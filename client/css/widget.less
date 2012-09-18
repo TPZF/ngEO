@@ -1,0 +1,51 @@
+
+.widget {
+	background: fade(@background-color, 60%); 
+	z-index: 1005;
+	border: solid 5px fade(@background-color, 60%); 
+	background-clip: padding-box;
+	position: absolute;
+}
+
+.widget-header {
+	.drop-shadow(0, 2px, 3px, 0, 0.25);
+	position: relative;
+    z-index: 1010;
+	cursor: pointer;
+}
+
+.widget-title {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	margin: 0 0 0 0.5em;
+}
+
+.widget-footer {
+	padding-top: 5px;
+	text-align: right;
+}
+
+.widget-min {
+	background-image: url('../images/minimize.png');
+	width: 24px;
+	height: 24px;
+	float: right;
+}
+
+.widget-max {
+	background-image: url('../images/maximize.png');
+	width: 24px;
+	height: 24px;
+	float: right;
+}
+.widget-close {
+	background-image: url('../images/close2.png');
+	width: 24px;
+	height: 24px;
+	float: right;
+}
+
+.widget-content {
+	background: #ffffff;
+}
