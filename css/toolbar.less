@@ -1,0 +1,39 @@
+
+#toolbar {
+	background-color: fade(@background-color, 50%); 
+	position: absolute;
+	width: 100%;
+	z-index: 1001;
+	//opacity: 0.7;
+    margin: 0;
+    padding: 0;
+	text-align: center;
+}
+
+.tb-elt {
+	display: inline-block;	
+	margin-top: 3px;
+	margin-left: 4px;
+	margin-right: 4px;
+}
+
+#toolbar img {
+	padding: 4px;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+.tb-text {
+	font-size: 0.8em; 
+}
+
+.tb-separator {
+	width: 0px;
+	height: 3em;
+	border-left: solid 1px @text-color;
+	display: inline-block;
+	vertical-align: top;
+	margin-right: 2em;
+	margin-top: 3px;
+	margin-left: 5em;
+}

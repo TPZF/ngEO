@@ -1,0 +1,64 @@
+
+/**
+ * Header : content is centered horizontally and border at bottom to separate with the toolbar
+ */
+header {
+	text-align: center;
+	padding: 0;
+	border-bottom: 2px solid @text-color;
+	height: @header-height;
+	
+	/* All elements in header are inline, and vertically aligned */
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+	
+	/* H1 : bigger font */
+	h1 {
+		font-size: 2.8em;
+		text-transform: uppercase;
+		margin: 0;
+		padding: 0;
+		font-weight:bold;
+	}
+	
+	/* Small paragraph */
+	p {
+		width: 12em;
+		font-size: 0.7em;
+		border-left: 1px solid @text-color;
+		padding-left: 0.3em;
+		margin: 0.3em 3em 0.3em 0.3em; // top right bottom left
+		color: darken(@text-color,30%);
+	}
+	
+	/* navigation menu */
+	nav {
+	
+		a {
+			display: inline-block;
+			padding: 0.6em;
+			border-left: 1px solid darken(@text-color,30%);
+			color: darken(@text-color,30%);
+			text-decoration: none;
+			font-weight:bold;
+			text-shadow: 2px 2px 2px darken(@text-color, 50%);
+		}
+		
+		a:hover {
+			color: @text-color;
+			text-shadow: 2px 2px 2px darken(@text-color, 30%);
+		}
+		
+		a.active {
+			color: @active-color;
+			text-shadow: 2px 2px 2px darken(@active-color, 30%);
+		}
+				
+		a:first-child {
+			border-left-style: none;
+		}
+	}
+}
+

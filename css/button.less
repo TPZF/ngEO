@@ -1,0 +1,52 @@
+/* basic button variables */
+@button_color: @background-color;
+@border_radius: 0.5em;
+@button_padding: 0.55em 2em;
+ 
+/* color variables set relative to @button_color. You probably don't need to change these. */
+@hover_background_color: lighten(@button_color, 20%);
+@border_color: lighten(@button_color, 20%);
+ 
+@normal_background_top: lighten(@button_color, 20%);
+@normal_background_bottom: darken(@button_color, 10%);
+ 
+@hover_background_top: lighten(@normal_background_top,10%);
+@hover_background_bottom: lighten(@normal_background_bottom,10%);   
+ 
+@active_background_top: @normal_background_bottom;
+@active_background_bottom: @normal_background_top;   
+
+ 
+.button {
+display: inline-block;
+outline: none;
+cursor: pointer;
+text-align: center;
+text-decoration: none;
+font-size: @font-size;
+line-height: 100%;
+padding: @button_padding;
+text-shadow: 0 1px 1px rgba(0,0,0,.3);
+color: @text-color;
+border: solid 1px @border_color;
+background: @button_color;
+.border-radius(@border_radius);
+.box-shadow(0 1px 2px rgba(0,0,0,.2));
+//.gradient(@normal_background_top, @normal_background_bottom);
+background: -moz-linear-gradient(top, lighten(@button_color, 40%) 0%, lighten(@button_color, 20%) 50%, darken(@button_color,10%) 50%, @button_color 100%);
+}
+
+.button:hover {
+background: @hover_background_color;
+text-decoration: none;
+//.gradient(@hover_background_top, @hover_background_bottom);
+background: -moz-linear-gradient(top, lighten(@button_color, 50%) 0%, lighten(@button_color, 30%) 50%, @button_color 50%, lighten(@button_color,10%) 100%);
+}
+
+.button.toggle, .button:active {
+position: relative;
+top: 1px;
+//.gradient(@active_background_top, @active_background_bottom);
+background: -moz-linear-gradient(top, lighten(@active-color, 30%) 0%, lighten(@active-color, 10%) 50%, darken(@active-color,20%) 50%, darken(@active-color,10%) 100%);
+border: solid 1px @active-color;
+}
