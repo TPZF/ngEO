@@ -16,6 +16,18 @@
 @active_background_top: @normal_background_bottom;
 @active_background_bottom: @normal_background_top;   
 
+
+// Special mixin for gradient in two part
+.two-part-gradient (@startColor, @mid1Color, @mid2Color, @endColor) {
+background-color: @mid1Color;
+//TODO : old webkit gradient, is it really needed ?
+//background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+background: -webkit-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+background: -moz-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+background: -ms-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+background: -o-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+}
+
  
 .button {
 display: inline-block;
@@ -33,20 +45,20 @@ background: @button_color;
 .border-radius(@border_radius);
 .box-shadow(0 1px 2px rgba(0,0,0,.2));
 //.gradient(@normal_background_top, @normal_background_bottom);
-background: -moz-linear-gradient(top, lighten(@button_color, 40%) 0%, lighten(@button_color, 20%) 50%, darken(@button_color,10%) 50%, @button_color 100%);
+.two-part-gradient (lighten(@button_color, 40%), lighten(@button_color, 20%), darken(@button_color,10%), @button_color);
 }
 
 .button:hover {
 background: @hover_background_color;
 text-decoration: none;
 //.gradient(@hover_background_top, @hover_background_bottom);
-background: -moz-linear-gradient(top, lighten(@button_color, 50%) 0%, lighten(@button_color, 30%) 50%, @button_color 50%, lighten(@button_color,10%) 100%);
+.two-part-gradient (lighten(@button_color, 50%), lighten(@button_color, 30%), @button_color, lighten(@button_color,10%));
 }
 
 .button.toggle, .button:active {
 position: relative;
 top: 1px;
 //.gradient(@active_background_top, @active_background_bottom);
-background: -moz-linear-gradient(top, lighten(@active-color, 30%) 0%, lighten(@active-color, 10%) 50%, darken(@active-color,20%) 50%, darken(@active-color,10%) 100%);
+.two-part-gradient (lighten(@active-color, 30%), lighten(@active-color, 10%), darken(@active-color,20%), darken(@active-color,10%));
 border: solid 1px @active-color;
 }

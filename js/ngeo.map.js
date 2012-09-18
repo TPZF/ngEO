@@ -360,13 +360,13 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 			mapEngine.destroy();
 			
 			// Callback called by the map engine when the map engine is initialized
-			/*var initCallback = function(map)
+			var initCallback = function(map)
 			{
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
 				
-				if ( visualizedProducts )	{	
+				/*if ( visualizedProducts )	{	
 					// Add the result products to the map to visualize them
 					for (var i=0; i < visualizedProducts.length; i++ ) {
 						var product = visualizedProducts[i];
@@ -375,8 +375,8 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 							map.showQuicklook( product );
 						}
 					}
-				}
-			};*/
+				}*/
+			};
 			
 			currentEngineIndex = (currentEngineIndex+1) % 2;
 			var value = engines[currentEngineIndex];
@@ -394,8 +394,8 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 			mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
 
 			// Subscribe to events
-			/*map.subscribe("init",initCallback);
-			map.subscribe("click",mapClickHandler);
+			mapEngine.subscribe("init",initCallback);
+			/*map.subscribe("click",mapClickHandler);
 			map.subscribe("startNavigation",startNavigationHandler);
 			map.subscribe("endNavigation", function() {
 				eocat.Events.trigger("map.endNavigation",map);
