@@ -96,7 +96,7 @@ $.widget( "ngeo.ngeowidget", {
 		
 		
 		this.parentElement
-			.width( this.element.width() )
+			//.width( this.element.width() )
 			.position({my: "center center", at: "center center", of: "#mapContainer" })
 			.draggable({ handle: self.header, containment: "#mapContainer"})
 			.hide();

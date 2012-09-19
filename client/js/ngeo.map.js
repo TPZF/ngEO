@@ -3,22 +3,24 @@
   */
 
 
-define( [ "ngeo.openlayers", "ngeo.globweb" ], 
+define( [ "ngeo.configuration", "ngeo.openlayers", "ngeo.globweb", "backbone" ], 
 
 // The function to define the map module
-function(OpenLayersMapEngine, GlobWebMapEngine) {
+function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	
 	/**
 	 * Private attributes
 	 */
 	var self = null;
-	var engines = [ 'openlayers', 'globweb' ];
+	var engines = [ OpenLayersMapEngine, GlobWebMapEngine ];
 	var currentEngineIndex = 0;
 	var mapEngine = null;
 	var element = null;
+	var backgroundLayer = null;
 	var selectedProduct = null;
 	var visualizedProducts = [];
 	var	popup = null;
+	var maxExtent = [-180,-85,180,85];
 	var resultStyle = {
 		strokeColor: '#ff0000',
 		strokeWidth: 1
@@ -238,6 +240,20 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 		
 		visualizedProducts = vizProducts;
 	};
+	
+	var configureMapEngine = function() {
+	
+		mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
+		mapEngine.setBackgroundLayer( backgroundLayer );
+		mapEngine.zoomToExtent( maxExtent );
+		
+		mapEngine.subscribe("endNavigation", function() {
+			self.trigger("endNavigation",self);
+		});
+		
+		/*map.subscribe("startNavigation",startNavigationHandler);
+		map.subscribe("click",mapClickHandler);*/
+	};
 
 	
 	/**
@@ -253,20 +269,17 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 			// Keep the this
 			self = this;
 			
+			_.extend(self, Backbone.Events);
+			
 			element = document.getElementById(eltId);
 			
-			// Default is OpenLayers ( can be stored in a session? )
-			mapEngine = new OpenLayersMapEngine(element);
-			mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
+			backgroundLayer = Configuration.map.backgroundLayers[0];
 			
-/*			map.subscribe("startNavigation",startNavigationHandler);
-			map.subscribe("click",mapClickHandler);
-			map.subscribe("endNavigation", function() {
-				eocat.Events.trigger("map.endNavigation",map);
-			});
-			
+			mapEngine = new engines[currentEngineIndex](element);
+			configureMapEngine();
+					
 			// Add a callback on eocat search success and error
-			eocat.Events.bind("search.success", visualizeResults);
+/*			eocat.Events.bind("search.success", visualizeResults);
 			eocat.Events.bind("search.error", visualizeResults);
 			
 			// Add callbacks when the shopcart is modified
@@ -324,6 +337,11 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 			
 		},
 		
+		setBackgroundLayer: function(layer) {
+			backgroundLayer = layer;
+			mapEngine.setBackgroundLayer(layer);
+		},
+		
 		zoomIn: function() {
 			mapEngine.zoomIn();
 		},
@@ -333,10 +351,10 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 		},
 		
 		zoomToMaxExtent: function() {
-			mapEngine.zoomToExtent( [-180,-85,180,85] );
+			mapEngine.zoomToExtent( maxExtent );
 		},
 		
-		zoomTo: function(product) {
+		/*zoomTo: function(product) {
 			// Zoom on the product in the carto
 			if (!product.extent)
 				computeExtent(product);
@@ -345,9 +363,16 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 			var height = extent[3] - extent[1];
 			var offsetExtent = [ extent[0] - 2 * width, extent[1] - 2 * height, extent[2] + 2 * width, extent[3] + 2 * height ];
 			mapEngine.zoomToExtent( offsetExtent );				
+		},*/
+		
+		zoomTo: function(extent) {
+			mapEngine.zoomToExtent( extent );							
 		},
-				
-
+		
+		getViewportExtent: function() {
+			return mapEngine.getViewportExtent();
+		},
+			
 		/**
 		 * Switch the map engine
 		 */
@@ -379,27 +404,12 @@ function(OpenLayersMapEngine, GlobWebMapEngine) {
 			};
 			
 			currentEngineIndex = (currentEngineIndex+1) % 2;
-			var value = engines[currentEngineIndex];
 			
-			// Instantiate the map engine
-			if ( value === 'openlayers' )
-				mapEngine = new OpenLayersMapEngine(element);
-			/*else if ( value === 'googlemap' )
-				map = new eocat.GoogleMapMap('map' );*/
-			else if ( value === 'globweb' )
-				mapEngine = new GlobWebMapEngine(element);
-			/*else if ( value === 'googleearth' )
-				map = new eocat.GoogleEarthMap('map' );*/
-			
-			mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
+			mapEngine = new engines[currentEngineIndex](element);			
+			configureMapEngine();
 
-			// Subscribe to events
+			// Subscribe to init event
 			mapEngine.subscribe("init",initCallback);
-			/*map.subscribe("click",mapClickHandler);
-			map.subscribe("startNavigation",startNavigationHandler);
-			map.subscribe("endNavigation", function() {
-				eocat.Events.trigger("map.endNavigation",map);
-			});*/
 		},
 				
 		/**
