@@ -3,8 +3,10 @@ require.config({
     //baseUrl: "/another/path",
     paths: {
         "jquery": "externs/jquery-1.7.1.min",
-		"jquery.ui": "externs/jquery-ui-1.8.18.custom.min"
-    },
+		"jquery.ui": "externs/jquery-ui-1.8.18.custom.min",
+        "underscore": "externs/underscore",
+		"backbone": "externs/backbone"
+   },
 	shim: {
 		'jquery': {
             deps: [],
@@ -14,18 +16,18 @@ require.config({
             deps: ['jquery'],
             exports: 'jQuery'
         },
-		"http://jqueryui.com/themeroller/themeswitchertool/": {
-            deps: ['jquery'],
-            exports: 'jQuery.fn.themeswitcher'
-        },
-		"externs/mustache": {
+		"underscore": {
             deps: [],
-            exports: 'Mustache'
+            exports: '_'
+		},
+		"backbone": {
+            deps: ["underscore"],
+            exports: 'Backbone'
 		}
 	}
   });
 
-require( ["jquery.ui", "ngeo.map", "ngeo.widget"], function($,Map) {
+require( ["jquery.ui", "ngeo.map", "ngeo.configuration", "ngeo.widget"], function($, Map, Configuration) {
 
 //** Main function : called when the document is ready
 $(document).ready(function() {
@@ -70,6 +72,50 @@ $(document).ready(function() {
 		title: 'Shopcart',
 		activator: '#shopcart',
 		buttons: [ "Button1" ]
+	});
+	
+	var layers = Configuration.map.backgroundLayers;
+	for ( var i=0; i < layers.length; i++ ) {
+		$("#backgroundImageries").append("<option value='" + i + "'>"+layers[i].name+"</option>");
+	}
+	$("#backgroundImageries").change( function() {
+		var val = $(this).val();
+		Map.setBackgroundLayer( Configuration.map.backgroundLayers[val] );
+	});
+	
+	$("#layersWidget").ngeowidget({
+		title: 'Layers',
+		activator: '#layers'
+	});
+	
+	
+	// Quick and dirty previous/next management
+	var views = [ Map.getViewportExtent() ];
+	var viewIndex = 0;
+	var block = false;
+	
+	Map.on("endNavigation", function() {
+		if (!block) {
+			viewIndex++; 
+			views[viewIndex] = Map.getViewportExtent();  
+			views.length = viewIndex + 1;
+		}
+	});
+	$("#left").click( function() { 
+		if ( viewIndex > 0 ) {
+			viewIndex--;
+			block = true;
+			Map.zoomTo( views[viewIndex] );
+			block = false;
+		}
+	});
+	$("#right").click( function() {
+		if ( viewIndex < views.length-1 ) {
+			viewIndex++;
+			block = true;
+			Map.zoomTo( views[viewIndex] );
+			block = false;
+		}
 	});
 
 });

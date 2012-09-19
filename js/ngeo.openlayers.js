@@ -13,6 +13,7 @@ define( [ "externs/OpenLayers" ],
  */
 OpenLayersMapEngine = function( parentElement )
 {
+	// Create element
 	var elt = document.createElement('div');
 	elt.id = "map";
 	parentElement.appendChild(elt);
@@ -22,9 +23,7 @@ OpenLayersMapEngine = function( parentElement )
 	// Create the map
 	this._map = new OpenLayers.Map(elt, {
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
-					 new OpenLayers.Control.Attribution()/*,
-		             new OpenLayers.Control.PanZoomBar({ zoomWorldIcon : true }),
-		             new OpenLayers.Control.LayerSwitcher()*/ ]
+					 new OpenLayers.Control.Attribution() ]
 		,projection: new OpenLayers.Projection("EPSG:900913")
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,units: "m"
@@ -34,38 +33,34 @@ OpenLayersMapEngine = function( parentElement )
 		,theme:null
 	});
 	
-/*	if(device == "mobile"){
-		this._map.addControl(new OpenLayers.Control.TouchNavigation());
-	}*/
-	
-/*	var apiKey = "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV";
-	var bingRoad = new OpenLayers.Layer.Bing({
-		name: "Road",
-		key: apiKey,
-		type: "Road"
-	}); 
-    this._map.addLayer(bingRoad);*/
-		
-	var officialosm = new OpenLayers.Layer.OSM("Official OSM");
-    this._map.addLayer(officialosm);
-
-    var layerMapnik = new OpenLayers.Layer.OSM("OSM Mapquest ","http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.png" );
-    this._map.addLayer(layerMapnik);
-
-    var layerOCM = new OpenLayers.Layer.OSM("OpenCycleMap","http://a.tile.opencyclemap.org/cycle/${z}/${x}/${y}.png" );
-    this._map.addLayer(layerOCM);
-	
-/*	var polayer = new OpenLayers.Layer.WMS( "PlanetObserver",
-		"proxy/VEGA/gwmap",
-		{ layers: 'PO150m' },
-		{ transitionEffect : 'resize' ,attribution: '&copy; PlanetObserver'}
-	);
-	this._map.addLayer(polayer);*/
-	
+	// Create the converter for GeoJSON format
 	this._geoJsonFormat = new OpenLayers.Format.GeoJSON();
-	
-	this._map.zoomToMaxExtent();
 }
+
+/**
+ * Set the background layer
+ */
+OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
+		
+	var olLayer;
+	switch (layer.type) {
+	case "OSM":
+		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png");
+		break;
+	case "WMS":
+		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer);
+		break;
+	case "Bing":
+		olLayer = new OpenLayers.Layer.Bing({ name: layer.name, key: layer.key, type: layer.imageSet});
+		break;
+	}
+	
+	if (olLayer) {
+		this._map.addLayer(olLayer);
+		this._map.setBaseLayer(olLayer);
+	}
+}
+
 
 /**
  * Subscribe to OpenLayersMap events

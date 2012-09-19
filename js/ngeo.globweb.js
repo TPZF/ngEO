@@ -6,6 +6,18 @@ define( [ "externs/GlobWeb.min" ],
 
 function() {
 
+/**
+ * Internal function to convert hex color to array of 4 flots between 0 and 1
+ */
+var convertColor = function(hex) {
+	 var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})|([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(hex);
+	 var red = parseInt(hex.length <= 4 ? result[4]+result[4] : result[1], 16);
+	 var green = parseInt(hex.length <= 4 ? result[5]+result[5] : result[2], 16);
+	 var blue = parseInt(hex.length <= 4 ? result[6]+result[6] : result[3], 16)
+	 
+	 return [ red / 255.0, green / 255.0, blue / 255.0, 1.0 ];
+};
+
 GlobWebMapEngine = function( parentElement )
 {
 	this.groundOverlays = {};
@@ -14,25 +26,16 @@ GlobWebMapEngine = function( parentElement )
 	this.parentElement = parentElement;
 	try
 	{
+		// Create the canvas element
 		var canvas = document.createElement('canvas');
 		canvas.id = "map";
 		canvas.width = parentElement.clientWidth;
 		canvas.height = parentElement.clientHeight;
 		parentElement.appendChild(canvas);
 		
-		// Create a div element for FPS
-/*		var divFps = document.createElement('div');
-		divFps.id = "GlobWebFps";
-		divFps.innerHTML = "FPS: 0";
-		mapElt.appendChild(divFps);
-		window.setInterval( function()
-				{
-					divFps.innerHTML = "FPS : " + GlobWeb.RenderContext.getAndResetFrameNumber();
-				}
-				,1000);*/
-		
 		this.canvas = canvas;
 	
+		// Create the globe
 		var globe = new GlobWeb.Globe({ canvas: canvas, 
 				atmosphere: false,
 				lighting: false,
@@ -41,19 +44,7 @@ GlobWebMapEngine = function( parentElement )
 				
 		// Add mouse navigation
 		var navigation = new GlobWeb.Navigation(globe);
-	
-		var blueMarbleLayer = new GlobWeb.WMSLayer({ baseUrl: "http://demonstrator.vegaspace.com/wmspub", layers: "BlueMarble" });
-		globe.setBaseImagery( blueMarbleLayer );
-		
-		/*var elevationLayer = new GlobWeb.BasicElevationLayer({ baseUrl:"http://demonstrator.vegaspace.com/json_elevations/get.php"});
-		globe.setBaseElevation( elevationLayer );*/
-		
-		var elevationLayer = new GlobWeb.WMSElevationLayer({ baseUrl:"http://demonstrator.vegaspace.com/wmspub", layers: "GTOPO"});
-		globe.setBaseElevation( elevationLayer );
-		
-		/*var osmLayer = new GlobWeb.OSMLayer( {baseUrl:"http://tile.openstreetmap.org"} );
-		globe.setBaseImagery( osmLayer );*/
-		
+			
 		this.globe = globe;
 		this.navigation = navigation;
 	}
@@ -67,6 +58,29 @@ GlobWebMapEngine = function( parentElement )
 		</div>";
 		console.log("WebGL cannot be initialized.")
 	}
+}
+
+/**
+ * Set the background layer
+ */
+GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
+
+	var gwLayer;
+	
+	switch (layer.type) {
+	case "OSM":
+		gwLayer = new GlobWeb.OSMLayer(layer);
+		break;
+	case "WMS":
+		gwLayer = new GlobWeb.WMSLayer(layer);
+		break;
+	case "Bing":
+		gwLayer = new GlobWeb.BingLayer(layer);
+		break;
+	}
+	
+	if (gwLayer)
+		this.globe.setBaseImagery(gwLayer);
 }
 
 /**
@@ -183,15 +197,6 @@ GlobWebMapEngine.prototype.zoomToExtent = function(extent)
 	
 	var geoPos = [ lon, lat ];
 	this.navigation.zoomTo( geoPos, d, 5 );
-}
-
-var convertColor = function(hex) {
-	 var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})|([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(hex);
-	 var red = parseInt(hex.length <= 4 ? result[4]+result[4] : result[1], 16);
-	 var green = parseInt(hex.length <= 4 ? result[5]+result[5] : result[2], 16);
-	 var blue = parseInt(hex.length <= 4 ? result[6]+result[6] : result[3], 16)
-	 
-	 return [ red / 255.0, green / 255.0, blue / 255.0, 1.0 ];
 }
 
 /**
