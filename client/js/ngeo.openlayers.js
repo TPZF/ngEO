@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "externs/OpenLayers.debug" ],
+define( [ "externs/OpenLayers.ngeo" ],
  
  function() {
   
@@ -23,8 +23,8 @@ OpenLayersMapEngine = function( parentElement )
 	// Create the map
 	this._map = new OpenLayers.Map(elt, {
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
-					 new OpenLayers.Control.Attribution(),
-					 new OpenLayers.Control.LayerSwitcher() ]
+					 new OpenLayers.Control.Attribution()/*,
+					 new OpenLayers.Control.LayerSwitcher()*/ ]
 		,projection: new OpenLayers.Projection("EPSG:900913")
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,units: "m"

@@ -2,8 +2,8 @@
 require.config({
     //baseUrl: "/another/path",
     paths: {
-        "jquery": "externs/jquery-1.7.1.min",
-		"jquery.ui": "externs/jquery-ui-1.8.18.custom.min",
+        "jquery": "externs/jquery-1.8.2.min",
+		"jquery.ui": "externs/jquery-ui-1.8.23.custom.min",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone"
    },
