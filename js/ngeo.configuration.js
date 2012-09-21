@@ -9,6 +9,7 @@ var configuration = {
 	
 	// Map configuration
 	map: {
+	
 		backgroundLayers: [{
 			name: "Open Street Map (Official)",
 			type: "OSM",
@@ -36,7 +37,21 @@ var configuration = {
 			type: "Bing",
 			key: "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
 			imageSet: "Aerial"
+		}],
+		
+		layers: [{
+			name: "Earthquake GeoRSS Feed",
+			type: "GeoRSS",
+			location: "data/eqs7day-M5.xml",
+			visible: false
+		}, {
+			name: "USGS Real-time Earthquakes",
+			type: "KML",
+			location: "data/earthquake.kml",
+			visible: false
 		}]
+		
+		
 	}
 };
 
