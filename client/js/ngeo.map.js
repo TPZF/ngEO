@@ -15,6 +15,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	var engines = [ OpenLayersMapEngine, GlobWebMapEngine ];
 	var currentEngineIndex = 0;
 	var mapEngine = null;
+	var layers = [];
 	var element = null;
 	var backgroundLayer = null;
 	var selectedProduct = null;
@@ -206,7 +207,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 		product.extent = [ minX, minY, maxX, maxY ];
 	};
 
-
 	/**
 	 * Visualize some products
 	 */
@@ -241,11 +241,18 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 		visualizedProducts = vizProducts;
 	};
 	
+	/**
+	 * Configure the map engine : set background layer, adjust style, connect events, etc...
+	 */
 	var configureMapEngine = function() {
 	
 		mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
 		mapEngine.setBackgroundLayer( backgroundLayer );
 		mapEngine.zoomToExtent( maxExtent );
+		
+		for ( var i = 0; i < Configuration.map.layers.length; i++ ) {
+			layers[i] = mapEngine.addLayer( Configuration.map.layers[i] );
+		}
 		
 		mapEngine.subscribe("endNavigation", function() {
 			self.trigger("endNavigation",self);
@@ -340,6 +347,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 		setBackgroundLayer: function(layer) {
 			backgroundLayer = layer;
 			mapEngine.setBackgroundLayer(layer);
+		},
+		
+		setLayerVisible: function(i,vis) {
+			mapEngine.setLayerVisible(layers[i],vis);
 		},
 		
 		zoomIn: function() {

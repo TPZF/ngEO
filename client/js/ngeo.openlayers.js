@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "externs/OpenLayers" ],
+define( [ "externs/OpenLayers.debug" ],
  
  function() {
   
@@ -23,7 +23,8 @@ OpenLayersMapEngine = function( parentElement )
 	// Create the map
 	this._map = new OpenLayers.Map(elt, {
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
-					 new OpenLayers.Control.Attribution() ]
+					 new OpenLayers.Control.Attribution(),
+					 new OpenLayers.Control.LayerSwitcher() ]
 		,projection: new OpenLayers.Projection("EPSG:900913")
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,units: "m"
@@ -59,6 +60,50 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 		this._map.addLayer(olLayer);
 		this._map.setBaseLayer(olLayer);
 	}
+}
+
+/**
+ * Set layer visibility
+ */
+OpenLayersMapEngine.prototype.setLayerVisible = function(olLayer,vis) {
+	olLayer.setVisibility(vis);
+}
+
+/**
+ * Add a layer
+ */
+OpenLayersMapEngine.prototype.addLayer = function(layer) {
+		
+	var olLayer;
+	switch (layer.type) {
+	case "WMS":
+		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer);
+		break;
+	case "GeoRSS":
+		olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });
+		break;
+	case "KML":
+		olLayer =  new OpenLayers.Layer.Vector(layer.name, {
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.HTTP({
+                url: layer.location,
+                format: new OpenLayers.Format.KML({
+                    extractStyles: true, 
+                    extractAttributes: true,
+                    maxDepth: 0
+                })
+            }),
+			projection: "EPSG:4326"
+        });
+		break;
+	}
+	
+	if (olLayer) {
+		olLayer.setVisibility(layer.visible);
+		this._map.addLayer(olLayer);
+	}
+	
+	return olLayer;
 }
 
 

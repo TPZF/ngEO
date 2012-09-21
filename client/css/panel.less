@@ -4,6 +4,11 @@
 .panel {
 	.drop-shadow (0, 0, 2px, 2px, 0.25);
 	.border-radius(5px);
+	margin-top: 0.5em;
+}
+
+.panel:first-child {
+	margin-top: 0;
 }
 
 .panel-header {
@@ -19,16 +24,4 @@
 	margin: 0;
 	padding: 0.5em;
 	.border-radiuses (0px, 5px, 5px, 0px); //@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0)
-}
-
-#layersWidget {
-	min-width: 25em;
-}
-
-#backgroundImageries {
-	width: 100%;
-	border: 1px solid @border-color;
-	.border-radius(3px);
-	display: block;
-	padding: 0.2em;
 }
