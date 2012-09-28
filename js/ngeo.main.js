@@ -4,12 +4,20 @@ require.config({
     paths: {
         "jquery": "externs/jquery-1.8.2.min",
 		"jquery.ui": "externs/jquery-ui-1.8.23.custom.min",
+		"jquery.mobile": "externs/jquery.mobile-1.1.1",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone"
    },
 	shim: {
 		'jquery': {
             deps: [],
+            exports: 'jQuery'
+        },
+		'ngeo.jqm-config': {
+            deps: ['jquery']
+        },
+ 		'jquery.mobile': {
+            deps: ['jquery','ngeo.jqm-config'],
             exports: 'jQuery'
         },
 		'jquery.ui': {
@@ -27,7 +35,7 @@ require.config({
 	}
   });
 
-require( ["jquery.ui", "ngeo.map", "ngeo.search", "ngeo.shopcart", "ngeo.layers", "ngeo.toolbarMap", "ngeo.widget"], 
+require( ["jquery.ui", "ngeo.map", "ngeo.search", "ngeo.shopcart", "ngeo.layers", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
 	function($, Map, SearchWidget, ShopcartWidget, LayersWidget, ToolBarMap) {
 
 //** Main function : called when the document is ready

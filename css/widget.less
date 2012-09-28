@@ -5,6 +5,7 @@
 	border: solid 5px fade(@background-color, 60%); 
 	background-clip: padding-box;
 	position: absolute;
+	.border-radius(8px);
 }
 
 .widget-header {
@@ -12,6 +13,7 @@
 	position: relative;
     z-index: 1010;
 	cursor: pointer;
+	height: 33px;
 }
 
 .widget-title {
@@ -26,17 +28,22 @@
 	text-align: right;
 }
 
+.widget-icon {
+	float: right;
+	margin-left: 4px;
+}
+
 .widget-min {
-	background-image: url('../images/minimize.png');
-	width: 24px;
-	height: 24px;
+//	background-image: url('../images/minimize.png');
+//	width: 24px;
+//	height: 24px;
 	float: right;
 }
 
 .widget-max {
-	background-image: url('../images/maximize.png');
-	width: 24px;
-	height: 24px;
+//	background-image: url('../images/maximize.png');
+//	width: 24px;
+//	height: 24px;
 	float: right;
 }
 .widget-close {

@@ -20,44 +20,64 @@
 
 <body>
 
-<!-- Menu Bar -->
-<header>
-	<h1>ngEO</h1>
-	<p>The next generation user services for earth observation.</p>
-	<nav>
-		<a href="#">About</a>
-		<a href="#" class="active">Data Services Area</a>
-		<a href="#">My account</a>
-		<a href="#">Support</a>
-		<!-- <a href="#">Login</a> -->
-	</nav>
-</header>
-
-<!-- Map -->
-<div id="mapContainer">
-
-	<div id="toolbar">
-	</div>
+<div data-role="page" data-theme="a">
 	
-	<div id="searchWidget" style="width: 500px; height: 300px;"></div>
-	<div id="shopcartWidget" style="width: 500px; height: 300px;"></div>
-	
-	<div id="layersWidget">
-		<div class="panel">
-			<h4 class="panel-header">Background imagery</h4>
-			<div class="panel-content">
-				<select id="backgroundImageries">
+	<!-- Menu Bar -->
+	<header data-enhance="false">
+		<h1>ngEO</h1>
+		<p>The next generation user services for earth observation.</p>
+		<nav>
+			<a href="#">About</a>
+			<a href="#" class="active">Data Services Area</a>
+			<a href="#">My account</a>
+			<a href="#">Support</a>
+			<!-- <a data-role="button" data-mini="true" data-inline="true" data-icon="gear" class="ui-btn-right" href="#">Login</a> -->
+		</nav>
+	</header>
+
+	<!-- Map -->
+	<div id="mapContainer">
+
+		<div id="toolbar">
+		</div>
+		
+		<div id="searchWidget" style="width: 500px; height: 300px;"></div>
+		<div id="shopcartWidget" style="width: 500px; height: 300px;"></div>
+		
+		<div id="layersWidget">
+		
+	<!--			<li data-role="list-divider">Background imagery </li>
+			<li>
+				<select data-native-menu="false">
+					<option value="standard">Standard: 7 day</option>
+					<option value="rush">Rush: 3 days</option>
+					<option value="express">Express: next day</option>
+					<option value="overnight">Overnight</option>
 				</select>
+			</li>
+			<li id="overlays" data-role="list-divider">Overlays</li>
+			<li> <label><input type="checkbox">Toto</label></li>
+		</ul>	 -->
+		
+<!--			<div class="panel">
+				<h4 class="panel-header">Background imagery</h4>
+				<div class="panel-content" id="backgroundImageries">
+					<select id="backgroundImageries" data-native-menu="false" >
+						<option value="0">Toto</option>
+						<option value="1">Titi</option>
+					</select> 
+				</div>
 			</div>
+			<div class="panel">
+				<h4 class="panel-header">Overlays</h4>
+				<div class="panel-content" id="overlays">
+				</div>
+			</div>-->
 		</div>
-		<div class="panel">
-			<h4 class="panel-header">Overlays</h4>
-			<div class="panel-content" id="overlays">
-			</div>
-		</div>
-	</div>
+		
+	</div>	
 	
-</div>
+</div><!-- /page -->
 
 </body>
 

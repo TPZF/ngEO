@@ -3,7 +3,7 @@
   */
 
 
-define( [ "jquery.ui" ], 
+define( [ "jquery.ui", "jquery.mobile" ], 
 
 // The function to define the Widget module
 function($) {
@@ -42,11 +42,14 @@ $.widget( "ngeo.ngeowidget", {
 			
 		if ( this.options.buttons )	{
 			$.each( this.options.buttons, function (index,  value ) {
-				self.footer.append("<a class='button' href='#'>" + value + "</a>");
+				//self.footer.append("<a class='button' href='#'>" + value + "</a>");
+				self.footer.append("<button data-role='button' data-inline='true'>" + value + "</button>");
 			});
 		} else {
 			this.footer.hide();
 		}
+		
+		var timeEffect = 300;
 
 		// Activator 
 		var activator;
@@ -54,26 +57,28 @@ $.widget( "ngeo.ngeowidget", {
 			activator = $(this.options.activator);
 			activator.click( function() { 
 				if ( activator.hasClass('toggle') ) {
-					self.parentElement.hide(); 
+					self.parentElement.fadeOut(timeEffect); 
 					activator.removeClass('toggle');
 				}
 				else {
-					self.parentElement.show(); 
+					self.parentElement.fadeIn(timeEffect); 
 					activator.addClass('toggle');
 				}
 			});
 		}
 			
 		// Add close icon	
-		$("<span class='widget-close'></span>")
+//		$("<span class='widget-close'></span>")
+		$('<span data-role="button" class="widget-icon" data-theme="c" data-icon="delete" data-mini="true" data-iconpos="notext"></span>')
 			.appendTo(this.header)
 			.click( function() { 
-				self.parentElement.hide(); 
+				self.parentElement.fadeOut(timeEffect); 
 				if (activator) activator.removeClass('toggle'); 
-			});	
+			});		
 		
 		// Add max icon	
-		$("<span class='widget-max'></span>")
+//		$("<span class='widget-max'></span>")
+		$('<span data-role="button" class="widget-icon widget-max" data-theme="c" data-icon="plus" data-mini="true" data-iconpos="notext"></span>')
 			.appendTo(this.header)
 			.hide()
 			.click( function() {
@@ -84,7 +89,8 @@ $.widget( "ngeo.ngeowidget", {
 			});
 			
 		// Add min icon	
-		$("<span class='widget-min'></span>")
+//		$("<span class='widget-min'></span>")
+		$('<span data-role="button" class="widget-icon widget-min" data-theme="c" data-icon="minus" data-mini="true" data-iconpos="notext"></span>')
 			.appendTo(this.header)
 			.click( function() {
 				var jThis = $(this);
@@ -96,6 +102,7 @@ $.widget( "ngeo.ngeowidget", {
 		
 		
 		this.parentElement
+			.trigger("create")
 			//.width( this.element.width() )
 			.position({my: "center center", at: "center center", of: "#mapContainer" })
 			.draggable({ handle: self.header, containment: "#mapContainer"})
