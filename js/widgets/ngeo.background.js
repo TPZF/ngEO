@@ -19,22 +19,9 @@ var changeBackground = function() {
 }
 
 return function() {
-/*	
-<fieldset data-role="controlgroup">
-	<legend>Choose a pet:</legend>
-     	<input type="radio" name="radio-choice" id="radio-choice-1" value="choice-1" checked="checked" />
-     	<label for="radio-choice-1">Cat</label>
 
-     	<input type="radio" name="radio-choice" id="radio-choice-2" value="choice-2"  />
-     	<label for="radio-choice-2">Dog</label>
-
-     	<input type="radio" name="radio-choice" id="radio-choice-3" value="choice-3"  />
-     	<label for="radio-choice-3">Hamster</label>
-
-     	<input type="radio" name="radio-choice" id="radio-choice-4" value="choice-4"  />
-     	<label for="radio-choice-4">Lizard</label>
-</fieldset> */
-
+	// Add the background widget to the data services area
+	$('#dataServicesArea').append('<div id="backgroundWidget"/>');
 	
 	// Build background layers panel
 	var content = $('<fieldset data-role="controlgroup"></fieldset>');

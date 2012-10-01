@@ -35,8 +35,8 @@ require.config({
 	}
   });
 
-require( ["jquery.ui", "ngeo.map", "widgets/ngeo.search", "widgets/ngeo.shopcart", "widgets/ngeo.layers", "widgets/ngeo.background", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
-	function($, Map, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap) {
+require( ["jquery", "ngeo.menubar", "ngeo.map", "widgets/ngeo.search", "widgets/ngeo.shopcart", "widgets/ngeo.layers", "widgets/ngeo.background", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
+	function($, MenuBar, Map, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap) {
 
 //** Main function : called when the document is ready
 $(document).ready(function() {
@@ -48,6 +48,9 @@ $(document).ready(function() {
 	$(window).resize( function() {
 		Map.updateViewportSize();
 	});
+	
+	// Initialize the menu bar
+	MenuBar.initialize('header nav');
 	
 	SearchWidget();
 	ShopcartWidget();

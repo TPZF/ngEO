@@ -1,5 +1,13 @@
 
 /**
+ * MenuBar
+ * 	Contains style for the menu bar and how to display menu item 'page'
+ *  The menu item 'page' has 
+ *		transparent background
+ *		layered above the map
+ */
+
+/**
  * Header : content is centered horizontally and border at bottom to separate with the toolbar
  */
 header {
@@ -62,3 +70,15 @@ header {
 	}
 }
 
+.menuBarPage {
+	position: absolute;
+	width: 100%;
+	z-index: 1001;
+}
+
+.menuBarPageContent {
+ 	background-color: fade(@background-color, 50%); 
+    margin:0px auto;
+	width: 960px;
+    padding: 1em;
+}
