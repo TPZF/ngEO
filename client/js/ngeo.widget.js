@@ -7,6 +7,8 @@ define( [ "jquery.ui", "jquery.mobile" ],
 
 // The function to define the Widget module
 function($) {
+
+var _widgets = [];
 	
 $.widget( "ngeo.ngeowidget", {
 	// default options
@@ -14,6 +16,7 @@ $.widget( "ngeo.ngeowidget", {
 		title: "",
 		activator: null,
 		buttons: null,
+		effectDuration: 300,
 		
 		// callbacks
 		resize: null
@@ -23,6 +26,7 @@ $.widget( "ngeo.ngeowidget", {
 	_create: function() {
 	
 		var self = this;
+		_widgets.push(this);
 		
 		// Style the container
 		this.element.addClass( "widget-content" );
@@ -31,10 +35,17 @@ $.widget( "ngeo.ngeowidget", {
 		this.element.wrap("<div class='widget'/>");
 		this.parentElement = this.element.parent();
 		
+		this.parentElement.wrap("<div class='widget-container' />");
+		this.containerElement = this.parentElement.parent();
+		
+		// Add Arrow 
+		this.arrow = $("<div class='widget-arrow-up' />")
+			.insertBefore(this.parentElement);
+		
 		// Add header
-		this.header = $("<div class='widget-header' />")
+/*		this.header = $("<div class='widget-header' />")
 			.insertBefore(this.element)
-			.append("<h2 class='widget-title'>" + this.options.title + "</h2>");
+			.append("<h2 class='widget-title'>" + this.options.title + "</h2>");*/
 			
 		// Add footer
 		this.footer = $("<div class='widget-footer' />")
@@ -49,24 +60,19 @@ $.widget( "ngeo.ngeowidget", {
 			this.footer.hide();
 		}
 		
-		var timeEffect = 300;
 
 		// Activator 
-		var activator;
-		if ( this.options.activator ) {
-			activator = $(this.options.activator);
-			activator.click( function() { 
-				if ( activator.hasClass('toggle') ) {
-					self.parentElement.fadeOut(timeEffect); 
-					activator.removeClass('toggle');
-				}
-				else {
-					self.parentElement.fadeIn(timeEffect); 
-					activator.addClass('toggle');
-				}
-			});
-		}
-			
+		this.activator = $(this.options.activator);
+		this.activator.click( function() { 
+			if ( self.activator.hasClass('toggle') ) {
+				self.hide();
+			}
+			else {
+				self.show();
+			}
+		});
+
+/*			
 		// Add close icon	
 //		$("<span class='widget-close'></span>")
 		$('<span data-role="button" class="widget-icon" data-theme="c" data-icon="delete" data-mini="true" data-iconpos="notext"></span>')
@@ -98,15 +104,36 @@ $.widget( "ngeo.ngeowidget", {
 					.children(":not(.widget-header)")
 					.slideUp( function() { self.header.find(".widget-max").show(); jThis.hide(); } ); 
 			});
-			
-		
-		
-		this.parentElement
+*/			
+				
+		this.containerElement
 			.trigger("create")
-			//.width( this.element.width() )
-			.position({my: "center center", at: "center center", of: "#mapContainer" })
-			.draggable({ handle: self.header, containment: "#mapContainer"})
 			.hide();
+	},
+	
+	show: function() {
+		// Automatically hide other widgets
+		for ( var i=0; i < _widgets.length; i++ ) {
+			if ( _widgets[i] != this ) {
+				_widgets[i].hide();
+			}
+		}
+		
+		// Recompute position for widget
+		var posActivator = this.activator.position();	
+		var widgetLeft = posActivator.left - (this.containerElement.outerWidth()/2) + (this.activator.outerWidth()/2);
+		var widgetTop = posActivator.top + this.activator.outerHeight() + 20;
+		this.containerElement
+			.css( 'top', widgetTop )
+			.css( 'left', widgetLeft )
+			.fadeIn(this.options.durationEffect); 
+		this.activator.addClass('toggle');
+	},
+	
+	hide: function() {
+		this.containerElement.fadeOut(this.options.durationEffect); 
+		this.activator.removeClass('toggle');
+
 	},
 		
 	// events bound via _bind are removed automatically

@@ -18,6 +18,9 @@ var convertColor = function(hex) {
 	 return [ red / 255.0, green / 255.0, blue / 255.0, 1.0 ];
 };
 
+/**
+ * GlobeWeb Map Engine constructor
+ */
 GlobWebMapEngine = function( parentElement )
 {
 	this.groundOverlays = {};
@@ -81,6 +84,43 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 	
 	if (gwLayer)
 		this.globe.setBaseImagery(gwLayer);
+}
+
+/**
+ * Set layer visibility
+ */
+GlobWebMapEngine.prototype.setLayerVisible = function(gwLayer,vis) {
+	gwLayer.visible(vis);
+}
+
+/**
+ * Add a layer
+ */
+GlobWebMapEngine.prototype.addLayer = function(layer) {
+		
+	var gwLayer;
+	switch (layer.type) {
+	case "WMS":
+		gwLayer = new GlobWeb.OSMLayer(layer);
+		break;
+/*	case "GeoRSS":
+		olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });
+		break;*/
+	case "KML":
+		gwLayer = new GlobWeb.VectorLayer(layer);
+		$.get( layer.location, function(data) {
+			var features = GlobWeb.KMLParser.parse(data);
+			gwLayer.addFeatureCollection(features);
+		});
+		break;
+	}
+	
+	if (gwLayer) {
+		gwLayer.visible(layer.visible);
+		this.globe.addLayer(gwLayer);
+	}
+	
+	return gwLayer;
 }
 
 /**

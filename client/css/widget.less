@@ -1,11 +1,17 @@
+@widget-arrow-size: 20px;
+@widget-background-color: fade(@background-color, 60%); 
+@widget-border-radius: 8px;
+
+.widget-container {
+	position: absolute;
+	z-index: 1005;
+}
 
 .widget {
-	background: fade(@background-color, 60%); 
-	z-index: 1005;
-	border: solid 5px fade(@background-color, 60%); 
+	background: @widget-background-color; 
+	border: solid 5px @widget-background-color; 
 	background-clip: padding-box;
-	position: absolute;
-	.border-radius(8px);
+	.border-radius(@widget-border-radius);
 }
 
 .widget-header {
@@ -15,6 +21,16 @@
 	cursor: pointer;
 	height: 33px;
 }
+
+.widget-arrow-up {
+	width: 0; 
+	height: 0; 
+	margin: auto;
+	border-left: @widget-arrow-size solid transparent;
+	border-right: @widget-arrow-size solid transparent;
+	border-bottom: @widget-arrow-size solid @widget-background-color;
+}
+
 
 .widget-title {
 	margin: 0;
@@ -57,4 +73,5 @@
 	background: #ffffff;
 	color: #0A0A0A;
 	padding: 0.5em;
+	.border-radius(@widget-border-radius);
 }

@@ -8,7 +8,7 @@ return function () {
 	ToolBar.addAction('right','Next');
 	ToolBar.addAction('zoomOut','Zoom Out');
 	ToolBar.addAction('zoomIn','Zoom In');
-	ToolBar.addAction('pencil','Draw');
+	ToolBar.addAction('background','Background');
 	ToolBar.addAction('switch','2D/3D');
 	
 	$("#zoomIn").click( function() { Map.zoomIn(); } );

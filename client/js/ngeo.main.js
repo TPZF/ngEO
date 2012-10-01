@@ -35,8 +35,8 @@ require.config({
 	}
   });
 
-require( ["jquery.ui", "ngeo.map", "ngeo.search", "ngeo.shopcart", "ngeo.layers", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
-	function($, Map, SearchWidget, ShopcartWidget, LayersWidget, ToolBarMap) {
+require( ["jquery.ui", "ngeo.map", "widgets/ngeo.search", "widgets/ngeo.shopcart", "widgets/ngeo.layers", "widgets/ngeo.background", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
+	function($, Map, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap) {
 
 //** Main function : called when the document is ready
 $(document).ready(function() {
@@ -53,6 +53,7 @@ $(document).ready(function() {
 	ShopcartWidget();
 	LayersWidget();
 	ToolBarMap();
+	BackgroundWidget();
 
 });
 
