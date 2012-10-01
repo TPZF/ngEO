@@ -6,7 +6,7 @@
 define( [ "ngeo.configuration", "ngeo.map", "ngeo.toolbar", "ngeo.widget" ], function(Configuration, Map, ToolBar) {
 
 return function() {
-
+	$('#dataServicesArea').append('<div id="layersWidget"/>');
 	ToolBar.addAction('layers','Layers');
 
 	// Build overlays panel

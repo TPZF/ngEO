@@ -3,6 +3,7 @@
 //@background-color: #325E8F;
 @text-color: #ffffff;
 @active-color: rgb(32,128,250);
+@border-color: lighten(@background-color,80%);
 
 /* Layout */
 @font-size: 14px;
@@ -31,13 +32,11 @@ html, body {
 }
 
 @import "mixins.less";
-@import "header.less";
+@import "menubar.less";
 @import "map.less";
 @import "button.less";
 @import "toolbar.less";
 @import "widget.less";
-@import "panel.less";
-
 @import "layers.less";
 
 // OpenLayers

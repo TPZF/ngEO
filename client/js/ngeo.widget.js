@@ -3,7 +3,7 @@
   */
 
 
-define( [ "jquery.ui", "jquery.mobile" ], 
+define( [ "jquery", "jquery.mobile" ], 
 
 // The function to define the Widget module
 function($) {
