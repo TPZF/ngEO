@@ -1,9 +1,7 @@
 
 require.config({
-    //baseUrl: "/another/path",
-    paths: {
+     paths: {
         "jquery": "externs/jquery-1.8.2.min",
-		"jquery.ui": "externs/jquery-ui-1.8.23.custom.min",
 		"jquery.mobile": "externs/jquery.mobile-1.1.1",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone"
@@ -20,10 +18,6 @@ require.config({
             deps: ['jquery','ngeo.jqm-config'],
             exports: 'jQuery'
         },
-		'jquery.ui': {
-            deps: ['jquery'],
-            exports: 'jQuery'
-        },
 		"underscore": {
             deps: [],
             exports: '_'
@@ -35,10 +29,13 @@ require.config({
 	}
   });
 
-require( ["jquery", "ngeo.menubar", "ngeo.map", "widgets/ngeo.search", "widgets/ngeo.shopcart", "widgets/ngeo.layers", "widgets/ngeo.background", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
-	function($, MenuBar, Map, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap) {
+/**
+ * Main ngEO module
+ */
+require( ["jquery", "backbone", "ngeo.menubar", "ngeo.map", "widgets/ngeo.search", "widgets/ngeo.shopcart", "widgets/ngeo.layers", "widgets/ngeo.background", "ngeo.toolbarMap", "ngeo.widget", "jquery.mobile"], 
+	function($, Backbone, MenuBar, Map, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap) {
 
-//** Main function : called when the document is ready
+//** Called when the document is ready
 $(document).ready(function() {
 	
 	// Initialize the map
@@ -52,12 +49,14 @@ $(document).ready(function() {
 	// Initialize the menu bar
 	MenuBar.initialize('header nav');
 	
+	// Initialize data services area
 	SearchWidget();
 	ShopcartWidget();
 	LayersWidget();
 	ToolBarMap();
 	BackgroundWidget();
-
+	
+	Backbone.history.start({pushState: true, root: "/ngEO/client/"})
 });
 
 });

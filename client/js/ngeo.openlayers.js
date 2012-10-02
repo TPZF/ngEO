@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "externs/OpenLayers.ngeo" ],
+define( [ "externs/OpenLayers" ],
  
  function() {
   
@@ -81,6 +81,17 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 		break;
 	case "GeoRSS":
 		olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });
+		break;
+	case "WFS":
+		olLayer = new OpenLayers.Layer.Vector(layer.name,{
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.WFS({
+                url: layer.baseUrl,
+				featureType: layer.featureType,
+				featureNS: layer.featureNS
+            }),
+			projection: "EPSG:4326"
+        });
 		break;
 	case "KML":
 		olLayer =  new OpenLayers.Layer.Vector(layer.name, {

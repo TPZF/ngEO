@@ -1,7 +1,7 @@
 /**
  * SearchWidget module
  */
-define( ["jquery", "ngeo.toolbar", "ngeo.widget"], function($, ToolBar) {
+define( ["jquery", "backbone", "ngeo.toolbar", "ngeo.widget"], function($, Backbone, ToolBar) {
 
 return function() {
 	$('#dataServicesArea').append('<div id="searchWidget" style="width: 500px; height: 300px;"></div>');
@@ -12,6 +12,19 @@ return function() {
 		activator: '#search',
 		buttons: [ "Button1", "Button2" ]
 	});
+	
+	// Router for seach shared url
+    var SearchRouter = Backbone.Router.extend({
+        routes: {
+            "search/:id": "search"
+        },
+        search: function( id ){
+			$("#searchWidget").ngeowidget("show");
+        }
+    });
+	
+    // Initiate the router
+    var router = new SearchRouter;	
 
 };
 

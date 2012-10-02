@@ -4,7 +4,7 @@
  */
 
 var express = require('express')
-  , user = require('./routes/user')
+  , webClientConfigurationData = require('./webClientConfigurationData')
   , http = require('http')
   , path = require('path');
 
@@ -23,7 +23,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-app.get('/users', user.list);
+app.get('/server/webClientConfigurationData', webClientConfigurationData);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
