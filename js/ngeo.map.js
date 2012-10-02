@@ -15,7 +15,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	var engines = [ OpenLayersMapEngine, GlobWebMapEngine ];
 	var currentEngineIndex = 0;
 	var mapEngine = null;
-	var layers = [];
+	var engineLayers = [];
 	var element = null;
 	var backgroundLayer = null;
 	var selectedProduct = null;
@@ -244,14 +244,14 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	/**
 	 * Configure the map engine : set background layer, adjust style, connect events, etc...
 	 */
-	var configureMapEngine = function() {
+	var configureMapEngine = function(mapConf) {
 	
 		mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
 		mapEngine.setBackgroundLayer( backgroundLayer );
 		mapEngine.zoomToExtent( maxExtent );
 		
-		for ( var i = 0; i < Configuration.map.layers.length; i++ ) {
-			layers[i] = mapEngine.addLayer( Configuration.map.layers[i] );
+		for ( var i = 0; i < mapConf.layers.length; i++ ) {
+			engineLayers[i] = mapEngine.addLayer( mapConf.layers[i] );
 		}
 		
 		mapEngine.subscribe("endNavigation", function() {
@@ -280,10 +280,13 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 			
 			element = document.getElementById(eltId);
 			
-			backgroundLayer = Configuration.map.backgroundLayers[0];
-			
 			mapEngine = new engines[currentEngineIndex](element);
-			configureMapEngine();
+			
+			Configuration.get( function(data) {
+				backgroundLayer = data.map.backgroundLayers[0];
+				configureMapEngine(data.map);
+			});
+			
 					
 			// Add a callback on eocat search success and error
 /*			eocat.Events.bind("search.success", visualizeResults);
@@ -345,12 +348,17 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 		},
 		
 		setBackgroundLayer: function(layer) {
+			// Store background layer
 			backgroundLayer = layer;
+			// Set the active background
 			mapEngine.setBackgroundLayer(layer);
 		},
 		
 		setLayerVisible: function(i,vis) {
-			mapEngine.setLayerVisible(layers[i],vis);
+			// Store visibilty in configuration data
+			Configuration.data.map.layers[i].visible = vis;
+			// Modify engine layers
+			mapEngine.setLayerVisible(engineLayers[i],vis);
 		},
 		
 		zoomIn: function() {
@@ -417,7 +425,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 			currentEngineIndex = (currentEngineIndex+1) % 2;
 			
 			mapEngine = new engines[currentEngineIndex](element);			
-			configureMapEngine();
+			configureMapEngine(Configuration.data.map);
 
 			// Subscribe to init event
 			mapEngine.subscribe("init",initCallback);

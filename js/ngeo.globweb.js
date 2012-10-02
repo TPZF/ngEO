@@ -2,9 +2,9 @@
  * GlobWeb map engine
  */
 
-define( [ "externs/GlobWeb.min" ],
+define( [ "jquery", "ngeo.geojsonconverter", "externs/GlobWeb.min" ],
 
-function() {
+function($,GeojsonConverter) {
 
 /**
  * Internal function to convert hex color to array of 4 flots between 0 and 1
@@ -103,9 +103,15 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	case "WMS":
 		gwLayer = new GlobWeb.OSMLayer(layer);
 		break;
-/*	case "GeoRSS":
-		olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });
-		break;*/
+	case "WFS":
+	case "GeoRSS":
+		gwLayer = new GlobWeb.VectorLayer({
+			name: layer.name,
+			visible: layer.visible,
+			style: new GlobWeb.FeatureStyle({ iconUrl: 'images/hotspot.png', pointMaxSize: 40000 })
+		});
+		GeojsonConverter.load( layer, $.proxy(gwLayer.addFeatureCollection, gwLayer) );
+		break;
 	case "KML":
 		gwLayer = new GlobWeb.VectorLayer(layer);
 		$.get( layer.location, function(data) {
@@ -134,10 +140,10 @@ GlobWebMapEngine.prototype.subscribe = function(name,callback)
 		callback(this);
 		break;
 	case "startNavigation":
-		this.navigation.subscribe("start",callback);
+		this.globe.subscribe("startNavigation",callback);
 		break;
 	case "endNavigation":
-		this.navigation.subscribe("end",callback);
+		this.globe.subscribe("endNavigation",callback);
 		break;
 	case "click":
 		$(this.mapElt).click( callback );
