@@ -31,7 +31,7 @@
 		}],
 		
 		"layers": [{
-			"name": "Earthquake GeoRSS Feed",
+			"name": "Earthquake Feed (GeoRSS)",
 			"type": "GeoRSS",
 			"location": "data/eqs7day-M5.xml",
 			"visible": false
