@@ -1,18 +1,17 @@
 /**
- * GeoJsonConvert based on OpenLayers
+ * GeoJsonConverter based on OpenLayers
  */
 
-define( [ "externs/OpenLayers" ], function() {
+define( [ "externs/OpenLayers.ngeo" ], function() {
  
 // Use to convert to GeoJSON 
 var geoJsonFormat = new OpenLayers.Format.GeoJSON();
 
 /*!
- * Convert the response from OpenLayer.Feature object to GeoJSON
+ * Convert a OpenLayer.Feature object to GeoJSON
  * @return a GeoJSON feature collection
  */
-var convert = function(resp) {
-	var features = resp.features;
+var convert = function(features) {
 	if (features && features.length > 0) {
 		var json = geoJsonFormat.write(features);
 		return JSON.parse( json );
@@ -48,7 +47,7 @@ var load = function(layer,cb) {
 	if ( protocol ) {
 		protocol.read({
 				callback: function(resp) {
-					cb( convert(resp) );
+					cb( convert(resp.features) );
 				}
 			});
 	}
@@ -58,7 +57,8 @@ var load = function(layer,cb) {
  * Public interface for GeoJsonConverter
  */
 return {
-	load: load
+	load: load,
+	convert: convert
 };
 
 });

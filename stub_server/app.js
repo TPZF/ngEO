@@ -17,7 +17,8 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use('/client',express.static(path.join(__dirname, '../client')));
+  app.use('/client-dev',express.static(path.join(__dirname, '../client')));
+  app.use('/client',express.static(path.join(__dirname, '../build/output')));
 });
 
 app.configure('development', function(){

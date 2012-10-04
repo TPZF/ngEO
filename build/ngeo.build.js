@@ -1,7 +1,6 @@
 ({
-    baseUrl: "../js",
-    name: "ngeo.main",
-    out: "ngeo.main.js",
+	appDir: "../client",
+    baseUrl: "js",
 	paths: {
         "jquery": "externs/jquery-1.8.2.min",
 		"jquery.ui": "externs/jquery-ui-1.8.23.custom.min",
@@ -9,6 +8,7 @@
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone"
 	},
+	removeCombined: true,
 	shim: {
 		'jquery': {
 			deps: [],
@@ -33,5 +33,14 @@
 			deps: ["underscore"],
 			exports: 'Backbone'
 		}
-	}
+	},
+	optimizeCss: "none",
+	optimize: "uglify",
+	modules: [
+		{ name: "ngeo.main" },
+		{ name: "ngeo.menubar",  exclude: ["jquery"]},
+		{ name: "ngeo.map", exclude: ["ngeo.configuration","backbone"]},
+		{ name: "ngeo.data-services-area", exclude: ["ngeo.configuration","ngeo.map","backbone","jquery","jquery.mobile"]},
+	],
+	dir: "output"
 })
