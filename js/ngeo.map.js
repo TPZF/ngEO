@@ -2,7 +2,6 @@
   * Map module
   */
 
-
 define( [ "ngeo.configuration", "ngeo.openlayers", "ngeo.globweb", "backbone" ], 
 
 // The function to define the map module
@@ -277,17 +276,20 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 			self = this;
 			
 			_.extend(self, Backbone.Events);
-			
+	
 			element = document.getElementById(eltId);
 			
 			mapEngine = new engines[currentEngineIndex](element);
 			
-			Configuration.get( function(data) {
-				backgroundLayer = data.map.backgroundLayers[0];
-				configureMapEngine(data.map);
+			// Manage window resize
+			$(window).resize( function() {
+				self.updateViewportSize();
 			});
 			
+			backgroundLayer = Configuration.data.map.backgroundLayers[0];
+			configureMapEngine(Configuration.data.map);
 					
+						
 			// Add a callback on eocat search success and error
 /*			eocat.Events.bind("search.success", visualizeResults);
 			eocat.Events.bind("search.error", visualizeResults);
