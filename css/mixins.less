@@ -79,6 +79,17 @@ background-image: -ms-linear-gradient(left, @startColor, @endColor);
 background-image: -o-linear-gradient(left, @startColor, @endColor);
 }
 
+// Special mixin for gradient in two part
+.two-part-gradient (@startColor, @mid1Color, @mid2Color, @endColor) {
+background-color: @mid1Color;
+//TODO : old webkit gradient, is it really needed ?
+//background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
+background: -webkit-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+background: -moz-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+background: -ms-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+background: -o-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
+}
+
 .animation (@name, @duration: 300ms, @delay: 0, @ease: ease) {
 -webkit-animation: @name @duration @delay @ease;
 -moz-animation: @name @duration @delay @ease;

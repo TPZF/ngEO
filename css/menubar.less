@@ -15,6 +15,7 @@ header {
 	padding: 0;
 	border-bottom: 2px solid @text-color;
 	height: @header-height;
+	min-width: 960px;
 	
 	/* All elements in header are inline, and vertically aligned */
 	> * {
@@ -61,7 +62,7 @@ header {
 		
 		a.active {
 			color: @active-color;
-			text-shadow: 2px 2px 2px darken(@active-color, 30%);
+			text-shadow: 2px 2px 2px darken(@active-color, 20%);
 		}
 				
 		a:first-child {

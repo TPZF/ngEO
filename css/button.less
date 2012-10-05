@@ -17,17 +17,6 @@
 @active_background_bottom: @normal_background_top;   
 
 
-// Special mixin for gradient in two part
-.two-part-gradient (@startColor, @mid1Color, @mid2Color, @endColor) {
-background-color: @mid1Color;
-//TODO : old webkit gradient, is it really needed ?
-//background: -webkit-gradient(linear, left top, left bottom, from(@startColor), to(@endColor));
-background: -webkit-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
-background: -moz-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
-background: -ms-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
-background: -o-linear-gradient(top, @startColor 0%, @mid1Color 50%, @mid2Color 50%, @endColor 100%);
-}
-
  
 .button {
 display: inline-block;
