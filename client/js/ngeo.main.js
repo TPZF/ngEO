@@ -40,6 +40,10 @@ var doc_ready = $.Deferred();
 /** When the document is ready and configuration is loaded load the rest of the application */
 $.when(doc_ready, Configuration.load()).then(function() {
 	
+	// Remove some automatic styling from jQuery Mobile that don't fit in ngEO style
+	$("body").removeClass("ui-mobile-viewport");
+	$("header").find("a").removeClass("ui-link");
+	
 	// Load the menu bar and initialize it
 	require(["ngeo.menubar"], function(MenuBar) {
 		MenuBar.initialize("header nav");

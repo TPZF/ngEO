@@ -22,10 +22,28 @@
 	margin-right: 4px;
 }
 
-#toolbar img {
+/*#toolbar img {
 	padding: 4px;
 	margin-bottom: 0px;
 	padding-bottom: 0px;
+}*/
+
+.tb-button {
+	cursor: pointer;
+	padding: 4px;
+	//margin: 1px;
+	.border-radius(0.5em);
+}
+
+.tb-button:hover {
+	cursor: pointer;
+	background: fade(@text-color, 20%); 
+}
+
+.tb-button.toggle, .tb-button:active {
+	.two-part-gradient (lighten(@active-color, 30%), lighten(@active-color, 10%), darken(@active-color,20%), darken(@active-color,10%));
+	//border: solid 1px @active-color;
+	//margin: 0px;
 }
 
 .tb-text {

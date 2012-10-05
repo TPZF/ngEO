@@ -15,8 +15,8 @@ fs.readFile(__dirname + '/output/index.html', 'utf8', function (err,data) {
 
   var removeComments = /<!--[\s\S]*?(?=-->)-->/g; // regex for removing HTML comments
   data = data.replace(removeComments, ''); // remove all html tags
- // console.log(clean);
-  console.log(data);
+  //console.log(clean);
+  //console.log(data);
   
   fs.writeFile(__dirname +  '/output/index.html', data, function (err) {
 	  if (err) {
