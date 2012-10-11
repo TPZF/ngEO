@@ -6,18 +6,11 @@ define( ['jquery'], function($) {
 
 var configuration = {};
 
-// Public method to get configuration data asynchronously
-/*configuration.get = function( callback ) {
-	if ( configuration.data )
-		callback(configuration.data);
-	else
-		configuration.on('loaded',callback);
-};*/
-
 configuration.load = function() {
 	// Load configuration data from the server
 	return $.ajax({
-	  url: '/server/webClientConfigurationData',
+	  url: 'conf/configuration.json',
+	  dataType: 'json',
 	  success: function(data) {
 		configuration.data = data;
 		//configuration.trigger('loaded',data);

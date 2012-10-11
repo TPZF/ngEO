@@ -36,6 +36,10 @@ GlobWebMapEngine = function( parentElement )
 		canvas.height = parentElement.clientHeight;
 		parentElement.appendChild(canvas);
 		
+		// Create the loading element
+		$('<img src="css/images/ajax-loader.gif" id="loading"></img>')
+			.appendTo(parentElement);
+		
 		this.canvas = canvas;
 	
 		// Create the globe
@@ -44,6 +48,10 @@ GlobWebMapEngine = function( parentElement )
 				lighting: false,
 				tileErrorTreshold: 4, 
 				continuousRendering: false });
+				
+		globe.subscribe("level0TilesLoaded", function() {
+			$("#loading").remove();
+		});
 				
 		// Add mouse navigation
 		var navigation = new GlobWeb.Navigation(globe);
@@ -162,10 +170,10 @@ GlobWebMapEngine.prototype.unsubscribe = function(name,callback)
 	switch (name )
 	{
 	case "startNavigation":
-		this.navigation.unsubscribe("start",callback);
+		this.globe.unsubscribe("startNavigation",callback);
 		break;
 	case "endNavigation":
-		this.navigation.unsubscribe("end",callback);
+		this.globe.unsubscribe("endNavigation",callback);
 		break;
 	}
 }
