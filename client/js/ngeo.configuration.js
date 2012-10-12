@@ -4,21 +4,23 @@
   
 define( ['jquery'], function($) {
 
-var configuration = {};
-
-configuration.load = function() {
+var configuration = { 
+	// The base url to retreive the configuration
+	url : 'conf/configuration.json',
+	
 	// Load configuration data from the server
-	return $.ajax({
-	  url: 'conf/configuration.json',
-	  dataType: 'json',
-	  success: function(data) {
-		configuration.data = data;
-		//configuration.trigger('loaded',data);
-	  },
-	  error: function(jqXHR, textStatus, errorThrown) {
-		alert(textStatus + ' ' + errorThrown);
-	  }
-	});
+	load: function() {
+		return $.ajax({
+		  url: this.url,
+		  dataType: 'json',
+		  success: function(data) {
+			configuration.data = data;
+		  },
+		  error: function(jqXHR, textStatus, errorThrown) {
+			console.log("Configuration not found " + textStatus + ' ' + errorThrown);
+		  }
+		});
+	}
 };
 
 return configuration;

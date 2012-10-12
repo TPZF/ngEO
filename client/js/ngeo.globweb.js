@@ -18,6 +18,7 @@ var convertColor = function(hex) {
 	 return [ red / 255.0, green / 255.0, blue / 255.0, 1.0 ];
 };
 
+
 /**
  * GlobeWeb Map Engine constructor
  */
@@ -25,8 +26,8 @@ GlobWebMapEngine = function( parentElement )
 {
 	this.groundOverlays = {};
 	this.features = {};
-	
 	this.parentElement = parentElement;
+	
 	try
 	{
 		// Create the canvas element
@@ -35,11 +36,7 @@ GlobWebMapEngine = function( parentElement )
 		canvas.width = parentElement.clientWidth;
 		canvas.height = parentElement.clientHeight;
 		parentElement.appendChild(canvas);
-		
-		// Create the loading element
-		$('<img src="css/images/ajax-loader.gif" id="loading"></img>')
-			.appendTo(parentElement);
-		
+			
 		this.canvas = canvas;
 	
 		// Create the globe
@@ -49,8 +46,13 @@ GlobWebMapEngine = function( parentElement )
 				tileErrorTreshold: 4, 
 				continuousRendering: false });
 				
+	
+		// Create the loading element
+		this.$loading = $('<img src="css/images/ajax-loader.gif" id="loading"></img>')
+			.appendTo(parentElement);
+			
 		globe.subscribe("level0TilesLoaded", function() {
-			$("#loading").remove();
+			$("#loading").hide();
 		});
 				
 		// Add mouse navigation
@@ -61,13 +63,10 @@ GlobWebMapEngine = function( parentElement )
 	}
 	catch (err)
 	{
+		parentElement.removeChild(canvas);
 		this.canvas = null;
-		mapElt.innerHTML = "<div style='text-align: center;'> If you see this message, WebGL is not supported in your browser.<br>\
-			Please install a recent version of <a href='http://www.mozilla.com'>Firefox</a> or <a href='http://www.google.com/chrome'>Google Chrome</a>.<br>\
-			If you already have a recent version of Firefox or Google Chrome, your graphics driver are too old, please update it.<br>\
-			On Google Chrome, you can check why it is not working by entering 'about:gpu' in the url bar.\
-		</div>";
 		console.log("WebGL cannot be initialized.")
+		throw 'WebGLNotFound';
 	}
 }
 
@@ -92,6 +91,8 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 	
 	if (gwLayer)
 		this.globe.setBaseImagery(gwLayer);
+
+	this.$loading.show();
 }
 
 /**
@@ -202,12 +203,9 @@ GlobWebMapEngine.prototype.getLonLatFromPixel = function(x,y)
  */
 GlobWebMapEngine.prototype.getViewportExtent = function()
 {
-	if ( this.globe )
-	{
-		var geoBound = this.globe.getViewportGeoBound();
-		if ( geoBound )
-			return [ geoBound.getWest(), geoBound.getSouth(), geoBound.getEast(), geoBound.getNorth() ];
-	}
+	var geoBound = this.globe.getViewportGeoBound();
+	if ( geoBound )
+		return [ geoBound.getWest(), geoBound.getSouth(), geoBound.getEast(), geoBound.getNorth() ];
 	
 	return null;
 }
@@ -353,16 +351,16 @@ GlobWebMapEngine.prototype.hideQuicklook = function(product)
  */
 GlobWebMapEngine.prototype.destroy = function()
 {
-	if ( this.globe )
-		this.globe.dispose();
+	this.globe.dispose();
 	
 	this.parentElement.removeChild(this.canvas);
+	this.$loading.remove();
 	
 	// Free the object
 	this.globe = null;
 	this.parentElement = null;
 	this.canvas = null;
-	this.navigation = null;	
+	this.navigation = null;
 }
 
 return GlobWebMapEngine;

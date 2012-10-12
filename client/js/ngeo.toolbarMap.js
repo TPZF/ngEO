@@ -1,6 +1,8 @@
 
 define(['jquery', 'ngeo.map', 'ngeo.toolbar'], function($,Map,ToolBar) {
 
+var mode2D = true;
+
 return function () {
 	$("#toolbar").append('<div class="tb-separator"></div>');
 	ToolBar.addAction('home','Start View');
@@ -13,8 +15,21 @@ return function () {
 	
 	$("#zoomIn").click( function() { Map.zoomIn(); } );
 	$("#zoomOut").click( function() { Map.zoomOut(); } );
-	$("#switch").click( function() { Map.switchMapEngine(); } );
 	$("#home").click( function() { Map.zoomToMaxExtent(); } );
+	
+	$("#switch").click( function() {
+		mode2D = !mode2D;
+		if (!Map.switchMapEngine(mode2D ? '2d' : '3d')) {
+			// Create a pop-up to warn the user
+			$('<div><p>3D map is not available because WebGL is not supported by your browser, see <a href="http://get.webgl.org/">here</a> for more details.</p></div>')
+				.appendTo('#mapContainer')
+				.popup()
+				.popup('open');
+			mode2D = true;
+			// Switch back to 2D
+			Map.switchMapEngine('2d'); 
+		}
+	});
 	
 	// Quick and dirty previous/next management
 	var views = [ Map.getViewportExtent() ];

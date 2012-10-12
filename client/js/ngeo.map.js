@@ -11,8 +11,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	 * Private attributes
 	 */
 	var self = null;
-	var engines = [ OpenLayersMapEngine, GlobWebMapEngine ];
-	var currentEngineIndex = 0;
+	var engines = {
+		'2d' : OpenLayersMapEngine, 
+		'3d' : GlobWebMapEngine,
+	};
 	var mapEngine = null;
 	var engineLayers = [];
 	var element = null;
@@ -279,7 +281,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	
 			element = document.getElementById(eltId);
 			
-			mapEngine = new engines[currentEngineIndex](element);
+			mapEngine = new engines['2d'](element);
 			
 			// Manage window resize
 			$(window).resize( function() {
@@ -397,14 +399,21 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 		/**
 		 * Switch the map engine
 		 */
-		switchMapEngine: function()
-		{	
-			// Retrieve the current viewport extent
-			var extent = mapEngine.getViewportExtent();
+		switchMapEngine: function(id)
+		{
+			if ( mapEngine ) {
+				// Retrieve the current viewport extent
+				var extent = mapEngine.getViewportExtent();
+				
+				// Destroy the old map engine
+				mapEngine.destroy();
+				mapEngine = null;
+			}
 			
-			// Destroy the old map engine
-			mapEngine.destroy();
-			
+			if (!engines[id]) {
+				return false;
+			}
+				
 			// Callback called by the map engine when the map engine is initialized
 			var initCallback = function(map)
 			{
@@ -423,14 +432,20 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 					}
 				}*/
 			};
+						
+			try {
 			
-			currentEngineIndex = (currentEngineIndex+1) % 2;
+				// Create the new engine
+				mapEngine = new engines[id](element);			
+				// Configure it
+				configureMapEngine(Configuration.data.map);
+				mapEngine.subscribe("init",initCallback);
+				
+			} catch (err) {
+				mapEngine = null;
+			}
 			
-			mapEngine = new engines[currentEngineIndex](element);			
-			configureMapEngine(Configuration.data.map);
-
-			// Subscribe to init event
-			mapEngine.subscribe("init",initCallback);
+			return mapEngine != null;
 		},
 				
 		/**
