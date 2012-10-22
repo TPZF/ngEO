@@ -2,7 +2,7 @@
  * SearchWidget module
  */
 define( ["jquery", "backbone", "search/view/MainSearchView", 
-         "ngeo.toolbar", "ngeo.widget"], function($, Backbone, MainSearchView, ToolBar) {
+          "ngeo.widget"], function($, Backbone, MainSearchView) {
 
 return function() {
 	
@@ -11,8 +11,6 @@ return function() {
 	console.log("main search view HTML content : " + mainSearchView.render().$el);
 	
 	$('#dataServicesArea').append(mainSearchView.render().$el);
-
-	ToolBar.addAction('search','Search');
 	
 	$("#searchWidget").ngeowidget({
 		title: 'Search',
