@@ -1,0 +1,56 @@
+{
+        "datasetSearchInfo":{
+                "datasetId": "SENTINEL2_L1",
+                "description": "All L1 products for the S2 mission" 
+                "Keywords": {
+                        "Keyword": "optical",
+                        "Keyword": "reflectance", 
+                        "Keyword": "land", 
+                        "Keyword": "high resolution"
+                }
+                "DownloadOptions": {
+                        
+                        "downloadOption": {
+                                "argumentName": "Product Format" 
+ 	  							"description": "desired download format"
+                                "value": {
+                                        "name": "GeoTIFF", 
+                                        "humanReadable": "GeoTiff", 
+                                        "sizeFactor": "1.2"
+                                }
+                        }
+                        
+                        "downloadOption": {
+                                "argumentName": "Download mode"
+                                "description": "wait until completion or download continuously"
+                                "value": {
+                                        "name": "DLcomplete", 
+                                        "humanReadable: "Download on completion", 
+                                        "sizeFactor": "1"
+                                }
+                                "value": {
+                                        "name": "DLcontinuous", 
+                                        "humanReadable": "Download continuously", 
+                                        "sizeFactor": "1"
+                                }
+                        }
+                }
+                "Attributes": {
+                        "Attribute" : {
+                                "Id": "track",
+                                "Type": "integer",
+                                "rangeMinValue": "1",
+                                "rangeMaxValue": "501"         
+                        }
+                        "Attribute" :  {
+                                "Id": "daynight flag",
+                                "Type": "enumeration",
+                                "PossibleValues": "day",
+                                "PossibleValues": "night",
+                        }
+                }
+                "startDate": "01-06-2014"
+                "endDate": "31-07-2024"
+        } 
+}
+                                
