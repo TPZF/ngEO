@@ -24,6 +24,8 @@ return function (dsa) {
 	ToolBar.addAction('background','Background');
 	ToolBar.addAction('switch','2D/3D');*/
 	
+	var dsa = $('#dataServicesArea');
+	
 	dsa.find("#zoomIn").click( function() { Map.zoomIn(); } );
 	dsa.find("#zoomOut").click( function() { Map.zoomOut(); } );
 	dsa.find("#home").click( function() { Map.zoomToMaxExtent(); } );
