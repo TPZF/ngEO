@@ -5,6 +5,8 @@
 
 var express = require('express')
   , webClientConfigurationData = require('./webClientConfigurationData')
+  , datasetPopulationMatrix = require('./datasetPopulationMatrix')
+  , datasetSearchInfo = require('./datasetSearchInfo')
   , http = require('http')
   , path = require('path')
   , proxy = require('./proxy');
@@ -27,6 +29,12 @@ app.configure('development', function(){
 
 // WebClientConfigurationData interface
 app.get('/server/webClientConfigurationData', webClientConfigurationData);
+
+//datasetPopulationMatrix interface
+app.get('/server/datasetPopulationMatrix', datasetPopulationMatrix);
+
+//datasetSearchInfo interface
+app.get('/server/datasetSearchInfo', datasetSearchInfo);
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
 proxy.setup(app,[{ 
