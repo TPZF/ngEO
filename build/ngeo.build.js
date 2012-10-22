@@ -34,7 +34,7 @@
 	modules: [
 		{ name: "ngeo.main" },
 		{ name: "ngeo.menubar",  exclude: ["jquery"]},
-		{ name: "ngeo.map", exclude: ["ngeo.configuration","backbone"]},
+		{ name: "map/ngeo.map", exclude: ["ngeo.configuration","backbone"]},
 		{ name: "ngeo.data-services-area", exclude: ["ngeo.configuration","ngeo.map","backbone","jquery","jquery.mobile"]},
 	],
 	dir: "output"
