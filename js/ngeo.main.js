@@ -50,7 +50,7 @@ $.when(doc_ready, Configuration.load()).then(function() {
 	});
 
 	// Load the map and initialize it
-	require(["ngeo.map"], function(Map) {
+	require(["map/ngeo.map"], function(Map) {
 		Map.initialize("mapContainer");
 	});
 	
