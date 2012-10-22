@@ -1,4 +1,4 @@
-define(["widgets/ngeo.search", "widgets/ngeo.shopcart", "widgets/ngeo.layers", "widgets/ngeo.background", "ngeo.toolbarMap"], 
+define(["search/widget/ngeo.search", "shopcart/widget/ngeo.shopcart", "map/widget/ngeo.layers", "map/widget/ngeo.background", "map/widget/ngeo.toolbarMap"], 
 	function(SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap) {
 	
 return {
