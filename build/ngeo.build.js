@@ -5,7 +5,8 @@
         "jquery": "externs/jquery-1.8.2.min",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0.min",
         "underscore": "externs/underscore",
-		"backbone": "externs/backbone"
+		"backbone": "externs/backbone",
+		"text": "externs/text"
 	},
 	removeCombined: true,
 	shim: {
@@ -33,9 +34,8 @@
 	optimize: "uglify",
 	modules: [
 		{ name: "ngeo.main" },
-		{ name: "ngeo.menubar",  exclude: ["jquery"]},
 		{ name: "map/ngeo.map", exclude: ["ngeo.configuration","backbone"]},
-		{ name: "ngeo.data-services-area", exclude: ["ngeo.configuration","ngeo.map","backbone","jquery","jquery.mobile"]},
+		{ name: "ngeo.data-services-area", exclude: ["ngeo.configuration","map/ngeo.map","backbone","jquery","jquery.mobile"]},
 	],
 	dir: "output"
 })
