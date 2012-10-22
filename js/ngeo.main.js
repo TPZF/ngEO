@@ -33,7 +33,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "ngeo.configuration", "backbone", "jquery.mobile"] , function(require, $,Configuration) {
+require( ["require", "jquery", "ngeo.configuration", "ngeo.menubar", "backbone", "jquery.mobile"] , function(require, $,Configuration, MenuBar) {
 
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
@@ -45,22 +45,14 @@ $.when(doc_ready, Configuration.load()).then(function() {
 	$("body").removeClass("ui-mobile-viewport");
 	$("header").find("a").removeClass("ui-link");
 	
-	// Load the menu bar and initialize it
-	require(["ngeo.menubar"], function(MenuBar) {
-		MenuBar.initialize("header nav");
-	});
+	// Initialize menu bar
+	MenuBar.initialize("header nav");
 
 	// Load the map and initialize it
 	require(["map/ngeo.map"], function(Map) {
 		Map.initialize("mapContainer");
 	});
-	
-	// Load and intialize data services area
-	require(["ngeo.data-services-area"], 
-		function(DataServicesArea) {
-			DataServicesArea.initialize();
-	});
-	
+		
 });
 
 /** When the document is ready, resolve the deferred object */

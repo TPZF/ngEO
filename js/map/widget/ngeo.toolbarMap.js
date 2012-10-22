@@ -3,21 +3,32 @@ define(['jquery', 'map/ngeo.map', 'ngeo.toolbar'], function($,Map,ToolBar) {
 
 var mode2D = true;
 
-return function () {
-	$("#toolbar").append('<div class="tb-separator"></div>');
+return function (dsa) {
+/*	var $toolbar = $("#toolbar");
+	$toolbar.toolbar("addSeparator");
+	
+	$toolbar.toolbar("addAction", {id: 'home', text: 'Start View'});
+	$toolbar.toolbar("addAction", {id: 'left', text: 'Previous'});
+	$toolbar.toolbar("addAction", {id: 'right', text: 'Next'});
+	$toolbar.toolbar("addAction", {id: 'zoomOut', text: 'Zoom Out'});
+	$toolbar.toolbar("addAction", {id: 'zoomIn', text: 'Zoom In'});
+	$toolbar.toolbar("addAction", {id: 'background', text: 'Background'});
+	$toolbar.toolbar("addAction", {id: 'switch', text: '2D/3D'});*/
+		
+	/*$("#toolbar").append('<div class="tb-separator"></div>');
 	ToolBar.addAction('home','Start View');
 	ToolBar.addAction('left','Previous');
 	ToolBar.addAction('right','Next');
 	ToolBar.addAction('zoomOut','Zoom Out');
 	ToolBar.addAction('zoomIn','Zoom In');
 	ToolBar.addAction('background','Background');
-	ToolBar.addAction('switch','2D/3D');
+	ToolBar.addAction('switch','2D/3D');*/
 	
-	$("#zoomIn").click( function() { Map.zoomIn(); } );
-	$("#zoomOut").click( function() { Map.zoomOut(); } );
-	$("#home").click( function() { Map.zoomToMaxExtent(); } );
+	dsa.find("#zoomIn").click( function() { Map.zoomIn(); } );
+	dsa.find("#zoomOut").click( function() { Map.zoomOut(); } );
+	dsa.find("#home").click( function() { Map.zoomToMaxExtent(); } );
 	
-	$("#switch").click( function() {
+	dsa.find("#switch").click( function() {
 		mode2D = !mode2D;
 		if (!Map.switchMapEngine(mode2D ? '2d' : '3d')) {
 			// Create a pop-up to warn the user
@@ -43,7 +54,7 @@ return function () {
 			views.length = viewIndex + 1;
 		}
 	});
-	$("#left").click( function() { 
+	dsa.find("#left").click( function() { 
 		if ( viewIndex > 0 ) {
 			viewIndex--;
 			block = true;
@@ -51,7 +62,7 @@ return function () {
 			block = false;
 		}
 	});
-	$("#right").click( function() {
+	dsa.find("#right").click( function() {
 		if ( viewIndex < views.length-1 ) {
 			viewIndex++;
 			block = true;
