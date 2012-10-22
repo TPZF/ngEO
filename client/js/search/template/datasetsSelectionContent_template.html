@@ -1,0 +1,14 @@
+<h3>Select a dataset</h3>
+
+<div id="datasetListContainer">
+	<ul id="datasetList">	
+	
+	<% _.each(data.datasetPopulationMatrix.datasetPopulationValues, function(dataset) { %>
+			
+			<li id="<%= dataset[0] %>"> <%= dataset[1] %> </li> 
+			<% }); %>
+	</ul>
+</div>
+
+<button id="next">next</button>
+
