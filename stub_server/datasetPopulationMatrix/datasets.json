@@ -1,0 +1,31 @@
+{
+    "datasetPopulationMatrix" : {
+    
+        "criteriaTitles" : ["datasetId", "datasetName", "mission","sensor", "keyword"], 
+       
+        "datasetPopulationValues" : [ ["ND_SAR_1", "ND_SAR_1","", "", "", "20"], 
+            ["ND_SAR_1_1", "ND_SAR_1_1", "S1", "SAR", "interferometry", "20"],
+            ["ND_SAR_1_2", "ND_SAR_1_2", "S1", "SAR", "polarimetry", "20"], 
+            
+            ["ND_OPT_1", "ND_OPT_1", "", "", "", "6"],
+            
+            ["ND_S2_1", "ND_S2_1", "S2", "OPT", "optical", "6"],
+            ["ND_S2_1_1", "ND_S2_1_1", "S2", "OPT", "land mapping", "6"], 
+            ["ND_S2_1_2", "ND_S2_1_2", "S2", "OPT", "reflectance",  "6"],
+         
+            ["LD_SENTINEL_1", "LD_SENTINEL_1", "", "", "", "2000"], 
+            ["LD_SENTINEL_1_1", "LD_SENTINEL_1_1", "S1", "SAR", "land mapping", "800"],
+            ["LD_SENTINEL_1_2", "LD_SENTINEL_1_2", "S1", "OPT", "ice mapping", "1200"],
+            
+            ["SENTINEL2_L1", "SENTINEL2_L1", "S2", "", "land mapping", "800"],
+            
+            ["SENTINEL3", "SENTINEL3", "S3", "", "land mapping", "800"],
+            ["SENTINEL3_L1", "SENTINEL3_L1", "", "", "", "2000"], 
+            ["SENTINEL3_L2", "SENTINEL3_L2", "S3", "SAR", "land mapping", "800"]
+                  
+           
+            ]
+    }
+        
+} 
+
