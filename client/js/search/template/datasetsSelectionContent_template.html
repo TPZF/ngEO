@@ -1,14 +1,12 @@
 <h3>Select a dataset</h3>
 
 <div id="datasetListContainer">
-	<ul id="datasetList">	
+	<ul id="datasetList" data-role="listview" data-inset="true">	
 	
 	<% _.each(data.datasetPopulationMatrix.datasetPopulationValues, function(dataset) { %>
-			
 			<li id="<%= dataset[0] %>"> <%= dataset[1] %> </li> 
 			<% }); %>
 	</ul>
 </div>
 
-<button id="next">next</button>
-
+<button id="next" data-theme="a">next</button>
