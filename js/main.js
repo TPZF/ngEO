@@ -3,6 +3,8 @@ require.config({
      paths: {
         "jquery": "externs/jquery-1.8.2.min",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
+		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"
@@ -12,19 +14,31 @@ require.config({
             deps: [],
             exports: 'jQuery'
         },
-		'ngeo.jqm-config': {
+		'jqm-config': {
             deps: ['jquery']
         },
+        
  		'jquery.mobile': {
-            deps: ['jquery','ngeo.jqm-config'],
+            deps: ['jquery','jqm-config'],
             exports: 'jQuery'
         },
-		"underscore": {
+        
+        'jqm-datebox-core' : {
+        	 deps: ['jquery', 'jquery.mobile'],
+             exports: 'jQuery'
+        },
+        
+        'jqm-datebox-calbox': {
+            deps: ['jqm-datebox-core'],
+            exports: 'jQuery'
+        },
+        
+		'underscore': {
             deps: [],
             exports: '_'
 		},
-		"backbone": {
-            deps: ["underscore"],
+		'backbone': {
+            deps: ['underscore'],
             exports: 'Backbone'
 		}
 	}
@@ -33,7 +47,8 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "ngeo.configuration", "ngeo.menubar", "backbone", "jquery.mobile"] , function(require, $,Configuration, MenuBar) {
+require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile", "jqm-datebox-calbox"] ,
+		function(require, $,Configuration, MenuBar) {
 
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
@@ -49,7 +64,7 @@ $.when(doc_ready, Configuration.load()).then(function() {
 	MenuBar.initialize("header nav");
 
 	// Load the map and initialize it
-	require(["map/ngeo.map"], function(Map) {
+	require(["map/map"], function(Map) {
 		Map.initialize("mapContainer");
 	});
 		

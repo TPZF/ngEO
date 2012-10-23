@@ -1,5 +1,5 @@
 
-define(["search/widget/ngeo.search", "shopcart/widget/ngeo.shopcart", "map/widget/ngeo.layers", "map/widget/ngeo.background", "map/widget/ngeo.toolbarMap",
+define(["search/widget/search", "shopcart/widget/shopcart", "map/widget/layers", "map/widget/background", "map/widget/toolbarMap",
 		"text!../pages/data-services-area.html"], 
 	function(SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap, dataservicesarea) {
 	
