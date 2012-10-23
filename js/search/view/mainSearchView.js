@@ -1,11 +1,11 @@
-define( ['jquery', 'backbone', 'underscore','search/model/datasetsPopulationModel', 
-         'search/model/datasetSearchInfoModel','search/view/datasetSelectionView', 
+define( ['jquery', 'backbone', 'underscore','search/model/dataSetPopulation', 
+         'search/model/dataset','search/view/datasetSelectionView', 
          'search/view/searchCriteriaView', 'text!search/template/mainSearchContent_template.html'], 
-		function($, Backbone, _ , DatasetsPopulationModel, 	DatasetSearchInfoModel, 
+		function($, Backbone, _ , DataSetPopulation, Dataset, 
 				DatasetSelectionView, SearchCriteriaView, mainView_template) {
 
 	/** 
-	 * main search view : responsible for handling the selection 
+	 * main search view : responsible for handling the dataset selection 
 	 * and search criteria sub views
 	 */
 var MainSearchView = Backbone.View.extend({
@@ -34,15 +34,15 @@ var MainSearchView = Backbone.View.extend({
 	
 	displaySearchCriteria : function(datasetId){
 
-		var datasetSearchInfoModel = new DatasetSearchInfoModel({datasetId : datasetId});
+		var dataset = new Dataset({datasetId : datasetId});
 		
-		console.log("Started loading of dataset population matrix....");
+		console.log("Started loading dataset population matrix....");
 		
-		datasetSearchInfoModel.load();		
+		dataset.load();		
 		
 		var searchCriteriaView = new SearchCriteriaView({
 			el : this.$el.find("#datasetSearchCriteria"),
-			model : datasetSearchInfoModel,
+			model : dataset,
 			mainView : this
 		});
 		
@@ -51,7 +51,7 @@ var MainSearchView = Backbone.View.extend({
 	
 	displayDatasets : function(){
 		
-		var listModel = new DatasetsPopulationModel();
+		var listModel = new DataSetPopulation();
 		
 		console.log("Started loading of dataset population matrix....");
 		
