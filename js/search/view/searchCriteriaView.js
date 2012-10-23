@@ -1,7 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'underscore', 'text!search/template/searchCriteriaContent_template.html'], 
-		function($, Backbone, _ , searchCriteria_template) {
+define( ['jquery', 'backbone', 'underscore', 'text!search/template/searchCriteriaContent_template.html',
+         'text!search/template/dateCriteriaContent.html', 'text!search/template/areaCriteriaContent.html'], 
+		function($, Backbone, _ , searchCriteria_template, dateCriteria_template, areaCriteria_template) {
 
 var SearchCriteriaView = Backbone.View.extend({
 
@@ -28,9 +29,30 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.$el = $(this.el);
 		
+		this.showDateCriteria();
+		
 		this.delegateEvents();
 		
 		return this;
+	},
+	
+
+	
+	showDateCriteria : function(){
+		
+		this.$el.find("#date").append($(dateCriteria_template));
+		this.$el.trigger('create');
+//		this.$el.find.$('#dateBoxLink').live("click", function() {
+//			this.$el.find.$('#from').datebox('open');
+//		});
+		
+		
+	},
+
+	showAreaCriteria : function(){
+		
+		this.$el.find("#area").append($(areaCriteria_template));
+		
 	},
 	
 	
@@ -41,7 +63,7 @@ var SearchCriteriaView = Backbone.View.extend({
        if (this.onClose) {
           this.onClose();
        }
-    },
+    }, 
 
     onClose : function() {
 
