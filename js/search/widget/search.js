@@ -2,7 +2,7 @@
  * SearchWidget module
  */
 define( ["jquery", "backbone", "search/view/MainSearchView", 
-          "ngeo.widget"], function($, Backbone, MainSearchView) {
+          "widget"], function($, Backbone, MainSearchView) {
 
 return function() {
 	
