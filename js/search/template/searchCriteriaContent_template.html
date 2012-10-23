@@ -1,4 +1,30 @@
 
+<!-- <div data-role="header" class="ui-header ui-bar-a" role="banner"> -->
+<!-- 	<h1 class="ui-title" role="heading" aria-level="1">Selected dataset : <%= datasetId %></h1> -->
+				
+<!-- 	<div data-role="navbar" class="ui-navbar ui-mini" role="navigation"> -->
+<!-- 		<ul class="ui-grid-b"> -->
+<!-- 			<li class="ui-block-a"><a href="#date" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="span" data-inline="true" class="ui-btn ui-btn-inline ui-btn-up-a ui-btn-active"><span class="ui-btn-inner"><span class="ui-btn-text">Date</span></span></a></li> -->
+<!-- 			<li class="ui-block-b"><a href="#area" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="span" data-inline="true" class="ui-btn ui-btn-inline ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Area</span></span></a></li> -->
+<!-- 			<li class="ui-block-c"><a href="#searchCriteria" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="span" data-inline="true" class="ui-btn ui-btn-inline ui-btn-up-a"><span class="ui-btn-inner"><span class="ui-btn-text">Advanced Criteria</span></span></a></li> -->
+<!-- 		</ul> -->
+<!-- 	</div>/navbar -->
+<!-- </div> -->
+
+
+<div data-role="header" class="ui-header ui-bar-a" role="banner"> 
+<h1 class="ui-title" role="heading" aria-level="1">Selected dataset : <%= datasetId %></h1>
+</div>
+
+<div data-role="controlgroup" data-type="horizontal" data-mini=true data-theme="a" class="ui-corner-all ui-controlgroup ui-controlgroup-horizontal">
+<div class="ui-controlgroup-controls" data-theme="a" >
+	<a href="#date" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="a" class="ui-btn ui-btn-up-c ui-corner-left"><span class="ui-btn-inner ui-corner-left"><span class="ui-btn-text">Date</span></span></a>
+	<a href="#area" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="a" class="ui-btn ui-btn-up-c"><span class="ui-btn-inner"><span class="ui-btn-text">Area</span></span></a>
+	<a href="#searchCriteria" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="a" class="ui-btn ui-corner-right ui-controlgroup-last ui-btn-up-c"><span class="ui-btn-inner ui-corner-right ui-controlgroup-last"><span class="ui-btn-text">Advanced Criteria</span></span></a>
+</div>
+</div>
+
+
 <!-- <div data-role="header" data-id="nav" data-position="fixed"> -->
 <!-- 	<div data-role="navbar"> -->
 <!-- 		<ul> -->
@@ -6,13 +32,13 @@
 <!-- 			<li><a href="#area">Area</a></li> -->
 <!-- 			<li><a href="#searchCriteria">Advanced Criteria</a></li> -->
 <!-- 		</ul> -->
-<!-- 	</div>/navbar -->
-<!-- </div>/footer -->
+<!-- 	</div> -->
+<!-- </div> -->
 
-<!-- <div id="#date></div> -->
-<!-- <div id="#area></div> -->
-<!-- <div id="#searchCriteria></div> -->
+<div id="date"></div>
+<div id="area"></div>
+<div id="searchCriteria"></div>
 
-<h3>Enter your search criteria for selected dataset : <%= datasetId %></h3>
+<!-- <h3>Enter your search criteria for selected dataset : <%= datasetId %></h3> -->
 
-<button id="back">back</button>
+<button id="back" data-theme="a">back</button>
