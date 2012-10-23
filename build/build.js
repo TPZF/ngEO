@@ -14,11 +14,11 @@
 			deps: [],
 			exports: 'jQuery'
 		},
-		'ngeo.jqm-config': {
+		'jqm-config': {
             deps: ['jquery']
         },
  		'jquery.mobile': {
-            deps: ['jquery','ngeo.jqm-config'],
+            deps: ['jquery','jqm-config'],
             exports: 'jQuery'
         },
 		"underscore": {
@@ -33,9 +33,9 @@
 	optimizeCss: "none",
 	optimize: "uglify",
 	modules: [
-		{ name: "ngeo.main" },
-		{ name: "map/ngeo.map", exclude: ["ngeo.configuration","backbone"]},
-		{ name: "ngeo.data-services-area", exclude: ["ngeo.configuration","map/ngeo.map","backbone","jquery","jquery.mobile"]},
+		{ name: "main" },
+		{ name: "map/map", exclude: ["configuration","backbone"]},
+		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","jquery","jquery.mobile"]},
 	],
 	dir: "output"
 })
