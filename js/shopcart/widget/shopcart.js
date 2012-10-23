@@ -1,7 +1,7 @@
 /**
  * ShopcartWidget module
  */
-define( ["jquery", "ngeo.widget"], function($) {
+define( ["jquery", "widget"], function($) {
 
 return function() {
 	
