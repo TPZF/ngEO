@@ -1,4 +1,4 @@
-define(['jquery','ngeo.menubar'], function ($,MenuBar) {
+define(['jquery','menubar'], function ($,MenuBar) {
 
 // Define the QUnit module and lifecycle.
 QUnit.module("MenuBar", {

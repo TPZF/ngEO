@@ -1,4 +1,4 @@
-define(['ngeo.configuration'], function (Configuration) {
+define(['configuration'], function (Configuration) {
 
     // Define the QUnit module and lifecycle.
     QUnit.module("Configuration");
