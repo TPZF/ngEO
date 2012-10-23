@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/ngeo.map', 'ngeo.toolbar'], function($,Map,ToolBar) {
+define(['jquery', 'map/map', 'toolbar'], function($,Map,ToolBar) {
 
 var mode2D = true;
 

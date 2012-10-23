@@ -2,7 +2,7 @@
   * Background widget module
   */
 
-define( [ "ngeo.configuration", "map/ngeo.map", "ngeo.widget" ], function(Configuration, Map) {
+define( [ "configuration", "map/map", "widget" ], function(Configuration, Map) {
 
 /**
  * The background widget
