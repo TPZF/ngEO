@@ -2,7 +2,7 @@
   * Map module
   */
 
-define( [ "ngeo.configuration", "map/ngeo.openlayers", "map/ngeo.globweb", "backbone" ], 
+define( [ "configuration", "map/openlayers", "map/globweb", "backbone" ], 
 
 // The function to define the map module
 function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
