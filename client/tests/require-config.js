@@ -19,11 +19,11 @@ var require = {
             deps: [],
             exports: 'jQuery'
         },
-		'ngeo.jqm-config': {
+		'jqm-config': {
             deps: ['jquery']
         },
  		'jquery.mobile': {
-            deps: ['jquery','ngeo.jqm-config'],
+            deps: ['jquery','jqm-config'],
             exports: 'jQuery'
         },
 		"underscore": {
