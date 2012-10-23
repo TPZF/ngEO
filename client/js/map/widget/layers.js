@@ -3,7 +3,7 @@
   */
 
 
-define( [ "ngeo.configuration", "map/ngeo.map", "ngeo.toolbar", "ngeo.widget" ], function(Configuration, Map, ToolBar) {
+define( [ "configuration", "map/map", "toolbar", "widget" ], function(Configuration, Map, ToolBar) {
 
 return function() {
 	$('#dataServicesArea').append('<div id="layersWidget"/>');
