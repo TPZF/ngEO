@@ -2,7 +2,7 @@
  * GlobWeb map engine
  */
 
-define( [ "jquery", "map/ngeo.geojsonconverter", "externs/GlobWeb.min" ],
+define( [ "jquery", "map/geojsonconverter", "externs/GlobWeb.min" ],
 
 function($,GeojsonConverter) {
 
