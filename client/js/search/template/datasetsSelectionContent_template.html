@@ -1,10 +1,15 @@
-<h3>Select a dataset</h3>
+
+<div data-role="header"  class="ui-header ui-bar-a"  role="banner"> 
+<h1 role="heading" class="ui-title" aria-level="1"> Select a dataset </h1>
+</div>
+
+
 
 <div id="datasetListContainer">
-	<ul id="datasetList" data-role="listview" data-inset="true">	
+	<ul id="datasetList" data-role="listview" data-inset="true" data-theme="c">	
 	
 	<% _.each(data.datasetPopulationMatrix.datasetPopulationValues, function(dataset) { %>
-			<li id="<%= dataset[0] %>"> <%= dataset[1] %> </li> 
+			<li> <label id="<%= dataset[0] %>"><input type="checkbox" name="checkbox-<%= dataset[0] %>" data-theme="c" data-mini="true" /> <%= dataset[1] %> </label> </li> 
 			<% }); %>
 	</ul>
 </div>
