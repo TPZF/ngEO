@@ -17,7 +17,10 @@ var DatasetSelectionView = Backbone.View.extend({
 	events : {
 	
 		'click #next' : function(){this.mainView.displaySearchCriteria(this.selectedDatasetId);},
-		'click li' : function(event){this.selectedDatasetId = event.currentTarget.id;},
+		'click label' : function(event){
+			console.log(event);
+			this.selectedDatasetId = event.currentTarget.id;
+			console.log("selected dataset: " + event.currentTarget.id);},
 		//'click li' : function(event){this.mainView.displaySearchCriteria(event.currentTarget.id);},
 	},
 	
@@ -39,6 +42,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		console.log ("the dataset selection view el :");
 		console.log(this.el);
 		this.$el = $(this.el);
+		this.$el.trigger('create');
 		console.log ("the dataset selection view $el :");
 		console.log(this.$el);
 		this.delegateEvents();
