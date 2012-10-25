@@ -20,7 +20,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 	render: function(){
 	
-		var content = _.template(searchCriteria_template, {datasetId : this.model.datasetId});
+		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
 		
 		console.log ("content of the dataset selection template : ");
 		console.log(content);
