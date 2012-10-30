@@ -2,27 +2,27 @@
 	
     "datasetPopulationMatrix" : {
     
-        "criteriaTitles" : ["datasetId", "datasetName", "nbOfItems", "mission","sensor", "keyword"], 
+        "criteriaTitles" : ["mission","sensor", "keyword"], 
        
-        "datasetPopulationValues" : [ ["ND_SAR_1", "ND_SAR_1", "1", "", "", "", "20"], 
-            ["ND_SAR_1_1", "ND_SAR_1_1", "5" , "S1", "SAR", "interferometry", "20"],
-            ["ND_SAR_1_2", "ND_SAR_1_2", "20" , "S1", "SAR", "polarimetry", "20"], 
+        "datasetPopulationValues" : [ [ "", "", "", "ND_SAR_1", "20"], 
+            [ "S1", "SAR", "interferometry", "ND_SAR_1_1", "20"],
+            [ "S1", "SAR", "polarimetry", "ND_SAR_1_2", "20"], 
             
-            ["ND_OPT_1", "ND_OPT_1", "7" , "", "", "", "6"],
+            [ "", "", "", "ND_OPT_1", "6"],
             
-            ["ND_S2_1", "ND_S2_1", "24" , "S2", "OPT", "optical", "6"],
-            ["ND_S2_1_1", "ND_S2_1_1", "15" , "S2", "OPT", "land mapping", "6"], 
-            ["ND_S2_1_2", "ND_S2_1_2", "3" , "S2", "OPT", "reflectance",  "6"],
+            [ "S2", "OPT", "optical", "ND_S2_1", "6"],
+            [ "S2", "OPT", "land mapping", "ND_S2_1_1", "6"], 
+            [ "S2", "OPT", "reflectance", "ND_S2_1_2", "6"],
          
-            ["LD_SENTINEL_1", "LD_SENTINEL_1", "87" , "", "", "", "2000"], 
-            ["LD_SENTINEL_1_1", "LD_SENTINEL_1_1", "200" , "S1", "SAR", "land mapping", "800"],
-            ["LD_SENTINEL_1_2", "LD_SENTINEL_1_2", "57" , "S1", "OPT", "ice mapping", "1200"],
+            [ "", "", "", "LD_SENTINEL_1", "2000"], 
+            [ "S1", "SAR", "land mapping", "LD_SENTINEL_1_1","800"],
+            [ "S1", "OPT", "ice mapping", "LD_SENTINEL_1_2", "1200"],
             
-            ["SENTINEL2_L1", "SENTINEL2_L1", "98" , "S2", "", "land mapping", "800"],
+            [ "S2", "", "land mapping", "SENTINEL2_L1", "800"],
             
-            ["SENTINEL3", "SENTINEL3", "644" , "S3", "", "land mapping", "800"],
-            ["SENTINEL3_L1", "SENTINEL3_L1", "378" , "", "", "", "2000"], 
-            ["SENTINEL3_L2", "SENTINEL3_L2", "400" , "S3", "SAR", "land mapping", "800"]
+            [ "S3", "", "land mapping", "SENTINEL3", "800"],
+            [ "", "", "", "SENTINEL3_L1", "2000"], 
+            [ "S3", "SAR", "land mapping", "SENTINEL3_L2","800"]
                   
            
             ]
