@@ -2,7 +2,7 @@
 
 define( ['jquery', 'backbone', 'underscore', 'text!search/template/searchCriteriaContent_template.html',
          'text!search/template/dateCriteriaContent.html', 'text!search/template/areaCriteriaContent.html',
-         'text!search/template/advancedCriteriaContent.html',], 
+         'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
 		function($, Backbone, _ , searchCriteria_template, dateCriteria_template, 
 				areaCriteria_template, advancedCriteria_template) {
 

@@ -47,7 +47,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile", "jqm-datebox-calbox"] ,
+require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile"] ,
 		function(require, $,Configuration, MenuBar) {
 
 /** Console fix	: create a dummy console.log when console is not present. Otherwise it is not working on some browser configuration */
