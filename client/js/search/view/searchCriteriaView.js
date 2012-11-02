@@ -13,9 +13,6 @@ var SearchCriteriaView = Backbone.View.extend({
 	},
 	
 	events :{
-		'click #back' : function(){
-			 this.mainView.displayDatasets();
-		},
 		'click #radio-date-label' : function(){
 			 this.showDateCriteria();
 		},
@@ -32,8 +29,15 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
 		
-		console.log ("content of the dataset selection template : ");
-		console.log(content);
+		// Add a back button to return to dataset selection
+		var backButton = this.mainView.$el.ngeowidget('addButton', { id: 'back', name: 'Back' });
+		var self = this;
+		backButton.click( function() {
+			self.mainView.displayDatasets();
+		});
+		
+		//console.log ("content of the dataset selection template : ");
+		//console.log(content);
 		
 		$(this.el).append($(content));
 		
@@ -88,6 +92,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	// TODO move to Backbone.View.prototype
     close : function() {
        this.undelegateEvents();
+	   this.mainView.$el.ngeowidget('removeButton', '#back');
        this.$el.empty();
        if (this.onClose) {
           this.onClose();

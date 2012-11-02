@@ -6,7 +6,7 @@
 <div id="filters" class="ui-grid-b">
 	<div class="ui-block-a" >
 		<select id="missions" data-mini="true" data-theme="a">
-			<option value="mission">Mission : empty</option>
+			<option value="mission">Mission : None</option>
 			<% _.each(attributes.missions, function(mission) { %>
 				<option value="<%=mission.mission%>">Mission : <%=mission.mission%></option>
 			<% }); %>
@@ -16,7 +16,7 @@
 	
 	<div class="ui-block-b">
 		<select id="sensors" data-mini="true" data-theme="a">
-			<option value="sensor">Sensor : empty</option>
+			<option value="sensor">Sensor : None</option>
 			<% _.each(attributes.sensors, function(sensor) { %>
 				<option value="<%=sensor.senso%>">Sensor : <%=sensor.sensor%></option>
 			<% }); %>
@@ -25,7 +25,7 @@
 	
 	<div class="ui-block-c">
 		<select id="keywords" data-mini="true" data-theme="a">
-			<option value="keyword">Keyword : empty</option>
+			<option value="keyword">Keyword : None</option>
 			<% _.each(attributes.keywords, function(keyword) { %>
 				<option value="<%=keyword.keyword%>">Keyword : <%=keyword.keyword%></option>
 			<% }); %>
@@ -48,5 +48,3 @@
 	</ul>
 	
 </div>
-
-<button id="next" data-theme="a">next</button>
