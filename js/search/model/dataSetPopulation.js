@@ -6,31 +6,101 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 
 var DataSetPopulation = Backbone.Model.extend({
 	
+	defaults:{
+		criteria : [],
+		missions : [],
+		sensors :  [],
+		keywords : [],
+		datasets : []
+	},
+	
 	// The base url to retreive the datasets population matrix
-	url : '../server/datasetPopulationMatrix',
+	initialize : function () {
+		this.url = '../server/datasetPopulationMatrix';
+	},
 
-	// Load configuration data from the server
-	load: function() {
+	parse: function(response){
 		
-		var self = this;
+		var columns = response.datasetPopulationMatrix.criteriaTitles;
+		var valuesTab = response.datasetPopulationMatrix.datasetPopulationValues;
 		
-		return $.ajax({
-		  url: self.url,
-		  dataType: 'json',
-		  success: function(data) {
-			  console.log(" Success received dataset population matrix from the server...");
-			  console.log(" Service url : " + self.url);
-			  self.data = data;
-			  console.log(" Received dataset population matrix from the server : ");
-			  console.log (self.data);
-			  self.trigger("loadedDatasets");
-		  },
-		  
-		  error: function(jqXHR, textStatus, errorThrown) {
-			console.log("no data to populate datasets list " + textStatus + ' ' + errorThrown);
-		  }
+		//create criteria as a table of json objects
+		var criteria = [];
+		_.each(columns, function(column){
+			criteria.push({"criterionName" : column}); 
 		});
-	}
+
+		var missions = [];	
+		var treatedMissions = [];
+		var sensors = [];	
+		var treatedSensors = [];
+		var keywords= [];	
+		var treatedKeywords = [];
+		
+		_.each(valuesTab, function(row){
+			
+			//create missions
+			//index of the json object is not correct so use of treatedMissions array
+			//if (row[0] != "" && missions.indexOf({"mission" : row[0]}) == -1){
+			if (row[0] != "" && treatedMissions.indexOf(row[0]) == -1){
+				treatedMissions.push(row[0]);
+				missions.push({"mission" : row[0]}); 
+			}
+			//create sensors
+			if (row[1] != ""  && treatedSensors.indexOf(row[1]) == -1){
+				treatedSensors.push(row[1]);
+				sensors.push({"sensor" : row[1]}); 
+			}
+			//create keywords
+			if (row[2] != ""  && treatedKeywords.indexOf(row[2]) == -1){
+				treatedKeywords.push(row[2]);
+				keywords.push({"keyword" : row[2]}); 
+			}
+			
+		});
+		
+		console.log("created missions as json : ");  
+		console.log("missions :: " +  missions);
+		
+		console.log("created sensors as json : ");  
+		console.log("sensors :: " +  sensors);
+
+		console.log("created keywords as json : ");  
+		console.log("keywords :: " +  keywords);
+		
+		//create datasets as a table of json objects
+		var datasets = [];
+		var datasetKeys = [];
+		var treatedDatasets = [];
+		
+		_.each(valuesTab, function(row){
+			
+			if (treatedDatasets.indexOf(row[3]) == -1){
+		
+				treatedDatasets.push(row[3]);
+				
+				//create keywords table
+				datasetKeys = [];
+				
+				_.each(valuesTab, function(rowIter){
+					
+					if (rowIter[3] == row[3] && datasetKeys.indexOf({"keyword" : rowIter[2]}) != -1) {
+						
+						datasetKeys.push({"keyword" : rowIter[2]});
+					}
+				});
+				
+				datasets.push({"mission" : row[0], "sensor": row[1], "keyword": datasetKeys, "datasetId": row[3], "itemsCount": row[4]}); 
+			}
+		});
+				
+		console.log("created datasets as json ");  
+		console.log("datasets :: " +  datasets);
+		
+		return {"criteria" : criteria, "missions" : missions, "sensors" : sensors, 
+			"keywords": keywords, "datasets" : datasets};
+	},
+	
 });
 
 return DataSetPopulation;
