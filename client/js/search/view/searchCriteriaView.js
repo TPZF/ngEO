@@ -1,8 +1,10 @@
 
 
 define( ['jquery', 'backbone', 'underscore', 'text!search/template/searchCriteriaContent_template.html',
-         'text!search/template/dateCriteriaContent.html', 'text!search/template/areaCriteriaContent.html'], 
-		function($, Backbone, _ , searchCriteria_template, dateCriteria_template, areaCriteria_template) {
+         'text!search/template/dateCriteriaContent.html', 'text!search/template/areaCriteriaContent.html',
+         'text!search/template/advancedCriteriaContent.html',], 
+		function($, Backbone, _ , searchCriteria_template, dateCriteria_template, 
+				areaCriteria_template, advancedCriteria_template) {
 
 var SearchCriteriaView = Backbone.View.extend({
 
@@ -83,7 +85,7 @@ var SearchCriteriaView = Backbone.View.extend({
 			console.log($(this.currentEl));
 			$(this.currentEl).unbind();
 		}
-		this.$el.find("#searchCriteria").append($(areaCriteria_template));
+		this.$el.find("#searchCriteria").append($(advancedCriteria_template));
 		this.currentEl = this.$el.find("#searchCriteria");
 		this.$el.trigger('create');	
 	},
