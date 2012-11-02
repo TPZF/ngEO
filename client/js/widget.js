@@ -31,6 +31,8 @@ $.widget( "ngeo.ngeowidget", {
 		
 		// Style the container
 		this.element.addClass( "widget-content" );
+		// Use jQM to style the content
+		this.element.addClass( "ui-body-c" );
 		
 		// Wrap with the parent div for widget
 		this.element.wrap("<div class='widget'/>");
