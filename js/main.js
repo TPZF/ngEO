@@ -50,6 +50,9 @@ require.config({
 require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile", "jqm-datebox-calbox"] ,
 		function(require, $,Configuration, MenuBar) {
 
+/** Console fix	: create a dummy console.log when console is not present. Otherwise it is not working on some browser configuration */
+window.console || (console={log:function(){}});
+
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
 
