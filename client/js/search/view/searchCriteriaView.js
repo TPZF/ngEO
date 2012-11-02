@@ -16,6 +16,16 @@ var SearchCriteriaView = Backbone.View.extend({
 		'click #back' : function(){
 			 this.mainView.displayDatasets();
 		},
+		'click #radio-date-label' : function(){
+			 this.showDateCriteria();
+		},
+		'click #radio-area-label' : function(){
+			 this.showAreaCriteria();
+		},
+		'click #radio-searchCriteria-label' : function(){
+			 this.showAdvancedCriteria();
+		}
+		
 	},
 	
 	render: function(){
@@ -34,25 +44,44 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.delegateEvents();
 		
 		return this;
-	},
-	
-
+	},	
 	
 	showDateCriteria : function(){
 		
+		if (this.currentEl != undefined && this.currentEl != this.$el.find("#date")){
+			console.log($(this.currentEl));
+			$(this.currentEl).empty();
+			console.log($(this.currentEl));
+			$(this.currentEl).unbind();
+		}
+
 		this.$el.find("#date").append($(dateCriteria_template));
+		this.currentEl = this.$el.find("#date");
 		this.$el.trigger('create');
-//		this.$el.find.$('#dateBoxLink').live("click", function() {
-//			this.$el.find.$('#from').datebox('open');
-//		});
-		
-		
 	},
 
 	showAreaCriteria : function(){
 		
+		if (this.currentEl != undefined && this.currentEl != this.$el.find("#area")){
+			$(this.currentEl).empty();
+			console.log($(this.currentEl));
+			$(this.currentEl).unbind();
+		}
 		this.$el.find("#area").append($(areaCriteria_template));
+		this.currentEl = this.$el.find("#area");
+		this.$el.trigger('create');
+	},
+	
+	showAdvancedCriteria : function(){
 		
+		if (this.currentEl != undefined && this.currentEl != this.$el.find("#searchCriteria")){
+			$(this.currentEl).empty();
+			console.log($(this.currentEl));
+			$(this.currentEl).unbind();
+		}
+		this.$el.find("#searchCriteria").append($(areaCriteria_template));
+		this.currentEl = this.$el.find("#searchCriteria");
+		this.$el.trigger('create');	
 	},
 	
 	
