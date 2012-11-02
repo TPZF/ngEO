@@ -23,8 +23,13 @@ var SearchCriteriaView = Backbone.View.extend({
 		},
 		'click #radio-searchCriteria-label' : function(){
 			 this.showAdvancedCriteria();
-		}
+		},
 		
+		'click #mapExtentCheckBox' : function(event){
+			
+			var $target = $(event.currentTarget);
+			//TODO DISPALY COORDINATES FROM MAP
+		}
 	},
 	
 	render: function(){
@@ -39,7 +44,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		});
 			
 		// Add a search button to submit the search request
-		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'search', name: 'Search' });
+		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Search' });
 		var self = this;
 		this.searchButton.click( function() {
 			//TODO SUBMIT SEARCH REQUEST
@@ -104,7 +109,7 @@ var SearchCriteriaView = Backbone.View.extend({
     close : function() {
        this.undelegateEvents();
 	   this.mainView.$el.ngeowidget('removeButton', '#back');
-	   this.mainView.$el.ngeowidget('removeButton', '#search');
+	   this.mainView.$el.ngeowidget('removeButton', '#searchRequest');
        this.$el.empty();
        if (this.onClose) {
           this.onClose();
