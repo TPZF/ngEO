@@ -1,36 +1,41 @@
 
-<fieldset id="coordinatesChoice" data-role="controlgroup" data-type="horizontal" data-mini="true">
-			     
-	<input type="radio" name="radio-area-criteria" id="radio-coordinates" value="on" data-theme="c" checked="checked">
-	<label for="radio-coordinates" id="radio-coordinates-label" data-corners="false">Coordinates</label>
-			         	
-	<input type="radio" name="radio-area-criteria" id="radio-gazetteer" data-theme="c" value="off">
-	<label for="radio-gazetteer" id="radio-gazetteer-label" data-corners="false">Gazetteer</label>
-    	
-</fieldset>
+	<fieldset id="coordinatesChoice" data-role="controlgroup" data-type="horizontal" data-mini="true">
+				     
+		<input type="radio" name="radio-area-criteria" id="radio-coordinates" value="on" data-theme="c" checked="checked">
+		<label for="radio-coordinates" id="radio-coordinates-label" data-corners="false">Coordinates</label>
+				         	
+		<input type="radio" name="radio-area-criteria" id="radio-gazetteer" data-theme="c" value="off">
+		<label for="radio-gazetteer" id="radio-gazetteer-label" data-corners="false">Gazetteer</label>
+	    	
+	</fieldset>
 
 <div id="coordinates" class="ui-grid-a">
 
-	<div class="ui-block-a" >
-		<label for="Centerlat">Center Latitude:</label>
-		<input type="text" name="lat" id="Centerlat" data-mini="true" data-theme="c" value="">
-   		
-	</div>
-	<div class="ui-block-b">
-		<label for="Centerlon">Center Longitude:</label>
-		<input type="text" name="lon" id="Centerlon" data-mini="true" data-theme="c" value="">
-	</div>
+		<div class="ui-block-a" >
+			<label for="Centerlat">Center Latitude:</label>
+			<div data-role="fieldcontain"><input type="text" name="lat" id="Centerlat" data-mini="true" data-theme="c" value=""></div>
+		</div>
+		
+		<div class="ui-block-b">
+			<label for="Centerlon">Center Longitude:</label>
+			<div data-role="fieldcontain"><input type="text" name="lon" id="Centerlon" data-mini="true" data-theme="c" value=""></div>
+		</div>
+		
+		<div class="ui-block-c">
+			<label for="height">Height:</label>
+			<div data-role="fieldcontain"><input type="text" name="height" id="height" data-mini="true" data-theme="c" value=""></div>
+		</div>
+		
+		<div class="ui-block-d">
+			<label for="width">Width:</label>
+			<div data-role="fieldcontain"><input type="text" name="width" id="width" data-mini="true" data-theme="c" value=""></div>
+		</div>
 	
-	<div class="ui-block-c">
-		<label for="height">Height :</label>
-		<input type="text" name="height" id="height" data-mini="true" data-theme="c" value="">
-	</div>
-	
-	<div class="ui-block-d">
-		<label for="width">Width :</label>
-		<input type="text" name="width" id="width" data-mini="true" data-theme="c" value="">
-	</div>
+</div>
+
+<div id="mapExtent" data-role="fieldcontain">
+	<label for="mapExtentCheckBox">use map extent</label>
+	<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c">
 </div>
 
 <div id="gazetteer"></div>
-
