@@ -81,7 +81,7 @@ var DatasetSelectionView = Backbone.View.extend({
     },
 
     onClose : function() {
-    	this.model.off("loadedDatasets", this.render, this);
+    	this.model.off("change", this.render, this);
     },
 	
 });
