@@ -22,20 +22,9 @@ var DatasetSelectionView = Backbone.View.extend({
 		'select #keywords' : function(){},
 		'click #next' : function(){this.mainView.displaySearchCriteria(this.selectedDatasetId);},
 		'click li' : function(event){
-			console.log(event);
 			this.selectedDatasetId = event.currentTarget.id;
-			var node = $("#" + this.selectedDatasetId);
-		    if (node.data('theme') != "b"){
-			   node.attr("data-theme", "b");
-		    }else{
-		 	  node.attr("data-theme", "c"); 
-		    }
-		    $('#datasetList').listview('refresh');
+			$(event.currentTarget).toggleClass('ui-btn-active');
 		}
-		// this.selectedDatasetId = event.currentTarget.id;
-		// console.log("selected dataset: " + event.currentTarget.id);},
-		// 'click li' :
-		// function(event){this.mainView.displaySearchCriteria(event.currentTarget.id);},
 	},
 	
 	render: function(){
@@ -45,21 +34,14 @@ var DatasetSelectionView = Backbone.View.extend({
 			return this;
 			
 		} 
-		 
-		console.log(this.model.attributes);
+		
 		var content = _.template(datasetsList_template, this.model);
 		
-		console.log ("content of the dataset selection div : ");
-		console.log(content);
+		//console.log ("content of the dataset selection div : ");
+		//console.log(content);
 		
-		$(this.el).append(content);
-		console.log ("the dataset selection view el :");
-		console.log(this.el);
-		this.$el = $(this.el);
+		this.$el.append(content);
 		this.$el.trigger('create');
-		console.log ("the dataset selection view $el :");
-		console.log(this.$el);
-		this.delegateEvents();
 		
 		return this;
 	},

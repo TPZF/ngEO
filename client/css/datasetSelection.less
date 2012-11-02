@@ -2,14 +2,15 @@
  * dataset selection view styling  
  */
  
-#searchWidget {
-	//max-height : 500px;
-	
-}
-
+// Set a max height for the container to have a scroll bar if too many datasets
 #datasetListContainer{
 	max-height : 450px;
-	max-width : 300px;
-	min-width : 300px;
+//	max-width : 300px;
+//	min-width : 300px;
 	overflow-y: auto;
+}
+
+// The listview is in read-only mode because no <a> is needed for dataset list view so we need to modify the cursor
+#datasetListContainer li {
+	cursor: pointer;
 }
