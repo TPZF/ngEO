@@ -38,6 +38,14 @@ var SearchCriteriaView = Backbone.View.extend({
 			self.mainView.displayDatasets();
 		});
 		
+		
+		// Add a search button to submit the search request
+		var searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'search', name: 'Search' });
+		var self = this;
+		searchButton.click( function() {
+			//TODO SUBMIT SEARCH REQUEST
+		});
+		
 		//console.log ("content of the dataset selection template : ");
 		//console.log(content);
 		
@@ -95,6 +103,7 @@ var SearchCriteriaView = Backbone.View.extend({
     close : function() {
        this.undelegateEvents();
 	   this.mainView.$el.ngeowidget('removeButton', '#back');
+	   this.mainView.$el.ngeowidget('removeButton', '#search');
        this.$el.empty();
        if (this.onClose) {
           this.onClose();
