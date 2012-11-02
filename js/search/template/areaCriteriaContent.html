@@ -1,9 +1,36 @@
-<div class="ui-controlgroup-controls">
-	<a href="#coordinates" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-btn-up-c ui-corner-left"><span class="ui-btn-inner ui-corner-left"><span class="ui-btn-text">Coordinates</span></span></a>
-	<a href="#gazetteer" data-role="button" data-corners="true" data-shadow="true" data-iconshadow="true" data-wrapperels="span" data-theme="c" class="ui-btn ui-corner-right ui-controlgroup-last ui-btn-up-c"><span class="ui-btn-inner ui-corner-right ui-controlgroup-last"><span class="ui-btn-text">Gazetteer</span></span></a>
+
+<fieldset data-role="controlgroup" data-type="horizontal">
+			     
+	<input type="radio" name="radio-area-criteria" id="radio-coordinates" value="on" checked="checked">
+	<label for="radio-coordinates" id="radio-coordinates-label" data-corners="false" data-theme="c">Coordinates</label>
+			         	
+	<input type="radio" name="radio-area-criteria" id="radio-gazetteer" value="off">
+	<label for="radio-gazetteer" id="radio-gazetteer-label" data-corners="false" data-theme="c">Gazetteer</label>
+    	
+</fieldset>
+
+<div id="coordinates" class="ui-grid-c">
+
+	<div class="ui-block-a" >
+		<label for="Centerlat">Center Latitude:</label>
+		<input type="text" name="lat" id="Centerlat" value="">
+   		
+	</div>
+	<div class="ui-block-b">
+		<label for="Centerlon">Center Longitude:</label>
+		<input type="text" name="lon" id="Centerlon" value="">
+	</div>
+	
+	<div class="ui-block-c">
+		<label for="height">Height :</label>
+		<input type="text" name="height" id="height" value="">
+	</div>
+	
+	<div class="ui-block-d">
+		<label for="width">Width :</label>
+		<input type="text" name="width" id="width" value="">
+	</div>
 </div>
 
-
-<div id="coordinates"></div>
 <div id="gazetteer"></div>
 
