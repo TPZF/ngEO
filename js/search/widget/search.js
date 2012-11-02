@@ -1,19 +1,29 @@
 /**
  * SearchWidget module
  */
-define( ["jquery", "backbone", "search/view/MainSearchView", 
-          "widget"], function($, Backbone, MainSearchView) {
+define( ["jquery", "backbone", 'search/model/dataSetPopulation', "search/view/MainSearchView", 
+          "widget"], function($, Backbone, DataSetPopulation, MainSearchView) {
 
 return function() {
+		
+	// Create the model for DataSetPopulation
+	var datasetPopulation = new DataSetPopulation();
 	
-	var mainSearchView = new MainSearchView();
-	mainSearchView.render();
+	// Create the main search view
+	var mainSearchView = new MainSearchView({ model: datasetPopulation });
 	
+	// Append it to the data services area
 	$('#dataServicesArea').append(mainSearchView.$el);
 	
-	$("#searchWidget").ngeowidget({
+	// Create the widget for main search view
+	mainSearchView.$el.ngeowidget({
 		title: 'Search',
-		activator: '#search'
+		activator: '#search',
+		show: function() {
+			// The dataset population is fetch each time the user launch a search
+			datasetPopulation.fetch();
+			mainSearchView.render();
+		}
 	});
 	
 //	// Router for seach shared url

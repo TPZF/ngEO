@@ -19,7 +19,8 @@ $.widget( "ngeo.ngeowidget", {
 		effectDuration: 300,
 		
 		// callbacks
-		resize: null
+		show: null,
+		hide: null
 	},
 
 	// the constructor
@@ -101,6 +102,16 @@ $.widget( "ngeo.ngeowidget", {
 		}
 	},
 	
+	update: function() {
+		// Recompute position for widget
+		var posActivator = this.activator.position();	
+		var widgetLeft = posActivator.left - (this.containerElement.outerWidth()/2) + (this.activator.outerWidth()/2);
+		var widgetTop = posActivator.top + this.activator.outerHeight() + 20;
+		this.containerElement
+			.css( 'top', widgetTop )
+			.css( 'left', widgetLeft );
+	},
+	
 	show: function() {
 		// Automatically hide other widgets
 		for ( var i=0; i < _widgets.length; i++ ) {
@@ -109,20 +120,24 @@ $.widget( "ngeo.ngeowidget", {
 			}
 		}
 		
-		// Recompute position for widget
-		var posActivator = this.activator.position();	
-		var widgetLeft = posActivator.left - (this.containerElement.outerWidth()/2) + (this.activator.outerWidth()/2);
-		var widgetTop = posActivator.top + this.activator.outerHeight() + 20;
-		this.containerElement
-			.css( 'top', widgetTop )
-			.css( 'left', widgetLeft )
-			.fadeIn(this.options.durationEffect); 
+		this.update();
+		this.containerElement.fadeIn(this.options.durationEffect); 
+		
 		this.activator.addClass('toggle');
+		
+		if ( this.options.show ) {
+			this.options.show();
+		}
 	},
 	
 	hide: function() {
+	
 		this.containerElement.fadeOut(this.options.durationEffect); 
 		this.activator.removeClass('toggle');
+		
+		if ( this.options.hide ) {
+			this.options.hide();
+		}
 
 	},
 		

@@ -44,6 +44,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		// TODO : display loading image
 		if (this.model.get("datasets").length == 0){
 			// $(this.el).append("<p>loading datasets...<p>");
+			console.log("Not loaded!!!");
 			return this;
 			
 		}
@@ -64,6 +65,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		
 		this.$el.append(content);
 		this.$el.trigger('create');
+		this.mainView.$el.ngeowidget('update');
 		
 		return this;
 	},

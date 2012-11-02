@@ -1,8 +1,8 @@
-define( ['jquery', 'backbone', 'underscore','search/model/dataSetPopulation', 
+define( ['jquery', 'backbone',
          'search/model/dataset','search/view/datasetSelectionView', 
-         'search/view/searchCriteriaView', 'text!search/template/mainSearchContent_template.html'], 
-		function($, Backbone, _ , DataSetPopulation, Dataset, 
-				DatasetSelectionView, SearchCriteriaView, mainView_template) {
+         'search/view/searchCriteriaView'], 
+		function($, Backbone, Dataset, 
+				DatasetSelectionView, SearchCriteriaView) {
 
 	/** 
 	 * main search view : responsible for handling the dataset selection 
@@ -10,34 +10,21 @@ define( ['jquery', 'backbone', 'underscore','search/model/dataSetPopulation',
 	 */
 var MainSearchView = Backbone.View.extend({
 			
-	render: function(){
+	id: "searchWidget",
 	
-		var content = _.template(mainView_template, {});
-
-		console.log("the rendered template of the main search view : " + content);
-
-		this.el = $(content);
-		console.log("the main search view root el : ");
-		console.log(this.el);
-		
-		this.$el = $(this.el);
-
-		console.log("the main search view root $el : ");
-		console.log(this.$el);
-		
-		this.displayDatasets();
-		
-		this.delegateEvents();
-		
+	initialize: function() {
+		this.$el.append('<div id="datasetsSelection"></div>');
+		this.$el.append('<div id="datasetSearchCriteria"></div>');
+	},
+	
+	render: function(){
+		this.displayDatasets();	
 		return this;
 	},
 	
 	displaySearchCriteria : function(datasetId){
 
-		var dataset = new Dataset({datasetId : datasetId});
-		
-		console.log("Started loading dataset population matrix....");
-		
+		var dataset = new Dataset({datasetId : datasetId});		
 		dataset.load();		
 		
 		var searchCriteriaView = new SearchCriteriaView({
@@ -51,13 +38,9 @@ var MainSearchView = Backbone.View.extend({
 	
 	displayDatasets : function(){
 		
-		var listModel = new DataSetPopulation();
-		
-		console.log("Started loading of dataset population matrix....");			
-		listModel.fetch();	
 		var datasetsView = new DatasetSelectionView({
 			el : this.$el.find("#datasetsSelection"),
-			model : listModel,
+			model : this.model,
 			mainView : this
 		});
 		
@@ -66,12 +49,18 @@ var MainSearchView = Backbone.View.extend({
 	
 	showView : function(view) {
 	       
+		var needToUpdate = false;
 		if (this.currentView && this.currentView != view) {
            this.currentView.close();
+		   needToUpdate = true;
         }
 
         this.currentView = view;
         this.currentView.render();
+		
+		if (needToUpdate) {
+			this.$el.ngeowidget('update');
+		}
      }
 	
 });
