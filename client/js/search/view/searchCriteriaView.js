@@ -37,14 +37,15 @@ var SearchCriteriaView = Backbone.View.extend({
 		backButton.click( function() {
 			self.mainView.displayDatasets();
 		});
-		
-		
+			
 		// Add a search button to submit the search request
-		var searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'search', name: 'Search' });
+		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'search', name: 'Search' });
 		var self = this;
-		searchButton.click( function() {
+		this.searchButton.click( function() {
 			//TODO SUBMIT SEARCH REQUEST
-		});
+		});		
+		// Search button is disable when no search criteria are is selected
+		this.searchButton.button('disable');
 		
 		//console.log ("content of the dataset selection template : ");
 		//console.log(content);
