@@ -53,10 +53,8 @@ var MainSearchView = Backbone.View.extend({
 		
 		var listModel = new DataSetPopulation();
 		
-		console.log("Started loading of dataset population matrix....");
-		
-		listModel.load();		
-		
+		console.log("Started loading of dataset population matrix....");			
+		listModel.fetch();	
 		var datasetsView = new DatasetSelectionView({
 			el : this.$el.find("#datasetsSelection"),
 			model : listModel,
