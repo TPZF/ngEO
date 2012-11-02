@@ -71,44 +71,34 @@ $.widget( "ngeo.ngeowidget", {
 				self.show();
 			}
 		});
-
-/*			
-		// Add close icon	
-//		$("<span class='widget-close'></span>")
-		$('<span data-role="button" class="widget-icon" data-theme="c" data-icon="delete" data-mini="true" data-iconpos="notext"></span>')
-			.appendTo(this.header)
-			.click( function() { 
-				self.parentElement.fadeOut(timeEffect); 
-				if (activator) activator.removeClass('toggle'); 
-			});		
-		
-		// Add max icon	
-//		$("<span class='widget-max'></span>")
-		$('<span data-role="button" class="widget-icon widget-max" data-theme="c" data-icon="plus" data-mini="true" data-iconpos="notext"></span>')
-			.appendTo(this.header)
-			.hide()
-			.click( function() {
-				var jThis = $(this);
-				self.parentElement
-					.children(":not(.widget-header)")
-					.slideDown( function() { self.header.find(".widget-min").show(); jThis.hide(); } ); 
-			});
-			
-		// Add min icon	
-//		$("<span class='widget-min'></span>")
-		$('<span data-role="button" class="widget-icon widget-min" data-theme="c" data-icon="minus" data-mini="true" data-iconpos="notext"></span>')
-			.appendTo(this.header)
-			.click( function() {
-				var jThis = $(this);
-				self.parentElement
-					.children(":not(.widget-header)")
-					.slideUp( function() { self.header.find(".widget-max").show(); jThis.hide(); } ); 
-			});
-*/			
 				
 		this.containerElement
 			.trigger("create")
 			.hide();
+	},
+	
+	// Add a button in the footer
+	addButton: function(options) {
+	
+		if ( this.footer.find('button').length == 0 ) {
+			this.footer.show();
+		}
+		
+		var btn = $("<button data-role='button' data-inline='true' id='"+options.id+"'>" + options.name + "</button>")
+			.appendTo(this.footer)
+			.button();
+			
+			
+		return btn;
+	},
+	
+	// Remove a button from the footer
+	removeButton: function(el) {
+		var $el = typeof el == "string" ? this.footer.find(el) : $(el);
+		$el.parent().remove();
+		if ( this.footer.find('button').length == 0 ) {
+			this.footer.hide();
+		}
 	},
 	
 	show: function() {

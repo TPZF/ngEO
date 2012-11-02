@@ -7,15 +7,13 @@ define( ["jquery", "backbone", "search/view/MainSearchView",
 return function() {
 	
 	var mainSearchView = new MainSearchView();
+	mainSearchView.render();
 	
-	console.log("main search view HTML content : " + mainSearchView.render().$el);
-	
-	$('#dataServicesArea').append(mainSearchView.render().$el);
+	$('#dataServicesArea').append(mainSearchView.$el);
 	
 	$("#searchWidget").ngeowidget({
 		title: 'Search',
-		activator: '#search',
-		buttons: [ "Button1", "Button2" ]
+		activator: '#search'
 	});
 	
 //	// Router for seach shared url
