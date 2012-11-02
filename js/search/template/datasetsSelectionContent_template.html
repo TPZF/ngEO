@@ -1,17 +1,53 @@
 
-<div data-role="header"  class="ui-header ui-bar-a"  role="banner"> 
+<div data-role="header"  class="ui-header ui-bar-a" role="banner"> 
 <h1 role="heading" class="ui-title" aria-level="1"> Select a dataset </h1>
 </div>
 
-
+<div id="filters" class="ui-grid-b">
+	<div class="ui-block-a" >
+		<select id="missions" data-mini="true" data-theme="a">
+			<option value="mission">Mission : empty</option>
+			<% _.each(attributes.missions, function(mission) { %>
+				<option value="<%=mission.mission%>">Mission : <%=mission.mission%></option>
+			<% }); %>
+		</select>
+   		
+	</div>
+	
+	<div class="ui-block-b">
+		<select id="sensors" data-mini="true" data-theme="a">
+			<option value="sensor">Sensor : empty</option>
+			<% _.each(attributes.sensors, function(sensor) { %>
+				<option value="<%=sensor.senso%>">Sensor : <%=sensor.sensor%></option>
+			<% }); %>
+		</select>
+	</div>
+	
+	<div class="ui-block-c">
+		<select id="keywords" data-mini="true" data-theme="a">
+			<option value="keyword">Keyword : empty</option>
+			<% _.each(attributes.keywords, function(keyword) { %>
+				<option value="<%=keyword.keyword%>">Keyword : <%=keyword.keyword%></option>
+			<% }); %>
+		</select>
+	</div>
+	
+</div>
 
 <div id="datasetListContainer">
-	<ul id="datasetList" data-role="listview" data-inset="true" data-theme="c">	
+
+
+	<ul id="datasetList" data-role="listview" data-inset="true" data-count-theme="b">	
 	
-	<% _.each(data.datasetPopulationMatrix.datasetPopulationValues, function(dataset) { %>
-			<li> <label id="<%= dataset[0] %>"><input type="checkbox" name="checkbox-<%= dataset[0] %>" data-theme="c" data-mini="true" /> <%= dataset[1] %> </label> </li> 
+	<% _.each(attributes.datasets, function(dataset) { %>
+		<li id="<%= dataset.datasetId %>" data-theme="d" data-icon="check" data-mini="true" >
+					<%= dataset.datasetId %>  
+					<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
+</li> 
 			<% }); %>
+ 		
 	</ul>
+	
 </div>
 
 <button id="next" data-theme="a">next</button>
