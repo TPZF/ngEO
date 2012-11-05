@@ -1,9 +1,9 @@
 
 
 define( ['jquery', 'backbone', 'search/model/datasetSearch', 'search/view/spatialExtentView',
-         'search/view/timeExtentView', 'text!search/template/searchCriteriaContent_template.html',
+         'search/view/timeExtentView',  'search/view/advancedSearchView', 'text!search/template/searchCriteriaContent_template.html',
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch , SpatialExtentView, TimeExtentView, 
+		function($, Backbone, DatasetSearch , SpatialExtentView, TimeExtentView, AdvancedSearchView, 
 				searchCriteria_template, dateCriteria_template, 
 				areaCriteria_template, advancedCriteria_template) {
 
@@ -94,13 +94,12 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 	showAdvancedCriteria : function(){
 		
-		if (this.currentEl != undefined && this.currentEl != this.$el.find("#searchCriteria")){
-			$(this.currentEl).empty();
-			console.log($(this.currentEl));
-			$(this.currentEl).unbind();
-		}
-		this.$el.find("#searchCriteria").append($(advancedCriteria_template));
-		this.currentEl = this.$el.find("#searchCriteria");
+		var advancedSearchView = new AdvancedSearchView({
+			el : this.$el.find("#searchCriteria"), 
+			searchCriteriaView : this,
+			model : this.searchModel });
+		this.showView(advancedSearchView);
+
 	},
 	
 	showView : function(view){
@@ -138,7 +137,7 @@ var SearchCriteriaView = Backbone.View.extend({
     }, 
 
     onClose : function() {
-
+    	this.searchModel = null;
     },
 	
 });
