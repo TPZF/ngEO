@@ -8,16 +8,18 @@ var TimeExtentView = Backbone.View.extend({
 
 	initialize : function(options){
 		
-		this.mainView = options.mainView;
+		this.searchCriteriaView = options.searchCriteriaView;
+		//bind the search model change here to avoiding calling the update method
+		this.model.on("change", this.searchCriteriaView.update(), this.searchCriteriaView);
 	},
 	
 	events :{
 
 		'change #from' : function(event){
-			this.searchModel.set({"startdate" : $(event.currentTarget).val()});
+			this.model.set({"startdate" : $(event.currentTarget).val()});
 		},
 		'change #to' : function(event){
-			this.searchModel.set({"stopdate" : $(event.currentTarget).val()});
+			this.model.set({"stopdate" : $(event.currentTarget).val()});
 		}		
 	},
 	
@@ -26,7 +28,6 @@ var TimeExtentView = Backbone.View.extend({
 		var content = _.template(dateCriteria_template, this.model);
 		console.log(content);
 		this.$el.append($(content));
-		this.$el.trigger('create');
 		
 		this.delegateEvents();
 		
@@ -43,7 +44,7 @@ var TimeExtentView = Backbone.View.extend({
     }, 
 
     onClose : function() {
-
+    	this.model.off("change", this.searchCriteriaView.update(), this.searchCriteriaView);
     },
 	
 });
