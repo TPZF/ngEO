@@ -41,7 +41,7 @@ var SpatialExtentView = Backbone.View.extend({
 	
 	render: function(){
 
-		this.$el.append($(areaCriteria_template));
+		this.$el.append(_.template(areaCriteria_template, this.model));
 		this.delegateEvents();
 		return this;
 	},	
