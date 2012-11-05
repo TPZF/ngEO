@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 
+define( ['jquery', 'backbone', 'search/model/datasetSearch', 'map/map',
          'text!search/template/areaCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch, areaCriteria_template) {
+		function($, Backbone, DatasetSearch, Map, areaCriteria_template) {
 
 var SpatialExtentView = Backbone.View.extend({
 
@@ -32,10 +32,21 @@ var SpatialExtentView = Backbone.View.extend({
 			this.model.set({"north": $(event.currentTarget).val()});
 		},
 		
-		'click #mapExtentCheckBox' : function(event){
+		'click #mapExtentCheckBoxLabel' : function(event){
 			
 			var $target = $(event.currentTarget);
-			//TODO DISPALY COORDINATES FROM MAP
+			var mapExtentString = new String(Map.getViewportExtent());
+			//console.log("SpatialExtentView : use map extent check box " : mapExtentString);
+			var coords = mapExtentString.split(',');
+//			this.model.set({"west" : coords[0]});
+//			this.model.set({"south" : coords[1]});
+//			this.model.set({"east" : coords[2]});
+//			this.model.set({"north" : coords[3]});
+			
+			$("#west").val(coords[0]);
+			$("#south").val(coords[1]);
+			$("#east").val(coords[2]);
+			$("#north").val(coords[3]);
 		}		
 	},
 	
@@ -49,8 +60,8 @@ var SpatialExtentView = Backbone.View.extend({
 	
 	// TODO move to Backbone.View.prototype
     close : function() {
-       this.undelegateEvents();
-       this.$el.empty();
+    	this.$el.empty();
+    	this.undelegateEvents();
        if (this.onClose) {
           this.onClose();
        }
