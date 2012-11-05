@@ -10,26 +10,26 @@ var SpatialExtentView = Backbone.View.extend({
 	
 	initialize : function(options){
 		
-		this.mainView = options.mainView;
-
+		this.searchCriteriaView = options.searchCriteriaView;
+		this.model.on("change", this.searchCriteriaView.update(), this.searchCriteriaView);
 	},
 	
 	events :{
 		
 		'change #west' : function(event){
-			this.searchModel.set({"west" : $(event.currentTarget).val()});
+			this.model.set({"west" : $(event.currentTarget).val()});
 		},
 		
 		'change #south' : function(event){
-			this.searchModel.set({"south" : $(event.currentTarget).val()});
+			this.model.set({"south" : $(event.currentTarget).val()});
 		},
 		
 		'change #east' : function(event){
-			this.searchModel.set({"east" : $(event.currentTarget).val()});
+			this.model.set({"east" : $(event.currentTarget).val()});
 		},
 		
 		'change #north' : function(event){
-			this.searchModel.set({"north": $(event.currentTarget).val()});
+			this.model.set({"north": $(event.currentTarget).val()});
 		},
 		
 		'click #mapExtentCheckBox' : function(event){
@@ -57,7 +57,7 @@ var SpatialExtentView = Backbone.View.extend({
     }, 
 
     onClose : function() {
-    	//this.model
+    	this.model.off("change", this.searchCriteriaView.update(), this.searchCriteriaView);
     },
 	
 });
