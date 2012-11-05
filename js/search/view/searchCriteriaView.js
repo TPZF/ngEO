@@ -13,6 +13,8 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.mainView = options.mainView;
 		this.searchModel = options.searchModel;
+		//bind the search model change here to avoiding calling the update method
+		//this.searchModel.on("change", this.update(), this);
 	},
 	
 	events : {
@@ -64,10 +66,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.$el = $(this.el);
 		
 		this.showDateCriteria();
-		
-		//bind the serach model change here to avoiding calling the update method
-		this.searchModel.on("change", this.update(), this);
-		
+
 		this.delegateEvents();
 		
 		return this;
@@ -77,6 +76,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		var timeView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
+			searchCriteriaView : this,
 			model : this.searchModel
 			});
 		this.showView(timeView);		
@@ -86,6 +86,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		var spatialExtent = new SpatialExtentView({
 			el : this.$el.find("#area"), 
+			searchCriteriaView : this,
 			model : this.searchModel });
 		this.showView(spatialExtent);
 
@@ -114,7 +115,9 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 	update : function(){
 	
-		if (this.searchModel.get("startdate") != "" && this.searchModel.get("stopdate") != ""){
+		if (this.searchModel.get("startdate") != "" && this.searchModel.get("stopdate") != ""
+			&& this.searchModel.get("west") != "" && this.searchModel.get("south") != ""
+			&& this.searchModel.get("east") != "" && this.searchModel.get("north") != ""){
 		
 			this.searchUrlButton.button('enable');
 			this.searchButton.button('enable');
