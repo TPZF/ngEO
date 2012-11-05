@@ -12,28 +12,28 @@
 
 		<div class="ui-block-a" >
 			<label for="west">West:</label>
-			<div data-role="fieldcontain"><input type="text" name="west" id="west" data-mini="true" data-theme="c" value=""></div>
+			<div data-role="fieldcontain"><input type="text" name="west" id="west" data-mini="true" data-theme="c" value="<%=attributes.west%>"></div>
 		</div>
 		
 		<div class="ui-block-b">
 			<label for="south">South:</label>
-			<div data-role="fieldcontain"><input type="text" name="south" id="south" data-mini="true" data-theme="c" value=""></div>
+			<div data-role="fieldcontain"><input type="text" name="south" id="south" data-mini="true" data-theme="c" value="<%=attributes.south%>"></div>
 		</div>
 		
 		<div class="ui-block-c">
 			<label for="east">East:</label>
-			<div data-role="fieldcontain"><input type="text" name="east" id="east" data-mini="true" data-theme="c" value=""></div>
+			<div data-role="fieldcontain"><input type="text" name="east" id="east" data-mini="true" data-theme="c" value="<%=attributes.east%>"></div>
 		</div>
 		
 		<div class="ui-block-d">
 			<label for="north">North:</label>
-			<div data-role="fieldcontain"><input type="text" name="north" id="north" data-mini="true" data-theme="c" value=""></div>
+			<div data-role="fieldcontain"><input type="text" name="north" id="north" data-mini="true" data-theme="c" value="<%=attributes.north%>"></div>
 		</div>
 	
 </div>
 
 <div id="mapExtent" data-role="fieldcontain">
-	<label for="mapExtentCheckBox">use map extent</label>
+	<label id="mapExtentCheckBoxLabel" for="mapExtentCheckBox">use map extent</label>
 	<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c">
 </div>
 
