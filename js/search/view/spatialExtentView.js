@@ -33,7 +33,6 @@ var SpatialExtentView = Backbone.View.extend({
 			this.model.set({"north": $(event.currentTarget).val()});
 		},
 		
-		//
 		'click #mapExtentCheckBoxLabel' : function(event){
 			
 			var $target = $(event.currentTarget);
@@ -47,6 +46,8 @@ var SpatialExtentView = Backbone.View.extend({
 	render: function(){
 
 		this.$el.append(_.template(areaCriteria_template, this.model));
+		//forces the update of the checkbox status
+		$("input[type='checkbox']").prop("checked",this.model.get("useExtent"));
 		this.delegateEvents();
 		return this;
 	},	
