@@ -10,7 +10,7 @@ return function() {
 	var datasetPopulation = new DataSetPopulation();
 	
 	// Create the main search view
-	var mainSearchView = new MainSearchView({ model: datasetPopulation });
+	var mainSearchView = new MainSearchView({ datasetSelectionModel : datasetPopulation });
 	
 	// Append it to the data services area
 	$('#dataServicesArea').append(mainSearchView.$el);
