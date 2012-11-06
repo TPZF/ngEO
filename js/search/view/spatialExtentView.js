@@ -11,7 +11,8 @@ var SpatialExtentView = Backbone.View.extend({
 	initialize : function(options){
 		
 		this.searchCriteriaView = options.searchCriteriaView;
-		this.model.on("change", this.searchCriteriaView.update(), this.searchCriteriaView);
+		this.model.on("change", this.searchCriteriaView.update, this.searchCriteriaView);
+		Map.on("endNavigation", this.synchronizeWithMapExtent, this);
 	},
 	
 	events :{
@@ -32,21 +33,14 @@ var SpatialExtentView = Backbone.View.extend({
 			this.model.set({"north": $(event.currentTarget).val()});
 		},
 		
+		//
 		'click #mapExtentCheckBoxLabel' : function(event){
 			
 			var $target = $(event.currentTarget);
-			var mapExtentString = new String(Map.getViewportExtent());
-			//console.log("SpatialExtentView : use map extent check box " : mapExtentString);
-			var coords = mapExtentString.split(',');
-//			this.model.set({"west" : coords[0]});
-//			this.model.set({"south" : coords[1]});
-//			this.model.set({"east" : coords[2]});
-//			this.model.set({"north" : coords[3]});
+			var useExtent = !($(event.currentTarget).hasClass('ui-checkbox-on'));
+			this.model.set({"useExtent" : useExtent});
 			
-			$("#west").val(coords[0]);
-			$("#south").val(coords[1]);
-			$("#east").val(coords[2]);
-			$("#north").val(coords[3]);
+			this.synchronizeWithMapExtent();
 		}		
 	},
 	
@@ -66,9 +60,29 @@ var SpatialExtentView = Backbone.View.extend({
           this.onClose();
        }
     }, 
+    
+    synchronizeWithMapExtent : function(){
+    	
+    	if(this.model.get("useExtent")){
+	    	
+    		var mapExtentString = new String(Map.getViewportExtent());
+			//console.log("SpatialExtentView : use map extent check box " : mapExtentString);
+			var coords = mapExtentString.split(',');
+			this.model.set({"west" : coords[0]});
+			this.model.set({"south" : coords[1]});
+			this.model.set({"east" : coords[2]});
+			this.model.set({"north" : coords[3]});
+			
+			$("#west").val(coords[0]);
+			$("#south").val(coords[1]);
+			$("#east").val(coords[2]);
+			$("#north").val(coords[3]);
+    	}
+    },
 
     onClose : function() {
     	this.model.off("change", this.searchCriteriaView.update(), this.searchCriteriaView);
+   		Map.off("endNavigation", this.synchronizeWithMapExtent, this);	
     },
 	
 });
