@@ -26,11 +26,9 @@ var TimeExtentView = Backbone.View.extend({
 	render: function(){
 	
 		var content = _.template(dateCriteria_template, this.model);
-		console.log(content);
+		//console.log(content);
 		this.$el.append($(content));
-		
 		this.delegateEvents();
-		
 		return this;
 	},	
 	
