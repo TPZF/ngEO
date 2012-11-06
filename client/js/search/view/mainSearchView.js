@@ -12,7 +12,8 @@ var MainSearchView = Backbone.View.extend({
 			
 	id: "searchWidget",
 	
-	initialize: function() {
+	initialize: function(options) {
+		this.datasetSelectionModel = options.datasetSelectionModel;
 		this.$el.append('<div id="datasetsSelection"></div>');
 		this.$el.append('<div id="datasetSearchCriteria"></div>');
 	},
@@ -36,9 +37,9 @@ var MainSearchView = Backbone.View.extend({
 		
 		var searchCriteriaView = new SearchCriteriaView({
 			el : this.$el.find("#datasetSearchCriteria"),
-			model : dataset,
+			model : datasetSearch,
 			mainView : this,
-			searchModel : datasetSearch,
+			dataset : dataset,
 		});
 		
 		this.showView(searchCriteriaView);
@@ -48,7 +49,7 @@ var MainSearchView = Backbone.View.extend({
 		
 		var datasetsView = new DatasetSelectionView({
 			el : this.$el.find("#datasetsSelection"),
-			model : this.model,
+			model : this.datasetSelectionModel,
 			mainView : this
 		});
 		
