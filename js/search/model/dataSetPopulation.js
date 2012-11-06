@@ -102,6 +102,7 @@ var DataSetPopulation = Backbone.Model.extend({
 			"keywords": keywords, "datasets" : datasets};
 	},
 	
+	//TODO to use/adapt when dealing with filters
 	getDatasetsWithMission : function(datasetsToFilter, mission){
 		var datasetsToDisplay = [];
 		_.each(datasetsToFilter, function(dataset)){
@@ -112,6 +113,7 @@ var DataSetPopulation = Backbone.Model.extend({
 		return datasetsToDisplay;
 	},
 	
+	//TODO to use/adapt when dealing with filters
 	getDatasetsWithSensor : function (datasetsToFilter, sensor){
 		var datasetsToDisplay = [];
 		_.each(datasetsToFilter, function(dataset)){
@@ -122,6 +124,7 @@ var DataSetPopulation = Backbone.Model.extend({
 		return datasetsToDisplay;
 	},
 	
+	//TODO to use/adapt when dealing with filters
 	getDatasetsWithKeyword : function(datasetsToFilter, keyword){
 		var datasetsToDisplay = [];
 		_.each(datasetsToFilter, function(dataset)){
