@@ -4,7 +4,7 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
-		host : "http://localhost:3000/server/productSearch", //server url 
+		host : "../server/productSearch", //stub server url 
 		datasetId : "",
 		startdate : "", //name of the opensearch request parameter
 		stopdate: "", //name of the opensearch request parameter
