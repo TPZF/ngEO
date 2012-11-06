@@ -1,9 +1,11 @@
 
 
 define( ['jquery', 'backbone', 'search/model/datasetSearch', 'search/view/spatialExtentView',
-         'search/view/timeExtentView',  'search/view/advancedSearchView', 'text!search/template/searchCriteriaContent_template.html',
+         'search/view/timeExtentView',  'search/view/advancedSearchView', "search/widget/searchResultsWidget",
+         'text!search/template/searchCriteriaContent_template.html',
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch , SpatialExtentView, TimeExtentView, AdvancedSearchView, 
+		function($, Backbone, DatasetSearch, SpatialExtentView, TimeExtentView, 
+				AdvancedSearchView, SearchResultsWidget,
 				searchCriteria_template, dateCriteria_template, 
 				areaCriteria_template, advancedCriteria_template) {
 
@@ -12,9 +14,9 @@ var SearchCriteriaView = Backbone.View.extend({
 	initialize : function(options){
 		
 		this.mainView = options.mainView;
-		this.searchModel = options.searchModel;
+		this.dataset = options.dataset;
 		//bind the search model change here to avoiding calling the update method
-		//this.searchModel.on("change", this.update(), this);
+		//this.searchModel.on("change", this.update, this);
 	},
 	
 	events : {
@@ -44,17 +46,21 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Search' });
 		var self = this;
 		this.searchButton.click( function() {
-			
+			SearchResultsWidget();
 		});		
+		
 		// Search button is disable when no search criteria are is selected
 		this.searchButton.button('disable');
 		
 		// Add a search url button to display the openSearch request url
 		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL' });
 		var self = this;
+		
 		this.searchUrlButton.click( function() {
-			//display pop up with openSearch url
-		});		
+			//TODO DISPLAY POPUP
+			self.$el.find("#openSearchUrlPopup").append(self.model.getOpenSearchURL());	
+		});	
+		
 		// Search button is disable when no search criteria are is selected
 		this.searchUrlButton.button('disable');
 		
@@ -77,7 +83,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var timeView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
 			searchCriteriaView : this,
-			model : this.searchModel
+			model : this.model
 			});
 		this.showView(timeView);		
 	},
@@ -87,7 +93,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var spatialExtent = new SpatialExtentView({
 			el : this.$el.find("#area"), 
 			searchCriteriaView : this,
-			model : this.searchModel });
+			model : this.model });
 		this.showView(spatialExtent);
 
 	},
@@ -97,7 +103,8 @@ var SearchCriteriaView = Backbone.View.extend({
 		var advancedSearchView = new AdvancedSearchView({
 			el : this.$el.find("#searchCriteria"), 
 			searchCriteriaView : this,
-			model : this.searchModel });
+			model : this.model ,
+			dataset : this.dataset});
 		this.showView(advancedSearchView);
 
 	},
@@ -114,9 +121,9 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 	update : function(){
 	
-		if (this.searchModel.get("startdate") != "" && this.searchModel.get("stopdate") != ""
-			&& this.searchModel.get("west") != "" && this.searchModel.get("south") != ""
-			&& this.searchModel.get("east") != "" && this.searchModel.get("north") != ""){
+		if (this.model.get("startdate") != "" && this.model.get("stopdate") != ""
+			&& this.model.get("west") != "" && this.model.get("south") != ""
+			&& this.model.get("east") != "" && this.model.get("north") != ""){
 		
 			this.searchUrlButton.button('enable');
 			this.searchButton.button('enable');
@@ -124,7 +131,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 	},
 	
-	// TODO move to Backbone.View.prototype
+	
     close : function() {
        this.undelegateEvents();
 	   this.mainView.$el.ngeowidget('removeButton', '#back');
@@ -137,7 +144,7 @@ var SearchCriteriaView = Backbone.View.extend({
     }, 
 
     onClose : function() {
-    	this.searchModel = null;
+    	this.model = null;
     },
 	
 });
