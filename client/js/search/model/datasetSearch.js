@@ -4,7 +4,7 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
-		host : "",
+		host : "http://localhost:3000/server/productSearch",
 		datasetId : "",
 		startdate : "",
 		stopdate: "",
@@ -12,6 +12,7 @@ var DataSetSearch = Backbone.Model.extend({
 		south : "",
 		east : "",
 		north : "",
+		useExtent : "false",
 		criteria : ""
 	},
 	
