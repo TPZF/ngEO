@@ -46,7 +46,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Search' });
 		var self = this;
 		this.searchButton.click( function() {
-			SearchResultsWidget();
+			SearchResultsWidget(self.model);
 		});		
 		
 		// Search button is disable when no search criteria are is selected
