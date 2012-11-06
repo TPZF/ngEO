@@ -32,7 +32,7 @@ var MainSearchView = Backbone.View.extend({
 		var today = (new Date()).toISOString();
 		var dateOnly = today.substring(0, today.indexOf('T'));
 		console.log(dateOnly);
-		var datasetSearch = new DatasetSearch({"host" : "toto" , "startdate" : dateOnly , "stopdate" : dateOnly});
+		var datasetSearch = new DatasetSearch({"datasetId" : datasetId  , "startdate" : dateOnly , "stopdate" : dateOnly});
 		
 		var searchCriteriaView = new SearchCriteriaView({
 			el : this.$el.find("#datasetSearchCriteria"),
