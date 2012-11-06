@@ -4,32 +4,36 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
-		host : "http://localhost:3000/server/productSearch",
+		host : "http://localhost:3000/server/productSearch", //server url 
 		datasetId : "",
-		startdate : "",
-		stopdate: "",
+		startdate : "", //name of the opensearch request parameter
+		stopdate: "", //name of the opensearch request parameter
 		west: "",
 		south : "",
 		east : "",
 		north : "",
 		useExtent : "false",
-		criteria : ""
+		criteria : ""//TODO later add the advanced criteria 
 	},
 	
 	validate: function(attrs) {
 	    if (attrs.stopdate < attrs.startdate) {
 	      return "Date interval can't end before it starts";
-	    }
-	    
+	    }   
 	  },
 	  
 	getOpenSearchURL : function(){
 	
 		//TODO add advanced search criteria later
-		return (host + "?q={datasetId  : " + this.get("datasetId") + " } &" +
+		var url = this.get("host") + "?q={datasetId:" + this.get("datasetId") + "}&" +
 				"startdate="+ this.get("startdate") + "&" + 
 				"stopdate=" + this.get("stopdate") + "&" + 
-				"bbox=" + west + "," + south + "," + east + "," + north);
+				"bbox=" + this.get("west") + "," + this.get("south") + "," 
+				+ this.get("east") + "," + this.get("north");
+		
+		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
+		
+		return url;
 	}
 });
 
