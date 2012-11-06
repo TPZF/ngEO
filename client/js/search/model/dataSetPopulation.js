@@ -11,7 +11,8 @@ var DataSetPopulation = Backbone.Model.extend({
 		missions : [],
 		sensors :  [],
 		keywords : [],
-		datasets : []
+		datasets : [],
+		datasetsToDisplay : []
 	},
 	
 	// The base url to retreive the datasets population matrix
@@ -86,11 +87,11 @@ var DataSetPopulation = Backbone.Model.extend({
 					
 					if (rowIter[3] == row[3] && datasetKeys.indexOf({"keyword" : rowIter[2]}) != -1) {
 						
-						datasetKeys.push({"keyword" : rowIter[2]});
+						datasetKeys.push({"keyword" : rowIter[2], "itemsCount":  rowIter[3]});
 					}
 				});
 				
-				datasets.push({"mission" : row[0], "sensor": row[1], "keyword": datasetKeys, "datasetId": row[3], "itemsCount": row[4]}); 
+				datasets.push({"mission" : row[0], "sensor": row[1], "keywordCount": datasetKeys, "datasetId": row[3], "itemsCount": row[4]}); 
 			}
 		});
 				
@@ -100,6 +101,44 @@ var DataSetPopulation = Backbone.Model.extend({
 		return {"criteria" : criteria, "missions" : missions, "sensors" : sensors, 
 			"keywords": keywords, "datasets" : datasets};
 	},
+	
+	getDatasetsWithMission : function(datasetsToFilter, mission){
+		var datasetsToDisplay = [];
+		_.each(datasetsToFilter, function(dataset)){
+			if(dataset.mission == mission){
+				datasetsToDisplay.push(dataset);
+			}
+		}
+		return datasetsToDisplay;
+	},
+	
+	getDatasetsWithSensor : function (datasetsToFilter, sensor){
+		var datasetsToDisplay = [];
+		_.each(datasetsToFilter, function(dataset)){
+			if(dataset.sensor == sensor){
+				datasetsToDisplay.push(dataset);
+			}
+		}
+		return datasetsToDisplay;
+	},
+	
+	getDatasetsWithKeyword : function(datasetsToFilter, keyword){
+		var datasetsToDisplay = [];
+		_.each(datasetsToFilter, function(dataset)){
+			_.each(dataset.keywordCount, function(keyCount)){
+				if (keyCount.keyword == keyword){
+					datasetsToDisplay.push({"mission" : dataset.mission, 
+											"sensor": dataset.sensor, 
+											"keywordCount": dataset.keywordCount, 
+											"datasetId": dataset.datasetId, 
+											"itemsCount": keyCount.itemsCount});
+				}
+				
+			}
+		}
+		return datasetsToDisplay;
+	}
+	
 	
 });
 
