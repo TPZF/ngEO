@@ -38,7 +38,6 @@ var SpatialExtentView = Backbone.View.extend({
 			var $target = $(event.currentTarget);
 			var useExtent = !($(event.currentTarget).hasClass('ui-checkbox-on'));
 			this.model.set({"useExtent" : useExtent});
-			
 			this.synchronizeWithMapExtent();
 		}		
 	},
@@ -46,7 +45,7 @@ var SpatialExtentView = Backbone.View.extend({
 	render: function(){
 
 		this.$el.append(_.template(areaCriteria_template, this.model));
-		//forces the update of the checkbox status
+		//forces the update of the checkbox status according to model
 		$("input[type='checkbox']").prop("checked",this.model.get("useExtent"));
 		this.delegateEvents();
 		return this;
@@ -82,7 +81,7 @@ var SpatialExtentView = Backbone.View.extend({
     },
 
     onClose : function() {
-    	this.model.off("change", this.searchCriteriaView.update(), this.searchCriteriaView);
+    	this.model.off("change", this.searchCriteriaView.update, this.searchCriteriaView);
    		Map.off("endNavigation", this.synchronizeWithMapExtent, this);	
     },
 	
