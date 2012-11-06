@@ -13,8 +13,8 @@
 	// extension so RequireJS resolves them as relative paths rather than using
 	// the `baseUrl` value supplied above.
 	var testModules = [
-		"configuration.js",
-		"menuBar.js"
+		"configurationTest.js",
+		"menuBarTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
