@@ -85,7 +85,7 @@ var DataSetPopulation = Backbone.Model.extend({
 				
 				_.each(valuesTab, function(rowIter){
 					
-					if (rowIter[3] == row[3] && datasetKeys.indexOf({"keyword" : rowIter[2]}) != -1) {
+					if (rowIter[3] == row[3] && datasetKeys.indexOf({"keyword" : rowIter[2], "itemsCount":  rowIter[3]}) != -1) {
 						
 						datasetKeys.push({"keyword" : rowIter[2], "itemsCount":  rowIter[3]});
 					}
@@ -105,30 +105,30 @@ var DataSetPopulation = Backbone.Model.extend({
 	//TODO to use/adapt when dealing with filters
 	getDatasetsWithMission : function(datasetsToFilter, mission){
 		var datasetsToDisplay = [];
-		_.each(datasetsToFilter, function(dataset)){
+		_.each(datasetsToFilter, function(dataset){
 			if(dataset.mission == mission){
 				datasetsToDisplay.push(dataset);
 			}
-		}
+		});
 		return datasetsToDisplay;
 	},
 	
 	//TODO to use/adapt when dealing with filters
 	getDatasetsWithSensor : function (datasetsToFilter, sensor){
 		var datasetsToDisplay = [];
-		_.each(datasetsToFilter, function(dataset)){
+		_.each(datasetsToFilter, function(dataset){
 			if(dataset.sensor == sensor){
 				datasetsToDisplay.push(dataset);
 			}
-		}
+		});
 		return datasetsToDisplay;
 	},
 	
 	//TODO to use/adapt when dealing with filters
 	getDatasetsWithKeyword : function(datasetsToFilter, keyword){
 		var datasetsToDisplay = [];
-		_.each(datasetsToFilter, function(dataset)){
-			_.each(dataset.keywordCount, function(keyCount)){
+		_.each(datasetsToFilter, function(dataset){
+			_.each(dataset.keywordCount, function(keyCount){
 				if (keyCount.keyword == keyword){
 					datasetsToDisplay.push({"mission" : dataset.mission, 
 											"sensor": dataset.sensor, 
@@ -136,9 +136,9 @@ var DataSetPopulation = Backbone.Model.extend({
 											"datasetId": dataset.datasetId, 
 											"itemsCount": keyCount.itemsCount});
 				}
-				
-			}
-		}
+			});	
+		});
+		
 		return datasetsToDisplay;
 	}
 	
