@@ -10,7 +10,7 @@ var TimeExtentView = Backbone.View.extend({
 		
 		this.searchCriteriaView = options.searchCriteriaView;
 		//bind the search model change here to avoiding calling the update method
-		this.model.on("change", this.searchCriteriaView.update(), this.searchCriteriaView);
+		this.model.on("change", this.searchCriteriaView.update, this.searchCriteriaView);
 	},
 	
 	events :{
