@@ -28,6 +28,10 @@ var SearchCriteriaView = Backbone.View.extend({
 		},
 		'click #radio-searchCriteria-label' : function(){
 			 this.showAdvancedCriteria();
+		},
+		//TODO remove since the click is not catched
+		'click #closePopup' : function(){
+			$("#popupText").empty();
 		}
 	},
 	
@@ -53,16 +57,27 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.searchButton.button('disable');
 		
 		// Add a search url button to display the openSearch request url
+		//this.searchUrlButton = this.mainView.$el.ngeowidget('addLink', { divId : '#openSearchUrlPopup' , id: 'searchUrl', name: 'Search URL' });
 		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL' });
+		
 		var self = this;
 		
 		this.searchUrlButton.click( function() {
-			//TODO DISPLAY POPUP
-			self.$el.find("#openSearchUrlPopup").append(self.model.getOpenSearchURL());	
+			//hack to remove the previous url since the click on the close button of the popup is not catched... 
+			$("#popupText").empty();
+			//append the current url
+			$("#popupText").append(self.model.getOpenSearchURL());	
+			$('#openSearchUrlPopup').popup("open",  $( {} )
+				    .jqmData( "position-to", "window" )
+				    .jqmData( "transition", "slide" ));
+			$('#openSearchUrlPopup').trigger('create');
+
 		});	
 		
+		
+		//TODO fix the update according to criteria selection
 		// Search button is disable when no search criteria are is selected
-		this.searchUrlButton.button('disable');
+		//this.searchUrlButton.button('disable');
 		
 		//console.log ("content of the dataset selection template : ");
 		//console.log(content);
