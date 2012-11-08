@@ -1,38 +1,37 @@
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 'search/view/SearchResultsTable', 
-         'text!search/template/areaCriteriaContent.html'], 
-		function($, Backbone, Map, areaCriteria_template) {
+define( ['jquery', 'backbone', 'search/model/datasetSearch', 'search/view/SearchResultsTable', 'jquery.dataTables'], 
+		function($, Backbone, DatasetSearch, SearchResultsTable) {
 
 var SearchResultsView = Backbone.View.extend({
 	
 	initialize : function(options){
-		this.searchTableModel = options.searchTableModel;
+		this.model.on("change", this.displayResultsTable, this);
 		this.$el.append('<div id="searchMessage"></div>');
 		this.$el.append('<div id="tableToolBar"></div>');
-		this.$el.append('<div id="datatable"></div>');
+		this.$el.append('<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable"></table>');
 	},
 
 	render: function(){
 
-		var itemsCount = this.searchTableModel.get("features").length; 
+		var itemsCount = this.model.get("items").length; 
 		if (itemsCount == 0){
 			this.$el.find("#searchMessage").append("Searching....");
-		}else{
-			this.$el.find("#searchMessage").append("Retrieved " + itemsCount + "results.");
-			//this.displayToolBar();
-			this.displayResultsTable();
-			
 		}
-		//this.$el.append(_.template(, this.model));
-
+		
 		return this;
 	},	
 
 	displayResultsTable : function(){
+		
+		this.$el.find("#searchMessage").empty();
+		
+		var self = this;
 		var searchResultsTable = new SearchResultsTable({
 			el : this.$el.find("#datatable"), 
-			model : this.searchTableModel
+			model : this.model,
+			searchResultsView : self
 			});
-		searchResultsTable.render();		
+			
+		searchResultsTable.render();
 	},
 	
 	//this.model.on("sync", this.render, this);
