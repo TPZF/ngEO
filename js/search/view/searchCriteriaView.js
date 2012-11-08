@@ -54,7 +54,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		});		
 		
 		// Search button is disable when no search criteria are is selected
-		this.searchButton.button('disable');
+		//this.searchButton.button('disable');
 		
 		// Add a search url button to display the openSearch request url
 		//this.searchUrlButton = this.mainView.$el.ngeowidget('addLink', { divId : '#openSearchUrlPopup' , id: 'searchUrl', name: 'Search URL' });
@@ -145,7 +145,6 @@ var SearchCriteriaView = Backbone.View.extend({
 		}
 		
 	},
-	
 	
     close : function() {
        this.undelegateEvents();
