@@ -63,7 +63,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 		
 		this.searchUrlButton.click( function() {
-			//hack to remove the previous url since the click on the close button of the popup is not catched... 
+			//work around to remove the previous url since the click on the close button of the popup is not catched... 
 			$("#popupText").empty();
 			//append the current url
 			$("#popupText").append(self.model.getOpenSearchURL());	
