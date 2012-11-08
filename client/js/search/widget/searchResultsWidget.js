@@ -15,7 +15,7 @@ return function(datasetSearch) {
 	searchResults.url = datasetSearch.get("host");
 	
 	// Create the main search results view
-	var searchResultsView = new SearchResultsView({ searchTableModel : searchResults });
+	var searchResultsView = new SearchResultsView({ model : searchResults });
 	
 	// TODO : where to append it to the data services area
 	$('#dataServicesArea').append(searchResultsView.$el);
@@ -32,8 +32,9 @@ return function(datasetSearch) {
 			searchResultsView.render();
 		}
 	});
-
-
+	
+	//searchResultsView.$el.ngeowidget('addHeader', { title : 'Search Results'});//, buttons: [{id: 'closeSearchResults', value: 'close' }]} );
+	
 };
 
 });
