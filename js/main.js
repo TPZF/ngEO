@@ -5,6 +5,7 @@ require.config({
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
+		"jquery.dataTables" : "externs/jquery.dataTables",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"
@@ -31,6 +32,11 @@ require.config({
         'jqm-datebox-calbox': {
             deps: ['jqm-datebox-core'],
             exports: 'jQuery'
+        },
+        
+        'jquery.dataTables' : {
+        	 deps: ['jquery'],
+             exports: 'jQuery'
         },
         
 		'underscore': {
