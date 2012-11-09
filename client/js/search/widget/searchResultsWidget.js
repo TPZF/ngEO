@@ -33,8 +33,6 @@ return function(datasetSearch) {
 		}
 	});
 	
-	//searchResultsView.$el.ngeowidget('addHeader', { title : 'Search Results'});//, buttons: [{id: 'closeSearchResults', value: 'close' }]} );
-	
 };
 
 });
