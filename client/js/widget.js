@@ -76,26 +76,7 @@ $.widget( "ngeo.ngeowidget", {
 			.trigger("create")
 			.hide();
 	},
-	
-	addHeader : function(options){
-		// Add header
-		this.header = $("<div class='widget-header' />")
-			.insertBefore(this.element)
-			.append("<h2 class='widget-title'>" + this.options.title + "</h2>");
-		
-		
-		if ( this.options.buttons )	{
-			$.each( this.options.buttons, function (index,  button ) {
-				if (button.value == 'close'){
-					self.header.append("<button id='" + button.id + "data-role='button' data-inline='true' data-theme='a' data-icon='delete' data-iconpos='notext' class='ui-btn-right'/>");	
-				}
-				self.header.append("<button id='" + button.id + "data-role='button' data-inline='true'>" + button.value + "</button>");
-			});
-		}
-	},
-	
-	
-	
+
 	// Add a button in the footer
 	addButton: function(options) {
 	
@@ -103,7 +84,7 @@ $.widget( "ngeo.ngeowidget", {
 			this.footer.show();
 		}
 		
-		var btn = $("<button data-role='button' data-inline='true' id='"+options.id+"'>" + options.name + "</button>")
+		var btn = $("<button data-role='button' data-inline='true' data-mini='true' id='"+options.id+"'>" + options.name + "</button>")
 			.appendTo(this.footer)
 			.button();
 			
