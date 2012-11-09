@@ -1,7 +1,8 @@
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 
-         'text!search/template/areaCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, Map, areaCriteria_template) {
+define( ['jquery', 'backbone', 'search/model/datasetSearch', 'jquery.mobile'], 
+		function($, Backbone, Map, DatasetSearch) {
 
+	//the DatasetSearch is included in order to access the pagination parameters later
+	
 var SearchResultsTable = Backbone.View.extend({
 
 	//the model is a SearchResults backbone model
@@ -14,31 +15,46 @@ var SearchResultsTable = Backbone.View.extend({
 	},
 	
 	events : {
-		'click tr' : function() {
-	       //TODO investigate not working
-	       // $(this).toggleClass('row_selected');
-	        $(this).addClass('ui-btn-active');
-	        this.trigger('refresh');
+		'click tr' : function(event) {
+	        $(event.currentTarget).toggleClass('row_selected');
 	    } 
 	},
 
 	render: function(){
-
+		
+		var self = this;
 		this.$el.dataTable( {
 			"sDom": '<"top"i>rt<"bottom"flp><"clear">',
 			"aaData" : this.model.get("itemValuesTable"),
 			"aoColumns" : this.model.get("columns"),
 			//"bDestroy" : true
+			//"iDisplayLength": 5,
 	        "bPaginate": true,
-//	        "bLengthChange": false,
+	        "bLengthChange": true,
 //	        "bFilter": true,
 	        "bSort": true,
 //	        "bInfo": false,
 //	        "bAutoWidth": false
+//	        "sScrollY": "200px",
+//	        "bScrollCollapse": true
+	        //FIXME 
+	        "fnDrawCallback": function() {
+	        	self.$el.trigger('create');
+	        	$("#dataTables_length").trigger('create');
+	        },
+	        
+//	        "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+//	         
+//	        	$(tr).onClick($(tr).toggleClass('ui-button-active'));
+//	          }
 	    } );
 		
 		console.log(this.$el.find('tr'));
-
+		//TODO browse slider to move 
+		this.select = this.searchResultsView.$el.ngeowidget('addSelect', { id: 'browseSlider', labelId :'browseSliderLabel' , labelText: 'Browse images on map : ', optionsList: [{value: 'on' , name:'On'}, {value: 'off' , name:'Off'}] });
+		this.select.find('#browseSliderLabel').removeClass("ui-slider");
+		this.select.find('#browseSliderLabel').addClass("browseLabel");
+		
 		
 		this.addToShopcart = this.searchResultsView.$el.ngeowidget('addButton', { id: 'addToShopcart', name: 'Add to Shopcart' });
 		var self = this;
@@ -57,12 +73,18 @@ var SearchResultsTable = Backbone.View.extend({
 		this.closeButton.click( function() {
 			self.close();
 		});
+
 		// Next button is disable when no dataset is selected
 		//this.addToShopcart.button('disable');
 		//return this;
 		//this.trigger('create');
+		//this.$el.find("#datatable_next").button();//.trigger('create');
+		this.$el.trigger('create');
 	},	
 
+	getSeletctedRows : function(){
+		return this.$el.$('tr.row_selected');
+	},
 	
 	// TODO move to Backbone.View.prototype
     close : function() {
