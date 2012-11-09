@@ -6,14 +6,15 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 var SearchResults = Backbone.Model.extend({
 	
 	defaults:{
-		columns : [{'sTitle': 'id'},  {'sTitle': 'Footprint'}, {'sTitle': 'Start'},{'sTitle': 'Stop'},
-		           {'sTitle': 'Platform'}, {'sTitle': 'Satelletite'}, {'sTitle' : 'Sensor'},{'sTitle': 'Swath'},{'sTitle': 'Orbit'},
-		           {'sTitle': 'Pass'},  {'sTitle': 'Product'}, {'sTitle': 'Product Type'},{'sTitle': 'Status'}],
+		columns : [{'sTitle': 'id'},  {'sTitle': 'Mission'}, {'sTitle' : 'Sensor'},{'sTitle': 'Start'},{'sTitle': 'Stop'},
+		          {'sTitle': 'Swath'},{'sTitle': 'Orbit'}, {'sTitle': 'Pass'},  
+		          {'sTitle': 'Product'}, {'sTitle': 'Product Type'},{'sTitle': 'Status'}],
 		items : [],
 		itemValuesTable : []
 	},
 
-    //TODO later add browse info :  {'sTitle': 'Browse Type'}, {'sTitle': 'Browse Projection'},{'sTitle': 'Browse File'}
+	//{'sTitle': 'Satelletite'} 
+    //TODO later add browse info if needed :  {'sTitle': 'Browse Type'}, {'sTitle': 'Browse Projection'},{'sTitle': 'Browse File'}
   
 
 	parse: function(response){
@@ -24,16 +25,17 @@ var SearchResults = Backbone.Model.extend({
 		var itemValuesTable = [];
 		_.each(features, function(feature){
 			items.push({'id' : feature.id,
-						'Footprint' : feature.geometry.coordinates,
+						'Mission' : feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
+						//'Satelletite' : feature.properties.EarthObservation.EarthObservationEquipment.eop_platformSerialIdentifier,
+						'Sensor' : feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
+						//'Footprint' : feature.geometry.coordinates,
 						'Start' : feature.properties.EarthObservation.gml_beginPosition,
 						'Stop' : feature.properties.EarthObservation.gml_endPosition,
 						//acquisition equipement
-						'Platform' : feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
-						'Satelletite' : feature.properties.EarthObservation.EarthObservationEquipment.eop_platformSerialIdentifier,
-						'Sensor' : feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
 						'Swath' : feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier,
 						//acquisition info
 						'Orbit' : feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber,
+						'Pass' : feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection,
 						'Product' : feature.properties.EarthObservation.EarthObservationMetaData.eop_identifier,
 						'Product Type' : feature.properties.EarthObservation.EarthObservationMetaData.eop_productType,
 						'Status' : feature.properties.EarthObservation.EarthObservationMetaData.eop_status
@@ -45,12 +47,12 @@ var SearchResults = Backbone.Model.extend({
 			
 			itemValuesTable.push([
 			    feature.id, 
-			    feature.geometry.coordinates,
+			   // feature.geometry.coordinates,
+			    feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
+			    feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
 			    feature.properties.EarthObservation.gml_beginPosition,
 				feature.properties.EarthObservation.gml_endPosition,
-				feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
-				feature.properties.EarthObservation.EarthObservationEquipment.eop_platformSerialIdentifier,
-				feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
+				//feature.properties.EarthObservation.EarthObservationEquipment.eop_platformSerialIdentifier,//Satellite identifier
 				feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier,
 				feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber,
 				feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection,
