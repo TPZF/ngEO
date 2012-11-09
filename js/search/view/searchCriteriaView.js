@@ -47,7 +47,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		});
 			
 		// Add a search button to submit the search request
-		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Search' });
+		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Submit Search' });
 		var self = this;
 		this.searchButton.click( function() {
 			SearchResultsWidget(self.model);
