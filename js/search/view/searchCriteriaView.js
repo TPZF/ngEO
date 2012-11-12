@@ -1,12 +1,11 @@
 
 
 define( ['jquery', 'backbone', 'search/model/datasetSearch', 'search/view/spatialExtentView',
-         'search/view/timeExtentView',  'search/view/advancedSearchView', "search/widget/searchResultsWidget",
+         'search/view/timeExtentView',  'search/view/advancedSearchView', 
          'text!search/template/searchCriteriaContent_template.html',
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
 		function($, Backbone, DatasetSearch, SpatialExtentView, TimeExtentView, 
-				AdvancedSearchView, SearchResultsWidget,
-				searchCriteria_template, dateCriteria_template, 
+				AdvancedSearchView, searchCriteria_template, dateCriteria_template, 
 				areaCriteria_template, advancedCriteria_template) {
 
 var SearchCriteriaView = Backbone.View.extend({
@@ -49,8 +48,11 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Add a search button to submit the search request
 		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Submit Search' });
 		var self = this;
+	
 		this.searchButton.click( function() {
-			SearchResultsWidget(self.model);
+			
+			self.mainView.displaySearchResults(self.model);
+		
 		});		
 		
 		// Search button is disable when no search criteria are is selected
@@ -63,7 +65,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 		
 		this.searchUrlButton.click( function() {
-			//work around to remove the previous url since the click on the close button of the popup is not catched... 
+			//remove the previous url since the click on the close button of the popup is not catched... 
 			$("#popupText").empty();
 			//append the current url
 			$("#popupText").append(self.model.getOpenSearchURL());	
