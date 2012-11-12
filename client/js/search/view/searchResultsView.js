@@ -1,12 +1,15 @@
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 
-         'search/view/SearchResultsTable',  'text!search/template/searchResultViewContent_template.html',
+define( ['jquery', 'backbone', 'search/model/datasetSearch',  'search/model/searchResultsTable', 
+         'search/view/searchResultsTableView',  'text!search/template/searchResultViewContent_template.html',
          'jquery.dataTables'], 
-		function($, Backbone, DatasetSearch, SearchResultsTable, searchResultsView_temp) {
+		function($, Backbone, DatasetSearch, SearchResultsTable, SearchResultsTableView, searchResultsView_temp) {
 
+	/** the model is a SearchResults model */
 var SearchResultsView = Backbone.View.extend({
 	
 	initialize : function(options){
 		this.model.on("change", this.displayResultsTable, this);
+		this.datasetSearch = options.datasetSearch;
+		this.mainView = options.mainView;
 //		this.$el.append('<div id="searchResultsHeader" data-role="header" class="ui-header ui-bar-a" role="banner"><h1 role="heading" class="ui-title" aria-level="1"> Search Results </h1></div>');
 //		this 
 //		this.$el.append('<div id="searchMessage"></div>');
@@ -28,7 +31,7 @@ var SearchResultsView = Backbone.View.extend({
 		
 		this.$el.append(searchResultsView_temp);
 		this.$el.find("#results").hide();
-		var itemsCount = this.model.get("items").length; 
+		var itemsCount = this.model.get("features").length; 
 		if (itemsCount == 0){
 			this.$el.find("#searchMessage").append("Searching....");
 		}
@@ -42,13 +45,16 @@ var SearchResultsView = Backbone.View.extend({
 		this.$el.find("#results").show();
 		
 		var self = this;
-		var searchResultsTable = new SearchResultsTable({
+		
+		var searchResultsTable = new SearchResultsTable({"features" : this.model.get("features") });
+		
+		var searchResultsTableView = new SearchResultsTableView({
 			el : this.$el.find("#datatable"), 
-			model : this.model,
-			searchResultsView : self
-			});
+			model : searchResultsTable,
+			mainView : self.mainView
+		});
 			
-		searchResultsTable.render();
+		searchResultsTableView.render();
 	},
 	
 	//this.model.on("sync", this.render, this);
