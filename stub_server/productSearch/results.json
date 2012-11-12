@@ -82,7 +82,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "PROVISIONNAL",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -132,11 +132,11 @@
                 "eop_instrumentShortName": "SAR",
                 "eop_sensorType": "RADAR",
                 "eop_operationalMode": "SM",
-                "eop_swathIdentifier": "I1",
+                "eop_swathIdentifier": "I3",
                 "Acquisition":
                   {
-                    "eop_orbitNumber" : 1000,
-                    "eop_orbitDirection" : "ASCENDING",
+                    "eop_orbitNumber" : 30300,
+                    "eop_orbitDirection" : "DESCENDING",
                     "eop_wrsLongitudeGrid" : "150",
                     "eop_wrsLatitudeGrid" : "7200",
                     "eop_startTimeFromAscendingNode" : 1000000,
@@ -222,15 +222,15 @@
             "gml_timePosition": "2001-01-01T12:00:00.00Z",
             "EarthObservationEquipment": 
               {
-                "eop_platformShortName": "SENTINEL-1",
+                "eop_platformShortName": "SENTINEL-2",
                 "eop_platformSerialIdentifier": "1A",
                 "eop_instrumentShortName": "SAR",
                 "eop_sensorType": "RADAR",
                 "eop_operationalMode": "SM",
-                "eop_swathIdentifier": "I1",
+                "eop_swathIdentifier": "I5",
                 "Acquisition":
                   {
-                    "eop_orbitNumber" : 1000,
+                    "eop_orbitNumber" : 300,
                     "eop_orbitDirection" : "ASCENDING",
                     "eop_wrsLongitudeGrid" : "150",
                     "eop_wrsLatitudeGrid" : "7200",
@@ -317,15 +317,15 @@
             "gml_timePosition": "2001-01-01T12:00:00.00Z",
             "EarthObservationEquipment": 
               {
-                "eop_platformShortName": "SENTINEL-1",
+                "eop_platformShortName": "SENTINEL-3",
                 "eop_platformSerialIdentifier": "1A",
                 "eop_instrumentShortName": "SAR",
                 "eop_sensorType": "RADAR",
                 "eop_operationalMode": "SM",
-                "eop_swathIdentifier": "I1",
+                "eop_swathIdentifier": "I4",
                 "Acquisition":
                   {
-                    "eop_orbitNumber" : 1000,
+                    "eop_orbitNumber" : 5000,
                     "eop_orbitDirection" : "ASCENDING",
                     "eop_wrsLongitudeGrid" : "150",
                     "eop_wrsLatitudeGrid" : "7200",
@@ -369,7 +369,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "POTENTIAL",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -749,7 +749,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "POTENTIAL",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -895,8 +895,8 @@
                 "eop_swathIdentifier": "I1",
                 "Acquisition":
                   {
-                    "eop_orbitNumber" : 1000,
-                    "eop_orbitDirection" : "ASCENDING",
+                    "eop_orbitNumber" : 500,
+                    "eop_orbitDirection" : "DESCENDING",
                     "eop_wrsLongitudeGrid" : "150",
                     "eop_wrsLatitudeGrid" : "7200",
                     "eop_startTimeFromAscendingNode" : 1000000,
@@ -939,7 +939,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "PLANNED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -990,8 +990,8 @@
                 "eop_swathIdentifier": "I1",
                 "Acquisition":
                   {
-                    "eop_orbitNumber" : 1000,
-                    "eop_orbitDirection" : "ASCENDING",
+                    "eop_orbitNumber" : 740,
+                    "eop_orbitDirection" : "DESCENDING",
                     "eop_wrsLongitudeGrid" : "150",
                     "eop_wrsLatitudeGrid" : "7200",
                     "eop_startTimeFromAscendingNode" : 1000000,
@@ -1034,7 +1034,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "POTENTIAL",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
