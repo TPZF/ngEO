@@ -2,29 +2,19 @@
 @widget-background-color: fade(@background-color, 60%); 
 @widget-border-radius: 8px;
 
-.widget-container {
-	position: absolute;
-	z-index: 1005;
-}
 
 .widget {
+	position: absolute;
+	z-index: 1005;
 	background: @widget-background-color; 
 	border: solid 5px @widget-background-color; 
 	background-clip: padding-box;
 	.border-radius(@widget-border-radius);
 }
-/*
-TODO : remove this, not needed anymore!
-.widget-header {
-	.drop-shadow(0, 2px, 3px, 0, 0.25);
-	position: relative;
-    z-index: 1010;
-	cursor: pointer;
-	height: 33px;
-}
-*/
 
 .widget-arrow-up {
+	position: absolute;
+	z-index: 1005;
 	width: 0; 
 	height: 0; 
 	margin: auto;
@@ -33,52 +23,19 @@ TODO : remove this, not needed anymore!
 	border-bottom: @widget-arrow-size solid @widget-background-color;
 }
 
-/*
- Not needed anymore
-.widget-title {
-	margin: 0;
-	padding: 0;
-	display: inline-block;
-	margin: 0 0 0 0.5em;
-}
 
-*/
 .widget-footer {
 	padding-top: 5px;
-	text-align: right;
+//	text-align: right;
 }
-/*
- TODO : remove this, not needed anymore!
-.widget-icon {
-	float: right;
-	margin-left: 4px;
-}
-
-.widget-min {
-//	background-image: url('../images/minimize.png');
-//	width: 24px;
-//	height: 24px;
+.widget-footer-right {
 	float: right;
 }
-
-.widget-max {
-//	background-image: url('../images/maximize.png');
-//	width: 24px;
-//	height: 24px;
-	float: right;
+.widget-footer-left {
+	float: left;
 }
-
-.widget-close {
-	background-image: url('../images/close2.png');
-	width: 24px;
-	height: 24px;
-	float: right;
-}*/
 
 .widget-content {
-// Background is set using jQM
-//	background: #ffffff;
-//	color: #0A0A0A;
 	padding: 0.5em;
 	.border-radius(@widget-border-radius);
 }

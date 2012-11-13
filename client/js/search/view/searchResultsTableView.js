@@ -58,13 +58,13 @@ var SearchResultsTableView = Backbone.View.extend({
 //		this.select.find('#browseSliderLabel').addClass("browseLabel");
 //		
 		
-		this.addToShopcart = this.mainView.$el.ngeowidget('addButton', { id: 'addToShopcart', name: 'Add to Shopcart' });
+		this.addToShopcart = this.mainView.$el.ngeowidget('addButton', { id: 'addToShopcart', name: 'Add to Shopcart', position: 'left' });
 		var self = this;
 		this.addToShopcart.click( function() {
 			//TODO 
 		});
 		
-		this.retrieveProduct = this.mainView.$el.ngeowidget('addButton', { id: 'retrieve', name: 'Retrieve Product' });
+		this.retrieveProduct = this.mainView.$el.ngeowidget('addButton', { id: 'retrieve', name: 'Retrieve Product', position: 'left' });
 		var self = this;
 		this.retrieveProduct.click( function() {
 			//TODO 
