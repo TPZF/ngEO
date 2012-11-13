@@ -9,7 +9,9 @@ define(
 			.extend({
 
 				defaults : {
-					columns : [ { //datatable columns
+					columns : [{ //datatable columns
+						'sTitle' : '  '
+					}, {
 						'sTitle' : 'id'
 					}, {
 						'sTitle' : 'Mission'
@@ -50,11 +52,7 @@ define(
 					var items = [];
 					var itemValuesTable = [];
 					_.each(params.features, function(feature) {
-							items.push({ // ' ' :
-											// 'false',
-											// //add an
-											// checked check
-											// box
+							items.push({ 
 										'id' : feature.id,
 										'Mission' : feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
 										// 'Satelletite' :
@@ -87,6 +85,7 @@ define(
 											// //add an
 											// checked check
 											// box
+											'',
 											feature.id,
 											// feature.geometry.coordinates,
 											feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
@@ -107,7 +106,7 @@ define(
 									]);
 						});
 
-					this.set({"items" : items, "itemValuesTable" : itemValuesTable });
+					this.set({"items" : items, "itemValuesTable" : itemValuesTable , "features" : params.features});
 				},
 
 			});
