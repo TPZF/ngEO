@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "externs/OpenLayers.ngeo" ],
+define( [ "externs/OpenLayers.debug" ],
  
  function() {
   
@@ -35,8 +35,30 @@ OpenLayersMapEngine = function( parentElement )
 	});
 	
 	// Create the converter for GeoJSON format
-	this._geoJsonFormat = new OpenLayers.Format.GeoJSON();
+	this._geoJsonFormat = new OpenLayers.Format.GeoJSON({
+		externalProjection: this._map.displayProjection,
+		internalProjection: this._map.projection
+	});
+	
+	this._styles = {};
 }
+
+/**
+ * Add a style
+ */
+OpenLayersMapEngine.prototype.addStyle = function(name,defaut,select) {
+	if (select) {
+		this._styles[name] = new OpenLayers.StyleMap({
+			'default' : new OpenLayers.Style(defaut),
+			'select' : new OpenLayers.Style(select)
+		});
+	}
+	else {
+		this._styles[name] = new OpenLayers.StyleMap({
+			'default' : new OpenLayers.Style(defaut)
+		});
+	}
+};
 
 /**
  * Set the background layer
@@ -116,9 +138,16 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			projection: "EPSG:4326"
         });
 		break;
+	case "GeoJSON":
+		olLayer = new OpenLayers.Layer.Vector(layer.name, {
+			projection: "EPSG:4326"
+        });
 	}
 	
 	if (olLayer) {
+		if (layer.style) {
+			olLayer.styleMap = this._styles[layer.style];
+		}
 		olLayer.setVisibility(layer.visible);
 		this._map.addLayer(olLayer);
 	}
@@ -172,31 +201,6 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
 	}
 }
 
-/**
- * Set the style to be used
- */
-OpenLayersMapEngine.prototype.setStyleMap = function(styleMap)
-{
-	this._styleMap = styleMap;
-	// Create the feature layer now
-	for ( var s in styleMap )
-	{
-		var olStyle = OpenLayers.Util.extend( {}, OpenLayers.Feature.Vector.style['default'] );
-		olStyle.fill = false;
-		olStyle.strokeColor = styleMap[s].strokeColor;
-		olStyle.strokeWidth = styleMap[s].strokeWidth;
-			
-		var featureLayer = new OpenLayers.Layer.Vector(s, {
-				projection: this._map.displayProjection,
-				style: olStyle
-			}
-		);
-		
-		this._map.addLayer( featureLayer );
-		
-		styleMap[s]._featureLayer = featureLayer;
-	}	
-}
 
 /**
  * Update the size of the map
@@ -270,26 +274,20 @@ OpenLayersMapEngine.prototype.zoomOut = function()
 }
 
 /**
- * Remove all products from the map
+ * Remove all features from a layer
  */
-OpenLayersMapEngine.prototype.removeAllProducts = function(style)
+OpenLayersMapEngine.prototype.removeAllFeatures = function(layer)
 {
-	var featureLayer = this._styleMap[style]._featureLayer;
-	featureLayer.removeAllFeatures();
+	layer.removeAllFeatures();
 }
 
 /**
- * Add a product on the map
+ * Add a feature on the map
  */
-OpenLayersMapEngine.prototype.addProduct = function(product,style)
+OpenLayersMapEngine.prototype.addFeatureCollection = function(layer,featureCollection)
 {
-	var featureLayer = this._styleMap[style]._featureLayer;
-
-	var olFeatures = this._geoJsonFormat.read(product.geometry);
-	olFeatures[0].id = product.name;
-	olFeatures[0].product = product;
-	olFeatures[0].geometry = olFeatures[0].geometry.components[0].transform(this._map.displayProjection, this._map.projection);
-	featureLayer.addFeatures( olFeatures );
+	var olFeatures = this._geoJsonFormat.read(featureCollection);
+	layer.addFeatures( olFeatures );
 
 }
 
@@ -310,11 +308,12 @@ OpenLayersMapEngine.prototype.removeProduct = function(product)
 }
 
 /**
- * Modify the product style
+ * Modify the feature style
  */
-OpenLayersMapEngine.prototype.modifyProductStyle = function(product,style)
+OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 {
-	var origFeatureLayer = this._styleMap[product.style]._featureLayer;
+	layer.drawFeature( layer.getFeatureByFid(feature.id), style );
+/*	var origFeatureLayer = this._styleMap[product.style]._featureLayer;
 	var newFeatureLayer = this._styleMap[style]._featureLayer;
 	
 	if ( origFeatureLayer != newFeatureLayer )
@@ -323,7 +322,7 @@ OpenLayersMapEngine.prototype.modifyProductStyle = function(product,style)
 		origFeatureLayer.removeFeatures( [olFeature] );
 		olFeature.style = null;
 		newFeatureLayer.addFeatures( [olFeature] );
-	}
+	}*/
 }
 
 /**
