@@ -46,11 +46,12 @@ var SearchResultsView = Backbone.View.extend({
 		
 		var self = this;
 		
-		var searchResultsTable = new SearchResultsTable({"features" : this.model.get("features") });
+		var searchResultsTable = new SearchResultsTable({"features" : this.model.attributes.features});
 		
 		var searchResultsTableView = new SearchResultsTableView({
 			el : this.$el.find("#datatable"), 
 			model : searchResultsTable,
+			searchResults : this.model,
 			mainView : self.mainView
 		});
 			
