@@ -50,7 +50,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		}
 		
 		// Add a next button in the widget footer
-		this.nextButton = this.mainView.$el.ngeowidget('addButton', { id: 'next', name: 'Next' });
+		this.nextButton = this.mainView.$el.ngeowidget('addButton', { id: 'next', name: 'Next', position: 'right' });
 		var self = this;
 		this.nextButton.click( function() {
 			self.mainView.displaySearchCriteria(self.selectedDatasetId);

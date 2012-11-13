@@ -39,7 +39,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
 		
 		// Add a back button to return to dataset selection
-		var backButton = this.mainView.$el.ngeowidget('addButton', { id: 'back', name: 'Back' });
+		var backButton = this.mainView.$el.ngeowidget('addButton', { id: 'back', name: 'Back', position: 'left' });
 		var self = this;
 		backButton.click( function() {
 			self.mainView.displayDatasets();
@@ -60,7 +60,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		// Add a search url button to display the openSearch request url
 		//this.searchUrlButton = this.mainView.$el.ngeowidget('addLink', { divId : '#openSearchUrlPopup' , id: 'searchUrl', name: 'Search URL' });
-		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL' });
+		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL', position: 'left' });
 		
 		var self = this;
 		

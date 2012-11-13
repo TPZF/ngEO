@@ -16,7 +16,7 @@ $.widget( "ngeo.ngeowidget", {
 		title: "",
 		activator: null,
 		buttons: null,
-		effectDuration: 300,
+		effectDuration: 1000,
 		
 		// callbacks
 		show: null,
@@ -37,18 +37,13 @@ $.widget( "ngeo.ngeowidget", {
 		// Wrap with the parent div for widget
 		this.element.wrap("<div class='widget'/>");
 		this.parentElement = this.element.parent();
-		
-		this.parentElement.wrap("<div class='widget-container' />");
-		this.containerElement = this.parentElement.parent();
-		
+				
 		// Add Arrow 
 		this.arrow = $("<div class='widget-arrow-up' />")
 			.insertBefore(this.parentElement);
-		
-		
-			
+					
 		// Add footer
-		this.footer = $("<div class='widget-footer'/>")
+		this.footer = $("<div class='widget-footer'><div class='widget-footer-left'/><div class='widget-footer-right'/></div>")
 			.insertAfter(this.element);
 			
 		if ( this.options.buttons )	{
@@ -71,10 +66,11 @@ $.widget( "ngeo.ngeowidget", {
 				self.show();
 			}
 		});
-				
-		this.containerElement
+			
+		this.parentElement
 			.trigger("create")
 			.hide();
+		this.arrow.hide();
 	},
 
 	// Add a button in the footer
@@ -84,8 +80,10 @@ $.widget( "ngeo.ngeowidget", {
 			this.footer.show();
 		}
 		
+		var pos = options.position || 'right';
+		
 		var btn = $("<button data-role='button' data-inline='true' data-mini='true' id='"+options.id+"'>" + options.name + "</button>")
-			.appendTo(this.footer)
+			.appendTo( pos == "right" ? this.footer.find('.widget-footer-right') : this.footer.find('.widget-footer-left') )
 			.button();
 			
 			
@@ -129,12 +127,21 @@ $.widget( "ngeo.ngeowidget", {
 	
 	update: function() {
 		// Recompute position for widget
-		var posActivator = this.activator.position();	
-		var widgetLeft = posActivator.left - (this.containerElement.outerWidth()/2) + (this.activator.outerWidth()/2);
-		var widgetTop = posActivator.top + this.activator.outerHeight() + 20;
-		this.containerElement
-			.css( 'top', widgetTop )
+		var posActivator = this.activator.position();
+		var widgetLeft = posActivator.left - (this.parentElement.outerWidth()/2) + (this.activator.outerWidth()/2);
+		this.parentElement
 			.css( 'left', widgetLeft );
+		this.arrow
+			.css( 'left', posActivator.left );
+			
+		// Set top position for both arrow and widget content
+		// Top position never changed because toolbar and activator are fixed... even with a window resize!
+		var $tb = $('#toolbar');
+		var widgetTop = $tb.position().top + $tb.outerHeight();
+		this.parentElement
+			.css( 'top', widgetTop + this.arrow.outerHeight() );
+		this.arrow
+			.css( 'top', widgetTop );
 	},
 	
 	show: function() {
@@ -146,8 +153,9 @@ $.widget( "ngeo.ngeowidget", {
 		}
 		
 		this.update();
-		this.containerElement.fadeIn(this.options.durationEffect); 
-		
+		this.parentElement.fadeIn(this.options.durationEffect); 
+		this.arrow.fadeIn(this.options.durationEffect); 
+	
 		this.activator.addClass('toggle');
 		
 		if ( this.options.show ) {
@@ -157,7 +165,8 @@ $.widget( "ngeo.ngeowidget", {
 	
 	hide: function() {
 	
-		this.containerElement.fadeOut(this.options.durationEffect); 
+		this.parentElement.fadeOut(this.options.durationEffect); 
+		this.arrow.fadeOut(this.options.durationEffect); 
 		this.activator.removeClass('toggle');
 		
 		if ( this.options.hide ) {
