@@ -30,7 +30,26 @@
 			"imageSet": "Aerial"
 		}],
 		
+		"styles": {
+			"footprint" : { "default" : {
+					"strokeColor": "#ff0000",
+					"strokeWidth": 1,
+					"fill" : false
+				},
+				"select" : {
+					"strokeColor": "#0000ff",
+					"strokeWidth": 1,
+					"fill" : false
+				}
+			}
+		},
+		
 		"layers": [{
+			"name": "Result Footprints",
+			"type": "GeoJSON",
+			"visible": true,
+			"style": "footprint"
+		},{
 			"name": "Earthquake Feed (GeoRSS)",
 			"type": "GeoRSS",
 			"location": "data/eqs7day-M5.xml",

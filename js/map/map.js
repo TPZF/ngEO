@@ -2,10 +2,10 @@
   * Map module
   */
 
-define( [ "configuration", "map/openlayers", "map/globweb", "backbone" ], 
+define( [ "configuration", "search/model/searchResults", "map/openlayers", "map/globweb", "backbone" ], 
 
 // The function to define the map module
-function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
+function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 	
 	/**
 	 * Private attributes
@@ -17,24 +17,12 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	};
 	var mapEngine = null;
 	var engineLayers = [];
+	var resultFootprintLayer = null;
 	var element = null;
 	var backgroundLayer = null;
-	var selectedProduct = null;
-	var visualizedProducts = [];
+	var selectedFeature = null;
 	var	popup = null;
 	var maxExtent = [-180,-85,180,85];
-	var resultStyle = {
-		strokeColor: '#ff0000',
-		strokeWidth: 1
-	};
-	var shopcartStyle = {
-			strokeColor: '#00ff00',
-			strokeWidth: 1
-		};
-	var selectedStyle = {
-			strokeColor: '#0000ff',
-			strokeWidth: 1
-		};
 
 	/**
 	 * Private methods
@@ -67,19 +55,19 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	var startNavigationHandler = function()
 	{
 		if ( popup ) {					
-			$(popup).dialog( "close" );
+			popup.popup( "close" );
 		}
-	}
+	};
 	
 	/**
-	 * Get the product from a point : test if the point is inside the product footprint
+	 * Get a feature from a point : test if the point is inside the footprint
 	 */
-	var getProductFromPoint = function(lonlat) {
+	var getFeatureFromPoint = function(lonlat) {
 		
-		for ( var i = 0; i < visualizedProducts.length; i++ ) {
-			var product = visualizedProducts[i];
-			if ( pointInRing(lonlat,product.geometry.coordinates[0]) ) {
-				return product;
+		for ( var i = 0; i < SearchResults.get('features').length; i++ ) {
+			var feature = SearchResults.get('features')[i];
+			if ( pointInRing(lonlat,feature.geometry.coordinates[0]) ) {
+				return feature;
 			}
 		}
 				
@@ -90,26 +78,23 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	 * Clear the current selection
 	 */
 	var clearSelection = function() {
-		if ( selectedProduct ) {
-			map.modifyProductStyle( selectedProduct, selectedProduct.previousStyle );
-			selectedProduct.style = selectedProduct.previousStyle;
-			selectedProduct = null;
+		if ( selectedFeature ) {
+			mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeature,"default");
+			selectedFeature = null;
 		}
 	};
 
 	
 	/**
-	 * Select product
+	 * Select feature
 	 */
-	var selectProduct = function(product)  {
-		if ( product != selectedProduct ) {
+	var selectFeature = function(feature)  {
+		if ( feature != selectedFeature ) {
 			
 			clearSelection();
 			
-			map.modifyProductStyle( product, 'selected' );
-			product.previousStyle = product.style;
-			product.style = 'selected';
-			selectedProduct = product;
+			mapEngine.modifyFeatureStyle(resultFootprintLayer,feature,"select");
+			selectedFeature = feature;
 		}
 	};
 	
@@ -117,71 +102,27 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	/**
 	 * Call when the user click on the map
 	 */
-	var mapClickHandler = function(evt)
+	var mapClickHandler = function(pageX,pageY)
 	{
-		var clientX, clientY, pageX, pageY;
-		var position = $("#map").offset();
-		if ( evt.pageX ) {
-			if ( !evt.originalEvent.ctrlKey )
-				return;
-			clientX = evt.pageX - position.left;
-			clientY = evt.pageY - position.top;
-			pageX = evt.pageX;
-			pageY = evt.pageY;
-		} else {
-			if ( !evt.getCtrlKey() )
-				return;
-			clientX = evt.getClientX();
-			clientY = evt.getClientY();
-			pageX = clientX + position.left;
-			pageY = clientY + position.top;
-		}
-		var lonlat = map.getLonLatFromPixel(clientX,clientY);
+		var position = $('#mapContainer').offset();
+		var clientX = pageX - position.left;
+		var clientY = pageY - position.top;
 		
 		clearSelection();
 		
-		// If we are on map, select the product below the mouse
-		if ( lonlat) {
-						
-			if ( !popup ) {
-				popup = document.createElement('div');
-				popup.id = "cartoPopup";
-				$("#map").append(popup);
-							
-				$(popup).dialog({ autoOpen: false, resizable: false });
-			}
-			
-			var jPopup = $(popup);
-			
-			var product = getProductFromPoint(lonlat);
-			if ( product ) {
+		var lonlat = mapEngine.getLonLatFromPixel(clientX,clientY);
+		if ( lonlat ) {
+			var feature = getFeatureFromPoint(lonlat);
+			if ( feature )
+			{
+				selectFeature(feature);
 				
-				selectProduct(product);
-				
-            	var content = '<p> <b>Name : </b>' + product.name + '</p>'
-            			+ '<p> <b>Status : </b>' + product.status + '</p>'
-            			+ '<p> <b>Acquisistion date : </b>' + product.date + '</p>'
-            			+ '<p> <b>Orbit : </b>' + product.orbit + '</p>'
-    					+ '<p> <b>Pass : </b>' + product.pass + '</p>'
-    					+ '<br>'
-    					+ '<div id="popup-toolbar"></div>';
-            	          	    			
-            	jPopup.html(content);
-            	
-               	// Build the toolbar
-            	var toolbar = productToolbarFactory.create( jPopup.find("#popup-toolbar").get(0) );
-            	toolbar.productSelected( product );
-               	popup.toolbar = toolbar;
-            	
-               	jPopup.dialog( "option", "title", "Selected product" );
-               	jPopup.dialog( "option", "position", [pageX - jPopup.outerWidth() / 2, pageY - jPopup.outerHeight() / 2 ] );
-               	jPopup.dialog( "option", "width", 'auto' );
-               	jPopup.dialog( "open" );
-				
-				eocat.Events.trigger('product.selected', product, self );
-            					
-			} else {
-				jPopup.dialog( "close" );
+				if (!popup)
+				{
+					popup = $('<div data-role="popup" id="popupBasic"><p>This is a completely basic popup, no options set.<p></div>').appendTo('#mapContainer');
+					popup.popup();
+				}
+				popup.popup('open', { x:  pageX, y: pageY });
 			}
 		}
 	};
@@ -209,37 +150,13 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	};
 
 	/**
-	 * Visualize some products
+	 * Update results
 	 */
-	var visualizeResults = function( products ) {
-		
-		if ( selectedProduct && selectedProduct.previousStyle === "results") {
-			clearSelection();
-		}
-		
-		// Clear the product in the map engine, except for product in shopcart
-		var vizProducts = [];
-		for ( var i = 0; i < visualizedProducts.length; i++ ) {
-			var product = visualizedProducts[i];	
-			if ( product.style === "results" ) {
-				map.removeProduct( product );
-			} else {
-				vizProducts.push( product );
-			}
-		}
-				
-		if ( products ) {
-			// Add the product to the map, each map engine will render the product according to its capabilites
-			for ( var i = 0; i < products.length; i++ ) {
-				var product = products[i];	
-				computeExtent(product);
-				map.addProduct(product,'results');
-				product.style = 'results';
-				vizProducts.push( product );
-			}
-		}
-		
-		visualizedProducts = vizProducts;
+	var updateResults = function() {
+	
+		mapEngine.removeAllFeatures( resultFootprintLayer );
+		mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
+
 	};
 	
 	/**
@@ -247,20 +164,31 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	 */
 	var configureMapEngine = function(mapConf) {
 	
-		mapEngine.setStyleMap( { 'results': resultStyle, 'shopcart': shopcartStyle, 'selected': selectedStyle } );
 		mapEngine.setBackgroundLayer( backgroundLayer );
-		mapEngine.zoomToExtent( maxExtent );
+		
+		for ( var x in mapConf.styles ) {
+			if ( mapConf.styles.hasOwnProperty(x) ) {
+				var style = mapConf.styles[x];
+				if ( style['default'] &&  style['select'] ) {
+					mapEngine.addStyle( x, style['default'], style['select'] );
+				} else {
+					mapEngine.addStyle( x, style );
+				}
+			}
+		}
 		
 		for ( var i = 0; i < mapConf.layers.length; i++ ) {
 			engineLayers[i] = mapEngine.addLayer( mapConf.layers[i] );
 		}
+		resultFootprintLayer = engineLayers[0];
+		
+		mapEngine.zoomToExtent( maxExtent );
 		
 		mapEngine.subscribe("endNavigation", function() {
 			self.trigger("endNavigation",self);
 		});
 		
-		/*map.subscribe("startNavigation",startNavigationHandler);
-		map.subscribe("click",mapClickHandler);*/
+		mapEngine.subscribe("startNavigation",startNavigationHandler);
 	};
 
 	
@@ -281,6 +209,23 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 	
 			element = document.getElementById(eltId);
 			
+			var prevX, prevY;
+			var prevTime;
+			element.addEventListener('mousedown',function(evt){
+				prevX = evt.pageX;
+				prevY = evt.pageY;
+				prevTime = Date.now();
+			}, true);
+			element.addEventListener( 'mouseup', function(evt) {
+				var dx = evt.pageX - prevX;
+				var dy = evt.pageY - prevY;
+				var dt = Date.now() - prevTime;
+				if ( dx <= 1 && dy <= 1 && dt < 1000 ) {
+					mapClickHandler(evt.pageX,evt.pageY);
+					console.log('click');
+				}
+			}, true);
+			
 			mapEngine = new engines['2d'](element);
 			
 			// Manage window resize
@@ -290,65 +235,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 			
 			backgroundLayer = Configuration.data.map.backgroundLayers[0];
 			configureMapEngine(Configuration.data.map);
-					
-						
-			// Add a callback on eocat search success and error
-/*			eocat.Events.bind("search.success", visualizeResults);
-			eocat.Events.bind("search.error", visualizeResults);
 			
-			// Add callbacks when the shopcart is modified
-			eocat.Events.bind("shopcart.productAdded", function(product) {
-				if (product.style) {
-					
-					if ( product == selectedProduct ) {
-						product.previousStyle = 'shopcart';	
-					} else {
-						map.modifyProductStyle(product,'shopcart');
-						product.style = 'shopcart';	
-					}
-					
-				} else {
-					
-					map.addProduct(product,'shopcart');
-					visualizedProducts.push( product );
-					product.style = 'shopcart';
-					product.shopcartOnly = true;
-					
-				}
-			});
-			eocat.Events.bind("shopcart.productRemoved", function(product) {
-				if (product.shopcartOnly) {
-					map.removeProduct(product);
-					visualizedProducts.splice( visualizedProducts.indexOf(product), 1 );
-				} else {
-					if ( product == selectedProduct ) {
-						product.previousStyle = 'results';					
-					} else {
-						map.modifyProductStyle(product,'results');
-						product.style = 'results';
-					} 
-				}
-			});
-			
-			// Add a callback when the quicklook visibility of a product is changed
-			eocat.Events.bind('product.quicklookChanged', function(product) {
-				if ( product.quicklookVisible )
-					map.showQuicklook( product );
-				else
-					map.hideQuicklook( product );
-			});
-				
-			// Add a callback when a product is selected somewhere in the application
-			eocat.Events.bind('product.selected', function(product,origin) {
-				
-				if ( origin == self )
-					return;
-				
-				self.zoomTo(product);
-				
-				selectProduct(product);
-			});*/
-			
+			SearchResults.on('change',updateResults);
 		},
 		
 		setBackgroundLayer: function(layer) {
@@ -420,30 +308,21 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine ) {
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
-				
-				/*if ( visualizedProducts )	{	
-					// Add the result products to the map to visualize them
-					for (var i=0; i < visualizedProducts.length; i++ ) {
-						var product = visualizedProducts[i];
-						map.addProduct(product, product.style );
-						if ( product.quicklookVisible )	{
-							map.showQuicklook( product );
-						}
-					}
-				}*/
-			};
-						
-			try {
-			
-				// Create the new engine
-				mapEngine = new engines[id](element);			
+					
 				// Configure it
 				configureMapEngine(Configuration.data.map);
-				mapEngine.subscribe("init",initCallback);
 				
+				mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
+			};
+						
+			// Create the new engine and catch any error
+			try {
+				mapEngine = new engines[id](element);			
 			} catch (err) {
 				mapEngine = null;
 			}
+			
+			mapEngine.subscribe("init",initCallback);
 			
 			return mapEngine != null;
 		},

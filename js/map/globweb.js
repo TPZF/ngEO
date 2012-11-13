@@ -26,6 +26,7 @@ GlobWebMapEngine = function( parentElement )
 {
 	this.groundOverlays = {};
 	this.features = {};
+	this.styles = {};
 	this.parentElement = parentElement;
 	
 	try
@@ -71,6 +72,23 @@ GlobWebMapEngine = function( parentElement )
 }
 
 /**
+ * Add a style
+ */
+GlobWebMapEngine.prototype.addStyle = function(name,defaut,select) {
+	this.styles[name] = {
+		'default' : new GlobWeb.FeatureStyle(defaut),
+		'select' : new GlobWeb.FeatureStyle(select)
+	};
+	
+	// Convert color
+	// TODO : do someting in GlobWeb maybe ?
+	if (defaut.strokeColor)
+		this.styles[name]['default'].strokeColor = convertColor(defaut.strokeColor);
+	if (select && select.strokeColor)
+		this.styles[name]['select'].strokeColor = convertColor(select.strokeColor);
+};
+
+/**
  * Set the background layer
  */
 GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
@@ -112,6 +130,9 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	case "WMS":
 		gwLayer = new GlobWeb.OSMLayer(layer);
 		break;
+	case "GeoJSON":
+		gwLayer = new GlobWeb.VectorLayer({ name: layer.name, visible: layer.visible });
+		break;
 	case "WFS":
 	case "GeoRSS":
 		gwLayer = new GlobWeb.VectorLayer({
@@ -131,6 +152,10 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	}
 	
 	if (gwLayer) {
+		if ( layer.style && this.styles.hasOwnProperty(layer.style) ) {
+			gwLayer.style = this.styles[layer.style]['default'];
+			gwLayer.styleMap = this.styles[layer.style];
+		}
 		gwLayer.visible(layer.visible);
 		this.globe.addLayer(gwLayer);
 	}
@@ -194,7 +219,7 @@ GlobWebMapEngine.prototype.updateSize = function()
  */
 GlobWebMapEngine.prototype.getLonLatFromPixel = function(x,y)
 {
-	return GlobWeb.RenderContext.getLonLatFromPixel(x,y);
+	return this.globe.getLonLatFromPixel(x,y);
 }
 
 
@@ -251,75 +276,30 @@ GlobWebMapEngine.prototype.zoomToExtent = function(extent)
 	this.navigation.zoomTo( geoPos, d, 5 );
 }
 
+
 /**
- * Set the style to be used
+ * Remove all features from a layer
  */
-GlobWebMapEngine.prototype.setStyleMap = function(styleMap)
+GlobWebMapEngine.prototype.removeAllFeatures = function(layer)
 {
-	this.styleMap = styleMap;
-	// Create the feature layer now
-	for ( var s in styleMap )
-	{
-		styleMap[s].features = {};
-		styleMap[s].gwStyle = {
-				color: convertColor(styleMap[s].strokeColor),
-				lineWidth: styleMap[s].strokeWidth
-		};
-	}	
+//	layer.removeAllFeatures();
 }
 
 /**
- * Remove all products from the map
+ * Add a feature on the map
  */
-GlobWebMapEngine.prototype.removeAllProducts = function(styleDesc)
+GlobWebMapEngine.prototype.addFeatureCollection = function(layer,featureCollection)
 {
-	var style = this.styleMap[styleDesc];
-	for ( var x in style.features ) {
-		this.globe.removeFeature( style.features[x] );
-	}
-}
-
-/**
- * Remove a product from the map
- */
-GlobWebMapEngine.prototype.removeProduct = function(product)
-{
-	var style = this.styleMap[product.style];
-	var feature = style.features[product.name];
-	this.globe.removeFeature(feature);
-	delete style.features[product.name];
-		
-	if ( product.quicklookVisible ) {
-		this.hideQuicklook(product);
-	}
-}
-
-
-/**
- * Add a product on the map
- */
-GlobWebMapEngine.prototype.addProduct = function(product,style)
-{
-	var feature = { type: "Feature", geometry: product.geometry, id: product.name };
-	this.globe.addFeature( feature, this.styleMap[style].gwStyle );
-	this.styleMap[style].features[ product.name ] = feature;
+	layer.addFeatureCollection( featureCollection );
 }
 
 /**
  * Modify the product style
  */
-GlobWebMapEngine.prototype.modifyProductStyle = function(product,styleDesc)
+GlobWebMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 {	
-	var oldStyle = this.styleMap[product.style];
-	var newStyle = this.styleMap[styleDesc];
-	// Select the new feature
-	var feature = oldStyle.features.hasOwnProperty( product.name ) ? oldStyle.features[ product.name ] : null;
-	if ( feature )
-	{
-		this.globe.modifyFeatureStyle( feature, newStyle.gwStyle );
-		delete oldStyle.features[ product.name ];
-		newStyle.features[ product.name ] = feature;
-	}
+	layer.modifyFeatureStyle(feature,layer.styleMap[style]);
+	this.globe.refresh();
 }
 
 /**
