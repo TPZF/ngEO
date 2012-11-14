@@ -1,9 +1,12 @@
-define( ['jquery', 'backbone'], function($, Backbone) {
+define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var Dataset = Backbone.Model.extend({
 	
-	// The base url to retreive the datasets population matrix
-	url : '../server/datasetSearchInfo/', //+ this.datasetId,
+	// Constructor : initialize the url from the configuration
+	initialize : function () {
+		// The base url to retreive the dataset Search Info
+		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('id');
+	},
 });
 
 return Dataset;

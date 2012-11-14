@@ -35,10 +35,10 @@ app.get('/server/webClientConfigurationData', webClientConfigurationData);
 app.get('/server/datasetPopulationMatrix', datasetPopulationMatrix);
 
 //datasetSearchInfo interface
-app.get('/server/datasetSearchInfo', datasetSearchInfo);
+app.get('/server/datasetSearchInfo/:id', datasetSearchInfo);
 
 //product search interface
-app.get('/server/productSearch', productSearch);
+app.get(/\/server\/productSearch?.*/, productSearch);
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
 proxy.setup(app,[{ 

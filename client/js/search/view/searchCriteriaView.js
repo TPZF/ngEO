@@ -1,10 +1,10 @@
 
 
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 
          'text!search/template/searchCriteriaContent_template.html',
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch, SpatialExtentView, TimeExtentView, 
+		function($, Backbone, Configuration, DatasetSearch, SpatialExtentView, TimeExtentView, 
 				AdvancedSearchView, searchCriteria_template, dateCriteria_template, 
 				areaCriteria_template, advancedCriteria_template) {
 
@@ -65,10 +65,8 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 		
 		this.searchUrlButton.click( function() {
-			//remove the previous url since the click on the close button of the popup is not catched... 
-			$("#popupText").empty();
-			//append the current url
-			$("#popupText").append(self.model.getOpenSearchURL());	
+			// Set the opensearch url
+			$("#popupText").html( Configuration.serverHostName + self.model.getOpenSearchURL());	
 			$('#openSearchUrlPopup').popup("open",  $( {} )
 				    .jqmData( "position-to", "window" )
 				    .jqmData( "transition", "slide" ));

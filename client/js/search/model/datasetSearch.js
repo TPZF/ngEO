@@ -1,10 +1,9 @@
   
-define( ['jquery', 'backbone'], function($, Backbone) {
+define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
-		host : "../server/productSearch", //stub server url 
 		datasetId : "",
 		startdate : "", //name of the opensearch request parameter
 		stopdate: "", //name of the opensearch request parameter
@@ -25,13 +24,13 @@ var DataSetSearch = Backbone.Model.extend({
 	getOpenSearchURL : function(){
 	
 		//TODO add advanced search criteria later
-		var url = this.get("host") + "?q={datasetId:" + this.get("datasetId") + "}&" +
+		var url = Configuration.baseServerUrl + "/productSearch?q={datasetId:" + this.get("datasetId") + "}&" +
 				"startdate="+ this.get("startdate") + "&" + 
 				"stopdate=" + this.get("stopdate") + "&" + 
 				"bbox=" + this.get("west") + "," + this.get("south") + "," 
 				+ this.get("east") + "," + this.get("north");
 		
-		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
+		//console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
 		return url;
 	}
