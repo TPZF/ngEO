@@ -2,7 +2,7 @@
   * Datasets population model
   */
   
-define( ['jquery', 'backbone'], function($, Backbone) {
+define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var DataSetPopulation = Backbone.Model.extend({
 	
@@ -15,9 +15,10 @@ var DataSetPopulation = Backbone.Model.extend({
 		datasetsToDisplay : []
 	},
 	
-	// The base url to retreive the datasets population matrix
+	// Constructor : initialize the url from the configuration
 	initialize : function () {
-		this.url = '../server/datasetPopulationMatrix';
+		// The base url to retreive the datasets population matrix
+		this.url = Configuration.baseServerUrl + '/datasetPopulationMatrix';
 	},
 
 	parse: function(response){
@@ -60,14 +61,14 @@ var DataSetPopulation = Backbone.Model.extend({
 			
 		});
 		
-		console.log("created missions as json : ");  
+/*		console.log("created missions as json : ");  
 		console.log("missions :: " +  missions);
 		
 		console.log("created sensors as json : ");  
 		console.log("sensors :: " +  sensors);
 
 		console.log("created keywords as json : ");  
-		console.log("keywords :: " +  keywords);
+		console.log("keywords :: " +  keywords);*/
 		
 		//create datasets as a table of json objects
 		var datasets = [];
@@ -95,8 +96,8 @@ var DataSetPopulation = Backbone.Model.extend({
 			}
 		});
 				
-		console.log("created datasets as json ");  
-		console.log("datasets :: " +  datasets);
+		//console.log("created datasets as json ");  
+		//console.log("datasets :: " +  datasets);
 		
 		return {"criteria" : criteria, "missions" : missions, "sensors" : sensors, 
 			"keywords": keywords, "datasets" : datasets};

@@ -11,6 +11,6 @@ var SearchResults = Backbone.Model.extend({
 	}
 });
 
-return SearchResults;
+return new SearchResults();
 
 });

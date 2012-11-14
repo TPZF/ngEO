@@ -26,15 +26,20 @@ var MainSearchView = Backbone.View.extend({
 	
 	displaySearchCriteria : function(datasetId){
 
-		var dataset = new Dataset({datasetId : datasetId});		
-		
+		// Retreive the dataset information
+		var dataset = new Dataset({id : datasetId});			
 		dataset.fetch();		
 		
-		//get only date part (without time)
+		// Get only date part (without time)
+		// TODO : the startDate and endDate should be taken from the DataSet informations
 		var today = (new Date()).toISOString();
 		var dateOnly = today.substring(0, today.indexOf('T'));
-		console.log(dateOnly);
-		var datasetSearch = new DatasetSearch({"datasetId" : datasetId  , "startdate" : dateOnly , "stopdate" : dateOnly});
+
+		var datasetSearch = new DatasetSearch({ 
+				"datasetId" : datasetId,
+				"startdate" : dateOnly,
+				"stopdate" : dateOnly
+		});
 		
 		var searchCriteriaView = new SearchCriteriaView({
 			el : this.$el.find("#datasetSearchCriteria"),
@@ -59,17 +64,12 @@ var MainSearchView = Backbone.View.extend({
 	
 	displaySearchResults : function(datasetSearch){
 		
-		this.searchResults = new SearchResults();
-		//TODO use the openSearch url when the service is implemented
-		//searchResults.url = self.DatasetSearch.getOpenSearchURL();
-		//For the moment used only host string to communicate with the stub server 
-		this.searchResults.url = datasetSearch.get("host");
-		
-		this.searchResults.fetch();
+		SearchResults.url = datasetSearch.getOpenSearchURL();
+		SearchResults.fetch();
 
 		var searchResultsView =  new SearchResultsView({ 
 			el : this.$el.find("#searchResults"),
-			model : this.searchResults,
+			model : SearchResults,
 			mainView : this
 		});
 		
@@ -88,7 +88,7 @@ var MainSearchView = Backbone.View.extend({
         this.currentView.render();
 		
 		if (needToUpdate) {
-			this.$el.ngeowidget('update');
+		//	this.$el.ngeowidget('update');
 		}
      }
 	

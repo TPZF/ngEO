@@ -209,6 +209,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 	
 			element = document.getElementById(eltId);
 			
+			// TODO : do not listen to elment but to the main div to display map...
+			// Otherwise too much click
 			var prevX, prevY;
 			var prevTime;
 			element.addEventListener('mousedown',function(evt){
@@ -222,7 +224,7 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 				var dt = Date.now() - prevTime;
 				if ( dx <= 1 && dy <= 1 && dt < 1000 ) {
 					mapClickHandler(evt.pageX,evt.pageY);
-					console.log('click');
+					console.log('mapClickHandler called');
 				}
 			}, true);
 			
