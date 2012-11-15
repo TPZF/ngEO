@@ -179,11 +179,9 @@ GlobWebMapEngine.prototype.subscribe = function(name,callback)
 	case "endNavigation":
 		this.globe.subscribe("endNavigation",callback);
 		break;
-	case "click":
-		$(this.mapElt).click( callback );
-		break;
-	case "dblclick":
-		$(this.mapElt).dblclick( callback );
+	case "mousedown":
+	case "mouseup":
+		this.canvas.addEventListener( name, callback );
 		break;
 	}
 }
@@ -200,6 +198,10 @@ GlobWebMapEngine.prototype.unsubscribe = function(name,callback)
 		break;
 	case "endNavigation":
 		this.globe.unsubscribe("endNavigation",callback);
+		break;
+	case "mousedown":
+	case "mouseup":
+		this.canvas.removeEventListener( name, callback );
 		break;
 	}
 }

@@ -128,7 +128,7 @@ $.widget( "ngeo.ngeowidget", {
 	update: function() {
 		// Recompute position for widget
 		var posActivator = this.activator.position();
-		var widgetLeft = posActivator.left - (this.parentElement.outerWidth()/2) + (this.activator.outerWidth()/2);
+		var widgetLeft = Math.max( 10, posActivator.left - (this.parentElement.outerWidth()/2) + (this.activator.outerWidth()/2) );
 		this.parentElement
 			.css( 'left', widgetLeft );
 		this.arrow

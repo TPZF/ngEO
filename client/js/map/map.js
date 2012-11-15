@@ -337,14 +337,16 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			// Callback called by the map engine when the map engine is initialized
 			var initCallback = function(map)
 			{
+				// Configure the map engine
+				configureMapEngine(Configuration.data.map);
+				
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
-					
-				// Configure it
-				configureMapEngine(Configuration.data.map);
 				
-				mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
+				if ( SearchResults.get('features').length > 0 ) {
+					mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
+				}
 			};
 						
 			// Create the new engine and catch any error
