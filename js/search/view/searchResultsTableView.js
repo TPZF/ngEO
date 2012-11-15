@@ -151,7 +151,7 @@ define(
 							$("#datatable_length select").trigger('create');
 							$("#datatable_next").trigger('create');
 							$("#datatable_previous").trigger('create');
-							$(".bottom").trigger('create');// to insure that JQM styling is still kept
+							//$(".bottom").trigger('create');// to insure that JQM styling is still kept
 
 							this.table.fnDraw();
 							this.addToShopcart = this.mainView.$el.ngeowidget(
@@ -197,7 +197,7 @@ define(
 							//if the switcher is on On position, display browses for the selected rows unless clear the browse layer
 							$('#browseSlider').change(function(){
 								console.log( $("#browseSlider").val());
-								console.log(  self.getSeletctedFeaturesTable());
+								console.log(self.getSeletctedFeaturesTable());
 								self.searchResults.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSeletctedFeaturesTable());
 							});
 
