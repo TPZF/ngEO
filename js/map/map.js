@@ -23,6 +23,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 	var selectedFeature = null;
 	var	popup = null;
 	var maxExtent = [-180,-85,180,85];
+	var wmsBrowse = {
+	};
 
 	/**
 	 * Private methods
@@ -130,12 +132,12 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 
 
 	/**
-	 * Compute the extent of a product
+	 * Compute the extent of a feature
 	 */
-	var computeExtent = function(product)
+	var computeExtent = function(feature)
 	{
 		// Compute the extent from the coordinates
-		var coords = product.geometry.coordinates[0];
+		var coords = feature.geometry.coordinates[0];
 		var minX = coords[0][0];
 		var minY = coords[0][1];
 		var maxX =  coords[0][0];
@@ -146,7 +148,7 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			maxX = Math.max( maxX, coords[i][0] );	
 			maxY = Math.max( maxY, coords[i][1] );	
 		}
-		product.extent = [ minX, minY, maxX, maxY ];
+		feature.bbox = [ minX, minY, maxX, maxY ];
 	};
 
 	/**
@@ -157,6 +159,33 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 		mapEngine.removeAllFeatures( resultFootprintLayer );
 		mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
 
+	};
+
+	/**
+	 * Display the browse
+	 */
+	var displayBrowse = function(value,features) {
+		for ( var i = 0; i < features.length; i++ ) {
+			var feature = features[i];
+			if (!wmsBrowse.hasOwnProperty(feature.id)) {
+				var eo = feature.properties.EarthObservation;
+				var layerDesc = {
+					name: feature.id,
+					type: "WMS",
+					visible: value,
+					baseUrl: "/wms2eos/servlets/wms",
+					params: { layers: feature.properties.browseLayer,
+						time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
+						version: "1.1.1",
+						transparent: true,
+						styles: "ellipsoid"
+					}
+				};
+				wmsBrowse[ feature.id ] = mapEngine.addLayer(layerDesc);			
+			}
+			var layer = wmsBrowse[ feature.id ];
+			mapEngine.setLayerVisible(value);
+		}
 	};
 	
 	/**
@@ -189,6 +218,23 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 		});
 		
 		mapEngine.subscribe("startNavigation",startNavigationHandler);
+	
+		// Click for selection
+		var prevX, prevY;
+		var prevTime;
+		mapEngine.subscribe( 'mousedown',function(evt){
+			prevX = evt.pageX;
+			prevY = evt.pageY;
+			prevTime = Date.now();
+		}, true);
+		mapEngine.subscribe( 'mouseup', function(evt) {
+			var dx = evt.pageX - prevX;
+			var dy = evt.pageY - prevY;
+			var dt = Date.now() - prevTime;
+			if ( dx <= 1 && dy <= 1 && dt < 1000 ) {
+				mapClickHandler(evt.pageX,evt.pageY);
+			}
+		}, true);
 	};
 
 	
@@ -209,24 +255,6 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 	
 			element = document.getElementById(eltId);
 			
-			// TODO : do not listen to elment but to the main div to display map...
-			// Otherwise too much click
-			var prevX, prevY;
-			var prevTime;
-			element.addEventListener('mousedown',function(evt){
-				prevX = evt.pageX;
-				prevY = evt.pageY;
-				prevTime = Date.now();
-			}, true);
-			element.addEventListener( 'mouseup', function(evt) {
-				var dx = evt.pageX - prevX;
-				var dy = evt.pageY - prevY;
-				var dt = Date.now() - prevTime;
-				if ( dx <= 1 && dy <= 1 && dt < 1000 ) {
-					mapClickHandler(evt.pageX,evt.pageY);
-					console.log('mapClickHandler called');
-				}
-			}, true);
 			
 			mapEngine = new engines['2d'](element);
 			
@@ -239,6 +267,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			configureMapEngine(Configuration.data.map);
 			
 			SearchResults.on('change',updateResults);
+			SearchResults.on('displayBrowse',displayBrowse);
+			SearchResults.on('zoomToProductExtent',self.zoomToFeature);
 		},
 		
 		setBackgroundLayer: function(layer) {
@@ -267,16 +297,16 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			mapEngine.zoomToExtent( maxExtent );
 		},
 		
-		/*zoomTo: function(product) {
+		zoomToFeature: function(feature) {
 			// Zoom on the product in the carto
-			if (!product.extent)
-				computeExtent(product);
-			var extent = product.extent;
+			if (!feature.bbox)
+				computeExtent(feature);
+			var extent = feature.bbox;
 			var width = extent[2] - extent[0];
 			var height = extent[3] - extent[1];
 			var offsetExtent = [ extent[0] - 2 * width, extent[1] - 2 * height, extent[2] + 2 * width, extent[3] + 2 * height ];
 			mapEngine.zoomToExtent( offsetExtent );				
-		},*/
+		},
 		
 		zoomTo: function(extent) {
 			mapEngine.zoomToExtent( extent );							
