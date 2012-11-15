@@ -10,29 +10,29 @@ define(
 
 				defaults : {
 					columns : [{ //datatable columns
-						'sTitle' : '  '
+						'sTitle' : '  ' ,  'sWidth': "5%" 
 					}, {
 						'sTitle' : 'id'
 					}, {
 						'sTitle' : 'Mission'
 					}, {
-						'sTitle' : 'Sensor'
+						'sTitle' : 'Sensor',  "sContentPadding": "mmm"
 					}, {
 						'sTitle' : 'Start'
 					}, {
 						'sTitle' : 'Stop'
 					}, {
-						'sTitle' : 'Swath'
+						'sTitle' : 'Swath',  "sContentPadding": "mmm"
 					}, {
-						'sTitle' : 'Orbit'
+						'sTitle' : 'Orbit',  "sContentPadding": "mmm"
 					}, {
-						'sTitle' : 'Pass'
+						'sTitle' : 'Pass', 
 					}, {
-						'sTitle' : 'Product'
+						'sTitle' : 'Product', 
 					}, {
-						'sTitle' : 'Product Type'
+						'sTitle' : 'Product Type',  "sContentPadding": "mmm"
 					}, {
-						'sTitle' : 'Status'
+						'sTitle' : 'Status',  "sContentPadding": "mmm"
 					} ],
 					features : [], //geojson initial  features
 					items : [], //json formatted data to display for now it is not needed
