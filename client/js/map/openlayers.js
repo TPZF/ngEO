@@ -25,7 +25,7 @@ OpenLayersMapEngine = function( parentElement )
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
 					 new OpenLayers.Control.Attribution()/*,
 					 new OpenLayers.Control.LayerSwitcher()*/ ]
-		,projection: new OpenLayers.Projection("EPSG:900913")
+		,projection: new OpenLayers.Projection("EPSG:3857")
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,units: "m"
 		,maxExtent: new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34)
@@ -99,7 +99,12 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 	var olLayer;
 	switch (layer.type) {
 	case "WMS":
-		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer);
+		olLayer = new OpenLayers.Layer.WMS(layer.name,
+					layer.baseUrl,
+					layer.params, {
+					   isBaseLayer: false,
+					   opacity: 0.7
+				   });
 		break;
 	case "GeoRSS":
 		//olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });	
@@ -174,11 +179,9 @@ OpenLayersMapEngine.prototype.subscribe = function(name,callback)
 		// Attach events for navigation change
 		this._map.events.register("moveend", undefined, callback);
 		break;
-	case "click":
-		$(this.element ).click( callback );
-		break;
-	case "dblclick":
-		$(this.element ).dblclick( callback );
+	case "mousedown":
+	case "mouseup":
+		this.element.addEventListener( name, callback, true );
 		break;
 	}
 }
@@ -197,6 +200,10 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
 	case "endNavigation":
 		// Detach events for navigation change
 		this._map.events.unregister("moveend", undefined, callback);
+		break;
+	case "mousedown":
+	case "mouseup":
+		this.element.removeEventListener( name, callback );
 		break;
 	}
 }

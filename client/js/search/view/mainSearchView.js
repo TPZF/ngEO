@@ -20,7 +20,8 @@ var MainSearchView = Backbone.View.extend({
 	},
 	
 	render: function(){
-		this.displayDatasets();	
+		if (!this.currentView)
+			this.displayDatasets();	
 		return this;
 	},
 	
