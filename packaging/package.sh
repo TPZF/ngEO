@@ -13,3 +13,14 @@ mv esa-webclient-ngeo.tar.gz ~/rpmbuild/SOURCES
 # Build the rpm
 rpmbuild -ba esa-webclient-ngeo.spec
 
+# Build the tar from the server
+cd ../packaging
+mkdir esa-webclient-testserver-ngeo
+mv ../stub_server ./esa-webclient-testserver-ngeo/webclient-testserver
+tar czf esa-webclient-testserver-ngeo.tar.gz esa-webclient-testserver-ngeo
+rm -rf esa-webclient-testserver-ngeo
+mv esa-webclient-testserver-ngeo.tar.gz ~/rpmbuild/SOURCES
+
+# Build the rpm
+rpmbuild -ba esa-webclient-testserver-ngeo.spec
+
