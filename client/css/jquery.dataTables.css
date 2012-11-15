@@ -4,10 +4,19 @@
  */
  
  /** Add some padding and reset font-weight to normal */
-.dataTables_wrapper .ui-toolbar {
-    padding: 5px;
-	font-weight: normal;
+/* .dataTables_wrapper .ui-toolbar { */
+/*     padding: 5px; */
+/* 	font-weight: normal; */
+/* } */
+
+table.dataTable thead th {
+	padding: 3px 18px 3px 10px;
+	border-bottom: 1px solid black;
+	font-weight: bold;
+	cursor: pointer;
+	*cursor: hand;
 }
+
 
 .DataTables_sort_icon {
 	float: right;
@@ -17,19 +26,65 @@
 	float: right;
 }
 
+
+/* Styling for filter */
+#datatable_filter label {
+	font-size: 13px;
+	font-weight: bold;
+}
+
+#datatable_filter input{
+	width : auto;
+	display : inline;	
+}
+
+
 .dataTables_length  {
 	float: left;
 }
 
+.dataTables_length .ui-select{
+	width: 50%;
+}
+
+#datatable_length label{
+	font-size: 13px;
+	font-weight: bold;
+	width: 50%;
+}
+
+
+
+/* remove border between each item */
+.ui-checkbox label .ui-btn-inner{
+  border: 0;
+}
+
+/* change background color when check boxes are checked */
+.ui-checkbox-on .ui-icon{
+  background-color: #456;
+}
+
+
 .dataTables_info  {
-    float: left;
+    font-weight: bold;
     text-align: center;
-    width: 80%;
+    padding-bottom: 10px;
+	padding-top: 5px;
  }
 
 .dataTables_paginate {
 	float: right;
+	display : inline-block;
 }
+
+/* #dataTables_paginate a { */
+/* 	width: 40%; */
+/* }  */
+/* #datatable_previous,  #datatable_next{ */
+/* 	width: 40%; */
+/* } */
+
 
 
 /**
@@ -46,8 +101,15 @@
 	text-align: center;
 }
 
+
 .dataTables_wrapper td {
 	text-align: center;
+/* 	width : 10%; */
+}
+
+#datatable tr td .ui-checkbox {
+	text-align: center;
+/* 	width : 6%; */
 }
 
 /** Color for Odd line */
@@ -65,51 +127,56 @@
 	background-color: #B0BED9;
 }
 
+#datatable label {
+	font-size: 12px;
+}
+
+
 /* Two button pagination - previous / next */
-.paginate_disabled_previous,
-.paginate_enabled_previous,
-.paginate_disabled_next,
-.paginate_enabled_next {
-	height: 19px;
-	float: left;
-	cursor: pointer;
-	*cursor: hand;
-	color: #111 !important;
-}
-.paginate_disabled_previous:hover,
-.paginate_enabled_previous:hover,
-.paginate_disabled_next:hover,
-.paginate_enabled_next:hover {
-	text-decoration: none !important;
-}
-.paginate_disabled_previous:active,
-.paginate_enabled_previous:active,
-.paginate_disabled_next:active,
-.paginate_enabled_next:active {
-	outline: none;
-}
+/* .paginate_disabled_previous, */
+/* .paginate_enabled_previous, */
+/* .paginate_disabled_next, */
+/* .paginate_enabled_next { */
+/* 	height: 19px; */
+/* 	float: left; */
+/* 	cursor: pointer; */
+/* 	*cursor: hand; */
+/* 	color: #111 !important; */
+/* } */
+/* .paginate_disabled_previous:hover, */
+/* .paginate_enabled_previous:hover, */
+/* .paginate_disabled_next:hover, */
+/* .paginate_enabled_next:hover { */
+/* 	text-decoration: none !important; */
+/* } */
+/* .paginate_disabled_previous:active, */
+/* .paginate_enabled_previous:active, */
+/* .paginate_disabled_next:active, */
+/* .paginate_enabled_next:active { */
+/* 	outline: none; */
+/* } */
 
-.paginate_disabled_previous,
-.paginate_disabled_next {
-	color: #666 !important;
-}
-.paginate_disabled_previous,
-.paginate_enabled_previous {
-	padding-left: 23px;
-}
-.paginate_disabled_next,
-.paginate_enabled_next {
-	padding-right: 23px;
-	margin-left: 10px;
-}
+/* .paginate_disabled_previous, */
+/* .paginate_disabled_next { */
+/* 	color: #666 !important; */
+/* } */
+/* .paginate_disabled_previous, */
+/* .paginate_enabled_previous { */
+/* 	padding-left: 23px; */
+/* } */
+/* .paginate_disabled_next, */
+/* .paginate_enabled_next { */
+/* 	padding-right: 23px; */
+/* 	margin-left: 10px; */
+/* } */
 
-.paginate_enabled_previous { background: url('../images/back_enabled.png') no-repeat top left; }
-.paginate_enabled_previous:hover { background: url('../images/back_enabled_hover.png') no-repeat top left; }
-.paginate_disabled_previous { background: url('../images/back_disabled.png') no-repeat top left; }
+/* .paginate_enabled_previous { background: url('../images/back_enabled.png') no-repeat top left; } */
+/* .paginate_enabled_previous:hover { background: url('../images/back_enabled_hover.png') no-repeat top left; } */
+/* .paginate_disabled_previous { background: url('../images/back_disabled.png') no-repeat top left; } */
 
-.paginate_enabled_next { background: url('../images/forward_enabled.png') no-repeat top right; }
-.paginate_enabled_next:hover { background: url('../images/forward_enabled_hover.png') no-repeat top right; }
-.paginate_disabled_next { background: url('../images/forward_disabled.png') no-repeat top right; }
+/* .paginate_enabled_next { background: url('../images/forward_enabled.png') no-repeat top right; } */
+/* .paginate_enabled_next:hover { background: url('../images/forward_enabled_hover.png') no-repeat top right; } */
+/* .paginate_disabled_next { background: url('../images/forward_disabled.png') no-repeat top right; } */
 
 /*
  * Sorting
