@@ -66,6 +66,7 @@ var MainSearchView = Backbone.View.extend({
 	displaySearchResults : function(datasetSearch){
 		
 		SearchResults.url = datasetSearch.getOpenSearchURL();
+		SearchResults.set({"features" : [] }, {silent : true});
 		SearchResults.fetch();
 
 		var searchResultsView =  new SearchResultsView({ 
