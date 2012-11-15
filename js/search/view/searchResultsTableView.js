@@ -84,7 +84,7 @@ define(
 													.html(
 //															'<label id="'+aData[1]+'Label" for="' + aData[1] + '" style="max-width:37px, width:5%, border:0" data-iconpos="top" data-corners="false" data-theme="d"></label>' +
 //															'<input type="checkbox" id="' + aData[1] + '" style="max-width:37px, width:5%, border:0" data-mini="true" data-corners="false" data-theme="d">');
-															'<img id="'+aData[1]+'Label" style="text-inline : center" data-corners="false" data-icon="check"  class="ui-icon ui-icon-checkbox-on "/>');
+															'<img id="'+aData[1]+'Label" style="text-inline : center" data-corners="false" data-icon="check"  class="ui-icon ui-icon-checkbox-on "></img>');
 												}else{
 													$('td:eq(' + index + ')', nRow)
 													.html('<label data-mini="true" data-theme="d" style="width:8%">' + cellValue +'</label>');
