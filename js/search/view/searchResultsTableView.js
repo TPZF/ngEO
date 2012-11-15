@@ -35,8 +35,10 @@ define(
 							},
 
 							'click img' : function(event){
+								console.log($(event.currentTarget));
 //								$(event.currentTarget).removeAttribute('class');
 //								$(event.currentTarget).addAttribute('class', 'ui-icon ui-icon-shadow ui-icon-checkbox-off');	
+//								this.table.fnDraw();
 //								}else{
 //									$target.addClass('ui-icon-checkbox-off');	
 //									$target.removeClass('ui-icon-checkbox-on');	
@@ -66,10 +68,22 @@ define(
 										"fnDrawCallback": function( oSettings ) {
 											$("#datatable_next").trigger('create');
 											$("#datatable_previous").trigger('create');
-											$("#datatable_filter").trigger('create');
-											$("#datatable_length").trigger('create');
+											
+											$("#datatable_filter input").attr('data-mini','true');
+											$("#datatable_filter label").attr('data-mini','true');
+											
+											$("#datatable_filter label").trigger('create');
+											$("#datatable_filter input").trigger('create');
+											
+											$("#datatable_length select").attr('data-mini','true');
+											$("#datatable_length label").attr('data-mini','true');
+											
+											$("#datatable_length select").trigger('create');
+											$("#datatable_length label").trigger('create');
+											//$("#datatable_length").trigger('create');
 											//$("#datatable_info").trigger('create');
-											$("bottom").trigger('create');
+											//$("bottom").trigger('create');
+											//$("#datatable").trigger('create');
 											self.$el.trigger('create');// to insure that JQM styling is still kept
 										 },			
 										
@@ -147,13 +161,14 @@ define(
 							$("#datatable_filter input").attr("data-theme", "d");
 							
 							
-							$("#datatable_filter input").trigger('create');
-							$("#datatable_length select").trigger('create');
-							$("#datatable_next").trigger('create');
-							$("#datatable_previous").trigger('create');
+//							$("#datatable_filter input").trigger('create');
+//							$("#datatable_length select").trigger('create');
+//							$("#datatable_next").trigger('create');
+//							$("#datatable_previous").trigger('create');
 							//$(".bottom").trigger('create');// to insure that JQM styling is still kept
 
 							this.table.fnDraw();
+							
 							this.addToShopcart = this.mainView.$el.ngeowidget(
 									'addButton', {
 										id : 'addToShopcart',
