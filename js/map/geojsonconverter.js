@@ -47,7 +47,9 @@ var load = function(layer,cb) {
 	if ( protocol ) {
 		protocol.read({
 				callback: function(resp) {
-					cb( convert(resp.features) );
+					if ( resp.features ) {
+						cb( convert(resp.features) );
+					}
 				}
 			});
 	}
