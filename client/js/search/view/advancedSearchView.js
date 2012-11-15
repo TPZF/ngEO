@@ -1,7 +1,7 @@
 
 
 //TODO LATER / HANDLE THE ADVANCED SEARCH CRITERIA
-define( ['jquery', 'backbone',  'search/model/Dataset', 'search/model/datasetSearch', 
+define( ['jquery', 'backbone',  'search/model/dataset', 'search/model/datasetSearch', 
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
 		function($, Backbone, DatasetSearch , advancedCriteria_template) {
 

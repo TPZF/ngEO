@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "externs/OpenLayers.debug" ],
+define( [ "externs/OpenLayers.ngeo" ],
  
  function() {
   

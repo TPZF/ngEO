@@ -6,6 +6,7 @@
 		"jquery.mobile": "externs/jquery.mobile-1.2.0.min",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
+		"jquery.dataTables" : "externs/jquery.dataTables",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"
@@ -17,12 +18,12 @@
 			exports: 'jQuery'
 		},
 		'jqm-config': {
-            deps: ['jquery']
-        },
+           		 deps: ['jquery']
+        	},
  		'jquery.mobile': {
-            deps: ['jquery','jqm-config'],
-            exports: 'jQuery'
-        },
+            		deps: ['jquery','jqm-config'],
+           		exports: 'jQuery'
+        	},
 		"underscore": {
 			deps: [],
 			exports: '_'
@@ -31,14 +32,18 @@
 			deps: ["underscore"],
 			exports: 'Backbone'
 		},
-        'jqm-datebox-core' : {
-        	 deps: ['jquery', 'jquery.mobile'],
-             exports: 'jQuery'
-        },
-        'jqm-datebox-calbox': {
-            deps: ['jqm-datebox-core'],
-            exports: 'jQuery'
-        },
+        	'jqm-datebox-core' : {
+        		deps: ['jquery', 'jquery.mobile'],
+             		exports: 'jQuery'
+        	},
+        	'jqm-datebox-calbox': {
+            		deps: ['jqm-datebox-core'],
+           		exports: 'jQuery'
+        	},
+        	'jquery.dataTables' : {
+        	 deps: ['jquery'],
+             	exports: 'jQuery'
+       		}
 	},
 	optimizeCss: "none",
 	optimize: "uglify",

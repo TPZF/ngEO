@@ -1,7 +1,7 @@
 /**
  * SearchWidget module
  */
-define( ["jquery", "backbone", 'search/model/dataSetPopulation', "search/view/MainSearchView", 
+define( ["jquery", "backbone", 'search/model/dataSetPopulation', "search/view/mainSearchView", 
           "widget"], function($, Backbone, DataSetPopulation, MainSearchView) {
 
 return function() {
