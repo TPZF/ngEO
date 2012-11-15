@@ -25,13 +25,23 @@ define(
 								if (rowPos != null){// Don't select the header
 									$(event.currentTarget).toggleClass('row_selected');
 									this.searchResults.trigger("zoomToProductExtent", this.model.attributes.features[rowPos]);
+									
+									if ($("#browseSlider").val() == "on"){
+										var tab = [];
+										tab.push(this.model.attributes.features[rowPos]);
+										this.searchResults.trigger("displayBrowse", true, tab);
+									}
 								}
 							},
-						
-							
-							
-							'click [input=checkbox]' : function(event){
-								$(event.currentTarget).toggleClass('row_selected');	
+
+							'click img' : function(event){
+//								$(event.currentTarget).removeAttribute('class');
+//								$(event.currentTarget).addAttribute('class', 'ui-icon ui-icon-shadow ui-icon-checkbox-off');	
+//								}else{
+//									$target.addClass('ui-icon-checkbox-off');	
+//									$target.removeClass('ui-icon-checkbox-on');	
+//								}
+								
 							}
 							
 						},
@@ -39,32 +49,29 @@ define(
 						render : function() {
 
 							var self = this;
-							this.table = this.$el.dataTable({
+							this.table = this.$el.find("#datatable").dataTable({
 										"sDom" : '<"top"i>rt<"bottom"flp><"clear">',
 										"aaData" : this.model
 												.get("itemValuesTable"),
 										"aoColumns" : this.model.get("columns"),
-										"bPaginate" : true,
+										"oLanguage": {
+										      "sLengthMenu": "Show:_MENU_ "
+										},
+										"bDestroy": true,
+										"iDisplayLength": 5,	
 										"bLengthChange" : true,
+										"bPaginate" : true,
+										//"sPaginationType": "full_numbers",
 										"bSort" : true,
-										
 										"fnDrawCallback": function( oSettings ) {
+											$("#datatable_next").trigger('create');
+											$("#datatable_previous").trigger('create');
+											$("#datatable_filter").trigger('create');
+											$("#datatable_length").trigger('create');
+											//$("#datatable_info").trigger('create');
+											$("bottom").trigger('create');
 											self.$el.trigger('create');// to insure that JQM styling is still kept
-										 },
-										 
-//										 "fnPreDrawCallback": function( oSettings ) {
-//											 console.log($("bottom"));
-//												$(".bottom").attr("data-role", "footer");
-//												$(".bottom").addClass("ui-grid-d");
-//												$("#datatable_length").addClass("ui-block-a");
-//												$("#datatable_paginate").addClass("ui-block-c");
-//												
-//												$(".bottom").append('<div class="ui-block-b"><div data-role="fieldcontain" data-inline="true">'+
-//												'<label for="displayResultsCheck"  data-mini="true">Display Results</label>'+
-//												'<input type="checkbox" data-mini="true" data-theme="c" name="displayResultsCheck" id="displayResultsCheck"></div><div>');
-//
-//												$(".bottom").trigger('create');// to insure that JQM styling is still kept
-//										},
+										 },			
 										
 										"fnRowCallback" : function(nRow, aData,
 												iDisplayIndex,
@@ -75,45 +82,78 @@ define(
 												if (index == 0){
 													$('td:eq(0)', nRow)
 													.html(
-															'<label id="'+aData[1]+'Label" for="' + aData[1] + '" style="max-width:37px" data-iconpos="top" data-corners="false"></label>' +
-															'<input type="checkbox" id="' + aData[1] + '" style="max-width:37px" data-mini="true" data-corners="false" data-theme="d">');
-														
+//															'<label id="'+aData[1]+'Label" for="' + aData[1] + '" style="max-width:37px, width:5%, border:0" data-iconpos="top" data-corners="false" data-theme="d"></label>' +
+//															'<input type="checkbox" id="' + aData[1] + '" style="max-width:37px, width:5%, border:0" data-mini="true" data-corners="false" data-theme="d">');
+															'<img id="'+aData[1]+'Label" style="text-inline : center" data-corners="false" data-icon="check"  class="ui-icon ui-icon-checkbox-on "/>');
 												}else{
 													$('td:eq(' + index + ')', nRow)
-													.html(
-															'<label data-mini="true" data-theme="d">' + cellValue +'</label>');
+													.html('<label data-mini="true" data-theme="d" style="width:8%">' + cellValue +'</label>');
 												}
-												//CALLED AS MUCH AS THERE ARE ITEMS SO DO NOT TRIGGER EVENT FROM HERE!
-//												console.log(iDisplayIndex);
-//												console.log(self.model.attributes.features[iDisplayIndex]);
-//												$(nRow).click(function(){
-//													console.log(self.model.attributes.features[iDisplayIndex]);
-//													self.searchResults.trigger("zoomToProductExtent", self.model.attributes.features[iDisplayIndex]);});
-//												self.$el.trigger('create');
 											});
 										}
 									});
 
+//							$("#datatable th").attr("class", "ui-btn");
+//							$("#datatable th").attr("data-inline", "true");
+							
 							//trial for styling the bottom datatable toolbar not working as expected neither !!
 							console.log( "bottom div");
 							 console.log($("bottom"));
-								$(".bottom").attr("data-role", "footer");
-								$(".bottom").addClass("ui-grid-d");
-								//$("#datatable_length label").text( function(index, text) {return "Show entries :";});
-								$("#datatable_length select").attr("data-mini", "true");
-								$("#datatable_length").addClass("ui-block-a");
-								
-								//add check box for displaying footprints
-								$(".bottom").append('<div class="ui-block-b"><div data-role="fieldcontain" data-inline="true">'+
-								'<label id="displayResultsCheckLabel" for="displayResultsCheck"  data-mini="true">Display Results</label>'+
-								'<input type="checkbox" data-mini="true" data-theme="c" name="displayResultsCheck" id="displayResultsCheck"></div><div>');
+							$(".bottom").attr("data-role", "footer");
+							$(".bottom").attr("data-theme", "a");
+							$(".bottom").addClass("ui-grid-d");
+							//
+							
+							//$("#datatable_length").text( function(index, text) {return "Show entries :";});
+							$("#datatable_length").attr("data-role", "fieldcontain");				
+							$("#datatable_length").attr("style" , "width:13%");
+							$("#datatable_length").addClass("ui-block-a");
+							$("#datatable_length").attr("data-theme", "d");
+							//$("#datatable_length").attr("data-mini", "true");
+							$("#datatable_length label").attr("data-mini", "true");
+						//$("#datatable_length label").attr("style" , "width:50%");
+							$("#datatable_length label").attr("data-inline", "true");
+							$("#datatable_length select").attr("data-mini", "true");
+							$("#datatable_length select").attr("data-theme", "d");
+							//add check box for displaying footprints
+							$(".bottom").append('<div class="ui-block-b"><div data-role="fieldcontain" data-inline="true">'+
+							'<label id="displayResultsCheckLabel" for="displayResultsCheck" style="border:0" data-mini="true" data-corner-all="false" data-theme="a">Display Results</label>'+
+							'<input type="checkbox" name="displayResultsCheck" id="displayResultsCheck" data-mini="true" data-theme="d" data-corner-all="false" ></div><div>');
 
-								$("#datatable_paginate").addClass("ui-block-c");
-								
-								$("#datatable_filter").addClass("ui-block-d");
-								$("#datatable_filter input").attr("data-mini", "true");
-								$(".bottom").trigger('create');// to insure that JQM styling is still kept
+							//pagination
+							//$("#datatable_paginate").removeClass('pzgin')
+							$("#datatable_paginate").addClass("ui-block-c");
+							
+							$("#datatable_previous").attr("href", "#");
+							$("#datatable_previous").attr("data-mini", "true");
+							$("#datatable_previous").attr("data-role", "button");
+							$("#datatable_previous").attr("data-theme", "d");
+							$("#datatable_previous").attr("data-icon", "arrow-l");
+							$("#datatable_previous").attr("data-iconpos", "left");
+							$("#datatable_previous").attr("data-inline", "true");
+							
+							$("#datatable_next").attr("href", "#");
+							$("#datatable_next").attr("data-theme", "d");
+							$("#datatable_next").attr("data-mini", "true");
+							$("#datatable_next").attr("data-role", "button");
+							$("#datatable_next").attr("data-icon", "arrow-r");
+							$("#datatable_next").attr("data-iconpos", "right");
+							$("#datatable_next").attr("data-inline", "true");
+							
+							//styling of filter
+							$("#datatable_filter").addClass("ui-block-d");
+							$("#datatable_filter input").attr("data-mini", "true");
+							$("#datatable_filter").attr("data-mini", "true");
+							$("#datatable_filter input").attr("data-theme", "d");
+							
+							
+							$("#datatable_filter input").trigger('create');
+							$("#datatable_length select").trigger('create');
+							$("#datatable_next").trigger('create');
+							$("#datatable_previous").trigger('create');
+							$(".bottom").trigger('create');// to insure that JQM styling is still kept
 
+							this.table.fnDraw();
 							this.addToShopcart = this.mainView.$el.ngeowidget(
 									'addButton', {
 										id : 'addToShopcart',
@@ -143,6 +183,7 @@ define(
 							
 							this.newSearch.click(function() {
 								self.close();
+								self.searchResultsView.close();
 								self.mainView.displayDatasets();
 							});
 							
@@ -185,6 +226,7 @@ define(
 						},
 
 						close : function() {
+							this.table.fnClearTable();
 							this.mainView.$el.ngeowidget('removeButton',
 									'#addToShopcart');
 							this.mainView.$el.ngeowidget('removeButton',
