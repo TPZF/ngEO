@@ -71,6 +71,7 @@ var MainSearchView = Backbone.View.extend({
 
 		var searchResultsView =  new SearchResultsView({ 
 			el : this.$el.find("#searchResults"),
+			datasetSearch : datasetSearch,
 			model : SearchResults,
 			mainView : this
 		});
