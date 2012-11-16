@@ -99,11 +99,17 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 	var olLayer;
 	switch (layer.type) {
 	case "WMS":
+		var maxExtent;
+		if ( layer.bbox ) {
+			maxExtent = new OpenLayers.Bounds(layer.bbox[0],layer.bbox[1],layer.bbox[2],layer.bbox[3]);
+			maxExtent.transform(this._map.displayProjection, this._map.projection);
+		}
 		olLayer = new OpenLayers.Layer.WMS(layer.name,
 					layer.baseUrl,
 					layer.params, {
-					   isBaseLayer: false,
-					   opacity: 0.7
+						maxExtent: maxExtent,
+						isBaseLayer: false,
+						opacity: 0.7
 				   });
 		break;
 	case "GeoRSS":
@@ -160,6 +166,13 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 	return olLayer;
 }
 
+/**
+ * Remove layer from the map engine
+ */
+OpenLayersMapEngine.prototype.removeLayer = function(olLayer)
+{
+	this._map.removeLayer(olLayer);
+}
 
 /**
  * Subscribe to OpenLayersMap events
