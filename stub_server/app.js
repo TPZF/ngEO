@@ -10,8 +10,8 @@ var express = require('express')
   , productSearch = require('./productSearch')
   , http = require('http')
   , path = require('path')
-  , httpProxy = require('http-proxy');
-  //, proxy = require('./proxy');
+  , httpProxy = require('http-proxy')
+  , proxy = require('./proxy');
 
 var app = express();
 
@@ -42,7 +42,7 @@ app.get('/server/datasetSearchInfo/:id', datasetSearchInfo);
 app.get(/\/server\/productSearch?.*/, productSearch);
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
-/*proxy.setup(app,[{ 
+proxy.setup(app,[{ 
 	'method': 'post',
 	'host': 'demo.opengeo.org',
 	'pattern': '/demoWFS',
@@ -52,7 +52,7 @@ app.get(/\/server\/productSearch?.*/, productSearch);
 	'host': 'earthquake.usgs.gov',
 	'pattern': '/demoFeed',
 	'replace': '/earthquakes/catalogs/eqs7day-M5.xml'
-}]);*/
+}]);
 	
 var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
 app.use('/wms2eos', wms2eosProxy);

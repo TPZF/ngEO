@@ -21,6 +21,7 @@ var convertColor = function(hex) {
 
 /**
  * GlobeWeb Map Engine constructor
+ * parentElement : the parent element div for the map
  */
 GlobWebMapEngine = function( parentElement )
 {
@@ -292,7 +293,7 @@ GlobWebMapEngine.prototype.zoomToExtent = function(extent)
  */
 GlobWebMapEngine.prototype.removeAllFeatures = function(layer)
 {
-//	layer.removeAllFeatures();
+	layer.removeAllFeatures();
 }
 
 /**
@@ -312,29 +313,6 @@ GlobWebMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 	this.globe.refresh();
 }
 
-/**
- * Show the quicklook of a product
- */
-GlobWebMapEngine.prototype.showQuicklook = function(product)
-{
-	var go = new GlobWeb.GroundOverlay( "proxy?url=" + encodeURIComponent(product.quicklookUrl), 
-			product.geometry.coordinates[0], 1.0, false );
-	this.globe.addGroundOverlay( go );
-	this.groundOverlays[ product.name ] = go;
-}
-
-/**
- * Hide the quicklook of a product
- */
-GlobWebMapEngine.prototype.hideQuicklook = function(product)
-{
-	var groundOverlay = this.groundOverlays.hasOwnProperty( product.name ) ? this.groundOverlays[ product.name ] : null;
-	if ( groundOverlay )
-	{
-		this.globe.removeGroundOverlay( groundOverlay );
-		delete this.groundOverlays[ product.name ];
-	}
-}
 
 /**
  *  Destroy the map engine
