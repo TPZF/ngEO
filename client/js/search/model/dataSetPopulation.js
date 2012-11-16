@@ -1,5 +1,8 @@
 /**
   * Datasets population model
+  * 
+  * The data structure deals with native datasets;
+  * TODO later : to be updated to handle logical/virtual datasets.
   */
   
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
@@ -8,11 +11,15 @@ var DataSetPopulation = Backbone.Model.extend({
 	
 	defaults:{
 		criteria : [],
-		missions : [],
-		sensors :  [],
-		keywords : [],
+		missions : [{"mission" : "None"}],
+		sensors :  [{"sensor" : "None"}],
+		keywords : [{"keyword" : "None"}],
 		datasets : [],
-		datasetsToDisplay : []
+		datasetsToDisplay : [],
+		datasetsFiltredWithMissions : [],
+		datasetsFiltredWithSensors : [],
+		datasetsFiltredWithKeywords : [],
+		
 	},
 	
 	// Constructor : initialize the url from the configuration
@@ -26,17 +33,19 @@ var DataSetPopulation = Backbone.Model.extend({
 		var columns = response.datasetPopulationMatrix.criteriaTitles;
 		var valuesTab = response.datasetPopulationMatrix.datasetPopulationValues;
 		
+		this.matrix = valuesTab;
+		
 		//create criteria as a table of json objects
 		var criteria = [];
 		_.each(columns, function(column){
 			criteria.push({"criterionName" : column}); 
 		});
 
-		var missions = [];	
+		var missions = [{"mission" : "None"}];	
 		var treatedMissions = [];
-		var sensors = [];	
+		var sensors = [{"sensor" : "None"}];	
 		var treatedSensors = [];
-		var keywords= [];	
+		var keywords= [{"keyword" : "None"}];	
 		var treatedKeywords = [];
 		
 		_.each(valuesTab, function(row){
@@ -74,6 +83,8 @@ var DataSetPopulation = Backbone.Model.extend({
 		var datasets = [];
 		var datasetKeys = [];
 		var treatedDatasets = [];
+		var mission, sensor;
+		var self = this;
 		
 		_.each(valuesTab, function(row){
 			
@@ -81,66 +92,123 @@ var DataSetPopulation = Backbone.Model.extend({
 		
 				treatedDatasets.push(row[3]);
 				
+				mission = row[0];
+				sensor = row[1];
+				
 				//create keywords table
 				datasetKeys = [];
 				
 				_.each(valuesTab, function(rowIter){
 					
-					if (rowIter[3] == row[3] && datasetKeys.indexOf({"keyword" : rowIter[2], "itemsCount":  rowIter[3]}) != -1) {
-						
-						datasetKeys.push({"keyword" : rowIter[2], "itemsCount":  rowIter[3]});
+					if (rowIter[3] == row[3] && !self.isIn(datasetKeys, {"keyword" : rowIter[2], "itemsCount":  rowIter[3]})) {
+						if (mission == "" && rowIter[0] !=""){
+							mission = rowIter[0];
+						}
+						if (sensor == "" && rowIter[1] !=""){
+							sensor = rowIter[1];
+						}
+						if (rowIter[2] != ""){
+							datasetKeys.push({"keyword" : rowIter[2], "itemsCount":  rowIter[4]});
+						}
 					}
 				});
 				
-				datasets.push({"mission" : row[0], "sensor": row[1], "keywordCount": datasetKeys, "datasetId": row[3], "itemsCount": row[4]}); 
+				datasets.push({"datasetId": row[3], "itemsCount": row[4], "mission" : mission, "sensor": sensor, "keywordCount": datasetKeys}); 
 			}
 		});
 				
 		//console.log("created datasets as json ");  
-		//console.log("datasets :: " +  datasets);
+		console.log("datasets :: ");
+		console.log(datasets);
 		
 		return {"criteria" : criteria, "missions" : missions, "sensors" : sensors, 
-			"keywords": keywords, "datasets" : datasets};
+			"keywords": keywords, "datasets" : datasets, "datasetsToDisplay" : datasets};
 	},
 	
-	//TODO to use/adapt when dealing with filters
-	getDatasetsWithMission : function(datasetsToFilter, mission){
+	isIn : function (json, array){
+		_.each(array, function(elt){
+			if (elt.keyword == json.keyword && elt.itemsCount == json.itemsCount){
+				return true;
+			}
+		});
+		return false;
+	},
+
+	updateDatasetsWithMission : function(mission){
+		
+		if (mission == 'None'){
+
+			//TODO re-filter from the initial table with the sensor and keyword
+			var self = this;
+			this.set({"datasetsToDisplay" : self.get("datasets")}, {silent: true});
+			return;
+		}
+		
+		
+		var datasetsToFilter = this.get("datasets");
 		var datasetsToDisplay = [];
 		_.each(datasetsToFilter, function(dataset){
 			if(dataset.mission == mission){
 				datasetsToDisplay.push(dataset);
 			}
 		});
-		return datasetsToDisplay;
+		console.log(datasetsToDisplay);
+		
+		this.set({"datasetsFiltredWithMissions" : datasetsToDisplay}, {silent: true});
+		this.set({"datasetsToDisplay" : datasetsToDisplay}, {silent: true});
 	},
 	
-	//TODO to use/adapt when dealing with filters
-	getDatasetsWithSensor : function (datasetsToFilter, sensor){
+
+	updateDatasetsWithSensor : function (sensor){
+		
+		if (sensor == 'None'){
+			//TODO re-filter from the initial table with the mission and keyword
+			var self = this;
+			this.set({"datasetsFiltredWithSensors" : self.get("datasetsFiltredWithMissions")}, {silent: true});
+			this.set({"datasetsToDisplay" : self.get("datasetsFiltredWithMissions")}, {silent: true});
+			return;
+		}
+		
+		var datasetsToFilter = this.get("datasetsFiltredWithMissions");
 		var datasetsToDisplay = [];
 		_.each(datasetsToFilter, function(dataset){
 			if(dataset.sensor == sensor){
 				datasetsToDisplay.push(dataset);
 			}
 		});
-		return datasetsToDisplay;
+		console.log(datasetsToDisplay);
+		this.set({"datasetsFiltredWithSensors" : datasetsToDisplay}, {silent: true});
+		this.set({"datasetsToDisplay" : datasetsToDisplay}, {silent: true});
 	},
 	
-	//TODO to use/adapt when dealing with filters
-	getDatasetsWithKeyword : function(datasetsToFilter, keyword){
+
+	updateDatasetsWithKeyword : function(keyword){
+		
+		if (keyword == 'None'){
+			//re-filter from the initial table with the sensor and mission
+			var self = this;
+			this.set({"datasetsToDisplay" : self.get("datasetsFiltredWithSensors")}, {silent: true});
+			return; 
+		}
+		
+		var datasetsToFilter = this.get("datasetsFiltredWithSensors");
 		var datasetsToDisplay = [];
 		_.each(datasetsToFilter, function(dataset){
 			_.each(dataset.keywordCount, function(keyCount){
 				if (keyCount.keyword == keyword){
-					datasetsToDisplay.push({"mission" : dataset.mission, 
-											"sensor": dataset.sensor, 
-											"keywordCount": dataset.keywordCount, 
-											"datasetId": dataset.datasetId, 
-											"itemsCount": keyCount.itemsCount});
+					datasetsToDisplay.push({
+						"datasetId": dataset.datasetId, 
+						"itemsCount": keyCount.itemsCount,
+						"mission" : dataset.mission, 
+						"sensor": dataset.sensor, 
+						"keywordCount": dataset.keywordCount});
 				}
 			});	
 		});
 		
-		return datasetsToDisplay;
+		console.log(datasetsToDisplay);
+		//this.set({"datasetsFilredWithSensors" : datasetsToDisplay}, {silent: true});
+		this.set({"datasetsToDisplay" : datasetsToDisplay}, {silent: true});
 	}
 	
 	
