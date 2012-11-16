@@ -53,18 +53,20 @@ table.dataTable thead th {
 	width: 50%;
 }
 
-
-
-/* remove border between each item */
-.ui-checkbox label .ui-btn-inner{
-  border: 0;
+/**
+ * Used to display a lightweight checkbox in the dataTable
+ */
+.dataTables_chekbox {
+	display: inline-block;
+	border-radius: 3px;
 }
 
-/* change background color when check boxes are checked */
-.ui-checkbox-on .ui-icon{
-  background-color: #456;
+/**
+ * Add a nice background (taken from JQM) when checkbox is on
+ */
+.dataTables_chekbox.ui-icon-checkbox-on {
+	background-color: #4596CE;
 }
-
 
 .dataTables_info  {
     font-weight: bold;
