@@ -11,7 +11,7 @@ var DataSetSearch = Backbone.Model.extend({
 		south : "",
 		east : "",
 		north : "",
-		useExtent : "false",
+		useExtent : false,
 		criteria : ""//TODO later add the advanced criteria 
 	},
 	
