@@ -5,26 +5,37 @@
 define( [ "configuration", "search/model/searchResults", "map/openlayers", "map/globweb", "backbone" ], 
 
 // The function to define the map module
-function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
+function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	
 	/**
 	 * Private attributes
 	 */
+	 
+	// Reference to the map singleton
 	var self = null;
+	// The different engines used by the map
 	var engines = {
 		'2d' : OpenLayersMapEngine, 
 		'3d' : GlobWebMapEngine,
 	};
+	// The current map engine
 	var mapEngine = null;
+	// The engine layers
 	var engineLayers = [];
+	// The layer to store the results footprints
 	var resultFootprintLayer = null;
+	// The map DOM element
 	var element = null;
+	// The current background layer
 	var backgroundLayer = null;
+	// The current selected feature
 	var selectedFeature = null;
+	// The popup to use for selection
 	var	popup = null;
+	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
-	var wmsBrowse = {
-	};
+	// An object to store all  browse layers 
+	var browseLayers = {};
 
 	/**
 	 * Private methods
@@ -119,12 +130,12 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			{
 				selectFeature(feature);
 				
-				if (!popup)
+/*				if (!popup)
 				{
 					popup = $('<div data-role="popup" id="popupBasic"><p>This is a completely basic popup, no options set.<p></div>').appendTo('#mapContainer');
 					popup.popup();
 				}
-				popup.popup('open', { x:  pageX, y: pageY });
+				popup.popup('open', { x:  pageX, y: pageY });*/
 			}
 		}
 	};
@@ -157,14 +168,14 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 	 */
 	var updateResults = function() {
 	
-		// Remove browse
-		for ( var x in wmsBrowse ) {
-			if ( wmsBrowse.hasOwnProperty(x) ) {
-				mapEngine.removeLayer( wmsBrowse[x] );	
+		// Remove browse browse layers
+		for ( var x in browseLayers ) {
+			if ( browseLayers.hasOwnProperty(x) ) {
+				mapEngine.removeLayer( browseLayers[x] );	
 			}
 		}
-		// Cleanup the wmsBrowse
-		wmsBrowse = {};
+		// Cleanup the browse layers
+		browseLayers = {};
 	
 		// Remove all features
 		mapEngine.removeAllFeatures( resultFootprintLayer );
@@ -183,13 +194,14 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 				computeExtent(feature);
 				
 			// Create the WMS if it does not exists
-			if (!wmsBrowse.hasOwnProperty(feature.id)) {
+			if (!browseLayers.hasOwnProperty(feature.id)) {
 				var eo = feature.properties.EarthObservation;
 				var layerDesc = {
 					name: feature.id,
 					type: "WMS",
 					visible: value,
 					baseUrl: "/wms2eos/servlets/wms",
+					opacity: Configuration.data.map.browseDisplay.opacity,
 					params: { layers: feature.properties.browseLayer,
 						time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
 						version: "1.1.1",
@@ -198,11 +210,11 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 					},
 					bbox: feature.bbox
 				};
-				wmsBrowse[ feature.id ] = mapEngine.addLayer(layerDesc);			
+				browseLayers[ feature.id ] = mapEngine.addLayer(layerDesc);			
 			}
 			
 			// Modify browse layer visibility
-			var layer = wmsBrowse[ feature.id ];
+			var layer = browseLayers[ feature.id ];
 			mapEngine.setLayerVisible(layer,value);
 		}
 	};
@@ -290,6 +302,11 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			SearchResults.on('zoomToProductExtent',self.zoomToFeature);
 		},
 		
+		/**
+		 * Modify the background layer
+		 *
+		 * @param layer The layer to use as new background
+		 */
 		setBackgroundLayer: function(layer) {
 			// Store background layer
 			backgroundLayer = layer;
@@ -297,6 +314,12 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 			mapEngine.setBackgroundLayer(layer);
 		},
 		
+		/**
+		 * Change visibilty of a layer
+		 *
+		 * @param i	The layer index
+		 * @param vis The new visibility
+		 */
 		setLayerVisible: function(i,vis) {
 			// Store visibilty in configuration data
 			Configuration.data.map.layers[i].visible = vis;
@@ -381,7 +404,7 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 		},
 				
 		/**
-		 * Method called when the map viewport is resized
+		 * Method to call when the map viewport is resized
 		 */
 		updateViewportSize: function() {
 			if (mapEngine)

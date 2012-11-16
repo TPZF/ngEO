@@ -8,8 +8,7 @@ define( [ "externs/OpenLayers.ngeo" ],
   
 /**
  * Constructor
- * elementId : the element div for the map
- * initCallback : a callback to be called when the map is initialized
+ * parentElement : the parent element div for the map
  */
 OpenLayersMapEngine = function( parentElement )
 {
@@ -109,7 +108,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 					layer.params, {
 						maxExtent: maxExtent,
 						isBaseLayer: false,
-						opacity: 0.7
+						opacity: layer.opacity
 				   });
 		break;
 	case "GeoRSS":
@@ -333,46 +332,6 @@ OpenLayersMapEngine.prototype.removeProduct = function(product)
 OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 {
 	layer.drawFeature( layer.getFeatureByFid(feature.id), style );
-/*	var origFeatureLayer = this._styleMap[product.style]._featureLayer;
-	var newFeatureLayer = this._styleMap[style]._featureLayer;
-	
-	if ( origFeatureLayer != newFeatureLayer )
-	{
-		var olFeature = origFeatureLayer.getFeatureById(product.name);
-		origFeatureLayer.removeFeatures( [olFeature] );
-		olFeature.style = null;
-		newFeatureLayer.addFeatures( [olFeature] );
-	}*/
-}
-
-/**
- * Show the quicklook of a product
- */
-OpenLayersMapEngine.prototype.showQuicklook = function(product)
-{
-	var olFeatures = this._geoJsonFormat.read(product.geometry);
-	var productGeometry = olFeatures[0].geometry.transform(this._map.displayProjection, this._map.projection);
-	
-	var bounds = productGeometry.getBounds();
-	var layer = new OpenLayers.Layer.Image( product.name, product.quicklookUrl, bounds, new OpenLayers.Size(512,512),
-		{ isBaseLayer: false
-		, alwaysInRange: true
-		//, displayInLayerSwitcher: false 
-		}
-	);
-	this._map.addLayer( layer );
-}
-
-/**
- * Hide the quicklook of the product
- */
-OpenLayersMapEngine.prototype.hideQuicklook = function(product)
-{
-	var layers = this._map.getLayersByName( product.name );
-	if ( layers )
-	{
-		this._map.removeLayer( layers[0] );
-	}
 }
 
 /**
