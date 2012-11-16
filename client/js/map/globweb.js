@@ -164,6 +164,14 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 }
 
 /**
+ * Remove layer from the map engine
+ */
+GlobWebMapEngine.prototype.removeLayer = function(gwLayer)
+{
+	this.globe.removeLayer(gwLayer);
+}
+
+/**
  * Subscribe to GlobWebMap events
  */
 GlobWebMapEngine.prototype.subscribe = function(name,callback)

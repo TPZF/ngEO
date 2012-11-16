@@ -153,11 +153,23 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 
 	/**
 	 * Update results
+	 * Called when new results has been received
 	 */
 	var updateResults = function() {
 	
+		// Remove browse
+		for ( var x in wmsBrowse ) {
+			if ( wmsBrowse.hasOwnProperty(x) ) {
+				mapEngine.removeLayer( wmsBrowse[x] );	
+			}
+		}
+		// Cleanup the wmsBrowse
+		wmsBrowse = {};
+	
+		// Remove all features
 		mapEngine.removeAllFeatures( resultFootprintLayer );
 		mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
+		
 
 	};
 
@@ -167,6 +179,10 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 	var displayBrowse = function(value,features) {
 		for ( var i = 0; i < features.length; i++ ) {
 			var feature = features[i];
+			if (!feature.bbox)
+				computeExtent(feature);
+				
+			// Create the WMS if it does not exists
 			if (!wmsBrowse.hasOwnProperty(feature.id)) {
 				var eo = feature.properties.EarthObservation;
 				var layerDesc = {
@@ -179,12 +195,15 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine ) {
 						version: "1.1.1",
 						transparent: true,
 						styles: "ellipsoid"
-					}
+					},
+					bbox: feature.bbox
 				};
 				wmsBrowse[ feature.id ] = mapEngine.addLayer(layerDesc);			
 			}
+			
+			// Modify browse layer visibility
 			var layer = wmsBrowse[ feature.id ];
-			mapEngine.setLayerVisible(value);
+			mapEngine.setLayerVisible(layer,value);
 		}
 	};
 	
