@@ -26,9 +26,16 @@ var DataSetSearch = Backbone.Model.extend({
 		//TODO add advanced search criteria later
 		var url = Configuration.baseServerUrl + "/productSearch?q={datasetId:" + this.get("datasetId") + "}&" +
 				"startdate="+ this.get("startdate") + "&" + 
-				"stopdate=" + this.get("stopdate") + "&" + 
-				"bbox=" + this.get("west") + "," + this.get("south") + "," 
-				+ this.get("east") + "," + this.get("north");
+				"stopdate=" + this.get("stopdate");
+		
+		//add area criteria is set
+		if (this.get("west") != "" && this.get("south") != ""
+			&& this.get("east") != "" && this.get("north") != ""){
+		
+			var url = url  +  "&" + 
+			"bbox=" + this.get("west") + "," + this.get("south") + "," 
+			+ this.get("east") + "," + this.get("north");
+		}
 		
 		//console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
