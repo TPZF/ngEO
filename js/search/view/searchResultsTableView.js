@@ -75,19 +75,6 @@ define(
 											self.$el.trigger('create');// to insure that JQM styling is still kept
 										 },		
 										
-										"fnRowCallback" : function(nRow, aData,
-												iDisplayIndex,
-												iDisplayIndexFull) {
-											
-											_.each(aData, function(cellValue, index){
-												//add a check box in the first cell of each row
-												//style the other cell labels with JQM
-												if (index == 0){
-													$('td:eq(0)', nRow)
-													.html('<span id="'+aData[1]+'Label" class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>');
-												}
-											});
-										}
 									});
 							//Style the div of the datatable footer 	
 							$(".bottom").addClass("ui-grid-c");
@@ -201,7 +188,8 @@ define(
 							var features = [];
 							var indexes = []; //are kept here in case to change the triggering events with indexes
 							var self = this;
-							var selectedNodes = this.table.$('tr.row_selected');
+							//var selectedNodes = this.table.$('tr.row_selected');
+							var selectedNodes = this.table.$('.dataTables_chekbox').closest('tr');
 							
 							_.each(selectedNodes, function(node, index){
 								var rowPos = self.table.fnGetPosition(node);

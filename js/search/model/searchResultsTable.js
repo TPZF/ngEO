@@ -11,9 +11,9 @@ define(
 				defaults : {
 					columns : [{ //datatable columns
 						'sTitle' : '  ' ,  'sWidth': "5%" , 'bSortable': false
-					}, {
+					}/*, {
 						'sTitle' : 'id'
-					}, {
+					}*/, {
 						'sTitle' : 'Mission'
 					}, {
 						'sTitle' : 'Sensor',  "sContentPadding": "mmm"
@@ -35,16 +35,9 @@ define(
 						'sTitle' : 'Status',  "sContentPadding": "mmm"
 					} ],
 					features : [], //geojson initial  features
-					items : [], //json formatted data to display for now it is not needed
+					//items : [], //json formatted data to display for now it is not needed
 					itemValuesTable : [] //the values needed to be displayed
 				},
-				// { "fnRender": function ( o, val ) {
-				// return "<input id type='checkbox'
-				// } },
-				// {'sTitle': 'Satelletite'}
-				// TODO later add browse info if needed : {'sTitle':
-				// 'Browse Type'}, {'sTitle': 'Browse
-				// Projection'},{'sTitle': 'Browse File'}
 
 				initialize : function(params) {
 					
@@ -52,8 +45,9 @@ define(
 					var items = [];
 					var itemValuesTable = [];
 					_.each(params.features, function(feature) {
+							/*	FL : Not really needed, remove it ?
 							items.push({ 
-										'id' : feature.id,
+										//'id' : feature.id,
 										'Mission' : feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
 										// 'Satelletite' :
 										// feature.properties.EarthObservation.EarthObservationEquipment.eop_platformSerialIdentifier,
@@ -78,15 +72,11 @@ define(
 									// feature.properties.EarthObservation.EarthObservationEquipment.EarthObservationResult.eop_BrowseInformation.eop_referenceSystemIdentifier,
 									// 'Browse File' :
 									// feature.properties.EarthObservation.EarthObservationEquipment.EarthObservationResult.eop_BrowseInformation.eop_filename,
-									});
+									});*/
 
 							itemValuesTable.push([
-											// 'false',
-											// //add an
-											// checked check
-											// box
-											'',
-											feature.id,
+											'<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>',
+											//feature.id,
 											// feature.geometry.coordinates,
 											feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
 											feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
@@ -106,7 +96,7 @@ define(
 									]);
 						});
 
-					this.set({"items" : items, "itemValuesTable" : itemValuesTable , "features" : params.features});
+					this.set({/*"items" : items,*/ "itemValuesTable" : itemValuesTable , "features" : params.features});
 				},
 
 			});
