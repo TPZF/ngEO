@@ -44,7 +44,21 @@ define(
 //									$target.removeClass('ui-icon-checkbox-on');	
 //								}
 								
-							}
+							},
+							
+//							'click #searchCriteriaSummary' : function(event){
+//						
+//								var text = '<p><b>Date<b></p> : br/' + 
+//									this.searchResultsView.datasetSearch.attributes.startdate +'br/' +
+//									this.searchResultsView.datasetSearch.attributes.stopdate +'br/' +
+//									 '<p><b>Area<b></p> : br/' + this.searchResultsView.datasetSearch.attributes.west ;
+//									 
+//								$("#searchCriteriaPopupText").html( text );	
+//								$('#searchCriteriaPopupText').popup("open",  $( {} )
+//									    .jqmData( "position-to", "window" )
+//									    .jqmData( "transition", "slide" ));
+//								$('#searchCriteriaPopup').trigger('create');
+//							}
 							
 						},
 
@@ -200,6 +214,32 @@ define(
 								self.close();
 								self.searchResultsView.close();
 								self.mainView.displayDatasets();
+							});
+							
+							
+							$("#searchCriteriaSummary").click(function(){
+									
+									var text = '<p><b>Date:<b></p> ' + 
+										'<b>Start : <b> '+ self.searchResultsView.datasetSearch.attributes.startdate + '</p>' +
+										'<b>Stop : <b> ' + self.searchResultsView.datasetSearch.attributes.stopdate + '</p> ';
+										
+									if (self.searchResultsView.datasetSearch.attributes.west != '' &&
+											self.searchResultsView.datasetSearch.attributes.west != '' &&
+											self.searchResultsView.datasetSearch.attributes.west != '' &&
+											self.searchResultsView.datasetSearch.attributes.west != ''){
+										
+										text = text + '<p><b>Area:<b> ' + 
+										 '<p><b>West : <b>' + self.searchResultsView.datasetSearch.attributes.west +'</p> ' +
+										 '<p><b>South : <b>' + self.searchResultsView.datasetSearch.attributes.south +'</p> ' +
+										 '<p><b>East : <b>' + self.searchResultsView.datasetSearch.attributes.east +'</p> ' +
+										 '<p><b>North : <b>' + self.searchResultsView.datasetSearch.attributes.north + '</p> ';
+									}
+									
+									$("#searchCriteriaPopupText").html( text );	
+									$('#searchCriteriaSummaryPopup').popup("open",  $( {} )
+										    .jqmData( "position-to", "window" )
+										    .jqmData( "transition", "slide" ));
+									$('#searchCriteriaSummaryPopup').trigger('create');
 							});
 							
 
