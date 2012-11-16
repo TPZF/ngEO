@@ -1,8 +1,12 @@
-<div id="searchResultsHeader" data-role="header" class="ui-header ui-bar-a ui-grid-a" role="banner">
-	<div id="searchResultsTitle" class="ui-block-a">
+<div id="searchResultsHeader" data-role="header" class="ui-header ui-bar-a ui-grid-b" role="banner">
+	<div id="searchCriteriaSummaryContainer" class="ui-block-a" data-inline="true" style="width:15%"> 
+		<button id="searchCriteriaSummary" data-role="button" data-inline="true" data-icon="info" data-mini="true">Search Criteria</button>
+	</div>
+
+	<div id="searchResultsTitle" class="ui-block-b" data-inline="true" style="width:60%">
 		<h1 role="heading" class="ui-title" aria-level="1">Search Results</h1>
 	</div>
-	<div id="browseSliderContainer" class="ui-block-b">
+	<div id="browseSliderContainer" class="ui-block-c" data-inline="true"style="width:25%">
 		<div data-role="fieldcontain"> 
 			<label for="browseSlider" id="browseSliderLabel" data-inline="true" data-mini="true">Browse images on map :</label>
 			<select name="browseSlider" id="browseSlider" data-mini="true" data-inline="true" data-role="slider" class="ui-slider-switch">
@@ -11,6 +15,8 @@
 			</select>
 		</div>
 	</div>
+	
+	
 </div>
 
 <div id="searchMessage"></div>
@@ -20,4 +26,10 @@
 	<table cellpadding="0" cellspacing="0" border="0" class="display" id="datatable"></table>
 
 </div>
-		
+	
+<div id="searchCriteriaSummaryPopup" data-role=popup data-theme="c" 
+								data-overlay-theme="a" 
+								class="ui-content">
+		<a href="#" id="searchCriteriaClosePopup" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+		<p id="searchCriteriaPopupText"></p>
+</div> 	
