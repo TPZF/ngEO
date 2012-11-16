@@ -1,6 +1,6 @@
 define( ['jquery', 'backbone', 'underscore', 
-         'text!search/template/datasetsSelectionContent_template.html'], 
-		function($, Backbone, _ , datasetsList_template) {
+         'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
+		function($, Backbone, _ , datasetsSelection_template, datasetsList_template) {
 
 	/**
 	 * The related model is DatasetsPopulationModel
@@ -12,14 +12,11 @@ var DatasetSelectionView = Backbone.View.extend({
 
 		this.mainView = options.mainView;
 		this.model.on("change", this.render, this);
+		//this.model.on("change:datasetsToDisplay", this.updateDatasetsList, this);
 	},
 	
 	events : {
 	
-		//handling filters
-		'select #missions' : function(){},
-		'select #sensors' : function(){},
-		'select #keywords' : function(){},
 		'click li' : function(event){
 			
 			var $target = $(event.currentTarget);
@@ -58,16 +55,49 @@ var DatasetSelectionView = Backbone.View.extend({
 		// Next button is disable when no dataset is selected
 		this.nextButton.button('disable');
 		
-		var content = _.template(datasetsList_template, this.model);
-		
+		var mainContent = _.template(datasetsSelection_template, this.model);
+		console.log(mainContent);
+		var listContent = _.template(datasetsList_template, this.model);
+		console.log(listContent);
 		//console.log ("content of the dataset selection div : ");
 		//console.log(content);
 		
-		this.$el.append(content);
+		this.$el.append(mainContent);
+		this.$el.find("#datasetListContainer").append(listContent);
+		this.$el.find("#datasetListContainer").trigger('create');
 		this.$el.trigger('create');
 		this.mainView.$el.ngeowidget('update');
 		
+		$("#missions").change(function(event){
+			console.log($(event.currentTarget).val());
+			self.model.updateDatasetsWithMission($(event.currentTarget).val());
+			self.updateDatasetsList();
+		});
+		
+		$("#sensors").change(function(event){
+			console.log($(event.currentTarget).val());
+			self.model.updateDatasetsWithSensor($(event.currentTarget).val());
+			self.updateDatasetsList();
+		});
+		
+		$("#keywords").change(function(event){
+			console.log($(event.currentTarget).val());
+			self.model.updateDatasetsWithKeyword($(event.currentTarget).val());
+			self.updateDatasetsList();
+		});
+		
+		
+		this.delegateEvents();
+		
 		return this;
+	},
+	
+	updateDatasetsList : function(){
+		this.$el.find("#datasetListContainer").empty();
+		this.$el.find("#datasetListContainer").unbind();
+		var listContent = _.template(datasetsList_template, this.model);
+		this.$el.find("#datasetListContainer").append(listContent);
+		this.$el.find("#datasetListContainer").trigger('create');
 	},
 
 	// TODO move to Backbone.View.prototype
