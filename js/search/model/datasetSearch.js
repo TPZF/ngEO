@@ -40,6 +40,25 @@ var DataSetSearch = Backbone.Model.extend({
 		//console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
 		return url;
+	},
+	  
+	/** get the seach criteria to display as a txt pop-up in the searchresults view */
+	getSearchCriteriaSummary : function(){
+
+		var text = '<p><b>Date:<b></p> ' + 
+			'<b>Start : <b> '+ this.get("startdate") + '</p>' +
+			'<b>Stop : <b> ' + this.get("stopdate") + '</p> ';
+			
+		if (this.get("west") != '' && this.get("south") != '' &&
+				this.get("east") != '' && this.get("north") != ''){
+			
+			text = text + '<p><b>Area:<b> ' + 
+			 '<p><b>West : <b>' + this.get("west") +'</p> ' +
+			 '<p><b>South : <b>' + this.get("south") +'</p> ' +
+			 '<p><b>East : <b>' + this.get("east") +'</p> ' +
+			 '<p><b>North : <b>' + this.get("north") + '</p> ';
+		}
+		return text;
 	}
 });
 
