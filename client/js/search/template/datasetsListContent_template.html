@@ -1,0 +1,12 @@
+
+<ul id="datasetList" data-role="listview" data-inset="true" data-count-theme="b">	
+
+	<% _.each(attributes.datasetsToDisplay, function(dataset) { %>
+		<li id="<%= dataset.datasetId %>" data-theme="d" data-mini="true" >
+					<%= dataset.datasetId %>
+					<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
+		</li> 
+	<% }); %>
+		
+</ul>
+	
