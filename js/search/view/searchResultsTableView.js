@@ -33,16 +33,11 @@ define(
 									}
 								}
 							},
-
-							'click img' : function(event){
-								console.log($(event.currentTarget));
-//								$(event.currentTarget).removeAttribute('class');
-//								$(event.currentTarget).addAttribute('class', 'ui-icon ui-icon-shadow ui-icon-checkbox-off');	
-//								this.table.fnDraw();
-//								}else{
-//									$target.addClass('ui-icon-checkbox-off');	
-//									$target.removeClass('ui-icon-checkbox-on');	
-//								}
+							
+							// Called when the user clicks on the checkbox of the dataTables
+							'click .dataTables_chekbox' : function(event){
+								$(event.currentTarget).toggleClass('ui-icon-checkbox-off');
+								$(event.currentTarget).toggleClass('ui-icon-checkbox-on');
 								
 							},
 							
@@ -110,9 +105,7 @@ define(
 												if (index == 0){
 													$('td:eq(0)', nRow)
 													.html(
-//															'<label id="'+aData[1]+'Label" for="' + aData[1] + '" style="max-width:37px, width:5%, border:0" data-iconpos="top" data-corners="false" data-theme="d"></label>' +
-//															'<input type="checkbox" id="' + aData[1] + '" style="max-width:37px, width:5%, border:0" data-mini="true" data-corners="false" data-theme="d">');
-															'<img id="'+aData[1]+'Label" style="text-inline : center" data-corners="false" data-icon="check"  class="ui-icon ui-icon-checkbox-on "></img>');
+															'<span id="'+aData[1]+'Label" class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>');
 												}else{
 													$('td:eq(' + index + ')', nRow)
 													.html('<label data-mini="true" data-theme="d" style="width:8%">' + cellValue +'</label>');
@@ -120,6 +113,7 @@ define(
 											});
 										}
 									});
+									
 
 //							$("#datatable th").attr("class", "ui-btn");
 //							$("#datatable th").attr("data-inline", "true");
@@ -182,6 +176,7 @@ define(
 							//$(".bottom").trigger('create');// to insure that JQM styling is still kept
 
 							this.table.fnDraw();
+							
 							
 							this.addToShopcart = this.mainView.$el.ngeowidget(
 									'addButton', {
