@@ -2,14 +2,11 @@
 /**
  * DataTables Toolbar configuration
  */
- 
- /** Add some padding and reset font-weight to normal */
-/* .dataTables_wrapper .ui-toolbar { */
-/*     padding: 5px; */
-/* 	font-weight: normal; */
-/* } */
 
-table.dataTable thead th {
+/**
+ * Style for header : some border and padding
+ */
+.dataTable thead th {
 	padding: 3px 18px 3px 10px;
 	border-bottom: 1px solid black;
 	font-weight: bold;
@@ -39,18 +36,18 @@ table.dataTable thead th {
 }
 
 
+/** styling for dataTables length */
 .dataTables_length  {
 	float: left;
 }
 
 .dataTables_length .ui-select{
- 	width: 40%; 
+ 	display: inline-block;
 }
 
-#datatable_length label{
+.dataTables_length label {
 	font-size: 13px;
 	font-weight: bold;
-	width: 50%;
 }
 
 /**
@@ -80,14 +77,6 @@ table.dataTable thead th {
 /* 	display : inline-block; */
 }
 
-/* #dataTables_paginate a { */
-/* 	width: 40%; */
-/* }  */
-/* #datatable_previous,  #datatable_next{ */
-/* 	width: 40%; */
-/* } */
-
-
 
 /**
  * DataTables main table configuration
@@ -106,17 +95,12 @@ table.dataTable thead th {
 
 .dataTables_wrapper td {
 	text-align: center;
-/* 	width : 10%; */
-}
-
-#datatable tr td .ui-checkbox {
-	text-align: center;
-/* 	width : 6%; */
+	font-size: 12px;
 }
 
 /** Color for Odd line */
 .dataTables_wrapper tr.odd {
-	background-color: #E2E4FF;
+	background-color: #E9E9E9;
 }
 
 /** Color for Even line */
@@ -128,11 +112,6 @@ table.dataTable thead th {
 .dataTables_wrapper tr.row_selected {
 	background-color: #B0BED9;
 }
-
-#datatable label {
-	font-size: 12px;
-}
-
 
 /*
  * Sorting
