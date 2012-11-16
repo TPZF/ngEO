@@ -10,7 +10,7 @@ define(
 
 				defaults : {
 					columns : [{ //datatable columns
-						'sTitle' : '  ' ,  'sWidth': "5%" 
+						'sTitle' : '  ' ,  'sWidth': "5%" , 'bSortable': false
 					}, {
 						'sTitle' : 'id'
 					}, {
