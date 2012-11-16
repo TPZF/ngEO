@@ -66,7 +66,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.searchUrlButton.click( function() {
 			// Set the opensearch url
-			$("#popupText").html( Configuration.serverHostName + self.model.getOpenSearchURL());	
+			$("#popupText").html( '<b>' + Configuration.serverHostName + self.model.getOpenSearchURL() + '<b>');	
 			$('#openSearchUrlPopup').popup("open",  $( {} )
 				    .jqmData( "position-to", "window" )
 				    .jqmData( "transition", "slide" ));
