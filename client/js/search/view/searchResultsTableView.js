@@ -5,7 +5,7 @@ define(
 			var SearchResultsTableView = Backbone.View
 					.extend({
 
-						// the model is a SearchResults backbone model
+						// the model is a SearchResultsTable backbone model
 
 						initialize : function(options) {
 							this.mainView = options.mainView;
