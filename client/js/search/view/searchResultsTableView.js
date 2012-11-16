@@ -2,9 +2,6 @@ define(
 		[ 'jquery', 'backbone', 'search/model/datasetSearch', 'jquery.mobile' ],
 		function($, Backbone, Map, DatasetSearch) {
 
-			// the DatasetSearch is included in order to access the pagination
-			// parameters later
-
 			var SearchResultsTableView = Backbone.View
 					.extend({
 
@@ -39,22 +36,8 @@ define(
 								$(event.currentTarget).toggleClass('ui-icon-checkbox-off');
 								$(event.currentTarget).toggleClass('ui-icon-checkbox-on');
 								
-							},
-							
-//							'click #searchCriteriaSummary' : function(event){
-//						
-//								var text = '<p><b>Date<b></p> : br/' + 
-//									this.searchResultsView.datasetSearch.attributes.startdate +'br/' +
-//									this.searchResultsView.datasetSearch.attributes.stopdate +'br/' +
-//									 '<p><b>Area<b></p> : br/' + this.searchResultsView.datasetSearch.attributes.west ;
-//									 
-//								$("#searchCriteriaPopupText").html( text );	
-//								$('#searchCriteriaPopupText').popup("open",  $( {} )
-//									    .jqmData( "position-to", "window" )
-//									    .jqmData( "transition", "slide" ));
-//								$('#searchCriteriaPopup').trigger('create');
-//							}
-							
+							}
+
 						},
 
 						render : function() {
@@ -66,7 +49,7 @@ define(
 												.get("itemValuesTable"),
 										"aoColumns" : this.model.get("columns"),
 										"oLanguage": {
-										      "sLengthMenu": "Show:_MENU_ "
+										      "sLengthMenu": "_MENU_"
 										},
 										"bDestroy": true,
 										"iDisplayLength": 5,	
@@ -75,9 +58,7 @@ define(
 										//"sPaginationType": "full_numbers",
 										"bSort" : true,
 										"fnDrawCallback": function( oSettings ) {
-											$("#datatable_next").trigger('create');
-											$("#datatable_previous").trigger('create');
-											
+											// insure that JQM styling is still kept after sorting and pagination
 											$("#datatable_filter input").attr('data-mini','true');
 											$("#datatable_filter label").attr('data-mini','true');
 											
@@ -87,12 +68,18 @@ define(
 											$("#datatable_length select").attr('data-mini','true');
 											$("#datatable_length label").attr('data-mini','true');
 											
+											//enable and disable pagination buttons according to pagination status
+											if($("#datatable_next").hasClass('paginate_disabled_next')){
+												$("#datatable_next").addClass('ui-disabled');
+											}
+											
+											if($("#datatable_previous").hasClass('paginate_disabled_previous')){
+												$("#datatable_previous").addClass('ui-disabled');
+											}											
+											
 											$("#datatable_length select").trigger('create');
 											$("#datatable_length label").trigger('create');
-											//$("#datatable_length").trigger('create');
-											//$("#datatable_info").trigger('create');
-											//$("bottom").trigger('create');
-											//$("#datatable").trigger('create');
+											
 											self.$el.trigger('create');// to insure that JQM styling is still kept
 										 },			
 										
@@ -101,11 +88,11 @@ define(
 												iDisplayIndexFull) {
 											
 											_.each(aData, function(cellValue, index){
-												
+												//add a check box in the first cell of each row
+												//style the other cell labels with JQM
 												if (index == 0){
 													$('td:eq(0)', nRow)
-													.html(
-															'<span id="'+aData[1]+'Label" class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>');
+													.html('<span id="'+aData[1]+'Label" class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>');
 												}else{
 													$('td:eq(' + index + ')', nRow)
 													.html('<label data-mini="true" data-theme="d" style="width:8%">' + cellValue +'</label>');
@@ -113,39 +100,41 @@ define(
 											});
 										}
 									});
-									
-
-//							$("#datatable th").attr("class", "ui-btn");
-//							$("#datatable th").attr("data-inline", "true");
-							
-							//trial for styling the bottom datatable toolbar not working as expected neither !!
-							console.log( "bottom div");
-							 console.log($("bottom"));
+							//Style the div of the datatable footer 	
 							$(".bottom").attr("data-role", "footer");
-							$(".bottom").attr("data-theme", "a");
-							$(".bottom").addClass("ui-grid-d");
-							//
+							$(".bottom").attr("data-theme", "d");
+							$(".bottom").addClass("ui-grid-c");
+							$(".bottom").trigger('create');
 							
-							//$("#datatable_length").text( function(index, text) {return "Show entries :";});
-							$("#datatable_length").attr("data-role", "fieldcontain");				
-							$("#datatable_length").attr("style" , "width:13%");
+							//$("#datatable_length").attr("data-role", "fieldcontain");				
+							//$("#datatable_length").attr("style" , "width:13%");
 							$("#datatable_length").addClass("ui-block-a");
 							$("#datatable_length").attr("data-theme", "d");
-							//$("#datatable_length").attr("data-mini", "true");
+							
+//							$("#datatable_length").append('<div '+
+//									'<label id="nbEntries" data-inline=true style="border:0" data-mini="true" data-corner-all="false" data-theme="d">: displayed records</label>'+
+//									'</div>');
+
 							$("#datatable_length label").attr("data-mini", "true");
-						//$("#datatable_length label").attr("style" , "width:50%");
+							//$("#datatable_length label").attr("style" , "width:50%");
 							$("#datatable_length label").attr("data-inline", "true");
+							$("#datatable_length label").trigger('create');
 							$("#datatable_length select").attr("data-mini", "true");
 							$("#datatable_length select").attr("data-theme", "d");
-							//add check box for displaying footprints
-							$(".bottom").append('<div class="ui-block-b"><div data-role="fieldcontain" data-inline="true">'+
-							'<label id="displayResultsCheckLabel" for="displayResultsCheck" style="border:0" data-mini="true" data-corner-all="false" data-theme="a">Display Results</label>'+
-							'<input type="checkbox" name="displayResultsCheck" id="displayResultsCheck" data-mini="true" data-theme="d" data-corner-all="false" ></div><div>');
+							$("#datatable_length select").attr("data-theme", "d");
+							//add a check box for displaying footprints styled with JQM
+							$(".bottom").append('<div class="ui-block-b">' +
+							'<label id="displayResultsCheckLabel" for="displayResultsCheck" data-inline=true style="border:0" data-mini="true" data-corner-all="false" data-theme="a">Display results on map</label>'+
+							'<input type="checkbox" name="displayResultsCheck" id="displayResultsCheck" data-mini="true" data-theme="d" data-corner-all="false"></div>');
 
-							//pagination
-							//$("#datatable_paginate").removeClass('pzgin')
-							$("#datatable_paginate").addClass("ui-block-c");
+//							$(".bottom").append('<div class="ui-block-b">' +
+//									'<label data-inline=true style="border:0" data-mini="true" data-corner-all="false" data-theme="b">displayed records</label>'+
+//									</div>');
+
 							
+							//Add JQM styling for pagination elements
+							$("#datatable_paginate").addClass("ui-block-c");
+							//add JQM styling to the previous button
 							$("#datatable_previous").attr("href", "#");
 							$("#datatable_previous").attr("data-mini", "true");
 							$("#datatable_previous").attr("data-role", "button");
@@ -153,7 +142,7 @@ define(
 							$("#datatable_previous").attr("data-icon", "arrow-l");
 							$("#datatable_previous").attr("data-iconpos", "left");
 							$("#datatable_previous").attr("data-inline", "true");
-							
+							//add JQM styling to the next button
 							$("#datatable_next").attr("href", "#");
 							$("#datatable_next").attr("data-theme", "d");
 							$("#datatable_next").attr("data-mini", "true");
@@ -161,23 +150,21 @@ define(
 							$("#datatable_next").attr("data-icon", "arrow-r");
 							$("#datatable_next").attr("data-iconpos", "right");
 							$("#datatable_next").attr("data-inline", "true");
+
+							//enable and disable pagination buttons according to pagination status
+							if($("#datatable_next").hasClass('paginate_disabled_next')){
+								$("#datatable_next").addClass('ui-disabled');
+							}
+							if($("#datatable_previous").hasClass('paginate_disabled_previous')){
+								$("#datatable_previous").addClass('ui-disabled');
+							}
 							
-							//styling of filter
+							//add JQM styling for filter text input
 							$("#datatable_filter").addClass("ui-block-d");
 							$("#datatable_filter input").attr("data-mini", "true");
-							$("#datatable_filter").attr("data-mini", "true");
 							$("#datatable_filter input").attr("data-theme", "d");
 							
-							
-//							$("#datatable_filter input").trigger('create');
-//							$("#datatable_length select").trigger('create');
-//							$("#datatable_next").trigger('create');
-//							$("#datatable_previous").trigger('create');
-							//$(".bottom").trigger('create');// to insure that JQM styling is still kept
-
-							this.table.fnDraw();
-							
-							
+							//add button to the widget footer in order to add items to the shopcart
 							this.addToShopcart = this.mainView.$el.ngeowidget(
 									'addButton', {
 										id : 'addToShopcart',
@@ -185,9 +172,10 @@ define(
 										position: 'left'
 									});
 							
-							// TODO
+							// TODO 
 							this.addToShopcart.click(function() {});
 
+							//add button to the widget footer in order to download products
 							this.retrieveProduct = this.mainView.$el
 									.ngeowidget('addButton', {
 										id : 'retrieve',
@@ -198,6 +186,8 @@ define(
 							// TODO
 							this.retrieveProduct.click(function() {});
 
+							//add button to the widget footer in order to go back to the datasets
+							//list and do a new search
 							this.newSearch = this.mainView.$el.ngeowidget(
 									'addButton', {
 										id : 'newSearch',
@@ -211,26 +201,11 @@ define(
 								self.mainView.displayDatasets();
 							});
 							
-							
+							//display a popup with the search criteria already chosen for the search request
+							//for the moment there is only date and time
 							$("#searchCriteriaSummary").click(function(){
 									
-									var text = '<p><b>Date:<b></p> ' + 
-										'<b>Start : <b> '+ self.searchResultsView.datasetSearch.attributes.startdate + '</p>' +
-										'<b>Stop : <b> ' + self.searchResultsView.datasetSearch.attributes.stopdate + '</p> ';
-										
-									if (self.searchResultsView.datasetSearch.attributes.west != '' &&
-											self.searchResultsView.datasetSearch.attributes.west != '' &&
-											self.searchResultsView.datasetSearch.attributes.west != '' &&
-											self.searchResultsView.datasetSearch.attributes.west != ''){
-										
-										text = text + '<p><b>Area:<b> ' + 
-										 '<p><b>West : <b>' + self.searchResultsView.datasetSearch.attributes.west +'</p> ' +
-										 '<p><b>South : <b>' + self.searchResultsView.datasetSearch.attributes.south +'</p> ' +
-										 '<p><b>East : <b>' + self.searchResultsView.datasetSearch.attributes.east +'</p> ' +
-										 '<p><b>North : <b>' + self.searchResultsView.datasetSearch.attributes.north + '</p> ';
-									}
-									
-									$("#searchCriteriaPopupText").html( text );	
+									$("#searchCriteriaPopupText").html( self.searchResultsView.datasetSearch.getSearchCriteriaSummary() );	
 									$('#searchCriteriaSummaryPopup').popup("open",  $( {} )
 										    .jqmData( "position-to", "window" )
 										    .jqmData( "transition", "slide" ));
@@ -255,7 +230,8 @@ define(
 							this.$el.trigger('create');
 						},
 
-					
+						//get the geojson features related to the selected records as a table.
+						//used to trigger display browses event for map 
 						getSeletctedFeaturesTable : function() {
 							var features = [];
 							var indexes = []; //are kept here in case to change the triggering events with indexes
