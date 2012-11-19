@@ -3,6 +3,9 @@
  * Module dependencies.
  */
 
+// Change the working directory
+process.chdir(__dirname);
+
 var express = require('express')
   , webClientConfigurationData = require('./webClientConfigurationData')
   , datasetPopulationMatrix = require('./datasetPopulationMatrix')
@@ -22,7 +25,8 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(app.router);
   app.use('/client-dev',express.static(path.join(__dirname, '../client')));
-  app.use('/client',express.static(path.join(__dirname, '../build/output')));
+  app.use('/client-opt',express.static(path.join(__dirname, '../build/output')));
+  app.use('/client',express.static(path.join(__dirname, '../webclient')));
 });
 
 app.configure('development', function(){
