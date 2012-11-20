@@ -59,8 +59,6 @@ var DatasetSelectionView = Backbone.View.extend({
 		console.log(mainContent);
 		var listContent = _.template(datasetsList_template, this.model);
 		console.log(listContent);
-		//console.log ("content of the dataset selection div : ");
-		//console.log(content);
 		
 		this.$el.append(mainContent);
 		this.$el.find("#datasetListContainer").append(listContent);
@@ -68,10 +66,16 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.$el.trigger('create');
 		this.mainView.$el.ngeowidget('update');
 		
+		//iterate on all the combo boxes identifiers and bind the event handler which will generate 
+		//a regExp : "\b(criteria_1,criteria_2,...., criteria_n,[^"]*,[^"]*)
+		//the two last elements are the dataset identifier and the items 
+		//.* was not uses because it covers the caracter '"' and so the filtering is not correct.
+		//to cover the all the values (especially "") the expression : ([^"]*|"") is used.
+		
 		_.each(self.model.attributes.criteria, function(criterion, index){
 			
+			//bind a change event handler to the select id
 			$("#"+ criterion.criterionName).change(function(event){
-
 
 				var string = '';
 				
@@ -99,6 +103,8 @@ var DatasetSelectionView = Backbone.View.extend({
 				console.log("created string from select boxes"); 
 				console.log(string);
 				
+				//filter the datasets according to the selected parameters reg exp
+				//the datsets filtred as stored in the model
 				self.model.filter(string);
 				self.updateDatasetsList();
 			});
@@ -109,17 +115,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		return this;
 	},
 	
-	convertStrRegExp : function(string){
-		
-		var cars = string.split("");
-		var regExp = ""
-		_.each(cars, function(char, index){
-			regExp = regExp + "["+ char + "]";
-		});
-		
-		return regExp;
-	},
-	
+	/** update only the list of datasets in the view */
 	updateDatasetsList : function(){
 		this.$el.find("#datasetListContainer").empty();
 		this.$el.find("#datasetListContainer").unbind();
