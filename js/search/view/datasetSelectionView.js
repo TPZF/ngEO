@@ -11,7 +11,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	initialize : function(options){
 
 		this.mainView = options.mainView;
-		this.model.on("change", this.render, this);
+		this.model.on("change", function(){console.log("changed model");this.close(); this.mainView.displayDatasets();}, this);
 	},
 	
 	events : {
@@ -37,12 +37,12 @@ var DatasetSelectionView = Backbone.View.extend({
 	
 	render: function(){
 	
+	
 		// TODO : display loading image
 		if (this.model.get("datasets").length == 0){
 			// $(this.el).append("<p>loading datasets...<p>");
 			console.log("Not loaded!!!");
-			return this;
-			
+			return this;		
 		}
 		
 		// Add a next button in the widget footer
@@ -56,9 +56,9 @@ var DatasetSelectionView = Backbone.View.extend({
 		
 		console.log(this.model.attributes);
 		var mainContent = _.template(datasetsSelection_template, this.model);
-		console.log(mainContent);
+		//console.log(mainContent);
 		var listContent = _.template(datasetsList_template, this.model);
-		console.log(listContent);
+		//console.log(listContent);
 		
 		this.$el.append(mainContent);
 		this.$el.find("#datasetListContainer").append(listContent);
@@ -121,13 +121,17 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.$el.find("#datasetListContainer").append(listContent);
 		this.$el.find("#datasetListContainer").trigger('create');
 	},
+	
 
-	// TODO move to Backbone.View.prototype
+	clear : function (){
+		this.mainView.$el.ngeowidget('removeButton', this.nextButton);
+	    this.$el.empty();	    
+	},
+
     close : function() {
-       this.undelegateEvents();
-	   this.mainView.$el.ngeowidget('removeButton', this.nextButton);
-       this.$el.empty();
-       if (this.onClose) {
+    	this.clear();
+    	this.undelegateEvents();
+    	if (this.onClose) {
           this.onClose();
        }
     },
