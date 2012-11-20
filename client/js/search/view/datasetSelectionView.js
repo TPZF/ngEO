@@ -96,8 +96,6 @@ var DatasetSelectionView = Backbone.View.extend({
 					if (i == self.model.attributes.criteria.length-1){
 						string = string + '[^"]*,[^"]*)'
 					}					
-					
-					console.log(string);
 				});				
 				
 				console.log("created string from select boxes"); 
