@@ -70,8 +70,10 @@ var DataSetPopulation = Backbone.Model.extend({
 		console.log("datasets :");
 		console.log(datasets);
 		console.log("the matrix to set : ");
-		console.log(matrixStr);
+		console.log(matrixStr);	
 		
+		this.set({"datasetsToDisplay" : datasets}, {silent: true});
+	
 		return {"criteria" : criteria, "matrixStr" : matrixStr, "datasets" : datasets, "datasetsToDisplay" : datasets};
 	},
 	
