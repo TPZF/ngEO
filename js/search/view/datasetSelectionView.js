@@ -12,7 +12,6 @@ var DatasetSelectionView = Backbone.View.extend({
 
 		this.mainView = options.mainView;
 		this.model.on("change", this.render, this);
-		//this.model.on("change:datasetsToDisplay", this.updateDatasetsList, this);
 	},
 	
 	events : {
@@ -55,6 +54,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		// Next button is disable when no dataset is selected
 		this.nextButton.button('disable');
 		
+		console.log(this.model.attributes);
 		var mainContent = _.template(datasetsSelection_template, this.model);
 		console.log(mainContent);
 		var listContent = _.template(datasetsList_template, this.model);
@@ -68,28 +68,56 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.$el.trigger('create');
 		this.mainView.$el.ngeowidget('update');
 		
-		$("#missions").change(function(event){
-			console.log($(event.currentTarget).val());
-			self.model.updateDatasetsWithMission($(event.currentTarget).val());
-			self.updateDatasetsList();
-		});
-		
-		$("#sensors").change(function(event){
-			console.log($(event.currentTarget).val());
-			self.model.updateDatasetsWithSensor($(event.currentTarget).val());
-			self.updateDatasetsList();
-		});
-		
-		$("#keywords").change(function(event){
-			console.log($(event.currentTarget).val());
-			self.model.updateDatasetsWithKeyword($(event.currentTarget).val());
-			self.updateDatasetsList();
-		});
-		
+		_.each(self.model.attributes.criteria, function(criterion, index){
+			
+			$("#"+ criterion.criterionName).change(function(event){
+
+
+				var string = '';
+				
+				_.each(self.model.attributes.criteria, function(otherCriterion, i){
+					
+					if (i == 0){
+						string = string + '\\b(';
+					}
+
+					console.log($("#"+ otherCriterion.criterionName).val());
+					
+					if ($("#"+ otherCriterion.criterionName).val() != ''){
+						string = string + $("#"+ otherCriterion.criterionName).val() + ',';
+					}else{
+						string = string + '([^"]*|""),'
+					}
+	
+					if (i == self.model.attributes.criteria.length-1){
+						string = string + '[^"]*,[^"]*)'
+					}					
+					
+					console.log(string);
+				});				
+				
+				console.log("created string from select boxes"); 
+				console.log(string);
+				
+				self.model.filter(string);
+				self.updateDatasetsList();
+			});
+		});		
 		
 		this.delegateEvents();
 		
 		return this;
+	},
+	
+	convertStrRegExp : function(string){
+		
+		var cars = string.split("");
+		var regExp = ""
+		_.each(cars, function(char, index){
+			regExp = regExp + "["+ char + "]";
+		});
+		
+		return regExp;
 	},
 	
 	updateDatasetsList : function(){
