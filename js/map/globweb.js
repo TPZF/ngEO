@@ -129,10 +129,29 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	var gwLayer;
 	switch (layer.type) {
 	case "WMS":
-		gwLayer = new GlobWeb.OSMLayer(layer);
+		gwLayer = new GlobWeb.WMSLayer({
+			name: layer.name,
+			baseUrl: layer.baseUrl,
+			styles: layer.params.styles,
+			layers: layer.params.layers,
+			format: layer.params.format
+		});
+		break;
+	case "WMTS":
+		gwLayer = new GlobWeb.WMTSLayer({
+			name: layer.name,
+			baseUrl: layer.baseUrl,
+			style: layer.params.style,
+			layer: layer.params.layer,
+			format: layer.params.format,
+			matrixSet: layer.params.matrixSet
+		});
 		break;
 	case "GeoJSON":
-		gwLayer = new GlobWeb.VectorLayer({ name: layer.name, visible: layer.visible });
+		gwLayer = new GlobWeb.VectorLayer({ 
+			name: layer.name, 
+			visible: layer.visible 
+		});
 		break;
 	case "WFS":
 	case "GeoRSS":
