@@ -14,19 +14,26 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.mainView = options.mainView;
 		this.dataset = options.dataset;
-		//bind the search model change here to avoiding calling the update method
+					
+	//bind the search model change here to avoiding calling the update method
 		//this.searchModel.on("change", this.update, this);
 	},
 	
 	events : {
 		'click #radio-date-label' : function(){
-			 this.showDateCriteria();
+			 this.dateCriteriaView.$el.show();
+			 this.areaCriteriaView.$el.hide();
+			 this.advancedCriteriaView.$el.hide();
 		},
 		'click #radio-area-label' : function(){
-			 this.showAreaCriteria();
+			 this.dateCriteriaView.$el.hide();
+			 this.areaCriteriaView.$el.show();
+			 this.advancedCriteriaView.$el.hide();
 		},
 		'click #radio-searchCriteria-label' : function(){
-			 this.showAdvancedCriteria();
+			 this.dateCriteriaView.$el.hide();
+			 this.areaCriteriaView.$el.hide();
+			 this.advancedCriteriaView.$el.show();
 		},
 		//TODO remove since the click is not catched
 		'click #closePopup' : function(){
@@ -50,9 +57,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 	
 		this.searchButton.click( function() {
-			
 			self.mainView.displaySearchResults(self.model);
-		
 		});		
 		
 		// Search button is disable when no search criteria are is selected
@@ -74,66 +79,38 @@ var SearchCriteriaView = Backbone.View.extend({
 
 		});	
 		
+		this.$el.append(content);
 		
-		//TODO fix the update according to criteria selection
-		// Search button is disable when no search criteria are is selected
-		//this.searchUrlButton.button('disable');
-		
-		//console.log ("content of the dataset selection template : ");
-		//console.log(content);
-		
-		$(this.el).append($(content));
-		
-		this.$el = $(this.el);
-		
-		this.showDateCriteria();
-
-		this.delegateEvents();
-		
-		return this;
-	},	
-	
-	showDateCriteria : function(){
-		
-		var timeView = new TimeExtentView ({
+		// Create the views for each criteria : time, spatial and advanced
+		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
 			searchCriteriaView : this,
 			model : this.model
 			});
-		this.showView(timeView);		
-	},
-
-	showAreaCriteria : function(){
-		
-		var spatialExtent = new SpatialExtentView({
+		this.dateCriteriaView.render();
+			
+		this.areaCriteriaView = new SpatialExtentView({
 			el : this.$el.find("#area"), 
 			searchCriteriaView : this,
 			model : this.model });
-		this.showView(spatialExtent);
-
-	},
-	
-	showAdvancedCriteria : function(){
+		this.areaCriteriaView.render();
+		this.areaCriteriaView.$el.hide();	
 		
-		var advancedSearchView = new AdvancedSearchView({
+		this.advancedCriteriaView = new AdvancedSearchView({
 			el : this.$el.find("#searchCriteria"), 
 			searchCriteriaView : this,
 			model : this.model ,
 			dataset : this.dataset});
-		this.showView(advancedSearchView);
-
-	},
-	
-	showView : function(view){
-
-		if (this.currentView != undefined && this.currentView.el != view.el){
-			this.currentView.close();
-		}
-		this.currentView = view;
-		view.render();
+		this.advancedCriteriaView.render();
+		this.advancedCriteriaView.$el.hide();	
+		
 		this.$el.trigger('create');
-	},
-	
+		
+		
+		
+		return this;
+	},	
+		
 	update : function(){
 	
 		if (this.model.get("startdate") != "" && this.model.get("stopdate") != ""
