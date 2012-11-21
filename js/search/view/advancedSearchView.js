@@ -3,7 +3,7 @@
 //TODO LATER / HANDLE THE ADVANCED SEARCH CRITERIA
 define( ['jquery', 'backbone',  'search/model/dataset', 'search/model/datasetSearch', 
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch , advancedCriteria_template) {
+		function($, Backbone, Dataset, DatasetSearch , advancedCriteria_template) {
 
 var AdvancedSearchView = Backbone.View.extend({
 
@@ -21,7 +21,7 @@ var AdvancedSearchView = Backbone.View.extend({
 	
 	render: function(){
 	
-		this.$el.append($(advancedCriteria_template));
+		this.$el.append(advancedCriteria_template);
 		this.delegateEvents();
 		return this;
 	},	

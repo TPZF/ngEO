@@ -47,6 +47,7 @@ var SpatialExtentView = Backbone.View.extend({
 		this.$el.append(_.template(areaCriteria_template, this.model));
 		//forces the update of the checkbox status according to model
 		$("input[type='checkbox']").prop("checked",this.model.get("useExtent"));
+		this.synchronizeWithMapExtent();
 		this.delegateEvents();
 		return this;
 	},	
@@ -65,18 +66,16 @@ var SpatialExtentView = Backbone.View.extend({
     	
     	if(this.model.get("useExtent")){
 	    	
-    		var mapExtentString = new String(Map.getViewportExtent());
-			//console.log("SpatialExtentView : use map extent check box " : mapExtentString);
-			var coords = mapExtentString.split(',');
-			this.model.set({"west" : coords[0]});
-			this.model.set({"south" : coords[1]});
-			this.model.set({"east" : coords[2]});
-			this.model.set({"north" : coords[3]});
+    		var mapExtent = Map.getViewportExtent();
+			this.model.set({"west" : mapExtent[0]});
+			this.model.set({"south" : mapExtent[1]});
+			this.model.set({"east" : mapExtent[2]});
+			this.model.set({"north" : mapExtent[3]});
 			
-			$("#west").val(coords[0]);
-			$("#south").val(coords[1]);
-			$("#east").val(coords[2]);
-			$("#north").val(coords[3]);
+			$("#west").val(mapExtent[0]);
+			$("#south").val(mapExtent[1]);
+			$("#east").val(mapExtent[2]);
+			$("#north").val(mapExtent[3]);
     	}
     },
 

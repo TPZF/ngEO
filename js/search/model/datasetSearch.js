@@ -11,7 +11,7 @@ var DataSetSearch = Backbone.Model.extend({
 		south : "",
 		east : "",
 		north : "",
-		useExtent : false,
+		useExtent : true,
 		criteria : ""//TODO later add the advanced criteria 
 	},
 	
@@ -45,18 +45,19 @@ var DataSetSearch = Backbone.Model.extend({
 	/** get the seach criteria to display as a txt pop-up in the searchresults view */
 	getSearchCriteriaSummary : function(){
 
-		var text = '<p><b>Date:<b></p> ' + 
-			'<b>Start : <b> '+ this.get("startdate") + '</p>' +
-			'<b>Stop : <b> ' + this.get("stopdate") + '</p> ';
+		var text = '<p><b>DataSet : </b>' + this.get("datasetId") + '</p> '
+		
+		text += '<b>Start date : </b> '+ this.get("startdate") + '</p>' +
+			'<b>Stop date : </b> ' + this.get("stopdate") + '</p> ';
 			
 		if (this.get("west") != '' && this.get("south") != '' &&
 				this.get("east") != '' && this.get("north") != ''){
 			
-			text = text + '<p><b>Area:<b> ' + 
-			 '<p><b>West : <b>' + this.get("west") +'</p> ' +
-			 '<p><b>South : <b>' + this.get("south") +'</p> ' +
-			 '<p><b>East : <b>' + this.get("east") +'</p> ' +
-			 '<p><b>North : <b>' + this.get("north") + '</p> ';
+			text += '<p><b>Area:</b> ' + 
+			 '<p><b>West : </b>' + this.get("west") +'</p> ' +
+			 '<p><b>South : </b>' + this.get("south") +'</p> ' +
+			 '<p><b>East : </b>' + this.get("east") +'</p> ' +
+			 '<p><b>North : </b>' + this.get("north") + '</p> ';
 		}
 		return text;
 	}

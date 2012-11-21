@@ -48,6 +48,7 @@ define(
 										"aaData" : this.model.get("itemValuesTable"),
 										"aoColumns" : this.model.get("columns"),
 										"bDestroy": true,
+										"aLengthMenu": [5, 10, 25, 50],
 										"iDisplayLength": 5,	
 										"bLengthChange" : true,
 										"bPaginate" : true,
@@ -189,7 +190,7 @@ define(
 							var indexes = []; //are kept here in case to change the triggering events with indexes
 							var self = this;
 							//var selectedNodes = this.table.$('tr.row_selected');
-							var selectedNodes = this.table.$('.dataTables_chekbox').closest('tr');
+							var selectedNodes = this.table.$('.ui-icon-checkbox-on').closest('tr');
 							
 							_.each(selectedNodes, function(node, index){
 								var rowPos = self.table.fnGetPosition(node);
