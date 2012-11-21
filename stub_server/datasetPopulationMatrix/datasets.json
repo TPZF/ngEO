@@ -1,6 +1,6 @@
 {
 	
-    "datasetPopulationMatrix" : {
+    "datasetpopulationmatrix" : {
     
         "criteriaTitles" : ["mission","sensor", "keyword"], 
        

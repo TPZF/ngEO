@@ -27,8 +27,8 @@ var DataSetPopulation = Backbone.Model.extend({
 
 	parse: function(response){
 		
-		var criteriaTitles = response.datasetPopulationMatrix.criteriaTitles;
-		var valuesTab = response.datasetPopulationMatrix.datasetPopulationValues;
+		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
+		var valuesTab = response.datasetpopulationmatrix.datasetPopulationValues;
 		var self = this;
 		var matrixStr = "";
 		
