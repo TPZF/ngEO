@@ -73,27 +73,36 @@ define(
 									// 'Browse File' :
 									// feature.properties.EarthObservation.EarthObservationEquipment.EarthObservationResult.eop_BrowseInformation.eop_filename,
 									});*/
-
-							itemValuesTable.push([
-											'<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>',
-											//feature.id,
-											// feature.geometry.coordinates,
-											feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
-											feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
-											feature.properties.EarthObservation.gml_beginPosition,
-											feature.properties.EarthObservation.gml_endPosition,
-											// feature.properties.EarthObservation.EarthObservationEquipment.eop_platformSerialIdentifier,//Satellite
-											// identifier
-											feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier,
-											feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber,
-											feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection,
-											feature.properties.EarthObservation.EarthObservationMetaData.eop_identifier,
-											feature.properties.EarthObservation.EarthObservationMetaData.eop_productType,
-											feature.properties.EarthObservation.EarthObservationMetaData.eop_status
-									//				,feature.properties.EarthObservation.EarthObservationEquipment.EarthObservationResult.eop_BrowseInformation.eop_type,
-									//				feature.properties.EarthObservation.EarthObservationEquipment.EarthObservationResult.eop_BrowseInformation.eop_referenceSystemIdentifier,
-									//				feature.properties.EarthObservation.EarthObservationEquipment.EarthObservationResult.eop_BrowseInformation.eop_filename
-									]);
+									
+							if ( feature.properties.EarthObservation ) {
+								itemValuesTable.push([
+												'<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>',
+												feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName,
+												feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName,
+												feature.properties.EarthObservation.gml_beginPosition,
+												feature.properties.EarthObservation.gml_endPosition,
+												feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier,
+												feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber,
+												feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection,
+												feature.properties.EarthObservation.EarthObservationMetaData.eop_identifier,
+												feature.properties.EarthObservation.EarthObservationMetaData.eop_productType,
+												feature.properties.EarthObservation.EarthObservationMetaData.eop_status
+										]);
+							} else {
+								itemValuesTable.push([
+												'<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>',
+												'Empty',
+												'Empty',
+												feature.properties['ical:dtstart'],
+												feature.properties['ical:dtend'],
+												'Empty',
+												feature.properties['eop:orbitNumber'],
+												'Empty',
+												feature.properties['dc:identifier'],
+												'Empty',
+												'Empty'
+										]);
+							}
 						});
 
 					this.set({/*"items" : items,*/ "itemValuesTable" : itemValuesTable , "features" : params.features});

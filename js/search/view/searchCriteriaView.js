@@ -124,11 +124,14 @@ var SearchCriteriaView = Backbone.View.extend({
 	},
 	
     close : function() {
+ 	   this.dateCriteriaView.close();
+ 	   this.areaCriteriaView.close();
+	   this.advancedCriteriaView.close();
        this.undelegateEvents();
 	   this.mainView.$el.ngeowidget('removeButton', '#back');
 	   this.mainView.$el.ngeowidget('removeButton', '#searchRequest');
 	   this.mainView.$el.ngeowidget('removeButton', '#searchUrl');
-       this.$el.empty();
+      this.$el.empty();
        if (this.onClose) {
           this.onClose();
        }

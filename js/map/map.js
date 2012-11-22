@@ -79,7 +79,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 		
 		for ( var i = 0; i < SearchResults.get('features').length; i++ ) {
 			var feature = SearchResults.get('features')[i];
-			if ( pointInRing(lonlat,feature.geometry.coordinates[0]) ) {
+			var isMultiPolygon = feature.geometry.type == "MultiPolygon";
+			if ( pointInRing(lonlat,isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0]) ) {
 				return feature;
 			}
 		}
@@ -147,8 +148,9 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 	 */
 	var computeExtent = function(feature)
 	{
+		var isMultiPolygon = feature.geometry.type == "MultiPolygon";
 		// Compute the extent from the coordinates
-		var coords = feature.geometry.coordinates[0];
+		var coords = isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0];
 		var minX = coords[0][0];
 		var minY = coords[0][1];
 		var maxX =  coords[0][0];
