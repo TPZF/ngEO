@@ -1,6 +1,6 @@
 /*
  * GET datasetPopulationMatrix
- * IF-ngEO-datasetPopulationMatrix
+ * IF-ngEO-DatasetSearchInfo
  */
 
 module.exports = function(req, res){
