@@ -11,6 +11,7 @@ var express = require('express')
   , datasetPopulationMatrix = require('./datasetPopulationMatrix')
   , datasetSearchInfo = require('./datasetSearchInfo')
   , productSearch = require('./productSearch')
+  , downloadManagers = require('./downloadManagers')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
@@ -44,6 +45,9 @@ app.get('/server/datasetSearchInfo/:id', datasetSearchInfo);
 
 //product search interface
 app.get(/\/server\/productSearch?.*/, productSearch);
+
+//download managers interface
+app.get('/server/downloadManagers', downloadManagers);
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
 proxy.setup(app,[{ 
