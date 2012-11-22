@@ -1,0 +1,19 @@
+{ 
+    "downloadmanager":{
+        "downloadmanagerid": "DM_01",
+        "downloadmanagerfriendlyname": "Magellium Limited Main DM",
+        "userid" : "esa_user1",
+        "status": "ACTIVE",
+        "ipaddress": "dmServer.magellium.fr",
+        "lastaccessdate": "2001-12-17T09:30:47-05:00"
+    },
+    
+     "downloadmanager" :{
+        "downloadmanagerid": "DM_02",
+        "downloadmanagerfriendlyname": "TPZ Limited Main DM",
+        "userid" : "tpz_user1",
+        "status" : "ACTIVE",
+        "ipaddress": "dmServer.tpz.fr",
+        "lastaccessdate" : "2012-11-22T09:30:47-05:00"
+    }
+} 
