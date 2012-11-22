@@ -24,8 +24,13 @@ var activePage = null;
  /**
   * Add page content
   */
-var addPageContent = function(href,$div) {
-	cache[href] = $div;
+var addPageContent = function($link,$div) {
+	// Wrap the page co
+	if ( !$link.data('nowrap') ) {
+		$div.children().wrapAll('<div class="menuBarPageContent"></div>');
+		$div.addClass('menuBarPage');
+	}
+	cache[ $link.attr('href') ] = $div;
 	$div.hide();
 	$('#mapContainer').prepend($div);
 }
@@ -33,37 +38,33 @@ var addPageContent = function(href,$div) {
  /**
   * Load a page
   */
- var loadPage = function(link,onload) {
+ var loadPage = function($link,onload) {
  
-	var href = link.attr('href');
+	var href = $link.attr('href');
 	
-	if ( link.data('page') ) {
+	if ( $link.data('page') ) {
 	
-		// Load the page and insert it
+		// Load the page and insert it to the main page
 		$.ajax({
-			url: link.data('page'),
+			url: $link.data('page'),
 			success: function(content) {
 				
+				// Add a div to embed page content
 				var $div = $('<div id="' + href.substr(1) + '"></div>')
-					.append(content);
-					
-				if ( !link.data('nowrap') ) {
-					$div.children().wrapAll('<div class="menuBarPageContent"></div>');
-					$div.addClass('menuBarPage');
-				}
-				
-				addPageContent(href,$div);
+					.append(content);				
+				addPageContent($link,$div);
 				if (onload) onload($div);
 			}
 		});
 		
-	} else if ( link.data('module') ) {
+	} else if ( $link.data('module') ) {
 		
 		// Load and intialize the module
-		require([link.data('module')], 
+		require([$link.data('module')], 
 			function(Module) {
+				// First build the div and add it to build content
 				var $div = Module.buildElement();
-				addPageContent(href,$div);
+				addPageContent($link,$div);
 				Module.initialize();
 				if (onload) onload($div);
 		});
@@ -87,24 +88,14 @@ var showPage = function(page) {
 return {
 	initialize: function(selector) {
 	
-		// Pre-process the links
+		// Traverse all the links and search if the div is not already contained in the main page
 		$(selector).find('a').each( function() {
 			var jThis = $(this);
 			var jContent = $(jThis.attr('href'));
 			
 			if ( jContent.length > 0 ) {
 			
-				if ( !jThis.data('nowrap') ) {
-					jContent.children().wrapAll('<div class="menuBarPageContent"></div>');
-					jContent.addClass('menuBarPage');
-				}
-				
-				if ( !jThis.hasClass('active') ) {
-					 jContent.hide();
-				}
-				
-				cache[jThis.attr('href')] = jContent;
-				
+				addPageContent(jThis,jContent);
 			}
 		});
 	
