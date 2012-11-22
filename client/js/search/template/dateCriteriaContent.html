@@ -5,7 +5,7 @@
 	
 	<input name="From" id="from" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.startdate %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.startdate %>", 
-		  "useTodayButton": true, "themeDate":"c", "calHighToday": false, "zindex": "2000"}'  >
+		  "useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
 </div>
 
 
@@ -15,7 +15,7 @@
 	
 	<input name="To" id="to" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.stopdate %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.stopdate %>", 
-	   	"useTodayButton": true, "themeDate":"c", "calHighToday": false, "zindex": "2000"}'>
+	   	"useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
 
 </div>
 

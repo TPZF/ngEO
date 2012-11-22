@@ -44,7 +44,7 @@ app.get('/server/datasetPopulationMatrix', datasetPopulationMatrix);
 app.get('/server/datasetSearchInfo/:id', datasetSearchInfo);
 
 //product search interface
-app.get(/\/server\/productSearch?.*/, productSearch);
+app.get(/\/server\/catalogueSearch.*/, productSearch);
 
 //download managers interface
 app.get('/server/downloadManagers', downloadManagers);

@@ -8,6 +8,9 @@ return function() {
 		
 	// Create the model for DataSetPopulation
 	var datasetPopulation = new DataSetPopulation();
+	// The dataset population is fetch only at the beginning for the moment
+	// It was called every time the search widget was shown before, but it can trigger a bug!
+	datasetPopulation.fetch();
 	
 	// Create the main search view
 	var mainSearchView = new MainSearchView({ datasetSelectionModel : datasetPopulation });
@@ -20,8 +23,6 @@ return function() {
 		title: 'Search',
 		activator: '#search',
 		show: function() {
-			// The dataset population is fetch each time the user launch a search
-			datasetPopulation.fetch();
 			mainSearchView.render();
 		}
 	});
