@@ -7,19 +7,6 @@ define( [ "jquery", "map/geojsonconverter", "externs/GlobWeb.min" ],
 function($,GeojsonConverter) {
 
 /**
- * Internal function to convert hex color to array of 4 flots between 0 and 1
- */
-var convertColor = function(hex) {
-	 var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})|([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i.exec(hex);
-	 var red = parseInt(hex.length <= 4 ? result[4]+result[4] : result[1], 16);
-	 var green = parseInt(hex.length <= 4 ? result[5]+result[5] : result[2], 16);
-	 var blue = parseInt(hex.length <= 4 ? result[6]+result[6] : result[3], 16)
-	 
-	 return [ red / 255.0, green / 255.0, blue / 255.0, 1.0 ];
-};
-
-
-/**
  * GlobeWeb Map Engine constructor
  * parentElement : the parent element div for the map
  */
@@ -84,9 +71,9 @@ GlobWebMapEngine.prototype.addStyle = function(name,defaut,select) {
 	// Convert color
 	// TODO : do someting in GlobWeb maybe ?
 	if (defaut.strokeColor)
-		this.styles[name]['default'].strokeColor = convertColor(defaut.strokeColor);
+		this.styles[name]['default'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(defaut.strokeColor);
 	if (select && select.strokeColor)
-		this.styles[name]['select'].strokeColor = convertColor(select.strokeColor);
+		this.styles[name]['select'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(select.strokeColor);
 };
 
 /**
