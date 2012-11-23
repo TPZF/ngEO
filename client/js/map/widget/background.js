@@ -2,7 +2,7 @@
   * Background widget module
   */
 
-define( [ "configuration", "map/map", "widget" ], function(Configuration, Map) {
+define( [ "map/map", "widget" ], function(Map) {
 
 /**
  * The background widget
@@ -14,7 +14,7 @@ var backbroundWidget;
  */
 var changeBackground = function() {
 	var val = parseInt( $(this).val() );
-	Map.setBackgroundLayer( Configuration.data.map.backgroundLayers[val] );
+	Map.setBackgroundLayer( Map.backgroundLayers[val] );
 	backbroundWidget.ngeowidget("hide");
 }
 
@@ -25,9 +25,8 @@ return function() {
 	
 	// Build background layers panel 
 	var content = $('<fieldset data-role="controlgroup"></fieldset>');
-	var bgLayers = Configuration.data.map.backgroundLayers;
+	var bgLayers = Map.backgroundLayers;
 	for ( var i=0; i < bgLayers.length; i++ ) {
-		
 		// Add label
 		var label = $('<label>' + bgLayers[i].name + '</label>')
 			.appendTo(content);

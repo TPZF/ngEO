@@ -3,13 +3,13 @@
   */
 
 
-define( [ "configuration", "map/map", "toolbar", "widget" ], function(Configuration, Map, ToolBar) {
+define( [ "map/map", "toolbar", "widget" ], function(Map, ToolBar) {
 
 return function() {
 	$('#dataServicesArea').append('<div id="layersWidget"/>');
 
 	// Build overlays panel
-	var layers = Configuration.data.map.layers;
+	var layers = Map.layers;
 	var group = $("<fieldset data-role='controlgroup' />");
 	for ( var i=0; i < layers.length; i++ ) {
 	

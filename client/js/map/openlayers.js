@@ -132,7 +132,8 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			format: layer.params.format,
 			style: layer.params.style,
 			isBaseLayer: false,
-			zoomOffset: -1
+			zoomOffset: -1,
+			projection: layer.projection
 		});
 		break;
 	case "GeoRSS":
