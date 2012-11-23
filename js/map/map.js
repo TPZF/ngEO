@@ -36,6 +36,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 	var maxExtent = [-180,-85,180,85];
 	// An object to store all  browse layers 
 	var browseLayers = {};
+	// To know if map is in geographic or not
+	var isGeo = false;
 
 	/**
 	 * Private methods
@@ -239,8 +241,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 			}
 		}
 		
-		for ( var i = 0; i < mapConf.layers.length; i++ ) {
-			engineLayers[i] = mapEngine.addLayer( mapConf.layers[i] );
+		for ( var i = 0; i < self.layers.length; i++ ) {
+			engineLayers[i] = mapEngine.addLayer( self.layers[i] );
 		}
 		resultFootprintLayer = engineLayers[0];
 		
@@ -270,11 +272,41 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 		}, true);
 	};
 
+	var isLayerCompatible = function(layer) {
+		switch (layer.type)
+		{
+			case "Bing":
+			case "OSM":
+				return !isGeo;
+			case "WMTS":
+				return Configuration.data.map.projection == layer.projection;
+			case "WMS":
+			case "GeoJSON":
+			case "KML":
+			case "GeoRSS":
+			case "WFS":
+				return true;
+			default:
+				return false;
+		}
+	}	
 	
 	/**
 	 * Public interface
 	 */
 	return {
+	
+		/**
+		 * The background layers that can be used on the map.
+		 * Loaded from configuration, this array only stores the 'compatible' background layers
+		 */
+		backgroundLayers: [],
+	
+		/**
+		 * The layers applied on the map.
+		 * Loaded from configuration, this array only stores the 'compatible' layers
+		 */
+		layers: [],
 		
 		/**
 		 * Initialize module
@@ -296,14 +328,32 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 				self.updateViewportSize();
 			});
 			
-			backgroundLayer = Configuration.data.map.backgroundLayers[0];
+			
+			// Check layers from configuration
+			isGeo = Configuration.data.map.projection == "EPSG:4326";
+			
+			var confBackgroundLayers = Configuration.data.map.backgroundLayers;
+			for ( var i = 0; i < confBackgroundLayers.length; i++ ) {
+				if ( isLayerCompatible( confBackgroundLayers[i] ) ) {
+					self.backgroundLayers.push( confBackgroundLayers[i] );
+				}
+			}
+			
+			var confLayers = Configuration.data.map.layers;
+			for ( var i = 0; i < confLayers.length; i++ ) {
+				if ( isLayerCompatible( confLayers[i] ) ) {
+					self.layers.push( confLayers[i] );
+				}
+			}
+			
+			backgroundLayer = self.backgroundLayers[0];
 			configureMapEngine(Configuration.data.map);
 			
 			SearchResults.on('change',updateResults);
 			SearchResults.on('displayBrowse',displayBrowse);
 			SearchResults.on('zoomToProductExtent',self.zoomToFeature);
 		},
-		
+				
 		/**
 		 * Modify the background layer
 		 *

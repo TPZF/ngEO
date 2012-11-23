@@ -1,8 +1,9 @@
 {	
 	"map": {
 	
-		"backupProj": "EPSG:900913",
+		"proj2": "EPSG:900913",
 		"projection": "EPSG:3857", 
+		"toto": "EPSG:4326", 
 		
 		"backgroundLayers": [{
 			"name": "Open Street Map (Official)",
@@ -34,7 +35,8 @@
 		}],
 		
 		"styles": {
-			"footprint" : { "default" : {
+			"footprint" : {
+				"default" : {
 					"strokeColor": "#ff0000",
 					"strokeWidth": 1,
 					"fill" : false
@@ -79,14 +81,7 @@
 				"format": "image/png",
 				"style": "default"
 			},
-			"visible": false
-		}, {
-			"name": "Test SAR WMS",
-			"type": "WMS",
-			"baseUrl": "http://ngeo.eox.at/c/?",
-			"params": { 
-				"layers": "TEST_SAR" 
-			},
+			"projection": "EPSG:4326",
 			"visible": false
 		}],
 		
