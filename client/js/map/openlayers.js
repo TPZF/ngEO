@@ -70,23 +70,18 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 	case "Bing":
 		olLayer = new OpenLayers.Layer.Bing({ name: layer.name, key: layer.key, type: layer.imageSet});
 		break;
-/*	case "WMTS":
+	case "WMTS":
 		olLayer = new OpenLayers.Layer.WMTS({
-			name: "TEST_SAR-WGS84-WMTS",
-			url: "http://ngeo.eox.at/c/wmts/",
-			layer: 'TEST_SAR',
-			matrixSet: 'WGS84',
-			format: 'image/png',
-			style: 'default',
-			isBaseLayer:false,
-			resolutions:[0.70312500000000000000,0.35156250000000000000,0.17578125000000000000,0.08789062500000000000,0.04394531250000000000,0.02197265625000000000,0.01098632812500000000,0.00549316406250000000,0.00274658203125000000,0.00137329101562500000,0.00068664550781250000,0.00034332275390625000,0.00017166137695312500,0.00008583068847656250,0.00004291534423828120,0.00002145767211914060,0.00001072883605957030,0.00000536441802978516],
-			zoomOffset:0,
-			units:"dd",
-			maxExtent: new OpenLayers.Bounds(-180.000000,-90.000000,180.000000,90.000000),
-			projection: new OpenLayers.Projection("EPSG:4326".toUpperCase()),
-			sphericalMercator: false
+			name: layer.name,
+			url: layer.baseUrl,
+			layer: layer.params.layer,
+			matrixSet: layer.params.matrixSet,
+			format: layer.params.format,
+			style: layer.params.style,
+			isBaseLayer: true,
+			projection: layer.projection
 		});
-		break;*/
+		break;
 	}
 	
 	if (olLayer) {
