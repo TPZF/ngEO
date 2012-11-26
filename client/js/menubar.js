@@ -87,7 +87,6 @@ var showPage = function(page) {
 
 return {
 	initialize: function(selector) {
-	
 		// Traverse all the links and search if the div is not already contained in the main page
 		$(selector).find('a').each( function() {
 			var jThis = $(this);
@@ -104,8 +103,9 @@ return {
 		activePage = cache[ activeMenuItem.attr('href') ];
 		if (!activePage) {
 			loadPage(activeMenuItem, showPage);
-		}
-		
+		} else {
+			activePage.show();
+		}		
 		
 		// Add interaction when user clicks on the link
 		// Display the content, and hide previous one
