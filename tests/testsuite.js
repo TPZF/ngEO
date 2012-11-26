@@ -14,7 +14,8 @@
 	// the `baseUrl` value supplied above.
 	var testModules = [
 		"configurationTest.js",
-		"menuBarTest.js"
+		"menuBarTest.js",
+		"datasetPopulationTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
