@@ -65,9 +65,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -82,7 +82,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "PROVISIONNAL",
+                "eop_status": "PLANNED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -162,7 +162,7 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
+                    "eop_filename": "https://pdgs/file.zip",
                     "eop_version": "1.1",
                     "eop_size": 1450000
                   },
@@ -257,9 +257,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -274,7 +274,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "ACQUIRED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -352,9 +352,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -369,7 +369,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "POTENTIAL",
+                "eop_status": "CANCELLED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -447,7 +447,7 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
+                    "eop_filename": "s2://pdgs/sentinel2/granules/file.zip",
                     "eop_version": "1.1",
                     "eop_size": 1450000
                   },
@@ -542,9 +542,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -559,7 +559,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "ARCHIVED",
+                "eop_status": "ACQUIRED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -732,9 +732,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -749,7 +749,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "POTENTIAL",
+                "eop_status": "PLANNED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -922,9 +922,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -1017,9 +1017,9 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "http://pdgs/file.zip",
-                    "eop_version": "1.1",
-                    "eop_size": 1450000
+                    "eop_filename": "",
+                    "eop_version": "",
+                    "eop_size": ""
                   },
                 "atm_cloudCoverPercentage": 10.0,
                 "atm_snowCoverPercentage": 15.0,
@@ -1034,7 +1034,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "POTENTIAL",
+                "eop_status": "PLANNED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
