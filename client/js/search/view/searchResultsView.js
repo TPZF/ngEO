@@ -1,7 +1,5 @@
-define( ['jquery', 'backbone', 'search/model/datasetSearch',  'search/model/searchResultsTable', 
-         'search/view/searchResultsTableView',  'text!search/template/searchResultViewContent_template.html',
-         'jquery.dataTables'], 
-		function($, Backbone, DatasetSearch, SearchResultsTable, SearchResultsTableView, searchResultsView_temp) {
+define( ['jquery', 'backbone', 'search/view/searchResultsTableView',  'text!search/template/searchResultViewContent_template.html'], 
+		function($, Backbone, SearchResultsTableView, searchResultsView_temp) {
 
 	/** the model is a SearchResults model */
 var SearchResultsView = Backbone.View.extend({
@@ -30,12 +28,11 @@ var SearchResultsView = Backbone.View.extend({
 		
 		this.$el.find("#searchMessage").empty();
 		
-		var searchResultsTable = new SearchResultsTable({"features" : this.model.attributes.features});
+		//var searchResultsTable = new SearchResultsTable({"features" : this.model.attributes.features});
 		
 		var searchResultsTableView = new SearchResultsTableView({
 			el : this.$el.find("#results"), 
-			model : searchResultsTable,
-			searchResults : this.model,
+			model : this.model,
 			searchResultsView : this,
 			mainView : this.mainView
 		});

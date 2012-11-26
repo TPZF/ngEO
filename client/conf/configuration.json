@@ -1,9 +1,28 @@
-{	
+{
+	"resultsTable": {
+		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
+						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
+						{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
+						{"sTitle" : "Stop", "mData" : "properties.EarthObservation.gml_endPosition"}, 
+						{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
+						{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
+						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
+						{"sTitle" : "Product", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_identifier" }, 
+						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
+						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
+					   ],
+		"columnsDef_Terradue" : [{"sTitle" : "Start", "mData": "properties.ical:dtstart"},
+						{"sTitle" : "Stop", "mData": "properties.ical:dtend"},
+						{"sTitle" : "Orbit", "mData": "properties.eop:orbitNumber"},
+						{"sTitle" : "Product", "mData": "properties.dc:identifier"} ]
+	
+	},
+	
 	"map": {
 	
-		"proj2": "EPSG:900913",
-		"proj": "EPSG:3857", 
-		"projection": "EPSG:4326", 
+		"pp": "EPSG:900913", 
+		"projection": "EPSG:3857", 
+		"ppp": "EPSG:4326", 
 		
 		"backgroundLayers": [{
 			"name": "Open Street Map (Official)",
