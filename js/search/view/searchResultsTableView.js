@@ -1,6 +1,6 @@
 define(
-		[ 'jquery', 'backbone', 'search/model/datasetSearch', 'jquery.mobile' ],
-		function($, Backbone, Map, DatasetSearch) {
+		[ 'jquery', 'backbone', 'configuration', 'jquery.mobile', 'jquery.dataTables' ],
+		function($, Backbone, Configuration) {
 
 			var SearchResultsTableView = Backbone.View
 					.extend({
@@ -10,7 +10,6 @@ define(
 						initialize : function(options) {
 							this.mainView = options.mainView;
 							this.searchResultsView = options.searchResultsView;
-							this.searchResults = options.searchResults;
 						},
 
 						events : {
@@ -21,7 +20,7 @@ define(
 								if (rowPos != null) {// Don't select the header
 									this.table.find('.row_selected').removeClass('row_selected');
 									$(event.currentTarget).toggleClass('row_selected');
-									this.searchResults.trigger("zoomToProductExtent", this.model.attributes.features[rowPos]);
+									this.model.trigger("zoomToProductExtent", this.model.get('features')[rowPos]);
 								}
 							},
 							
@@ -32,21 +31,26 @@ define(
 								
 								var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
 								if ($("#browseSlider").val() == "on"){
-									this.searchResults.trigger("displayBrowse", 
+									this.model.trigger("displayBrowse", 
 										$(event.currentTarget).hasClass('ui-icon-checkbox-on'),
-										[this.model.attributes.features[rowPos]]);
+										[this.model.get('features')[rowPos]]);
 								}					
 							}
 
 						},
 
 						render : function() {
+							
+							// Take column definitions from Configuration
+							// Add checkbox as first colum
+							var columnsDef = [{	'sTitle' : '', 'bSortable': false, 'mData': null, "sDefaultContent": '<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>' }];
+							columnsDef = columnsDef.concat( Configuration.data.resultsTable.columnsDef );
 
 							var self = this;
 							this.table = this.$el.find("#datatable").dataTable({
 										"sDom" : '<"top"i>rt<"bottom"flp><"clear">',
-										"aaData" : this.model.get("itemValuesTable"),
-										"aoColumns" : this.model.get("columns"),
+										"aaData" : this.model.get('features'),
+										"aoColumns" : columnsDef, 
 										"bDestroy": true,
 										"aLengthMenu": [5, 10, 25, 50],
 										"iDisplayLength": 5,	
@@ -78,7 +82,7 @@ define(
 										
 									});
 							//Style the div of the datatable footer 	
-							$(".bottom").addClass("ui-grid-c");
+							$(".bottom").addClass("ui-grid-b");
 							$("#datatable_length").addClass("ui-block-a");
 										
 							//add a check box for displaying footprints styled with JQM
@@ -88,7 +92,7 @@ define(
 							*/
 							
 							//Add JQM styling for pagination elements
-							$("#datatable_paginate").addClass("ui-block-c");
+							$("#datatable_paginate").addClass("ui-block-b");
 							//add JQM styling to the previous button
 							$("#datatable_previous").attr({
 								"data-mini": "true",
@@ -115,7 +119,7 @@ define(
 							}
 							
 							//add JQM styling for filter text input
-							$("#datatable_filter").addClass("ui-block-d");
+							$("#datatable_filter").addClass("ui-block-c");
 							$("#datatable_filter input").attr("data-mini", "true");
 							
 							//add button to the widget footer in order to add items to the shopcart
@@ -165,19 +169,10 @@ define(
 										    .jqmData( "transition", "slide" ));
 									$('#searchCriteriaSummaryPopup').trigger('create');
 							});
-							
-
-							//display all the footprints on the map if the checkbox is checked
-							$('#displayResultsCheckLabel').click(function(event){
-								//console.log(!$(event.currentTarget).hasClass('ui-checkbox-on'));
-								self.searchResults.trigger("displayFootprints", !$(event.currentTarget).hasClass('ui-checkbox-on'), self.model.attributes.features);
-							});
-							
+														
 							//if the switcher is on On position, display browses for the selected rows unless clear the browse layer
 							$('#browseSlider').change(function(){
-								//console.log( $("#browseSlider").val());
-								//console.log(self.getSeletctedFeaturesTable());
-								self.searchResults.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSeletctedFeaturesTable());
+								self.model.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSelectedFeaturesTable());
 							});
 
 							this.$el.trigger('create');
@@ -185,7 +180,7 @@ define(
 
 						//get the geojson features related to the selected records as a table.
 						//used to trigger display browses event for map 
-						getSeletctedFeaturesTable : function() {
+						getSelectedFeaturesTable : function() {
 							var features = [];
 							var indexes = []; //are kept here in case to change the triggering events with indexes
 							var self = this;
@@ -195,7 +190,7 @@ define(
 							_.each(selectedNodes, function(node, index){
 								var rowPos = self.table.fnGetPosition(node);
 								indexes.push(rowPos);
-								features.push(self.model.attributes.features[rowPos]);
+								features.push(self.model.get('features')[rowPos]);
 							
 							});
 							//console.log(indexes);
