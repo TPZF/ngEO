@@ -1,0 +1,29 @@
+
+<div id="downloadManagersContent" class="widget-content ui-body-c">
+
+	<div data-role="header"  class="ui-header ui-bar-a" role="banner"> 
+		<h1 role="heading" class="ui-title" aria-level="1"> Download Managers </h1>
+	</div>
+
+	<div id="downloadManagerStatusMessage"></div>
+	
+	<fieldset id="downloadManagersList" data-role="controlgroup" data-mini="true">
+	
+		<% _.each(downloadmanagers, function(downloadManager) { %>		     
+			<input id="<%= downloadManager.downloadmanagerid %>_input" type="radio" name="downloadManager" value="<%= downloadManager.downloadmanagerid %>">
+			<label for="<%= downloadManager.downloadmanagerid %>_input" id="<%= downloadManager.downloadmanagerid %>" data-corners="false" data-theme="c"><%= downloadManager.downloadmanagerfriendlyname %></label>
+		<% }); %>	         	
+	
+	</fieldset>
+
+</div>
+
+<div id="downloadManagersFooter">
+	
+	<button id="validateRequest" data-role="button" data-mini="true" data-inline="true" data-theme="a" >Validate Your Request</button>
+<!-- 	<button id="closeDownloadManagerPopup" data-mini="true" data-inline="true" data-theme="a">Close</button> -->
+
+	<div id="serverMessage"></div>
+
+</div>	
+	
