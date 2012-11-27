@@ -12,6 +12,8 @@ var express = require('express')
   , datasetSearchInfo = require('./datasetSearchInfo')
   , productSearch = require('./productSearch')
   , downloadManagers = require('./downloadManagers')
+  , simpleDataAccessRequest = require('./simpleDataAccessRequest')
+  , downloadStatuses = require('./dataAccessRequestStatus')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
@@ -48,6 +50,13 @@ app.get(/\/server\/catalogueSearch.*/, productSearch);
 
 //download managers interface
 app.get('/server/downloadManagers', downloadManagers);
+
+//simple DAR interface
+app.post('/server/simpleDataAccessRequest', simpleDataAccessRequest);
+
+//data access statuses interface
+app.get('/server/dataAccessRequestStatus/:id', downloadStatuses);
+
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
 proxy.setup(app,[{ 
