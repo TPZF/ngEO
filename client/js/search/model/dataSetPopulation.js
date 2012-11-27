@@ -14,7 +14,7 @@ var DataSetPopulation = Backbone.Model.extend({
 					  //"criterionName" is the name of the criterion received from the server
 					  //"indexInRow" is the index of the criterion within the criteria table "criteriaTitles" received 
 					  //"values" is table of the values got from the matrix values received from the server.
-		datasets : [], // the datsets without filtring
+		datasets : [], // the datsets without filtering
 		matrixStr : "", //the whole string created from the received values matrix
 		datasetsToDisplay : [] //the datasets filtred according to a given expression
 	},
@@ -67,10 +67,10 @@ var DataSetPopulation = Backbone.Model.extend({
 			
 		});
 
-		console.log("datasets :");
-		console.log(datasets);
-		console.log("the matrix to set : ");
-		console.log(matrixStr);	
+//		console.log("datasets :");
+//		console.log(datasets);
+//		console.log("the matrix to set : ");
+//		console.log(matrixStr);	
 		
 		this.set({"datasetsToDisplay" : datasets}, {silent: true});
 	
@@ -88,7 +88,7 @@ var DataSetPopulation = Backbone.Model.extend({
 		//"(criteria_1,criteria_2,...., criteria_n,dataset_id,itemsCount"
 		var filtredStrings = this.get("matrixStr").match(filterExp);
 		console.log("filtredStrings");
-		console.log(filtredStrings);
+		//console.log(filtredStrings);
 		
 		var datasetsToDisplay = [];
 		var treatedDatasets = [];
@@ -109,7 +109,7 @@ var DataSetPopulation = Backbone.Model.extend({
 			}
 		});
 			
-		console.log(datasetsToDisplay);
+		//console.log(datasetsToDisplay);
 
 		this.set({"datasetsToDisplay" : datasetsToDisplay}, {silent: true});
 	
