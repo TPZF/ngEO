@@ -1,13 +1,12 @@
 define( ['jquery', 'backbone', 'search/view/searchResultsTableView',  'text!search/template/searchResultViewContent_template.html'], 
 		function($, Backbone, SearchResultsTableView, searchResultsView_temp) {
 
-	/** the model is a SearchResults model */
+/** the model is a SearchResults model */
 var SearchResultsView = Backbone.View.extend({
 	
 	initialize : function(options){
 	
 		this.model.on("change", this.displayResultsTable, this);
-		
 		this.datasetSearch = options.datasetSearch;
 		this.mainView = options.mainView;
 	},
@@ -28,8 +27,6 @@ var SearchResultsView = Backbone.View.extend({
 		
 		this.$el.find("#searchMessage").empty();
 		
-		//var searchResultsTable = new SearchResultsTable({"features" : this.model.attributes.features});
-		
 		var searchResultsTableView = new SearchResultsTableView({
 			el : this.$el.find("#results"), 
 			model : this.model,
@@ -39,9 +36,8 @@ var SearchResultsView = Backbone.View.extend({
 			
 		searchResultsTableView.render();
 	},
-	
-	//this.model.on("sync", this.render, this);
-	// TODO move to Backbone.View.prototype
+
+
     close : function() {
     	
     	this.$el.empty();
