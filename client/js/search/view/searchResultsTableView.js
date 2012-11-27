@@ -1,6 +1,8 @@
 define(
-		[ 'jquery', 'backbone', 'configuration', 'jquery.mobile', 'jquery.dataTables' ],
-		function($, Backbone, Configuration) {
+		[ 'jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 
+		  'dataAccess/model/simpleDataAccessRequest', 'dataAccess/view/downloadManagersListView', 
+		  'jquery.mobile', 'jquery.dataTables' ],
+		function($, Backbone, Configuration, DownloadManagers, SimpleDataAccessRequest, DownloadManagersListView) {
 
 			var SearchResultsTableView = Backbone.View
 					.extend({
@@ -130,7 +132,7 @@ define(
 										position: 'left'
 									});
 							
-							// TODO 
+							// TODO for ngeo V2
 							this.addToShopcart.click(function() {});
 
 							//add button to the widget footer in order to download products
@@ -141,8 +143,29 @@ define(
 										position: 'left'
 									});
 							
-							// TODO
-							this.retrieveProduct.click(function() {});
+							//create a simpleDataAccessRequest and assign a download manager
+							this.retrieveProduct.click(function() {
+								
+								SimpleDataAccessRequest.setProductURLs(self.getSelectedProductURLs());
+								
+								DownloadManagers.fetch().done(function() {
+								
+									var downloadManagersListView = new DownloadManagersListView({
+										model : DownloadManagers,
+										request : SimpleDataAccessRequest,
+										parent : self
+									});
+									
+									$("#downloadManagersPopupContent").html(downloadManagersListView.render().$el);
+									
+									$("#downloadManagersPopup").popup({ dismissable: false }); 
+									$("#downloadManagersPopup").popup("open");  
+									
+									//trigger jqm styling
+									$("#downloadManagersPopup").trigger('create');
+	
+								});	
+							});
 
 							//add button to the widget footer in order to go back to the datasets
 							//list and do a new search
@@ -170,7 +193,7 @@ define(
 									$('#searchCriteriaSummaryPopup').trigger('create');
 							});
 														
-							//if the switcher is on On position, display browses for the selected rows unless clear the browse layer
+							//if the switcher is on "On" position, display browses for the selected rows unless clear the browse layer
 							$('#browseSlider').change(function(){
 								self.model.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSelectedFeaturesTable());
 							});
@@ -197,7 +220,38 @@ define(
 							//console.log(features);
 							
 							return features;
-			
+						},
+
+						/** get the list of product urls of the checked product rows */
+						getSelectedProductURLs : function(){
+
+							//var selectedNodes = this.table.$('tr.row_selected');
+							var selectedNodes = this.table.$('.ui-icon-checkbox-on').closest('tr');
+							
+							var urls = [selectedNodes.length];
+							var self = this;
+							
+							_.each(selectedNodes, function(node, index){
+								
+								var rowPos = self.table.fnGetPosition(node);
+								//According to spec EarthObservationResult and eop_ProductInformation are not compalsory
+								//TODO CASE WHERE THERE IS NO URL
+								if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult){
+									if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation){
+										console.log(self.model.get('features')[rowPos]);
+										console.log(self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
+										urls.push({"productURL" : self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename});
+									}else{
+										urls.push({"productURL" : ""});
+									}
+								}
+							});
+							
+							_.each(urls, function(url, index){
+								console.log(url);
+							});
+							
+							return urls;
 						},
 
 						close : function() {
