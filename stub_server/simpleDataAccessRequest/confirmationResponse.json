@@ -1,0 +1,35 @@
+{
+        "DataAccessRequestStatus" : { 
+                "ID" : "DAR_00000011092",
+                "type" :"Simple Data Access Request",
+                "status" : 0, 
+                "message": "processing", 
+                "dlManagerId" : "DM_00001234",
+                "productStatuses" : [
+                	{ 
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0015",
+                        "productStatus" : 0,
+                        "percentageCompleted" : 0, 
+                        "expectedSize": 1000 
+               		},
+					{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0020", 
+                        "productStatus" : 0,
+                        "percentageCompleted" : 0, 
+                        "expectedSize": 1000
+                	}, 
+                	{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0055",
+                        "productStatus" : 0,
+                        "percentageCompleted" : 0,  
+                        "expectedSize" : 1000
+                	}, 
+                	{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0058",
+                        "productStatus" : 0,
+                        "percentageCompleted" : 0, 
+                        "expectedSize" : 1000 
+                	}
+                ]
+        }
+} 

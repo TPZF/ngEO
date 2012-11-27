@@ -1,0 +1,27 @@
+{
+        "DataAccessRequestStatus" : { 
+                "ID" : "DAR_00000011092",
+                "type" :"Simple Data Access Request",
+                "status" : 4, 
+                "message": "Data Access Request validated", 
+                "dlManagerId" : "DM_00001234",
+                "productStatuses" : [
+                	{ 
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0015",
+                        "expectedSize": 1000 
+               		},
+					{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0020", 
+                        "expectedSize": 1000
+                	}, 
+                	{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0055", 
+                        "expectedSize" : 1000
+                	}, 
+                	{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0058",
+                        "expectedSize" : 1000 
+                	}
+                ]
+        }
+} 
