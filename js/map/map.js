@@ -281,6 +281,7 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 			case "WMTS":
 				return Configuration.data.map.projection == layer.projection;
 			case "WMS":
+				return layer.projection ? Configuration.data.map.projection == layer.projection : true;
 			case "GeoJSON":
 			case "KML":
 			case "GeoRSS":

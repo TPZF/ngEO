@@ -88,7 +88,7 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 		gwLayer = new GlobWeb.OSMLayer(layer);
 		break;
 	case "WMS":
-		gwLayer = new GlobWeb.WMSLayer(layer);
+		gwLayer = new GlobWeb.WMSLayer( $.extend({ name: layer.name, baseUrl: layer.baseUrl}, layer.params) );
 		break;
 	case "Bing":
 		gwLayer = new GlobWeb.BingLayer(layer);
@@ -245,11 +245,12 @@ GlobWebMapEngine.prototype.getLonLatFromPixel = function(x,y)
  */
 GlobWebMapEngine.prototype.getViewportExtent = function()
 {
+	// TODO : improve geobound
 	var geoBound = this.globe.getViewportGeoBound();
 	if ( geoBound )
 		return [ geoBound.getWest(), geoBound.getSouth(), geoBound.getEast(), geoBound.getNorth() ];
 	
-	return null;
+	return [ -180, -90, 180, 90 ];
 }
 
 /**

@@ -23,7 +23,7 @@ OpenLayersMapEngine = function( parentElement )
 	this._map = new OpenLayers.Map(elt, {
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
 					 new OpenLayers.Control.Attribution() ]
-		,projection: new OpenLayers.Projection(Configuration.data.map.projection) //"EPSG:3857")
+		,projection: new OpenLayers.Projection(Configuration.data.map.projection)
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,theme:null
 	});
@@ -65,7 +65,7 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png");
 		break;
 	case "WMS":
-		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer);
+		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params);
 		break;
 	case "Bing":
 		olLayer = new OpenLayers.Layer.Bing({ name: layer.name, key: layer.key, type: layer.imageSet});
