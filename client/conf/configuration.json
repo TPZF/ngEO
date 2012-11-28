@@ -22,7 +22,7 @@
 	
 		"pp": "EPSG:900913", 
 		"projection": "EPSG:3857", 
-		"ppp": "EPSG:4326", 
+		"pprojection": "EPSG:4326", 
 		
 		"backgroundLayers": [{
 			"name": "Open Street Map (Official)",
@@ -40,7 +40,9 @@
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
-			"layers": "BlueMarble"
+			"params": {
+				"layers": "BlueMarble"
+			}
 		}, {
 			"name": "Bing Road",
 			"type": "Bing",
@@ -62,7 +64,24 @@
 				"style": ""
 			},
 			"projection": "EPSG:4326"
-	}],
+	   }, {
+			"name": "VMAP0",
+			"type": "WMS",
+			"baseUrl": "http://vmap0.tiles.osgeo.org/wms/vmap0",
+			"params": {
+				"layers": "basic"
+			},
+			"projection": "EPSG:4326"
+	   }, {
+			"name": "OSM (TPZ Fr)",
+			"type": "WMS",
+			"baseUrl": "http://demonstrator.telespazio.com/geocache/wms",
+			"params": {
+				"layers": "imposm-fr",
+				"format": "image/png"
+			},
+			"projection": "EPSG:4326"
+	   }],
 	
 		"styles": {
 			"footprint" : {
@@ -104,7 +123,7 @@
 		}, {
 			"name": "Test SAR WMTS",
 			"type": "WMTS",
-			"baseUrl": "http://localhost/EOX/",
+			"baseUrl": "http://ngeo.eox.at/c/wmts/",
 			"params" : {
 				"layer": "TEST_SAR",
 				"matrixSet": "WGS84",

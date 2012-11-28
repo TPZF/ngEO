@@ -71,7 +71,7 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	fs.readFile('./productSearch/dataFromEOLI.txt', 'utf8', function (err, data) {
 		var lines=data.split("\n");
 		var columns=lines[1].split("|");
-		console.log("columns ("+columns.length+" elements): "+lines[1]);
+		//console.log("columns ("+columns.length+" elements): "+lines[1]);
 		var footprintIndex = columns.indexOf('FOOTPRINT');
 		var startIndex = columns.indexOf('Start');
 		var stopIndex = columns.indexOf('Stop');
