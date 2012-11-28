@@ -2,10 +2,10 @@
   * Map module
   */
 
-define( [ "configuration", "search/model/searchResults", "map/openlayers", "map/globweb", "backbone" ], 
+define( [ "configuration", "map/widget/mapPopup", "search/model/searchResults", "map/openlayers", "map/globweb", "backbone" ], 
 
 // The function to define the map module
-function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
+function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	
 	/**
 	 * Private attributes
@@ -31,7 +31,7 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 	// The current selected feature
 	var selectedFeature = null;
 	// The popup to use for selection
-	var	popup = null;
+	var	mapPopup = null;
 	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
 	// An object to store all  browse layers 
@@ -69,8 +69,8 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 	 */
 	var startNavigationHandler = function()
 	{
-		if ( popup ) {					
-			popup.popup( "close" );
+		if ( mapPopup ) {					
+			mapPopup.close();
 		}
 	};
 	
@@ -133,12 +133,15 @@ function(Configuration, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Ba
 			{
 				selectFeature(feature);
 				
-/*				if (!popup)
+				if (!mapPopup)
 				{
-					popup = $('<div data-role="popup" id="popupBasic"><p>This is a completely basic popup, no options set.<p></div>').appendTo('#mapContainer');
-					popup.popup();
+					mapPopup = new MapPopup('.ui-page-active');
 				}
-				popup.popup('open', { x:  pageX, y: pageY });*/
+				mapPopup.open({ x:  pageX, y: pageY }, feature);
+			}
+			else if (mapPopup)
+			{
+				mapPopup.close();
 			}
 		}
 	};
