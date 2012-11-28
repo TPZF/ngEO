@@ -90,32 +90,6 @@ $.widget( "ngeo.ngeowidget", {
 		return btn;
 	},
 	
-	// Add a select in the footer
-	addSelect: function(options) {
-	
-//		if ( this.footer.find('button').length == 0 ) {
-//			this.footer.show();
-//		}
-//		
-		//Browse images on the map
-		var field = $('<div id="browseSliderContainer"  data-inline="true" data-role="fieldcontain class="fieldcontain-ui ui-body ui-br">' +
-			'<label for="' + options.id + '" id="' + options.labelId +'" data-inline="true" data-mini="true" class="ui-slider">' + options.labelText + '</label></div>'); 
-			
-		var select = $('<select name="' + options.id + '" id="' + options.id + '" data-mini="true" data-inline="true" data-role="slider" class="ui-slider-switch"></select>');
-		$.each( options.optionsList, function (index,  option ) {
-			select.append('<option value="' + option.value + '">' + option.name +'</option>');
-		});
-		
-		field.append(select);
-
-		field.appendTo(this.footer).trigger('create');
-//		var btn = $("<button data-role='button' data-inline='true' data-mini='true' id='"+options.id+"'>" + options.name + "</button>")
-//			.appendTo(this.footer)
-//			.button();
-	
-		return field;
-	},
-	
 	// Remove a button from the footer
 	removeButton: function(el) {
 		var $el = typeof el == "string" ? this.footer.find(el) : $(el);

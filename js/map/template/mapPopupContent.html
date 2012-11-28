@@ -1,0 +1,9 @@
+
+<div class="ui-header ui-bar-a"> 
+	<h1 role="heading" class="ui-title">Product details</h1>
+</div>
+
+<% _.each(contentDefs, function(contentDef) { %>		
+<p><b> <%= contentDef.sTitle %> : </b> <% print(getData(product, contentDef.mData)) %> </p>
+<% }); %>
+
