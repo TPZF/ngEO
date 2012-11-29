@@ -4,7 +4,7 @@
                 "type" :"Simple Data Access Request",
                 "status" : 4, 
                 "message": "Data Access Request validated", 
-                "dlManagerId" : "DM_00001234",
+                "dlManagerId" : "DM_01",
                 "productStatuses" : [
                 	{ 
                         "productURL" : "https://S2PF/XXXXXXXXXXXX0015",

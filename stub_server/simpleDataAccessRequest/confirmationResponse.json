@@ -4,7 +4,7 @@
                 "type" :"Simple Data Access Request",
                 "status" : 0, 
                 "message": "processing", 
-                "dlManagerId" : "DM_00001234",
+                "dlManagerId" : "DM_01",
                 "productStatuses" : [
                 	{ 
                         "productURL" : "https://S2PF/XXXXXXXXXXXX0015",
