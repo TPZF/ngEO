@@ -18,6 +18,48 @@
 	
 	},
 	
+	"downloadManager" : {
+		"downloadManagerInstallationLink" : "<a href='./server/downloadManager/install/'/>" 	
+	},
+	
+	"dataAccessRequestStatuses" : {
+	   
+	   "validationRequestStage" : "validation",
+	   
+	   "confirmationRequestStage" : "confirmation",
+	   
+	    "validStatuses": {
+	        "inProgressStatus": {
+	            "value": 0,
+	            "message": "Request In Process..."
+	        },
+	        "pausedStatus": {
+	            "value": 1,
+	            "message": "Request Paused"
+	        },
+	        "completedStatus": {
+	            "value": 2,
+	            "message": "Request Completed"
+	        },
+	        "cancelledStatus": {
+	            "value": 3,
+	            "message": "Request Cancelled"
+	        },
+	        "validatedStatus": {
+	            "value": 4,
+	            "message": "Request Acknowledged"
+	        },
+	        "bulkOrderStatus": {
+	            "value": 5,
+	            "message": "Request Max Size Exceeded"
+	        }
+	    },
+	    "unExpectedStatusError": "ERROR: The server returned an expected status",
+	    "requestSubmissionError": "FAILURE: Request Submission Failed",
+	    "invalidDownloadManagersError": "Invalid Request : Please select a download manager first.", 
+		"invalidProductURLsError": "Invalid Request: Please check some products first."	
+	},
+	
 	"map": {
 	
 		"pp": "EPSG:900913", 
