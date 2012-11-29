@@ -21,8 +21,8 @@
 	"map": {
 	
 		"pp": "EPSG:900913", 
-		"projection": "EPSG:3857", 
-		"pprojection": "EPSG:4326", 
+		"pprojection": "EPSG:3857", 
+		"projection": "EPSG:4326", 
 		
 		"backgroundLayers": [{
 			"name": "Open Street Map (Official)",
@@ -121,11 +121,23 @@
 			"featureNS": "http://www.openplans.org/topp",
 			"visible": false
 		}, {
-			"name": "Test SAR WMTS",
+			"name": "EOX SAR WMTS",
 			"type": "WMTS",
 			"baseUrl": "http://ngeo.eox.at/c/wmts/",
 			"params" : {
 				"layer": "TEST_SAR",
+				"matrixSet": "WGS84",
+				"format": "image/png",
+				"style": "default"
+			},
+			"projection": "EPSG:4326",
+			"visible": false
+		}, {
+			"name": "EOX Optical WMTS",
+			"type": "WMTS",
+			"baseUrl": "http://ngeo.eox.at/c/wmts/",
+			"params" : {
+				"layer": "TEST_OPTICAL",
 				"matrixSet": "WGS84",
 				"format": "image/png",
 				"style": "default"
