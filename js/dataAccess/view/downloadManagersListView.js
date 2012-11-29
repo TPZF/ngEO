@@ -1,31 +1,48 @@
-define( ['jquery', 'backbone', 'text!dataAccess/template/downloadManagersListContent.html'], 
-		function($, Backbone, downloadManagersList_template) {
+define( ['jquery', 'backbone', 'configuration', 'text!dataAccess/template/downloadManagersListContent.html'], 
+		function($, Backbone, Configuration, downloadManagersList_template) {
 
+	/**
+	 * This view handles the displaying of download managers and the assignment 
+	 * of a download manager to a data access request either a SimpleDataAccessRequest 
+	 * or a StandingOrderDataAccessRequest.
+	 * 
+	 * The attribute request is the request to be submitted.
+	 * 
+	 */
 var DownloadManagersListView = Backbone.View.extend({
 
 	initialize : function(options){
 		this.request = options.request;
-		this.parent = options.parent;
+		this.selectedDownloadManager = options.selectedDownloadManager;
+		this.request.on('toggleRequestButton', this.toggleRequestButton, this);
 	},
 	
 	events : {
 		'click #validateRequest' : function(event){
 			$("#serverMessage").empty();
 			this.request.setDownloadManager(this.selectedDownloadManager);
-			//$("#serverMessage").append(this.request.getServerResponse());
-			this.request.validate().done($("#serverMessage").append(this.request.serverResponse));
+		
+			var self = this;
+			//when the request has been submitted update the text to the user
+			$.when(this.request.submit()).done(function(){
+				$("#serverMessage").append(self.request.serverResponse);
+			});
 		},
 		
 		'click label' : function(event){
 			var $target = $(event.currentTarget);
-			//check class ui-radio-off because it is going to be chaged to ui-radio-on at the end of the handler
+			//look for class ui-radio-off because it is going to be changed to ui-radio-on at the end of the handler
 			if ($target.hasClass("ui-radio-off")){
 				this.selectedDownloadManager = event.currentTarget.id;
 				console.log("selected Download Manager :");
 				console.log(this.selectedDownloadManager);
 			}
 		}
-		
+	},
+	
+	/** change the button status to disabled in case the requests are not valid */
+	toggleRequestButton : function(params){
+		$("#validateRequest").button(params[0]); 
 	},
 	
 	render: function(){
@@ -37,7 +54,7 @@ var DownloadManagersListView = Backbone.View.extend({
 		if (this.model.attributes.downloadmanagers == 0) {
 			//empty the status to cover the case where a user has stopped a download manager after it has install it
 			$("#downloadManagerStatusMessage").empty();
-			$("#downloadManagerStatusMessage").append("To install a Download Manager click on this link : \b <a href='TO BE DONE'/>");
+			$("#downloadManagerStatusMessage").append("To install a Download Manager click on this link : " + Configuration.downloadManager.downloadManagerInstallationLink);
 			$("#downloadManagersList").hide();
 			$("#downloadManagersFooter").hide();
 					
@@ -49,7 +66,6 @@ var DownloadManagersListView = Backbone.View.extend({
 			$("#downloadManagerStatusMessage").append("<h4>Select a Download Manager : <h4>");
 			$("#downloadManagersList").show();
 			$("#downloadManagersFooter").show();
-			//$("#validateRequest").button("disable");
 		}
 
 		this.delegateEvents();
