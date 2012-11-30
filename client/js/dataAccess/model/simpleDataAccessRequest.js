@@ -136,6 +136,15 @@ var SimpleDataAccessRequest = {
 							  self.firstRequest = self.currentRequest;
 							  self.currentRequest.SimpleDataAccessRequest.requestStage = statusesConfig.confirmationRequestStage;
 							  self.serverResponse = validStatusesConfig.validatedStatus.message;
+							  
+							 //calculate the total download estimated size  
+							  var totalSize = 0;
+							  _.each(data.DataAccessRequestStatus.productStatuses, function(productStatus){
+								  totalSize += productStatus.expectedSize;
+							  });
+							  
+							  self.serverResponse += "Estimated Size : " + totalSize + "\n";
+							  
 						  }else{
 							  self.trigger('toggleRequestButton', ['disable']);
 							 
