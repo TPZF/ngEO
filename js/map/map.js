@@ -69,9 +69,7 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	 */
 	var startNavigationHandler = function()
 	{
-		if ( mapPopup ) {					
-			mapPopup.close();
-		}
+		mapPopup.close();
 	};
 	
 	/**
@@ -94,9 +92,13 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	 * Clear the current selection
 	 */
 	var clearSelection = function() {
+	
 		if ( selectedFeature ) {
+		
 			mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeature,"default");
 			selectedFeature = null;
+			
+			mapPopup.close();
 		}
 	};
 
@@ -132,16 +134,8 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 			if ( feature )
 			{
 				selectFeature(feature);
-				
-				if (!mapPopup)
-				{
-					mapPopup = new MapPopup('.ui-page-active');
-				}
+		
 				mapPopup.open({ x:  pageX, y: pageY }, feature);
-			}
-			else if (mapPopup)
-			{
-				mapPopup.close();
 			}
 		}
 	};
@@ -324,7 +318,10 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	
 			element = document.getElementById(eltId);
 			
-			
+			// Create the popup for selection
+			mapPopup = new MapPopup('.ui-page-active');
+			mapPopup.close();
+
 			mapEngine = new engines['2d'](element);
 			
 			// Manage window resize
