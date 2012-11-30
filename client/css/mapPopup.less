@@ -1,6 +1,6 @@
 @mapPopup-arrow-size: 10px;
 
-.mapPopup-arrow {
+.mapPopup-arrow-left {
 	position: absolute;
 	z-index: 1005;
 	width: 0; 
@@ -11,7 +11,18 @@
 	border-right: @mapPopup-arrow-size solid @widget-background-color;
 }
 
+.mapPopup-arrow-right {
+	position: absolute;
+	z-index: 1005;
+	width: 0; 
+	height: 0; 
+	margin: auto;
+	border-top: @mapPopup-arrow-size solid transparent;
+	border-bottom: @mapPopup-arrow-size solid transparent;
+	border-left: @mapPopup-arrow-size solid @widget-background-color;
+}
+
 .mapPopup p {
-	margin: 0;
+	margin: 3px;
 	padding: 0;
 }
