@@ -31,6 +31,14 @@ define(
 								$(event.currentTarget).toggleClass('ui-icon-checkbox-off');
 								$(event.currentTarget).toggleClass('ui-icon-checkbox-on');
 								
+								//Disable the Retrieve Product button if no product item is selected 
+								//and/or if the products checked do not have a product url 
+								if(this.getSelectedProductURLs().length == 0){
+									this.retrieveProduct.button('disable');
+								}else{
+									this.retrieveProduct.button('enable');
+								}
+								
 								var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
 								if ($("#browseSlider").val() == "on"){
 									this.model.trigger("displayBrowse", 
@@ -143,6 +151,8 @@ define(
 										position: 'left'
 									});
 							
+							this.retrieveProduct.button('disable');
+							
 							//create a simpleDataAccessRequest and assign a download manager
 							this.retrieveProduct.click(function() {
 								
@@ -164,7 +174,7 @@ define(
 									//after closing the popup reset the simple data access parameters 
 									$( "#downloadManagersPopup" ).bind({
 										   popupafterclose: function(event, ui) {
-											   SimpleDataAccessRequest.initialize();
+											   downloadManagersListView.request.initialize();
 										   }
 									});
 									
@@ -175,6 +185,7 @@ define(
 								});	
 							});
 
+							
 							//add button to the widget footer in order to go back to the datasets
 							//list and do a new search
 							this.newSearch = this.mainView.$el.ngeowidget(
@@ -182,7 +193,6 @@ define(
 										id : 'newSearch',
 										name : 'New Search'
 									});
-							
 							
 							this.newSearch.click(function() {
 								self.close();
@@ -243,14 +253,14 @@ define(
 								
 								var rowPos = self.table.fnGetPosition(node);
 								//According to spec EarthObservationResult and eop_ProductInformation are not compalsory
-								//TODO CASE WHERE THERE IS NO URL
+								//if the product url is empty or not defined even if the product is checked
+								//it is not takn into account
 								if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult){
-									if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation){
-										console.log(self.model.get('features')[rowPos]);
-										console.log(self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
+									if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation &&
+											self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename != ""){
+//										console.log(self.model.get('features')[rowPos]);
+//										console.log(self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
 										urls.push({"productURL" : self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename});
-									}else{
-										urls.push({"productURL" : ""});
 									}
 								}
 							});
