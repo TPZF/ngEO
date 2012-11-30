@@ -69,12 +69,11 @@ $.when(doc_ready, Configuration.load())
 		// Remove some automatic styling from jQuery Mobile that don't fit in ngEO style
 		$("body").removeClass("ui-mobile-viewport");
 		$("header").find("a").removeClass("ui-link");
-		
-		// Initialize menu bar
-		MenuBar.initialize("header nav");
 
 		// Load the map and initialize it
 		require(["map/map"], function(Map) {
+			// Initialize menu bar
+			MenuBar.initialize("header nav");
 			Map.initialize("mapContainer");
 		});
 		
