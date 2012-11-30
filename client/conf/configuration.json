@@ -19,7 +19,7 @@
 	},
 	
 	"downloadManager" : {
-		"downloadManagerInstallationLink" : "<a href='./server/downloadManager/install/'/>" 	
+		"downloadManagerInstallationLink" : "./server/downloadManager/install.html" 	
 	},
 	
 	"dataAccessRequestStatuses" : {
@@ -57,7 +57,8 @@
 	    "unExpectedStatusError": "ERROR: The server returned an expected status",
 	    "requestSubmissionError": "FAILURE: Request Submission Failed",
 	    "invalidDownloadManagersError": "Invalid Request : Please select a download manager first.", 
-		"invalidProductURLsError": "Invalid Request: Please check some products first."	
+		"invalidProductURLsError": "Invalid Request: Please check some products first.",
+		"invalidConfirmationRequest" : "Invalid Confirmation Request: The selected download manager has been changed."
 	},
 	
 	"map": {
