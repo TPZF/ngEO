@@ -44,6 +44,10 @@ var SimpleDataAccessRequest = {
 		};
 	},
 	
+	getSpecificMessage : function(){
+		return "<h5>Selected Products : " + this.currentRequest.SimpleDataAccessRequest.productURLs.length + "<h5>"; 
+	},
+	
 	/** Set the list of checked products */
 	setProductURLs: function(urls){
 		this.currentRequest.SimpleDataAccessRequest.productURLs = urls;
@@ -71,9 +75,22 @@ var SimpleDataAccessRequest = {
 		//if request not valid when no download manager then display the specific message
 		//the validate button is not disabled since when the user selects a download manager the request
 		if (this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId == ""){
+			
 			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidDownloadManagersError;
 			return false;
 		}
+		
+		//second stage submission with and without bulk order if the user changes the download manager 
+		if (this.step == 1 &&
+			this.id != "" &&
+			this.currentRequest.SimpleDataAccessRequest.requestStage == dataAccessConfig.confirmationRequestStage &&
+		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId != 
+		    	this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId)) {
+			
+				this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidConfirmationRequest;
+				this.trigger('toggleRequestButton', ['disable']);
+				return false;
+		}	
 		
 		//initial request : nominal case
 		if (this.step == 0 && 
@@ -82,15 +99,16 @@ var SimpleDataAccessRequest = {
 			return true;
 		}
 		
+		
 		//second stage submission with and without bulk order
 		if (this.step == 1 &&
 			this.id != "" &&
 			(this.currentRequest.SimpleDataAccessRequest.createBulkOrder == true || 
 				 this.currentRequest.SimpleDataAccessRequest.createBulkOrder == undefined) &&
 			this.currentRequest.SimpleDataAccessRequest.requestStage == dataAccessConfig.confirmationRequestStage &&
-		    this.firstRequest.SimpleDataAccessRequest.downloadLocation === this.currentRequest.SimpleDataAccessRequest.downloadLocation &&
-		    this.firstRequest.SimpleDataAccessRequest.productURLs === this.currentRequest.SimpleDataAccessRequest.productURLs
-		){
+		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId ==
+		    	this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId)
+		 ){
 			return true;
 		}
 		
@@ -98,6 +116,20 @@ var SimpleDataAccessRequest = {
 		this.trigger('toggleRequestButton', ['disable']);
 		
 		return false;
+	},
+	
+	SimpleDataAccessRequest : {
+		requestStage :  Configuration.data.dataAccessRequestStatuses.validationRequestStage,
+		downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""}, 
+		productURLs : []
+	},
+	
+	keepFirstRequestMembers: function(){
+		 this.firstRequest.SimpleDataAccessRequest.requestStage = this.currentRequest.SimpleDataAccessRequest.requestStage;
+		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId;
+		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadDirectory = this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadDirectory;
+		 this.firstRequest.SimpleDataAccessRequest.productURLs = this.currentRequest.SimpleDataAccessRequest.productURLs;
+		 
 	},
 	
 	/** Submit the request to the server */
@@ -133,9 +165,10 @@ var SimpleDataAccessRequest = {
 						  if (self.step == 0 && self.id == "" &&  self.currentRequest.SimpleDataAccessRequest.requestStage == statusesConfig.validationRequestStage) {
 							  self.step = 1;
 							  self.id = data.DataAccessRequestStatus.ID;
-							  self.firstRequest = self.currentRequest;
+							  //store the first request 
+							  self.keepFirstRequestMembers();
 							  self.currentRequest.SimpleDataAccessRequest.requestStage = statusesConfig.confirmationRequestStage;
-							  self.serverResponse = validStatusesConfig.validatedStatus.message;
+							  self.serverResponse = "<p>" + validStatusesConfig.validatedStatus.message + "<p>";
 							  
 							 //calculate the total download estimated size  
 							  var totalSize = 0;
@@ -143,7 +176,9 @@ var SimpleDataAccessRequest = {
 								  totalSize += productStatus.expectedSize;
 							  });
 							  
-							  self.serverResponse += "Estimated Size : " + totalSize + "\n";
+							  self.serverResponse += "<p> Estimated Size : " + totalSize + "<p>";
+							  
+							  self.trigger('requestButtonTextChange');
 							  
 						  }else{
 							  self.trigger('toggleRequestButton', ['disable']);
@@ -156,11 +191,13 @@ var SimpleDataAccessRequest = {
 						  if (self.step == 0 && currentRequest.SimpleDataAccessRequest.requestStage == statusesConfig.validationRequestStage) {
 							  self.step = 1;
 							  self.id = data.DataAccessRequestStatus.ID;
-							  self.firstRequest = self.currentRequest;
+							  //store the first request 
+							  self.keepFirstRequestMembers();
 							  //Bulk order is considered add the createBulkOrder
 							  self.currentRequest.createBulkOrder = true;
 							  self.currentRequest.SimpleDataAccessRequest.requestStage = statusesConfig.confirmationRequestStage;
 							  self.serverResponse = validStatusesConfig.bulkOrderStatus.message;
+							  self.trigger('requestButtonTextChange');
 						  }else{
 							  self.trigger('toggleRequestButton', ['disable']);
 						  }
@@ -194,7 +231,7 @@ var SimpleDataAccessRequest = {
 					   
 				  //if the server sends a response message append it to the message to display
 				  if (data.DataAccessRequestStatus.message){
-					   self.serverResponse =  self.serverResponse + "\n" + data.DataAccessRequestStatus.message;
+					   self.serverResponse =  self.serverResponse + "<p>" + data.DataAccessRequestStatus.message + "<p>";
 				  }
 				   
 		  	  },
