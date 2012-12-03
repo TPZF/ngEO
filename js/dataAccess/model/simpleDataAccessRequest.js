@@ -1,53 +1,60 @@
   
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest'], 
+		
+		function($, Backbone, Configuration, DataAccessRequest) {
 
 /**
  * This module deals with the creation and submission of simple data access requests 
+ * It extends DataAccessRequest module
  */
-var SimpleDataAccessRequest = {		
+var SimpleDataAccessRequest = {
 
 	url : Configuration.baseServerUrl + "/simpleDataAccessRequest",
 	
-	firstRequest : {}, //keeps track of the first stage request in order to validate the second stage request 
-	
-	currentRequest : {},
-	
-	id : "", //data access request id returned by the server 
-	 
-	step : 0, //step is a counter of request steps. It is set to 0 when no request has been sent
-			  // it is set to 1 when a request has been sent
-
-	serverResponse : "A validation request has been send to the server...",
-	
 	rejectedProductsNB : 0, //nb of products checked but not having a url 
 	
-	initialize : function(){
-		this.resetRequest();
-	},
-	
+	productURLs : [],
 	
 	resetRequest : function (){
+		
 		this.step = 0;
 		this.id = "";
 		this.rejectedProductsNB = 0;
-		this.firstRequest = this.initializeRequest();
-		this.currentRequest = this.initializeRequest();
+		this.requestStage = Configuration.data.dataAccessRequestStatuses.validationRequestStage;
+		this.downloadLocation = {DownloadManagerId : "" , DownloadDirectory : ""};
+		this.productURLs = [];
+		
+		this.firstRequest = this.getRequest();
+		this.currentRequest = this.getRequest();
 	},
 	
-	//TODO the DownloadDirectory is optional. Not taken into account for the moment
-	initializeRequest : function() {	
+	getRequest : function() {	
+		
+		if (this.createBulkOrder){
+			
+			return {
+				SimpleDataAccessRequest : {
+					requestStage :  this.requestStage,
+					createBulkOrder: true,
+					downloadLocation : this.downloadLocation, 
+					productURLs : this.productURLs
+				}
+			};
+		}
+		
 		return {
 			SimpleDataAccessRequest : {
-				requestStage :  Configuration.data.dataAccessRequestStatuses.validationRequestStage,
-				downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""}, 
-				productURLs : []
+				requestStage :  this.requestStage,
+				downloadLocation : this.downloadLocation, 
+				productURLs : this.productURLs
 			}
 		};
+		
 	},
 	
 	getSpecificMessage : function(){
 		
-		var collapsibleContent = "<h5>Selected Products : " + (this.currentRequest.SimpleDataAccessRequest.productURLs.length + this.rejectedProductsNB) + "<h5>";
+		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
 		
 		if (this.rejectedProductsNB == 0){
 			collapsibleContent += "<p>All the selected items have been included in the request.<p>";
@@ -60,52 +67,46 @@ var SimpleDataAccessRequest = {
 	
 	/** Set the list of products for the DAR */
 	setProducts: function(products) {
-	
-		this.currentRequest.SimpleDataAccessRequest.productURLs.length = 0;
 		
 		for ( var i = 0; i < products.length; i++ ) {
 			var eor = products[i].properties.EarthObservation.EarthObservationResult;
 			if ( eor && eor.eop_ProductInformation ) {
-				this.currentRequest.SimpleDataAccessRequest.productURLs.push( eor.eop_ProductInformation.eop_filename );
+				this.productURLs.push( eor.eop_ProductInformation.eop_filename );
 			} else {
 				this.rejectedProductsNB++;
 			}
 		}
-		
 	},
 	
-	/** Assign the download
-	 *  manager to the request */
-	setDownloadManager : function(downloadManagerId){
-		this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = downloadManagerId;
-	},
-		
 	/** check whether the request is valid or not */
 	isValid : function(){
 		
-		var dataAccessConfig = Configuration.data.dataAccessRequestStatuses;
-		
-		//Request not valid when no product urls set then display the specific message
-		if ( this.currentRequest.SimpleDataAccessRequest.productURLs.length == 0){
-			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidProductURLsError;
-			this.trigger('toggleRequestButton', ['disable']);
+		if (!this.isDownloadManagerSet()){
 			return false;
 		}
 		
+		var dataAccessConfig = Configuration.data.dataAccessRequestStatuses;
+		
 		//if request not valid when no download manager then display the specific message
 		//the validate button is not disabled since when the user selects a download manager the request
-		if (this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId == ""){
-			
+		if (this.downloadLocation.DownloadManagerId == ""){
 			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidDownloadManagersError;
 			return false;
 		}
 		
+		//Request not valid when no product urls set then display the specific message
+		if ( this.productURLs.length == 0){
+			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidProductURLsError;
+			this.trigger('toggleRequestButton', ['disable']);
+			return false;
+		}
+
 		//second stage submission with and without bulk order if the user changes the download manager 
 		if (this.step == 1 &&
 			this.id != "" &&
-			this.currentRequest.SimpleDataAccessRequest.requestStage == dataAccessConfig.confirmationRequestStage &&
+			this.requestStage == dataAccessConfig.confirmationRequestStage &&
 		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId != 
-		    	this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId)) {
+		    	this.downloadLocation.DownloadManagerId)) {
 			
 				this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidConfirmationRequest;
 				this.trigger('toggleRequestButton', ['disable']);
@@ -115,7 +116,7 @@ var SimpleDataAccessRequest = {
 		//initial request : nominal case
 		if (this.step == 0 && 
 		    this.id == "" &&
-		    this.currentRequest.SimpleDataAccessRequest.requestStage == dataAccessConfig.validationRequestStage) {
+		    this.requestStage == dataAccessConfig.validationRequestStage) {
 			return true;
 		}
 		
@@ -123,11 +124,9 @@ var SimpleDataAccessRequest = {
 		//second stage submission with and without bulk order
 		if (this.step == 1 &&
 			this.id != "" &&
-			(this.currentRequest.SimpleDataAccessRequest.createBulkOrder == true || 
-				 this.currentRequest.SimpleDataAccessRequest.createBulkOrder == undefined) &&
-			this.currentRequest.SimpleDataAccessRequest.requestStage == dataAccessConfig.confirmationRequestStage &&
+			this.requestStage == dataAccessConfig.confirmationRequestStage &&
 		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId ==
-		    	this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId)
+		    	this.downloadLocation.DownloadManagerId)
 		 ){
 			return true;
 		}
@@ -138,133 +137,28 @@ var SimpleDataAccessRequest = {
 		return false;
 	},
 	
-	keepFirstRequestMembers: function(){
-		 this.firstRequest.SimpleDataAccessRequest.requestStage = this.currentRequest.SimpleDataAccessRequest.requestStage;
-		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId;
-		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadDirectory = this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadDirectory;
-		 this.firstRequest.SimpleDataAccessRequest.productURLs = this.currentRequest.SimpleDataAccessRequest.productURLs;
+	keepFirstRequestMembers : function(){
+		 this.firstRequest.SimpleDataAccessRequest.requestStage = this.requestStage;
+		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = this.downloadLocation.DownloadManagerId;
+		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadDirectory = this.downloadLocation.DownloadDirectory;
+		 this.firstRequest.SimpleDataAccessRequest.productURLs = this.productURLs;
 		 
 	},
 	
-	/** Submit the request to the server */
-	submit : function(){
-
-		//check that the request is valid before sending it to the server
-		if (!this.isValid()){
-			return;
-		}
+	validationProcessing : function(dataAccessRequestStatus){
 		
-		var self = this;
-		
-		return $.ajax({
-		  url: self.url,
-		  type : 'POST',
-		  dataType: 'json',
-		  contentType: 'application/json',
-		  data : JSON.stringify(self.currentRequest),
-		  success: function(data) {
-			  
-			  console.log(" SUCCESS : Received simple DAR validation response from the server :");
-			  console.log (data);
-			
-			  //check the server response status with the configured server response statuses  
-			  var statusesConfig = Configuration.data.dataAccessRequestStatuses;
-			  var validStatusesConfig = statusesConfig.validStatuses;
-			  
-				  switch (data.DataAccessRequestStatus.status){
-					  
-				  	  case validStatusesConfig.validatedStatus.value:
-						 
-				  		  //initial stage
-						  if (self.step == 0 && self.id == "" &&  self.currentRequest.SimpleDataAccessRequest.requestStage == statusesConfig.validationRequestStage) {
-							  self.step = 1;
-							  self.id = data.DataAccessRequestStatus.ID;
-							  //store the first request 
-							  self.keepFirstRequestMembers();
-							  self.currentRequest.SimpleDataAccessRequest.requestStage = statusesConfig.confirmationRequestStage;
-							  self.serverResponse = "<p>" + validStatusesConfig.validatedStatus.message + "<p>";
-							  
-							 //calculate the total download estimated size  
-							  var totalSize = 0;
-							  _.each(data.DataAccessRequestStatus.productStatuses, function(productStatus){
-								  totalSize += productStatus.expectedSize;
-							  });
-							  
-							  self.serverResponse += "<p> Estimated Size : " + totalSize + "<p>";
-							  
-							  self.trigger('requestButtonTextChange');
-							  
-						  }else{
-							  self.trigger('toggleRequestButton', ['disable']);
-							 
-						  }
-						  break;
-					 
-					  case validStatusesConfig.bulkOrderStatus.value:
-						   
-						  if (self.step == 0 && currentRequest.SimpleDataAccessRequest.requestStage == statusesConfig.validationRequestStage) {
-							  self.step = 1;
-							  self.id = data.DataAccessRequestStatus.ID;
-							  //store the first request 
-							  self.keepFirstRequestMembers();
-							  //Bulk order is considered add the createBulkOrder
-							  self.currentRequest.createBulkOrder = true;
-							  self.currentRequest.SimpleDataAccessRequest.requestStage = statusesConfig.confirmationRequestStage;
-							  self.serverResponse = validStatusesConfig.bulkOrderStatus.message;
-							  self.trigger('requestButtonTextChange');
-						  }else{
-							  self.trigger('toggleRequestButton', ['disable']);
-						  }
-						  
-						  break;
-						  
-					  case validStatusesConfig.inProgressStatus.value:
-						  
-						  if (self.step == 1 && self.id == data.DataAccessRequestStatus.ID &&
-								self.currentRequest.SimpleDataAccessRequest.requestStage == statusesConfig.confirmationRequestStage) {//2 steps done
-							  self.serverResponse = validStatusesConfig.inProgressStatus.message;
-						  }  
-						  self.trigger('toggleRequestButton', ['disable']);
-						  break;
-					
-					  case validStatusesConfig.pausedStatus.value:
-						  self.serverResponse = validStatusesConfig.pausedStatus.message;
-						  self.trigger('toggleRequestButton', ['disable']);
-						  break;
-						  
-					  case validStatusesConfig.cancelledStatus.value:
-						  self.serverResponse = validStatusesConfig.cancelledStatus.message;
-						  self.trigger('toggleRequestButton', ['disable']);
-						  break;
-					  
-					  default: 
-						  self.serverResponse = self.serverResponse = Configuration.data.dataAccessRequestStatuses.unExpectedStatusError ;
-					  	  self.trigger('toggleRequestButton', ['disable']);
-					  	  break;
-				  }	  
-					   
-				  //if the server sends a response message append it to the message to display
-				  if (data.DataAccessRequestStatus.message){
-					   self.serverResponse =  self.serverResponse + "<p>" + data.DataAccessRequestStatus.message + "<p>";
-				  }
-				  
-				  console.log("serverResponse");
-				  console.log(self.serverResponse);
-				   
-		  	  },
+		//calculate the total download estimated size  
+		  var totalSize = 0;
+		  _.each(dataAccessRequestStatus.productStatuses, function(productStatus){
+			  totalSize += productStatus.expectedSize;
+		  });
 		  
-			  error: function(jqXHR, textStatus, errorThrown) {
-				  //console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
-				  self.serverResponse = Configuration.data.dataAccessRequestStatuses.requestSubmissionError ;
-				  self.trigger('toggleRequestButton', ['disable']);
-			  }
-		});	
+		  this.serverResponse += "<p> Estimated Size : " + totalSize + "<p>";
 	}
-	  
 }
 
-// add events method to object
-_.extend(SimpleDataAccessRequest, Backbone.Events);
+// add DataAccessRequest methods to object
+_.extend(SimpleDataAccessRequest, DataAccessRequest);
 
 return SimpleDataAccessRequest;
 
