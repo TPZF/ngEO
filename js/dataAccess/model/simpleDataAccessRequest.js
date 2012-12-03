@@ -19,6 +19,7 @@ var SimpleDataAccessRequest = {
 
 	serverResponse : "A validation request has been send to the server...",
 	
+	rejectedProductsNB : 0, //nb of products checked but not having a url 
 	
 	initialize : function(){
 		_.extend(this, Backbone.Events);
@@ -29,6 +30,7 @@ var SimpleDataAccessRequest = {
 	resetRequest : function (){
 		this.step = 0;
 		this.id = "";
+		this.rejectedProductsNB = 0;
 		this.firstRequest = this.initializeRequest();
 		this.currentRequest = this.initializeRequest();
 	},
@@ -45,12 +47,30 @@ var SimpleDataAccessRequest = {
 	},
 	
 	getSpecificMessage : function(){
-		return "<h5>Selected Products : " + this.currentRequest.SimpleDataAccessRequest.productURLs.length + "<h5>"; 
+		
+		var collapsibleContent = "<h5>Selected Products : " + (this.currentRequest.SimpleDataAccessRequest.productURLs.length + this.rejectedProductsNB) + "<h5>";
+		
+		if (this.rejectedProductsNB == 0){
+			collapsibleContent += "<p>All the selected items have been included in the request.<p>";
+		}else{
+			collapsibleContent += "<p> " + this.rejectedProductsNB + " products were not included in the request since they do not have a url.";
+		}
+		
+		return collapsibleContent; 
 	},
 	
 	/** Set the list of checked products */
 	setProductURLs: function(urls){
-		this.currentRequest.SimpleDataAccessRequest.productURLs = urls;
+		
+		var self = this;
+		_.each(urls, function(url){
+			
+			if(url.productURL != ""){
+				self.currentRequest.SimpleDataAccessRequest.productURLs.push(url);
+			}else{
+				self.rejectedProductsNB++;
+			}
+		});	
 	},
 	
 	/** Assign the download
@@ -116,12 +136,6 @@ var SimpleDataAccessRequest = {
 		this.trigger('toggleRequestButton', ['disable']);
 		
 		return false;
-	},
-	
-	SimpleDataAccessRequest : {
-		requestStage :  Configuration.data.dataAccessRequestStatuses.validationRequestStage,
-		downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""}, 
-		productURLs : []
 	},
 	
 	keepFirstRequestMembers: function(){
@@ -233,6 +247,9 @@ var SimpleDataAccessRequest = {
 				  if (data.DataAccessRequestStatus.message){
 					   self.serverResponse =  self.serverResponse + "<p>" + data.DataAccessRequestStatus.message + "<p>";
 				  }
+				  
+				  console.log("serverResponse");
+				  console.log(self.serverResponse);
 				   
 		  	  },
 		  
