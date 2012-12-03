@@ -1,8 +1,8 @@
 define(
 		[ 'jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 
-		  'dataAccess/model/simpleDataAccessRequest', 'dataAccess/view/downloadManagersListView', 
+		  'dataAccess/model/simpleDataAccessRequest', 'dataAccess/view/downloadManagersListView','dataAccess/widget/downloadManagersWidget',
 		  'jquery.mobile', 'jquery.dataTables' ],
-		function($, Backbone, Configuration, DownloadManagers, SimpleDataAccessRequest, DownloadManagersListView) {
+		function($, Backbone, Configuration, DownloadManagers, SimpleDataAccessRequest, DownloadManagersListView, DownloadManagersWidget) {
 
 			var SearchResultsTableView = Backbone.View
 					.extend({
@@ -155,34 +155,13 @@ define(
 							
 							//create a simpleDataAccessRequest and assign a download manager
 							this.retrieveProduct.click(function() {
-								
+
 								SimpleDataAccessRequest.initialize();
 								SimpleDataAccessRequest.setProductURLs(self.getSelectedProductURLs());
 								
-								DownloadManagers.fetch().done(function() {
-								
-									var downloadManagersListView = new DownloadManagersListView({
-										model : DownloadManagers,
-										selectedDownloadManager : "",
-										request : SimpleDataAccessRequest,
-										parent : self
-									});
-									
-									$("#downloadManagersPopupContent").html(downloadManagersListView.render().$el);
-									$("#downloadManagersPopup").popup(); 		
-									
-									//after closing the popup reset the simple data access parameters 
-									$( "#downloadManagersPopup" ).bind({
-										   popupafterclose: function(event, ui) {
-											   downloadManagersListView.request.initialize();
-										   }
-									});
-									
-									$("#downloadManagersPopup").popup("open");  
-									//trigger jqm styling
-									$("#downloadManagersPopup").trigger('create');
-	
-								});	
+								var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+								downloadManagersWidget.open();
+
 							});
 
 							
