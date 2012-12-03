@@ -15,12 +15,14 @@ var SimpleDataAccessRequest = {
 	
 	productURLs : [],
 	
+	/** reset specific parameters of a simple DAR */
 	resetRequest : function (){
 		
 		this.rejectedProductsNB = 0;
 		this.productURLs = [];
 	},
 	
+	/** get the current request to submit */
 	getRequest : function() {	
 		
 		if (this.createBulkOrder){
@@ -45,6 +47,7 @@ var SimpleDataAccessRequest = {
 		
 	},
 	
+	/** get message the display when a simple DAT creation is triggered */
 	getSpecificMessage : function(){
 		
 		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
@@ -97,7 +100,7 @@ var SimpleDataAccessRequest = {
 		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId != 
 		    	this.downloadLocation.DownloadManagerId)) {
 			
-				this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidConfirmationRequest;
+				this.serverResponse = dataAccessConfig.invalidConfirmationRequest;
 				this.trigger('toggleRequestButton', ['disable']);
 				return false;
 		}	
@@ -126,6 +129,7 @@ var SimpleDataAccessRequest = {
 		return false;
 	},
 	
+	/** save the validation request in order to proceed to confirmation*/
 	keepFirstRequestMembers : function(){
 		 this.firstRequest.SimpleDataAccessRequest.requestStage = this.requestStage;
 		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = this.downloadLocation.DownloadManagerId;
@@ -134,6 +138,7 @@ var SimpleDataAccessRequest = {
 		 
 	},
 	
+	/** specific simple DAR additional processing after validation request */
 	validationProcessing : function(dataAccessRequestStatus){
 		
 		//calculate the total download estimated size  
@@ -146,7 +151,7 @@ var SimpleDataAccessRequest = {
 	}
 }
 
-// add DataAccessRequest methods to object
+// add DataAccessRequest methods to SimpleDataAccessRequest
 _.extend(SimpleDataAccessRequest, DataAccessRequest);
 
 return SimpleDataAccessRequest;
