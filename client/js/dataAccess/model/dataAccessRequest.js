@@ -23,23 +23,19 @@ var DataAccessRequest = {
 
 
 	initialize : function(){
+		
+		this.step = 0;
+		this.id = "";
+		this.requestStage =  Configuration.data.dataAccessRequestStatuses.validationRequestStage;
+		this.downloadLocation = {DownloadManagerId : "" , DownloadDirectory : ""};
+		this.firstRequest = this.getRequest();
+		
 		this.resetRequest();
 	},
-	
+
 	/** Assign the download manager to the request */
 	setDownloadManager : function(downloadManagerId){
 		this.downloadLocation.DownloadManagerId = downloadManagerId;
-	},
-	
-	
-	/** check whether the download manager is set */
-	isDownloadManagerSet : function(){
-		//if request not valid when no download manager then display the specific message
-		//the validate button is not disabled since when the user selects a download manager the request
-		if (this.downloadLocation.DownloadManagerId == ""){
-			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidDownloadManagersError;
-			return false;
-		}
 	},
 	
 	/** Submit the request to the server */
