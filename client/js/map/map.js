@@ -28,8 +28,10 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	var element = null;
 	// The current background layer
 	var backgroundLayer = null;
-	// The current selected feature
-	var selectedFeature = null;
+	// The current selected features
+	var selectedFeatures = [];
+	// The index when using stack selection
+	var stackSelectionIndex = -1;
 	// The popup to use for selection
 	var	mapPopup = null;
 	// Max extent of the map
@@ -41,6 +43,10 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 
 	/**
 	 * Private methods
+	 */
+	 
+	/**
+	 * Check if the point is inside the given ring
 	 */
 	var pointInRing = function ( point, ring )
 	{
@@ -73,49 +79,39 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	};
 	
 	/**
-	 * Get a feature from a point : test if the point is inside the footprint
+	 * Get the feature from a point : test if the point is inside the footprint
 	 */
-	var getFeatureFromPoint = function(lonlat) {
+	var getFeaturesFromPoint = function(lonlat) {
+	
+		var features = [];
 		
 		for ( var i = 0; i < SearchResults.get('features').length; i++ ) {
 			var feature = SearchResults.get('features')[i];
 			var isMultiPolygon = feature.geometry.type == "MultiPolygon";
 			if ( pointInRing(lonlat,isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0]) ) {
-				return feature;
+				features.push( feature );
 			}
 		}
 				
-		return null;
+		return features;
 	};
-
-	/**
-	 * Clear the current selection
-	 */
-	var clearSelection = function() {
 	
-		if ( selectedFeature ) {
-		
-			mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeature,"default");
-			selectedFeature = null;
+	 /** 
+	  *	Test if a new selection is equal to the previous selection
+	  */
+	var isSelectionEqual = function( newSelection ) {
+		if ( selectedFeatures.length == newSelection.length) {
 			
-			mapPopup.close();
+			for ( var i=0; i < selectedFeatures.length; i++ ) {
+				if ( selectedFeatures[i] != newSelection[i] )
+					return false;
+			}
+			
+			return true;
 		}
+		else
+			return false;
 	};
-
-	
-	/**
-	 * Select feature
-	 */
-	var selectFeature = function(feature)  {
-		if ( feature != selectedFeature ) {
-			
-			clearSelection();
-			
-			mapEngine.modifyFeatureStyle(resultFootprintLayer,feature,"select");
-			selectedFeature = feature;
-		}
-	};
-	
 
 	/**
 	 * Call when the user click on the map
@@ -126,16 +122,55 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 		var clientX = pageX - position.left;
 		var clientY = pageY - position.top;
 		
-		clearSelection();
+		mapPopup.close();
 		
 		var lonlat = mapEngine.getLonLatFromPixel(clientX,clientY);
 		if ( lonlat ) {
-			var feature = getFeatureFromPoint(lonlat);
-			if ( feature )
+			var features = getFeaturesFromPoint(lonlat);
+			if ( features.length > 0 )
 			{
-				selectFeature(feature);
-		
-				mapPopup.open({ x:  pageX, y: pageY }, feature);
+				if ( isSelectionEqual(features) ) {
+				
+					// Reset previous selected feature
+					if ( stackSelectionIndex == -1 ) {
+						for ( var i=0; i < selectedFeatures.length; i++ ) {
+							mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "default");
+						}		
+					} else {
+						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "default" );
+					}
+					
+					stackSelectionIndex++;
+					
+					// Select individual feature
+					if ( stackSelectionIndex == selectedFeatures.length ) {
+						for ( var i=0; i < selectedFeatures.length; i++ ) {
+							mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "select" );
+						}
+						stackSelectionIndex = -1;		
+						mapPopup.open({ x:  pageX, y: pageY }, selectedFeatures);
+					} else {
+						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "select" );
+						mapPopup.open({ x:  pageX, y: pageY }, [ selectedFeatures[stackSelectionIndex] ]);
+					}
+					
+				} else {
+				
+					// Remove selected style for previous selection
+					for ( var i=0; i < selectedFeatures.length; i++ ) {
+						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i],"default");
+					}
+					
+					// Add style for new selection
+					for ( var i=0; i < features.length; i++ ) {
+						mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i],"select");
+					}
+					
+					selectedFeatures = features;
+					stackSelectionIndex = -1;
+					
+					mapPopup.open({ x:  pageX, y: pageY }, selectedFeatures);
+				}
 			}
 		}
 	};

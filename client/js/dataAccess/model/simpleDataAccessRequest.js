@@ -22,7 +22,6 @@ var SimpleDataAccessRequest = {
 	rejectedProductsNB : 0, //nb of products checked but not having a url 
 	
 	initialize : function(){
-		_.extend(this, Backbone.Events);
 		this.resetRequest();
 	},
 	
@@ -59,18 +58,20 @@ var SimpleDataAccessRequest = {
 		return collapsibleContent; 
 	},
 	
-	/** Set the list of checked products */
-	setProductURLs: function(urls){
+	/** Set the list of products for the DAR */
+	setProducts: function(products) {
+	
+		this.currentRequest.SimpleDataAccessRequest.productURLs.length = 0;
 		
-		var self = this;
-		_.each(urls, function(url){
-			
-			if(url.productURL != ""){
-				self.currentRequest.SimpleDataAccessRequest.productURLs.push(url);
-			}else{
-				self.rejectedProductsNB++;
+		for ( var i = 0; i < products.length; i++ ) {
+			var eor = products[i].properties.EarthObservation.EarthObservationResult;
+			if ( eor && eor.eop_ProductInformation ) {
+				this.currentRequest.SimpleDataAccessRequest.productURLs.push( eor.eop_ProductInformation.eop_filename );
+			} else {
+				this.rejectedProductsNB++;
 			}
-		});	
+		}
+		
 	},
 	
 	/** Assign the download
@@ -78,8 +79,7 @@ var SimpleDataAccessRequest = {
 	setDownloadManager : function(downloadManagerId){
 		this.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = downloadManagerId;
 	},
-	
-	
+		
 	/** check whether the request is valid or not */
 	isValid : function(){
 		
@@ -262,6 +262,9 @@ var SimpleDataAccessRequest = {
 	}
 	  
 }
+
+// add events method to object
+_.extend(SimpleDataAccessRequest, Backbone.Events);
 
 return SimpleDataAccessRequest;
 

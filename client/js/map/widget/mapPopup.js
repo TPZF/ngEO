@@ -3,7 +3,8 @@
   */
 
 
-define( [ "jquery", "configuration", 'text!map/template/mapPopupContent.html', "underscore" ], function($,Configuration, mapPopup_template) {
+define( [ "jquery", "configuration", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
+	"text!map/template/mapPopupContent.html", "underscore" ], function($,Configuration, SimpleDataAccessRequest, DownloadManagersWidget, mapPopup_template) {
 
 
 var MapPopup = function(container) {
@@ -14,28 +15,31 @@ var MapPopup = function(container) {
 	var element;
 	var parentElement;
 	var arrow;
+	var products = null;
 	var isOpened = false;
 
-	element = $('<div></div>');
+	element = $('<div class="widget-content ui-body-c mapPopup"></div>');
 	
-	// Style the content
-	element.addClass( "widget-content" );
-	// Use jQM to style the content
-	element.addClass( "ui-body-c" );
-	element.addClass( "mapPopup" );
-
 	// Wrap with the parent div for widget
-	element.wrap("<div class='widget'/>");
+	element.wrap("<div class='widget'></div>");
 	parentElement = element.parent();
+	parentElement.prepend("<h2>Products</h2>");
 			
 	// Add footer
 	var footer = $("<div class='widget-footer'><div class='widget-footer-left'/><div class='widget-footer-right'/></div>")
 		.insertAfter(element);
 		
-	var btn = $("<button data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
-		.appendTo( footer.find('.widget-footer-left') );
+/*	var btn = $("<button data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
+		.appendTo( footer.find('.widget-footer-left') );*/
 	var btn = $("<button data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
-		.appendTo( footer.find('.widget-footer-left') );
+		.appendTo( footer.find('.widget-footer-left') )
+		.click( function() {
+			SimpleDataAccessRequest.initialize();
+			SimpleDataAccessRequest.setProducts( products );
+			
+			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+			downloadManagersWidget.open();
+		});
 		
 	parentElement.appendTo(container);
 	parentElement.trigger("create");
@@ -51,7 +55,7 @@ var MapPopup = function(container) {
 	/**
 	 * Private methods
 	 */
-			
+					
 	/**
 		Get data from a path
 	 */
@@ -77,9 +81,17 @@ var MapPopup = function(container) {
 	/**
 		Open the popup
 	 */
-	this.open = function(pos,product) {
+	this.open = function(pos,features) {
 	
-		buildContent(product);
+		products = features;
+		
+		if ( products.length == 1 ) {
+			parentElement.find("h2").html("Product details");
+			buildContent(products[0]);
+		} else {
+			parentElement.find("h2").html("Multiple products");
+			element.html( products.length + " products selected." );
+		}
 			
 		var toolbarBottom = $("#toolbar").offset().top + $("#toolbar").outerHeight();
 		
@@ -91,25 +103,26 @@ var MapPopup = function(container) {
 		parentElement.css('top', top );
 		
 		// Compute left position for popup, if too close to window right edge, "invert" its position
+		var margin = 2;
 		var left = pos.x + arrow.outerWidth();
 		if ( left + parentElement.outerWidth() >  window.innerWidth ) {
-			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() );
+			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() - margin );
 			parentElement.show();
 		
 			arrow.css('top',pos.y  - arrow.outerHeight() / 2);
-			arrow.css('left',pos.x - arrow.outerWidth());
+			arrow.css('left',pos.x - arrow.outerWidth() - margin);
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
 			arrow.show();
 		} else {
-			parentElement.css('left', left);
+			parentElement.css('left', left + margin);
 			parentElement.show();
 			
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');
 			arrow.addClass('mapPopup-arrow-left');
 			arrow.css('top',pos.y  - arrow.outerHeight() / 2);
-			arrow.css('left',pos.x);
+			arrow.css('left',pos.x + margin);
 			arrow.show();
 		}
 		

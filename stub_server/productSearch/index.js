@@ -67,7 +67,7 @@ function convertToGeojsonPolygon(polygon) {
  */
 var featureCollection = null;
 fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
-	featureCollection = JSON.parse(data);
+	var fc = JSON.parse(data);
 	fs.readFile('./productSearch/dataFromEOLI.txt', 'utf8', function (err, data) {
 		var lines=data.split("\n");
 		var columns=lines[1].split("|");
@@ -77,19 +77,24 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 		var stopIndex = columns.indexOf('Stop');
 		var collectionIndex = columns.indexOf('COLLECTION');
 		
-		for(var i = 0; i < featureCollection.features.length; i++) {
+		featureCollection = {
+			type: "FeatureCollection",
+			features: []
+		};
+		
+		for(var i = 0; i < lines.length - 2; i++) {
 			var cells = lines[i+2].split('|');
 			var footprintStr = cells[footprintIndex];
 			var coords = convertToGeojsonPolygon(footprintStr);
-			featureCollection.features[i].geometry.coordinates = convertToGeojsonPolygon(footprintStr);
-			featureCollection.features[i].properties.EarthObservation.gml_beginPosition = cells[startIndex].replace(' ','T') + '0Z';
-			featureCollection.features[i].properties.EarthObservation.gml_endPosition = cells[stopIndex].replace(' ','T') + '0Z';
+			var feature = JSON.parse( JSON.stringify(fc.features[ i % fc.features.length ]) );
+			feature.id = i;
+			feature.geometry.coordinates = convertToGeojsonPolygon(footprintStr);
+			feature.properties.EarthObservation.gml_beginPosition = cells[startIndex].replace(' ','T') + '0Z';
+			feature.properties.EarthObservation.gml_endPosition = cells[stopIndex].replace(' ','T') + '0Z';
 			
 			var layer = dataSet2wmsLayers[ cells[collectionIndex] ];
-/**			var wmsBrowse = browseWMSBaseUrl + "&LAYERS=" + layer
-				+ "&TIME=" + featureCollection.features[i].properties.EarthObservation.gml_beginPosition + "/" + featureCollection.features[i].properties.EarthObservation.gml_endPosition;
-			featureCollection.features[i].properties.browseLayer = wmsBrowse;*/
-			featureCollection.features[i].properties.browseLayer = layer;
+			feature.properties.browseLayer = layer;
+			featureCollection.features.push( feature ); 
 		}
 		
 	});
