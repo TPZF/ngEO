@@ -63,10 +63,11 @@ var DownloadManagersListView = Backbone.View.extend({
 			
 			this.$el.append(downloadManagersList_template);
 			//empty the status to cover the case where a user has stopped a download manager after it has install it
-			this.$el.find("#downloadManagerStatusMessage").empty();
-			this.$el.find("#downloadManagerStatusMessage").append("<p>No download manager is regitered. To install a Download Manager click on this link : <p>"); 
-			//style the download manager installation link
-			this.$el.find("#downloadManagerStatusMessage").append("<a data-mini='true' data-theme='a' data-role='button' href='" +
+			this.$el.find("#downloadManagerStatusMessage")
+				.empty()
+				.append("<p>No download manager is regitered. To install a Download Manager click on this link : <p>") 
+				//style the download manager installation link
+				.append("<a data-mini='true' data-theme='a' data-role='button' href='" +
 												Configuration.data.downloadManager.downloadManagerInstallationLink + "'>" + 
 												Configuration.data.downloadManager.downloadManagerInstallationLink+"</a>");
 			this.$el.find("#downloadManagersList").hide();
@@ -76,17 +77,17 @@ var DownloadManagersListView = Backbone.View.extend({
 			var content = _.template(downloadManagersList_template, this.model.attributes);
 			this.$el.append(content);
 			//empty the status to cover the case where a user has registered a download manager after it has no one installed
-			this.$el.find("#downloadManagerStatusMessage").empty();
-			this.$el.find("#downloadManagerStatusMessage").append("<h4>Select a Download Manager : <h4>");
-			this.$el.find("#downloadManagerStatusMessage").show();
+			this.$el.find("#downloadManagerStatusMessage")
+				.empty()
+				.append("<h4>Select a Download Manager : <h4>")
+				.show()
 			this.$el.find("#downloadManagersList").show();
 			this.$el.find("#downloadManagersFooter").show();
 			
 		}
 		
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
-		//this.$el.find(".ui-collapsible-heading .ui-btn").removeAttr("text-align");
-		this.$el.find(".ui-collapsible-heading .ui-btn").attr("style", "{text-align:center}");
+		//this.$el.find(".ui-collapsible-heading .ui-btn").attr("style", "{text-align:center}");
 		this.delegateEvents();
 		return this;
 	}
