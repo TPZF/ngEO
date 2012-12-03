@@ -32,10 +32,12 @@ define(
 								$(event.currentTarget).toggleClass('ui-icon-checkbox-on');
 								
 								//Disable the Retrieve Product button if no product item is selected 
-								//and/or if the products checked do not have a product url 
-								if(this.getSelectedProductURLs().length == 0){
+								//and/or if the products checked do not have a product url
+								SimpleDataAccessRequest.initialize();
+								SimpleDataAccessRequest.setProducts(this.getSelectedFeatures());
+								if ( SimpleDataAccessRequest.currentRequest.SimpleDataAccessRequest.productURLs.length == 0 ) {
 									this.retrieveProduct.button('disable');
-								}else{
+								} else {
 									this.retrieveProduct.button('enable');
 								}
 								
@@ -157,7 +159,7 @@ define(
 							this.retrieveProduct.click(function() {
 
 								SimpleDataAccessRequest.initialize();
-								SimpleDataAccessRequest.setProductURLs(self.getSelectedProductURLs());
+								SimpleDataAccessRequest.setProducts(self.getSelectedFeatures());
 								
 								var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
 								downloadManagersWidget.open();
@@ -192,7 +194,7 @@ define(
 														
 							//if the switcher is on "On" position, display browses for the selected rows unless clear the browse layer
 							$('#browseSlider').change(function(){
-								self.model.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSelectedFeaturesTable());
+								self.model.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSelectedFeatures());
 							});
 
 							this.$el.trigger('create');
@@ -200,7 +202,7 @@ define(
 
 						//get the geojson features related to the selected records as a table.
 						//used to trigger display browses event for map 
-						getSelectedFeaturesTable : function() {
+						getSelectedFeatures : function() {
 							var features = [];
 							var indexes = []; //are kept here in case to change the triggering events with indexes
 							var self = this;
@@ -217,38 +219,6 @@ define(
 							//console.log(features);
 							
 							return features;
-						},
-
-						/** get the list of product urls of the checked product rows */
-						getSelectedProductURLs : function(){
-
-							//var selectedNodes = this.table.$('tr.row_selected');
-							var selectedNodes = this.table.$('.ui-icon-checkbox-on').closest('tr');
-							
-							var urls = [];
-							var self = this;
-							
-							_.each(selectedNodes, function(node, index){
-								
-								var rowPos = self.table.fnGetPosition(node);
-								//According to spec EarthObservationResult and eop_ProductInformation are not compalsory
-								//if the product url is empty or not defined even if the product is checked
-								//it is not takn into account
-								if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult){
-									if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation){
-										//console.log(self.model.get('features')[rowPos]);
-										//console.log(self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
-										urls.push({"productURL" : self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename});
-									}
-								}
-							});
-							
-							console.log("checked product urls length :" + urls.length);
-							_.each(urls, function(url, index){
-								console.log(url);
-							});
-							
-							return urls;
 						},
 
 						close : function() {

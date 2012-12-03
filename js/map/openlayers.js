@@ -331,22 +331,6 @@ OpenLayersMapEngine.prototype.addFeatureCollection = function(layer,featureColle
 }
 
 /**
- * Remove a product from the map
- */
-OpenLayersMapEngine.prototype.removeProduct = function(product)
-{
-	var featureLayer = this._styleMap[product.style]._featureLayer;
-	var olFeature = featureLayer.getFeatureById(product.name);
-	featureLayer.removeFeatures( [olFeature] );
-	
-	if ( product.quicklookVisible ) {
-		var layers = this._map.getLayersByName( product.name );
-		if ( layers )
-			this._map.removeLayer( layers[0] );
-	}
-}
-
-/**
  * Modify the feature style
  */
 OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
