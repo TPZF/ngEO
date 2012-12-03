@@ -1,5 +1,7 @@
 /**
   * download manager widget module
+  * Used to assign a download manager to a data access request 
+  * (either simple DAR or a standing order)
   */
 
 
@@ -10,14 +12,13 @@ define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView',
 var DownloadManagersWidget = function(request) {
 
 	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content">');
-	parentElement.attr('style', '{"background" : "@widget-background-color"}');
 
 	var element = $('<div id="downloadManagersPopupContent"></div>'); 
 	element.appendTo(parentElement);
 	//parentElement.appendTo(container);
 
 	/**
-		Build the content of the popup from the given product
+		Build the content of the popup with the download managers view
 	 */
 	var buildContent = function() {
 
@@ -30,8 +31,7 @@ var DownloadManagersWidget = function(request) {
 				request : request
 			});
 			
-			downloadManagersListView.render();
-			
+			downloadManagersListView.render();		
 			downloadManagersListView.$el.trigger('create');
 		});
 	};
@@ -45,9 +45,9 @@ var DownloadManagersWidget = function(request) {
 		parentElement.popup(); 		
 			
 		//after closing the popup reset the simple data access parameters 
+		//and remove the popup elements
 		parentElement.bind({
 		   popupafterclose: function(event, ui) {
-			   //container.remove(parentElement);
 			   request.initialize();
 			   parentElement.remove();
 		   }
@@ -60,7 +60,8 @@ var DownloadManagersWidget = function(request) {
 
 		
 	/**
-		Close the popup
+	 *	For the moment not used since the popup can be 
+	 *	closed by clicking out side its content.
 	 */
 	this.close = function() {
 		parentElement.popup("close");
