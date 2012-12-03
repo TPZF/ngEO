@@ -61,12 +61,14 @@ var SimpleDataAccessRequest = {
 		return collapsibleContent; 
 	},
 	
-	/** Set the list of products for the DAR */
+	/** Set the list of products for the DAR 
+	 * if the file name is empty the product is rejected
+	 */
 	setProducts: function(products) {
 		
 		for ( var i = 0; i < products.length; i++ ) {
 			var eor = products[i].properties.EarthObservation.EarthObservationResult;
-			if ( eor && eor.eop_ProductInformation ) {
+			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
 				this.productURLs.push( eor.eop_ProductInformation.eop_filename );
 			} else {
 				this.rejectedProductsNB++;
@@ -88,7 +90,7 @@ var SimpleDataAccessRequest = {
 		
 		//Request not valid when no product urls set then display the specific message
 		if ( this.productURLs.length == 0){
-			this.serverResponse = dataAccessConfig.invalidProductURLsError;
+			this.serverResponse = Configuration.data.simpleDataAccess.invalidProductURLsError;
 			this.trigger('toggleRequestButton', ['disable']);
 			return false;
 		}
