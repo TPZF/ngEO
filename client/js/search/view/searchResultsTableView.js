@@ -235,10 +235,9 @@ define(
 								//if the product url is empty or not defined even if the product is checked
 								//it is not takn into account
 								if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult){
-									if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation &&
-											self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename != ""){
-//										console.log(self.model.get('features')[rowPos]);
-//										console.log(self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
+									if (self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation){
+										//console.log(self.model.get('features')[rowPos]);
+										//console.log(self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
 										urls.push({"productURL" : self.model.get('features')[rowPos].properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename});
 									}
 								}
