@@ -17,15 +17,8 @@ var SimpleDataAccessRequest = {
 	
 	resetRequest : function (){
 		
-		this.step = 0;
-		this.id = "";
 		this.rejectedProductsNB = 0;
-		this.requestStage = Configuration.data.dataAccessRequestStatuses.validationRequestStage;
-		this.downloadLocation = {DownloadManagerId : "" , DownloadDirectory : ""};
 		this.productURLs = [];
-		
-		this.firstRequest = this.getRequest();
-		this.currentRequest = this.getRequest();
 	},
 	
 	getRequest : function() {	
@@ -81,22 +74,18 @@ var SimpleDataAccessRequest = {
 	/** check whether the request is valid or not */
 	isValid : function(){
 		
-		if (!this.isDownloadManagerSet()){
-			return false;
-		}
-		
 		var dataAccessConfig = Configuration.data.dataAccessRequestStatuses;
-		
+
 		//if request not valid when no download manager then display the specific message
 		//the validate button is not disabled since when the user selects a download manager the request
 		if (this.downloadLocation.DownloadManagerId == ""){
-			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidDownloadManagersError;
+			this.serverResponse = dataAccessConfig.invalidDownloadManagersError;
 			return false;
 		}
 		
 		//Request not valid when no product urls set then display the specific message
 		if ( this.productURLs.length == 0){
-			this.serverResponse = Configuration.data.dataAccessRequestStatuses.invalidProductURLsError;
+			this.serverResponse = dataAccessConfig.invalidProductURLsError;
 			this.trigger('toggleRequestButton', ['disable']);
 			return false;
 		}
