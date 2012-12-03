@@ -67,6 +67,9 @@ var SearchCriteriaView = Backbone.View.extend({
 		//this.searchUrlButton = this.mainView.$el.ngeowidget('addLink', { divId : '#openSearchUrlPopup' , id: 'searchUrl', name: 'Search URL' });
 		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL', position: 'left' });
 		
+		 //Add a standing order button to create a standing order
+		this.standingOrderButton = this.mainView.$el.ngeowidget('addButton', { id: 'standingOrder', name: 'Standing Order', position: 'left' });
+
 		var self = this;
 		
 		this.searchUrlButton.click( function() {
@@ -105,9 +108,6 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.advancedCriteriaView.$el.hide();	
 		
 		this.$el.trigger('create');
-		
-		
-		
 		return this;
 	},	
 		
@@ -120,7 +120,6 @@ var SearchCriteriaView = Backbone.View.extend({
 			this.searchUrlButton.button('enable');
 			this.searchButton.button('enable');
 		}
-		
 	},
 	
     close : function() {
@@ -131,7 +130,8 @@ var SearchCriteriaView = Backbone.View.extend({
 	   this.mainView.$el.ngeowidget('removeButton', '#back');
 	   this.mainView.$el.ngeowidget('removeButton', '#searchRequest');
 	   this.mainView.$el.ngeowidget('removeButton', '#searchUrl');
-      this.$el.empty();
+	   this.mainView.$el.ngeowidget('removeButton', '#standingOrder');
+       this.$el.empty();
        if (this.onClose) {
           this.onClose();
        }
