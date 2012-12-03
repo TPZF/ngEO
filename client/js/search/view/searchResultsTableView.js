@@ -35,7 +35,7 @@ define(
 								//and/or if the products checked do not have a product url
 								SimpleDataAccessRequest.initialize();
 								SimpleDataAccessRequest.setProducts(this.getSelectedFeatures());
-								if ( SimpleDataAccessRequest.currentRequest.SimpleDataAccessRequest.productURLs.length == 0 ) {
+								if ( SimpleDataAccessRequest.productURLs.length == 0 ) {
 									this.retrieveProduct.button('disable');
 								} else {
 									this.retrieveProduct.button('enable');
