@@ -15,7 +15,9 @@
 	var testModules = [
 		"configurationTest.js",
 		"menuBarTest.js",
-		"datasetPopulationTest.js"
+		"datasetPopulationTest.js",
+		"simpleDataAccessRequestTest.js",
+		"downloadManagersTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
