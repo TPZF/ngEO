@@ -1,6 +1,72 @@
-{	
+{
+	"resultsTable": {
+		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
+						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
+						{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
+						{"sTitle" : "Stop", "mData" : "properties.EarthObservation.gml_endPosition"}, 
+						{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
+						{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
+						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
+						{"sTitle" : "Product", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_identifier" }, 
+						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
+						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
+					   ],
+		"columnsDef_Terradue" : [{"sTitle" : "Start", "mData": "properties.ical:dtstart"},
+						{"sTitle" : "Stop", "mData": "properties.ical:dtend"},
+						{"sTitle" : "Orbit", "mData": "properties.eop:orbitNumber"},
+						{"sTitle" : "Product", "mData": "properties.dc:identifier"} ]
+	
+	},
+	
+	"downloadManager" : {
+		"downloadManagerInstallationLink" : "./server/downloadManager/install.html" 	
+	},
+	
+	"dataAccessRequestStatuses" : {
+	   
+	   "validationRequestStage" : "validation",
+	   
+	   "confirmationRequestStage" : "confirmation",
+	   
+	    "validStatuses": {
+	        "inProgressStatus": {
+	            "value": 0,
+	            "message": "Request In Process..."
+	        },
+	        "pausedStatus": {
+	            "value": 1,
+	            "message": "Request Paused"
+	        },
+	        "completedStatus": {
+	            "value": 2,
+	            "message": "Request Completed"
+	        },
+	        "cancelledStatus": {
+	            "value": 3,
+	            "message": "Request Cancelled"
+	        },
+	        "validatedStatus": {
+	            "value": 4,
+	            "message": "Request Acknowledged"
+	        },
+	        "bulkOrderStatus": {
+	            "value": 5,
+	            "message": "Request Max Size Exceeded"
+	        }
+	    },
+	    "unExpectedStatusError": "ERROR: The server returned an expected status",
+	    "requestSubmissionError": "FAILURE: Request Submission Failed",
+	    "invalidDownloadManagersError": "Invalid Request : Please select a download manager first.", 
+		"invalidProductURLsError": "Invalid Request: Please check some products first.",
+		"invalidConfirmationRequest" : "Invalid Confirmation Request: The selected download manager has been changed."
+	},
+	
 	"map": {
 	
+		"pp": "EPSG:900913", 
+		"pprojection": "EPSG:3857", 
+		"projection": "EPSG:4326", 
+		
 		"backgroundLayers": [{
 			"name": "Open Street Map (Official)",
 			"type": "OSM",
@@ -17,7 +83,9 @@
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
-			"layers": "BlueMarble"
+			"params": {
+				"layers": "BlueMarble"
+			}
 		}, {
 			"name": "Bing Road",
 			"type": "Bing",
@@ -28,9 +96,57 @@
 			"type": "Bing",
 			"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
 			"imageSet": "Aerial"
-		}],
+		}, {
+			"name": "Terra/MODIS (NASA)",
+			"type": "WMTS",
+			"baseUrl": "http://map1b.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
+			"params": {
+				"layer": "MODIS_Terra_CorrectedReflectance_TrueColor",
+				"matrixSet": "EPSG4326_250m",
+				"format": "image/jpeg",
+				"style": ""
+			},
+			"projection": "EPSG:4326"
+	   }, {
+			"name": "VMAP0",
+			"type": "WMS",
+			"baseUrl": "http://vmap0.tiles.osgeo.org/wms/vmap0",
+			"params": {
+				"layers": "basic"
+			},
+			"projection": "EPSG:4326"
+	   }, {
+			"name": "OSM (TPZ Fr)",
+			"type": "WMS",
+			"baseUrl": "http://demonstrator.telespazio.com/geocache/wms",
+			"params": {
+				"layers": "imposm-fr",
+				"format": "image/png"
+			},
+			"projection": "EPSG:4326"
+	   }],
+	
+		"styles": {
+			"footprint" : {
+				"default" : {
+					"strokeColor": "#ff0000",
+					"strokeWidth": 1,
+					"fill" : false
+				},
+				"select" : {
+					"strokeColor": "#0000ff",
+					"strokeWidth": 1,
+					"fill" : false
+				}
+			}
+		},
 		
 		"layers": [{
+			"name": "Result Footprints",
+			"type": "GeoJSON",
+			"visible": true,
+			"style": "footprint"
+		},{
 			"name": "Earthquake Feed (GeoRSS)",
 			"type": "GeoRSS",
 			"location": "data/eqs7day-M5.xml",
@@ -47,7 +163,35 @@
 			"featureType": "states",
 			"featureNS": "http://www.openplans.org/topp",
 			"visible": false
-		}]
+		}, {
+			"name": "EOX SAR WMTS",
+			"type": "WMTS",
+			"baseUrl": "http://ngeo.eox.at/c/wmts/",
+			"params" : {
+				"layer": "TEST_SAR",
+				"matrixSet": "WGS84",
+				"format": "image/png",
+				"style": "default"
+			},
+			"projection": "EPSG:4326",
+			"visible": false
+		}, {
+			"name": "EOX Optical WMTS",
+			"type": "WMTS",
+			"baseUrl": "http://ngeo.eox.at/c/wmts/",
+			"params" : {
+				"layer": "TEST_OPTICAL",
+				"matrixSet": "WGS84",
+				"format": "image/png",
+				"style": "default"
+			},
+			"projection": "EPSG:4326",
+			"visible": false
+		}],
+		
+		"browseDisplay": {
+			"opacity": 0.7
+		}
 	}
 }
 
