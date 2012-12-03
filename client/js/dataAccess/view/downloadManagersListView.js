@@ -57,8 +57,6 @@ var DownloadManagersListView = Backbone.View.extend({
 	render: function(){
 	
 		console.log(this.model);
-
-		
 		//after the download managers are retrieved
 		//if no download manager is already registered : propose a link to the user to install one
 		if (this.model.attributes.downloadmanagers == 0) {
@@ -71,7 +69,6 @@ var DownloadManagersListView = Backbone.View.extend({
 			this.$el.find("#downloadManagerStatusMessage").append("<a data-mini='true' data-theme='a' data-role='button' href='" +
 												Configuration.data.downloadManager.downloadManagerInstallationLink + "'>" + 
 												Configuration.data.downloadManager.downloadManagerInstallationLink+"</a>");
-			this.$el.find("#downloadManagerStatusMessage").trigger('create');
 			this.$el.find("#downloadManagersList").hide();
 			this.$el.find("#downloadManagersFooter").hide();
 					
