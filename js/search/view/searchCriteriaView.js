@@ -2,16 +2,20 @@
 
 define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 
+         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/StandingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
 		function($, Backbone, Configuration, DatasetSearch, SpatialExtentView, TimeExtentView, 
-				AdvancedSearchView, searchCriteria_template) {
+				 AdvancedSearchView, StandingOrderDataAccessRequest, StandingOrderWidget,
+				 searchCriteria_template) {
 
+	/**
+	 * The model for this view is a backbone model : DataSetSearch 
+	 */
 var SearchCriteriaView = Backbone.View.extend({
 
 	initialize : function(options){
 		
 		this.mainView = options.mainView;
-		this.dataset = options.dataset;
 	},
 	
 	events : {
@@ -42,6 +46,18 @@ var SearchCriteriaView = Backbone.View.extend({
 		 //Add a standing order button to create a standing order
 		this.standingOrderButton = this.mainView.$el.ngeowidget('addButton', { id: 'standingOrder', name: 'Standing Order', position: 'left' });
 
+		this.standingOrderButton.click( function() {
+			
+			StandingOrderDataAccessRequest.initialize();
+			//set open search url
+			StandingOrderDataAccessRequest.OpenSearchURL = self.model.getOpenSearchURL();
+			//set selected download options
+			StandingOrderDataAccessRequest.DownloadOptions = self.model.get("selectedDownloadOptions");
+			
+			var standingOrderWidget = new StandingOrderWidget();
+			standingOrderWidget.open();
+		});
+		
 		var self = this;
 		
 		this.searchUrlButton.click( function() {
@@ -77,7 +93,7 @@ var SearchCriteriaView = Backbone.View.extend({
 			el : this.$el.find("#searchCriteria"), 
 			searchCriteriaView : this,
 			model : this.model ,
-			dataset : this.dataset});
+			dataset : this.model.dataset});
 		this.advancedCriteriaView.render();
 		
 		this.$el.trigger('create');
