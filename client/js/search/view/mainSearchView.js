@@ -27,10 +27,6 @@ var MainSearchView = Backbone.View.extend({
 	
 	displaySearchCriteria : function(datasetId){
 
-		// Retreive the dataset information
-		var dataset = new Dataset({id : datasetId});			
-		dataset.fetch();		
-		
 		// Get only date part (without time)
 		// TODO : the startDate and endDate should be taken from the DataSet informations
 		var today = (new Date()).toISOString();
@@ -45,8 +41,7 @@ var MainSearchView = Backbone.View.extend({
 		var searchCriteriaView = new SearchCriteriaView({
 			el : this.$el.find("#datasetSearchCriteria"),
 			model : datasetSearch,
-			mainView : this,
-			dataset : dataset,
+			mainView : this
 		});
 		
 		this.showView(searchCriteriaView);
