@@ -55,7 +55,7 @@ define(
 							
 							// Take column definitions from Configuration
 							// Add checkbox as first colum
-							var columnsDef = [{	'sTitle' : '', 'bSortable': false, 'mData': null, "sDefaultContent": '<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>' }];
+							var columnsDef = [{	'sTitle' : '', 'bSortable': false, 'mData': null, 'sWidth': '20px', 'sDefaultContent': '<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>' }];
 							columnsDef = columnsDef.concat( Configuration.data.resultsTable.columnsDef );
 
 							var self = this;
@@ -64,6 +64,7 @@ define(
 										"aaData" : this.model.get('features'),
 										"aoColumns" : columnsDef, 
 										"bDestroy": true,
+										"bAutoWidth": false,
 										"aLengthMenu": [5, 10, 25, 50],
 										"iDisplayLength": 5,	
 										"bLengthChange" : true,

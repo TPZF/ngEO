@@ -109,6 +109,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	 */
 	var mapClickHandler = function(pageX,pageY)
 	{
+		if (!resultsFeatureCollection)
+			return;
+			
 		var position = $('#mapContainer').offset();
 		var clientX = pageX - position.left;
 		var clientY = pageY - position.top;
