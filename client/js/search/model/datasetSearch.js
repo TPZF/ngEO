@@ -22,7 +22,9 @@ var DataSetSearch = Backbone.Model.extend({
 	initialize : function(){
 		//Retrieve the dataset information
 		this.dataset = new Dataset({id : this.get("datasetId")});			
-		this.dataset.fetch();
+		this.dataset.fetch().done(function(){
+			//TODO set the selected options default value from the dataset download options
+		});
 	},
 	
 	validate: function(attrs) {
