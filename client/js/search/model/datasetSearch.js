@@ -1,5 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataset'], 
+		function($, Backbone, Configuration, Dataset) {
 
 var DataSetSearch = Backbone.Model.extend({
 	
@@ -12,14 +13,23 @@ var DataSetSearch = Backbone.Model.extend({
 		east : "",
 		north : "",
 		useExtent : true,
+		selectedDownloadOptions : {}, // the selected download options as json object 
+									//{downloadoption1 : value , downloadoption2 : value 2, ....downloadoption : value n}
 		criteria : ""//TODO later add the advanced criteria 
+		
+	},
+	
+	initialize : function(){
+		//Retrieve the dataset information
+		this.dataset = new Dataset({id : this.get("datasetId")});			
+		this.dataset.fetch();
 	},
 	
 	validate: function(attrs) {
 	    if (attrs.stopdate < attrs.startdate) {
 	      return "Date interval can't end before it starts";
 	    }   
-	  },
+	 },
 	  
 	getOpenSearchURL : function(){
 	
