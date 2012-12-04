@@ -1,0 +1,58 @@
+
+<div id="standingOrderContent" class="widget-content ui-body-c">
+
+	<div data-role="header" class="ui-header ui-bar-a" role="banner">
+		<h1 role="heading" class="ui-title" aria-level="1">Standing Order</h1>
+	</div>
+
+	<div id="standingOrderSpecificMessage" data-role="collapsible"
+		data-theme="a" data-mini="true" data-collapsed-icon="info"
+		data-iconpos="right">
+	</div>
+
+	<div data-role="fieldcontain">
+
+		<label id="startDateLabel" for="startDateSTO" data-mini="true">StartDate:</label> <input name="startDateSTO" id="startDateSTO"
+			type="text" data-role="datebox" data-mini="true" data-theme="c"
+			value="<%= startDate %>"
+			data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= startDate %>", 
+  		   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'> 
+	</div>
+
+	<div data-role="fieldcontain">
+
+		<label id="endDateLabel" for="endDateSTO" data-mini="true">EndDate:</label> <input name="endDateSTO" id="endDateSTO"
+			type="text" data-role="datebox" data-mini="true" data-theme="c"
+			value="<%= endDate %>"
+			data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= endDate %>", 
+  		   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'> 
+	</div>
+
+	<div data-role="fieldcontain">
+		<label id="timeDrivenLabel" for="timeDrivenCheckBox" data-mini="true">Time Driven</label>
+		<input type="checkbox" name="timeDrivenCheckBox" id="timeDrivenCheckBox" data-mini="true" data-theme="c">
+	</div>
+	
+	<div id="timeDrivenParams">
+
+		<div data-role="fieldcontain">
+			<label id="repeatPeriodLabel" for="repeatPeriod" data-mini="true">Shifting Period (in days) : </label>
+			<input type="number" name="repeatPeriod" id="repeatPeriodInput" data-mini="true" data-theme="c">
+		</div>
+		
+		<div data-role="fieldcontain">
+			<label id="applyShitfLabel" for="applyShitfCheckBox" data-mini="true">Apply shifting to search filter time period</label>
+			<input type="checkbox" name="applyShitfCheckBox" id="applyShitfCheckBox" data-mini="true" data-theme="c">
+		</div>
+		
+	</div>
+
+</div>
+
+<div id="standingOrdersFooter" class="popup-widget-footer">
+
+	<button id="CreateSTRequest" data-role="button" data-mini="true"
+		data-inline="true" data-theme="a">Create Request</button>
+	<!-- 	<button id="closeStandingOrderPopup" data-mini="true" data-inline="true" data-theme="a">Close</button> -->
+
+</div>
