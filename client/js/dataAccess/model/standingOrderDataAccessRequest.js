@@ -16,22 +16,29 @@ var StandingOrderDataAccessRequest = {
 	
 	endDate : "",
 	
+	timeDriven : false,
+	
+	repeatPeriod : 0,
+	
+	slideAcquisitionTime : false,
+	
 	DownloadOptions: {}, 
 	
-	//TODO handle scheduling options
 	SchedulingOptions : {},
 	
 	resetRequest : function (){
 		
 		this.OpenSearchURL = "";
-		
 		this.DownloadOptions = {};
 		this.SchedulingOptions = {};
+		this.timeDriven = false;
+		this.repeatPeriod = 0;
+		this.slideAcquisitionTime = false;
 		
 		//set date to the current date
 		var today = (new Date()).toISOString();
 		var dateOnly = today.substring(0, today.indexOf('T'));
-		
+		//TODO add time widgets
 		this.startDate = dateOnly;
 		this.endDate = dateOnly;
 	},
@@ -47,7 +54,7 @@ var StandingOrderDataAccessRequest = {
 					createBulkOrder: true,
 					OpenSearchURL : this.OpenSearchURL,
 					DownloadOptions : this.DownloadOptions,
-					SchedulingOptions : this.SchedulingOptions,
+					SchedulingOptions : this.getSchedulingOptions(),
 					downloadLocation : this.downloadLocation 
 				}
 			};
@@ -65,6 +72,26 @@ var StandingOrderDataAccessRequest = {
 		
 	},
 	
+	getSchedulingOptions : function (){
+		
+		if (this.timeDriven){
+			
+			return { TimeDriven : { 
+				startDate : this.startDate,
+				endDate : this.endDate,
+				repeatPeriod : this.repeatPeriod, 
+				slideAcquisitionTime : this.slideAcquisitionTime 
+				} 
+			};
+
+		}else{
+			return { DataDriven : { 
+				startDate : this.startDate,
+				endDate : this.endDate } };
+		}
+	},
+	
+	/** message to display as information */
 	getSpecificMessage : function(){
 		
 		var collapsibleContent = "<h5> Standing Order info <h5>";
@@ -107,8 +134,6 @@ var StandingOrderDataAccessRequest = {
 			this.serverResponse = standingOrderConfig.invalidDownloadOptionsError;
 			return false;
 		}
-		
-		//TODO validate scheduling options
 
 		//initial request : nominal case
 		if (this.step == 0 && 
@@ -146,7 +171,7 @@ var StandingOrderDataAccessRequest = {
 	
 	/** specific Standing order additional processing after validation request */
 	validationProcessing : function (dataAccessRequestStatus){
-		//TODO SPECIFIC PROCESSING IF ANY WHEN STANDING ORDERS VALIDATION OK	
+		//there is nothing specific for standing orders
 	}
 	
 }
