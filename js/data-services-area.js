@@ -1,7 +1,8 @@
 
-define(["jquery", "search/widget/search", "shopcart/widget/shopcart", "map/widget/layers", "map/widget/background", "map/widget/toolbarMap",
+define(["jquery", "map/map", "search/model/searchResults", "search/widget/search", "shopcart/widget/shopcart", "map/widget/layers", "map/widget/background", "map/widget/toolbarMap",
+		"map/widget/mapPopup",
 		"text!../pages/data-services-area.html"], 
-	function($, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap, dataservicesarea) {
+	function($, Map, SearchResults, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap, MapPopup, dataservicesarea) {
 	
 return {
 
@@ -28,6 +29,15 @@ return {
 		LayersWidget();
 		ToolBarMap();
 		BackgroundWidget();
+		
+		// Create the popup for map
+		var mapPopup = new MapPopup('.ui-page-active');
+		mapPopup.close();
+		
+		// Connect search results events with map
+		SearchResults.on('change',Map.setResults);
+		SearchResults.on('displayBrowse',Map.setDisplayBrowse);
+		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
 		
 	}
 };

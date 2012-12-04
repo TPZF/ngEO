@@ -2,10 +2,10 @@
   * Map module
   */
 
-define( [ "configuration", "map/widget/mapPopup", "search/model/searchResults", "map/openlayers", "map/globweb", "backbone" ], 
+define( [ "configuration", "map/openlayers", "map/globweb", "backbone" ], 
 
 // The function to define the map module
-function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
+function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	
 	/**
 	 * Private attributes
@@ -24,6 +24,8 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	var engineLayers = [];
 	// The layer to store the results footprints
 	var resultFootprintLayer = null;
+	// The feature collection for results
+	var resultsFeatureCollection = null;
 	// The map DOM element
 	var element = null;
 	// The current background layer
@@ -32,8 +34,6 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	var selectedFeatures = [];
 	// The index when using stack selection
 	var stackSelectionIndex = -1;
-	// The popup to use for selection
-	var	mapPopup = null;
 	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
 	// An object to store all  browse layers 
@@ -68,15 +68,6 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 		}
 		return inPoly;
 	}
-
-
-	/**
-	 * Navigation start handler
-	 */
-	var startNavigationHandler = function()
-	{
-		mapPopup.close();
-	};
 	
 	/**
 	 * Get the feature from a point : test if the point is inside the footprint
@@ -85,8 +76,8 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	
 		var features = [];
 		
-		for ( var i = 0; i < SearchResults.get('features').length; i++ ) {
-			var feature = SearchResults.get('features')[i];
+		for ( var i = 0; i < resultsFeatureCollection.features.length; i++ ) {
+			var feature = resultsFeatureCollection.features[i];
 			var isMultiPolygon = feature.geometry.type == "MultiPolygon";
 			if ( pointInRing(lonlat,isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0]) ) {
 				features.push( feature );
@@ -121,56 +112,51 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 		var position = $('#mapContainer').offset();
 		var clientX = pageX - position.left;
 		var clientY = pageY - position.top;
-		
-		mapPopup.close();
-		
+				
 		var lonlat = mapEngine.getLonLatFromPixel(clientX,clientY);
 		if ( lonlat ) {
 			var features = getFeaturesFromPoint(lonlat);
-			if ( features.length > 0 )
-			{
-				if ( isSelectionEqual(features) ) {
-				
-					// Reset previous selected feature
-					if ( stackSelectionIndex == -1 ) {
-						for ( var i=0; i < selectedFeatures.length; i++ ) {
-							mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "default");
-						}		
-					} else {
-						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "default" );
-					}
-					
-					stackSelectionIndex++;
-					
-					// Select individual feature
-					if ( stackSelectionIndex == selectedFeatures.length ) {
-						for ( var i=0; i < selectedFeatures.length; i++ ) {
-							mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "select" );
-						}
-						stackSelectionIndex = -1;		
-						mapPopup.open({ x:  pageX, y: pageY }, selectedFeatures);
-					} else {
-						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "select" );
-						mapPopup.open({ x:  pageX, y: pageY }, [ selectedFeatures[stackSelectionIndex] ]);
-					}
-					
-				} else {
-				
-					// Remove selected style for previous selection
+			if ( isSelectionEqual(features) ) {
+			
+				// Reset previous selected feature
+				if ( stackSelectionIndex == -1 ) {
 					for ( var i=0; i < selectedFeatures.length; i++ ) {
-						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i],"default");
-					}
-					
-					// Add style for new selection
-					for ( var i=0; i < features.length; i++ ) {
-						mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i],"select");
-					}
-					
-					selectedFeatures = features;
-					stackSelectionIndex = -1;
-					
-					mapPopup.open({ x:  pageX, y: pageY }, selectedFeatures);
+						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "default");
+					}		
+				} else {
+					mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "default" );
 				}
+				
+				stackSelectionIndex++;
+				
+				// Select individual feature
+				if ( stackSelectionIndex == selectedFeatures.length ) {
+					for ( var i=0; i < selectedFeatures.length; i++ ) {
+						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "select" );
+					}
+					stackSelectionIndex = -1;
+					self.trigger("featuresSelected",selectedFeatures,{ x:  pageX, y: pageY });
+				} else {
+					mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "select" );
+					self.trigger("featuresSelected", [ selectedFeatures[stackSelectionIndex] ],{ x:  pageX, y: pageY });
+				}
+				
+			} else {
+			
+				// Remove selected style for previous selection
+				for ( var i=0; i < selectedFeatures.length; i++ ) {
+					mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i],"default");
+				}
+				
+				// Add style for new selection
+				for ( var i=0; i < features.length; i++ ) {
+					mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i],"select");
+				}
+				
+				selectedFeatures = features;
+				stackSelectionIndex = -1;
+				
+				self.trigger("featuresSelected",selectedFeatures,{ x:  pageX, y: pageY });
 			}
 		}
 	};
@@ -196,63 +182,6 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 			maxY = Math.max( maxY, coords[i][1] );	
 		}
 		feature.bbox = [ minX, minY, maxX, maxY ];
-	};
-
-	/**
-	 * Update results
-	 * Called when new results has been received
-	 */
-	var updateResults = function() {
-	
-		// Remove browse browse layers
-		for ( var x in browseLayers ) {
-			if ( browseLayers.hasOwnProperty(x) ) {
-				mapEngine.removeLayer( browseLayers[x] );	
-			}
-		}
-		// Cleanup the browse layers
-		browseLayers = {};
-	
-		// Remove all features
-		mapEngine.removeAllFeatures( resultFootprintLayer );
-		mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
-		
-
-	};
-
-	/**
-	 * Display the browse
-	 */
-	var displayBrowse = function(value,features) {
-		for ( var i = 0; i < features.length; i++ ) {
-			var feature = features[i];
-			if (!feature.bbox)
-				computeExtent(feature);
-				
-			// Create the WMS if it does not exists
-			if (!browseLayers.hasOwnProperty(feature.id)) {
-				var eo = feature.properties.EarthObservation;
-				var layerDesc = {
-					name: feature.id,
-					type: "WMS",
-					visible: value,
-					baseUrl: "/wms2eos/servlets/wms",
-					opacity: Configuration.data.map.browseDisplay.opacity,
-					params: { layers: feature.properties.browseLayer,
-						time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
-						version: "1.1.1",
-						transparent: true,
-						styles: "ellipsoid"
-					},
-					bbox: feature.bbox
-				};
-				browseLayers[ feature.id ] = mapEngine.addLayer(layerDesc);			
-			}
-			
-			// Modify browse layer visibility
-			var layer = browseLayers[ feature.id ];
-			mapEngine.setLayerVisible(layer,value);
-		}
 	};
 	
 	/**
@@ -283,8 +212,9 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 		mapEngine.subscribe("endNavigation", function() {
 			self.trigger("endNavigation",self);
 		});
-		
-		mapEngine.subscribe("startNavigation",startNavigationHandler);
+		mapEngine.subscribe("startNavigation", function() {
+			self.trigger("startNavigation",self);
+		});
 	
 		// Click for selection
 		var prevX, prevY;
@@ -353,10 +283,6 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 	
 			element = document.getElementById(eltId);
 			
-			// Create the popup for selection
-			mapPopup = new MapPopup('.ui-page-active');
-			mapPopup.close();
-
 			mapEngine = new engines['2d'](element);
 			
 			// Manage window resize
@@ -384,10 +310,6 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 			
 			backgroundLayer = self.backgroundLayers[0];
 			configureMapEngine(Configuration.data.map);
-			
-			SearchResults.on('change',updateResults);
-			SearchResults.on('displayBrowse',displayBrowse);
-			SearchResults.on('zoomToProductExtent',self.zoomToFeature);
 		},
 				
 		/**
@@ -445,6 +367,63 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 		getViewportExtent: function() {
 			return mapEngine.getViewportExtent();
 		},
+		
+		/**
+		 * Set results
+		 * Called when new results has been received
+		 */
+		setResults: function(results) {
+			// Remove browse browse layers
+			for ( var x in browseLayers ) {
+				if ( browseLayers.hasOwnProperty(x) ) {
+					mapEngine.removeLayer( browseLayers[x] );	
+				}
+			}
+			// Cleanup the browse layers
+			browseLayers = {};
+		
+			// Remove all features
+			mapEngine.removeAllFeatures( resultFootprintLayer );
+			// Add it new
+			resultsFeatureCollection = results.attributes;
+			mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
+		},
+
+		/**
+		 * Display the browse
+		 */
+		setDisplayBrowse: function(value,features) {
+			for ( var i = 0; i < features.length; i++ ) {
+				var feature = features[i];
+				if (!feature.bbox)
+					computeExtent(feature);
+					
+				// Create the WMS if it does not exists
+				if (!browseLayers.hasOwnProperty(feature.id)) {
+					var eo = feature.properties.EarthObservation;
+					var layerDesc = {
+						name: feature.id,
+						type: "WMS",
+						visible: value,
+						baseUrl: "/wms2eos/servlets/wms",
+						opacity: Configuration.data.map.browseDisplay.opacity,
+						params: { layers: feature.properties.browseLayer,
+							time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
+							version: "1.1.1",
+							transparent: true,
+							styles: "ellipsoid"
+						},
+						bbox: feature.bbox
+					};
+					browseLayers[ feature.id ] = mapEngine.addLayer(layerDesc);			
+				}
+				
+				// Modify browse layer visibility
+				var layer = browseLayers[ feature.id ];
+				mapEngine.setLayerVisible(layer,value);
+			}
+		},
+		
 			
 		/**
 		 * Switch the map engine
@@ -474,9 +453,12 @@ function(Configuration, MapPopup, SearchResults, OpenLayersMapEngine, GlobWebMap
 				if ( extent )
 					map.zoomToExtent( extent );
 				
-				if ( SearchResults.get('features').length > 0 ) {
-					mapEngine.addFeatureCollection( resultFootprintLayer, SearchResults.attributes );
+				// Display footprints if any
+				if ( resultsFeatureCollection.features.length > 0 ) {
+					mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
 				}
+				
+				// TODO : manage browse
 			};
 						
 			// Create the new engine and catch any error
