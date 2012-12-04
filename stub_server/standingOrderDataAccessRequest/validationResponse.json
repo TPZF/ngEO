@@ -1,0 +1,10 @@
+{
+        "DataAccessRequestStatus" : { 
+                "ID" : "DAR_00000011092",
+                "type" :"Standing Order Data Access Request",
+                "status" : 4, 
+                "message": "Standing order data Access Request validated", 
+                "dlManagerId" : "DM_01"
+          
+        }
+} 
