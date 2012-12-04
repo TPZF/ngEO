@@ -3,8 +3,8 @@
   */
 
 
-define( [ "jquery", "configuration", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
-	"text!map/template/mapPopupContent.html", "underscore" ], function($,Configuration, SimpleDataAccessRequest, DownloadManagersWidget, mapPopup_template) {
+define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
+	"text!map/template/mapPopupContent.html", "underscore" ], function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, mapPopup_template) {
 
 
 var MapPopup = function(container) {
@@ -51,6 +51,18 @@ var MapPopup = function(container) {
 	// The popup is closed by default
 	arrow.hide();
 	parentElement.hide();
+
+	var self = this;
+	Map.on('featuresSelected', function(selectedFeatures,coord) {
+		if ( selectedFeatures.length == 0 ) {
+			self.close();
+		} else {
+			self.open(coord,selectedFeatures);
+		}
+	});
+	Map.on('startNavigation', function() {
+		self.close();
+	});
 	
 	/**
 	 * Private methods
@@ -90,7 +102,7 @@ var MapPopup = function(container) {
 			buildContent(products[0]);
 		} else {
 			parentElement.find("h2").html("Multiple products");
-			element.html( products.length + " products selected." );
+			element.html( products.length + " products selected.<br>Click again to cycle through the different products." );
 		}
 			
 		var toolbarBottom = $("#toolbar").offset().top + $("#toolbar").outerHeight();
@@ -107,24 +119,23 @@ var MapPopup = function(container) {
 		var left = pos.x + arrow.outerWidth();
 		if ( left + parentElement.outerWidth() >  window.innerWidth ) {
 			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() - margin );
-			parentElement.show();
 		
 			arrow.css('top',pos.y  - arrow.outerHeight() / 2);
 			arrow.css('left',pos.x - arrow.outerWidth() - margin);
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
-			arrow.show();
 		} else {
 			parentElement.css('left', left + margin);
-			parentElement.show();
 			
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');
 			arrow.addClass('mapPopup-arrow-left');
 			arrow.css('top',pos.y  - arrow.outerHeight() / 2);
 			arrow.css('left',pos.x + margin);
-			arrow.show();
 		}
+		
+		parentElement.fadeIn();
+		arrow.fadeIn();
 		
 		// Close the popup when click is done outside the map
 		$("header").on("click",this.close);
@@ -140,8 +151,8 @@ var MapPopup = function(container) {
 	this.close = function() {
 	
 		if ( isOpened ) {
-			arrow.hide();
-			parentElement.hide();
+			parentElement.fadeOut();
+			arrow.fadeOut();
 			
 			// Remvoe event listener
 			$("header").off("click",this.close);
