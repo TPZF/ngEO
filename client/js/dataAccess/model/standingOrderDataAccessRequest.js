@@ -1,5 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest'], 
+		function($, Backbone, Configuration, DataAccessRequest) {
 
 /**
  * This module deals with the creation and submission of a Standing order data access request
@@ -11,19 +12,28 @@ var StandingOrderDataAccessRequest = {
 
 	OpenSearchURL : "",
 	
-	endDate : "";
+	startDate : "", //TODO keep or remove according to clarification ngeo-314
 	
-	DownloadOptions: "",
+	endDate : "",
+	
+	DownloadOptions: {}, 
 	
 	//TODO handle scheduling options
 	SchedulingOptions : {},
 	
 	resetRequest : function (){
 		
-		this.openSearchURL = "";
-		this.endDate = "";
-		this.DownloadOptions = "";
-		this.SchedulingOptions : {};
+		this.OpenSearchURL = "";
+		
+		this.DownloadOptions = {};
+		this.SchedulingOptions = {};
+		
+		//set date to the current date
+		var today = (new Date()).toISOString();
+		var dateOnly = today.substring(0, today.indexOf('T'));
+		
+		this.startDate = dateOnly;
+		this.endDate = dateOnly;
 	},
 	
 	getRequest : function() {	
@@ -57,7 +67,20 @@ var StandingOrderDataAccessRequest = {
 	
 	getSpecificMessage : function(){
 		
-		var collapsibleContent = "TODO STANDING ORDER MESSAGE";
+		var collapsibleContent = "<h5> Standing Order info <h5>";
+		
+		collapsibleContent += "<p> OpenSearchURL: " + this.OpenSearchURL + "<p>";
+		
+		if (this.DownloadOptions === {} ){
+			collapsibleContent += "<p> There are no download Options <p>";
+		
+		}else{	
+
+			_.each(this.DownloadOptions, function(value, key){
+				collapsibleContent += "<p>" + value + " : " + key + "<p>";
+			});
+		}
+		
 		return collapsibleContent; 
 	},
 	
@@ -65,7 +88,7 @@ var StandingOrderDataAccessRequest = {
 	/** check whether the request is valid or not */
 	isValid : function(){
 		
-		var standingOrderConfig = Configuration.data.dataAccessRequestStatuses;
+		var dataAccessConfig = Configuration.data.dataAccessRequestStatuses;
 		var standingOrderConfig = Configuration.data.standingOrder;
 		
 		//if request not valid when no download manager then display the specific message
@@ -122,11 +145,11 @@ var StandingOrderDataAccessRequest = {
 	},
 	
 	/** specific Standing order additional processing after validation request */
-	validationProcessing(dataAccessRequestStatus){
+	validationProcessing : function (dataAccessRequestStatus){
 		//TODO SPECIFIC PROCESSING IF ANY WHEN STANDING ORDERS VALIDATION OK	
 	}
 	
-	});
+}
 
 //add DataAccessRequest methods to SimpleDataAccessRequest
 _.extend(StandingOrderDataAccessRequest, DataAccessRequest);
