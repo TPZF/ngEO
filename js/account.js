@@ -10,7 +10,9 @@ return {
 	buildElement: function() {
 	
 		var acc = $(account_html);
-		acc.find('#tabs').tabs();
+		acc.find('#tabs').tabs({ 
+			theme: "b" 
+		});
 		return acc;
 	},
 	

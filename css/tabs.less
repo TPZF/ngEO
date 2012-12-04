@@ -1,48 +1,86 @@
 
 /**
- * Remove list style and padding
+ * Basic structure for a tabs
  */
-.tabs-ul {
+.ui-tabs {
+
+	/**
+	 * Remove list style and padding
+	 */
 	list-style: none;
-	margin: 0;
+	margin: 2px 0 0;
 	padding: 0;
-}
+		
+	/**
+	 * Set inline-block to be horizontal
+	 */
+	> li {
+		display: inline-block;
+		padding: 0;
+		margin: 0;
+		margin-bottom: -1px;
+		
+		/**
+		 * Style for the tab when not active
+		 */
+		> a {
+			display: inline-block;
+			text-decoration: none;
+			margin: 0;
+			padding: 8px;
+		}
+	}
 
-/**
- * Set inline-block to be horizontal
- */
-.tabs-li {
-	display: inline-block;
-	padding: 0;
-	margin: 0;
-}
+	/**
+	 * Style for the tab when active (taken from jQuery Mobile)
+	 */
+	.ui-tabs-active > a {
+		color: #2489ce;
+		background: #F9F9F9;
+		text-shadow: 0 /*{c-body-shadow-x}*/ 1px /*{c-body-shadow-y}*/ 0 /*{c-body-shadow-radius}*/ #fff /*{c-body-shadow-color}*/;
+	}
 
-/**
- * Style for the tab when not active
- */
-.tabs-a {
-	display: inline-block;
-	text-decoration: none;
-	color: white;
-	margin: 0;
-	padding: 8px;
-}
-
-/**
- * Style for the tab when active (taken from jQuery Mobile)
- */
-.tabs-a-active {
-	color: #333333;
-	background: #F9F9F9;
-	text-shadow: 0 /*{c-body-shadow-x}*/ 1px /*{c-body-shadow-y}*/ 0 /*{c-body-shadow-radius}*/ #fff /*{c-body-shadow-color}*/;
 }
 
 /**
  * Style for tab content
- * Remove border to mix cleanly with tab
  * Padding is necessary to be "glued" to tab
  */
-.tabs-content {
-	border-width: 0;
-	padding: 2px;
+.ui-tabs-content {
+	padding: 5px;
 }
+
+
+/**
+ * Style for theme 'a', used by SearchCriteria
+ * All tabs have border, color for inactive is blackish
+ */
+.ui-tabs-a {
+	li {
+		border: 1px solid #AAAAAA;
+		border-bottom-width: 0px;
+	}
+	
+	a {
+		color: #333333;
+		font-weight: bold;
+	}
+}
+
+
+/**
+ * Style for theme 'b' (used by MyAccount)
+ * Only active tab has border, color for inactive is greyish
+ */
+.ui-tabs-b {
+	.ui-tabs-active {
+		border: 1px solid #AAAAAA;
+		border-bottom-width: 0px;
+	}
+	
+	a {
+		color: #ddd;
+		font-weight: bold;
+	}
+}
+

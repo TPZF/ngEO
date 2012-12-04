@@ -1,45 +1,17 @@
 
-<!-- <div data-role="header" class="ui-header ui-bar-a" role="banner"> -->
-<!-- 	<h1 class="ui-title" role="heading" aria-level="1">Selected dataset : <%= datasetId %></h1> -->
-				
-<!-- 	<div data-role="navbar" class="ui-navbar ui-mini" role="navigation"> -->
-<!-- 		<ul class="ui-grid-b"> -->
-<!-- 			<li class="ui-block-a"><a href="#date">Date</a></li> -->
-<!-- 			<li class="ui-block-b"><a href="#area">Area</a></li> -->
-<!-- 			<li class="ui-block-c"><a href="#searchCriteria">Search Criteria</a></li> -->
-<!-- 		</ul> -->
-<!-- 	</div>/navbar -->
-<!-- </div> -->
-
-
 <div data-role="header" class="ui-header ui-bar-a" role="banner"> 
 <h1 class="ui-title" role="heading" aria-level="1">Selected dataset : <%= datasetId %></h1>
 </div>
 
-<div id="serachCriteriaRadios">
-
-	<fieldset data-role="controlgroup" data-mini="true" data-type="horizontal">
-			     
-		<input type="radio" name="radio-criteria" id="radio-date" value="on" checked="checked">
-		<label for="radio-date" id="radio-date-label" data-corners="false" data-theme="c">Date</label>
-				         	
-		<input type="radio" name="radio-criteria" id="radio-area" value="off">
-		<label for="radio-area" id="radio-area-label" data-corners="false" data-theme="c">Area</label>
-		
-		<input type="radio" name="radio-criteria" id="radio-searchCriteria" value="other">
-		<label for="radio-searchCriteria" id="radio-searchCriteria-label" data-corners="false" data-theme="c">Advanced Criteria</label>
-			         	
-	</fieldset>
-</div>
-
-
-<div id="date">
-</div>
-
-<div id="area">
-</div>
-
-<div id="searchCriteria">
+<div id="tabs">
+	<ul>
+		<li><a href="#date">Date</a></li>
+		<li><a href="#area">Area</a></li>
+		<li><a href="#searchCriteria">Advanced</a></li>
+	</ul>
+	<div id="date">	</div>
+	<div id="area"> </div>
+	<div id="searchCriteria"></div>
 </div>
 
 <div id="openSearchUrlPopup" data-role=popup data-theme="c" 

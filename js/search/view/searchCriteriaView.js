@@ -2,11 +2,9 @@
 
 define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 
-         'text!search/template/searchCriteriaContent_template.html',
-         'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
+         'text!search/template/searchCriteriaContent_template.html', "tabs"], 
 		function($, Backbone, Configuration, DatasetSearch, SpatialExtentView, TimeExtentView, 
-				AdvancedSearchView, searchCriteria_template, dateCriteria_template, 
-				areaCriteria_template, advancedCriteria_template) {
+				AdvancedSearchView, searchCriteria_template) {
 
 var SearchCriteriaView = Backbone.View.extend({
 
@@ -14,31 +12,9 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.mainView = options.mainView;
 		this.dataset = options.dataset;
-					
-	//bind the search model change here to avoiding calling the update method
-		//this.searchModel.on("change", this.update, this);
 	},
 	
 	events : {
-		'click #radio-date-label' : function(){
-			 this.dateCriteriaView.$el.show();
-			 this.areaCriteriaView.$el.hide();
-			 this.advancedCriteriaView.$el.hide();
-		},
-		'click #radio-area-label' : function(){
-			 this.dateCriteriaView.$el.hide();
-			 this.areaCriteriaView.$el.show();
-			 this.advancedCriteriaView.$el.hide();
-		},
-		'click #radio-searchCriteria-label' : function(){
-			 this.dateCriteriaView.$el.hide();
-			 this.areaCriteriaView.$el.hide();
-			 this.advancedCriteriaView.$el.show();
-		},
-		//TODO remove since the click is not catched
-		'click #closePopup' : function(){
-			$("#popupText").empty();
-		}
 	},
 	
 	render: function(){
@@ -59,12 +35,8 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.searchButton.click( function() {
 			self.mainView.displaySearchResults(self.model);
 		});		
-		
-		// Search button is disable when no search criteria are is selected
-		//this.searchButton.button('disable');
-		
+				
 		// Add a search url button to display the openSearch request url
-		//this.searchUrlButton = this.mainView.$el.ngeowidget('addLink', { divId : '#openSearchUrlPopup' , id: 'searchUrl', name: 'Search URL' });
 		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL', position: 'left' });
 		
 		 //Add a standing order button to create a standing order
@@ -84,6 +56,9 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.$el.append(content);
 		
+		// Create the tabs
+		this.$el.find("#tabs").tabs();
+		
 		// Create the views for each criteria : time, spatial and advanced
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
@@ -97,7 +72,6 @@ var SearchCriteriaView = Backbone.View.extend({
 			searchCriteriaView : this,
 			model : this.model });
 		this.areaCriteriaView.render();
-		this.areaCriteriaView.$el.hide();	
 		
 		this.advancedCriteriaView = new AdvancedSearchView({
 			el : this.$el.find("#searchCriteria"), 
@@ -105,9 +79,12 @@ var SearchCriteriaView = Backbone.View.extend({
 			model : this.model ,
 			dataset : this.dataset});
 		this.advancedCriteriaView.render();
-		this.advancedCriteriaView.$el.hide();	
 		
 		this.$el.trigger('create');
+		
+		// Remove class added by jQM
+		this.$el.find("#tabs").find("a").removeClass('ui-link');
+
 		return this;
 	},	
 		
