@@ -13,6 +13,7 @@ var express = require('express')
   , productSearch = require('./productSearch')
   , downloadManagers = require('./downloadManagers')
   , simpleDataAccessRequest = require('./simpleDataAccessRequest')
+  , standingOrderDataAccessRequest = require('./standingOrderDataAccessRequest')
   , downloadStatuses = require('./dataAccessRequestStatus')
   , http = require('http')
   , path = require('path')
@@ -53,6 +54,9 @@ app.get('/server/downloadManagers', downloadManagers);
 
 //simple DAR interface
 app.post('/server/simpleDataAccessRequest', simpleDataAccessRequest);
+
+//standing order DAR interface
+app.post('/server/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //data access statuses interface
 app.get('/server/dataAccessRequestStatus/:id', downloadStatuses);
