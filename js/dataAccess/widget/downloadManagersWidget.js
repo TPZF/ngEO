@@ -11,7 +11,7 @@ define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView',
 
 var DownloadManagersWidget = function(request) {
 
-	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content">');
+	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content popup-widget-background">');
 
 	var element = $('<div id="downloadManagersPopupContent"></div>'); 
 	element.appendTo(parentElement);
