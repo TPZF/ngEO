@@ -12,26 +12,28 @@ $.widget( "ngeo.tabs", {
 
 	// default options
 	options: {
+	
+		// A theme to be applied, added as a class on the whole tab
+		theme: "a"
 		
 		// callbacks
 	},
 
 	// the constructor
 	_create: function() {
-		this.element.find('ul').addClass('tabs-ul');
-		this.element.find('li').addClass('tabs-li');
+		this.element.find('ul').addClass('ui-tabs').addClass('ui-tabs-'+this.options.theme);
 		var self = this;
 		
 		// Style the link and div content
 		// Also store the active link and div
 		this.element.find('a')
 			.each( function(index) {
-				$(this).addClass('tabs-a')
 				var $div = self.element.find( $(this).attr('href') );
-				$div.addClass('ui-body-c').addClass('tabs-content');
+				$div.addClass('ui-body-c').addClass('ui-tabs-content');
 				
 				if ( index == 0 ) {
-					self.activeLink = $(this).addClass('tabs-a-active');
+					self.activeLink = $(this);
+					self.activeLink.parent().addClass('ui-tabs-active');
 					self.activeDiv = $div.show();
 				} else {
 					$div.hide();
@@ -42,9 +44,9 @@ $.widget( "ngeo.tabs", {
 		this.element.find('a').click( function(event) {
 		
 			var href = $(this).attr('href');
-			self.activeLink.removeClass('tabs-a-active');
+			self.activeLink.parent().removeClass('ui-tabs-active');
 			self.activeDiv.hide();
-			$(this).addClass('tabs-a-active');
+			$(this).parent().addClass('ui-tabs-active');
 			$(href).show();
 			
 			self.activeDiv = $(href);
