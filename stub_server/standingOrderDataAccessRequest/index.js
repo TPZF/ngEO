@@ -4,10 +4,10 @@
 
 module.exports = function(req, res){
 
-	if(req.body.SimpleDataAccessRequest.requestStage == "validation"){
+	if(req.body.StandingOrderDataAccessRequest.requestStage == "validation"){
 		res.sendfile('./standingOrderDataAccessRequest/validationResponse.json');
 	
-	}else if (req.body.SimpleDataAccessRequest.requestStage == "confirmation"){
+	}else if (req.body.StandingOrderDataAccessRequest.requestStage == "confirmation"){
 		res.sendfile('./standingOrderDataAccessRequest/confirmationResponse.json');
 	
 	}else{
