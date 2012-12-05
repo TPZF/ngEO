@@ -40,7 +40,7 @@ GlobWebMapEngine = function( parentElement )
 		this.$loading = $('<img src="css/images/ajax-loader.gif" id="loading"></img>')
 			.appendTo(parentElement);
 			
-		globe.subscribe("level0TilesLoaded", function() {
+		globe.subscribe("baseLayersReady", function() {
 			$("#loading").hide();
 		});
 				
@@ -83,14 +83,14 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 
 	var gwLayer;
 	
-	switch (layer.type) {
+	switch (layer.type.toUpperCase()) {
 	case "OSM":
 		gwLayer = new GlobWeb.OSMLayer(layer);
 		break;
 	case "WMS":
 		gwLayer = new GlobWeb.WMSLayer( $.extend({ name: layer.name, baseUrl: layer.baseUrl}, layer.params) );
 		break;
-	case "Bing":
+	case "BING":
 		gwLayer = new GlobWeb.BingLayer(layer);
 		break;
 	}
@@ -114,7 +114,7 @@ GlobWebMapEngine.prototype.setLayerVisible = function(gwLayer,vis) {
 GlobWebMapEngine.prototype.addLayer = function(layer) {
 		
 	var gwLayer;
-	switch (layer.type) {
+	switch (layer.type.toUpperCase()) {
 	case "WMS":
 		gwLayer = new GlobWeb.WMSLayer({
 			name: layer.name,
@@ -125,23 +125,25 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		});
 		break;
 	case "WMTS":
+		// TODO : add bbox to WMTSLayer
 		gwLayer = new GlobWeb.WMTSLayer({
 			name: layer.name,
 			baseUrl: layer.baseUrl,
 			style: layer.params.style,
 			layer: layer.params.layer,
 			format: layer.params.format,
-			matrixSet: layer.params.matrixSet
+			matrixSet: layer.params.matrixSet,
+			time: layer.params.time
 		});
 		break;
-	case "GeoJSON":
+	case "GEOJSON":
 		gwLayer = new GlobWeb.VectorLayer({ 
 			name: layer.name, 
 			visible: layer.visible 
 		});
 		break;
 	case "WFS":
-	case "GeoRSS":
+	case "GEORSS":
 		gwLayer = new GlobWeb.VectorLayer({
 			name: layer.name,
 			visible: layer.visible,
