@@ -60,14 +60,14 @@ OpenLayersMapEngine.prototype.addStyle = function(name,defaut,select) {
 OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 		
 	var olLayer;
-	switch (layer.type) {
+	switch (layer.type.toUpperCase()) {
 	case "OSM":
 		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png");
 		break;
 	case "WMS":
 		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params);
 		break;
-	case "Bing":
+	case "BING":
 		olLayer = new OpenLayers.Layer.Bing({ name: layer.name, key: layer.key, type: layer.imageSet});
 		break;
 	case "WMTS":
@@ -103,7 +103,7 @@ OpenLayersMapEngine.prototype.setLayerVisible = function(olLayer,vis) {
 OpenLayersMapEngine.prototype.addLayer = function(layer) {
 		
 	var olLayer;
-	switch (layer.type) {
+	switch (layer.type.toUpperCase()) {
 	case "WMS":
 		var maxExtent;
 		if ( layer.bbox ) {
@@ -128,10 +128,15 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			style: layer.params.style,
 			isBaseLayer: false,
 			zoomOffset: -1,
-			projection: layer.projection
+			projection: layer.projection,
+			dimensions: [ 'TIME' ],
+			params: {
+				'TIME': layer.params.time
+			},
+			tileFullExtent: new OpenLayers.Bounds(layer.bbox)
 		});
 		break;
-	case "GeoRSS":
+	case "GEORSS":
 		//olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });	
 		olLayer =  new OpenLayers.Layer.Vector(layer.name, {
             strategies: [new OpenLayers.Strategy.Fixed()],
@@ -168,7 +173,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			projection: "EPSG:4326"
         });
 		break;
-	case "GeoJSON":
+	case "GEOJSON":
 		olLayer = new OpenLayers.Layer.Vector(layer.name, {
 			projection: "EPSG:4326"
         });

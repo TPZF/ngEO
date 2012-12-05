@@ -236,6 +236,43 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			}
 		}, true);
 	};
+	
+	var createBrowseLayer = function(feature) {
+	
+		var eo = feature.properties.EarthObservation;
+		if (eo.EarthObservationResult && eo.EarthObservationResult.eop_BrowseInformation) {
+		
+			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
+			
+			var params = {
+				time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
+				transparent: true
+			};
+			
+			if ( eoBrowse.eop_type == "wms" ) {
+				params.layers = eoBrowse.eop_layer;
+				params.styles = "ellipsoid";
+			} else if ( eoBrowse.eop_type == "wmts" ) {
+				params.layer = eoBrowse.eop_layer;
+				params.matrixSet = "WGS84";
+			}
+			
+			var layerDesc = {
+				name: feature.id,
+				type: eoBrowse.eop_type,
+				visible: false,
+				baseUrl: eoBrowse.eop_url,
+				opacity: Configuration.data.map.browseDisplay.opacity,
+				params: params,
+				bbox: feature.bbox
+			};
+			
+			return mapEngine.addLayer(layerDesc);
+			
+		}
+		
+		return null;
+	};
 
 	var isLayerCompatible = function(layer) {
 		switch (layer.type)
@@ -403,27 +440,15 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 					
 				// Create the WMS if it does not exists
 				if (!browseLayers.hasOwnProperty(feature.id)) {
-					var eo = feature.properties.EarthObservation;
-					var layerDesc = {
-						name: feature.id,
-						type: "WMS",
-						visible: value,
-						baseUrl: "/wms2eos/servlets/wms",
-						opacity: Configuration.data.map.browseDisplay.opacity,
-						params: { layers: feature.properties.browseLayer,
-							time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
-							version: "1.1.1",
-							transparent: true,
-							styles: "ellipsoid"
-						},
-						bbox: feature.bbox
-					};
-					browseLayers[ feature.id ] = mapEngine.addLayer(layerDesc);			
+					browseLayers[ feature.id ] = createBrowseLayer(feature);
 				}
 				
+				// TODO : remove layer when not visible
 				// Modify browse layer visibility
 				var layer = browseLayers[ feature.id ];
-				mapEngine.setLayerVisible(layer,value);
+				if ( layer ) {
+					mapEngine.setLayerVisible(layer,value);
+				}
 			}
 		},
 		
