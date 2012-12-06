@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 'map/map',
+define( ['jquery', 'backbone', 'map/map',
          'text!search/template/areaCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch, Map, areaCriteria_template) {
+		function($, Backbone, Map, areaCriteria_template) {
 
 var SpatialExtentView = Backbone.View.extend({
 
