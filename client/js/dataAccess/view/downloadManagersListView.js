@@ -84,8 +84,15 @@ var DownloadManagersListView = Backbone.View.extend({
 			this.$el.find("#downloadManagersList").show();
 			this.$el.find("#downloadManagersFooter").show();
 			
+			//set the first download manager to be selected by default
+			//console.log(this.$el.find('input[type="radio"]:eq(0)')[0]);
+			var firstDM = $(this.$el.find('input[type="radio"]:eq(0)')[0]);
+			console.log(this.selectedDownloadManager);
+			firstDM.prop("checked", true);
+			this.selectedDownloadManager = firstDM.attr("value");
+			//console.log(this.selectedDownloadManager);
 		}
-		
+
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
 		//this.$el.find(".ui-collapsible-heading .ui-btn").attr("style", "{text-align:center}");
 		this.delegateEvents();
