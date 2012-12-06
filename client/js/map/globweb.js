@@ -32,7 +32,7 @@ GlobWebMapEngine = function( parentElement )
 		var globe = new GlobWeb.Globe({ canvas: canvas, 
 				atmosphere: false,
 				lighting: false,
-				tileErrorTreshold: 4, 
+				tileErrorTreshold: 3, 
 				continuousRendering: false });
 				
 	
@@ -125,16 +125,19 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		});
 		break;
 	case "WMTS":
-		// TODO : add bbox to WMTSLayer
-		gwLayer = new GlobWeb.WMTSLayer({
+		var config = {
 			name: layer.name,
 			baseUrl: layer.baseUrl,
 			style: layer.params.style,
 			layer: layer.params.layer,
 			format: layer.params.format,
 			matrixSet: layer.params.matrixSet,
-			time: layer.params.time
-		});
+			time: layer.params.time,
+		};
+		if ( layer.bbox ) {
+			config.geoBound = new GlobWeb.GeoBound( layer.bbox[0], layer.bbox[1], layer.bbox[2], layer.bbox[3] );
+		}
+		gwLayer = new GlobWeb.WMTSLayer(config);
 		break;
 	case "GEOJSON":
 		gwLayer = new GlobWeb.VectorLayer({ 
