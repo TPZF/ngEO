@@ -7,7 +7,6 @@ var SearchResultsView = Backbone.View.extend({
 	initialize : function(options){
 	
 		this.model.on("change", this.displayResultsTable, this);
-		this.datasetSearch = options.datasetSearch;
 		this.mainView = options.mainView;
 	},
 
