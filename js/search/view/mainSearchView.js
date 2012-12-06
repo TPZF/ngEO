@@ -31,16 +31,22 @@ var MainSearchView = Backbone.View.extend({
 		// TODO : the startDate and endDate should be taken from the DataSet informations
 		var today = (new Date()).toISOString();
 		var dateOnly = today.substring(0, today.indexOf('T'));
+		var timeOnly = today.substring(today.indexOf('T')+1, today.lastIndexOf(':'));
 
-		var datasetSearch = new DatasetSearch({ 
+//		console.log("time");
+//		console.log(today);
+		
+		DatasetSearch.set({ 
 				"datasetId" : datasetId,
 				"startdate" : dateOnly,
-				"stopdate" : dateOnly
+				"stopdate" : dateOnly,
+				"startTime" : timeOnly,
+				"stopTime" : timeOnly
 		});
 		
 		var searchCriteriaView = new SearchCriteriaView({
 			el : this.$el.find("#datasetSearchCriteria"),
-			model : datasetSearch,
+			model : DatasetSearch,
 			mainView : this
 		});
 		
@@ -58,15 +64,14 @@ var MainSearchView = Backbone.View.extend({
 		this.showView(datasetsView);
 	},
 	
-	displaySearchResults : function(datasetSearch){
+	displaySearchResults : function(){
 		
-		SearchResults.url = datasetSearch.getOpenSearchURL();
+		SearchResults.url = DatasetSearch.getOpenSearchURL();
 		SearchResults.set({"features" : [] }, {silent : true});
 		SearchResults.fetch();
 
 		var searchResultsView =  new SearchResultsView({ 
 			el : this.$el.find("#searchResults"),
-			datasetSearch : datasetSearch,
 			model : SearchResults,
 			mainView : this
 		});
