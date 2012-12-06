@@ -1,6 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest'], 
-		function($, Backbone, Configuration, DataAccessRequest) {
+define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest', 'search/model/dataSetSearch'], 
+		function($, Backbone, Configuration, DataAccessRequest, DataSetSearch) {
 
 /**
  * This module deals with the creation and submission of a Standing order data access request
@@ -14,7 +14,11 @@ var StandingOrderDataAccessRequest = {
 	
 	startDate : "", //TODO keep or remove according to clarification ngeo-314
 	
+	startTime : "", //TODO keep or remove according to clarification ngeo-314
+	
 	endDate : "",
+	
+	endTime : "",
 	
 	timeDriven : false,
 	
@@ -38,14 +42,19 @@ var StandingOrderDataAccessRequest = {
 		//set date to the current date
 		var today = (new Date()).toISOString();
 		var dateOnly = today.substring(0, today.indexOf('T'));
-		//TODO add time widgets
+		var timeOnly = today.substring(today.indexOf('T')+1, today.lastIndexOf(':'));
+		
 		this.startDate = dateOnly;
 		this.endDate = dateOnly;
+		
+		this.startTime = timeOnly;
+		this.endTime = timeOnly;
 	},
 	
+	/** build the request to submit */
 	getRequest : function() {	
 		//if createBulkOrder is set to true after a validation request
-		//take into account the createBulkOrder for the confiramtion request
+		//take into account the createBulkOrder for the confirmation request
 		if (self.createBulkOrder){
 			
 			return {
@@ -65,20 +74,21 @@ var StandingOrderDataAccessRequest = {
 				requestStage :  this.requestStage,
 				OpenSearchURL : this.OpenSearchURL,
 				DownloadOptions : this.DownloadOptions,
-				SchedulingOptions : this.SchedulingOptions,
+				SchedulingOptions : this.getSchedulingOptions(),
 				downloadLocation : this.downloadLocation 
 			}
 		};
 		
 	},
 	
+	/** build the Scheduling option property depending on the STO type */
 	getSchedulingOptions : function (){
 		
 		if (this.timeDriven){
 			
 			return { TimeDriven : { 
-				startDate : this.startDate,
-				endDate : this.endDate,
+				startDate : DataSetSearch.formatDate(this.startDate, this.startTime),
+				endDate : DataSetSearch.formatDate(this.endDate, this.endTime),
 				repeatPeriod : this.repeatPeriod, 
 				slideAcquisitionTime : this.slideAcquisitionTime 
 				} 
@@ -86,8 +96,9 @@ var StandingOrderDataAccessRequest = {
 
 		}else{
 			return { DataDriven : { 
-				startDate : this.startDate,
-				endDate : this.endDate } };
+				startDate : DataSetSearch.formatDate(this.startDate, this.startTime),
+				endDate : DataSetSearch.formatDate(this.endDate, this.endTime)
+				} };
 		}
 	},
 	
@@ -125,24 +136,50 @@ var StandingOrderDataAccessRequest = {
 			return false;
 		}
 		
-		if (this.openSearchURL == ""){
+		if (this.OpenSearchURL == "" || !this.OpenSearchURL){
 			this.serverResponse = standingOrderConfig.invalidOpenSearchURLError;
 			return false;
 		}
 
-		if (this.DownloadOptions == ""){
+		if (!this.DownloadOptions){
 			this.serverResponse = standingOrderConfig.invalidDownloadOptionsError;
 			return false;
 		}
 
+		//second stage submission with and without bulk order if the user changes the download manager 
+		//between validation and confirmation
+		if (this.step == 1 &&
+			this.id != "" &&
+			this.requestStage == dataAccessConfig.confirmationRequestStage &&
+		    (this.firstRequest.StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId != 
+		    	this.downloadLocation.DownloadManagerId)) {
+			
+				this.serverResponse = dataAccessConfig.invalidConfirmationRequest;
+				this.trigger('toggleRequestButton', ['disable']);
+				
+				return false;
+		}	
+		
+		var computedShedulingOptions = this.getSchedulingOptions();		
+		console.log(computedShedulingOptions);
+		
 		//initial request : nominal case
+		//slideAcquisitionTime is a boolean and repeatPeriod is number so compare with undefined
+		//to avoid 0/boolean false tests 
 		if (this.step == 0 && 
 		    this.id == "" &&
-		    this.requestStage == dataAccessConfig.validationRequestStage) {
+		    this.requestStage == dataAccessConfig.validationRequestStage && 
+		    this.OpenSearchURL && this.DownloadOptions && 
+		    this.SchedulingOptions && 
+		    ((computedShedulingOptions.DataDriven && computedShedulingOptions.DataDriven.endDate) ||
+		     (computedShedulingOptions.TimeDriven && computedShedulingOptions.TimeDriven.endDate &&
+		    		 computedShedulingOptions.TimeDriven.repeatPeriod != undefined &&  
+		    		 computedShedulingOptions.TimeDriven.slideAcquisitionTime != undefined))) {
 			return true;
 		}
 	
 		//second stage submission with and without bulk order
+		//no need to test the other properties because they cannot be changed in the meantime
 		if (this.step == 1 &&
 			this.id != "" &&
 			this.requestStage == dataAccessConfig.confirmationRequestStage &&
