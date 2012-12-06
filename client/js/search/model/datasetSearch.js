@@ -8,6 +8,8 @@ var DataSetSearch = Backbone.Model.extend({
 		datasetId : "",
 		startdate : "", //name of the opensearch request parameter
 		stopdate: "", //name of the opensearch request parameter
+		startTime : "",
+		stopTime: "", 
 		west: "",
 		south : "",
 		east : "",
@@ -21,10 +23,11 @@ var DataSetSearch = Backbone.Model.extend({
 	
 	initialize : function(){
 		//Retrieve the dataset information
-		this.dataset = new Dataset({id : this.get("datasetId")});			
-		this.dataset.fetch().done(function(){
+		this.dataset = new Dataset({datasetId : this.get("datasetId")});			
+		//TODO handle download options later
+		//this.dataset.fetch().done(function(){
 			//TODO set the selected options default value from the dataset download options
-		});
+		//});
 	},
 	
 	validate: function(attrs) {
@@ -37,8 +40,8 @@ var DataSetSearch = Backbone.Model.extend({
 	
 		//TODO add advanced search criteria later
 		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.get("datasetId") + "?" +
-				"start="+ this.get("startdate") + "&" + 
-				"stop=" + this.get("stopdate") + "&count=10";
+				"start="+ this.formatDate(this.get("startdate"), this.get("startTime")) + "&" + 
+				"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime")) + "&count=10";
 		
 		//add area criteria is set
 		if (this.get("west") != "" && this.get("south") != ""
@@ -53,14 +56,21 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		return url;
 	},
+	
+	//Format to openSearch compliant date format : 
+	//the seconds are added manually since not handled by the TimeBox widget
+	//to confirm later whether to use another widget...
+	formatDate : function(date, time){
+		return date + "T" + time + ":00";
+	},
 	  
 	/** get the seach criteria to display as a txt pop-up in the searchresults view */
 	getSearchCriteriaSummary : function(){
 
 		var text = '<p><b>DataSet : </b>' + this.get("datasetId") + '</p> '
 		
-		text += '<b>Start date : </b> '+ this.get("startdate") + '</p>' +
-			'<b>Stop date : </b> ' + this.get("stopdate") + '</p> ';
+		text += '<b>Start date : </b> '+ this.formatDate(this.get("startdate"), this.get("startTime")) + '</p>' +
+			'<b>Stop date : </b> ' + this.formatDate(this.get("stopdate"), this.get("endTime")) + '</p> ';
 			
 		if (this.get("west") != '' && this.get("south") != '' &&
 				this.get("east") != '' && this.get("north") != ''){
@@ -75,6 +85,6 @@ var DataSetSearch = Backbone.Model.extend({
 	}
 });
 
-return DataSetSearch;
+return new DataSetSearch();
 
 });
