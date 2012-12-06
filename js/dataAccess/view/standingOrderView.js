@@ -1,5 +1,6 @@
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/widget/DownloadManagersWidget', 
-         'text!dataAccess/template/standingOrderViewContent.html'], 
+         'text!dataAccess/template/standingOrderViewContent.html', "jqm-datebox-calbox", 
+         "jqm-datebox-datebox"], 
 		function($, Backbone, Configuration, DownloadManagersWidget,
 				standingOrderView_template) {
 
@@ -26,20 +27,59 @@ define( ['jquery', 'backbone', 'configuration', 'dataAccess/widget/DownloadManag
 				this.request.endDate = $(event.currentTarget).val();
 			},		
 			
-			'click #timeDrivenLabel' : function(event){
+			//choose STO type : Data-driven or Time-driven
+			'click #type label' : function(event){
 				
-				var $target = $(event.currentTarget);
-				var isTimeDriven = !($(event.currentTarget).hasClass('ui-checkbox-on'));
-				this.request.type = isTimeDriven;
-				var timeDrivenElt = this.$el.find("#timeDrivenParams");
+				//the ui-radio-on state will be set at the end of the handler
+				//that's why make the test according to ui-radio-off
+				var isChecked = ($(event.currentTarget).hasClass('ui-radio-off'));
+			
+				//case where the user clicks on the already selected radio
+				if (isChecked == false){
+					return;
+				}
 				
-				if (isTimeDriven){
-					timeDrivenElt.show();
-				}else{
-					timeDrivenElt.hide();
+				var timeDrivenElt = $("#timeDrivenParams");
+				
+				if (event.currentTarget.id == "time-driven-label"){
+					
+					//Set standing order request type
+					this.request.timeDriven = isChecked;
+					
+					//update the time driven parameters display
+					if (isChecked){
+						timeDrivenElt.show();
+					}else{
+						timeDrivenElt.hide();
+					}
+				}else{//click on the Data-driven radio button
+					
+					
+					//Set standing order request type
+					this.request.timeDriven = !isChecked;
+					
+					//update the time driven parameters display
+					if (isChecked){
+						timeDrivenElt.hide();
+					}else{
+						timeDrivenElt.show();
+					}
 				}
 			},
 			
+			//set repeat period
+			'change #repeatPeriodInput' : function(event){
+				this.request.repeatPeriod = $(event.currentTarget).val();
+			},
+			
+			//set slide time
+			'click #applyShitfLabel' : function(event){
+				
+				var isChecked = !($(event.currentTarget).hasClass('ui-checkbox-off'));
+				this.request.slideAcquisitionTime = !isChecked;
+			},
+			
+			//trigger the assignment to the STO request to a download manager
 			'click #CreateSTORequest' : function(event){
 				
 				var self = this;	
@@ -47,27 +87,17 @@ define( ['jquery', 'backbone', 'configuration', 'dataAccess/widget/DownloadManag
 					var downloadManagersWidget = new DownloadManagersWidget(self.request);
 					downloadManagersWidget.open();				
 				});			
-			},
-//			
-//			'click label' : function(event){
-//				var $target = $(event.currentTarget);
-//				//look for class ui-radio-off because it is going to be changed to ui-radio-on at the end of the handler
-//				if ($target.hasClass("ui-radio-off")){
-//					this.selectedDownloadManager = event.currentTarget.id;
-//					console.log("selected Download Manager :");
-//					console.log(this.selectedDownloadManager);
-//				}
-//			}
+			}
 		},
 		
 		render: function(){
-			var content = _.template(standingOrderView_template, {startDate : this.request.startDate, endDate : this.request.endDate});
+			var content = _.template(standingOrderView_template, {startDate : this.request.startDate, 
+																	startTime : this.request.startTime, 
+																	endDate : this.request.endDate,
+																	endTime : this.request.endTime});
 			this.$el.append(content);
 			this.$el.find("#standingOrderSpecificMessage").append(this.request.getSpecificMessage());
 			this.$el.find("#timeDrivenParams").hide();
-			this.$el.find("#timeDrivenLabel").trigger('create');
-			this.$el.find("#timeDrivenCheckBox").trigger('create');
-			this.$el.trigger('create');
 			this.delegateEvents();
 			return this;
 		}
