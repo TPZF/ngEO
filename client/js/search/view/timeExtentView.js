@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 
-         'text!search/template/dateCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, DatasetSearch , dateCriteria_template, advancedCriteria_template) {
+define( ['jquery', 'backbone', 'text!search/template/dateCriteriaContent.html', 
+         'jqm-datebox-calbox', 'jqm-datebox-datebox'], 
+		function($, Backbone , dateCriteria_template, advancedCriteria_template) {
 
 var TimeExtentView = Backbone.View.extend({
 
@@ -15,11 +15,18 @@ var TimeExtentView = Backbone.View.extend({
 	
 	events :{
 
-		'change #from' : function(event){
+		'change #fromDateInput' : function(event){
 			this.model.set({"startdate" : $(event.currentTarget).val()});
 		},
-		'change #to' : function(event){
+		'change #toDateInput' : function(event){
 			this.model.set({"stopdate" : $(event.currentTarget).val()});
+		},
+		
+		'change #fromTimeInput' : function(event){
+			this.model.set({"startTime" : $(event.currentTarget).val()});
+		},
+		'change #toTimeInput' : function(event){
+			this.model.set({"stopTime" : $(event.currentTarget).val()});
 		}		
 	},
 	
