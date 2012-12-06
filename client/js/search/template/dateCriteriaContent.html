@@ -1,21 +1,33 @@
 
 <div data-role="fieldcontain">
 
-	<label for="From">Start Date : </label>
+	<label id="fromDateLabel" for="fromDateInput">Start Date : </label>
 	
-	<input name="From" id="from" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.startdate %>"
+	<input name="From" id="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.startdate %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.startdate %>", 
 		  "useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
 </div>
 
+<div data-role="fieldcontain">
+		
+	<label id="fromTimeLabel" for="fromTimeInput" data-mini="true">Start Time:</label>
+	<input name="startTime" id="fromTimeInput" type="text" data-role="datebox" data-mini="true" data-theme="c" value="<%=attributes.startTime %>"
+  			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'>
+</div>
 
 <div data-role="fieldcontain">
 
-	<label for="To">End Date : </label>
+	<label id="toDateInput" for="toDateInput">End Date : </label>
 	
-	<input name="To" id="to" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.stopdate %>"
+	<input name="toDate" id="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.stopdate %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.stopdate %>", 
 	   	"useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
 
 </div>
 
+<div data-role="fieldcontain">
+	
+	<label id="toTimeLabel" for="toTimeInput" data-mini="true">End Time:</label>
+	<input name="endTime" id="toTimeInput" type="text" data-role="datebox" data-mini="true" data-theme="c" value="<%=attributes.stopTime %>"
+  			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'>
+</div>
