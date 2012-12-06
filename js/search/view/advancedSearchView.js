@@ -1,19 +1,17 @@
 
 
 //TODO LATER / HANDLE THE ADVANCED SEARCH CRITERIA
-define( ['jquery', 'backbone',  'search/model/dataset', 'search/model/datasetSearch', 
+define( ['jquery', 'backbone',  'search/model/dataset',
          'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, Dataset, DatasetSearch , advancedCriteria_template) {
+		function($, Backbone, Dataset, advancedCriteria_template) {
 
 var AdvancedSearchView = Backbone.View.extend({
 
 	// the model is the DatasetSearch (the search model containing search params)
-	// this.datset is the model for advanced search attributes model 
 	
 	initialize : function(options){
 		
 		this.searchCriteriaView = options.searchCriteriaView;
-		this.dataset = options.dataset;
 	},
 	
 	events :{		
