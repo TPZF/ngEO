@@ -64,7 +64,7 @@
 		"invalidProductURLsError": "Invalid Request: Please check products having a url."
 	}, 
 	
-	"standingOrders" : {
+	"standingOrder" : {
 		"invalidOpenSearchURLError": "Invalid OpenSearch URL : Empty URL.",
 		"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
 	},
