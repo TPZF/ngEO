@@ -1,10 +1,10 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/StandingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
-		function($, Backbone, Configuration, DatasetSearch, SpatialExtentView, TimeExtentView, 
+		function($, Backbone, Configuration, SpatialExtentView, TimeExtentView, 
 				 AdvancedSearchView, StandingOrderDataAccessRequest, StandingOrderWidget,
 				 searchCriteria_template) {
 
@@ -92,8 +92,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.advancedCriteriaView = new AdvancedSearchView({
 			el : this.$el.find("#searchCriteria"), 
 			searchCriteriaView : this,
-			model : this.model ,
-			dataset : this.model.dataset});
+			model : this.model});
 		this.advancedCriteriaView.render();
 		
 		this.$el.trigger('create');
