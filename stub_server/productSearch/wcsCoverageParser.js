@@ -33,10 +33,8 @@ module.exports.parse = function(file,fc) {
 		
 		var timeStart = node.getElementsByTagName('gml:beginPosition')[0];
 		var timeStop = node.getElementsByTagName('gml:endPosition')[0];
-		console.log(timeStart.textContent + "/" + timeStop.textContent);
 		
 		var posList = node.getElementsByTagName('gml:posList')[0];
-		console.log( convertToGeojsonPolygon(posList.textContent) );
 
 		// "Clone" feature
 		var feature = JSON.parse( JSON.stringify(fc.features[ i % fc.features.length ]) );
