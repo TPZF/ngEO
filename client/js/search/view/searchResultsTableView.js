@@ -1,8 +1,8 @@
 define(
-		[ 'jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 
+		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'dataAccess/model/downloadManagers', 
 		  'dataAccess/model/simpleDataAccessRequest', 'dataAccess/view/downloadManagersListView','dataAccess/widget/downloadManagersWidget',
 		  'jquery.mobile', 'jquery.dataTables' ],
-		function($, Backbone, Configuration, DownloadManagers, SimpleDataAccessRequest, DownloadManagersListView, DownloadManagersWidget) {
+		function($, Backbone, Configuration, DatasetSearch, DownloadManagers, SimpleDataAccessRequest, DownloadManagersListView, DownloadManagersWidget) {
 
 			var SearchResultsTableView = Backbone.View
 					.extend({
@@ -186,7 +186,7 @@ define(
 							//for the moment there is only date and time
 							$("#searchCriteriaSummary").click(function(){
 									
-									$("#searchCriteriaPopupText").html( self.searchResultsView.datasetSearch.getSearchCriteriaSummary() );	
+									$("#searchCriteriaPopupText").html(DatasetSearch.getSearchCriteriaSummary() );	
 									$('#searchCriteriaSummaryPopup').popup("open",  $( {} )
 										    .jqmData( "position-to", "window" )
 										    .jqmData( "transition", "slide" ));
