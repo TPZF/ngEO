@@ -16,7 +16,7 @@ var Dataset = Backbone.Model.extend({
 	// Constructor : initialize the url from the configuration
 	initialize : function () {
 		// The base url to retreive the dataset Search Info
-		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('id');
+		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
 	},
 });
 
