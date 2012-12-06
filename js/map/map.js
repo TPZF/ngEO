@@ -237,6 +237,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		}, true);
 	};
 	
+	/**
+	 * Create a browse layer for the given feature
+	 */
 	var createBrowseLayer = function(feature) {
 	
 		var eo = feature.properties.EarthObservation;
@@ -260,18 +263,47 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			var layerDesc = {
 				name: feature.id,
 				type: eoBrowse.eop_type,
-				visible: false,
+				visible: true,
 				baseUrl: eoBrowse.eop_url,
 				opacity: Configuration.data.map.browseDisplay.opacity,
 				params: params,
 				bbox: feature.bbox
 			};
 			
-			return mapEngine.addLayer(layerDesc);
+			return { 
+				desc: layerDesc,
+				engine: mapEngine.addLayer(layerDesc)
+			};
 			
 		}
 		
 		return null;
+	};
+	
+	/**
+	 * Show a browse layer for the given feature
+	 */
+	var showBrowseLayer = function(feature) {			
+		// Create the WMS if it does not exists
+		if (!browseLayers.hasOwnProperty(feature.id)) {
+		
+			// Compute bbox if it does not exists (used by browse layer)
+			if (!feature.bbox)
+				computeExtent(feature);
+
+			browseLayers[ feature.id ] = createBrowseLayer(feature);
+		}
+	};
+	
+	/**
+	 * Hide the browse layer of the given feature
+	 */
+	var hideBrowseLayer = function(feature) {	
+		// Create the WMS if it does not exists
+		if (browseLayers.hasOwnProperty(feature.id)) {
+			mapEngine.removeLayer( browseLayers[ feature.id ].engine );
+			delete browseLayers[ feature.id ];
+		}
 	};
 
 	var isLayerCompatible = function(layer) {
@@ -404,6 +436,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			mapEngine.zoomToExtent( extent );							
 		},
 		
+		/**
+		 * Get current viewport extent
+		 * @return an array of 4 number : [west,south,east,north]
+		 */
 		getViewportExtent: function() {
 			return mapEngine.getViewportExtent();
 		},
@@ -416,7 +452,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			// Remove browse browse layers
 			for ( var x in browseLayers ) {
 				if ( browseLayers.hasOwnProperty(x) ) {
-					mapEngine.removeLayer( browseLayers[x] );	
+					mapEngine.removeLayer( browseLayers[x].engine );	
 				}
 			}
 			// Cleanup the browse layers
@@ -434,25 +470,14 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		 */
 		setDisplayBrowse: function(value,features) {
 			for ( var i = 0; i < features.length; i++ ) {
-				var feature = features[i];
-				if (!feature.bbox)
-					computeExtent(feature);
-					
-				// Create the WMS if it does not exists
-				if (!browseLayers.hasOwnProperty(feature.id)) {
-					browseLayers[ feature.id ] = createBrowseLayer(feature);
-				}
-				
-				// TODO : remove layer when not visible
-				// Modify browse layer visibility
-				var layer = browseLayers[ feature.id ];
-				if ( layer ) {
-					mapEngine.setLayerVisible(layer,value);
+				if ( value ) {
+					showBrowseLayer(features[i]);
+				} else {
+					hideBrowseLayer(features[i]);
 				}
 			}
 		},
 		
-			
 		/**
 		 * Switch the map engine
 		 */
@@ -482,11 +507,16 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 					map.zoomToExtent( extent );
 				
 				// Display footprints if any
-				if ( resultsFeatureCollection.features.length > 0 ) {
+				if ( resultsFeatureCollection && resultsFeatureCollection.features.length > 0 ) {
 					mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
 				}
 				
-				// TODO : manage browse
+				// Display browse
+				for ( var x in browseLayers ) {
+					if ( browseLayers.hasOwnProperty(x) ) {
+						browseLayers[x].engine = mapEngine.addLayer( browseLayers[x].desc );
+					}
+				}
 			};
 						
 			// Create the new engine and catch any error
