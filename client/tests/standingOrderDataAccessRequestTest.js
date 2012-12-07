@@ -34,7 +34,7 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 					
 					QUnit.ok(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven != undefined, "DataDriven SchedulingOptions set");
 					
-					QUnit.equal(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven.endDate, "2012-12-07T10:34:00", "DataDriven endDate set");
+					QUnit.equal(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven.endDate, "2012-12-07T10:34:00.00Z", "DataDriven endDate set");
 					
 					QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
 							"confirmation",  "Request Stage Validation");	
