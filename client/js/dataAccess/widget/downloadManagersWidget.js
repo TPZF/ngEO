@@ -11,11 +11,10 @@ define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView',
 
 var DownloadManagersWidget = function(request) {
 
-	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content popup-widget-background">');
+	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-overlay-theme="a" class="ui-content popup-widget-background">');
 
 	var element = $('<div id="downloadManagersPopupContent"></div>'); 
 	element.appendTo(parentElement);
-	//parentElement.appendTo(container);
 
 	/**
 		Build the content of the popup with the download managers view
@@ -32,7 +31,6 @@ var DownloadManagersWidget = function(request) {
 			});
 			
 			downloadManagersListView.render();		
-			downloadManagersListView.$el.trigger('create');
 		});
 	};
 		
@@ -42,7 +40,6 @@ var DownloadManagersWidget = function(request) {
 	this.open = function() {
 	
 		buildContent();
-		parentElement.popup(); 		
 			
 		//after closing the popup reset the simple data access parameters 
 		//and remove the popup elements
@@ -54,8 +51,11 @@ var DownloadManagersWidget = function(request) {
 		   
 		});
 		
-		//trigger jqm styling
-		parentElement.popup("open");  
+		//Open the popup
+		//parentElement.popup({ "position-to" : "#searchCriteriaSummaryContainer" }); 
+		parentElement.popup();
+		parentElement.popup("open");
+		window.resizeTo(window.innerWidth, window.innerHeight);
 	};
 
 		
