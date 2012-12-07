@@ -17,7 +17,8 @@
 		"menuBarTest.js",
 		"datasetPopulationTest.js",
 		"simpleDataAccessRequestTest.js",
-		"downloadManagersTest.js"
+		"downloadManagersTest.js",
+		"standingOrderDataAccessRequestTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
