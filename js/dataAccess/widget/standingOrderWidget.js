@@ -5,14 +5,16 @@
 
 define(
 		[ "jquery", "configuration",
-				'dataAccess/model/standingOrderDataAccessRequest',
-				'dataAccess/view/standingOrderView'],
-	function($, Configuration, StandingOrderDataAccessRequest,
-			StandingOrderView) {
+				'dataAccess/model/standingOrderDataAccessRequest', 'dataAccess/model/downloadManagers',
+				'dataAccess/view/standingOrderView', 'dataAccess/view/downloadManagersListView'],
+	
+		function($, Configuration, StandingOrderDataAccessRequest, DownloadManagers,
+			StandingOrderView, DownloadManagersListView) {
 
+		
 		var StandingOrderWidget = function() {
 
-			var parentElement = $('<div id="standingOrderPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content popup-widget-background">');
+			var parentElement = $('<div id="standingOrderPopup" data-role="popup" data-overlay-theme="a" class="ui-content popup-widget-background">');
 
 			var element = $('<div id="standingOrderPopupContent"></div>');
 
@@ -34,6 +36,28 @@ define(
 				standingOrderView.render();
 
 			};
+			
+			/** 
+			 * Display the list of download managers
+			 * in order to chose one and validate the request.
+			 */
+			this.displayDownloadManagersView = function(){
+				
+				element.empty();
+				
+				DownloadManagers.fetch().done(function() {
+					
+					var downloadManagersListView = new DownloadManagersListView({
+						model : DownloadManagers,
+						el: element,
+						selectedDownloadManager : "",
+						request : StandingOrderDataAccessRequest
+					});
+					
+					downloadManagersListView.render();		
+					
+				});
+			};
 
 			/**
 			 * Open the popup
@@ -41,18 +65,20 @@ define(
 			this.open = function() {
 
 				buildContent();
-				parentElement.popup();
 
 				parentElement.bind({
 
 					popupafterclose : function(event, ui) {
 						parentElement.remove();
+						StandingOrderDataAccessRequest.initialize();
 					}
 
 				});
-
+				
+				//parentElement.popup({ "position-to" : "#retrieve" });  
+				parentElement.popup();
+				parentElement.popup("open"); 
 				// trigger jqm styling
-				parentElement.popup("open");
 				parentElement.trigger('create');
 			};
 
