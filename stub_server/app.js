@@ -59,7 +59,7 @@ app.post('/server/simpleDataAccessRequest', simpleDataAccessRequest);
 app.post('/server/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //data access statuses interface
-app.get('/server/dataAccessRequestStatus/:id', downloadStatuses);
+app.get('/server/dataAccessRequestStatus', downloadStatuses);
 
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
