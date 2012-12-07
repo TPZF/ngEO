@@ -20,6 +20,12 @@ var SimpleDataAccessRequest = {
 		
 		this.rejectedProductsNB = 0;
 		this.productURLs = [];
+		this.firstRequest = {SimpleDataAccessRequest : {
+								requestStage :  "",
+								downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""},
+								productURLs : []
+								}
+							};
 	},
 	
 	/** get the current request to submit */
@@ -46,7 +52,7 @@ var SimpleDataAccessRequest = {
 		};
 		
 	},
-	
+		
 	/** get message the display when a simple DAT creation is triggered */
 	getSpecificMessage : function(){
 		
