@@ -1,8 +1,7 @@
-define( ['jquery', 'backbone', 'configuration', 'dataAccess/widget/DownloadManagersWidget', 
-         'text!dataAccess/template/standingOrderViewContent.html', "jqm-datebox-calbox", 
-         "jqm-datebox-datebox"], 
-		function($, Backbone, Configuration, DownloadManagersWidget,
-				standingOrderView_template) {
+define( ['jquery', 'backbone', 'configuration',
+         'text!dataAccess/template/standingOrderViewContent.html', 
+         "jqm-datebox-calbox", "jqm-datebox-datebox"], 
+		function($, Backbone, Configuration, standingOrderView_template) {
 
 	/**
 	 * This view handles the displaying of standing orders request parameters.
@@ -83,10 +82,7 @@ define( ['jquery', 'backbone', 'configuration', 'dataAccess/widget/DownloadManag
 			'click #CreateSTORequest' : function(event){
 				
 				var self = this;	
-				$.when(this.parentWidget.close()).done(function(){
-					var downloadManagersWidget = new DownloadManagersWidget(self.request);
-					downloadManagersWidget.open();				
-				});			
+				this.parentWidget.displayDownloadManagersView();
 			}
 		},
 		
@@ -99,6 +95,7 @@ define( ['jquery', 'backbone', 'configuration', 'dataAccess/widget/DownloadManag
 			this.$el.find("#standingOrderSpecificMessage").append(this.request.getSpecificMessage());
 			this.$el.find("#timeDrivenParams").hide();
 			this.delegateEvents();
+
 			return this;
 		}
 		
