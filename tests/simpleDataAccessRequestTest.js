@@ -24,15 +24,15 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 			DownloadManagers.fetch().done(function() {
 				
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProductURLs([{"ProductUrl" : "http:/server/test.ngeo"}]);
+				SimpleDataAccessRequest.setProducts ([]);
 				SimpleDataAccessRequest.setDownloadManager(DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid);
 		
-				QUnit.equal(SimpleDataAccessRequest.currentRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId, 
+				QUnit.equal(SimpleDataAccessRequest.downloadLocation.DownloadManagerId, 
 				DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid, "a download manager is assigned to the request");
 		
-				QUnit.ok(SimpleDataAccessRequest.currentRequest.SimpleDataAccessRequest.productURLs.length == 1, "Product urls set to the request");
+				QUnit.ok(SimpleDataAccessRequest.productURLs != undefined, "Product urls set to the request");
 				
-				QUnit.equal(SimpleDataAccessRequest.currentRequest.SimpleDataAccessRequest.requestStage, 
+				QUnit.equal(SimpleDataAccessRequest.requestStage, 
 						"validation",  "Request Stage Validation");	
 				
 				//submit validation request
@@ -43,7 +43,7 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 					//Check that the server has returned the id of the DAR
 					QUnit.equal(SimpleDataAccessRequest.id , "DAR_00000011092", "Request Submitted : DAR ID returned by the server");
 					
-					QUnit.equal(SimpleDataAccessRequest.currentRequest.SimpleDataAccessRequest.requestStage, 
+					QUnit.equal(SimpleDataAccessRequest.requestStage, 
 							"confirmation",  "Request Stage Changed to Confirmation");
 					
 					QUnit.equal(SimpleDataAccessRequest.serverResponse, 
