@@ -38,6 +38,13 @@ var StandingOrderDataAccessRequest = {
 		this.timeDriven = false;
 		this.repeatPeriod = 0;
 		this.slideAcquisitionTime = false;
+		this.firstRequest = {StandingOrderDataAccessRequest : {
+								requestStage :  "",
+								OpenSearchURL : "",
+								DownloadOptions : {},
+								SchedulingOptions : {},
+								downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""}
+							 }};
 		
 		//set date to the current date
 		var today = (new Date()).toISOString();
@@ -102,24 +109,25 @@ var StandingOrderDataAccessRequest = {
 		}
 	},
 	
-	/** message to display as information */
+	/** message to display as information 
+	 * Display nothing for STO */
 	getSpecificMessage : function(){
 		
-		var collapsibleContent = "<h5> Standing Order info <h5>";
-		
-		collapsibleContent += "<p> OpenSearchURL: " + this.OpenSearchURL + "<p>";
-		
-		if (this.DownloadOptions === {} ){
-			collapsibleContent += "<p> There are no download Options <p>";
-		
-		}else{	
-
-			_.each(this.DownloadOptions, function(value, key){
-				collapsibleContent += "<p>" + value + " : " + key + "<p>";
-			});
-		}
-		
-		return collapsibleContent; 
+//		var collapsibleContent = "<h5> Standing Order info <h5>";
+//		
+//		collapsibleContent += "<p> OpenSearchURL: " + this.OpenSearchURL + "<p>";
+//		
+//		if (this.DownloadOptions === {} ){
+//			collapsibleContent += "<p> There are no download Options <p>";
+//		
+//		}else{	
+//
+//			_.each(this.DownloadOptions, function(value, key){
+//				collapsibleContent += "<p>" + value + " : " + key + "<p>";
+//			});
+//		}
+//		
+//		return collapsibleContent; 
 	},
 	
 	
