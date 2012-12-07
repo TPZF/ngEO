@@ -60,8 +60,9 @@ var DataSetSearch = Backbone.Model.extend({
 	//Format to openSearch compliant date format : 
 	//the seconds are added manually since not handled by the TimeBox widget
 	//to confirm later whether to use another widget...
+	//TODO CONFIRM TIME FORMAT
 	formatDate : function(date, time){
-		return date + "T" + time + ":00";
+		return date + "T" + time + ":00.00Z"; 
 	},
 	  
 	/** get the seach criteria to display as a txt pop-up in the searchresults view */
