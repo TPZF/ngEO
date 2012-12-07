@@ -28,7 +28,6 @@ var DataAccessRequest = {
 		this.id = "";
 		this.requestStage =  Configuration.data.dataAccessRequestStatuses.validationRequestStage;
 		this.downloadLocation = {DownloadManagerId : "" , DownloadDirectory : ""};
-		this.firstRequest = this.getRequest();
 		
 		this.resetRequest();
 	},
