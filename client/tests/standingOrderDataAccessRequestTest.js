@@ -12,13 +12,6 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 	    	}
 	    });
     
-	    QUnit.test("Check dataAccessRequest statuses in configuration", 3 , function () { 
-	        QUnit.ok(Configuration.data.dataAccessRequestStatuses, "dataAccessRequestStatuses object found in configuration");
-	    	QUnit.ok(Configuration.data.dataAccessRequestStatuses.validStatuses.validatedStatus.value == 4, "Validation status in configuration Ok");
-	    	QUnit.ok(Configuration.data.dataAccessRequestStatuses.validStatuses.inProgressStatus.value == 0,"In progress status  in configuration Ok");
-	    });
-
-    
     	QUnit.asyncTest("Create Standing Order & Assign a downloadManager", 13, function () {
     	
 			DownloadManagers.fetch().done(function() {
