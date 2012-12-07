@@ -1,5 +1,7 @@
 /**
   * Download managers model 
+  * The DownloadManagers is a singleton to be used for DAR and Download managers 
+  * assignement and monitoring 
   */
 
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
