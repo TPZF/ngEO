@@ -94,8 +94,10 @@ var DownloadManagersListView = Backbone.View.extend({
 		}
 
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
-		//this.$el.find(".ui-collapsible-heading .ui-btn").attr("style", "{text-align:center}");
 		this.delegateEvents();
+		//Trigger JQM styling
+		this.$el.trigger('create');
+		
 		return this;
 	}
 	
