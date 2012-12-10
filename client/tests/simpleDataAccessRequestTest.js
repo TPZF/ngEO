@@ -24,7 +24,20 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 			DownloadManagers.fetch().done(function() {
 				
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts ([]);
+				
+				// Create a dummy feature
+				var feature = {
+					properties: {
+						EarthObservation: {
+							EarthObservationResult : {
+								eop_ProductInformation: {
+									eop_filename: "dummy"
+								}
+							}
+						}
+					}
+				};
+				SimpleDataAccessRequest.setProducts ([feature]);
 				SimpleDataAccessRequest.setDownloadManager(DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid);
 		
 				QUnit.equal(SimpleDataAccessRequest.downloadLocation.DownloadManagerId, 
@@ -33,7 +46,8 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 				QUnit.ok(SimpleDataAccessRequest.productURLs != undefined, "Product urls set to the request");
 				
 				QUnit.equal(SimpleDataAccessRequest.requestStage, 
-						"validation",  "Request Stage Validation");	
+						"validation",  "Request Stage Validation");
+	
 				
 				//submit validation request
 				SimpleDataAccessRequest.submit().done(function() {
@@ -50,18 +64,16 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 							"<p>Request Acknowledged<p><p> Estimated Size : 4000" + 
 							"<p><p>Data Access Request validated<p>",  "Validation Server Response Ok");
 				
+					//submit confirmation request
+					SimpleDataAccessRequest.submit().done(function() {
+						
+						QUnit.ok(true, "Confirmation Request Submitted to the server");
+										
+						QUnit.start();
+
+					});
 				});
 				
-				//submit confirmation request
-				SimpleDataAccessRequest.submit().done(function() {
-					
-					QUnit.ok(true, "Confirmation Request Submitted to the server");
-//						QUnit.equal(SimpleDataAccessRequest.serverResponse, 
-//								"<p>Request In Process...<p><p>processing<p>",  "Confirmation Server Response Ok");
-					
-				});
-				
-				QUnit.start();
 			});		
 				
 		});
