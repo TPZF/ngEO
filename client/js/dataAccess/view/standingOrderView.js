@@ -26,6 +26,11 @@ define( ['jquery', 'backbone', 'configuration',
 				this.request.endDate = $(event.currentTarget).val();
 			},		
 			
+			//set repeat period
+			'change #openSearchURLArea' : function(event){
+				this.request.OpenSearchURL = $(event.currentTarget).val();
+			},
+
 			//choose STO type : Data-driven or Time-driven
 			'click #type label' : function(event){
 				
@@ -84,13 +89,16 @@ define( ['jquery', 'backbone', 'configuration',
 				var self = this;	
 				this.parentWidget.displayDownloadManagersView();
 			}
+			
+			
 		},
 		
 		render: function(){
 			var content = _.template(standingOrderView_template, {startDate : this.request.startDate, 
 																	startTime : this.request.startTime, 
 																	endDate : this.request.endDate,
-																	endTime : this.request.endTime});
+																	endTime : this.request.endTime,
+																	OpenSearchURL : this.request.OpenSearchURL});
 			this.$el.append(content);
 			this.$el.find("#standingOrderSpecificMessage").append(this.request.getSpecificMessage());
 			this.$el.find("#timeDrivenParams").hide();
