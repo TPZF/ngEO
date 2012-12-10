@@ -54,15 +54,17 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 							"<p>Request Acknowledged<p>" + 
 							"<p>Standing order data Access Request validated<p>",  "Validation Server Response Ok");
 				
-				});
 				
-				//submit confirmation request
-				StandingOrderDataAccessRequest.submit().done(function() {
-					
-					QUnit.ok(true, "Confirmation Request Submitted to the server");
+					//submit confirmation request
+					StandingOrderDataAccessRequest.submit().done(function() {
+						
+						QUnit.ok(true, "Confirmation Request Submitted to the server");
 
-					QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
-							"confirmation",  "Request Stage Confirmation");	
+						QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
+								"confirmation",  "Request Stage Confirmation");	
+						
+						
+					});
 					
 				});
 				
