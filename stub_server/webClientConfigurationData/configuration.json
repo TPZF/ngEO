@@ -19,7 +19,8 @@
 	},
 	
 	"downloadManager" : {
-		"downloadManagerInstallationLink" : "./server/downloadManager/install.html" 	
+		"downloadManagerInstallationLink" : "./server/downloadManager/install.html",
+		"undefinedDownloadManagerId"	: "undefined download manager id"	
 	},
 	
 	"dataAccessRequestStatuses" : {
