@@ -38,28 +38,28 @@ app.configure('development', function(){
 });
 
 // WebClientConfigurationData interface
-app.get('/server/webClientConfigurationData', webClientConfigurationData);
+app.get('/ngeo/webClientConfigurationData', webClientConfigurationData);
 
 //datasetPopulationMatrix interface
-app.get('/server/datasetPopulationMatrix', datasetPopulationMatrix);
+app.get('/ngeo/datasetPopulationMatrix', datasetPopulationMatrix);
 
 //datasetSearchInfo interface
-app.get('/server/datasetSearchInfo/:id', datasetSearchInfo);
+app.get('/ngeo/datasetSearchInfo/:id', datasetSearchInfo);
 
 //product search interface
-app.get(/\/server\/catalogueSearch.*/, productSearch);
+app.get(/\/ngeo\/catalogueSearch.*/, productSearch);
 
 //download managers interface
-app.get('/server/downloadManagers', downloadManagers);
+app.get('/ngeo/downloadManagers', downloadManagers);
 
 //simple DAR interface
-app.post('/server/simpleDataAccessRequest', simpleDataAccessRequest);
+app.post('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
 
 //standing order DAR interface
-app.post('/server/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
+app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //data access statuses interface
-app.get('/server/dataAccessRequestStatus', downloadStatuses);
+app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
 
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)

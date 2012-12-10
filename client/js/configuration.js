@@ -10,7 +10,7 @@ var configuration = {
 	url : 'conf/configuration.json',
 	
 	// The base server url
-	baseServerUrl : '/server',
+	baseServerUrl : '/ngeo',
 	
 	// The  server host name
 	serverHostName : 'http://localhost:3000',
