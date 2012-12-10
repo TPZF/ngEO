@@ -30,10 +30,12 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	var element = null;
 	// The current background layer
 	var backgroundLayer = null;
-	// The current selected features
-	var selectedFeatures = [];
-	// The index when using stack selection
-	var stackSelectionIndex = -1;
+	// The current picked features
+	var pickedFeatures = [];
+	// The index when using stack picking
+	var stackPickingIndex = -1;
+	// To know if we are currently picking
+	var inPicking = false;
 	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
 	// An object to store all  browse layers 
@@ -91,10 +93,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	  *	Test if a new selection is equal to the previous selection
 	  */
 	var isSelectionEqual = function( newSelection ) {
-		if ( selectedFeatures.length == newSelection.length) {
+		if ( pickedFeatures.length == newSelection.length) {
 			
-			for ( var i=0; i < selectedFeatures.length; i++ ) {
-				if ( selectedFeatures[i] != newSelection[i] )
+			for ( var i=0; i < pickedFeatures.length; i++ ) {
+				if ( pickedFeatures[i] != newSelection[i] )
 					return false;
 			}
 			
@@ -119,48 +121,27 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		var lonlat = mapEngine.getLonLatFromPixel(clientX,clientY);
 		if ( lonlat ) {
 			var features = getFeaturesFromPoint(lonlat);
+			
+			inPicking = true;
 			if ( isSelectionEqual(features) ) {
 			
-				// Reset previous selected feature
-				if ( stackSelectionIndex == -1 ) {
-					for ( var i=0; i < selectedFeatures.length; i++ ) {
-						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "default");
-					}		
+				stackPickingIndex++;
+				
+				if ( stackPickingIndex == pickedFeatures.length ) {
+					stackPickingIndex = -1;
+					self.trigger("pickedFeatures", pickedFeatures, { x:  pageX, y: pageY });
 				} else {
-					mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "default" );
+					self.trigger("pickedFeatures", [ pickedFeatures[stackPickingIndex] ], { x:  pageX, y: pageY });
 				}
-				
-				stackSelectionIndex++;
-				
-				// Select individual feature
-				if ( stackSelectionIndex == selectedFeatures.length ) {
-					for ( var i=0; i < selectedFeatures.length; i++ ) {
-						mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i], "select" );
-					}
-					stackSelectionIndex = -1;
-					self.trigger("featuresSelected",selectedFeatures,{ x:  pageX, y: pageY });
-				} else {
-					mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[stackSelectionIndex], "select" );
-					self.trigger("featuresSelected", [ selectedFeatures[stackSelectionIndex] ],{ x:  pageX, y: pageY });
-				}
-				
+			
 			} else {
 			
-				// Remove selected style for previous selection
-				for ( var i=0; i < selectedFeatures.length; i++ ) {
-					mapEngine.modifyFeatureStyle(resultFootprintLayer,selectedFeatures[i],"default");
-				}
+				pickedFeatures = features;
+				stackPickingIndex = -1;
+				self.trigger("pickedFeatures", pickedFeatures, { x:  pageX, y: pageY });
 				
-				// Add style for new selection
-				for ( var i=0; i < features.length; i++ ) {
-					mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i],"select");
-				}
-				
-				selectedFeatures = features;
-				stackSelectionIndex = -1;
-				
-				self.trigger("featuresSelected",selectedFeatures,{ x:  pageX, y: pageY });
 			}
+			inPicking = false;
 		}
 	};
 	
@@ -464,19 +445,33 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			resultsFeatureCollection = results.attributes;
 			mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
 		},
-
+		
 		/**
-		 * Display the browse
+		 * Select the features in the map
 		 */
-		setDisplayBrowse: function(value,features) {
-			for ( var i = 0; i < features.length; i++ ) {
-				if ( value ) {
-					showBrowseLayer(features[i]);
-				} else {
-					hideBrowseLayer(features[i]);
-				}
+		selectFeatures: function(features) {
+			if (!inPicking) {
+				pickedFeatures = [];
+			}
+			for ( var i=0; i < features.length; i++ ) {
+				mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i], "select");
+				showBrowseLayer(features[i]);
 			}
 		},
+		
+		/**
+		 * Unselect the features in the map
+		 */
+		unselectFeatures: function(features) {
+			if (!inPicking) {
+				pickedFeatures = [];
+			}
+			for ( var i=0; i < features.length; i++ ) {
+				mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i], "default");
+				hideBrowseLayer(features[i]);
+			}
+		},
+
 		
 		/**
 		 * Switch the map engine
