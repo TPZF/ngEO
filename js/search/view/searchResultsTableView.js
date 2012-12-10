@@ -12,6 +12,9 @@ define(
 						initialize : function(options) {
 							this.mainView = options.mainView;
 							this.searchResultsView = options.searchResultsView;
+							
+							this.model.on("selectFeatures", this.toggleSelection, this );
+							this.model.on("unselectFeatures", this.toggleSelection, this );
 						},
 
 						events : {
@@ -28,27 +31,35 @@ define(
 							
 							// Called when the user clicks on the checkbox of the dataTables
 							'click .dataTables_chekbox' : function(event){
-								$(event.currentTarget).toggleClass('ui-icon-checkbox-off');
-								$(event.currentTarget).toggleClass('ui-icon-checkbox-on');
-								
+								// retreive the position of the selected row
+								var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
+								if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
+									this.model.select( this.model.get('features')[rowPos] );
+								} else {
+									this.model.unselect( this.model.get('features')[rowPos] );
+								}
+																
 								//Disable the Retrieve Product button if no product item is selected 
 								//and/or if the products checked do not have a product url
 								SimpleDataAccessRequest.initialize();
-								SimpleDataAccessRequest.setProducts(this.getSelectedFeatures());
+								SimpleDataAccessRequest.setProducts(this.model.selection);
 								if ( SimpleDataAccessRequest.productURLs.length == 0 ) {
 									this.retrieveProduct.button('disable');
 								} else {
 									this.retrieveProduct.button('enable');
 								}
-								
-								var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
-								if ($("#browseSlider").val() == "on"){
-									this.model.trigger("displayBrowse", 
-										$(event.currentTarget).hasClass('ui-icon-checkbox-on'),
-										[this.model.get('features')[rowPos]]);
-								}					
 							}
 
+						},
+						
+						toggleSelection: function(features) {
+							var checkboxes = this.table.$( ".dataTables_chekbox");
+							for ( var i = 0; i < features.length; i++ ) {
+								var index = this.model.get("features").indexOf(features[i]);
+								checkboxes.eq(index)
+									.toggleClass('ui-icon-checkbox-off')
+									.toggleClass('ui-icon-checkbox-on');	
+							}
 						},
 
 						render : function() {
@@ -160,7 +171,7 @@ define(
 							this.retrieveProduct.click(function() {
 
 								SimpleDataAccessRequest.initialize();
-								SimpleDataAccessRequest.setProducts(self.getSelectedFeatures());
+								SimpleDataAccessRequest.setProducts( self.model.selection );
 								
 								var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
 								downloadManagersWidget.open();
@@ -192,34 +203,8 @@ define(
 										    .jqmData( "transition", "slide" ));
 									$('#searchCriteriaSummaryPopup').trigger('create');
 							});
-														
-							//if the switcher is on "On" position, display browses for the selected rows unless clear the browse layer
-							$('#browseSlider').change(function(){
-								self.model.trigger("displayBrowse", $("#browseSlider").val() == "on", self.getSelectedFeatures());
-							});
 
 							this.$el.trigger('create');
-						},
-
-						//get the geojson features related to the selected records as a table.
-						//used to trigger display browses event for map 
-						getSelectedFeatures : function() {
-							var features = [];
-							var indexes = []; //are kept here in case to change the triggering events with indexes
-							var self = this;
-							//var selectedNodes = this.table.$('tr.row_selected');
-							var selectedNodes = this.table.$('.ui-icon-checkbox-on').closest('tr');
-							
-							_.each(selectedNodes, function(node, index){
-								var rowPos = self.table.fnGetPosition(node);
-								indexes.push(rowPos);
-								features.push(self.model.get('features')[rowPos]);
-							
-							});
-							//console.log(indexes);
-							//console.log(features);
-							
-							return features;
 						},
 
 						close : function() {

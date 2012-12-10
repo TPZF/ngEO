@@ -33,12 +33,16 @@ return {
 		// Create the popup for map
 		var mapPopup = new MapPopup('.ui-page-active');
 		mapPopup.close();
-		
+
+		// Connect with map feature picking
+		Map.on('pickedFeatures',SearchResults.setSelection,SearchResults);
+	
 		// Connect search results events with map
 		SearchResults.on('change',Map.setResults);
-		SearchResults.on('displayBrowse',Map.setDisplayBrowse);
 		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
-		
+		SearchResults.on('selectFeatures',Map.selectFeatures);
+		SearchResults.on('unselectFeatures',Map.unselectFeatures);
+	
 	}
 };
 

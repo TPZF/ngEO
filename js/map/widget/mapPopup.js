@@ -53,7 +53,7 @@ var MapPopup = function(container) {
 	parentElement.hide();
 
 	var self = this;
-	Map.on('featuresSelected', function(selectedFeatures,coord) {
+	Map.on('pickedFeatures', function(selectedFeatures,coord) {
 		if ( selectedFeatures.length == 0 ) {
 			self.close();
 		} else {
