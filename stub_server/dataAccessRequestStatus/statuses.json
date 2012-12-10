@@ -3,24 +3,24 @@
         {
             "ID": "DAR_00000011075",
             "type": "Simple Data Access Request",
-            "status": "0",
+            "status": 0,
             "DlManagerId": "DM_01",
             "productStatuses": [
                 {
                     "productURL": "https://S2PF/XXXXXXXXXXXX0001",
-                    "productStatus": "0",
+                    "productStatus": 0,
                     "percentageCompleted": "80",
                     "expectedSize": "1000"
                 },
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0032",
-                    "productStatus": "1",
+                    "productStatus": 1,
                     "percentageCompleted": "100",
                     "expectedSize": "1000"
                 },
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0026",
-                    "productStatus": "3",
+                    "productStatus": 3,
                     "percentageCompleted": "50",
                     "expectedSize": "1000"
                 }
@@ -29,13 +29,13 @@
         {
             "ID": "DAR_00000011076",
             "type": "Standing Order Data Access Request",
-            "status": "1",
+            "status": 1,
             "DlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011077",
             "type": "Standing Order Data Access Request",
-            "status": "5",
+            "status": 5,
             "DlManagerId": "DM_02"
         },
         {
@@ -46,13 +46,13 @@
             "productStatuses": [
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0015",
-                    "productStatus": "1",
+                    "productStatus": 1,
                     "percentageCompleted": "100",
                     "expectedSize": "1000"
                 },
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0015",
-                    "productStatus": "1",
+                    "productStatus": 1,
                     "percentageCompleted": "100",
                     "expectedSize": "1000"
                 }
@@ -61,19 +61,19 @@
         {
             "ID": "DAR_00000011079",
             "type": "Standing Order Data Access Request",
-            "status": "1",
+            "status": 1,
             "DlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011080",
             "type": "Standing Order Data Access Request",
-            "status": "5",
+            "status": 5,
             "DlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011081",
             "type": "Standing Order Data Access Request",
-            "status": "0",
+            "status": 0,
             "DlManagerId": "DM_01"
         }
     ]
