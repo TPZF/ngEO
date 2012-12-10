@@ -59,7 +59,7 @@ app.post('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
 app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //data access statuses interface
-app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
+app.all(/\/ngeo\/dataAccessRequestStatus.*/, downloadStatuses);
 
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
