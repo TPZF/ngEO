@@ -1,8 +1,8 @@
 define( ['jquery', 'backbone',
          'search/model/dataset', 'search/model/datasetSearch', 'search/model/searchResults',
-         'search/view/datasetSelectionView', 'search/view/searchCriteriaView', 'search/view/searchResultsView', ], 
+         'search/view/datasetSelectionView', 'search/view/searchCriteriaView', 'search/view/searchResultsTableView', ], 
 		function($, Backbone, Dataset, DatasetSearch, SearchResults,
-				DatasetSelectionView, SearchCriteriaView, SearchResultsView) {
+				DatasetSelectionView, SearchCriteriaView, SearchResultsTableView) {
 
 	/** 
 	 * main search view : responsible for handling the dataset selection 
@@ -69,14 +69,14 @@ var MainSearchView = Backbone.View.extend({
 		SearchResults.url = DatasetSearch.getOpenSearchURL();
 		SearchResults.set({"features" : [] }, {silent : true});
 		SearchResults.fetch();
-
-		var searchResultsView =  new SearchResultsView({ 
-			el : this.$el.find("#searchResults"),
+		
+		var searchResultsTableView = new SearchResultsTableView({
+			el : this.$el.find("#searchResults"), 
 			model : SearchResults,
 			mainView : this
 		});
-		
-		this.showView(searchResultsView);
+				
+		this.showView(searchResultsTableView);
 	},
 	
 	showView : function(view) {

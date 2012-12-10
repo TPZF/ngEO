@@ -67,19 +67,27 @@ var SimpleDataAccessRequest = {
 		return collapsibleContent; 
 	},
 	
+	/** Get the list of products URLs from a list of products
+	 * if the file name is empty the product is rejected
+	 */
+	getProductUrls: function(products) {
+		var productUrls = [];
+		for ( var i = 0; i < products.length; i++ ) {
+			var eor = products[i].properties.EarthObservation.EarthObservationResult;
+			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
+				productUrls.push( eor.eop_ProductInformation.eop_filename );
+			} 
+		}
+		
+		return productUrls;
+	},
+	
 	/** Set the list of products for the DAR 
 	 * if the file name is empty the product is rejected
 	 */
 	setProducts: function(products) {
-		
-		for ( var i = 0; i < products.length; i++ ) {
-			var eor = products[i].properties.EarthObservation.EarthObservationResult;
-			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
-				this.productURLs.push( eor.eop_ProductInformation.eop_filename );
-			} else {
-				this.rejectedProductsNB++;
-			}
-		}
+		this.productURLs = this.getProductUrls(products);
+		this.rejectedProductsNB = products.length - this.productURLs.length;
 	},
 	
 	/** check whether the request is valid or not */
