@@ -2,7 +2,7 @@
 
 define( ['jquery', 'backbone', 'configuration', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 
-         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/StandingOrderWidget', 
+         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
 		function($, Backbone, Configuration, SpatialExtentView, TimeExtentView, 
 				 AdvancedSearchView, StandingOrderDataAccessRequest, StandingOrderWidget,
