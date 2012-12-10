@@ -19,17 +19,9 @@
 	},
 	
 	
-	"DARMonitoringTable" : {
-		"columnsDef" : [{"sTitle" : "Data Access Request ID", "mData" : "ID" },
-						{"sTitle" : "Type",  "mData" : "type"},
-						{"sTitle" : "DownloadManager", "mData" : "DlManagerId"}, 
-						{"sTitle" : "Status", "mData" : "status"}
-					   ]
-	},
-	
-	
 	"downloadManager" : {
-		"downloadManagerInstallationLink" : "./server/downloadManager/install.html" 	
+		"downloadManagerInstallationLink" : "./server/downloadManager/install.html",
+		"undefinedDownloadManagerId"	: "undefined download manager id"
 	},
 	
 	"dataAccessRequestStatuses" : {
