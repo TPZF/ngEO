@@ -1,53 +1,86 @@
 
-<div id="dataAccessMonitoringContent" class="widget-content ui-body-c" >
-     
-     <div>
-		<label id ="dmName">Download Manager</label>
-	     <label id ="dar">Data Access Request</label>
-	     <label id ="type">Type</label>
-	     <label id ="status">Status</label>
-	     <label id ="products">Products</label>
-	</div>				     
-		<% _.each(getOrderedStatuses(), function(newStatus) { %>		     
+<div id="dataAccessMonitoringContent" class="widget-content ui-body-c">
 
-			<div>
-				<label id ="<%= newStatus.downloadManagerName %>" data-mini="true"><%= newStatus.downloadManagerName %></label>
-				<span> 
-					<% _.each(newStatus.DARs, function(dar) { %>
 
-						     <label id ="<%= dar.ID %>" data-mini="true"><%= dar.ID %></label>
-						     <label id ="<%= dar.type %>" data-mini="true"><%= dar.type %></label>
-						     <label id ="<%= dar.status %>" data-mini="true"><%= getStatus(dar.status).status %></label>
-						     <span> 
-						     
-							     <% if (dar.productStatuses) { %>
-							      <table cellpadding="0" cellspacing="0" border="0">
-									 <% _.each(dar.productStatuses, function(productStatus) { %>		
-										  <tbody>
-										    <tr>
-										      <td><%= productStatus.productURL %></td>
-										      <td><%= getStatus (productStatus.productStatus).status %></td>
-										      <td><%= productStatus.percentageCompleted %></td>
-										      <td><%= productStatus.expectedSize %></td>
-										    </tr>
-										  </tbody>
-									 <% }); %>
-								 </table> 	
-								<% } %>	
-					  	</span>
-					<% }); %>
-				</span>
-		  </div>
-		<% }); %>	         	
+	<div class=ui-grid-a>
 
+		<div id="dmsDiv" class="ui-block-a widget-content ui-body-c">
+			<h4>Download Managers</h4>
+			<ul id="downloadmnagers" data-role="listview" data-inset="true"
+				data-theme="a">
+				<% _.each(getOrderedStatuses(), function(newStatus) { %>
+				<li id="<%= newStatus.downloadManagerName %>" data-mini="true"><%=
+					newStatus.downloadManagerName %></li> <% }); %>
+			</ul>
+		</div>
+
+		<div id="darsDiv" class="ui-block-b widget-content ui-body-c">
+			<h4>Data Access Requests</h4>
+			<% _.each(getOrderedStatuses(), function(newStatus) { %> <%
+			_.each(newStatus.DARs, function(dar) { %>
+			<div id="<%= dar.ID %>" data-role="collapsible"
+				data-collapsed="false" data-inset="true" data-theme="a"
+				data-content-theme="d" data-mini="true">
+				<h4>Data Access Request : <%= dar.ID %></h4>
+
+				<table id="dar" cellpadding="0" cellspacing="0" border="0">
+					<thead>
+						<th></th>
+						<th>Type</th>
+						<th>Status</th>
+						<th>Download Manager</th>
+					</thead>
+					<tbody>
+						<td></td>
+						<td><%= dar.type %></td>
+						<td><%= getStatus (dar.status).status %></td>
+						<td><%= newStatus.DlManagerId %></td>
+						</tr>
+					</tbody>
+				</table>
+
+				<div data-role="collapsible" data-collapsed="false" data-mini="true"
+					data-inset="true" data-theme="c" data-content-theme="d">
+					<h4>Products</h4>
+					<% if (dar.productStatuses) { %>
+					<table id="product" cellpadding="0" cellspacing="0" border="0">
+						<thead>
+							<th>Index</th>
+							<th>ProductURL</th>
+							<th>Status</th>
+							<th>%Completed</th>
+							<th>ExpectedSize</th>
+						</thead>
+						<% _.each(dar.productStatuses, function(productStatus, i) { %>
+						<tbody>
+							<tr>
+								<td><%= i+1 %></td>
+								<td><%= productStatus.productURL %></td>
+								<td><%= getStatus (productStatus.productStatus).status %></td>
+								<td><%= productStatus.percentageCompleted %></td>
+								<td><%= productStatus.expectedSize %></td>
+							</tr>
+						</tbody>
+
+						<% }); %>
+					</table>
+
+					<% } else { %> <label data-mini="true"> No Products
+						available </label> <% } %>
+				</div>
+
+			</div>
+			<% }); %> <% }); %>
+		</div>
+	</div>
 </div>
-
 <div id="monitoringButtons" class="popup-widget-footer">
-	
-	<button id="stop" data-role="button" data-mini="true" data-inline="true" data-theme="a" >Stop</button>
-	<button id="pause" data-mini="true" data-inline="true" data-theme="a">Stop definitively</button> 
+
+	<button id="stop" data-role="button" data-mini="true"
+		data-inline="true" data-theme="a">Stop</button>
+	<button id="pause" data-mini="true" data-inline="true" data-theme="a">Stop
+		definitively</button>
 
 	<div id="serverDARMonitoringResponse"></div>
 
-</div>	
-	
+</div>
