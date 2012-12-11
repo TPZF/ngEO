@@ -18,12 +18,19 @@
 	
 	},
 	
+	
 	"downloadManager" : {
 		"downloadManagerInstallationLink" : "./server/downloadManager/install.html",
-		"undefinedDownloadManagerId"	: "undefined download manager id"	
+		"undefinedDownloadManagerId"	: "undefined download manager id"
 	},
 	
 	"dataAccessRequestStatuses" : {
+	   
+	   "DARStorageTime" : 2, 
+	   
+	   "collapseDAR" : false,
+	    
+	   "collapseProducts" : false, 
 	   
 	   "validationRequestStage" : "validation",
 	   
