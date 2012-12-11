@@ -9,7 +9,9 @@ define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManage
 var DataAccessRequestStatuses = Backbone.Model.extend({
 	
 	defaults:{
-		dataAccessRequestStatuses : []
+		dataAccessRequestStatuses : [],
+		collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
+		collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts
 	},
 
 	initialize : function(){
@@ -33,7 +35,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 			 if (foundDM.indexOf(status.DlManagerId) == -1){
 				 foundDM.push(status.DlManagerId);
 				 dars = [];
-				 dars.push({"ID" : status.ID, "type": status.type, "status": status.status, "productStatuses" : status.productStatuses});
+				 dars.push({"ID" : status.ID, "type": status.type, "status": status.status, "productStatuses" : status.productStatuses });
 				 statuses.push({"downloadManagerName" : DownloadManagers.getDownloadManagerName(status.DlManagerId), "DlManagerId" : status.DlManagerId, "DARs" : dars }); 
 			 }else{
 				 _.each(statuses, function(newStatus) {
