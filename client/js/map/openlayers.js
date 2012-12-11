@@ -119,7 +119,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 				   });
 		break;
 	case "WMTS":
-		olLayer = new OpenLayers.Layer.WMTS({
+		var config = {
 			name: layer.name,
 			url: layer.baseUrl,
 			layer: layer.params.layer,
@@ -129,12 +129,21 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			isBaseLayer: false,
 			zoomOffset: -1,
 			projection: layer.projection,
-			dimensions: [ 'TIME' ],
-			params: {
+		};
+		
+		// Manage time
+		if ( layer.params.time ) {
+			config.dimensions = [ 'TIME' ];
+			config.params = {
 				'TIME': layer.params.time
-			},
-			tileFullExtent: new OpenLayers.Bounds(layer.bbox)
-		});
+			};
+		}
+		
+		// Manage bbox
+		if ( layer.bbox ) {
+			config.tileFullExtent = new OpenLayers.Bounds(layer.bbox);
+		}
+		olLayer = new OpenLayers.Layer.WMTS(config);
 		break;
 	case "GEORSS":
 		//olLayer = new OpenLayers.Layer.GeoRSS(layer.name, layer.location, { projection: "EPSG:4326" });	
