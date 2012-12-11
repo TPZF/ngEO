@@ -28,6 +28,10 @@
 	   
 	   "DARStorageTime" : 2, 
 	   
+	   "collapseDAR" : false,
+	    
+	   "collapseProducts" : true, 
+	   
 	   "validationRequestStage" : "validation",
 	   
 	   "confirmationRequestStage" : "confirmation",
