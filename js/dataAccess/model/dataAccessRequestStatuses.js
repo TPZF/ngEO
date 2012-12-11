@@ -9,8 +9,7 @@ define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManage
 var DataAccessRequestStatuses = Backbone.Model.extend({
 	
 	defaults:{
-		dataAccessRequestStatuses : [],
-		//orderedStatuses : []
+		dataAccessRequestStatuses : []
 	},
 
 	initialize : function(){
