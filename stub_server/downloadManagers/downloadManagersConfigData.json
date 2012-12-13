@@ -14,9 +14,17 @@
 	        "downloadmanagerid": "DM_02",
 	        "downloadmanagerfriendlyname": "TPZ Limited Main DM",
 	        "userid" : "tpz_user1",
-	        "status" : "ACTIVE",
+	        "status" : "INACTIVE",
 	        "ipaddress": "dmServer.tpz.fr",
 	        "lastaccessdate" : "2012-11-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadmanagerid": "DM_03",
+	        "downloadmanagerfriendlyname": "TPZ Test NGEO DM",
+	        "userid" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipaddress": "dmServer.tpz.ngeo.fr",
+	        "lastaccessdate" : "2012-12-22T09:30:47-05:00"
 	    }
 	]
 } 
