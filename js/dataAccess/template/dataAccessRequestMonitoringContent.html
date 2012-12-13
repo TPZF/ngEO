@@ -1,25 +1,9 @@
-
-<div id="dataAccessMonitoringContent" class="widget-content ui-body-c">
-
-
-	<div class=ui-grid-a>
-
-		<div id="dmsDiv" class="ui-block-a widget-content ui-body-c">
-			<h4>Download Managers : <%= getOrderedStatuses().length %></h4>
-			<ul id="downloadmnagers" data-role="listview" data-inset="true"
-				data-theme="a">
-				<% _.each(getOrderedStatuses(), function(newStatus) { %>
-				<li id="<%= newStatus.downloadManagerName %>" data-mini="true"><%=
-					newStatus.downloadManagerName %> : <%= newStatus.DARs.length %></li> <% }); %>
-			</ul>
-		</div>
-
-		<div id="darsDiv" class="ui-block-b widget-content ui-body-c">
-			<h4>Data Access Requests </h4>
-			<% _.each(getOrderedStatuses(), function(newStatus) { %> <%
-			_.each(newStatus.DARs, function(dar) { %>
+			<h4>Data Access Requests : </h4>
+			
+			<% _.each(getOrderedStatuses(), function(newStatus) { %> 
+				<%_.each(newStatus.DARs, function(dar) { %>
 			<div id="<%= dar.ID %>" data-role="collapsible"
-				data-collapsed="<%= attributes.collapseDAR %>" data-inset="true" data-theme="f"
+				data-collapsed="<%= attributes.collapseDAR %>" data-inset="true" data-theme="a"
 				data-content-theme="c" data-mini="true">
 				<h4><%= dar.type %> : <%= dar.ID %></h4>
 
@@ -28,18 +12,20 @@
 						<th>Type</th>
 						<th>Status</th>
 						<th>Download Manager</th>
+						<th>Products</th>
 					</thead>
 					<tbody>
 						<tr>
 							<td><%= dar.type %></td>
-							<td><%= getStatus (dar.status).status %></td>
-							<td><%= newStatus.DlManagerId %></td>
+							<td><%= getStatusReadableString (dar.status).status %></td>
+							<td><%= newStatus.dlManagerId %></td>
+							<td><%= (dar.productStatuses)? dar.productStatuses.length : 0 %></td>
 						</tr>
 					</tbody>
 				</table>
 
 				<div data-role="collapsible" data-collapsed="<%= attributes.collapseProducts %>" data-mini="true"
-					data-inset="true" data-theme="c" data-content-theme="d">
+					data-inset="true" data-theme="a" data-content-theme="d">
 					<h4>Products</h4>
 					<% if (dar.productStatuses) { %>
 					<table cellpadding="0" cellspacing="0" border="0">
@@ -53,7 +39,7 @@
 						<tbody>
 							<tr>
 								<td><%= productStatus.productURL %></td>
-								<td><%= getStatus (productStatus.productStatus).status %></td>
+								<td><%= getStatusReadableString (productStatus.productStatus).status %></td>
 								<td><%= productStatus.percentageCompleted %></td>
 								<td><%= productStatus.expectedSize %></td>
 							</tr>
@@ -68,26 +54,15 @@
 
 				<div class="popup-widget-footer">
 				
-					<button id="stop_<%= dar.ID %>" data-role="button" data-mini="true"
-						data-inline="true" data-theme="a">Stop</button>
-					<button id="pause_<%= dar.ID %>" data-mini="true" data-inline="true" data-theme="a">Stop
+					<button id="pause_<%= dar.ID %>" data-role="button" data-mini="true"
+						data-inline="true" data-theme="a">Pause</button>
+					<button id="stop_<%= dar.ID %>" data-mini="true" data-inline="true" data-theme="a">Stop
 						definitively</button>
 				
 					<div id="serverDARMonitoringResponse_<%= dar.ID %>"></div>
 				
-				</div>
-			</div>
-			<% }); %> <% }); %>
+				</div>					
 		</div>
-	</div>
-</div>
-<!-- <div id="monitoringButtons" class="popup-widget-footer"> -->
-
-<!-- 	<button id="stop" data-role="button" data-mini="true" -->
-<!-- 		data-inline="true" data-theme="a">Stop</button> -->
-<!-- 	<button id="pause" data-mini="true" data-inline="true" data-theme="a">Stop -->
-<!-- 		definitively</button> -->
-
-<!-- 	<div id="serverDARMonitoringResponse"></div> -->
-
-<!-- </div> -->
+		<% }); %> 
+		
+		<% }); %>
