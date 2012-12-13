@@ -1,4 +1,4 @@
-
+/** set the titles for download managers and DARS section in the centre*/
 #dataAccessMonitoringContent h4 {
 	text-align : center;
 }
@@ -8,12 +8,21 @@
 	overflow : auto;
 }
 
+/** set the font of download managers list items */  
+#dmsDiv li {
+	font-size : 12px;
+}
+
 #darsDiv {
 	max-height : 500px;
 	max-width : 1000px;
 	width : 70%;
 	overflow : auto;
 	text-align : center;
+}
+/** style the text of the DAR collapsible */
+.ui-collapsible-heading .ui-btn-text{
+	font-size : 12px;
 }
 
 #dataAccessMonitoringContent table th{
@@ -31,7 +40,6 @@
 .ui-icon-processing {
 	background: #a6d36a;
 	background-repeat: no-repeat;
-	-moz-border-radius:                 9px;
 	-webkit-border-radius:              9px;
 	border-radius:                      9px;
 	float : right;
@@ -40,15 +48,14 @@
 .ui-icon-cancelled {
 	background: #c1272c;
 	background-repeat: no-repeat;
-	-moz-border-radius:                 9px;
 	-webkit-border-radius:              9px;
 	border-radius:                      9px;
+	float : right;
 }
 
 .ui-icon-paused {
-	background: #faec4e;
+	background: #DFCF1F;
 	background-repeat: no-repeat;
-	-moz-border-radius:                 9px;
 	-webkit-border-radius:              9px;
 	border-radius:                      9px;
 	float : right;
@@ -57,7 +64,6 @@
 .ui-icon-completed {
 	background: #2489ce;
 	background-repeat: no-repeat;
-	-moz-border-radius:                 9px;
 	-webkit-border-radius:              9px;
 	border-radius:                      9px;
 	float : right;
@@ -66,7 +72,8 @@
 .ui-icon-unknown {
 	background: #736357;
 	background-repeat: no-repeat;
-	-moz-border-radius:                 9px;
 	-webkit-border-radius:              9px;
 	border-radius:                      9px;
+	float : right;
+	
 }
