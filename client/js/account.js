@@ -1,9 +1,9 @@
 
 define(["jquery", "dataAccess/model/dataAccessRequestStatuses", 
-        "dataAccess/model/downloadManagers", 
-        "dataAccess/view/dataAccessRequestMonitoringView", "text!../pages/account.html", "tabs"], 
+        "dataAccess/model/downloadManagers", "dataAccess/view/dataAccessRequestMonitoringView", 
+        "dataAccess/view/downloadManagersMonitoringView", "text!../pages/account.html", "tabs"], 
 
-        function($, DataAccessRequestStatuses, DownloadManagers, DataAccessRequestMonitoringView, account_html) {
+        function($, DataAccessRequestStatuses, DownloadManagers, DataAccessRequestMonitoringView, DownloadManagersMonitoringView, account_html) {
 	
 return {
 
@@ -26,12 +26,22 @@ return {
 	 */
 	initialize: function() {
 		
-		DataAccessRequestStatuses.fetch().done(function(){
+		DownloadManagers.fetch().done(function(){
 			
-			DownloadManagers.fetch().done(function(){
+			// create the download managers monitoring view
+			var dmView = new DownloadManagersMonitoringView({
+				model : DownloadManagers,
+				el : "#downloadManagersMonitoring"
+			});
 			
-				console.log("statuses");
-				console.log(DataAccessRequestStatuses.attributes);
+			dmView.render();
+			
+			
+			//create the DARs monitoring view
+			DataAccessRequestStatuses.fetch().done(function(){
+				
+				//console.log("statuses");
+				//console.log(DataAccessRequestStatuses.attributes);
 				var darView = new DataAccessRequestMonitoringView({
 					model : DataAccessRequestStatuses,
 					el : "#DARMonitoring"
