@@ -4,7 +4,7 @@
             "ID": "DAR_00000011075",
             "type": "Simple Data Access Request",
             "status": 0,
-            "DlManagerId": "DM_01",
+            "dlManagerId": "DM_01",
             "productStatuses": [
                 {
                     "productURL": "https://S2PF/XXXXXXXXXXXX0001",
@@ -30,19 +30,19 @@
             "ID": "DAR_00000011076",
             "type": "Standing Order Data Access Request",
             "status": 1,
-            "DlManagerId": "DM_02"
+            "dlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011077",
             "type": "Standing Order Data Access Request",
-            "status": 5,
-            "DlManagerId": "DM_02"
+            "status": 3,
+            "dlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011078",
             "type": "Simple Data Access Request",
-            "status": "4",
-            "DlManagerId": "DM_01",
+            "status": 1,
+            "dlManagerId": "DM_01",
             "productStatuses": [
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0015",
@@ -62,19 +62,19 @@
             "ID": "DAR_00000011079",
             "type": "Standing Order Data Access Request",
             "status": 1,
-            "DlManagerId": "DM_02"
+            "dlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011080",
             "type": "Standing Order Data Access Request",
-            "status": 5,
-            "DlManagerId": "DM_02"
+            "status": 3,
+            "dlManagerId": "DM_02"
         },
         {
             "ID": "DAR_00000011081",
             "type": "Standing Order Data Access Request",
             "status": 0,
-            "DlManagerId": "DM_01"
+            "dlManagerId": "DM_01"
         }
     ]
 }
