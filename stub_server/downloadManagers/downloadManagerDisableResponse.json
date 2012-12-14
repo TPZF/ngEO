@@ -1,0 +1,12 @@
+{
+    "downloadmanagerid": "DM_01",
+    "downloadmanagerfriendlyname": "Magellium Limited Main DM",
+    "userid": "esa_user1",
+    "status": "INACTIVE",
+    "ipaddress": "dmServer.magellium.fr",
+    "lastaccessdate": "2001-12-17T09:30:47-05:00",
+    "stoporder": "STOP",
+    "stoporderdate": "2001-12-17T09:20:47-05:00",
+    "stoporderid": "ORDER_455",
+    "stopordertransmissiondate": "2001-12-17T09:20:47-05:00"
+}
