@@ -18,8 +18,6 @@
 				<% if (downloadManager.status == 'ACTIVE'){ %>
 					<td><span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span></td>
 				<% } else if (downloadManager.status == 'INACTIVE') { %>
-					<td><span class="ui-icon-paused ui-icon ui-shadow">&nbsp;</span></td>
-				<% } else if (downloadManager.status == 'STOPPED') { %>
 					<td><span class="ui-icon-cancelled ui-icon ui-shadow">&nbsp;</span></td>
 				<% } else { %>
 					<td><span class="ui-icon-unknown ui-icon ui-shadow">&nbsp;</span></td> 
@@ -38,10 +36,11 @@
 
 <div class="popup-widget-footer">
 
+	<div id="dm_server_response"></div>
 	<button id="enable_dm" data-role="button" data-mini="true"
 		data-inline="true" data-theme="a">Enable</button>
 	<button id="disable_dm" data-mini="true" data-inline="true"
 		data-theme="a">Disable</button>
-	<button id="stop_dm" data-mini="true" data-inline="true"
-		data-theme="a">Stop</button>
+<!-- 	<button id="stop_dm" data-mini="true" data-inline="true" -->
+<!-- 		data-theme="a">Stop</button> -->
 </div>
