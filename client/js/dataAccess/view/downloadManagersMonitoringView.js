@@ -67,13 +67,13 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		}
 	},
 	
+	//TODO refactor to create a new sub view for the each download manager row
 	/**call back function when a server has send back a response for a download manager
 	 * status change request. the argument is an array ['SUCCESS'|'ERROR', dmI', newStatus, 'message']
 	 * In all cases display the message and only in case of a successful status change
 	 * update the download manager view.
 	 */ 
 	updateDownloadManagerStatusView : function(args){
-		
 		
 		$("#dm_server_response").empty();
 		$("#dm_server_response").append(args[3]);
@@ -82,7 +82,13 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			
 			var iconCell = $('.dm_selected').find("td:eq(0)");
 			console.log(iconCell);
-			iconCell.empty();	
+			//find the status cell
+			var statusCell = $('.dm_selected').find("td:eq(3)");
+			console.log(statusCell);
+			iconCell.empty();
+			//update the status cell with the new value
+			statusCell.empty();
+			statusCell.append(args[2]);
 			
 			switch (args[2]) {
 				
