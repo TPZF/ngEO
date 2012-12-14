@@ -94,20 +94,20 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 				
 				case 'ACTIVE' :
 					
-					iconCell.append('<span class="ui-icon-processing ui-icon">&nbsp;</span>');
+					iconCell.append('<span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span>');
 					$("#enable_dm").button('disable');
 					$("#disable_dm").button('enable');
 					break;
 				
 				case 'INACTIVE'  :
-					iconCell.append('<span class="ui-icon-cancelled ui-icon">&nbsp;</span>');
+					iconCell.append('<span class="ui-icon-cancelled ui-icon ui-shadow">&nbsp;</span>');
 					$("#enable_dm").button('enable');
 					$("#disable_dm").button('disable');
 					break;
 		
 				//Unknown Status
 				default :
-					iconCell.append('<span class="ui-icon-unknown ui-icon">&nbsp;</span>');
+					iconCell.append('<span class="ui-icon-unknown ui-icon ui-shadow">&nbsp;</span>');
 					$("#enable_dm").button('disable');
 					$("#disable_dm").button('disable');
 			  		break;
