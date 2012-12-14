@@ -17,7 +17,7 @@
 					<tbody>
 						<tr>
 							<td><%= dar.type %></td>
-							<td><%= getStatusReadableString (dar.status).status %></td>
+							<td><%= getStatusReadableString (dar.status) %></td>
 							<td><%= newStatus.dlManagerId %></td>
 							<td><%= (dar.productStatuses)? dar.productStatuses.length : 0 %></td>
 						</tr>
@@ -39,7 +39,7 @@
 						<tbody>
 							<tr>
 								<td><%= productStatus.productURL %></td>
-								<td><%= getStatusReadableString (productStatus.productStatus).status %></td>
+								<td><%= getStatusReadableString (productStatus.productStatus) %></td>
 								<td><%= productStatus.percentageCompleted %></td>
 								<td><%= productStatus.expectedSize %></td>
 							</tr>
@@ -54,12 +54,14 @@
 
 				<div class="popup-widget-footer">
 				
+					<div id="serverDARMonitoringResponse_<%= dar.ID %>" class="ui-message"></div>
+					
 					<button id="pause_<%= dar.ID %>" data-role="button" data-mini="true"
 						data-inline="true" data-theme="a">Pause</button>
 					<button id="stop_<%= dar.ID %>" data-mini="true" data-inline="true" data-theme="a">Stop
 						definitively</button>
 				
-					<div id="serverDARMonitoringResponse_<%= dar.ID %>"></div>
+					
 				
 				</div>					
 		</div>
