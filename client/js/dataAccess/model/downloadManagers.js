@@ -76,7 +76,9 @@ var DownloadManagers = Backbone.Model.extend({
 		  dataType: 'json',
 		  success: function(data) {
 			  //console.log(self.getDownloadManagerIndex(dmID));
-			  self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)] = data;
+			  //TODO UPDATE THE WHOLE DATA WHEN INTEGRATED WITH REAL INTERFACES
+			  //self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)].status = data;
+			  self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)].status = newStatus;
 			  //notify that the download manager status has been successfully changed
 			  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, 'Status changed Successfully to : ' + newStatus]);  
 		  },
