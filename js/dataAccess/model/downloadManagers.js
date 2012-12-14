@@ -29,6 +29,50 @@ var DownloadManagers = Backbone.Model.extend({
 		 });
 		
 		return name;
+	},
+
+	/** get a download manager status given its id */
+	getDownloadManagerStatus : function (id) {
+	
+		var status = null;
+		
+		_.each(this.get("downloadmanagers"), function(dm) {
+			if (dm.downloadmanagerid == id){
+				status =  dm.status;
+			} 
+		 });
+		
+		return status;
+	},
+	
+	/** Submit the DM change status request to the server.
+	 * triggers a notification event with these arguments ['SUCCESS'|'ERROR', dmI', newStatus, 'message']
+	 */
+	requestChangeStatus : function(dmID, newStatus){
+	
+		console.log ("DM change Status request");
+		var self = this;
+		var dmChangeStatusURL = self.url + '/' + dmID + '/changeStatus?new_status=' + newStatus;
+		console.log ("dmChangeStatusURL : ");
+		console.log (dmChangeStatusURL);
+		
+		return $.ajax({
+		  url: dmChangeStatusURL,
+		  type : 'GET',
+		  dataType: 'json',
+		  success: function(data) {
+			
+			  //notify that the download manager status has been successfully changed
+			  self.trigger('DownloadManagerStatusChanged', ['Success', dmID, newStatus, 'Status changed Successfully']);  
+		  },
+		  
+		  error: function(jqXHR, textStatus, errorThrown) {
+		
+			  console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
+			  //notify that the download manager status change has Failed
+			  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus,  "ERROR when posting Change status Request : " + textStatus + ' ' + errorThrown]);  
+		  }
+		});	
 	}
 
 });
