@@ -51,6 +51,21 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 
 	},
 	
+	
+	/** get a DAR status index given its id */
+	getDARStatusIndex : function (id) {
+	
+		var index = null;
+		
+		_.each(this.get("dataAccessRequestStatuses"), function(dar, i) {
+			if (dar.ID == id){
+				index =  i;
+			} 
+		 });
+		
+		return index;
+	},
+	
 	/**
 	 * reorder all the DARs'statuses in a new object by download manager name 
 	 */
@@ -91,27 +106,27 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  switch (status){
 		  
 		  	  case validStatusesConfig.validatedStatus.value:
-		  		 return validStatusesConfig.validatedStatus;
+		  		 return validStatusesConfig.validatedStatus.status;
 				 break;
 			 
 			  case validStatusesConfig.bulkOrderStatus.value:
-				  return validStatusesConfig.bulkOrderStatus;
+				  return validStatusesConfig.bulkOrderStatus.status;
 				  break;
 				  
 			  case validStatusesConfig.inProgressStatus.value:
-				  return validStatusesConfig.inProgressStatus;
+				  return validStatusesConfig.inProgressStatus.status;;
 				  break;
 			
 			  case validStatusesConfig.pausedStatus.value:
-				  return validStatusesConfig.pausedStatus;
+				  return validStatusesConfig.pausedStatus.status;;
 				  break;
 				  
 			  case validStatusesConfig.cancelledStatus.value:
-				  return validStatusesConfig.cancelledStatus;
+				  return validStatusesConfig.cancelledStatus.status;
 				  break;
 
 		   		default :
-		   		  return {status : "Unknown Status"};
+		   		  return "Unknown Status";
 		   		  break;
 		  }	
 	},
@@ -162,13 +177,22 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  contentType: 'application/json',
 		  data : JSON.stringify(request),
 		  success: function(data) {
-			//TODO WAITING CLARIFICATION FROM GARIN	FOR SERVER RESPONSE FORMAT  
+			  //
+			  console.log(self.getDARStatusIndex(darID));
+			  //TODO FOR THE MOMENT THE SERVER SENDS NO RESPONSE BECAUSE NOT SPECIFIED IN THE ICD!!!
+			  //Waiting for clarification ngeo 316
+			  //self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(dmID)].status = data;
+			  self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(darID)].status = newStatus;
+			  //notify that the DAR status has been successfully changed
+			  self.trigger('DARStatusChanged', ['SUCCESS', darID, newStatus, 'Status changed Successfully to : ' + self.getStatusReadableString(newStatus)]);  
+
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
 			  console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
-			  self.serverResponse = Configuration.data.dataAccessRequestStatuses.requestSubmissionError ;
-			  self.trigger('toggleRequestButton', ['disable']);
+			  //notify that the download manager status change has Failed
+			  self.trigger('DARStatusChanged', ['ERROR', darID, newStatus,  "ERROR when posting Change status Request : " + textStatus + ' ' + errorThrown]);  
+
 		  }
 		});	
 	}
