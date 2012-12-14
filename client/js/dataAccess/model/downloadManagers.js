@@ -45,6 +45,20 @@ var DownloadManagers = Backbone.Model.extend({
 		return status;
 	},
 	
+	/** get a download manager given its id */
+	getDownloadManagerIndex : function (id) {
+	
+		var index = null;
+		
+		_.each(this.get("downloadmanagers"), function(dm, i) {
+			if (dm.downloadmanagerid == id){
+				index =  i;
+			} 
+		 });
+		
+		return index;
+	},
+	
 	/** Submit the DM change status request to the server.
 	 * triggers a notification event with these arguments ['SUCCESS'|'ERROR', dmI', newStatus, 'message']
 	 */
@@ -61,9 +75,10 @@ var DownloadManagers = Backbone.Model.extend({
 		  type : 'GET',
 		  dataType: 'json',
 		  success: function(data) {
-			
+			  //console.log(self.getDownloadManagerIndex(dmID));
+			  self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)] = data;
 			  //notify that the download manager status has been successfully changed
-			  self.trigger('DownloadManagerStatusChanged', ['Success', dmID, newStatus, 'Status changed Successfully']);  
+			  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, 'Status changed Successfully to : ' + newStatus]);  
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
