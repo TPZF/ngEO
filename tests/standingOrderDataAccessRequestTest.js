@@ -63,12 +63,12 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 						QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
 								"confirmation",  "Request Stage Confirmation");	
 						
+						QUnit.start();
 						
 					});
 					
 				});
 				
-				QUnit.start();
 			});		
 				
 		});
