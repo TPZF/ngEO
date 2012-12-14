@@ -22,7 +22,7 @@
 	        "downloadmanagerid": "DM_03",
 	        "downloadmanagerfriendlyname": "TPZ Test NGEO DM",
 	        "userid" : "tpz_user2",
-	        "status" : "STOPPED",
+	        "status" : "ACTIVE",
 	        "ipaddress": "dmServer.tpz.ngeo.fr",
 	        "lastaccessdate" : "2012-12-22T09:30:47-05:00"
 	    }
