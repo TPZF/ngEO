@@ -15,6 +15,7 @@ var express = require('express')
   , simpleDataAccessRequest = require('./simpleDataAccessRequest')
   , standingOrderDataAccessRequest = require('./standingOrderDataAccessRequest')
   , downloadStatuses = require('./dataAccessRequestStatus')
+  , downloadHelper = require('./downloadHelper')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
@@ -61,6 +62,8 @@ app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest)
 //data access statuses interface
 app.all(/\/ngeo\/dataAccessRequestStatus.*/, downloadStatuses);
 
+//download helper interface
+app.get(/\/ngeo\/downloadHelper.*/, downloadHelper);
 
 // Setup some proxy route (to have access to WFS or GeoRSS services)
 proxy.setup(app,[{ 
