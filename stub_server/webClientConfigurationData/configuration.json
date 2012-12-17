@@ -26,11 +26,9 @@
 	
 	"dataAccessRequestStatuses" : {
 	   
-	   "DARStorageTime" : 2, 
-	   
-	   "collapseDAR" : false,
+	   "collapseDAR" : true,
 	    
-	   "collapseProducts" : false, 
+	   "collapseProducts" : true, 
 	   
 	   "validationRequestStage" : "validation",
 	   
@@ -39,26 +37,32 @@
 	    "validStatuses": {
 	        "inProgressStatus": {
 	            "value": 0,
+	            "status" : "Processing",
 	            "message": "Request In Process..."
 	        },
 	        "pausedStatus": {
 	            "value": 1,
+	            "status" : "Paused",
 	            "message": "Request Paused"
 	        },
 	        "completedStatus": {
 	            "value": 2,
+	            "status" : "Completed",
 	            "message": "Request Completed"
 	        },
 	        "cancelledStatus": {
 	            "value": 3,
+	            "status" : "Cancelled",
 	            "message": "Request Cancelled"
 	        },
 	        "validatedStatus": {
 	            "value": 4,
+	            "status" : "Validated",
 	            "message": "Request Acknowledged"
 	        },
 	        "bulkOrderStatus": {
 	            "value": 5,
+	            "status" : "BulkOrdered",
 	            "message": "Request Max Size Exceeded"
 	        }
 	    },
