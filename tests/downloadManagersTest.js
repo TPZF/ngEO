@@ -4,7 +4,7 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 	QUnit.module("DownloadManagers");
 	
 	//load the datasets 
-	QUnit.asyncTest("Check Received DownloadManagers", 12, function () {
+	QUnit.asyncTest("Check & Monitor DownloadManagers", 12, function () {
 		DownloadManagers.initialize();
 		DownloadManagers.fetch().done( function() {
 			
@@ -15,13 +15,13 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 			QUnit.ok(downloadmanagers[0].downloadmanagerid ,"Download Manager ID found");
 			QUnit.ok(downloadmanagers[0].downloadmanagerfriendlyname ,"Download Manager friendly name found");
 			QUnit.ok(downloadmanagers[0].userid ,"Download Manager user ID found");
-			QUnit.ok(downloadmanagers[0].status == 'ACTIVE',"Download Manager status found");
+			QUnit.ok(downloadmanagers[0].status == 'ACTIVE', "DM_01 is ACTIVE");
 			QUnit.ok(downloadmanagers[0].ipaddress ,"Download Manager ipaddress found");
 			QUnit.ok(downloadmanagers[0].lastaccessdate ,"Download Manager lastaccessdate found");
 			
 			//test DM change request status 
 			DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'INACTIVE').done(function(){
-				QUnit.ok(downloadmanagers[0].status == 'INACTIVE', "changed DM from ACTIVE to INACTIVE");
+				QUnit.ok(downloadmanagers[0].status == 'INACTIVE', "changed DM_01 from ACTIVE to INACTIVE");
 				
 				//test DM change request status 
 				DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'ACTIVE').done(function(){
@@ -30,7 +30,7 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 				
 			});
 			
-			QUnit.ok(downloadmanagers[1].status == 'INACTIVE', "changed DM_02 from INACTIVE to ACTIVE");
+			QUnit.ok(downloadmanagers[1].status == 'INACTIVE', " DM_02 is INACTIVE");
 			
 			//test DM change request status 
 			DownloadManagers.requestChangeStatus(downloadmanagers[1].downloadmanagerid, 'ACTIVE').done(function(){
