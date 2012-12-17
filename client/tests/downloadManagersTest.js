@@ -4,7 +4,7 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 	QUnit.module("DownloadManagers");
 	
 	//load the datasets 
-	QUnit.asyncTest("Check Received DownloadManagers", 8, function () {
+	QUnit.asyncTest("Check Received DownloadManagers", 9, function () {
 		DownloadManagers.initialize();
 		DownloadManagers.fetch().done( function() {
 			
@@ -22,9 +22,15 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 			//test DM change request status 
 			DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'INACTIVE').done(function(){
 				QUnit.ok(downloadmanagers[0].status == 'INACTIVE', "changed DM from ACTIVE to INACTIVE");
-				QUnit.start();
-			});
 				
+				//test DM change request status 
+				DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'ACTIVE').done(function(){
+					QUnit.ok(downloadmanagers[0].status == 'ACTIVE', "changed DM from INACTIVE to ACTIVE");
+					QUnit.start();
+				});
+				
+			});
+	
 		});
 	});
 
