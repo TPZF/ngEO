@@ -81,6 +81,8 @@
 		"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
 	},
 	
+	"downloadHelperService" : {"url" : "http://localhost:3000/ngeo/downloadHelper"},
+	
 	"map": {
 	
 		"pp": "EPSG:900913", 
