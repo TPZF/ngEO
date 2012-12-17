@@ -8,6 +8,11 @@ define(
 
 			initialize : function(){
 				this.model.on("DARStatusChanged" , this.updateDARStatusView, this);
+				//orderedStatuses is the model for the monitoring view, it wrappes the DataAccessRequestStatuses model
+				//and the orderedStatusesToDisplay which the array of the DARs to be displayed.
+				//It is useful to update the orderedStatusesToDisplay according the DM selected.
+				this.orderedStatuses = { orderedStatusesToDisplay : this.model.getOrderedStatuses(),
+										 model : this.model};
 			},
 			
 			events : {
@@ -17,8 +22,6 @@ define(
 					//the stop and pause buttons ids follow expressions stop_id and pause_id 
 					//where is is the related dar id
 					var darId = buttonId.substring(buttonId.indexOf('_')+1, buttonId.length);
-					console.log(darId);
-					
 					var validStatusesConfig = Configuration.data.dataAccessRequestStatuses.validStatuses;
 					
 					if (buttonId.indexOf('stop') == 0){//stop button is clicked
@@ -39,24 +42,35 @@ define(
 				},
 				
 				'click li' : function(event){
-//					console.log($('#'+ event.currentTarget.id));
-//					var target = $('#'+ event.currentTarget.id);
-//					if ( target.hasClass('ui-btn-active') ) {
-//						target.removeClass('ui-btn-active');
-//						this.selectedDownloadManagertId = undefined;
-//						
-//				    } else {
-//					   this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
-//					  target.addClass('ui-btn-active');
-//					  this.selectedDatasetId = event.currentTarget.id;
-//				    }
-				
+					console.log($('#'+ event.currentTarget.id));
+					var target = $('#'+ event.currentTarget.id);
+					var filtredStatuses;
+					
+					if ( target.hasClass('ui-btn-active') ) {
+						target.removeClass('ui-btn-active');
+						this.selectedDownloadManagertId = undefined;
+						//no Download manager is selected so get the whole list of DARs
+						this.orderedStatuses.orderedStatusesToDisplay = this.model.getOrderedStatuses();
+						//empty the tab content and the redraw the whole list since no DM is selected 
+						$("#DARMonitoring").empty();
+						this.render();
+						
+				    } else {
+					  
+				    	this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
+				    	target.addClass('ui-btn-active');
+				    	this.selectedDownloadManagertId = event.currentTarget.id;
+				    	//set up the list of DARs according to the selected Download manager
+				    	this.orderedStatuses.orderedStatusesToDisplay = this.model.getFilterOrderedStatuses(this.selectedDownloadManagertId);
+				    	//the update view method is used rather than render method in order to keep the status of the download manager
+				    	//selected in the list and just update the list and not all the view.
+				    	this.updateView();
+				    }
 				}
 			},
 			
-			/** change the "Pause" button text to be Resume
-			 * update the button text in the jqm span for button text to make the
-			 * button text updated*/
+			/** Call back method called after a DAR status change response received from the server.  
+			 * The method changes the DAR icon and the status of the buttons according to the new changed status of the DAR */
 			updateDARStatusView : function(args){
 
 				var darId = args[1];
@@ -100,8 +114,7 @@ define(
 							break;
 				
 						case validStatusesConfig.cancelledStatus.value :// cancelled triggered by clicking on stop 
-							//definitevely and the old status was processing or paused
-							
+							//definitively and the old status was processing or paused
 							collapsibleHeader.find("span .ui-icon-processing").remove();
 							collapsibleHeader.find("span .ui-icon-paused").remove();
 							collapsibleHeader.append('<span class="ui-icon-cancelled ui-icon ui-shadow">&nbsp;</span>');
@@ -120,72 +133,91 @@ define(
 				}
 			},
 		
+			/** update the list of selected data access statuses when a download manager has been selected. */
+			updateView : function(){
+				$("#darsDiv").empty();
+				var darsContent = _.template(DAR_monitoring_template, this.orderedStatuses);
+				$("#darsDiv").append(darsContent);
+				this.$el.trigger('create');
+				this.setUpStatusIcons();
+			},
+			
+			/** Display the list of DMs assigned to Data Access Requests in the left side and the list of 
+			 * Data access request in the right side.
+			 * By default all the DARS are displayed.  */
 			render : function() {
 
 				var mainContent = _.template(accountDARs_template, this.model);
 				this.$el.append(mainContent);
-				var darsContent = _.template(DAR_monitoring_template, this.model);
+				var darsContent = _.template(DAR_monitoring_template, this.orderedStatuses);
 				$("#darsDiv").append(darsContent);
-				this.$el.trigger('create');
+				this.$el.trigger('create');			
+				this.setUpStatusIcons();
+				return this;
+			},
 			
+			/** assign the correct status icon and update the buttons status for each data access request 
+			 * depending on the DAR status. */
+			setUpStatusIcons : function(){
+				
 				var validStatusesConfig = Configuration.data.dataAccessRequestStatuses.validStatuses;
 				var self = this;
 				
-				_.each(this.model.get("dataAccessRequestStatuses"), function(darStatus, i){
+				_.each(this.orderedStatuses.orderedStatusesToDisplay, function(orderedStatus){
 					
-					//select the DAR element
-					var selector = "div[id='" + darStatus.ID + "']";
-//					console.log("selector");
-//					console.log(selector);	
-					var darDiv = $("#darsDiv").find(selector);
-					var collapsibleHeader = darDiv.find(".ui-btn-inner:eq(0)");	
-					var pauseButton = darDiv.find("button[id='pause_" + darStatus.ID + "']");
-					var stopButton = darDiv.find("button[id='stop_" + darStatus.ID + "']");
-//					console.log(collapsibleHeader);
-//					console.log($(collapsibleHeader).find(".ui-btn-inner"));
+					_.each(orderedStatus.DARs, function(darStatus, i){
+					
+						//select the DAR element
+						var selector = "div[id='" + darStatus.ID + "']";
+	//					console.log("selector");
+	//					console.log(selector);	
+						var darDiv = $("#darsDiv").find(selector);
+						var collapsibleHeader = darDiv.find(".ui-btn-inner:eq(0)");	
+						var pauseButton = darDiv.find("button[id='pause_" + darStatus.ID + "']");
+						var stopButton = darDiv.find("button[id='stop_" + darStatus.ID + "']");
+	//					console.log(collapsibleHeader);
+	//					console.log($(collapsibleHeader).find(".ui-btn-inner"));
+	
+						  switch (darStatus.status){
+	
+						  	  //processing
+							  case validStatusesConfig.inProgressStatus.value:
+								  collapsibleHeader.append('<span class="ui-icon-processing ui-icon .ui-shadow">&nbsp;</span>');
+								  break;
+							
+							  //paused 
+							  case validStatusesConfig.pausedStatus.value:
+								  collapsibleHeader.append('<span class="ui-icon-paused ui-icon .ui-shadow">&nbsp;</span>');
+								  pauseButton.html("Resume"); 
+								  //update the text in the span added by JQM to make the change effective
+								  pauseButton.prev().find(".ui-btn-text").html("Resume"); 
+								  break;
+							
+							  //completed
+							  case validStatusesConfig.completedStatus.value: 
+								  collapsibleHeader.append('<span class="ui-icon-completed ui-icon .ui-shadow">&nbsp;</span>');
+								  pauseButton.button('disable');
+								  stopButton.button('disable');
+								  break; 
+						   			
+							  //Cancelled
+							  case validStatusesConfig.cancelledStatus.value:
+								  collapsibleHeader.append('<span class="ui-icon-cancelled ui-icon .ui-shadow">&nbsp;</span>');
+								  pauseButton.button('disable');
+								  stopButton.button('disable');
+								  break;
+							  
+							  //Unknown Status
+							  default :
+								  collapsibleHeader.append('<span class="ui-icon-unknown ui-icon .ui-shadow">&nbsp;</span>');
+							  	  pauseButton.button('disable');
+							      stopButton.button('disable');
+						  		  break;
+						 }	
 
-					  switch (darStatus.status){
-
-					  	  //processing
-						  case validStatusesConfig.inProgressStatus.value:
-							  collapsibleHeader.append('<span class="ui-icon-processing ui-icon .ui-shadow">&nbsp;</span>');
-							  break;
-						
-						  //paused 
-						  case validStatusesConfig.pausedStatus.value:
-							  collapsibleHeader.append('<span class="ui-icon-paused ui-icon .ui-shadow">&nbsp;</span>');
-							  pauseButton.html("Resume"); 
-							  //update the text in the span added by JQM to make the change effective
-							  pauseButton.prev().find(".ui-btn-text").html("Resume"); 
-							  break;
-						
-						  //completed
-						  case validStatusesConfig.completedStatus.value: 
-							  collapsibleHeader.append('<span class="ui-icon-completed ui-icon .ui-shadow">&nbsp;</span>');
-							  pauseButton.button('disable');
-							  stopButton.button('disable');
-							  break; 
-					   			
-						  //Cancelled
-						  case validStatusesConfig.cancelledStatus.value:
-							  collapsibleHeader.append('<span class="ui-icon-cancelled ui-icon .ui-shadow">&nbsp;</span>');
-							  pauseButton.button('disable');
-							  stopButton.button('disable');
-							  break;
-						  
-						  //Unknown Status
-						  default :
-							  collapsibleHeader.append('<span class="ui-icon-unknown ui-icon .ui-shadow">&nbsp;</span>');
-						  	  pauseButton.button('disable');
-						      stopButton.button('disable');
-					  		  break;
-					 }	
-
+					});
 				});
-				
-				this.$el.trigger('create');
-				
-				return this;
+
 			}
 
 	});
