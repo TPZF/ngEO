@@ -1,0 +1,16 @@
+
+<div id="directDownloadContent" class="widget-content ui-body-c">
+
+	<div data-role="header"  class="ui-header ui-bar-a" role="banner"> 
+		<h1 role="heading" class="ui-title" aria-level="1"> Direct Download </h1>
+	</div>
+		
+	<ul id="downloadChoiceList" data-role="listview" data-mini="true" data-insets="true" data-theme="b"> 
+		     
+		<li><a href="<%= url %>">Browser Download</a></li>	  
+		<% if (downloadHelperUrl){ %>
+			<li id="downloadHelperUrl"><a href="<%= downloadHelperUrl %>"> Download Manager Download</a></li>
+		<% } %>	
+	</ul>
+
+</div>
