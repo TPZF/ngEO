@@ -1,10 +1,14 @@
 define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
-		  'text!search/template/searchResultViewContent_template.html', 'jquery.mobile', 'jquery.dataTables' ],
+		  'dataAccess/widget/directDownloadWidget','text!search/template/searchResultViewContent_template.html', 
+		  'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-		searchResultsView_temp ) {
+			DirectDownloadWidget, searchResultsView_temp ) {
 
+			/**
+			 * The model is the backbone model SearchResults 
+			 */
 		var SearchResultsTableView = Backbone.View.extend({
 
 			initialize : function(options) {
@@ -39,13 +43,27 @@ define(
 													
 					//Disable the Retrieve Product button if no product item is selected 
 					//and/or if the products checked do not have a product url
-					if ( SimpleDataAccessRequest.getProductUrls(this.model.selection).length == 0 ) {
+					if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
 						this.retrieveProduct.button('disable');
 					} else {
 						this.retrieveProduct.button('enable');
 					}
-				}
-
+				}, 
+				
+				//Called when the user clicks on the product id of an item
+				'click .ui-direct-download' : function(event){
+					var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
+					console.log("Selected Feature");
+					console.log(this.model.get('features')[rowPos]);
+					console.log("Selected url");
+					var featureArray = [];
+					featureArray.push(this.model.get('features')[rowPos]);
+					console.log(this.model.getProductUrls(featureArray)[0]);
+					var directDownloadWidget = new DirectDownloadWidget(this.model.getProductUrls(featureArray)[0]);
+					directDownloadWidget.open();
+			
+				}, 
+			
 			},
 				
 			toggleSelection: function(features) {
@@ -86,6 +104,23 @@ define(
 							//"sPaginationType": "full_numbers",
 							"bSort" : true,
 							"fnDrawCallback": function( oSettings ) {
+					
+								//console.log($("tbody tr"));
+								$("tbody tr").each(function(i, elt){
+									console.log("elt");
+									console.log($(elt));
+									
+									if ($(elt).text() != "No data available in table"){
+										var rowPos = self.table.fnGetPosition(elt);
+										console.log(rowPos);
+										
+										if (self.model.isBrowserSupportedUrl( self.model.get('features')[rowPos])){
+											$(elt).find("td:eq(8)").addClass("ui-direct-download");
+										}
+								
+									}
+								});
+								
 								// insure that JQM styling is still kept after sorting and pagination
 								$("#datatable_filter input").attr('data-mini','true');
 								$("#datatable_filter label").attr('data-mini','true');
@@ -108,6 +143,7 @@ define(
 							 },		
 							
 						});
+			
 				//Style the div of the datatable footer 	
 				$(".bottom").addClass("ui-grid-b");
 				$("#datatable_length").addClass("ui-block-a");
@@ -207,6 +243,7 @@ define(
 				});
 
 				this.$el.trigger('create');
+
 			},
 
 			close : function() {
