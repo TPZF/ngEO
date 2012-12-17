@@ -26,8 +26,6 @@
 	
 	"dataAccessRequestStatuses" : {
 	   
-	   "DARStorageTime" : 2, 
-	   
 	   "collapseDAR" : true,
 	    
 	   "collapseProducts" : true, 
@@ -82,6 +80,8 @@
 		"invalidOpenSearchURLError": "Invalid OpenSearch URL : Empty URL.",
 		"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
 	},
+	
+	"downloadHelperService" : {"url" : "http://localhost:3000/ngeo/downloadHelper"},
 	
 	"map": {
 	
