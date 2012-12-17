@@ -1,6 +1,8 @@
 /**
- * Data Access Request Statuses model It is a singleton which retrieves the all
- * DARs statuses : used for DAR monitoring
+ * Data Access Request Statuses model It is a singleton which :
+ * 1-retrieves all DARs statuses.
+ * 2-orders the DARs statuses by order download manager to insure filtering DARs by DM.
+ * Theses functionalities are used for DAR monitoring.
  */
 
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers'], 
@@ -10,18 +12,23 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	
 	defaults:{
 		dataAccessRequestStatuses : [],
-		collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
-		collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts,
+		collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR, //the collapsible DARs element initial status
+		collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts,//the collapsible products element initial status
 	},
 
 	initialize : function(){
-		// The base url to retrieve the DARs'statuses list
+		// The base url to retrieve the DARs'statuses list or submit DAR status changes
 		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
 	},
-
 	
 	/**
-	 * reorder all the DARs'statuses in a new object by download manager name 
+	 * reorder all the DARs'statuses in an array of objects each object has the following properties:
+	 * "downloadManagerName" : download manager name
+	 * "dlManagerId" : download manager id
+	 * "DARs" : array of assignment data access request statuses to the DM.
+	 * each DAR is a json as returned by the server.
+	 * {"ID" : ID, "type":type, "status": status, "productStatuses" : product statuses}
+	 * for Standing orders the productStatuses has the value undefined.
 	 */
 	getOrderedStatuses : function (){
 	
@@ -46,13 +53,35 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 			 }
 		 });
 		
-		 console.log(statuses);
 		 return statuses;
 
 	},
 	
+	/** get the json object containing all the DARs relative to one download manager 
+	 * the result is returned as an array to still be compliant with the getOrderedStatuses
+	 * result which is an array */
+	getFilterOrderedStatuses : function (dmID){
+		
+		var foundStatus = null;
+
+		_.each(this.getOrderedStatuses(), function(orderedStatus) {
+			 
+			 if (orderedStatus.dlManagerId == dmID){
+
+				 foundStatus = orderedStatus
+			 }
+		 });
+
+		 var resultArray = [];
 	
-	/** get a DAR status index given its id */
+		 resultArray.push(foundStatus);
+		 
+		 return resultArray;
+	},
+	
+	/** get a DAR status index in the model array given its id 
+	 * used by requestChangeStatus to update the DAR status after a successful DAR
+	 * status change request submission*/
 	getDARStatusIndex : function (id) {
 	
 		var index = null;
@@ -66,39 +95,10 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		return index;
 	},
 	
-	/**
-	 * reorder all the DARs'statuses in a new object by download manager name 
+	/** 
+	 * products do have statuses 0, 1, 2 or 3, however DARs can have also statuses 4 and 5
+	 * this method returns the friendly readable status string from the configuration 
 	 */
-	getStatusesByDMId : function (dmId){
-	
-		var statuses = [];
-		var foundDM = [];
-		var dars = [];
-		var self = this;
-			
-		 _.each(self.get("dataAccessRequestStatuses"), function(status) {
-			 
-			 if (foundDM.indexOf(status.dlManagerId) == -1){
-				 foundDM.push(status.dlManagerId);
-				 dars = [];
-				 dars.push({"ID" : status.ID, "type": status.type, "status": status.status, "productStatuses" : status.productStatuses });
-				 statuses.push({"downloadManagerName" : DownloadManagers.getDownloadManagerName(status.dlManagerId), "dlManagerId" : status.dlManagerId, "DARs" : dars }); 
-			 }else{
-				 _.each(statuses, function(newStatus) {
-					 if (newStatus.dlManagerId == status.dlManagerId){
-						 newStatus.DARs.push({"ID" : status.ID, "type": status.type, "status": status.status, "productStatuses" : status.productStatuses}); 
-					 }
-				 });
-			 }
-		 });
-		
-		 console.log(statuses);
-		 return statuses;
-
-	},
-	
-	/** products do have statuses 1, 2 or 3, however DARs can have also statuses 4 and 5
-	 * this method returns the friendly readable status string from the configuration */
 	getStatusReadableString : function (status){
 		  
 		  var validStatusesConfig = Configuration.data.dataAccessRequestStatuses.validStatuses;
@@ -120,6 +120,10 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 			  case validStatusesConfig.pausedStatus.value:
 				  return validStatusesConfig.pausedStatus.status;;
 				  break;
+				  
+			  case validStatusesConfig.completedStatus.value:
+				  return validStatusesConfig.completedStatus.status;;
+				  break;	 
 				  
 			  case validStatusesConfig.cancelledStatus.value:
 				  return validStatusesConfig.cancelledStatus.status;
@@ -163,12 +167,12 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 			                status : newStatus, 
 			                dlManagerId : darStatus.dlManagerId}
 					};
-		console.log ("change Status request");
-		console.log (request);
+		//console.log ("change Status request");
+		//console.log (request);
 		var self = this;
 		var changeStatusURL = self.url + '/' + darID;
-		console.log ("changeStatusURL : ");
-		console.log (changeStatusURL);
+		//console.log ("changeStatusURL : ");
+		//console.log (changeStatusURL);
 		
 		return $.ajax({
 		  url: changeStatusURL,
@@ -177,8 +181,8 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  contentType: 'application/json',
 		  data : JSON.stringify(request),
 		  success: function(data) {
-			  //
-			  console.log(self.getDARStatusIndex(darID));
+			  
+			  //console.log(self.getDARStatusIndex(darID));
 			  //TODO FOR THE MOMENT THE SERVER SENDS NO RESPONSE BECAUSE NOT SPECIFIED IN THE ICD!!!
 			  //Waiting for clarification ngeo 316
 			  //self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(dmID)].status = data;
