@@ -34,10 +34,10 @@ GlobWebMapEngine = function( parentElement )
 				continuousRendering: false });
 				
 		// Display some stats
-		var stats = document.createElement('div');
+		/*var stats = document.createElement('div');
 		stats.id = "stats";
 		parentElement.appendChild(stats);
-		new GlobWeb.Stats(globe,{ element: stats, verbose: true });
+		new GlobWeb.Stats(globe,{ element: stats, verbose: true });*/
 		
 		// Create the loading element
 		this.$loading = $('<img src="css/images/ajax-loader.gif" id="loading"></img>')
