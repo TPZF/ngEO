@@ -25,17 +25,20 @@ GlobWebMapEngine = function( parentElement )
 		canvas.width = parentElement.clientWidth;
 		canvas.height = parentElement.clientHeight;
 		parentElement.appendChild(canvas);
-			
+		
 		this.canvas = canvas;
 	
 		// Create the globe
 		var globe = new GlobWeb.Globe({ canvas: canvas, 
-				atmosphere: false,
-				lighting: false,
-				tileErrorTreshold: 3, 
+				tileErrorTreshold: 2, 
 				continuousRendering: false });
 				
-	
+		// Display some stats
+		var stats = document.createElement('div');
+		stats.id = "stats";
+		parentElement.appendChild(stats);
+		new GlobWeb.Stats(globe,{ element: stats, verbose: true });
+		
 		// Create the loading element
 		this.$loading = $('<img src="css/images/ajax-loader.gif" id="loading"></img>')
 			.appendTo(parentElement);
