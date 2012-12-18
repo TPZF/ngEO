@@ -58,7 +58,8 @@
 	modules: [
 		{ name: "main" },
 		{ name: "map/map", exclude: ["configuration","backbone","underscore"]},
-		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile"]},
+		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables"]},
+		{ name: "account", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables"]},
 	],
 	dir: "output"
 })
