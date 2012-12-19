@@ -117,7 +117,8 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 	
 	render: function(){
 	
-		var content = _.template(downloadManagersMonitoring_template, this.model.attributes);
+		var content = _.template(downloadManagersMonitoring_template, 
+				_.extend({downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink}, this.model.attributes));
 		this.$el.append(content);
 		this.delegateEvents();
 		this.$el.trigger('create');		
