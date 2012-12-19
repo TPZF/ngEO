@@ -120,10 +120,7 @@ var SearchResultsTableView = Backbone.View.extend({
 					"fnDrawCallback": function( oSettings ) {
 			
 						//console.log($("tbody tr"));
-						$("tbody tr").each(function(i, elt){
-							console.log("elt");
-							console.log($(elt));
-							
+						$("#datatable tbody tr").each(function(i, elt){						
 							if ($(elt).text() != "No data available in table"){
 								var rowPos = self.table.fnGetPosition(elt);
 								console.log(rowPos);
@@ -131,7 +128,6 @@ var SearchResultsTableView = Backbone.View.extend({
 								if (self.model.isBrowserSupportedUrl( self.model.get('features')[rowPos])){
 									$(elt).find("td:eq(8)").addClass("ui-direct-download");
 								}
-						
 							}
 						});
 						
