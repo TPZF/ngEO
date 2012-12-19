@@ -20,7 +20,7 @@
 	
 	
 	"downloadManager" : {
-		"downloadManagerInstallationLink" : "./server/downloadManager/install.html",
+		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html",
 		"undefinedDownloadManagerId"	: "undefined download manager id"
 	},
 	
@@ -80,8 +80,6 @@
 		"invalidOpenSearchURLError": "Invalid OpenSearch URL : Empty URL.",
 		"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
 	},
-	
-	"downloadHelperService" : {"url" : "http://localhost:3000/ngeo/downloadHelper"},
 	
 	"map": {
 	
