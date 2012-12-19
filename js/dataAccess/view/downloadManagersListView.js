@@ -65,11 +65,11 @@ var DownloadManagersListView = Backbone.View.extend({
 			//empty the status to cover the case where a user has stopped a download manager after it has install it
 			this.$el.find("#downloadManagerStatusMessage")
 				.empty()
-				.append("<p>No download manager is regitered. To install a Download Manager click on this link : <p>") 
+				.append("<p><b>No download manager has been registered.</b></p><p><b>To install a Download Manager click on the following button : </b></p>") 
 				//style the download manager installation link
-				.append("<a data-mini='true' data-theme='a' data-role='button' href='" +
+				.append("<a data-mini='true' data-inline='true' data-theme='a' data-role='button' href='" +
 												Configuration.data.downloadManager.downloadManagerInstallationLink + "'>" + 
-												Configuration.data.downloadManager.downloadManagerInstallationLink+"</a>");
+												"Install Download Manager" +"</a>");
 			this.$el.find("#downloadManagersList").hide();
 			this.$el.find("#downloadManagersFooter").hide();
 					
