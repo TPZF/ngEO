@@ -58,15 +58,14 @@ var SearchResultsTableView = Backbone.View.extend({
 		//Called when the user clicks on the product id of an item
 		'click .ui-direct-download' : function(event){
 			var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
-			console.log("Selected Feature");
-			console.log(this.model.get('features')[rowPos]);
-			console.log("Selected url");
+			//console.log("Selected Feature");
+			//console.log(this.model.get('features')[rowPos]);
+			//console.log("Selected url");
 			var featureArray = [];
 			featureArray.push(this.model.get('features')[rowPos]);
-			console.log(this.model.getProductUrls(featureArray)[0]);
+			//console.log(this.model.getProductUrls(featureArray)[0]);
 			var directDownloadWidget = new DirectDownloadWidget(this.model.getProductUrls(featureArray)[0]);
 			directDownloadWidget.open();
-	
 		}, 
 	
 	},
