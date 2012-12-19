@@ -542,7 +542,7 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "",
+                    "eop_filename": "https://server:port/products/s1/package.tar",
                     "eop_version": "",
                     "eop_size": ""
                   },
