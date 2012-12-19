@@ -18,7 +18,7 @@ define(
 			events : {
 				'click button' : function(event){
 					var buttonId = event.currentTarget.id;
-					console.log($('#'+ event.currentTarget.id));
+					//console.log($('#'+ event.currentTarget.id));
 					//the stop and pause buttons ids follow expressions stop_id and pause_id 
 					//where is is the related dar id
 					var darId = buttonId.substring(buttonId.indexOf('_')+1, buttonId.length);
@@ -42,7 +42,7 @@ define(
 				},
 				
 				'click li' : function(event){
-					console.log($('#'+ event.currentTarget.id));
+					//console.log($('#'+ event.currentTarget.id));
 					var target = $('#'+ event.currentTarget.id);
 					var filtredStatuses;
 					
