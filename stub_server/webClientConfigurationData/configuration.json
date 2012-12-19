@@ -20,7 +20,7 @@
 	
 	
 	"downloadManager" : {
-		"downloadManagerInstallationLink" : "./server/downloadManager/install.html",
+		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html",
 		"undefinedDownloadManagerId"	: "undefined download manager id"
 	},
 	
