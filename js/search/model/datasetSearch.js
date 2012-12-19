@@ -21,20 +21,23 @@ var DataSetSearch = Backbone.Model.extend({
 		
 	},
 	
-	initialize : function(){
+	initialize : function() {
+		// Initialize date/time with today
+		var today = (new Date()).toISOString();
+		var dateOnly = today.substring(0, today.indexOf('T'));
+		var timeOnly = today.substring(today.indexOf('T')+1, today.lastIndexOf(':'));
+		this.set("startdate",dateOnly);
+		this.set("stopdate",dateOnly);
+		this.set("startTime",timeOnly);
+		this.set("stopTime",timeOnly);
+		
 		//Retrieve the dataset information
-		this.dataset = new Dataset({datasetId : this.get("datasetId")});			
+		//this.dataset = new Dataset({datasetId : this.get("datasetId")});			
 		//TODO handle download options later
 		//this.dataset.fetch().done(function(){
 			//TODO set the selected options default value from the dataset download options
 		//});
 	},
-	
-	validate: function(attrs) {
-	    if (attrs.stopdate < attrs.startdate) {
-	      return "Date interval can't end before it starts";
-	    }   
-	 },
 	  
 	getOpenSearchURL : function(){
 	
