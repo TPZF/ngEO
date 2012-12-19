@@ -5,17 +5,17 @@ define( [ "jquery", "configuration", "dataAccess/model/downloadManagers", "dataA
 
 var DirectDownloadWidget = function(url) {
 
-	var parentElement = $('<div id="directDownloadPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content popup-widget-background">');
+	var parentElement = $('<div id="directDownloadPopup" data-role="popup" data-overlay-theme="a" class="ui-content popup-widget-background">');
 
-	var element = $('<div id="directDownloadPopupContent"></div>'); 
-	element.appendTo(parentElement);
+//	var element = $('<div id="directDownloadPopupContent"></div>'); 
+//	element.appendTo(parentElement);
 
 	/**
 		Build the content of the popup with the direct download links view
 	 */
 	var buildContent = function() {
 		DownloadManagers.fetch().done(function() {
-			var directDownloadView = new DirectDownloadView({el : element, url : url});
+			var directDownloadView = new DirectDownloadView({el : parentElement, url : url});
 			directDownloadView.render();
 		});
 	};
@@ -26,9 +26,18 @@ var DirectDownloadWidget = function(url) {
 	this.open = function() {
 	
 		buildContent();
-		element.trigger('create');
-		parentElement.popup(); 		
-		parentElement.popup("open");  
+		parentElement.bind({
+
+			popupafterclose : function(event, ui) {
+				parentElement.remove();
+			}
+		});
+		
+		//parentElement.popup({ "position-to" : "#retrieve" });  
+		parentElement.popup();
+		parentElement.popup("open"); 
+		// trigger jqm styling
+		parentElement.trigger('create');
 	};
 
 		
