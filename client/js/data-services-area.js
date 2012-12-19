@@ -1,8 +1,10 @@
 
-define(["jquery", "map/map", "search/model/searchResults", "search/widget/search", "shopcart/widget/shopcart", "map/widget/layers", "map/widget/background", "map/widget/toolbarMap",
+define(["jquery", "map/map", "search/model/searchResults", "search/widget/datasetSelection",
+		"search/widget/searchCriteria", "search/widget/resultsTable",
+		"shopcart/widget/shopcart", "map/widget/toolbarMap",
 		"map/widget/mapPopup",
 		"text!../pages/data-services-area.html"], 
-	function($, Map, SearchResults, SearchWidget, ShopcartWidget, LayersWidget, BackgroundWidget, ToolBarMap, MapPopup, dataservicesarea) {
+	function($, Map, SearchResults, DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea) {
 	
 return {
 
@@ -24,11 +26,11 @@ return {
 	initialize: function() {
 	
 		// Create all widgets
-		SearchWidget();
+		DataSetSelectionWidget();
+		SearchCriteriaWidget();
+		ResultsTableWidget();
 		ShopcartWidget();
-		LayersWidget();
 		ToolBarMap();
-		BackgroundWidget();
 		
 		// Create the popup for map
 		var mapPopup = new MapPopup('.ui-page-active');

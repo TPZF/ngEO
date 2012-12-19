@@ -1,19 +1,20 @@
-define( ['jquery', 'backbone', 'underscore', 
+define( ['jquery', 'backbone', 'search/model/datasetSearch',
          'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
-		function($, Backbone, _ , datasetsSelection_template, datasetsList_template) {
+		function($, Backbone, DatasetSearch, datasetsSelection_template, datasetsList_template) {
 
-	/**
-	 * The related model is DatasetsPopulationModel
-	 */
-	
+/**
+ * The related model is DatasetsPopulationModel
+ */
 var DatasetSelectionView = Backbone.View.extend({
 
-	initialize : function(options){
-
-		this.mainView = options.mainView;
-		this.model.on("change", function(){console.log("changed model");this.close(); this.mainView.displayDatasets();}, this);
-	},
+	/**
+	 * Id for view div container
+	 */
+	id: 'datasetSelection',
 	
+	/**
+	 * Events to manage on the view
+	 */
 	events : {
 	
 		'click li' : function(event){
@@ -25,46 +26,35 @@ var DatasetSelectionView = Backbone.View.extend({
 			if ( $target.hasClass('ui-btn-active') ) {
 				$target.removeClass('ui-btn-active');
 				this.selectedDatasetId = undefined;
-				this.nextButton.button('disable');
+				DatasetSearch.set("datasetId",undefined);				
+				
 			} else {
 				this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
 				$target.addClass('ui-btn-active');
 				this.selectedDatasetId = event.currentTarget.id;
-				this.nextButton.button('enable');
+				DatasetSearch.set("datasetId", this.selectedDatasetId);
 			}
 		}
 	},
 	
+	/**
+	 * Render the view
+	 */
 	render: function(){
-	
-	
 		// TODO : display loading image
 		if (this.model.get("datasets").length == 0){
 			// $(this.el).append("<p>loading datasets...<p>");
 			console.log("Not loaded!!!");
 			return this;		
 		}
-		
-		// Add a next button in the widget footer
-		this.nextButton = this.mainView.$el.ngeowidget('addButton', { id: 'next', name: 'Next', position: 'right' });
 		var self = this;
-		this.nextButton.click( function() {
-			self.mainView.displaySearchCriteria(self.selectedDatasetId);
-		});
-		// Next button is disable when no dataset is selected
-		this.nextButton.button('disable');
 		
-		console.log(this.model.attributes);
 		var mainContent = _.template(datasetsSelection_template, this.model);
-		//console.log(mainContent);
 		var listContent = _.template(datasetsList_template, this.model);
-		//console.log(listContent);
 		
 		this.$el.append(mainContent);
 		this.$el.find("#datasetListContainer").append(listContent);
-		this.$el.find("#datasetListContainer").trigger('create');
 		this.$el.trigger('create');
-		this.mainView.$el.ngeowidget('update');
 		
 		//iterate on all the combo boxes identifiers and bind the event handler which will generate 
 		//a regExp : "\b(criteria_1,criteria_2,...., criteria_n,[^"]*,[^"]*)
@@ -85,7 +75,7 @@ var DatasetSelectionView = Backbone.View.extend({
 						string = string + '\\b(';
 					}
 
-					console.log($("#"+ otherCriterion.criterionName).val());
+					//console.log($("#"+ otherCriterion.criterionName).val());
 					
 					if ($("#"+ otherCriterion.criterionName).val() != ''){
 						string = string + $("#"+ otherCriterion.criterionName).val() + ',';
@@ -98,8 +88,8 @@ var DatasetSelectionView = Backbone.View.extend({
 					}					
 				});				
 				
-				console.log("created string from select boxes"); 
-				console.log(string);
+				//console.log("created string from select boxes"); 
+				//console.log(string);
 				
 				//filter the datasets according to the selected parameters reg exp
 				//the datsets filtred as stored in the model
@@ -108,38 +98,21 @@ var DatasetSelectionView = Backbone.View.extend({
 			});
 		});		
 		
-		this.delegateEvents();
-		
 		return this;
 	},
 	
-	/** update only the list of datasets in the view */
+	/** 
+	 * Update only the list of datasets in the view 
+	 */
 	updateDatasetsList : function(){
-		this.$el.find("#datasetListContainer").empty();
-		this.$el.find("#datasetListContainer").unbind();
+		var $dslListContainer = this.$el.find("#datasetListContainer")
+		$dslListContainer.empty();
+		$dslListContainer.unbind();
 		var listContent = _.template(datasetsList_template, this.model);
-		this.$el.find("#datasetListContainer").append(listContent);
-		this.$el.find("#datasetListContainer").trigger('create');
+		$dslListContainer.append(listContent);
+		$dslListContainer.trigger('create');
 	},
-	
-
-	clear : function (){
-		this.mainView.$el.ngeowidget('removeButton', this.nextButton);
-	    this.$el.empty();	    
-	},
-
-    close : function() {
-    	this.clear();
-    	this.undelegateEvents();
-    	if (this.onClose) {
-          this.onClose();
-       }
-    },
-
-    onClose : function() {
-    	this.model.off("change", this.render, this);
-    },
-	
+		
 });
 
 return DatasetSelectionView;
