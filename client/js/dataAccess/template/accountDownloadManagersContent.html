@@ -1,6 +1,14 @@
 <div id="downloadManagersMonitoringContent"
 	class="widget-content ui-body-c">
 
+<% if (downloadmanagers.length == 0){ %>
+		<div id="downloadManagerStatusMessage">
+			<p><b>No download manager has been registered.</b></p>
+			<p><b> To install a Download Manager click on the following button : </b></p>
+			<a data-mini='true' data-inline='true' data-theme='a' data-role='button' href='<%= downloadManagerInstallationLink %>'>Install Download Manager</a>
+		</div>
+<% } else {%>	
+
 	<table cellpadding="0" cellspacing="0" border="0">
 		<thead>
 			<th></th>
@@ -34,6 +42,8 @@
 	</table>
 </div>
 
+
+
 <div class="popup-widget-footer">
 
 	<div id="dm_server_response"></div>
@@ -44,3 +54,5 @@
 <!-- 	<button id="stop_dm" data-mini="true" data-inline="true" -->
 <!-- 		data-theme="a">Stop</button> -->
 </div>
+
+<% } %>
