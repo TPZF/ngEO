@@ -1,50 +1,70 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
-		function($, Backbone, Configuration, SpatialExtentView, TimeExtentView, 
+		function($, Backbone, Configuration, DatasetSearch, SearchResults, SpatialExtentView, TimeExtentView, 
 				 AdvancedSearchView, StandingOrderDataAccessRequest, StandingOrderWidget,
 				 searchCriteria_template) {
 
-	/**
-	 * The model for this view is a backbone model : DataSetSearch 
-	 */
+/**
+ * The model for this view is a backbone model : DataSetSearch 
+ */
 var SearchCriteriaView = Backbone.View.extend({
 
-	initialize : function(options){
-		
-		this.mainView = options.mainView;
+	/**
+	 * Id for view div container
+	 */
+	id: "datasetSearchCriteria",
+	
+	/**
+	 * Constructor
+	 * Connect to model change
+	 */
+	initialize : function() {
+		this.model.on("change:datasetId", this.onDataSetChanged, this);
 	},
 	
-	events : {
+	/**
+	 * Update the view when the datasetId have been changed
+	 */
+	onDataSetChanged: function() {
+		//this.$el.find("h1").html( "Selected dataset : " + this.model.get("datasetId") );
+		if ( this.model.get("datasetId") ) {
+			this.searchButton.button('enable');
+			this.searchUrlButton.button('enable');
+			this.standingOrderButton.button('enable');
+		} else {
+			this.searchButton.button('disable');
+			this.searchUrlButton.button('disable');
+			this.standingOrderButton.button('disable');
+		}
 	},
 	
+	/**
+	 * Render the view
+	 */
 	render: function(){
 	
 		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
-		
-		// Add a back button to return to dataset selection
-		var backButton = this.mainView.$el.ngeowidget('addButton', { id: 'back', name: 'Back', position: 'left' });
-		var self = this;
-		backButton.click( function() {
-			self.mainView.displayDatasets();
-		});
-			
+					
 		// Add a search button to submit the search request
-		this.searchButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Submit Search' });
+		this.searchButton = this.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Submit Search' });
 		var self = this;
 	
 		this.searchButton.click( function() {
-			self.mainView.displaySearchResults(self.model);
+			SearchResults.url = DatasetSearch.getOpenSearchURL();
+			SearchResults.set({"features" : [] }, {silent : true});
+			SearchResults.fetch();
+			self.$el.ngeowidget('hide');
 		});		
 				
 		// Add a search url button to display the openSearch request url
-		this.searchUrlButton = this.mainView.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL', position: 'left' });
+		this.searchUrlButton = this.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL', position: 'left' });
 		
 		 //Add a standing order button to create a standing order
-		this.standingOrderButton = this.mainView.$el.ngeowidget('addButton', { id: 'standingOrder', name: 'Standing Order', position: 'left' });
+		this.standingOrderButton = this.$el.ngeowidget('addButton', { id: 'standingOrder', name: 'Standing Order', position: 'left' });
 
 		this.standingOrderButton.click( function() {
 			
@@ -99,39 +119,16 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		// Remove class added by jQM
 		this.$el.find("#tabs").find("a").removeClass('ui-link');
+		
+		// Disable all button if no dataset
+		if ( !this.model.get("datasetId") ) {
+			this.searchButton.button('disable');
+			this.searchUrlButton.button('disable');
+			this.standingOrderButton.button('disable');
+		}
 
 		return this;
-	},	
-		
-	update : function(){
-	
-		if (this.model.get("startdate") != "" && this.model.get("stopdate") != ""
-			&& this.model.get("west") != "" && this.model.get("south") != ""
-			&& this.model.get("east") != "" && this.model.get("north") != ""){
-		
-			this.searchUrlButton.button('enable');
-			this.searchButton.button('enable');
-		}
-	},
-	
-    close : function() {
- 	   this.dateCriteriaView.close();
- 	   this.areaCriteriaView.close();
-	   this.advancedCriteriaView.close();
-       this.undelegateEvents();
-	   this.mainView.$el.ngeowidget('removeButton', '#back');
-	   this.mainView.$el.ngeowidget('removeButton', '#searchRequest');
-	   this.mainView.$el.ngeowidget('removeButton', '#searchUrl');
-	   this.mainView.$el.ngeowidget('removeButton', '#standingOrder');
-       this.$el.empty();
-       if (this.onClose) {
-          this.onClose();
-       }
-    }, 
-
-    onClose : function() {
-    	this.model = null;
-    },
+	}
 	
 });
 

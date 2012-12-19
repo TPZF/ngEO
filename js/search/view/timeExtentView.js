@@ -7,10 +7,8 @@ define( ['jquery', 'backbone', 'text!search/template/dateCriteriaContent.html',
 var TimeExtentView = Backbone.View.extend({
 
 	initialize : function(options){
-		
-		this.searchCriteriaView = options.searchCriteriaView;
-		//bind the search model change here to avoiding calling the update method
-		this.model.on("change", this.searchCriteriaView.update, this.searchCriteriaView);
+		// Refresh the time extent when the dataset is changed
+		this.model.on("change:datasetId", this.update, this);
 	},
 	
 	events :{
@@ -30,28 +28,19 @@ var TimeExtentView = Backbone.View.extend({
 		}		
 	},
 	
+	update: function() {
+		$('#fromDateInput').val( this.model.get("startdate") );
+		$('#toDateInput').val( this.model.get("stopdate") );
+		$('#fromTimeInput').val( this.model.get("startTime") );
+		$('#toTimeInput').val( this.model.get("stopTime") );
+	},
+	
 	render: function(){
-	
 		var content = _.template(dateCriteria_template, this.model);
-		//console.log(content);
 		this.$el.append($(content));
-		this.delegateEvents();
 		return this;
-	},	
-	
-	// TODO move to Backbone.View.prototype
-    close : function() {
-       this.undelegateEvents();
-       this.$el.empty();
-       if (this.onClose) {
-          this.onClose();
-       }
-    }, 
-
-    onClose : function() {
-    	this.model.off("change", this.searchCriteriaView.update(), this.searchCriteriaView);
-    },
-	
+	}
+		
 });
 
 return TimeExtentView;
