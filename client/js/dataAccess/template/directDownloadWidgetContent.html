@@ -1,9 +1,11 @@
-<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="c" class="ui-listview ui-listview-inset ui-corner-all ui-shadow">
+<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="c">
 	
-	<li data-role="divider" data-theme="a" class="ui-li ui-li-static ui-btn-up-a">Direct Download Links</li>
-	<li data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-btn-up-b"><div class="ui-btn-inner ui-li"><div class="ui-btn-text"><a href="<%= url %>" class="ui-link-inherit">Browser Download</a></div><span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span></div></li>
+	<li data-role="divider" data-theme="a">Direct Download Links</li>
+	<li>
+		<a href="<%= url %>">Browser Download</a>
+	</li>
 	<% if (downloadHelperUrl){ %>
-		<li id="downloadHelperUrl" data-corners="false" data-shadow="false" data-iconshadow="true" data-wrapperels="div" data-icon="arrow-r" data-iconpos="right" data-theme="c" class="ui-btn ui-btn-icon-right ui-li-has-arrow ui-li ui-corner-bottom ui-li-last ui-btn-up-b"><div class="ui-btn-inner ui-li"><div class="ui-btn-text"><a class="ui-link-inherit"> Download Manager Download</a></div><span class="ui-icon ui-icon-arrow-r ui-icon-shadow">&nbsp;</span></div></li>
+		<li id="downloadHelperUrl"><a>Download Manager Download</a></li>
 	<% } %>	
 </ul>
 

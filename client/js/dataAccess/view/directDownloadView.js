@@ -51,8 +51,8 @@ define(
 			}else{
 				this.$el.append(_.template(directDownload_Content, {url : this.url, downloadHelperUrl : undefined}));
 			}
+			this.$el.trigger('create');
 			
-			this.delegateEvents();
 			return this;
 		}
 		
