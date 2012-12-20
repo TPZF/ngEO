@@ -18,21 +18,17 @@ var MapPopup = function(container) {
 	var products = null;
 	var isOpened = false;
 
-	element = $('<div class="widget-content ui-body-c mapPopup"></div>');
+	element = $('<div class="widget-content ui-body-c mapPopup"><div id="text"></div><div id="buttons" data-mini="true" data-role="controlgroup" data-type="horizontal"></div></div>');
 	
 	// Wrap with the parent div for widget
 	element.wrap("<div class='widget'></div>");
 	parentElement = element.parent();
-	parentElement.prepend("<h2>Products</h2>");
-			
-	// Add footer
-	var footer = $("<div class='widget-footer'><div class='widget-footer-left'/><div class='widget-footer-right'/></div>")
-		.insertAfter(element);
-		
-/*	var btn = $("<button data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
-		.appendTo( footer.find('.widget-footer-left') );*/
-	var btn = $("<button data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
-		.appendTo( footer.find('.widget-footer-left') )
+	
+	// Add buttons for some simple actions
+	var btn = $("<button data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
+		.appendTo( element.find('#buttons') );
+	var btn = $("<button data-icon='grid' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
+		.appendTo( element.find('#buttons') )
 		.click( function() {
 			SimpleDataAccessRequest.initialize();
 			SimpleDataAccessRequest.setProducts( products );
@@ -53,11 +49,11 @@ var MapPopup = function(container) {
 	parentElement.hide();
 
 	var self = this;
-	Map.on('pickedFeatures', function(selectedFeatures,coord) {
+	Map.on('pickedFeatures', function(selectedFeatures) {
 		if ( selectedFeatures.length == 0 ) {
 			self.close();
 		} else {
-			self.open(coord,selectedFeatures);
+			self.open(selectedFeatures);
 		}
 	});
 	Map.on('startNavigation', function() {
@@ -87,51 +83,71 @@ var MapPopup = function(container) {
 		var content = _.template(mapPopup_template, { contentDefs: Configuration.data.resultsTable.columnsDef,
 						getData: getData,
 						product: product });
-		element.html(content);
+		element.find('#text').html(content);
 	};
-		
+	
+	/**
+		Compute the bounding box of the features, used to compute the pop-up position
+	 */
+	var computeBbox = function(features) {
+		var bbox = [ features[0].bbox[0], features[0].bbox[1], features[0].bbox[2], features[0].bbox[3] ];
+		for ( var i = 1; i < features.length; i++ ) {
+			bbox[0] = Math.min( bbox[0], features[i].bbox[0] );
+			bbox[1] = Math.min( bbox[1], features[i].bbox[1] );
+			bbox[2] = Math.max( bbox[2], features[i].bbox[2] );
+			bbox[3] = Math.max( bbox[3], features[i].bbox[3] );
+		}
+		return bbox;
+	};
+
+			
 	/**
 		Open the popup
 	 */
-	this.open = function(pos,features) {
+	this.open = function(features) {
 	
 		products = features;
 		
 		if ( products.length == 1 ) {
-			parentElement.find("h2").html("Product details");
 			buildContent(products[0]);
 		} else {
-			parentElement.find("h2").html("Multiple products");
-			element.html( products.length + " products selected.<br>Click again to cycle through the different products." );
+			element.find('#text').html( products.length + " products selected.<br>Click again to cycle through the different products." );
 		}
+		
+		var bbox = computeBbox(features);
+		var pos = Map.getPixelFromLonLat( bbox[2], (bbox[1] + bbox[3])*0.5);
 			
-		var toolbarBottom = $("#toolbar").offset().top + $("#toolbar").outerHeight();
+		var toolbarTop = $("#toolbar").offset().top;
+		pos.y += toolbarTop;
+		var toolbarBottom = toolbarTop + $("#toolbar").outerHeight();
 		
 		// Compute top position for popup, limit it to the toolbar bottom
-		var top = pos.y - parentElement.outerHeight() + arrow.outerHeight();
+		var poh = parentElement.outerHeight();
+		var top = pos.y - parentElement.outerHeight() / 2;
 		if ( top < toolbarBottom ) {
 			top = toolbarBottom + 5;
 		}		
 		parentElement.css('top', top );
 		
 		// Compute left position for popup, if too close to window right edge, "invert" its position
-		var margin = 2;
 		var left = pos.x + arrow.outerWidth();
 		if ( left + parentElement.outerWidth() >  window.innerWidth ) {
-			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() - margin );
+			pos = Map.getPixelFromLonLat( bbox[0], (bbox[1] + bbox[3])*0.5);
+			pos.y += toolbarTop;
+			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() );
 		
-			arrow.css('top',pos.y  - arrow.outerHeight() / 2);
-			arrow.css('left',pos.x - arrow.outerWidth() - margin);
+			arrow.css('top',pos.y);
+			arrow.css('left',pos.x - arrow.outerWidth());
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
 		} else {
-			parentElement.css('left', left + margin);
+			parentElement.css('left', left);
 			
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');
 			arrow.addClass('mapPopup-arrow-left');
-			arrow.css('top',pos.y  - arrow.outerHeight() / 2);
-			arrow.css('left',pos.x + margin);
+			arrow.css('top', pos.y);
+			arrow.css('left', pos.x);
 		}
 		
 		parentElement.fadeIn();

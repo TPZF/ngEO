@@ -274,6 +274,17 @@ OpenLayersMapEngine.prototype.getLonLatFromPixel = function(x,y)
 }
 
 /**
+ * Get pixel from lonlat
+ */
+OpenLayersMapEngine.prototype.getPixelFromLonLat = function(lon,lat)
+{
+	var olLonLat = new OpenLayers.LonLat(lon,lat);
+	olLonLat = olLonLat.transform(this._map.displayProjection, this._map.projection);
+	var olPixel = this._map.getPixelFromLonLat( olLonLat );
+	return { x: olPixel.x, y: olPixel.y };
+}
+
+/**
  * Get the current viewport extent
  */
 OpenLayersMapEngine.prototype.getViewportExtent = function()

@@ -247,6 +247,15 @@ GlobWebMapEngine.prototype.getLonLatFromPixel = function(x,y)
 	return this.globe.getLonLatFromPixel(x,y);
 }
 
+/**
+ * Get pixel from lonlat
+ */
+GlobWebMapEngine.prototype.getPixelFromLonLat = function(lon,lat)
+{
+	var pixel = this.globe.getPixelFromLonLat(lon,lat);
+	return { x: pixel[0], y: pixel[1] };
+}
+
 
 /**
  * Get the current viewport extent
