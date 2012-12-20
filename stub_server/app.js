@@ -60,7 +60,10 @@ app.post('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
 app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //data access statuses interface
-app.all(/\/ngeo\/dataAccessRequestStatus.*/, downloadStatuses);
+app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
+
+//data access statuses interface
+app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
 
 //download helper interface
 app.get(/\/ngeo\/downloadHelper.*/, downloadHelper);
