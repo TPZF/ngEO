@@ -76,6 +76,8 @@ define(
 				var darId = args[1];
 				var messageEltId  = "#serverDARMonitoringResponse_" + darId;
 				$(messageEltId).empty().append(args[3]);
+				$(messageEltId).show();
+				$(messageEltId).fadeOut(Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
 				
 				if (args[0] == 'SUCCESS'){
 					
