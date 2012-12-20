@@ -129,16 +129,16 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				
 				if ( stackPickingIndex == pickedFeatures.length ) {
 					stackPickingIndex = -1;
-					self.trigger("pickedFeatures", pickedFeatures, { x:  pageX, y: pageY });
+					self.trigger("pickedFeatures", pickedFeatures);
 				} else {
-					self.trigger("pickedFeatures", [ pickedFeatures[stackPickingIndex] ], { x:  pageX, y: pageY });
+					self.trigger("pickedFeatures", [ pickedFeatures[stackPickingIndex] ]);
 				}
 			
 			} else {
 			
 				pickedFeatures = features;
 				stackPickingIndex = -1;
-				self.trigger("pickedFeatures", pickedFeatures, { x:  pageX, y: pageY });
+				self.trigger("pickedFeatures", pickedFeatures);
 				
 			}
 			inPicking = false;
@@ -267,11 +267,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	var showBrowseLayer = function(feature) {			
 		// Create the WMS if it does not exists
 		if (!browseLayers.hasOwnProperty(feature.id)) {
-		
-			// Compute bbox if it does not exists (used by browse layer)
-			if (!feature.bbox)
-				computeExtent(feature);
-
 			browseLayers[ feature.id ] = createBrowseLayer(feature);
 		}
 	};
@@ -404,8 +399,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		
 		zoomToFeature: function(feature) {
 			// Zoom on the product in the carto
-			if (!feature.bbox)
-				computeExtent(feature);
 			var extent = feature.bbox;
 			var width = extent[2] - extent[0];
 			var height = extent[3] - extent[1];
@@ -426,6 +419,13 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		},
 		
 		/**
+		 * Get the page position from a lonlat
+		 */
+		getPixelFromLonLat: function(lon,lat) {
+			return mapEngine.getPixelFromLonLat(lon,lat);
+		},
+				
+		/**
 		 * Set results
 		 * Called when new results has been received
 		 */
@@ -443,6 +443,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			mapEngine.removeAllFeatures( resultFootprintLayer );
 			// Add it new
 			resultsFeatureCollection = results.attributes;
+			// Process the feature collection
+			for ( var i = 0; i < resultsFeatureCollection.features.length; i++ ) {
+				if (!resultsFeatureCollection.features[i].bbox)
+					computeExtent(resultsFeatureCollection.features[i]);
+			}
 			mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
 		},
 		
