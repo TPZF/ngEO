@@ -65,6 +65,9 @@ define(
 			this.open = function() {
 
 				buildContent();
+				parentElement.appendTo('.ui-page-active');
+				// trigger jqm styling
+				parentElement.trigger('create');
 
 				parentElement.bind({
 
@@ -78,8 +81,6 @@ define(
 				//parentElement.popup({ "position-to" : "#retrieve" });  
 				parentElement.popup();
 				parentElement.popup("open"); 
-				// trigger jqm styling
-				parentElement.trigger('create');
 			};
 
 			/**

@@ -11,51 +11,45 @@ define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView',
 
 var DownloadManagersWidget = function(request) {
 
-	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-overlay-theme="a" class="ui-content popup-widget-background">');
+	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-position-to="window" data-overlay-theme="a" class="ui-content popup-widget-background">');
 
 	var element = $('<div id="downloadManagersPopupContent"></div>'); 
 	element.appendTo(parentElement);
 
 	/**
-		Build the content of the popup with the download managers view
+		Open the popup
 	 */
-	var buildContent = function() {
-
+	this.open = function() {
+	
+		parentElement.appendTo('.ui-page-active');
+		
+		// Load DownloadManagers and then build and open the pop-up
 		DownloadManagers.fetch().done(function() {
 		
+			// Create the view and render it
 			var downloadManagersListView = new DownloadManagersListView({
 				model : DownloadManagers,
 				el: element,
 				selectedDownloadManager : "",
 				request : request
 			});
+			downloadManagersListView.render();
 			
-			downloadManagersListView.render();		
+			//after closing the popup reset the simple data access parameters 
+			//and remove the popup elements
+			parentElement.bind({
+			   popupafterclose: function(event, ui) {
+				   request.initialize();
+				   parentElement.remove();
+			   }
+			   
+			});
+			
+			//Open the popup
+			parentElement.popup();
+			parentElement.popup("open");
 		});
-	};
-		
-	/**
-		Open the popup
-	 */
-	this.open = function() {
 	
-		buildContent();
-			
-		//after closing the popup reset the simple data access parameters 
-		//and remove the popup elements
-		parentElement.bind({
-		   popupafterclose: function(event, ui) {
-			   request.initialize();
-			   parentElement.remove();
-		   }
-		   
-		});
-		
-		//Open the popup
-		//parentElement.popup({ "position-to" : "#searchCriteriaSummaryContainer" }); 
-		parentElement.popup();
-		parentElement.popup("open");
-		window.resizeTo(window.innerWidth, window.innerHeight);
 	};
 
 		
