@@ -12,13 +12,15 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	
 	defaults:{
 		dataAccessRequestStatuses : [],
-		collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR, //the collapsible DARs element initial status
-		collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts,//the collapsible products element initial status
+		collapseDAR : false,
+		collapseProducts : false
 	},
 
 	initialize : function(){
 		// The base url to retrieve the DARs'statuses list or submit DAR status changes
 		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
+		this.attributes.collapseDAR = Configuration.data.dataAccessRequestStatuses.collapseDAR; //the collapsible DARs element initial status
+		this.attributes.collapseProducts = Configuration.data.dataAccessRequestStatuses.collapseProducts;//the collapsible products element initial status
 	},
 	
 	/**
@@ -173,6 +175,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		var changeStatusURL = self.url + '/' + darID;
 		//console.log ("changeStatusURL : ");
 		//console.log (changeStatusURL);
+		var message = "";
 		
 		return $.ajax({
 		  url: changeStatusURL,
@@ -181,15 +184,21 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  contentType: 'application/json',
 		  data : JSON.stringify(request),
 		  success: function(data) {
+			 
+			  //If the server sends back a message get it in order to be displayed
+			  if (data.DataAccessRequestStatus.message){
+				  message = data.DataAccessRequestStatus.message;
+			  }
 			  
-			  //console.log(self.getDARStatusIndex(darID));
-			  //TODO FOR THE MOMENT THE SERVER SENDS NO RESPONSE BECAUSE NOT SPECIFIED IN THE ICD!!!
-			  //Waiting for clarification ngeo 316
-			  //self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(dmID)].status = data;
-			  self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(darID)].status = newStatus;
-			  //notify that the DAR status has been successfully changed
-			  self.trigger('DARStatusChanged', ['SUCCESS', darID, newStatus, 'Status changed Successfully to : ' + self.getStatusReadableString(newStatus)]);  
-
+			  if (data.DataAccessRequestStatus.status == newStatus){
+				  self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(darID)].status = newStatus;
+				  //notify that the DAR status has been successfully changed
+				  self.trigger('DARStatusChanged', ['SUCCESS', darID, newStatus, 'SUCCESS Status changed to : ' + self.getStatusReadableString(newStatus) + ' ' + message]);  
+ 
+			  }else{
+				  self.trigger('DARStatusChanged', ['ERROR', darID, newStatus, 'ERROR : ' + message]);  
+				  
+			  }
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
