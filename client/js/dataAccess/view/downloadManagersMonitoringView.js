@@ -77,6 +77,8 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		
 		$("#dm_server_response").empty();
 		$("#dm_server_response").append(args[3]);
+		$("#dm_server_response").show();
+		$("#dm_server_response").fadeOut(Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
 		
 		if (args[0] == 'SUCCESS'){
 			
