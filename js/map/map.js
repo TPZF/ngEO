@@ -522,11 +522,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			// Create the new engine and catch any error
 			try {
 				mapEngine = new engines[id](element);			
+				mapEngine.subscribe("init",initCallback);
 			} catch (err) {
 				mapEngine = null;
-			}
-			
-			mapEngine.subscribe("init",initCallback);
+			}	
 			
 			return mapEngine != null;
 		},
