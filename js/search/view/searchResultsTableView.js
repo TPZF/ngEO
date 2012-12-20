@@ -65,7 +65,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			featureArray.push(this.model.get('features')[rowPos]);
 			//console.log(this.model.getProductUrls(featureArray)[0]);
 			var directDownloadWidget = new DirectDownloadWidget(this.model.getProductUrls(featureArray)[0]);
-			directDownloadWidget.open();
+			directDownloadWidget.open(event);
 		}, 
 	
 	},
