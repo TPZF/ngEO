@@ -15,7 +15,7 @@
 	<div data-role="fieldcontain">
 
 		<label id="startDateLabel" for="startDateSTO" data-mini="true">Start Date:</label> <input name="startDateSTO" id="startDateSTO"
-			type="text" data-role="datebox" data-mini="true"
+			type="text" data-role="datebox" data-mini="true" data-theme="c"
 			value="<%= startDate %>"
 			data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= startDate %>", 
  		   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'> 
@@ -24,14 +24,14 @@
 	<div data-role="fieldcontain">
 		
 		<label id="startTimeLabel" for="startTimeInput" data-mini="true">Start Time:</label>
-		<input name="startTime" id="startTimeInput" type="text" data-role="datebox" data-mini="true" value="<%= startTime %>"
+		<input name="startTime" id="startTimeInput" type="text" data-role="datebox" data-mini="true" data-theme="c" value="<%= startTime %>"
    			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'>
 	</div>
 	
 	<div data-role="fieldcontain">
 
 		<label id="endDateLabel" for="endDateSTO" data-mini="true">End Date:</label> <input name="endDateSTO" id="endDateSTO"
-			type="text" data-role="datebox" data-mini="true"
+			type="text" data-role="datebox" data-mini="true" data-theme="c"
 			value="<%= endDate %>"
 			data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= endDate %>", 
   		   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'> 
@@ -40,7 +40,7 @@
  	<div data-role="fieldcontain">
 		
 		<label id="endTimeLabel" for="endTimeInput" data-mini="true">End Time:</label>
-		<input name="endTime" id="endTimeInput" type="text" data-role="datebox" data-mini="true" value="<%= endTime %>"
+		<input name="endTime" id="endTimeInput" type="text" data-role="datebox" data-theme="c" data-mini="true" value="<%= endTime %>"
    			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'>
 	</div>
 	

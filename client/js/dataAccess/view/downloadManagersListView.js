@@ -56,7 +56,6 @@ var DownloadManagersListView = Backbone.View.extend({
 	
 	render: function(){
 	
-		console.log(this.model);
 		//after the download managers are retrieved
 		//if no download manager is already registered : propose a link to the user to install one
 		if (this.model.attributes.downloadmanagers == 0) {
@@ -94,7 +93,6 @@ var DownloadManagersListView = Backbone.View.extend({
 		}
 
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
-		this.delegateEvents();
 		//Trigger JQM styling
 		this.$el.trigger('create');
 		
