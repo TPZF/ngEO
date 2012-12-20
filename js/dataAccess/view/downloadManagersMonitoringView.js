@@ -75,10 +75,19 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 	 */ 
 	updateDownloadManagerStatusView : function(args){
 		
-		$("#dm_server_response").empty();
-		$("#dm_server_response").append(args[3]);
-		$("#dm_server_response").show();
-		$("#dm_server_response").fadeOut(Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
+		// Clean-up the timeout for hiding of status message
+		if ( this.timeOut ) {
+			clearTimeout( this.timeOut );
+		}
+		$("#dm_server_response")
+			.empty()
+			.append(args[3])
+			.slideDown();
+			
+		// Hide status message after a given time
+		this.timeOut = setTimeout( function() {
+			$("#dm_server_response").slideUp();
+		}, Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
 		
 		if (args[0] == 'SUCCESS'){
 			
@@ -122,9 +131,9 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		var content = _.template(downloadManagersMonitoring_template, 
 				_.extend({downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink}, this.model.attributes));
 		this.$el.append(content);
-		this.delegateEvents();
 		this.$el.trigger('create');		
 
+		$("#dm_server_response").hide();
 		$("#enable_dm").button('disable');
 		$("#disable_dm").button('disable');
 		
