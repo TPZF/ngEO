@@ -163,7 +163,7 @@ var StandingOrderDataAccessRequest = {
 		    	this.downloadLocation.DownloadManagerId)) {
 			
 				this.serverResponse = dataAccessConfig.invalidConfirmationRequest;
-				this.trigger('toggleRequestButton', ['disable']);
+				this.trigger('RequestNotValidEvent');
 				
 				return false;
 		}	
@@ -198,7 +198,7 @@ var StandingOrderDataAccessRequest = {
 		}
 
 		//disable the request validation if the request is not valid
-		this.trigger('toggleRequestButton', ['disable']);
+		this.trigger('RequestNotValidEvent');
 		
 		return false;
 	},
