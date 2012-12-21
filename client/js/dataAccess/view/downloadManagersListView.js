@@ -14,8 +14,10 @@ var DownloadManagersListView = Backbone.View.extend({
 	initialize : function(options){
 		this.request = options.request;
 		this.selectedDownloadManager = options.selectedDownloadManager;
-		this.request.on('toggleRequestButton', this.toggleRequestButton, this);
-		this.request.on('requestButtonTextChange', this.requestButtonTextChange, this);
+		this.request.on('SuccessValidationRequest', this.requestButtonTextChange, this);
+		this.request.on('FailureValidationRequest', this.disableRequestButton, this);
+		this.request.on('RequestNotValidEvent', this.disableRequestButton, this);
+		
 	},
 	
 	events : {
@@ -42,8 +44,8 @@ var DownloadManagersListView = Backbone.View.extend({
 	},
 	
 	/** change the button status to disabled in case the requests are not valid */
-	toggleRequestButton : function(params){
-		$("#validateRequest").button(params[0]); 
+	disableRequestButton : function(){
+		$("#validateRequest").button('disable'); 
 	},
 	
 	/** change the button text to highlight the request stage "Confirmation" 
