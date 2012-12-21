@@ -4,11 +4,14 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 	QUnit.module("DownloadManagers");
 	
 	//load the datasets 
-	QUnit.asyncTest("Check & Monitor DownloadManagers", 12, function () {
+	QUnit.asyncTest("Check & Monitor DownloadManagers", 14, function () {
+		
 		DownloadManagers.initialize();
+		
 		DownloadManagers.fetch().done( function() {
 			
 			var downloadmanagers = DownloadManagers.attributes.downloadmanagers;
+			var commands = DownloadManagers.attributes.commands;
 			QUnit.ok($.isArray(downloadmanagers),"Download Managers list retrieved");
 			
 			//check the criteria 
@@ -19,31 +22,25 @@ define(['jquery','dataAccess/model/downloadManagers'], function ($, DownloadMana
 			QUnit.ok(downloadmanagers[0].ipaddress ,"Download Manager ipaddress found");
 			QUnit.ok(downloadmanagers[0].lastaccessdate ,"Download Manager lastaccessdate found");
 			
-			//test DM change request status 
-			DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'INACTIVE').done(function(){
-				QUnit.ok(downloadmanagers[0].status == 'INACTIVE', "changed DM_01 from ACTIVE to INACTIVE");
-				
-				//test DM change request status 
-				DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'ACTIVE').done(function(){
-					QUnit.ok(downloadmanagers[0].status == 'ACTIVE', "changed DM_01 from INACTIVE to ACTIVE");
-				});
-				
-			});
-			
+			QUnit.ok(downloadmanagers[0].status == 'ACTIVE', " DM_01 is ACTIVE");
 			QUnit.ok(downloadmanagers[1].status == 'INACTIVE', " DM_02 is INACTIVE");
+			QUnit.ok(downloadmanagers[2].status == 'STOPPED', " DM_03 is STOPPED");
 			
 			//test DM change request status 
-			DownloadManagers.requestChangeStatus(downloadmanagers[1].downloadmanagerid, 'ACTIVE').done(function(){
-				QUnit.ok(downloadmanagers[1].status == 'ACTIVE', "changed DM_02 from ACTIVE to INACTIVE");
+			DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadmanagerid, 'STOP').done(function(){
+				QUnit.ok(downloadmanagers[0].status == 'ACTIVE', "Status not changed immediately after a stop command");
+				QUnit.ok(commands[0] == 'STOP', "submitted stop command");
 				
 				//test DM change request status 
-				DownloadManagers.requestChangeStatus(downloadmanagers[1].downloadmanagerid, 'INACTIVE').done(function(){
-					QUnit.ok(downloadmanagers[1].status == 'INACTIVE', "changed DM_02 from ACTIVE to INACTIVE");
+				DownloadManagers.requestChangeStatus(downloadmanagers[1].downloadmanagerid, 'STOP_IMMEDIALETY').done(function(){
+					QUnit.ok(downloadmanagers[1].status == 'INACTIVE', "submitted STOP_IMMEDIALETY command");
+					QUnit.ok(commands[1] == 'STOP_IMMEDIALETY', "submitted stop immediately command");
 					QUnit.start();
 				});
 				
 			});
-	
+		
+			
 		});
 	});
 
