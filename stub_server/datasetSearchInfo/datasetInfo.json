@@ -2,21 +2,21 @@
     "datasetSearchInfo": {
         "datasetId": "SENTINEL2_L1",
         "description": "All L1 products for the S2 mission",
-        "Keywords": [
+        "keywords": [
             {
-                "Keyword": "optical"
+                "keyword": "optical"
             },
             {
-                "Keyword": "reflectance"
+                "keyword": "reflectance"
             },
             {
-                "Keyword": "land"
+                "keyword": "land"
             },
             {
-                "Keyword": "high resolution"
+                "keyword": "high resolution"
             }
         ],
-        "DownloadOptions": [
+        "downloadOptions": [
             {
                 "argumentName": "ProductFormat",
                 "description": "desired download format",
@@ -45,7 +45,7 @@
                 ]
             }
         ],
-        "Attributes": [
+        "attributes": [
             {
                 "Id": "track",
                 "Type": "integer",
