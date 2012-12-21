@@ -31,11 +31,11 @@
         "stoppedStatus": {
             "value": "STOPPED"
         },
-        "StopCommand": {
+        "stopCommand": {
             "value": "STOP",
             "message": "The server has received a STOP command"
         },
-        "StopImmediatelyCommand": {
+        "stopImmediatelyCommand": {
             "value": "STOP_IMMEDIATELY",
             "message": "The server has received a STOP_IMMEDIATELY command"
         }
