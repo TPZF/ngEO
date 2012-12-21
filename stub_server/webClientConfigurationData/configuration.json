@@ -21,7 +21,24 @@
 	
 	"downloadManager" : {
 		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html",
-		"undefinedDownloadManagerId"	: "undefined download manager id"
+		"undefinedDownloadManagerId"	: "undefined download manager id",
+		"activeStatus": {
+            "value": "ACTIVE"
+        },
+        "inactiveStatus": {
+            "value": "INACTIVE"
+        },
+        "stoppedStatus": {
+            "value": "STOPPED"
+        },
+        "StopCommand": {
+            "value": "STOP",
+            "message": "The server has received a STOP command"
+        },
+        "StopImmediatelyCommand": {
+            "value": "STOP_IMMEDIATELY",
+            "message": "The server has received a STOP_IMMEDIATELY command"
+        }
 	},
 	
 	"dataAccessRequestStatuses" : {
