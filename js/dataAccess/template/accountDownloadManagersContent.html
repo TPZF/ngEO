@@ -27,6 +27,8 @@
 				<% if (downloadManager.status == 'ACTIVE'){ %>
 					<td><span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span></td>
 				<% } else if (downloadManager.status == 'INACTIVE') { %>
+					<td><span class="ui-icon-paused ui-icon ui-shadow">&nbsp;</span></td>
+				<% } else if (downloadManager.status == 'STOPPED') { %>
 					<td><span class="ui-icon-cancelled ui-icon ui-shadow">&nbsp;</span></td>
 				<% } else { %>
 					<td><span class="ui-icon-unknown ui-icon ui-shadow">&nbsp;</span></td> 
