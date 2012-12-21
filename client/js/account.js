@@ -1,9 +1,9 @@
 
-define(["jquery", "dataAccess/model/dataAccessRequestStatuses", 
+define(["jquery", "configuration", "dataAccess/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "dataAccess/view/dataAccessRequestMonitoringView", 
         "dataAccess/view/downloadManagersMonitoringView", "text!../pages/account.html", "tabs"], 
 
-        function($, DataAccessRequestStatuses, DownloadManagers, DataAccessRequestMonitoringView, DownloadManagersMonitoringView, account_html) {
+        function($, Configuration, DataAccessRequestStatuses, DownloadManagers, DataAccessRequestMonitoringView, DownloadManagersMonitoringView, account_html) {
 	
 return {
 
