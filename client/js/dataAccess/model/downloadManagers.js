@@ -9,7 +9,8 @@ define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configura
 var DownloadManagers = Backbone.Model.extend({
 	
 	defaults:{
-		downloadmanagers : []
+		downloadmanagers : [],
+		commands : []
 	},
 
 	initialize : function(){
@@ -59,6 +60,16 @@ var DownloadManagers = Backbone.Model.extend({
 		return index;
 	},
 	
+	/** get the last command submitted to the server */
+	getRecentCommand : function (id) {
+		
+		var index = this.getDownloadManagerIndex(id);
+		if (index == null) {
+			return undefined;
+		}
+		return this.get("commands")[index];
+	},
+	
 	/** Submit the DM change status request to the server.
 	 * triggers a notification event with these arguments ['SUCCESS'|'ERROR', dmI', newStatus, 'message']
 	 */
@@ -75,12 +86,18 @@ var DownloadManagers = Backbone.Model.extend({
 		  type : 'GET',
 		  dataType: 'json',
 		  success: function(data) {
-			  //console.log(self.getDownloadManagerIndex(dmID));
-			  //TODO UPDATE THE WHOLE DATA WHEN INTEGRATED WITH REAL INTERFACES
 			  //self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)].status = data;
-			  self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)].status = newStatus;
-			  //notify that the download manager status has been successfully changed
-			  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, 'Status changed Successfully to : ' + newStatus]);  
+			  self.get("commands")[self.getDownloadManagerIndex(dmID)] = newStatus;
+			 
+			  //notify that the download manager change status request has been received by the server
+			  if (newStatus == Configuration.data.downloadManager.stopCommand.value){
+				  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopCommand.message]);  
+			  }else if (newStatus == Configuration.data.downloadManager.stopImmediatelyCommand.value){
+				  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopImmediatelyCommand.message]);
+			  }else{
+				  //Should not happen
+				  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus, "Un supported Command " + newStatus]);
+			  }
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
