@@ -77,10 +77,10 @@ var DataAccessRequest = {
 							  
 							  self.validationProcessing(data.DataAccessRequestStatus);
 							  
-							  self.trigger('requestButtonTextChange');
+							  self.trigger('SuccessValidationRequest');
 							  
 						  }else{
-							  self.trigger('toggleRequestButton', ['disable']);
+							  self.trigger('FailureValidationRequest');
 							 
 						  }
 						  break;
@@ -96,9 +96,9 @@ var DataAccessRequest = {
 							  self.createBulkOrder = true;
 							  self.requestStage = statusesConfig.confirmationRequestStage;
 							  self.serverResponse = validStatusesConfig.bulkOrderStatus.message;
-							  self.trigger('requestButtonTextChange');
+							  self.trigger('SuccessValidationRequest');
 						  }else{
-							  self.trigger('toggleRequestButton', ['disable']);
+							  self.trigger('FailureValidationRequest');
 						  }
 						  
 						  break;
@@ -109,22 +109,22 @@ var DataAccessRequest = {
 								self.requestStage == statusesConfig.confirmationRequestStage) {//2 steps done
 							  self.serverResponse = validStatusesConfig.inProgressStatus.message;
 						  }  
-						  self.trigger('toggleRequestButton', ['disable']);
+						  self.trigger('FailureValidationRequest');
 						  break;
 					
 					  case validStatusesConfig.pausedStatus.value:
 						  self.serverResponse = validStatusesConfig.pausedStatus.message;
-						  self.trigger('toggleRequestButton', ['disable']);
+						  self.trigger('FailureValidationRequest');
 						  break;
 						  
 					  case validStatusesConfig.cancelledStatus.value:
 						  self.serverResponse = validStatusesConfig.cancelledStatus.message;
-						  self.trigger('toggleRequestButton', ['disable']);
+						  self.trigger('FailureValidationRequest');
 						  break;
 					  
 					  default: 
 						  self.serverResponse = self.serverResponse = Configuration.data.dataAccessRequestStatuses.unExpectedStatusError ;
-					  	  self.trigger('toggleRequestButton', ['disable']);
+					  	  self.trigger('FailureValidationRequest');
 					  	  break;
 				  }	  
 					   
@@ -132,16 +132,13 @@ var DataAccessRequest = {
 				  if (data.DataAccessRequestStatus.message){
 					   self.serverResponse =  self.serverResponse + "<p>" + data.DataAccessRequestStatus.message + "<p>";
 				  }
-				  
-				  console.log("serverResponse");
-				  console.log(self.serverResponse);
 				   
 		  	  },
 		  
 			  error: function(jqXHR, textStatus, errorThrown) {
 				  //console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
 				  self.serverResponse = Configuration.data.dataAccessRequestStatuses.requestSubmissionError ;
-				  self.trigger('toggleRequestButton', ['disable']);
+				  self.trigger('FailureValidationRequest');
 			  }
 		});	
 	}
