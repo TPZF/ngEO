@@ -91,7 +91,7 @@ var SimpleDataAccessRequest = {
 		//Request not valid when no product urls set then display the specific message
 		if ( this.productURLs.length == 0){
 			this.serverResponse = Configuration.data.simpleDataAccess.invalidProductURLsError;
-			this.trigger('toggleRequestButton', ['disable']);
+			this.trigger('RequestNotValidEvent');
 			return false;
 		}
 
@@ -103,7 +103,7 @@ var SimpleDataAccessRequest = {
 		    	this.downloadLocation.DownloadManagerId)) {
 			
 				this.serverResponse = dataAccessConfig.invalidConfirmationRequest;
-				this.trigger('toggleRequestButton', ['disable']);
+				this.trigger('RequestNotValidEvent');
 				return false;
 		}	
 		
@@ -126,7 +126,7 @@ var SimpleDataAccessRequest = {
 		}
 		
 		//disable the request validation if the request is not valid
-		this.trigger('toggleRequestButton', ['disable']);
+		this.trigger('RequestNotValidEvent');
 		
 		return false;
 	},
