@@ -36,7 +36,7 @@ return {
 			
 			dmView.render();
 			
-			DataAccessRequestStatuses.initialize({collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
+			DataAccessRequestStatuses.set({collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
 				collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts});
 
 			//create the DARs monitoring view
