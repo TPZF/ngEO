@@ -19,8 +19,9 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	initialize : function(){
 		// The base url to retrieve the DARs'statuses list or submit DAR status changes
 		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
-		this.attributes.collapseDAR = Configuration.data.dataAccessRequestStatuses.collapseDAR; //the collapsible DARs element initial status
-		this.attributes.collapseProducts = Configuration.data.dataAccessRequestStatuses.collapseProducts;//the collapsible products element initial status
+//		this.attributes.collapseDAR = Configuration.data.dataAccessRequestStatuses.collapseDAR; //the collapsible DARs element initial status
+//		this.attributes.collapseProducts = Configuration.data.dataAccessRequestStatuses.collapseProducts;//the collapsible products element initial status
+	
 	},
 	
 	/**
@@ -153,8 +154,6 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	},
 	
 	/** Submit the change status request to the server */
-	//TODO THE REQUEST IS SUBMITTED BUT Waiting for Garin Response :
-	//handle multiple requests synchronization!!
 	requestChangeStatus : function(darID, newStatus){
 		
 		var darStatus = this.getDARStatusById(darID);
