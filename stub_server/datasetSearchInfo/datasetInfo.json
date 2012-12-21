@@ -55,7 +55,10 @@
             {
                 "Id": "daynight flag",
                 "Type": "enumeration",
-                "PossibleValues": "night"
+                "PossibleValues": [
+                	{"PossibleValue" : "night"},
+                	{"PossibleValue" : "day"}
+                	]
             }
         ]
     },
