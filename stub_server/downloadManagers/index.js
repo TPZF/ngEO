@@ -6,12 +6,8 @@
 
 module.exports = function(req, res){
   
-	if (req.query.new_status == "ACTIVE"){ //it is a DM enable request
+	if (req.query.new_status == "STOP" || req.query.new_status == "STOP_IMMEDIATELY"){ //stop request
 	
-		res.sendfile('./downloadManagers/downloadManagerEnableResponse.json');
-	
-	}else if (req.query.new_status == "INACTIVE") {//it is a DM disable request
-		
 		res.sendfile('./downloadManagers/downloadManagerDisableResponse.json');
 
 	} else{
