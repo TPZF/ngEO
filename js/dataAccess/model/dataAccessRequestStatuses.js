@@ -19,9 +19,6 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	initialize : function(){
 		// The base url to retrieve the DARs'statuses list or submit DAR status changes
 		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
-//		this.attributes.collapseDAR = Configuration.data.dataAccessRequestStatuses.collapseDAR; //the collapsible DARs element initial status
-//		this.attributes.collapseProducts = Configuration.data.dataAccessRequestStatuses.collapseProducts;//the collapsible products element initial status
-	
 	},
 	
 	/**
