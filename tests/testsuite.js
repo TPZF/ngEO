@@ -20,7 +20,8 @@
 		"downloadManagersTest.js",
 		"standingOrderDataAccessRequestTest.js",
 		"searchResultsTest.js",
-		"dataAccessRequestStatusesTest.js"
+		"dataAccessRequestStatusesTest.js",
+		"datasetSearchInfoTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
