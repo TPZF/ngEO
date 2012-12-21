@@ -1,13 +1,10 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var Dataset = Backbone.Model.extend({
-	
+//	datasetSearchInfo attribute do include {datasetId : "", description : "", keywords : [], downloadOptions : [], attributes : [] }
 	defaults :{
-		datasetId : "",
-		description : "",
-		keywords : [],
-		downloadOptions : [],
-		attributes : [],
+		datasetSearchInfo : {},
+		datasetId : "", //this is shall corrspond to datasetSearchInfo.datasetId received from the server
 		startDate : "",
 		endDate : ""		
 		
