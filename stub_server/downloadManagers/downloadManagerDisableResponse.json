@@ -2,7 +2,7 @@
     "downloadmanagerid": "DM_01",
     "downloadmanagerfriendlyname": "Magellium Limited Main DM",
     "userid": "esa_user1",
-    "status": "INACTIVE",
+    "status": "STOPPED",
     "ipaddress": "dmServer.magellium.fr",
     "lastaccessdate": "2001-12-17T09:30:47-05:00",
     "stoporder": "STOP",
