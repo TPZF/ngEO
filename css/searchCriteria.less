@@ -1,6 +1,9 @@
 #datasetSearchCriteria {
 	min-width : 500px;
+	overflow-y: auto;
 }
+
+///////////////////   			 Area criteria styling 		//////////////////////////////////
 
 #coordinatesChoice, #coordinates, #mapExtent {
 	text-align: center;
@@ -11,6 +14,9 @@
 	font-size: 14px;
 }
 
+///////////////////   			 Date search criteria styling 		//////////////////////////////////
+
+
 // Give a width to label to properly aligned date input
 // Date input is 75% width, so 22% seems to fit well...
 #date label {
@@ -19,4 +25,20 @@
 	font-weight : bold;
 	display : inline-block;
 	width: 20%;
+}
+
+///////////////////   			 Advanced search criteria styling 		//////////////////////////////////
+
+
+#advancedCriteriaMessage{
+ 	font-size : 12px;
+	text-align : center;
+}
+
+//harmonize labels styling respectively for
+//labels inside fieldcontain divs and for fieldset headers 
+#searchCriteria label, #searchCriteria .ui-controlgroup-label {
+	
+	font-size : 14px;
+	font-weight : bold;
 }
