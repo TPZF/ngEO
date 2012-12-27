@@ -4,6 +4,9 @@ define( ['jquery', 'backbone', 'text!search/template/dateCriteriaContent.html',
          'jqm-datebox-calbox', 'jqm-datebox-datebox'], 
 		function($, Backbone , dateCriteria_template, advancedCriteria_template) {
 
+	/**
+	 * The backbone model is DatasetSearch
+	 */
 var TimeExtentView = Backbone.View.extend({
 
 	initialize : function(options){
