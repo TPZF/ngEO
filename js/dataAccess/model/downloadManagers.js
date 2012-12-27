@@ -84,29 +84,28 @@ var DownloadManagers = Backbone.Model.extend({
 		return $.ajax({
 		  url: dmChangeStatusURL,
 		  type : 'GET',
-		  dataType: 'json',
-		  success: function(data) {
-			  //self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)].status = data;
-			  self.get("commands")[self.getDownloadManagerIndex(dmID)] = newStatus;
-			 
-			  //notify that the download manager change status request has been received by the server
-			  if (newStatus == Configuration.data.downloadManager.stopCommand.value){
-				  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopCommand.message]);  
-			  }else if (newStatus == Configuration.data.downloadManager.stopImmediatelyCommand.value){
-				  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopImmediatelyCommand.message]);
-			  }else{
-				  //Should not happen
-				  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus, "Un supported Command " + newStatus]);
-			  }
-		  },
-		  
-		  error: function(jqXHR, textStatus, errorThrown) {
-		
-			  console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
-			  //notify that the download manager status change has Failed
-			  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus,  "ERROR when posting Change status Request : " + textStatus + ' ' + errorThrown]);  
-		  }
-		});	
+		  dataType: 'json'
+			})
+			.done(function(data) {
+				  //self.get("downloadmanagers")[self.getDownloadManagerIndex(dmID)].status = data;
+				  self.get("commands")[self.getDownloadManagerIndex(dmID)] = newStatus;
+				 
+				  //notify that the download manager change status request has been received by the server
+				  if (newStatus == Configuration.data.downloadManager.stopCommand.value){
+					  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopCommand.message]);  
+				  }else if (newStatus == Configuration.data.downloadManager.stopImmediatelyCommand.value){
+					  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopImmediatelyCommand.message]);
+				  }else{
+					  //Should not happen
+					  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus, "Un supported Command " + newStatus]);
+				  }
+			 })
+			.fail(function(jqXHR, textStatus, errorThrown) {
+				
+				  console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
+				  //notify that the download manager status change has Failed
+				  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus,  "ERROR when posting Change status Request : " + textStatus + ' ' + errorThrown]);  
+			 });
 	}
 
 });
