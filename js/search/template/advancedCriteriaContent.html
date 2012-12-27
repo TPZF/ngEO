@@ -1,0 +1,89 @@
+<% if (!dataset) { %> 
+
+    <!-- if no dataset has been selected display an information message to the user -->
+
+	<div id="advancedCriteriaMessage" class="widget-content ui-body-c">
+		<p><b>No dataset has been selected.</b></p>
+		<p><b>Please select a dataset first to see its advanced criteria </b></p>
+	</div>
+
+<% } else { %>	
+	
+	<!-- if the selected dataset has no advanced criteria display an information message to the user -->
+	
+	<% if (dataset.attributes.datasetSearchInfo.attributes.length == 0 ) { %>
+		<div id="advancedCriteriaMessage" class="widget-content ui-body-c">
+			<p><b>The selected dataset : <%=dataset.attributes.id %> </b></p>
+			<p><b>Does not have advanced criteria </b></p>
+		</div>
+	
+	<% } else { %>	 		
+	
+		<form>
+		<% _.each(dataset.attributes.datasetSearchInfo.attributes, function(criterion, i) { %>		
+		
+			   <!-- the criterion is an enumeration has multiple options so create a select  -->
+				<% if (criterion.type == 'enumeration') { %> 
+		
+		 			<!-- the criterion has 2 options so create two radio buttons  -->
+					<% if (criterion.possibleValues.length == 2) { %> 
+						<div data-role="fieldcontain">
+							
+							<fieldset data-role="controlgroup">
+								
+								<legend><%= criterion.id %>:</legend>
+    	
+       							<input id="<%= criterion.id %>-input-1" type="radio" name="<%= criterion.id %>" data-mini="true" checked="true">
+								<label for="<%= criterion.id %>-input-1" id="<%= criterion.id %>-label-1" data-mini="true" data-corners="false"><%=criterion.possibleValues[0].possibleValue%></label>         	
+
+								<input id="<%= criterion.id %>-input-2" type="radio" name="<%= criterion.id %>" data-mini="true">
+								<label for="<%= criterion.id %>-input-2" id="<%= criterion.id %>-label-2" data-mini="true" data-corners="false"><%=criterion.possibleValues[1].possibleValue%></label>         	
+								
+    						</fieldset>
+   						</div>
+					 <!-- the criterion has multiple options so create a select  -->
+					<% } else { %>	
+							
+						 <div data-role='fieldcontain'> 
+							
+							<label for="<%= criterion.id %>" data-mini="true"><%=criterion.id%>: </label>   
+							
+							<select id="<%= criterion.id %>" data-mini="true" data-theme="c">
+								<% _.each(criterion.possibleValues, function(possibleValue) { %>
+									<option value="<%=possibleValue.possibleValue%>"><%=possibleValue.possibleValue%></option>
+								<% }); %>
+						 	</select>	
+						 	
+						</div>
+					
+					<% } %>
+					
+				<!-- the criterion is an integer within a range  -->	
+				<% } else if (criterion.type == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+					
+
+					<div data-role="fieldcontain">
+							
+							<fieldset data-role="controlgroup">
+								
+								<legend><%= criterion.id %>:</legend>
+    	
+       							 <label for="<%= criterion.id %>_from">from:</label>
+   						 		 <input type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" step="1" data-highlight="true" data-mini="true"/>
+
+								 <label for="<%= criterion.id %>_to">to:</label>
+   						 		<input type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" step="1" data-highlight="true" data-mini="true"/>
+
+    						</fieldset>
+   						</div>
+						
+					
+				<% } else { %>	
+					 <label for="<%= criterion.id %>"> ERROR: Undefined Criterion type <%= criterion.id %> </label>
+				<% } %>
+		
+				
+			<% }); %>
+			</form>
+	<% } %>
+<% } %>
