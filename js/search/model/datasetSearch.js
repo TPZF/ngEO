@@ -24,19 +24,41 @@ var DataSetSearch = Backbone.Model.extend({
 	initialize : function() {
 		// Initialize date/time with today
 		var today = (new Date()).toISOString();
-		var dateOnly = today.substring(0, today.indexOf('T'));
-		var timeOnly = today.substring(today.indexOf('T')+1, today.lastIndexOf(':'));
-		this.set("startdate",dateOnly);
-		this.set("stopdate",dateOnly);
-		this.set("startTime",timeOnly);
-		this.set("stopTime",timeOnly);
+		//set start and stop dates/times to today
+		this.setDateAndTime(today, today); 
+		//no dataset is selected
+		this.dataset = undefined;
+	},
+	
+	/** load the information for the selected dataset from the server 
+	 * unless if no dataset is selected set the dataset to undefined */
+	updateDatasetModel : function(){
 		
-		//Retrieve the dataset information
-		//this.dataset = new Dataset({datasetId : this.get("datasetId")});			
-		//TODO handle download options later
-		//this.dataset.fetch().done(function(){
-			//TODO set the selected options default value from the dataset download options
-		//});
+		//Retrieve the dataset information from the server
+		if (this.get("datasetId")){
+			
+			this.dataset = new Dataset({datasetId : this.get("datasetId")});			
+			var self = this;
+			this.dataset.fetch({
+				
+				success: function(model, response, options) {
+					//update dates/times from dataset dates/times
+					self.setDateAndTime(model.attributes.datasetSearchInfo.startDate, model.attributes.datasetSearchInfo.endDate); 
+					self.trigger('datasetLoaded');
+					//TODO set the selected options default value from the dataset download options
+				},
+				
+				error: function(model, xhr, options) {
+					console.log(model);
+					//model.trigger('datasetLoaded');
+					//TODO set the selected options default value from the dataset download options
+				}
+			});
+	
+		}else{
+			this.dataset = undefined;
+		}
+		
 	},
 	  
 	getOpenSearchURL : function(){
@@ -58,6 +80,29 @@ var DataSetSearch = Backbone.Model.extend({
 		//console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
 		return url;
+	},
+	
+	/** split a given date/time into date and time for start and stop dates & times*/
+	setDateAndTime : function(startDate, stopDate){
+		
+		//set start date and time
+		var dateOnly = startDate.substring(0, startDate.indexOf('T'));
+		var timeOnly = startDate.substring(startDate.indexOf('T')+1, startDate.lastIndexOf(':'));
+		
+		this.set("startdate",dateOnly);
+		this.set("startTime",timeOnly);
+		
+		if (startDate != stopDate){
+			dateOnly = stopDate.substring(0, stopDate.indexOf('T'));
+			timeOnly = stopDate.substring(stopDate.indexOf('T')+1, stopDate.lastIndexOf(':'));
+			this.set("stopdate",dateOnly);
+			this.set("stopTime",timeOnly);
+		}
+		
+		//set stop date and time
+		this.set("stopdate",dateOnly);
+		this.set("stopTime",timeOnly);
+		
 	},
 	
 	//Format to openSearch compliant date format : 
