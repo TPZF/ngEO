@@ -4,9 +4,7 @@ var Dataset = Backbone.Model.extend({
 //	datasetSearchInfo attribute do include {datasetId : "", description : "", keywords : [], downloadOptions : [], attributes : [] }
 	defaults :{
 		datasetSearchInfo : {},
-		datasetId : "", //this is shall corrspond to datasetSearchInfo.datasetId received from the server
-		startDate : "",
-		endDate : ""		
+		datasetId : "" //the datasetId shall correspond to datasetSearchInfo.datasetId received from the server
 		
 	},
 	
