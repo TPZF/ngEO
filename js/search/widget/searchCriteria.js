@@ -6,6 +6,8 @@ define( ["jquery", "backbone", "search/model/datasetSearch", "search/view/search
 
 return function() {
 		
+	DatasetSearch.initialize();
+	
 	var view = new SearchCriteriaView({
 		model : DatasetSearch,
 	});
