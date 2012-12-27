@@ -20,26 +20,46 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 	/**
 	 * Constructor
-	 * Connect to model change
+	 * Connect to model change and dataset loaded events
 	 */
 	initialize : function() {
 		this.model.on("change:datasetId", this.onDataSetChanged, this);
+		this.model.on("datasetLoaded", this.onDatasetLoaded, this);
 	},
 	
 	/**
 	 * Update the view when the datasetId have been changed
 	 */
 	onDataSetChanged: function() {
-		//this.$el.find("h1").html( "Selected dataset : " + this.model.get("datasetId") );
+		
 		if ( this.model.get("datasetId") ) {
+			//update the header with the dataset id selected
+			this.$el.find("#searchCriteriaHeader h1")
+					.empty()		
+					.append("Selected Dataset : " + this.model.get("datasetId"));
+			//load the selected dataset from the server
 			this.searchButton.button('enable');
 			this.searchUrlButton.button('enable');
 			this.standingOrderButton.button('enable');
 		} else {
+			
+			this.$el.find("#searchCriteriaHeader h1")
+					.empty()
+					.append("No Dataset Selected");
 			this.searchButton.button('disable');
 			this.searchUrlButton.button('disable');
 			this.standingOrderButton.button('disable');
 		}
+		//if the dataset is defined load it from the server unless it is set to undefined
+		this.model.updateDatasetModel();		
+	},
+	/**
+	 * Callback method to display the advanced search criteria
+	 * for the selected dataset once they are loaded
+	 */
+	onDatasetLoaded : function(){
+		this.$el.find("#searchCriteria").empty();
+		this.advancedCriteriaView.render();
 	},
 	
 	/**
