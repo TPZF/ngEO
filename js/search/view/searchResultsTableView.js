@@ -117,15 +117,15 @@ var SearchResultsTableView = Backbone.View.extend({
 					//"sPaginationType": "full_numbers",
 					"bSort" : true,
 					"fnDrawCallback": function( oSettings ) {
-			
-						//console.log($("tbody tr"));
-						$("#datatable tbody tr").each(function(i, elt){						
+
+						$("#datatable tbody tr").each(function(i, elt){		
+							//avoid the case where the table has not been loaded yet				
 							if ($(elt).text() != "No data available in table"){
 								var rowPos = self.table.fnGetPosition(elt);
-								console.log(rowPos);
+								var selector = "td:eq(" + Configuration.data.directDownload.productColumnIndex + ")";
 								
 								if (self.model.isBrowserSupportedUrl( self.model.get('features')[rowPos])){
-									$(elt).find("td:eq(8)").addClass("ui-direct-download");
+									$(elt).find(selector).addClass("ui-direct-download");
 								}
 							}
 						});
