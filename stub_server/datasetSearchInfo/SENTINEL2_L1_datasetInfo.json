@@ -92,6 +92,19 @@
                         "possibleValue": "no"
                     }
                 ]
+            },
+            {
+                "id": "orbit",
+                "type": "integer",
+                "rangeMinValue": "1",
+                "rangeMaxValue": "70000"
+            },
+            
+            {
+                "id": "track",
+                "type": "integer",
+                "rangeMinValue": "1",
+                "rangeMaxValue": "501"
             }
         ],
      	"startDate": "25-12-2012T12:45:07:00.57Z",
