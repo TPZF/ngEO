@@ -37,8 +37,6 @@ var DownloadManagersListView = Backbone.View.extend({
 			//look for class ui-radio-off because it is going to be changed to ui-radio-on at the end of the handler
 			if ($target.hasClass("ui-radio-off")){
 				this.selectedDownloadManager = event.currentTarget.id;
-				console.log("selected Download Manager :");
-				console.log(this.selectedDownloadManager);
 			}
 		}
 	},
