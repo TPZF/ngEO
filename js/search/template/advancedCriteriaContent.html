@@ -19,6 +19,7 @@
 	
 	<% } else { %>	 		
 	
+	<!-- 	display search criteria -->
 		<form>
 		<% _.each(dataset.attributes.datasetSearchInfo.attributes, function(criterion, i) { %>		
 		
@@ -29,20 +30,20 @@
 					<% if (criterion.possibleValues.length == 2) { %> 
 						<div data-role="fieldcontain">
 							
-							<fieldset data-role="controlgroup">
+							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
 								
 								<legend><%= criterion.id %>:</legend>
     	
-       							<input id="<%= criterion.id %>-input-1" type="radio" name="<%= criterion.id %>" data-mini="true" checked="true">
-								<label for="<%= criterion.id %>-input-1" id="<%= criterion.id %>-label-1" data-mini="true" data-corners="false"><%=criterion.possibleValues[0].possibleValue%></label>         	
+       							<input id="<%=criterion.possibleValues[0].possibleValue%>_input" type="radio" name="<%=criterion.possibleValues[0].possibleValue%>" data-mini="true" checked="true">
+								<label for="<%= criterion.id %>_input_1" id="<%=criterion.possibleValues[0].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[0].possibleValue%></label>         	
 
-								<input id="<%= criterion.id %>-input-2" type="radio" name="<%= criterion.id %>" data-mini="true">
-								<label for="<%= criterion.id %>-input-2" id="<%= criterion.id %>-label-2" data-mini="true" data-corners="false"><%=criterion.possibleValues[1].possibleValue%></label>         	
+								<input id="<%=criterion.possibleValues[1].possibleValue%>_input" type="radio" name="<%=criterion.possibleValues[1].possibleValue%>" data-mini="true">
+								<label for="<%=criterion.possibleValues[1].possibleValue%>_input" id="<%=criterion.possibleValues[1].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[1].possibleValue%></label>         	
 								
     						</fieldset>
    						</div>
-					 <!-- the criterion has multiple options so create a select  -->
-					<% } else { %>	
+					 <!-- the criterion has multiple options with only one value allowed so create a select  -->
+					<% } else if (criterion.value == 'single') { %>	
 							
 						 <div data-role='fieldcontain'> 
 							
@@ -55,31 +56,47 @@
 						 	</select>	
 						 	
 						</div>
+						 <!-- the criterion has multiple options with multiple values allowed so create a group of checkboxes  -->
+					<% } else if (criterion.value == 'multiple') { %>	
+							
+						 <div data-role="fieldcontain">
+							
+							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
+								
+								<legend><%= criterion.id %>:</legend>
+    	
+    							<% _.each(criterion.possibleValues, function(possibleValue, index) { %>
+									 <label id="<%=possibleValue.possibleValue%>_label_<%= index %>" for="<%=possibleValue.possibleValue%>_input_<%= index %>"><%=possibleValue.possibleValue%></label>
+   						 			 <input type="checkbox" name="<%=possibleValue.possibleValue%>" id="<%=possibleValue.possibleValue%>_input_<%= index %>" data-mini="true"/>		
+								<% }); %>
+       							
+    						</fieldset>
+   						</div>
 					
-					<% } %>
+					<% } else { %>
 					
+					<% }  %>
 				<!-- the criterion is an integer within a range  -->	
 				<% } else if (criterion.type == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 					
 
 					<div data-role="fieldcontain">
 							
-							<fieldset data-role="controlgroup">
+							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
 								
 								<legend><%= criterion.id %>:</legend>
     	
        							 <label for="<%= criterion.id %>_from">from:</label>
-   						 		 <input type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" step="1" data-highlight="true" data-mini="true"/>
+   						 		 <input type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
 
 								 <label for="<%= criterion.id %>_to">to:</label>
-   						 		<input type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" step="1" data-highlight="true" data-mini="true"/>
+   						 		 <input type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
 
     						</fieldset>
-   						</div>
-						
-					
+   					</div>
+
 				<% } else { %>	
-					 <label for="<%= criterion.id %>"> ERROR: Undefined Criterion type <%= criterion.id %> </label>
+					 <label> ERROR: Undefined Criterion type <%= criterion.id %> </label>
 				<% } %>
 		
 				
