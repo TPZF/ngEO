@@ -40,6 +40,10 @@
             "message": "The server has received a STOP_IMMEDIATELY command"
         }
 	},
+
+	"directDownload" : {
+		"productColumnIndex" : 8
+	},
 	
 	"dataAccessRequestStatuses" : {
 	   	   
