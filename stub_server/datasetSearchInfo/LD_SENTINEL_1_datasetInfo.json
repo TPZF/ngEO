@@ -1,0 +1,98 @@
+{
+    "datasetSearchInfo": {
+        "datasetId": "LD_SENTINEL_1",
+        "description": "All L1 products for the S1 mission",
+        "keywords": [
+            {
+                "keyword": "optical"
+            },
+            {
+                "keyword": "reflectance"
+            },
+            {
+                "keyword": "land"
+            },
+            {
+                "keyword": "high resolution"
+            }
+        ],
+        "downloadOptions": [
+            {
+                "argumentName": "ProductFormat",
+                "description": "desired download format",
+                "values": [
+                    {
+                        "name": "GeoTIFF",
+                        "humanReadable": "GeoTiff",
+                        "sizeFactor": "1.2"
+                    }
+                ]
+            },
+            {
+                "argumentName": "Download mode",
+                "description": "wait until completion or download continuously",
+                "values": [
+                    {
+                        "name": "DLcomplete",
+                        "humanReadable": "Download on completion",
+                        "sizeFactor": "1"
+                    },
+                    {
+                        "name": "DLcontinuous",
+                        "humanReadable": "Download continuously",
+                        "sizeFactor": "1"
+                    }
+                ]
+            }
+        ],
+        "attributes": [
+             {
+                "id": "pass",
+                "type": "enumeration",
+                "possibleValues": [
+                    {
+                        "possibleValue": "Ascending"
+                    },
+                    {
+                        "possibleValue": "Descending"
+                    }
+                ]
+            },
+            
+            {
+                "id": "orbit",
+                "type": "integer",
+                "rangeMinValue": "1",
+                "rangeMaxValue": "70000"
+            },
+            
+            {
+                "id": "track",
+                "type": "integer",
+                "rangeMinValue": "1",
+                "rangeMaxValue": "501"
+            },
+            
+            {
+                "id": "status",
+                "type": "enumeration",
+                "possibleValues": [
+                    {
+                        "possibleValue": "Archived"
+                    },
+                    {
+                        "possibleValue": "Aquired"
+                    },
+                    {
+                        "possibleValue": "Planned"
+                    },
+                    {
+                        "possibleValue": "Cancelled"
+                    }
+                ]
+            }
+        ],
+        "startDate": "01-06-2014T12:45:07:00.57Z",
+        "endDate": "31-07-2024T23:27:05:00.57Z"
+    }
+}
