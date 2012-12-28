@@ -60,6 +60,25 @@
             },
           
             {
+                "id": "sensor",
+                "type": "enumeration",
+                "value" : "multiple",
+                "possibleValues": [
+                    {
+                        "possibleValue": "OLCI"
+                    },
+                    {
+                        "possibleValue": "SLSTR"
+                    },
+                    {
+                        "possibleValue": "SRAL"
+                    },
+                    {
+                        "possibleValue": "MWR"
+                    }
+                ]
+            },
+            {
                 "id": "status",
                 "type": "enumeration",
                 "possibleValues": [

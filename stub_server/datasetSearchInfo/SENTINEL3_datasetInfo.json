@@ -49,12 +49,33 @@
              {
                 "id": "pass",
                 "type": "enumeration",
+                "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
                     },
                     {
                         "possibleValue": "Descending"
+                    }
+                ]
+            },
+            
+            {
+                "id": "sensor",
+                "type": "enumeration",
+                "value" : "multiple",
+                "possibleValues": [
+                    {
+                        "possibleValue": "OLCI"
+                    },
+                    {
+                        "possibleValue": "SLSTR"
+                    },
+                    {
+                        "possibleValue": "SRAL"
+                    },
+                    {
+                        "possibleValue": "MWR"
                     }
                 ]
             },
@@ -76,6 +97,7 @@
             {
                 "id": "status",
                 "type": "enumeration",
+                "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"
@@ -95,6 +117,7 @@
             {
                 "id": "daynight flag",
                 "type": "enumeration",
+                "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "night"

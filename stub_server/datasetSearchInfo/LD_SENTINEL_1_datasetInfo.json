@@ -47,8 +47,23 @@
         ],
         "attributes": [
              {
+                "id": "satellite",
+                "type": "enumeration",
+                "value" : "single",
+                "possibleValues": [
+                    {
+                        "possibleValue": "Sentinel-1A"
+                    },
+                    {
+                        "possibleValue": "Sentinel-1B"
+                    }
+                ]
+            },
+             
+             {
                 "id": "pass",
                 "type": "enumeration",
+                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
@@ -76,6 +91,7 @@
             {
                 "id": "status",
                 "type": "enumeration",
+                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"

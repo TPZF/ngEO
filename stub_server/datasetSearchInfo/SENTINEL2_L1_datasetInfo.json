@@ -49,6 +49,7 @@
              {
                 "id": "pass",
                 "type": "enumeration",
+                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
@@ -62,6 +63,7 @@
             {
                 "id": "status",
                 "type": "enumeration",
+                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"
@@ -81,6 +83,7 @@
             {
                 "id": "granule",
                 "type": "enumeration",
+                "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "yes"
