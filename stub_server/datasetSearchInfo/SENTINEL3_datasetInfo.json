@@ -1,7 +1,7 @@
 {
     "datasetSearchInfo": {
-        "datasetId": "SENTINEL2_L1",
-        "description": "All L1 products for the S2 mission",
+        "datasetId": "SENTINEL3",
+        "description": "All products for the S3 mission",
         "keywords": [
             {
                 "keyword": "optical"
@@ -60,6 +60,20 @@
             },
             
             {
+                "id": "orbit",
+                "type": "integer",
+                "rangeMinValue": "1",
+                "rangeMaxValue": "70000"
+            },
+            
+            {
+                "id": "track",
+                "type": "integer",
+                "rangeMinValue": "1",
+                "rangeMaxValue": "501"
+            },
+            
+            {
                 "id": "status",
                 "type": "enumeration",
                 "possibleValues": [
@@ -79,19 +93,19 @@
             },
             
             {
-                "id": "granule",
+                "id": "daynight flag",
                 "type": "enumeration",
                 "possibleValues": [
                     {
-                        "possibleValue": "yes"
+                        "possibleValue": "night"
                     },
                     {
-                        "possibleValue": "no"
+                        "possibleValue": "day"
                     }
                 ]
             }
         ],
-     	"startDate": "25-12-2012T12:45:07:00.57Z",
-        "endDate": "19-01-2019T11:35:38:00.57Z"
+        "startDate": "01-06-2014T12:45:07:00.57Z",
+        "endDate": "31-07-2024T23:27:05:00.57Z"
     }
 }

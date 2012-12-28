@@ -1,7 +1,7 @@
 {
     "datasetSearchInfo": {
-        "datasetId": "SENTINEL2_L1",
-        "description": "All L1 products for the S2 mission",
+        "datasetId": "SENTINEL3_L2",
+        "description": "All L2 products for the S3 mission",
         "keywords": [
             {
                 "keyword": "optical"
@@ -58,7 +58,7 @@
                     }
                 ]
             },
-            
+          
             {
                 "id": "status",
                 "type": "enumeration",
@@ -76,22 +76,9 @@
                         "possibleValue": "Cancelled"
                     }
                 ]
-            },
-            
-            {
-                "id": "granule",
-                "type": "enumeration",
-                "possibleValues": [
-                    {
-                        "possibleValue": "yes"
-                    },
-                    {
-                        "possibleValue": "no"
-                    }
-                ]
             }
         ],
-     	"startDate": "25-12-2012T12:45:07:00.57Z",
-        "endDate": "19-01-2019T11:35:38:00.57Z"
+        "startDate": "01-06-2014T12:45:07:00.57Z",
+        "endDate": "31-07-2024T23:27:05:00.57Z"
     }
 }
