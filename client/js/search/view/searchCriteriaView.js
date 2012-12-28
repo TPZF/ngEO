@@ -33,19 +33,11 @@ var SearchCriteriaView = Backbone.View.extend({
 	onDataSetChanged: function() {
 		
 		if ( this.model.get("datasetId") ) {
-			//update the header with the dataset id selected
-			this.$el.find("#searchCriteriaHeader h1")
-					.empty()		
-					.append("Selected Dataset : " + this.model.get("datasetId"));
 			//load the selected dataset from the server
 			this.searchButton.button('enable');
 			this.searchUrlButton.button('enable');
 			this.standingOrderButton.button('enable');
 		} else {
-			
-			this.$el.find("#searchCriteriaHeader h1")
-					.empty()
-					.append("No Dataset Selected");
 			this.searchButton.button('disable');
 			this.searchUrlButton.button('disable');
 			this.standingOrderButton.button('disable');
@@ -131,7 +123,6 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.advancedCriteriaView = new AdvancedSearchView({
 			el : this.$el.find("#searchCriteria"), 
-			searchCriteriaView : this,
 			model : this.model});
 		this.advancedCriteriaView.render();
 		
