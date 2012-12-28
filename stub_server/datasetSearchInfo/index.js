@@ -13,19 +13,19 @@ module.exports = function(req, res){
 			res.sendfile('./datasetSearchInfo/ND_S2_1_datasetInfo.json');
 			break;
 		case 'LD_SENTINEL_1':
-			res.sendfile('./datasetSearchInfo/datasetInfo.json');
+			res.sendfile('./datasetSearchInfo/LD_SENTINEL_1_datasetInfo.json');
 			break;
 		case 'SENTINEL2_L1':
 			res.sendfile('./datasetSearchInfo/SENTINEL2_L1_datasetInfo.json');
 			break;
 		case 'SENTINEL3':
-			res.sendfile('./datasetSearchInfo/datasetInfo.json');
+			res.sendfile('./datasetSearchInfo/SENTINEL3_datasetInfo.json');
 			break;
 		case 'SENTINEL3_L1':
-			res.sendfile('./datasetSearchInfo/datasetInfo.json');
+			res.sendfile('./datasetSearchInfo/SENTINEL3_L1_datasetInfo.json');
 			break;
 		case 'SENTINEL3_L2':
-			res.sendfile('./datasetSearchInfo/datasetInfo.json');
+			res.sendfile('./datasetSearchInfo/SENTINEL3_L2_datasetInfo.json');
 			break;
 		default:
 			res.sendfile('./datasetSearchInfo/datasetInfo.json');
