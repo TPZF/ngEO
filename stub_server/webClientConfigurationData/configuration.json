@@ -41,6 +41,10 @@
         }
 	},
 	
+	"directDownload" : {
+		"productColumnIndex" : 8
+	},
+	
 	"dataAccessRequestStatuses" : {
 	   
 	   "messagefadeOutTime" : 2500,
