@@ -18,6 +18,17 @@
 	
 	},
 	
+	"searchCriteriaToOpenSearchMapping" : {
+		"orbit" : "on",
+		"pass" : "od",
+		"status" : "status",
+		"sensor" : "isn",
+		"sensorType" : "st",
+		"sensorMode" : "som",
+		"satellite" : "psn",
+		"startTimeFromAscendingNode" : "axsa",
+		"completionTimeFromAscendingNode" : "axso" 
+	},
 	
 	"downloadManager" : {
 		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html",
