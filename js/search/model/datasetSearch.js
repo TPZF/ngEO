@@ -17,7 +17,6 @@ var DataSetSearch = Backbone.Model.extend({
 		useExtent : true,
 		selectedDownloadOptions : {}, // the selected download options as json object 
 									//{downloadoption1 : value , downloadoption2 : value 2, ....downloadoption : value n}
-		criteria : ""//TODO later add the advanced criteria 
 		
 	},
 	
@@ -58,17 +57,18 @@ var DataSetSearch = Backbone.Model.extend({
 		}else{
 			this.dataset = undefined;
 		}
-		
 	},
 	  
+	/**
+	 * Create the openSearch url
+	 */
 	getOpenSearchURL : function(){
-	
-		//TODO add advanced search criteria later
+
 		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.get("datasetId") + "?" +
 				"start="+ this.formatDate(this.get("startdate"), this.get("startTime")) + "&" + 
 				"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime")) + "&count=10";
 		
-		//add area criteria is set
+		//add area criteria if set
 		if (this.get("west") != "" && this.get("south") != ""
 			&& this.get("east") != "" && this.get("north") != ""){
 		
@@ -77,7 +77,18 @@ var DataSetSearch = Backbone.Model.extend({
 			+ this.get("east") + "," + this.get("north");
 		}
 		
-		//console.log("DatasetSearch module : getOpenSearchURL method : " + url);
+		//iterate on the configured criterion with the openSearch criterion name
+		//add the selected advanced criteria set in the model
+		var self = this;
+		
+		_.each(Configuration.data.searchCriteriaToOpenSearchMapping, function(value, key, list){
+			
+			if (self.attributes[value] && self.attributes[value]  != ""){
+				url = url  +  "&" + value + "=" + self.attributes[value] ;
+			}
+		});
+		
+		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
 		return url;
 	},
