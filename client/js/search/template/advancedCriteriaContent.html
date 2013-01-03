@@ -21,6 +21,10 @@
 	
 	<!-- 	display search criteria -->
 		<form>
+		
+		 <label id="useAdvancedCriteria_label" for="useAdvancedCriteria_input">Use advanced criteria in the search</label>
+   		 <input type="checkbox" name="useAdvancedCriteria" id="useAdvancedCriteria_input" data-mini="true" checked/>		
+		
 		<% _.each(dataset.attributes.datasetSearchInfo.attributes, function(criterion, i) { %>		
 		
 			   <!-- the criterion is an enumeration has multiple options so create a select  -->
@@ -34,11 +38,11 @@
 								
 								<legend><%= criterion.id %>:</legend>
     	
-       							<input id="<%=criterion.possibleValues[0].possibleValue%>_input" type="radio" name="<%=criterion.possibleValues[0].possibleValue%>" data-mini="true" checked="true">
-								<label for="<%= criterion.id %>_input_1" id="<%=criterion.possibleValues[0].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[0].possibleValue%></label>         	
+       							<input id="<%=criterion.id%>_<%=criterion.possibleValues[0].possibleValue%>_input" type="radio" name="<%=criterion.id%>" data-mini="true" checked="true">
+								<label for="<%=criterion.id%>_<%=criterion.possibleValues[0].possibleValue%>_input" id="<%=criterion.id%>_<%=criterion.possibleValues[0].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[0].possibleValue%></label>         	
 
-								<input id="<%=criterion.possibleValues[1].possibleValue%>_input" type="radio" name="<%=criterion.possibleValues[1].possibleValue%>" data-mini="true">
-								<label for="<%=criterion.possibleValues[1].possibleValue%>_input" id="<%=criterion.possibleValues[1].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[1].possibleValue%></label>         	
+								<input id="<%=criterion.id%>_<%=criterion.possibleValues[1].possibleValue%>_input" type="radio" name="<%=criterion.id%>" data-mini="true">
+								<label for="<%=criterion.id%>_<%=criterion.possibleValues[1].possibleValue%>_input" id="<%=criterion.id%>_<%=criterion.possibleValues[1].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[1].possibleValue%></label>         	
 								
     						</fieldset>
    						</div>
@@ -65,9 +69,9 @@
 								
 								<legend><%= criterion.id %>:</legend>
     	
-    							<% _.each(criterion.possibleValues, function(possibleValue, index) { %>
-									 <label id="<%=possibleValue.possibleValue%>_label_<%= index %>" for="<%=possibleValue.possibleValue%>_input_<%= index %>"><%=possibleValue.possibleValue%></label>
-   						 			 <input type="checkbox" name="<%=possibleValue.possibleValue%>" id="<%=possibleValue.possibleValue%>_input_<%= index %>" data-mini="true"/>		
+    							<% _.each(criterion.possibleValues, function(possibleValue) { %>
+									 <label id="<%=criterion.id%>_<%=possibleValue.possibleValue%>_label" for="<%=criterion.id%>_<%=possibleValue.possibleValue%>_input"><%=possibleValue.possibleValue%></label>
+   						 			 <input type="checkbox" name="<%= criterion.id %>" id="<%=criterion.id%>_<%=possibleValue.possibleValue%>_input" data-mini="true"/>		
 								<% }); %>
        							
     						</fieldset>
