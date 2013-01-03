@@ -15,6 +15,7 @@ var DataSetSearch = Backbone.Model.extend({
 		east : "",
 		north : "",
 		useExtent : true,
+		useAdvancedCriteria : true, //flag for including adavanced serach criteria or not
 		selectedDownloadOptions : {}, // the selected download options as json object 
 									//{downloadoption1 : value , downloadoption2 : value 2, ....downloadoption : value n}
 		
@@ -32,6 +33,9 @@ var DataSetSearch = Backbone.Model.extend({
 	/** load the information for the selected dataset from the server 
 	 * unless if no dataset is selected set the dataset to undefined */
 	updateDatasetModel : function(){
+
+		//reset all the selected attributes from the old dataset if any
+		this.clearOldDatasetAttributes();
 		
 		//Retrieve the dataset information from the server
 		if (this.get("datasetId")){
@@ -58,12 +62,27 @@ var DataSetSearch = Backbone.Model.extend({
 			this.dataset = undefined;
 		}
 	},
-	  
+	 
+	/** Remove all the selected criteria from the old selected dataset */ 
+	clearOldDatasetAttributes : function(){
+		
+		var self = this;
+		
+		if (this.dataset && this.dataset.attributes.datasetSearchInfo.attributes){			
+			_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
+				if (_.has(self.attributes, attribute.id)){
+					self.unset(attribute.id);
+				}				
+			});
+		}
+	},
+	
 	/**
 	 * Create the openSearch url
 	 */
 	getOpenSearchURL : function(){
 
+		var self = this;
 		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.get("datasetId") + "?" +
 				"start="+ this.formatDate(this.get("startdate"), this.get("startTime")) + "&" + 
 				"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime")) + "&count=10";
@@ -77,19 +96,32 @@ var DataSetSearch = Backbone.Model.extend({
 			+ this.get("east") + "," + this.get("north");
 		}
 		
-		//iterate on the configured criterion with the openSearch criterion name
-		//add the selected advanced criteria set in the model
-		var self = this;
-		
-		_.each(Configuration.data.searchCriteriaToOpenSearchMapping, function(value, key, list){
+		//add the advanced criteria values selected and already set to the model
+		if (this.get("useAdvancedCriteria")){
 			
-			if (self.attributes[value] && self.attributes[value]  != ""){
-				url = url  +  "&" + value + "=" + self.attributes[value] ;
+			//iterate on the configured criteria with the advanced criterion id
+			//and for each criterion, add the openSearch mapped criterion with the selected advanced criteria value set in the model 
+			_.each(Configuration.data.searchCriteriaToOpenSearchMapping, function(value, key, list){
+				
+				if (self.attributes[key] && self.attributes[key]  != ""){
+					url = url  +  "&" + value + "=" + self.attributes[key] ;
+				}
+			});
+			
+			//add the advanced criteria not set in the model ie not changed by the user with their default values from the dataset 
+			if (this.dataset.attributes.datasetSearchInfo.attributes){
+				
+				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
+					
+					if (!_.has(self.attributes, attribute.id)){
+						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(attribute.id) + '=' + self.dataset.getDefaultCriterionValue(attribute.id);	
+					}
+				});
 			}
-		});
+		}
 		
 		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
-		
+	
 		return url;
 	},
 	
@@ -125,6 +157,7 @@ var DataSetSearch = Backbone.Model.extend({
 	},
 	  
 	/** get the seach criteria to display as a txt pop-up in the searchresults view */
+	//TODO CONFIRM THE USE OF THE SUMMARY
 	getSearchCriteriaSummary : function(){
 
 		var text = '<p><b>DataSet : </b>' + this.get("datasetId") + '</p> '
