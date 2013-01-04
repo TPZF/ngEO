@@ -1,11 +1,11 @@
 
 
 define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/model/searchResults', 'search/view/spatialExtentView',
-         'search/view/timeExtentView',  'search/view/advancedSearchView', 
+         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
 		function($, Backbone, Configuration, DatasetSearch, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, StandingOrderDataAccessRequest, StandingOrderWidget,
+				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget,
 				 searchCriteria_template) {
 
 /**
@@ -46,12 +46,14 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.model.updateDatasetModel();		
 	},
 	/**
-	 * Callback method to display the advanced search criteria
+	 * Callback method to display the advanced search criteria and the download options
 	 * for the selected dataset once they are loaded
 	 */
 	onDatasetLoaded : function(){
 		this.$el.find("#searchCriteria").empty();
 		this.advancedCriteriaView.render();
+		this.$el.find("#downloadOptions").empty();
+		this.downloadOptionsView.render();
 	},
 	
 	/**
@@ -84,7 +86,7 @@ var SearchCriteriaView = Backbone.View.extend({
 			//set open search url
 			StandingOrderDataAccessRequest.OpenSearchURL = self.model.getOpenSearchURL();
 			//set selected download options
-			StandingOrderDataAccessRequest.DownloadOptions = self.model.get("selectedDownloadOptions");
+			StandingOrderDataAccessRequest.DownloadOptions = self.model.getSelectedDownloadOptions();
 			
 			var standingOrderWidget = new StandingOrderWidget();
 			standingOrderWidget.open();
@@ -107,7 +109,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Create the tabs
 		this.$el.find("#tabs").tabs();
 		
-		// Create the views for each criteria : time, spatial and advanced
+		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
 			searchCriteriaView : this,
@@ -125,6 +127,14 @@ var SearchCriteriaView = Backbone.View.extend({
 			el : this.$el.find("#searchCriteria"), 
 			model : this.model});
 		this.advancedCriteriaView.render();
+		
+		this.$el.trigger('create');
+		
+		//add download options view as a tab
+		this.downloadOptionsView = new DownloadOptionsView({
+			el : this.$el.find("#downloadOptions"), 
+			model : this.model});
+		this.downloadOptionsView.render();
 		
 		this.$el.trigger('create');
 		
