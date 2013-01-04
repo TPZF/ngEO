@@ -18,6 +18,18 @@
 	
 	},
 	
+	"inputLabelSuffix" : "label",
+	
+	"fieldIdSuffixSepartor" : "_",
+		
+	"rangeStartSuffix" : "from",
+	
+	"rangeStopSuffix" : "to",
+		
+	"inputSuffix" : "input",
+	
+	"widgetSuffix" : "widget",
+	
 	"searchCriteriaToOpenSearchMapping" : {
 		"orbit" : "on",
 		"pass" : "od",
@@ -27,8 +39,11 @@
 		"sensorMode" : "som",
 		"satellite" : "psn",
 		"startTimeFromAscendingNode" : "axsa",
-		"completionTimeFromAscendingNode" : "axso" 
+		"completionTimeFromAscendingNode" : "axso", 
+		"track" : "track",
+		"daynight flag" : "daynight flag"
 	},
+	
 	
 	"downloadManager" : {
 		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html",
