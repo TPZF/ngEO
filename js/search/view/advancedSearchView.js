@@ -1,32 +1,32 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataset',
-         'text!search/template/advancedCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, Configuration, Dataset, advancedCriteria_template) {
+define( ['jquery', 'backbone', 'configuration', 'text!search/template/advancedCriteriaContent.html'], 
+		function($, Backbone, Configuration, advancedCriteria_template) {
 
 var AdvancedSearchView = Backbone.View.extend({
 
-	/** the model is the DatasetSearch (the search model containing search params)
-	/* the dataset attribute is the Dataset backbone model containing the advanced criteria 
+	/** the model is the DatasetSearch (the search model containing search parameters)
+	/* the dataset property of DatasetSearch is the Dataset backbone model containing the advanced criteria 
 	 */
 	
 	events : {
 		
-		//for every criteria modified by a select element, set in the DatasetSearch the openSearch mapped criterion 
-		//with the selected value (the select is used for single-valued criteria 
+		//for every criteria modified by a select element, set in the DatasetSearch the criterion 
+		//with the selected value (the select is used for single-valued criteria)
 		'change select' : function(event){
 			var criterion = {};
 			criterion[event.currentTarget.id] = $(event.currentTarget).val();
 			this.model.set(criterion);			
 		},
 		
-		//catch the changes of criterion range once the slider moving is finished
+		//catch the criterion range changes of once the slider moving is finished
 		'slidestop input' : function(event) {
 			this.setInputCriterionValues(event);
 		},
 		
 		//catch the changes of criterion range and/or simple text values by entering values in the text field
-		//do not use input 'change' event to avoid interference of handlers. In fact, when moving the slider change input event is triggered  
+		//do not use input 'change' event to avoid interference of handlers. 
+		//In fact, when moving the slider change input event is triggered  
 		//so this would make the handlers called twice.
 		'blur input' : function(event) {
 			this.setInputCriterionValues(event);
@@ -122,8 +122,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			}
 			//create the range value
 			criterionValue = "[" + currentValue + "," +$('#' + otherRangeLimitId).val() + "]";
-			
-			
+				
 		}else if (inputSuffix == Configuration.data.rangeStopSuffix){ //range stop 
 			otherRangeLimitId = otherRangeLimitId + Configuration.data.rangeStartSuffix;			
 			//handle the case where nothing is entered in the text fields
