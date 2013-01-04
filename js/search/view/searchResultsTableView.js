@@ -1,10 +1,10 @@
 define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
-		  'dataAccess/widget/directDownloadWidget','text!search/template/searchResultViewContent_template.html', 
+		  'dataAccess/widget/directDownloadWidget', 'search/widget/downloadOptionsWidget','text!search/template/searchResultViewContent_template.html', 
 		  'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-			DirectDownloadWidget, searchResultsView_temp ) {
+			DirectDownloadWidget, DownloadOptionsWidget, searchResultsView_temp ) {
 
 /**
  * The model is the backbone model SearchResults 
@@ -50,8 +50,10 @@ var SearchResultsTableView = Backbone.View.extend({
 			//and/or if the products checked do not have a product url
 			if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
 				this.retrieveProduct.button('disable');
+				this.downloadOptionsButton.button('disable');
 			} else {
 				this.retrieveProduct.button('enable');
+				this.downloadOptionsButton.button('enable');
 			}
 		}, 
 		
@@ -217,6 +219,25 @@ var SearchResultsTableView = Backbone.View.extend({
 			
 			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
 			downloadManagersWidget.open();
+
+		});
+		
+		//add button to the widget footer in order to download products
+		this.downloadOptionsButton = this.$el
+				.ngeowidget('addButton', {
+					id : 'downloadOptionsButton',
+					name : 'Download Options',
+					position: 'right'
+				});
+		
+		this.downloadOptionsButton.button('disable');
+		
+		//Displays the download options of the selected products in order tobe changed in one shot
+		//for the moment all product belong to the unique selected dataset 
+		this.downloadOptionsButton.click(function() {
+			
+			var downloadOptionsWidget = new DownloadOptionsWidget();
+			downloadOptionsWidget.open();
 
 		});
 		
