@@ -73,7 +73,7 @@ var AdvancedSearchView = Backbone.View.extend({
 				}else if ($target.hasClass('ui-checkbox-on')){ //unselect a value
 					
 					var criterionSetValue = this.model.get(criterionId);
-					console.log("Criterion : "  + criterionId + " old value :" + criterionSetValue);
+					//console.log("Criterion : "  + criterionId + " old value :" + criterionSetValue);
 					
 					if (criterionSetValue == criterionValue){//one value is selected so set the default value to the whole possible values
 						newValue = this.model.dataset.getDefaultCriterionValue(criterionId);
@@ -87,7 +87,7 @@ var AdvancedSearchView = Backbone.View.extend({
 							newValue = criterionSetValue.replace("," + criterionValue, "");
 						} 
 					}
-					console.log("Criterion : "  + criterionId + " new value :" + newValue);
+					//console.log("Criterion : "  + criterionId + " new value :" + newValue);
 				
 				} else {
 					//do nothing ! console.log(" not ui-radio-off");
