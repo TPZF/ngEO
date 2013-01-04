@@ -51,6 +51,33 @@ var SearchResults = Backbone.Model.extend({
 		return productUrls;
 	},
 	
+	/** After a download options selection change update the product urls with the new selected 
+	 * downloadOptions is a json object containing the selected download options.
+	 */
+	updateProductUrls: function(selectedDownloadOptions) {
+		var eor;
+		
+		_.each(this.selection, function(feature){
+			eor = feature.properties.EarthObservation.EarthObservationResult;
+			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
+				
+				_.each(selectedDownloadOptions, function(optionValue, optionKey, list){
+					//the download option is not set in the url
+					if (eor.eop_ProductInformation.eop_filename.indexOf(optionKey) == -1){
+						if (eor.eop_ProductInformation.eop_filename.indexOf("?") == -1){
+							eor.eop_ProductInformation.eop_filename = eor.eop_ProductInformation.eop_filename + "?" + optionKey + "=" + optionValue;
+						} else{
+							eor.eop_ProductInformation.eop_filename = eor.eop_ProductInformation.eop_filename + "&" + optionKey + "=" + optionValue;
+						}
+					}else{
+						//TODO CONTINUE TO HANDLE THE OTHER CASES : replace the existent value
+					}
+				});
+					
+			} 
+		});
+	},
+	
 	/**  Check whether the given feature has a url supported by a browser */
 	isBrowserSupportedUrl : function(feature) {
 
