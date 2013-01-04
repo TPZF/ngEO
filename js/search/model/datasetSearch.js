@@ -2,6 +2,17 @@
 define( ['jquery', 'backbone', 'configuration', 'search/model/dataset'], 
 		function($, Backbone, Configuration, Dataset) {
 
+	/**
+	 * This backbone model holds in its attributes :
+	 * 
+	 * 1- the selection dataset id
+	 * 2- the selected dates/times
+	 * 3- the selected  area coordinates
+	 * 4- all the selected search parameters and download options
+	 * 
+	 * the dataset property is a nested backbone model loaded through the datasetSearchInfo interface.
+	 * the DataSetSearch is a singleton used throughout the application.
+	 */
 var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
@@ -144,6 +155,7 @@ var DataSetSearch = Backbone.Model.extend({
 		var selectedOptions = {};
 		var self = this;
 		
+		//add the options set to the model ie changed by the user with the selected value
 		//add options not set in the model ie not changed by the user with their default values from the dataset 
 		if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
 			
