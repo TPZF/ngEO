@@ -1,11 +1,10 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var Dataset = Backbone.Model.extend({
-//	datasetSearchInfo attribute do include {datasetId : "", description : "", keywords : [], downloadOptions : [], attributes : [] }
+//	datasetSearchInfo attribute does include {datasetId : "", description : "", keywords : [], downloadOptions : [], attributes : [] }
 	defaults :{
 		datasetSearchInfo : {},
-		datasetId : "" //the datasetId shall correspond to datasetSearchInfo.datasetId received from the server
-		
+		datasetId : "" //the datasetId shall correspond to datasetSearchInfo.datasetId received from the server	
 	},
 	
 	// Constructor : initialize the url from the configuration
@@ -14,7 +13,7 @@ var Dataset = Backbone.Model.extend({
 		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
 	},
 	
-	/** Get the default criterion value according to its type, number of allowed selected elements */
+	/** Get the default criterion value according to its type or number of allowed selected elements */
 	getDefaultCriterionValue : function(criterionId){
 		
 		var attribute;
@@ -40,7 +39,24 @@ var Dataset = Backbone.Model.extend({
 		}
 		
 		return criterionValue;
+	},
+	
+	/**
+	 * Get the default value name of a download option which is the first possible value.
+	 */
+	getDefaultDownloadOptionValue : function(optionName){
+		
+		var value;
+		
+		_.each(this.attributes.datasetSearchInfo.downloadOptions, function(option){
+			if (option.argumentName == optionName){
+				value = option.values[0].name;
+			}
+		});
+		
+		return value;
 	}
+	
 });
 
 return Dataset;
