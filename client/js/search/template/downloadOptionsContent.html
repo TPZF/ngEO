@@ -1,0 +1,42 @@
+<% if (!dataset) { %> 
+
+    <!-- if no dataset has been selected display an information message to the user -->
+	<div id="downloadOptionsMessage" class="widget-content ui-body-c">
+		<p><b>No dataset has been selected.</b></p>
+		<p><b>Please select a dataset first to see its download options</b></p>
+	</div>
+
+<% } else { %>	
+	
+	<!-- if the selected dataset has no download options display an information message to the user -->
+	
+	<% if (dataset.attributes.datasetSearchInfo.attributes.length == 0 ) { %>
+		<div id="downloadOptionsMessage" class="widget-content ui-body-c">
+			<p><b>The selected dataset : <%=dataset.attributes.id %> </b></p>
+			<p><b>Does not have download options</b></p>
+		</div>
+	
+	<% } else { %>	 		
+	
+		<!-- 	display  download options -->
+		<form>
+			<% _.each(dataset.attributes.datasetSearchInfo.downloadOptions, function(option, i) { %>		
+
+				<div data-role="fieldcontain">
+					
+					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.argumentName %> : </label>
+						 
+					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+						<% _.each(option.values, function(value) { %>
+							<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+						<% }); %>
+					</select>	
+			   
+			   </div>	 	
+			<% }); %>
+		
+		</form>
+	
+	<% } %>
+
+<% } %>
