@@ -41,7 +41,8 @@
 		"startTimeFromAscendingNode" : "axsa",
 		"completionTimeFromAscendingNode" : "axso", 
 		"track" : "track",
-		"daynight flag" : "daynight flag"
+		"daynight flag" : "daynight flag",
+		"granule": "granule"
 	},
 	
 	
