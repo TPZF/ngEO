@@ -169,7 +169,6 @@ var StandingOrderDataAccessRequest = {
 		}	
 		
 		var computedShedulingOptions = this.getSchedulingOptions();		
-		console.log(computedShedulingOptions);
 		
 		//initial request : nominal case
 		//slideAcquisitionTime is a boolean and repeatPeriod is number so compare with undefined
