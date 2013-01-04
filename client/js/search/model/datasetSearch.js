@@ -15,10 +15,7 @@ var DataSetSearch = Backbone.Model.extend({
 		east : "",
 		north : "",
 		useExtent : true,
-		useAdvancedCriteria : true, //flag for including adavanced serach criteria or not
-		selectedDownloadOptions : {}, // the selected download options as json object 
-									//{downloadoption1 : value , downloadoption2 : value 2, ....downloadoption : value n}
-		
+		useAdvancedCriteria : true //flag for including adavanced serach criteria or not		
 	},
 	
 	initialize : function() {
@@ -34,8 +31,8 @@ var DataSetSearch = Backbone.Model.extend({
 	 * unless if no dataset is selected set the dataset to undefined */
 	updateDatasetModel : function(){
 
-		//reset all the selected attributes from the old dataset if any
-		this.clearOldDatasetAttributes();
+		//reset all the selected attributes and download options from the old dataset if any
+		this.clearSelectedAttributesAndOptions();
 		
 		//Retrieve the dataset information from the server
 		if (this.get("datasetId")){
@@ -48,13 +45,11 @@ var DataSetSearch = Backbone.Model.extend({
 					//update dates/times from dataset dates/times
 					self.setDateAndTime(model.attributes.datasetSearchInfo.startDate, model.attributes.datasetSearchInfo.endDate); 
 					self.trigger('datasetLoaded');
-					//TODO set the selected options default value from the dataset download options
 				},
 				
 				error: function(model, xhr, options) {
 					console.log(model);
 					//model.trigger('datasetLoaded');
-					//TODO set the selected options default value from the dataset download options
 				}
 			});
 	
@@ -63,22 +58,36 @@ var DataSetSearch = Backbone.Model.extend({
 		}
 	},
 	 
-	/** Remove all the selected criteria from the old selected dataset */ 
-	clearOldDatasetAttributes : function(){
+	/** 
+	 * Remove all the selected criteria and  selected download options of the old selected dataset 
+	 * The option silent is set to true to avoid firing unused events.
+	 */ 
+	clearSelectedAttributesAndOptions : function(){
 		
 		var self = this;
 		
-		if (this.dataset && this.dataset.attributes.datasetSearchInfo.attributes){			
-			_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
-				if (_.has(self.attributes, attribute.id)){
-					self.unset(attribute.id);
-				}				
-			});
+		if (this.dataset){
+			//remove selected search criteria
+			if (this.dataset.attributes.datasetSearchInfo.attributes){			
+				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
+					if (_.has(self.attributes, attribute.id)){
+						self.unset(attribute.id, {silent: true});
+					}				
+				});
+			}
+			//remove selected download options
+			if (this.dataset.attributes.datasetSearchInfo.downloadOptions){			
+				_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+					if (_.has(self.attributes, option.argumentName)){
+						self.unset(option.argumentName, {silent: true});
+					}				
+				});
+			}
 		}
 	},
 	
-	/**
-	 * Create the openSearch url
+	/** Create the openSearch url. 
+	 * The url contains spatial, temporal and search criteria parameters.
 	 */
 	getOpenSearchURL : function(){
 
@@ -108,7 +117,8 @@ var DataSetSearch = Backbone.Model.extend({
 				}
 			});
 			
-			//add the advanced criteria not set in the model ie not changed by the user with their default values from the dataset 
+			//add the advanced criteria not set in the model ie not changed by the user
+			//with their default values from the dataset 
 			if (this.dataset.attributes.datasetSearchInfo.attributes){
 				
 				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
@@ -125,7 +135,38 @@ var DataSetSearch = Backbone.Model.extend({
 		return url;
 	},
 	
-	/** split a given date/time into date and time for start and stop dates & times*/
+	/** Get the selected download options as a json object.
+	 * If the download options have been changed by the user, their are set as an attribute to the DatasetSearch
+	 * unless the default value is got from the dataset.
+	 */
+	getSelectedDownloadOptions : function(){
+		
+		var selectedOptions = {};
+		var self = this;
+		
+		//add options not set in the model ie not changed by the user with their default values from the dataset 
+		if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
+			
+			_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+				console.log("option" + option);
+				console.log("option.argumentName : " + option.argumentName);
+				
+				if (_.has(self.attributes, option.argumentName)){
+					selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;
+				}else{
+					selectedOptions[option.argumentName] = self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
+				}
+			});
+		}
+		console.log("Selected options of dataset : " + this.dataset.attributes.datasetId + " : ");
+		console.log(selectedOptions);
+		
+		return selectedOptions;
+	},
+	
+	/** 
+	 * Splits a given date/time into date and time for start and stop dates & times.
+	 */
 	setDateAndTime : function(startDate, stopDate){
 		
 		//set start date and time
@@ -148,16 +189,18 @@ var DataSetSearch = Backbone.Model.extend({
 		
 	},
 	
-	//Format to openSearch compliant date format : 
-	//the seconds are added manually since not handled by the TimeBox widget
-	//to confirm later whether to use another widget...
-	//TODO CONFIRM TIME FORMAT
+	/** Format to openSearch compliant date format : 
+	 * the seconds are added manually since not handled by the TimeBox widget
+	 * to confirm later whether to use another widget...
+	 * TODO CONFIRM TIME FORMAT
+	 */
 	formatDate : function(date, time){
 		return date + "T" + time + ":00.00Z"; 
 	},
 	  
-	/** get the seach criteria to display as a txt pop-up in the searchresults view */
-	//TODO CONFIRM THE USE OF THE SUMMARY
+	/** Get the search criteria to display as a txt pop-up in the search results view 
+	 * TODO CONFIRM THE USE OF THE SUMMARY
+	 */
 	getSearchCriteriaSummary : function(){
 
 		var text = '<p><b>DataSet : </b>' + this.get("datasetId") + '</p> '
