@@ -21,10 +21,9 @@
 	
 	<!-- 	display search criteria -->
 		<form>
-		
-		 <label id="useAdvancedCriteria_label" for="useAdvancedCriteria_input">Use advanced criteria in the search</label>
-   		 <input type="checkbox" name="useAdvancedCriteria" id="useAdvancedCriteria_input" data-mini="true" checked/>		
-		
+			<label id="useAdvancedCriteria_label" for="useAdvancedCriteria_input">Use advanced criteria </label>
+			<input type="checkbox" name="useAdvancedCriteria" id="useAdvancedCriteria_input" data-mini="true"/>		
+
 		<% _.each(dataset.attributes.datasetSearchInfo.attributes, function(criterion, i) { %>		
 		
 			   <!-- the criterion is an enumeration has multiple options so create a select  -->
