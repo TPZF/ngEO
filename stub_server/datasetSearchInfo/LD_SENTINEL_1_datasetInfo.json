@@ -18,7 +18,7 @@
         ],
         "downloadOptions": [
             {
-                "argumentName": "ProductFormat",
+                "argumentName": "ProductFormat_LD_S1",
                 "description": "desired download format",
                 "values": [
                     {
@@ -29,7 +29,7 @@
                 ]
             },
             {
-                "argumentName": "Download mode",
+                "argumentName": "Download mode_LD_S1",
                 "description": "wait until completion or download continuously",
                 "values": [
                     {
