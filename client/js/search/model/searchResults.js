@@ -60,20 +60,40 @@ var SearchResults = Backbone.Model.extend({
 		_.each(this.selection, function(feature){
 			eor = feature.properties.EarthObservation.EarthObservationResult;
 			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
-				
+				var url;
 				_.each(selectedDownloadOptions, function(optionValue, optionKey, list){
 					//the download option is not set in the url
 					if (eor.eop_ProductInformation.eop_filename.indexOf(optionKey) == -1){
+						//no parameters set
 						if (eor.eop_ProductInformation.eop_filename.indexOf("?") == -1){
-							eor.eop_ProductInformation.eop_filename = eor.eop_ProductInformation.eop_filename + "?" + optionKey + "=" + optionValue;
-						} else{
-							eor.eop_ProductInformation.eop_filename = eor.eop_ProductInformation.eop_filename + "&" + optionKey + "=" + optionValue;
+							url = eor.eop_ProductInformation.eop_filename + "?" + optionKey + "=" + optionValue;
+						} else {
+							url = eor.eop_ProductInformation.eop_filename + "&" + optionKey + "=" + optionValue;
 						}
 					}else{
-						//TODO CONTINUE TO HANDLE THE OTHER CASES : replace the existent value
+						//the option has already been set : replace the existent value
+						//option in the middle
+						var valueStartIndex = eor.eop_ProductInformation.eop_filename.indexOf(optionKey) + optionKey.length + 1; //+1 to cover = after the param
+						var firstPart = eor.eop_ProductInformation.eop_filename.substring(0, valueStartIndex);
+						//console.log("first part :: " + firstPart);
+						var valuePart = eor.eop_ProductInformation.eop_filename.substring(valueStartIndex, eor.eop_ProductInformation.eop_filename.length);
+						//console.log("value part :: " + valuePart);
+						var valueStopIndex = valuePart.indexOf("&");
+						
+						if (valueStopIndex == -1){//the value is the last value in the url
+							url = firstPart + optionValue;
+						}else{
+							var remainingPart = valuePart.substring(valueStopIndex, eor.eop_ProductInformation.eop_filename.length);
+							//console.log("remainingPart :: " + remainingPart);
+							url = firstPart +  optionValue + remainingPart;
+							
+						}					
+						
 					}
-				});
-					
+					console.log("current url with new download options:: " + eor.eop_ProductInformation.eop_filename);
+					console.log("Updated url with new download options:: " + url);
+					eor.eop_ProductInformation.eop_filename =  url;
+				});	
 			} 
 		});
 	},
