@@ -162,7 +162,7 @@
               {
                 "eop_ProductInformation":
                   {
-                    "eop_filename": "https://pdgs/file.zip",
+                    "eop_filename": "https://pdgs/file.zip?ProductFormat=jpeg&Download mode=DLcomplete",
                     "eop_version": "1.1",
                     "eop_size": 1450000
                   },
