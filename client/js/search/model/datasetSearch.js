@@ -26,7 +26,8 @@ var DataSetSearch = Backbone.Model.extend({
 		east : "",
 		north : "",
 		useExtent : true,
-		useAdvancedCriteria : true //flag for including adavanced serach criteria or not		
+		useAdvancedCriteria : false, //flag for including advanced search criteria or not		
+		useDownloadOptions : false //flag for including download options or not		
 	},
 	
 	initialize : function() {
@@ -136,6 +137,22 @@ var DataSetSearch = Backbone.Model.extend({
 					
 					if (!_.has(self.attributes, attribute.id)){
 						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(attribute.id) + '=' + self.dataset.getDefaultCriterionValue(attribute.id);	
+					}
+				});
+			}
+		}
+		
+		//add the selected download options to the opensearch url
+		if (this.get("useDownloadOptions")){
+			
+			if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
+				
+				_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+					
+					if (_.has(self.attributes, option.argumentName)){
+						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(option.argumentName) + '=' + self.attributes[option.argumentName];
+					}else{
+						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(option.argumentName) + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
 					}
 				});
 			}
