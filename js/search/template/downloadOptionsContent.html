@@ -20,6 +20,10 @@
 	
 		<!-- 	display  download options -->
 		<form>
+				
+			<label id="useDownloadOptions_label" for="useDownloadOptions_input">Use download options</label>
+	  		<input type="checkbox" name="useDownloadOptions" id="useDownloadOptions_input" data-mini="true"/>		
+			
 			<% _.each(dataset.attributes.datasetSearchInfo.downloadOptions, function(option, i) { %>		
 
 				<div data-role="fieldcontain">
