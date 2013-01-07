@@ -17,10 +17,15 @@ var DownloadOptionsView = Backbone.View.extend({
 			var option = {};
 			option[event.currentTarget.id] = $(event.currentTarget).val();
 			this.model.set(option);			
-		}
-				
+		},
+
+		//listen to checkbox change event since the events are handled by the check boxes label 
+		'click #useDownloadOptions_label' : function(event){
+			var $target = $(event.currentTarget);			
+			var useDownloadOptions = $target.hasClass('ui-checkbox-off');
+			this.model.set({"useDownloadOptions" : useDownloadOptions});
+		}		
 	},
-	
 	
 	render: function(){
 
