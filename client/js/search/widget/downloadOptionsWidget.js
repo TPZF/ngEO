@@ -16,27 +16,21 @@ var DownloadOptionsWidget = function() {
 	var element = $('<div id="downloadOptionsPopupContent"></div>'); 
 	element.appendTo(parentElement);
 
-	/**
-	 * Build the content of the popup with the download options view
-	 */
-	var buildContent = function() {
-
-		var downloadOptionsWidgetView = new DownloadOptionsWidgetView({
-			model : DataSetSearch,
-			el: element
-		});
-		
-		downloadOptionsWidgetView.render();		
-	};
+	var downloadOptionsWidgetView = new DownloadOptionsWidgetView({
+		model : DataSetSearch,
+		el: element
+	});
 		
 	/**
-		Open the popup
+	 *	Open the popup
 	 */
 	this.open = function() {
 	
-		buildContent();
+		downloadOptionsWidgetView.render();
 		parentElement.popup(); 		
-			
+		
+		
+		
 		//after closing the popup reset the simple data access parameters 
 		//and remove the popup elements
 		parentElement.bind({
@@ -47,9 +41,10 @@ var DownloadOptionsWidget = function() {
 		});
 		
 		//trigger jqm styling
-		parentElement.popup("open");  
+		parentElement.popup("open"); 
+		//TODO fix the selected value for the combos
+		downloadOptionsWidgetView.setSelectedValues();
 	};
-
 		
 	/**
 	 *	For the moment not used since the popup can be 
