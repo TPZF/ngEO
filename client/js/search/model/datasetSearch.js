@@ -150,9 +150,9 @@ var DataSetSearch = Backbone.Model.extend({
 				_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
 					
 					if (_.has(self.attributes, option.argumentName)){
-						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(option.argumentName) + '=' + self.attributes[option.argumentName];
+						url = url  +  '&' + option.argumentName + '=' + self.attributes[option.argumentName];
 					}else{
-						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(option.argumentName) + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
+						url = url  +  '&' + option.argumentName + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
 					}
 				});
 			}
