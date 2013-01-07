@@ -26,34 +26,42 @@ var DownloadOptionsWidgetView = Backbone.View.extend({
 		//called when the 'Update Download Options' is clicked
 		'click #downloadOptionsUpdate' : function(event){
 			//update the product url of the selected products with the selected download options
-			SearchResults.updateProductUrls(this.model.getSelectedDownloadOptions());
+			//and display a message to the user.
+			$.when(SearchResults.updateProductUrls(this.model.getSelectedDownloadOptions())).done(function(){
+				$("#downloadOptionsMessage").empty();
+				$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
+			});
 		}
 	},
-	
-	
+		
 	render: function(){
 
-		var self = this;
-		var optionSelectId;
-		
 		var content = _.template(downloadOptionsWidget_template, this.model);
 		this.$el.append(content);
 		this.$el.trigger('create');
+		this.delegateEvents();
+		return this;
+	},	
+	
+	setSelectedValues : function(){
+
+		var self = this;
+		var optionSelectId;
 		
 		//set the selected values from the model
 		_.each(this.model.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
 			
 			if (_.has(self.model.attributes, option.argumentName)){
 				optionSelectId = "#" + option.argumentName + Configuration.data.fieldIdSuffixSepartor + Configuration.data.widgetSuffix;
-				console.log("optionSelectId : " + optionSelectId);
-				$(optionSelectId).val(self.model.attributes[option.argumentName]);
+				//TODO FIX THE SELECTED VALUE FOR THE SELECT
+				//console.log("optionSelectId : " + optionSelectId);
+				//console.log(self.model.attributes[option.argumentName]);
+				//console.log(self.$el.find(optionSelectId));
+				self.$el.find(optionSelectId).val(self.model.attributes[option.argumentName]);
 			}
 		});
-		this.delegateEvents();
-		return this;
-	},	
+	},
 	
-	// TODO move to Backbone.View.prototype
     close : function() {
        this.undelegateEvents();
        this.$el.empty();
