@@ -124,7 +124,7 @@ var SearchResultsTableView = Backbone.View.extend({
 							//avoid the case where the table has not been loaded yet				
 							if ($(elt).text() != "No data available in table"){
 								var rowPos = self.table.fnGetPosition(elt);
-								var selector = "td:eq(" + Configuration.data.directDownload.productColumnIndex + ")";
+								var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
 								
 								if (self.model.isBrowserSupportedUrl( self.model.get('features')[rowPos])){
 									$(elt).find(selector).addClass("ui-direct-download");

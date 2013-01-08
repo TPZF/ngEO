@@ -16,7 +16,7 @@ var DownloadOptionsWidgetView = Backbone.View.extend({
 		//with the selected value.
 		'change select' : function(event){
 			var option = {};
-			var suffix = Configuration.data.fieldIdSuffixSepartor + Configuration.data.widgetSuffix;
+			var suffix = Configuration.localConfig.fieldIdSuffixSepartor + Configuration.localConfig.widgetSuffix;
 			var optionName = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(suffix));
 			var option = {};
 			option[optionName] = $(event.currentTarget).val();
@@ -52,7 +52,7 @@ var DownloadOptionsWidgetView = Backbone.View.extend({
 		_.each(this.model.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
 			
 			if (_.has(self.model.attributes, option.argumentName)){
-				optionSelectId = "#" + option.argumentName + Configuration.data.fieldIdSuffixSepartor + Configuration.data.widgetSuffix;
+				optionSelectId = "#" + option.argumentName + Configuration.localConfig.fieldIdSuffixSepartor + Configuration.data.widgetSuffix;
 				//TODO FIX THE SELECTED VALUE FOR THE SELECT
 				//console.log("optionSelectId : " + optionSelectId);
 				//console.log(self.model.attributes[option.argumentName]);
