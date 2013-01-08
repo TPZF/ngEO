@@ -1,5 +1,5 @@
   
-define( ['jquery', 'backbone', 'configuration', 'search/model/searchResults', 'dataAccess/model/dataAccessRequest'], 
+define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'dataAccess/model/dataAccessRequest'], 
 		
 		function($, Backbone, Configuration, SearchResults, DataAccessRequest) {
 
