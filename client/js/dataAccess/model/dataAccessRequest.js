@@ -26,7 +26,7 @@ var DataAccessRequest = {
 		
 		this.step = 0;
 		this.id = "";
-		this.requestStage =  Configuration.data.dataAccessRequestStatuses.validationRequestStage;
+		this.requestStage =  Configuration.localConfig.dataAccessRequestStatuses.validationRequestStage;
 		this.downloadLocation = {DownloadManagerId : "" , DownloadDirectory : ""};
 		
 		this.resetRequest();
@@ -59,7 +59,7 @@ var DataAccessRequest = {
 			  console.log (data);
 			
 			  //check the server response status with the configured server response statuses  
-			  var statusesConfig = Configuration.data.dataAccessRequestStatuses;
+			  var statusesConfig = Configuration.localConfig.dataAccessRequestStatuses;
 			  var validStatusesConfig = statusesConfig.validStatuses;
 			  
 				  switch (data.DataAccessRequestStatus.status){
@@ -123,7 +123,7 @@ var DataAccessRequest = {
 						  break;
 					  
 					  default: 
-						  self.serverResponse = self.serverResponse = Configuration.data.dataAccessRequestStatuses.unExpectedStatusError ;
+						  self.serverResponse = self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.unExpectedStatusError ;
 					  	  self.trigger('FailureValidationRequest');
 					  	  break;
 				  }	  
@@ -137,7 +137,7 @@ var DataAccessRequest = {
 		  
 			  error: function(jqXHR, textStatus, errorThrown) {
 				  //console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
-				  self.serverResponse = Configuration.data.dataAccessRequestStatuses.requestSubmissionError ;
+				  self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.requestSubmissionError ;
 				  self.trigger('FailureValidationRequest');
 			  }
 		});	

@@ -79,7 +79,7 @@ var SimpleDataAccessRequest = {
 	/** check whether the request is valid or not */
 	isValid : function(){
 		
-		var dataAccessConfig = Configuration.data.dataAccessRequestStatuses;
+		var dataAccessConfig = Configuration.localConfig.dataAccessRequestStatuses;
 
 		//if request not valid when no download manager then display the specific message
 		//the validate button is not disabled since when the user selects a download manager the request
@@ -90,7 +90,7 @@ var SimpleDataAccessRequest = {
 		
 		//Request not valid when no product urls set then display the specific message
 		if ( this.productURLs.length == 0){
-			this.serverResponse = Configuration.data.simpleDataAccess.invalidProductURLsError;
+			this.serverResponse = Configuration.localConfig.simpleDataAccess.invalidProductURLsError;
 			this.trigger('RequestNotValidEvent');
 			return false;
 		}

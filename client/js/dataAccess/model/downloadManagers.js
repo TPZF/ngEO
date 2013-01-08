@@ -21,7 +21,7 @@ var DownloadManagers = Backbone.Model.extend({
 	/** get a download manager user friendly name given its id */
 	getDownloadManagerName : function (id) {
 	
-		var name = Configuration.data.downloadManager.undefinedDownloadManagerId;
+		var name = Configuration.localConfig.downloadManager.undefinedDownloadManagerId;
 		
 		_.each(this.get("downloadmanagers"), function(dm) {
 			if (dm.downloadmanagerid == id){
@@ -91,10 +91,10 @@ var DownloadManagers = Backbone.Model.extend({
 				  self.get("commands")[self.getDownloadManagerIndex(dmID)] = newStatus;
 				 
 				  //notify that the download manager change status request has been received by the server
-				  if (newStatus == Configuration.data.downloadManager.stopCommand.value){
-					  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopCommand.message]);  
-				  }else if (newStatus == Configuration.data.downloadManager.stopImmediatelyCommand.value){
-					  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.data.downloadManager.stopImmediatelyCommand.message]);
+				  if (newStatus == Configuration.localConfig.downloadManager.stopCommand.value){
+					  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.localConfig.downloadManager.stopCommand.message]);  
+				  }else if (newStatus == Configuration.localConfig.downloadManager.stopImmediatelyCommand.value){
+					  self.trigger('DownloadManagerStatusChanged', ['SUCCESS', dmID, newStatus, Configuration.localConfig.downloadManager.stopImmediatelyCommand.message]);
 				  }else{
 					  //Should not happen
 					  self.trigger('DownloadManagerStatusChanged', ['ERROR', dmID, newStatus, "Un supported Command " + newStatus]);
