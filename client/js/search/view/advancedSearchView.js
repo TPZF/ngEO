@@ -37,7 +37,7 @@ var AdvancedSearchView = Backbone.View.extend({
 		'click label' : function(event){
 			
 			var $target = $(event.currentTarget);			
-			var suffix = Configuration.data.fieldIdSuffixSepartor + Configuration.data.inputLabelSuffix;
+			var suffix = Configuration.localConfig.fieldIdSuffixSepartor + Configuration.localConfig.inputLabelSuffix;
 			var criterionIdValue = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(suffix));
 			
 			//case where the use advanced criteria is checked
@@ -48,8 +48,8 @@ var AdvancedSearchView = Backbone.View.extend({
 			
 			}else{//handle radio/checkbox search criteria fields
 				
-				var criterionId = criterionIdValue.substring(0, criterionIdValue.indexOf(Configuration.data.fieldIdSuffixSepartor));
-				var criterionValue = criterionIdValue.substring(criterionIdValue.indexOf(Configuration.data.fieldIdSuffixSepartor)+1, criterionIdValue.length);		
+				var criterionId = criterionIdValue.substring(0, criterionIdValue.indexOf(Configuration.localConfig.fieldIdSuffixSepartor));
+				var criterionValue = criterionIdValue.substring(criterionIdValue.indexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, criterionIdValue.length);		
 				var openSearchCriterion = {};
 				var newValue;
 				
@@ -104,15 +104,15 @@ var AdvancedSearchView = Backbone.View.extend({
 	 */
 	setInputCriterionValues : function(event){
 
-		var criterionId = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(Configuration.data.fieldIdSuffixSepartor));
-		var inputSuffix =  event.currentTarget.id.substring(event.currentTarget.id.lastIndexOf(Configuration.data.fieldIdSuffixSepartor)+1, event.currentTarget.id.length);
+		var criterionId = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(Configuration.localConfig.fieldIdSuffixSepartor));
+		var inputSuffix =  event.currentTarget.id.substring(event.currentTarget.id.lastIndexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, event.currentTarget.id.length);
 		var openSearchCriterion = {};
 		var criterionValue, currentValue;
-		var otherRangeLimitId  = criterionId + Configuration.data.fieldIdSuffixSepartor;
+		var otherRangeLimitId  = criterionId + Configuration.localConfig.fieldIdSuffixSepartor;
 		//if the start range has been changed set the new value of the criteria by retrieving the 
 		//stop range value and inversely. Unless the input is a text input with one value
-		if (inputSuffix == Configuration.data.rangeStartSuffix){ //range start 	
-			otherRangeLimitId = otherRangeLimitId + Configuration.data.rangeStopSuffix;
+		if (inputSuffix == Configuration.localConfig.rangeStartSuffix){ //range start 	
+			otherRangeLimitId = otherRangeLimitId + Configuration.localConfig.rangeStopSuffix;
 			//handle the case where nothing is entered in the text fields
 			//set the value to the min range
 			currentValue = $(event.currentTarget).val();
@@ -123,8 +123,8 @@ var AdvancedSearchView = Backbone.View.extend({
 			//create the range value
 			criterionValue = "[" + currentValue + "," +$('#' + otherRangeLimitId).val() + "]";
 				
-		}else if (inputSuffix == Configuration.data.rangeStopSuffix){ //range stop 
-			otherRangeLimitId = otherRangeLimitId + Configuration.data.rangeStartSuffix;			
+		}else if (inputSuffix == Configuration.localConfig.rangeStopSuffix){ //range stop 
+			otherRangeLimitId = otherRangeLimitId + Configuration.localConfig.rangeStartSuffix;			
 			//handle the case where nothing is entered in the text fields
 			//set the value to the max value
 			currentValue = $(event.currentTarget).val();
