@@ -23,7 +23,7 @@
 	},
 	
 	"dataAccessRequestStatuses" : { 	   
-	   "messagefadeOutTime" : 2500
+	   "messagefadeOutTime" : 2500,
 	   "collapseDAR" : false,
 	   "collapseProducts" : true
 	},
