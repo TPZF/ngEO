@@ -51,8 +51,9 @@ var SearchResults = Backbone.Model.extend({
 		return productUrls;
 	},
 	
-	/** After a download options selection change update the product urls with the new selected 
-	 * downloadOptions is a json object containing the selected download options.
+	/** After a download options selection change on results table, update the selected(checked) product urls 
+	 * with the new selected downloadOptions. The selectedDownloadOptions argument is a json object 
+	 * containing the selected download options.
 	 */
 	updateProductUrls: function(selectedDownloadOptions) {
 		var eor;
@@ -64,15 +65,14 @@ var SearchResults = Backbone.Model.extend({
 				_.each(selectedDownloadOptions, function(optionValue, optionKey, list){
 					//the download option is not set in the url
 					if (eor.eop_ProductInformation.eop_filename.indexOf(optionKey) == -1){
-						//no parameters set
+						//no parameters set in the url
 						if (eor.eop_ProductInformation.eop_filename.indexOf("?") == -1){
 							url = eor.eop_ProductInformation.eop_filename + "?" + optionKey + "=" + optionValue;
-						} else {
+						} else {//there are parameters in the url
 							url = eor.eop_ProductInformation.eop_filename + "&" + optionKey + "=" + optionValue;
 						}
 					}else{
 						//the option has already been set : replace the existent value
-						//option in the middle
 						var valueStartIndex = eor.eop_ProductInformation.eop_filename.indexOf(optionKey) + optionKey.length + 1; //+1 to cover = after the param
 						var firstPart = eor.eop_ProductInformation.eop_filename.substring(0, valueStartIndex);
 						//console.log("first part :: " + firstPart);
@@ -82,7 +82,7 @@ var SearchResults = Backbone.Model.extend({
 						
 						if (valueStopIndex == -1){//the value is the last value in the url
 							url = firstPart + optionValue;
-						}else{
+						}else{//option in the middle of the url
 							var remainingPart = valuePart.substring(valueStopIndex, eor.eop_ProductInformation.eop_filename.length);
 							//console.log("remainingPart :: " + remainingPart);
 							url = firstPart +  optionValue + remainingPart;
