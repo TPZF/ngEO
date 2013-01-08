@@ -28,16 +28,12 @@ var DownloadOptionsWidget = function() {
 	
 		downloadOptionsWidgetView.render();
 		parentElement.popup(); 		
-		
-		
-		
 		//after closing the popup reset the simple data access parameters 
 		//and remove the popup elements
 		parentElement.bind({
 		   popupafterclose: function(event, ui) {
 			   parentElement.remove();
 		   }
-		
 		});
 		
 		//trigger jqm styling
