@@ -24,7 +24,7 @@ return function() {
 		});
 		
 		// Build the label for input and add it to the group
-		$("<label>"+layers[i].name+"</label>")
+		$("<label data-mini='true'>"+layers[i].name+"</label>")
 			.prepend(input)
 			.appendTo(group);
 	}
