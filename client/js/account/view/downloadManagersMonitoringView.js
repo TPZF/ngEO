@@ -17,14 +17,14 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			 //console.log(node);
 			 var rowId =  $('tr.dm_selected').attr('id');
 			 //console.log(rowId);
-			 var dmID = rowId.substring(rowId.indexOf(Configuration.data.fieldIdSuffixSepartor)+1, rowId.length);
+			 var dmID = rowId.substring(rowId.indexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, rowId.length);
 			 //console.log(dmID);
 			 
 			 if (event.currentTarget.id == "stop_dm"){	
-				 this.model.requestChangeStatus(dmID, Configuration.data.downloadManager.stopCommand.value);
+				 this.model.requestChangeStatus(dmID, Configuration.localConfig.downloadManager.stopCommand.value);
 			 
 			 }else if (event.currentTarget.id == "stop_immediately_dm"){
-				 this.model.requestChangeStatus(dmID, Configuration.data.downloadManager.stopImmediatelyCommand.value);
+				 this.model.requestChangeStatus(dmID, Configuration.localConfig.downloadManager.stopImmediatelyCommand.value);
 			 
 			 }else{
 				 //NOT SUPPORTED CASE
@@ -37,14 +37,14 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			$(event.currentTarget).toggleClass('dm_selected');
 			// each row id follows this expression: row_id where id is the related download manager id
 			var rowId = event.currentTarget.id;
-			var dmID = rowId.substring(rowId.indexOf(Configuration.data.fieldIdSuffixSepartor)+1, rowId.length);
+			var dmID = rowId.substring(rowId.indexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, rowId.length);
 			var status = this.model.getDownloadManagerStatus(dmID);
 			var recentCommand = this.model.getRecentCommand(dmID);
 			
 			switch (recentCommand) {
 			
-			   case Configuration.data.downloadManager.stopCommand.value : 
-			   case Configuration.data.downloadManager.stopImmediatelyCommand.value : 
+			   case Configuration.localConfig.downloadManager.stopCommand.value : 
+			   case Configuration.localConfig.downloadManager.stopImmediatelyCommand.value : 
 					$("#stop_dm").button('disable');
 					$("#stop_immediately_dm").button('disable');
 					this.showMessage("Cannot change status : The download manager has just been stopped ");
@@ -54,17 +54,17 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 					
 					switch(status) {
 				
-						case Configuration.data.downloadManager.activeStatus.value :
+						case Configuration.localConfig.downloadManager.activeStatus.value :
 							$("#stop_dm").button('enable');
 							$("#stop_immediately_dm").button('enable');
 							break;
 						
-						case Configuration.data.downloadManager.inactiveStatus.value :
+						case Configuration.localConfig.downloadManager.inactiveStatus.value :
 							$("#stop_dm").button('enable');
 							$("#stop_immediately_dm").button('enable');
 							break;
 							
-						case Configuration.data.downloadManager.stoppedStatus.value :
+						case Configuration.localConfig.downloadManager.stoppedStatus.value :
 							$("#stop_dm").button('disable');
 							$("#stop_immediately_dm").button('disable');
 							break;
@@ -117,8 +117,8 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			switch (args[2]) {
 				
 			    //Forbid the STOP_IMMEDIATELY command after a STOP command
-				case Configuration.data.downloadManager.stopCommand.value :
-				case Configuration.data.downloadManager.stopImmediatelyCommand.value :
+				case Configuration.localConfig.downloadManager.stopCommand.value :
+				case Configuration.localConfig.downloadManager.stopImmediatelyCommand.value :
 					$("#stop_dm").button('disable');
 					$("#stop_immediately_dm").button('disable');
 					break;
