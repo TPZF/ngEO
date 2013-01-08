@@ -21,13 +21,13 @@ define(
 					//console.log($('#'+ event.currentTarget.id));
 					//the stop and pause buttons ids follow expressions stop_id and pause_id 
 					//where is is the related dar id
-					var darId = buttonId.substring(buttonId.indexOf('_')+1, buttonId.length);
+					var darId = buttonId.substring(buttonId.indexOf(Configuration.data.fieldIdSuffixSepartor)+1, buttonId.length);
 					var validStatusesConfig = Configuration.data.dataAccessRequestStatuses.validStatuses;
 					
-					if (buttonId.indexOf('stop') == 0){//stop button is clicked
+					if (buttonId.indexOf(Configuration.data.dataAccessRequestStatuses.stopButtonSuffix) == 0){//stop button is clicked
 						this.model.requestChangeStatus(darId, validStatusesConfig.cancelledStatus.value);
 					
-					}else if (buttonId.indexOf('pause') == 0){//pause button triggered to pause and resume actions
+					}else if (buttonId.indexOf(Configuration.data.dataAccessRequestStatuses.pauseButtonSuffix) == 0){//pause button triggered to pause and resume actions
 						// if the DAR is processing changed it to paused else if it is paused changed it to processing
 						if (this.model.getDARStatusById(darId).status == validStatusesConfig.inProgressStatus.value){
 							this.model.requestChangeStatus(darId, validStatusesConfig.pausedStatus.value);
