@@ -134,8 +134,8 @@ var StandingOrderDataAccessRequest = {
 	/** check whether the request is valid or not */
 	isValid : function(){
 		
-		var dataAccessConfig = Configuration.data.dataAccessRequestStatuses;
-		var standingOrderConfig = Configuration.data.standingOrder;
+		var dataAccessConfig = Configuration.localConfig.dataAccessRequestStatuses;
+		var standingOrderConfig = Configuration.localConfig.standingOrder;
 		
 		//if request not valid when no download manager then display the specific message
 		//the validate button is not disabled since when the user selects a download manager the request
