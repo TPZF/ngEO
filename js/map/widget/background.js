@@ -28,7 +28,7 @@ return function() {
 	var bgLayers = Map.backgroundLayers;
 	for ( var i=0; i < bgLayers.length; i++ ) {
 		// Add label
-		var label = $('<label>' + bgLayers[i].name + '</label>')
+		var label = $('<label data-mini="true">' + bgLayers[i].name + '</label>')
 			.appendTo(content);
 		
 		// Add radio button
