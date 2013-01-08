@@ -101,7 +101,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	 */
 	getStatusReadableString : function (status){
 		  
-		  var validStatusesConfig = Configuration.data.dataAccessRequestStatuses.validStatuses;
+		  var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
 		  
 		  switch (status){
 		  
