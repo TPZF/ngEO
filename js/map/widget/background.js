@@ -32,7 +32,7 @@ return function() {
 			.appendTo(content);
 		
 		// Add radio button
-		var input = $('<input type="radio"  data-theme="c" name="background-choice" value="' + i + '" />')
+		var input = $('<input type="radio" data-theme="c" name="background-choice" value="' + i + '" />')
 			.appendTo(label);
 			
 		// Always select the first
