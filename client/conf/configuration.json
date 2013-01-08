@@ -119,7 +119,9 @@
 	    "unExpectedStatusError": "ERROR: The server returned an expected status",
 	    "requestSubmissionError": "FAILURE: Request Submission Failed",
 	    "invalidDownloadManagersError": "Invalid Request : Please select a download manager first.", 
-		"invalidConfirmationRequest" : "Invalid Confirmation Request: The selected download manager has been changed."
+		"invalidConfirmationRequest" : "Invalid Confirmation Request: The selected download manager has been changed.",
+		"pauseButtonSuffix" : "pause",
+		"stopButtonSuffix" : "stop"
 	},
 	
 	"simpleDataAccess" : {
