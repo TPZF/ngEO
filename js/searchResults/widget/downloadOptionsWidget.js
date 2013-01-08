@@ -1,6 +1,6 @@
 /**
-  * download options widget module
-  * Used to update download options 
+  * Download options widget spawned-up from the results table view.
+  * Used to update download options for the checked product urls.
   */
 
 
