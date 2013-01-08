@@ -1,4 +1,4 @@
-define(['jquery', 'configuration', 'dataAccess/model/downloadManagers', 'dataAccess/model/dataAccessRequestStatuses'], 
+define(['jquery', 'configuration', 'dataAccess/model/downloadManagers', 'account/model/dataAccessRequestStatuses'], 
 		function ($, Configuration, DownloadManagers, DataAccessRequestStatuses) {
 
 	// Define the QUnit module and lifecycle.
