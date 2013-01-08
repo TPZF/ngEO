@@ -17,7 +17,7 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			 //console.log(node);
 			 var rowId =  $('tr.dm_selected').attr('id');
 			 //console.log(rowId);
-			 var dmID = rowId.substring(rowId.indexOf('_')+1, rowId.length);
+			 var dmID = rowId.substring(rowId.indexOf(Configuration.data.fieldIdSuffixSepartor)+1, rowId.length);
 			 //console.log(dmID);
 			 
 			 if (event.currentTarget.id == "stop_dm"){	
@@ -37,7 +37,7 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			$(event.currentTarget).toggleClass('dm_selected');
 			// each row id follows this expression: row_id where id is the related download manager id
 			var rowId = event.currentTarget.id;
-			var dmID = rowId.substring(rowId.indexOf('_')+1, rowId.length);
+			var dmID = rowId.substring(rowId.indexOf(Configuration.data.fieldIdSuffixSepartor)+1, rowId.length);
 			var status = this.model.getDownloadManagerStatus(dmID);
 			var recentCommand = this.model.getRecentCommand(dmID);
 			
