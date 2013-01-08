@@ -42,14 +42,12 @@ var DownloadManagersWidget = function(request) {
 				   request.initialize();
 				   parentElement.remove();
 			   }
-			   
 			});
 			
 			//Open the popup
 			parentElement.popup();
 			parentElement.popup("open");
 		});
-	
 	};
 
 		
