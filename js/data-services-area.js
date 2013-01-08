@@ -1,6 +1,6 @@
 
-define(["jquery", "map/map", "search/model/searchResults", "search/model/datasetSearch", "search/widget/datasetSelection",
-		"search/widget/searchCriteria", "search/widget/resultsTable",
+define(["jquery", "map/map", "searchResults/model/searchResults", "search/model/datasetSearch", "search/widget/datasetSelection",
+		"search/widget/searchCriteria", "searchResults/widget/resultsTable",
 		"shopcart/widget/shopcart", "map/widget/toolbarMap",
 		"map/widget/mapPopup",
 		"text!../pages/data-services-area.html"], 
