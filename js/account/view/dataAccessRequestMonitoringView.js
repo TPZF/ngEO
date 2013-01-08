@@ -75,9 +75,7 @@ define(
 
 				var darId = args[1];
 				var messageEltId  = "#serverDARMonitoringResponse_" + darId;
-				$(messageEltId).empty().append(args[3]);
-				$(messageEltId).show();
-				$(messageEltId).fadeOut(Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
+				this.showMessage(args[3], messageEltId);
 				
 				if (args[0] == 'SUCCESS'){
 					
@@ -135,6 +133,22 @@ define(
 				}
 			},
 		
+			/** display a notification message inside the given elementId */
+			showMessage : function(message, elementId){
+				if ( this.timeOut ) {
+					clearTimeout( this.timeOut );
+				}
+				$(elementId)
+					.empty()
+					.append(message)
+					.slideDown();
+					
+				// Hide status message after a given time
+				this.timeOut = setTimeout( function() {
+					$(elementId).slideUp();
+				}, Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
+			},
+			
 			/** update the list of selected data access statuses when a download manager has been selected. */
 			updateView : function(){
 				$("#darsDiv").empty();
