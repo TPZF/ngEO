@@ -1,6 +1,6 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'search/model/searchResults', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
