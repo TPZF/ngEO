@@ -1,4 +1,4 @@
-define(['jquery', 'configuration', 'search/model/searchResults'], 
+define(['jquery', 'configuration', 'searchResults/model/searchResults'], 
         function ($, Configuration, SearchResults) {
 
 	    // Define the QUnit module and lifecycle.
