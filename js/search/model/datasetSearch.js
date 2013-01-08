@@ -79,6 +79,9 @@ var DataSetSearch = Backbone.Model.extend({
 		var self = this;
 		
 		if (this.dataset){
+			//reset the useAdvancedCriteria flag
+			this.set({useAdvancedCriteria : false});
+			
 			//remove selected search criteria
 			if (this.dataset.attributes.datasetSearchInfo.attributes){			
 				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
@@ -89,6 +92,9 @@ var DataSetSearch = Backbone.Model.extend({
 			}
 			//remove selected download options
 			if (this.dataset.attributes.datasetSearchInfo.downloadOptions){			
+				//reset the useDownloadOptions flag
+				this.set({useDownloadOptions : false});
+				
 				_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
 					if (_.has(self.attributes, option.argumentName)){
 						self.unset(option.argumentName, {silent: true});
