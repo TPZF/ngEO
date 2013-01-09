@@ -18,10 +18,10 @@ var changeBackground = function() {
 	backbroundWidget.ngeowidget("hide");
 }
 
-return function() {
+return function(dsa) {
 
 	// Add the background widget to the data services area
-	$('#dataServicesArea').append('<div id="backgroundWidget"/>');
+	dsa.append('<div id="backgroundWidget"/>');
 	
 	// Build background layers panel 
 	var content = $('<fieldset data-role="controlgroup"></fieldset>');

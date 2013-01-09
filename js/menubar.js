@@ -71,7 +71,7 @@ var loadPage = function($link,onload) {
 				// First build the div and add it to build content
 				var $div = Module.buildElement();
 				addPageContent($link,$div);
-				Module.initialize();
+				Module.initialize($div);
 				if (onload) onload($div);
 		});
 	

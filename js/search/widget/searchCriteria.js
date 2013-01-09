@@ -4,18 +4,17 @@
 define( ["jquery", "backbone", "search/model/datasetSearch", "search/view/searchCriteriaView", 
           "widget"], function($, Backbone, DatasetSearch, SearchCriteriaView) {
 
-return function() {
+return function(element) {
 		
 	DatasetSearch.initialize();
 	
+	// Create the view and append it to the root element
 	var view = new SearchCriteriaView({
 		model : DatasetSearch,
 	});
+	element.append(view.$el);
 	
-	// Append it to the data services area
-	$('#dataServicesArea').append(view.$el);
-	
-	// Create the widget for main search view
+	// Create the widget to display the search criteria view
 	view.$el.ngeowidget({
 		title: 'Search Criteria',
 		activator: '#search',
@@ -23,6 +22,7 @@ return function() {
 	
 	view.render();
 
+	return view.$el;
 };
 
 });

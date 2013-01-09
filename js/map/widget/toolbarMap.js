@@ -4,11 +4,9 @@ define(['jquery', 'map/map', 'toolbar', "map/widget/layers", "map/widget/backgro
 var mode2D = true;
 
 return function (dsa) {
-	
-	var dsa = $('#dataServicesArea');
-	
-	LayersWidget();
-	BackgroundWidget();
+		
+	LayersWidget(dsa);
+	BackgroundWidget(dsa);
 	
 	dsa.find("#zoomIn").click( function() { Map.zoomIn(); } );
 	dsa.find("#zoomOut").click( function() { Map.zoomOut(); } );

@@ -4,7 +4,7 @@
 define( ["jquery", "backbone", 'search/model/dataSetPopulation', "search/view/datasetSelectionView", 
           "widget"], function($, Backbone, DataSetPopulation, DataSetSelectionView) {
 
-return function() {
+return function(element) {
 		
 	// Create the model for DataSetPopulation
 	var datasetPopulation = new DataSetPopulation();
@@ -23,13 +23,15 @@ return function() {
 	});
 	
 	// Append it to the data services area
-	$('#dataServicesArea').append(view.$el);
+	element.append(view.$el);
 	
 	// Create the widget for main search view
 	view.$el.ngeowidget({
 		title: 'DataSet Selection',
 		activator: '#dataset',
 	});
+	
+	return view.$el;
 };
 
 });

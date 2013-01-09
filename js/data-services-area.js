@@ -1,10 +1,10 @@
 
-define(["jquery", "map/map", "searchResults/model/searchResults", "search/model/datasetSearch", "search/widget/datasetSelection",
+define(["jquery", "menubar", "map/map", "searchResults/model/searchResults", "search/model/datasetSearch", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable",
 		"shopcart/widget/shopcart", "map/widget/toolbarMap",
 		"map/widget/mapPopup",
 		"text!../pages/data-services-area.html"], 
-	function($, Map, SearchResults, DatasetSearch, DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea) {
+	function($, MenuBar, Map, SearchResults, DatasetSearch, DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea) {
 	
 return {
 
@@ -22,21 +22,30 @@ return {
 	/**
 	 * Initialize the module.
 	 * Called after buildElement
+	 *
+	 * @param element The root element of the module
 	 */
-	initialize: function() {
+	initialize: function(element) {
 	
 		// Create all widgets
-		DataSetSelectionWidget();
-		SearchCriteriaWidget();
-		ResultsTableWidget();
-		ShopcartWidget();
-		ToolBarMap();
+		DataSetSelectionWidget(element);
+		var searchWidget = SearchCriteriaWidget(element);
+		ResultsTableWidget(element);
+		//ShopcartWidget(element);
+		ToolBarMap(element);
+		
+		// Setup the router for shared URL support
+		var router = new Backbone.Router();
+		router.route("data-services-area/search", "search", function() {
+			MenuBar.showPage("data-services-area");
+			searchWidget.ngeowidget("show");
+		});
 		
 		// Create the popup for map
 		var mapPopup = new MapPopup('.ui-page-active');
 		mapPopup.close();
 		
-		// Display a message about dataset
+		// Display a message about dataset in the map
 		DatasetSearch.on('change:datasetId', function(model) {
 			var datasetId = model.get('datasetId');
 			if ( datasetId ) {
