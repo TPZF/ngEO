@@ -5,8 +5,8 @@
 
 define( [ "map/map", "toolbar", "widget" ], function(Map, ToolBar) {
 
-return function() {
-	$('#dataServicesArea').append('<div id="layersWidget"/>');
+return function(dsa) {
+	dsa.append('<div id="layersWidget"/>');
 
 	// Build overlays panel
 	var layers = Map.layers;
