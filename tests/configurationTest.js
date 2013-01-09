@@ -3,7 +3,7 @@ define(['configuration'], function (Configuration) {
     // Define the QUnit module and lifecycle.
     QUnit.module("Configuration");
 
-    QUnit.asyncTest("Check map configuration", 11, function () {
+    QUnit.asyncTest("Check configuration data", 11, function () {
 		Configuration.url = "../conf/configuration.json";
 		Configuration.load()
 			.done( function() {
