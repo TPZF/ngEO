@@ -63,6 +63,17 @@ return {
 		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
 		SearchResults.on('selectFeatures',Map.selectFeatures);
 		SearchResults.on('unselectFeatures',Map.unselectFeatures);		
+		
+		// TODO : experiment for context help
+		$("#help").click( function() {
+			var div = $('<div></div>').appendTo('.ui-page-active');
+			div.load('man/GettingStarted.html', function() {
+				div.popup().popup("open");
+			});
+			
+			
+			$(this).toggleClass('toggle');
+		});
 	}
 };
 
