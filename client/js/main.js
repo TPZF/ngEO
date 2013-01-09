@@ -176,7 +176,7 @@ require.config({
  * Main ngEO module
  */
 require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile"] ,
-		function(require, $, Configuration, MenuBar) {
+		function(require, $, Configuration, MenuBar, Backbone) {
 
 /** Console fix	: create a dummy console.log when console is not present. Otherwise it is not working on some browser configuration */
 window.console || (console={log:function(){}});
@@ -188,15 +188,19 @@ var doc_ready = $.Deferred();
 $.when(doc_ready, Configuration.load())
 	.done( function() {
 	
+		$.mobile.loading("show");
+	
 		// Remove some automatic styling from jQuery Mobile that don't fit in ngEO style
 		$("body").removeClass("ui-mobile-viewport");
 		$("header").find("a").removeClass("ui-link");
 
-		// Load the map and initialize it
+		// Load the map module and initialize it
 		require(["map/map"], function(Map) {
+		
 			// Initialize menu bar
 			MenuBar.initialize("header nav");
 			Map.initialize("mapContainer");
+			
 		});
 		
 	})
