@@ -3,7 +3,7 @@
  * Manage page and module dynamic loading
  * Page are display above the map, with transparent background.
  */
-define(['jquery','require'], function($,require) {
+define(['jquery','require', 'backbone'], function($,require,Backbone) {
 
 /**
  * The currently active menu item
@@ -18,9 +18,14 @@ var activePage = null;
 /**
  * Cache for menu page content
  */
- var cache = {};
+var pageCache = {};
  
-  
+/**
+ * Router used by the MenuBar
+ */
+var router = new Backbone.Router();
+ 
+ 
  /**
   * Add page content
   */
@@ -30,15 +35,15 @@ var addPageContent = function($link,$div) {
 		$div.children().wrapAll('<div class="menuBarPageContent"></div>');
 	}
 	$div.addClass('menuBarPage');
-	cache[ $link.attr('href') ] = $div;
+	pageCache[ $link.attr('href') ] = $div;
 	$div.hide();
 	$('#mapContainer').prepend($div);
-}
+};
  
  /**
   * Load a page
   */
- var loadPage = function($link,onload) {
+var loadPage = function($link,onload) {
  
 	var href = $link.attr('href');
 	
@@ -58,7 +63,8 @@ var addPageContent = function($link,$div) {
 		});
 		
 	} else if ( $link.data('module') ) {
-		
+				
+		console.log("MenuBar, loadModule => " + $link.data('module'));
 		// Load and intialize the module
 		require([$link.data('module')], 
 			function(Module) {
@@ -76,7 +82,7 @@ var addPageContent = function($link,$div) {
 /**
  * Show a page
  */
-var showPage = function(page) {
+var _showPage = function(page) {
 	if ( activePage ) {
 		activePage.slideUp( 200, function() { page.slideDown(200); activePage = page; } );
 	} else {
@@ -85,50 +91,90 @@ var showPage = function(page) {
 	}
  };
 
+ /**
+  * Show a link
+  */
+var showInternalLink = function(link) {
+
+	var linkRef = link.attr('href');
+	var page = pageCache[ linkRef ];
+	if (page) {
+		_showPage(page);
+	}
+	
+	// Update active menu item
+	link.addClass('active');
+	if (activeMenuItem) activeMenuItem.removeClass('active');
+	activeMenuItem = link;
+};
+
+var numLinksToLoad = 0;
+
+ /**
+  * Callbacks call when a page content is loaded
+  */
+var onPageLoaded = function() {
+	numLinksToLoad--;
+	
+	if ( numLinksToLoad == 0 ) {
+	
+		$.mobile.loading("hide");
+	
+		// Start backbone history
+		Backbone.history.start();
+		
+		// Go to default page if none requested
+		if (!location.hash || location.hash == "") {
+			var defaut = $("header nav").data("default");
+			Backbone.history.navigate(defaut, { trigger: true });
+		}
+		
+	}
+};
+
 return {
+	/**
+	 * Initialize the menubar component
+	 */
 	initialize: function(selector) {
+		
+		var links = $(selector).find('a');
+		numLinksToLoad = links.length;
+	
 		// Traverse all the links and search if the div is not already contained in the main page
 		$(selector).find('a').each( function() {
-			var jThis = $(this);
-			var jContent = $(jThis.attr('href'));
+			var $this = $(this);
+			var linkRef = $this.attr('href');
 			
-			if ( jContent.length > 0 ) {
+			// If the link is contained in the document, process it.
+			if ( linkRef.charAt(0) == '#' ) {
 			
-				addPageContent(jThis,jContent);
-			}
-		});
-	
-		// Store the active menu item
-		activeMenuItem = $(selector).find('a.active');
-		activePage = cache[ activeMenuItem.attr('href') ];
-		if (!activePage) {
-			loadPage(activeMenuItem, showPage);
-		} else {
-			activePage.show();
-		}		
-		
-		// Add interaction when user clicks on the link
-		// Display the content, and hide previous one
-		$(selector).find('a').click( function() {
-			var jThis = $(this);
-			if ( !jThis.hasClass('active') ) {
-			
-				// Check if the page already exists, load it if yes, otherwise first load it
-				var pageRef = jThis.attr('href');
-				if ( cache[pageRef] ) {
-					showPage( cache[pageRef] );
+				// Add content if aleady in the document, otherwise load the page
+				var jContent = $($this.attr('href'));
+				if ( jContent.length > 0 ) {
+					addPageContent($this,jContent);
+					numLinksToLoad--;
 				} else {
-					loadPage(jThis, showPage);
+					loadPage( $this, onPageLoaded );
 				}
 				
-				// Update active menu item
-				jThis.addClass('active');
-				activeMenuItem.removeClass('active');
-				activeMenuItem = jThis;
+				// Add a route to show the link
+				router.route( linkRef.substr(1), linkRef.substr(1), function() {
+					showInternalLink( $this );
+				});
+				
+			} else {
+				numLinksToLoad--;
 			}
-
-			return true;			
 		});
+		
+	},
+	
+	/**
+	 * Show a page of the menubar
+	 */
+	showPage: function(name) {
+		showInternalLink( $('a[href=#' + name + ']') );
 	}
 };
 
