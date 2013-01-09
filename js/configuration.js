@@ -2,7 +2,7 @@
   * Configuration module
   */
   
-define( ['jquery', 'module'], function($, module) {
+define( ['jquery', 'text!../conf/localConfiguration.json'], function($, localConfiguration) {
 
 var configuration = {
 
@@ -17,7 +17,7 @@ var configuration = {
 	
 	//the local configuration is got from requirejs.config module config
 	//set in main.js
-	localConfig : module.config(),
+	localConfig : JSON.parse(localConfiguration),
 		
 	// Load configuration data from the server
 	load: function() {

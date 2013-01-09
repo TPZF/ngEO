@@ -9,9 +9,12 @@ QUnit.module("MenuBar", {
 });
 
 // just check that data services area is visible at beginning
-QUnit.test("Check default state", function () {
-	ok( $('#dataServicesArea').is(':visible') );
-	ok( $('a[href="#dataServicesArea"]').hasClass('active') );
+QUnit.asyncTest("Check default state", 2, function () {
+	setTimeout( function() {
+		ok( $('#data-services-area').is(':visible') );
+		ok( $('a[href="#data-services-area"]').hasClass('active') );
+		QUnit.start();
+	}, 1000 );
 });
 
 // just check what happens when a menu item is clicked
@@ -19,11 +22,11 @@ QUnit.asyncTest("Check click on menu item", 4, function () {
 	$('a[href="#about"]').click();
 	setTimeout( function() {
 		ok( $('#about').is(':visible') );
-		ok( !$('#dataServicesArea').is(':visible') );
+		ok( !$('#data-services-area').is(':visible') );
 		ok( $('a[href="#about"]').hasClass('active') );
-		ok( !$('a[href="#dataServicesArea"]').hasClass('active') );
+		ok( !$('a[href="#data-services-area"]').hasClass('active') );
 		QUnit.start();
-	}, 500 );
+	}, 1000 );
 });
 
 

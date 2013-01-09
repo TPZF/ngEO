@@ -24,7 +24,7 @@
 	
 	"dataAccessRequestStatuses" : { 	   
 	   "messagefadeOutTime" : 2500,
-	   "collapseDAR" : false,
+	   "collapseDAR" : true,
 	   "collapseProducts" : true
 	},
 	
