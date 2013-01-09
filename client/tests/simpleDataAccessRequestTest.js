@@ -13,9 +13,9 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 	    });
     
 	    QUnit.test("Check dataAccessRequest statuses in configuration", 3 , function () { 
-	        QUnit.ok(Configuration.data.dataAccessRequestStatuses, "dataAccessRequestStatuses object found in configuration");
-	    	QUnit.ok(Configuration.data.dataAccessRequestStatuses.validStatuses.validatedStatus.value == 4, "Validation status in configuration Ok");
-	    	QUnit.ok(Configuration.data.dataAccessRequestStatuses.validStatuses.inProgressStatus.value == 0,"In progress status  in configuration Ok");
+	        QUnit.ok(Configuration.localConfig.dataAccessRequestStatuses, "dataAccessRequestStatuses object found in configuration");
+	    	QUnit.ok(Configuration.localConfig.dataAccessRequestStatuses.validStatuses.validatedStatus.value == 4, "Validation status in configuration Ok");
+	    	QUnit.ok(Configuration.localConfig.dataAccessRequestStatuses.validStatuses.inProgressStatus.value == 0,"In progress status  in configuration Ok");
 	    });
 
     

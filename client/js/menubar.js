@@ -64,7 +64,6 @@ var loadPage = function($link,onload) {
 		
 	} else if ( $link.data('module') ) {
 				
-		console.log("MenuBar, loadModule => " + $link.data('module'));
 		// Load and intialize the module
 		require([$link.data('module')], 
 			function(Module) {
@@ -167,6 +166,11 @@ return {
 				numLinksToLoad--;
 			}
 		});
+		
+		if ( numLinksToLoad == 0 ) {
+		
+			// TODO : do something if nothing to load
+		}
 		
 	},
 	

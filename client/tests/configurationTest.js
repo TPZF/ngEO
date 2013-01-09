@@ -12,7 +12,7 @@ define(['configuration'], function (Configuration) {
 				QUnit.ok($.isArray(mapData.layers),"layers found in map configuration");
 				QUnit.ok($.isArray(mapData.backgroundLayers),"background layers found in map configuration");
 				
-				var dataAccessRequestStatuses = Configuration.data.dataAccessRequestStatuses;
+				var dataAccessRequestStatuses = Configuration.localConfig.dataAccessRequestStatuses;
 				QUnit.ok(dataAccessRequestStatuses,"dataAccessRequestStatuses object found in configuration");
 				QUnit.ok(dataAccessRequestStatuses.validStatuses,"validStatuses found in configuration");
 				

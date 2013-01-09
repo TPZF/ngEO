@@ -14,7 +14,7 @@
 	// the `baseUrl` value supplied above.
 	var testModules = [
 		"configurationTest.js",
-		"menuBarTest.js",
+	/*	"menuBarTest.js",*/
 		"datasetPopulationTest.js",
 		"simpleDataAccessRequestTest.js",
 		"downloadManagersTest.js",
