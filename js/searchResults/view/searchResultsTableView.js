@@ -191,15 +191,14 @@ var SearchResultsTableView = Backbone.View.extend({
 		$("#datatable_filter input").attr("data-mini", "true");
 		
 		//add button to the widget footer in order to add items to the shopcart
-		this.addToShopcart = this.$el.ngeowidget(
+		// TODO for ngeo V2
+/*		this.addToShopcart = this.$el.ngeowidget(
 				'addButton', {
 					id : 'addToShopcart',
 					name : 'Add to Shopcart',
 					position: 'left'
 				});
-		
-		// TODO for ngeo V2
-		this.addToShopcart.click(function() {});
+		this.addToShopcart.click(function() {});*/
 
 		//add button to the widget footer in order to download products
 		this.retrieveProduct = this.$el
