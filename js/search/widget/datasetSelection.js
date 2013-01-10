@@ -19,19 +19,28 @@ return function(element) {
 	datasetPopulation.fetch({
 		success: function() {
 			view.render();
+			// Append it to the data services area
+			element.append(view.$el);
+			
+			// Create the widget for main search view
+			view.$el.ngeowidget({
+				title: 'DataSet Selection',
+				activator: '#dataset',
+			});
+			
+			return view.$el;
+			
+		},//when the fetch fails display an error message and disable the datasets "button"
+		// so the application is still usable and the user can still see the other menus
+		error: function(){
+			$("#dataset").addClass("ui-disabled");
+			$('<div><p>Error : a error occured with DataSetPopulationMatrix interface.</p><p>Please check the server side interface and relaunch the application.</p></div>')
+			.appendTo('.ui-page-active')
+			.popup()
+			.popup('open');
 		}
 	});
-	
-	// Append it to the data services area
-	element.append(view.$el);
-	
-	// Create the widget for main search view
-	view.$el.ngeowidget({
-		title: 'DataSet Selection',
-		activator: '#dataset',
-	});
-	
-	return view.$el;
+
 };
 
 });
