@@ -41,10 +41,12 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Render the view
 	 */
 	render: function(){
-		// TODO : display loading image
+		
+		//if datasets array has no items that means that the server has sent a response
+		//since the fetch was a success (it is called from the dataseSelection widget).
+		//However, there was problem since the datsets were not created. 
 		if (this.model.get("datasets").length == 0){
-			// $(this.el).append("<p>loading datasets...<p>");
-			console.log("Not loaded!!!");
+			$(this.el).append("<p>Error: There was a problem when creating the datasets.<p>");
 			return this;		
 		}
 		var self = this;
