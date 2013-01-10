@@ -231,29 +231,8 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	formatDate : function(date, time){
 		return date + "T" + time + ":00.00Z"; 
-	},
-	  
-	/** Get the search criteria to display as a txt pop-up in the search results view 
-	 * TODO CONFIRM THE USE OF THE SUMMARY
-	 */
-	getSearchCriteriaSummary : function(){
-
-		var text = '<p><b>DataSet : </b>' + this.get("datasetId") + '</p> '
-		
-		text += '<b>Start date : </b> '+ this.formatDate(this.get("startdate"), this.get("startTime")) + '</p>' +
-			'<b>Stop date : </b> ' + this.formatDate(this.get("stopdate"), this.get("endTime")) + '</p> ';
-			
-		if (this.get("west") != '' && this.get("south") != '' &&
-				this.get("east") != '' && this.get("north") != ''){
-			
-			text += '<p><b>Area:</b> ' + 
-			 '<p><b>West : </b>' + this.get("west") +'</p> ' +
-			 '<p><b>South : </b>' + this.get("south") +'</p> ' +
-			 '<p><b>East : </b>' + this.get("east") +'</p> ' +
-			 '<p><b>North : </b>' + this.get("north") + '</p> ';
-		}
-		return text;
 	}
+	
 });
 
 return new DataSetSearch();
