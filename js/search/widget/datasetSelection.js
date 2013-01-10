@@ -31,7 +31,7 @@ return function(element) {
 			return view.$el;
 			
 		},//when the fetch fails display an error message and disable the datasets "button"
-		// so the application is still usable and the user can still see the other menus
+		// so the application is still usable and the user can still see the other menus.
 		error: function(){
 			$("#dataset").addClass("ui-disabled");
 			$('<div><p>Error : a error occured with DataSetPopulationMatrix interface.</p><p>Please check the server side interface and relaunch the application.</p></div>')
