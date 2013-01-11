@@ -11,6 +11,9 @@
 	text-align: center;
 }
 
+/**
+ * Widget main styling
+ */
 .widget {
 	position: absolute;
 	z-index: 1005;
@@ -20,6 +23,20 @@
 	.border-radius(@widget-border-radius);
 }
 
+/**
+ * Styling for close button
+ */
+.widget > .ui-btn-right {
+    right: -12px;
+    margin: 0;
+    position: absolute;
+    top: -12px;
+    z-index: 1101;
+}
+
+/**
+ * Styling for arrow
+ */
 .widget-arrow-up {
 	position: absolute;
 	z-index: 1005;
@@ -31,7 +48,9 @@
 	border-bottom: @widget-arrow-size solid @widget-background-color;
 }
 
-
+/**
+ * Styling for footer
+ */
 .widget-footer {
 	padding-top: 5px;
 //	text-align: right;

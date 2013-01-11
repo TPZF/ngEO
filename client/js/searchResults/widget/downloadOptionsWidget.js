@@ -10,11 +10,18 @@ define( [ "jquery", "configuration", 'searchResults/view/downloadOptionsWidgetVi
 
 var DownloadOptionsWidget = function() {
 
-	var parentElement = $('<div id="downloadOptionsPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content popup-widget-background ">');
+	var parentElement = $('<div id="downloadOptionsPopup">');
 	parentElement = parentElement.appendTo('.ui-page-active');
 	
 	var element = $('<div id="downloadOptionsPopupContent"></div>'); 
 	element.appendTo(parentElement);
+	
+	parentElement.ngeowidget({
+		title: "Download Options",
+		hide: function() {
+			parentElement.remove();
+		}
+	});
 
 	var downloadOptionsWidgetView = new DownloadOptionsWidgetView({
 		model : DataSetSearch,
@@ -27,17 +34,9 @@ var DownloadOptionsWidget = function() {
 	this.open = function() {
 	
 		downloadOptionsWidgetView.render();
-		parentElement.popup(); 		
-		//after closing the popup reset the simple data access parameters 
-		//and remove the popup elements
-		parentElement.bind({
-		   popupafterclose: function(event, ui) {
-			   parentElement.remove();
-		   }
-		});
-		
+			
 		//trigger jqm styling
-		parentElement.popup("open"); 
+		parentElement.ngeowidget("show"); 
 		//TODO fix the selected value for the combos
 		downloadOptionsWidgetView.setSelectedValues();
 	};
@@ -47,7 +46,7 @@ var DownloadOptionsWidget = function() {
 	 *	closed by clicking out side its content.
 	 */
 	this.close = function() {
-		parentElement.popup("close");
+		parentElement.ngeowidget("hide");
 	};
 };
 

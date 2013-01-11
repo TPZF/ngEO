@@ -14,13 +14,21 @@ define(
 		
 		var StandingOrderWidget = function() {
 
-			var parentElement = $('<div id="standingOrderPopup" data-role="popup" data-overlay-theme="a" class="ui-content popup-widget-background">');
-
+			var parentElement = $('<div id="standingOrderPopup">');
 			var element = $('<div id="standingOrderPopupContent"></div>');
-
 			element.appendTo(parentElement);
+			parentElement.appendTo('.ui-page-active');
+			parentElement.ngeowidget({
+				title: "Standing Order",
+				// Reinit the standing order when the widget is closed (FL: is it really needed?)
+				hide: function() {
+					StandingOrderDataAccessRequest.initialize();
+					parentElement.remove();
+				}
+			});
 
 			var self = this;
+			
 			/**
 			 * Build the content of the popup with the standing orders view
 			 */
@@ -65,22 +73,10 @@ define(
 			this.open = function() {
 
 				buildContent();
-				parentElement.appendTo('.ui-page-active');
 				// trigger jqm styling
 				parentElement.trigger('create');
 
-				parentElement.bind({
-
-					popupafterclose : function(event, ui) {
-						parentElement.remove();
-						StandingOrderDataAccessRequest.initialize();
-					}
-
-				});
-				
-				//parentElement.popup({ "position-to" : "#retrieve" });  
-				parentElement.popup();
-				parentElement.popup("open"); 
+				parentElement.ngeowidget("show"); 
 			};
 
 			/**
@@ -88,7 +84,7 @@ define(
 			 * clicking out side its content.
 			 */
 			this.close = function() {
-				parentElement.popup("close");
+				parentElement.ngeowidget("hide");
 			};
 		};
 

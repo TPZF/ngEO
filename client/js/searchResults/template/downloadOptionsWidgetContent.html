@@ -1,9 +1,4 @@
 <div id="downloadOptionsWidgetContent" class="widget-content ui-body-c">
-
-	<div data-role="header"  class="ui-header ui-bar-a"> 
-		<h1 class="ui-title">Download Options</h1>
-	</div>
-	
 	<!-- 	display  download options -->
 	<form>
 		<% _.each(dataset.attributes.datasetSearchInfo.downloadOptions, function(option, i) { %>		
@@ -25,10 +20,8 @@
 </div>
 
 <div class="popup-widget-footer">
-
 	<button id="downloadOptionsUpdate" data-role="button" data-mini="true"
 		data-inline="true" data-theme="a">Update Download Options</button>
-	<!-- 	<button id="closeStandingOrderPopup" data-mini="true" data-inline="true" data-theme="a">Close</button> -->
 
 	<div id="downloadOptionsMessage"></div>
 </div>

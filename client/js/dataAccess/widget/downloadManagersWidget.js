@@ -11,18 +11,24 @@ define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView',
 
 var DownloadManagersWidget = function(request) {
 
-	var parentElement = $('<div id="downloadManagersPopup" data-role="popup" data-position-to="window" data-overlay-theme="a" class="ui-content popup-widget-background">');
+	var parentElement = $('<div id="downloadManagersPopup">');
 
 	var element = $('<div id="downloadManagersPopupContent"></div>'); 
 	element.appendTo(parentElement);
+	parentElement.appendTo('.ui-page-active');
+	parentElement.ngeowidget({
+		title: 'Data Access Request',
+		hide: function() {
+			request.initialize();
+			parentElement.remove();
+		}
+	});
 
 	/**
 		Open the popup
 	 */
 	this.open = function() {
 	
-		parentElement.appendTo('.ui-page-active');
-		
 		// Load DownloadManagers and then build and open the pop-up
 		DownloadManagers.fetch().done(function() {
 		
@@ -35,18 +41,8 @@ var DownloadManagersWidget = function(request) {
 			});
 			downloadManagersListView.render();
 			
-			//after closing the popup reset the simple data access parameters 
-			//and remove the popup elements
-			parentElement.bind({
-			   popupafterclose: function(event, ui) {
-				   request.initialize();
-				   parentElement.remove();
-			   }
-			});
-			
 			//Open the popup
-			parentElement.popup();
-			parentElement.popup("open");
+			parentElement.ngeowidget("show");
 		});
 	};
 
@@ -56,7 +52,7 @@ var DownloadManagersWidget = function(request) {
 	 *	closed by clicking out side its content.
 	 */
 	this.close = function() {
-		parentElement.popup("close");
+		parentElement.ngeowidget("hide");
 	};
 };
 

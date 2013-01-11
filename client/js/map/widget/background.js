@@ -45,7 +45,6 @@ return function(dsa) {
 		
 	backbroundWidget = $("#backgroundWidget")
 		.append(content).ngeowidget({
-		title: 'Background',
 		activator: '#background'
 	});
 
