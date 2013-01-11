@@ -49,7 +49,6 @@
              {
                 "id": "pass",
                 "type": "enumeration",
-                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
@@ -77,7 +76,6 @@
             {
                 "id": "status",
                 "type": "enumeration",
-                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"
@@ -97,7 +95,6 @@
             {
                 "id": "daynight flag",
                 "type": "enumeration",
-                 "value" : "single",
                 "possibleValues": [
                     {
                         "possibleValue": "night"

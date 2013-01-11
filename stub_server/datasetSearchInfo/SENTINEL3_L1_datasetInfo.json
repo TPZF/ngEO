@@ -76,7 +76,6 @@
             {
                 "id": "sensor",
                 "type": "enumeration",
-                "value" : "multiple",
                 "possibleValues": [
                     {
                         "possibleValue": "OLCI"
