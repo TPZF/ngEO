@@ -23,19 +23,14 @@ var Dataset = Backbone.Model.extend({
 			if (criterion.id == criterionId) attribute = criterion;
 		});
 
-		if (attribute.value == "single"){ //if one value is allowed then set the first one
-			criterionValue = attribute.possibleValues[0].possibleValue;
-		
-		}else if (attribute.value == "multiple"){//if multiple values are allowed then set all of them
-			
+
+		if (attribute.rangeMinValue && attribute.rangeMaxValue){//the criterion is a range so set the range to be [min, max]
+			criterionValue = "[" + attribute.rangeMinValue + ',' + attribute.rangeMaxValue + "]";
+		}else{//all the criteria are by default searched with multiple values
 			criterionValue = attribute.possibleValues[0].possibleValue;
 			_.each(attribute.possibleValues, function(value, index){
 				if (index != 0) criterionValue = criterionValue  +  ',' + value.possibleValue;
 			});
-		}else if (attribute.rangeMinValue && attribute.rangeMaxValue){//the criterion is a range so set the range to be [min, max]
-			criterionValue = "[" + attribute.rangeMinValue + ',' + attribute.rangeMaxValue + "]";
-		}else{
-			criterionValue = ""; 
 		}
 		
 		return criterionValue;
