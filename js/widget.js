@@ -27,7 +27,6 @@ $.widget( "ngeo.ngeowidget", {
 	_create: function() {
 	
 		var self = this;
-		_widgets.push(this);
 		
 		// Style the container
 		this.element.addClass( "widget-content" );
@@ -37,11 +36,11 @@ $.widget( "ngeo.ngeowidget", {
 		// Wrap with the parent div for widget
 		this.element.wrap("<div class='widget'/>");
 		this.parentElement = this.element.parent();
-				
-		// Add Arrow 
-		this.arrow = $("<div class='widget-arrow-up' />")
-			.insertBefore(this.parentElement);
-					
+		
+		if ( this.options.title ) {
+			this.parentElement.prepend('<h2>' + this.options.title + '</h2>');
+		}
+									
 		// Add footer
 		this.footer = $("<div class='widget-footer'><div class='widget-footer-left'/><div class='widget-footer-right'/></div>")
 			.insertAfter(this.element);
@@ -56,21 +55,36 @@ $.widget( "ngeo.ngeowidget", {
 		}
 		
 
-		// Activator 
-		this.activator = $(this.options.activator);
-		this.activator.click( function() { 
-			if ( self.activator.hasClass('toggle') ) {
-				self.hide();
-			}
-			else {
-				self.show();
-			}
-		});
+		// Activator
+		if ( this.options.activator ) {
+			this.activator = $(this.options.activator);
+			this.activator.click( function() { 
+				if ( self.activator.hasClass('toggle') ) {
+					self.hide();
+				}
+				else {
+					self.show();
+				}
+			});
+		} else {
+			$('<a class="ui-btn-right" data-iconpos="notext" data-icon="delete" data-theme="a"\
+				data-role="button" data-corners="true" data-shadow="true"\
+				data-iconshadow="true" data-wrapperels="span" title="Close">')
+					.prependTo(this.parentElement)
+					.click( $.proxy(this.hide,this) ); 
+		}
 			
 		this.parentElement
 			.trigger("create")
 			.hide();
-		this.arrow.hide();
+			
+		if ( this.activator ) {
+			// Add Arrow
+			this.arrow = $("<div class='widget-arrow-up' />")
+				.insertBefore(this.parentElement);
+			this.arrow.hide();
+		}
+		_widgets.push(this);
 	},
 
 	// Add a button in the footer
@@ -100,37 +114,43 @@ $.widget( "ngeo.ngeowidget", {
 	},
 	
 	update: function() {
-		// Recompute position for widget
-		var posActivator = this.activator.position();
-		var widgetLeft = Math.max( 10, posActivator.left - (this.parentElement.outerWidth()/2) + (this.activator.outerWidth()/2) );
-		this.parentElement
-			.css( 'left', widgetLeft );
-		this.arrow
-			.css( 'left', posActivator.left );
-			
-		// Set top position for both arrow and widget content
-		// Top position never changed because toolbar and activator are fixed... even with a window resize!
 		var $tb = $('#toolbar');
-		var widgetTop = $tb.position().top + $tb.outerHeight();
-		this.parentElement
-			.css( 'top', widgetTop + this.arrow.outerHeight() );
-		this.arrow
-			.css( 'top', widgetTop );
+		var toolbarBottom = $tb.position().top + $tb.outerHeight();
+		if ( this.activator ) {
+			// Recompute position for widget
+			var posActivator = this.activator.position();
+			var widgetLeft = Math.max( 10, posActivator.left - (this.parentElement.outerWidth()/2) + (this.activator.outerWidth()/2) );
+			this.parentElement
+				.css( 'left', widgetLeft );
+			this.arrow
+				.css( 'left', posActivator.left );
+				
+			// Set top position for both arrow and widget content
+			// Top position never changed because toolbar and activator are fixed... even with a window resize!
+			this.parentElement
+				.css( 'top', toolbarBottom + this.arrow.outerHeight() );
+			this.arrow
+				.css( 'top', toolbarBottom );
+		} else {
+			var widgetLeft = $(window).width()/2 - (this.parentElement.outerWidth()/2);
+			var widgetTop = ($(window).height() - toolbarBottom)/2- (this.parentElement.outerHeight()/2);
+			this.parentElement.css({ top: widgetTop, left: widgetLeft });
+		}
 	},
 	
 	show: function() {
-		// Automatically hide other widgets
+		// Automatically hide other popup
 		for ( var i=0; i < _widgets.length; i++ ) {
 			if ( _widgets[i] != this ) {
 				_widgets[i].hide();
 			}
 		}
-		
+			
 		this.update();
 		this.parentElement.fadeIn(this.options.durationEffect); 
-		this.arrow.fadeIn(this.options.durationEffect); 
+		if (this.arrow) this.arrow.fadeIn(this.options.durationEffect); 
 	
-		this.activator.addClass('toggle');
+		if (this.activator) this.activator.addClass('toggle');
 		
 		if ( this.options.show ) {
 			this.options.show();
@@ -138,15 +158,9 @@ $.widget( "ngeo.ngeowidget", {
 	},
 	
 	hide: function() {
-	
-		this.parentElement.fadeOut(this.options.durationEffect); 
-		this.arrow.fadeOut(this.options.durationEffect); 
-		this.activator.removeClass('toggle');
-		
-		if ( this.options.hide ) {
-			this.options.hide();
-		}
-
+		this.parentElement.fadeOut(this.options.durationEffect,this.options.hide ); 
+		if (this.arrow) this.arrow.fadeOut(this.options.durationEffect); 
+		if (this.activator) this.activator.removeClass('toggle');
 	},
 		
 	// events bound via _bind are removed automatically

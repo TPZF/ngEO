@@ -16,7 +16,6 @@ return function(element) {
 	
 	// Create the widget to display the search criteria view
 	view.$el.ngeowidget({
-		title: 'Search Criteria',
 		activator: '#search',
 	});
 	

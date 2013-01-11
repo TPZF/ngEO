@@ -33,7 +33,6 @@ return function(dsa) {
 	
 	// Create widget
 	$("#layersWidget").ngeowidget({
-		title: 'Layers',
 		activator: '#layers'
 	});
 };

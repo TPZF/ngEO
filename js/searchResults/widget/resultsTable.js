@@ -4,7 +4,7 @@
 define( ["jquery", "backbone", "searchResults/model/searchResults", "searchResults/view/searchResultsTableView", 
           "widget"], function($, Backbone, SearchResults, SearchResultsTableView) {
 
-return function(element) {
+return function(root) {
 			
 	// Create the main search view
 	var view = new SearchResultsTableView({ 
@@ -12,11 +12,10 @@ return function(element) {
 	});
 	
 	// Append it to the data services area
-	element.append(view.$el);
+	root.append(view.$el);
 	
 	// Create the widget for view
 	view.$el.ngeowidget({
-		title: 'Results Table',
 		activator: '#result'
 	});
 	

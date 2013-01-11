@@ -24,7 +24,6 @@ return function(element) {
 			
 			// Create the widget for main search view
 			view.$el.ngeowidget({
-				title: 'DataSet Selection',
 				activator: '#dataset',
 			});
 			
