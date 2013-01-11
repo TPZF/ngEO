@@ -1,10 +1,9 @@
 define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
-		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget',
-		  'text!searchResults/template/searchResultViewContent_template.html', 'jquery.mobile', 'jquery.dataTables' ],
+		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget', 'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget, searchResultsView_temp ) {
+			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
 /**
  * The model is the backbone model SearchResults 
@@ -98,7 +97,8 @@ var SearchResultsTableView = Backbone.View.extend({
 	 */
 	render : function() {
 	
-		this.$el.append(searchResultsView_temp);
+		// Add the table
+		this.$el.append('<table cellpadding="0" cellspacing="0" border="0" id="datatable"></table>');
 
 		// Take column definitions from Configuration
 		// Add checkbox as first colum
