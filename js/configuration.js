@@ -31,17 +31,6 @@ var configuration = {
 			console.log("Configuration not found " + textStatus + ' ' + errorThrown);
 		  }
 		});
-	},
-	
-	/** get the open search mapping of a search criterion */
-	getCriterionOpenSearchMapping : function(criterionId){
-		var mappedValue = null;
-		_.each(this.localConfig.searchCriteriaToOpenSearchMapping, function(value, key, list){
-			if (criterionId == key){
-				mappedValue =  value;
-			}
-		});
-		return mappedValue;
 	}
 };
 
