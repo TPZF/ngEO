@@ -166,7 +166,12 @@ $.widget( "ngeo.ngeowidget", {
 	// events bound via _bind are removed automatically
 	// revert other modifications here
 	_destroy: function() {
-		// TODO 
+		// Cleanup parent element
+		this.parentElement.children().not(this.element).remove();
+		// Remove parent element
+		this.element.unwrap();
+		//Remove arrow
+		if (this.arrow) this.arrow.remove();
 	},
 
 	// _setOptions is called with a hash of all options that are changing
