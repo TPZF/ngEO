@@ -128,9 +128,9 @@ var DataSetSearch = Backbone.Model.extend({
 			
 			//iterate on the configured criteria with the advanced criterion id
 			//and for each criterion, add the openSearch mapped criterion with the selected advanced criteria value set in the model 
-			_.each(Configuration.localConfig.searchCriteriaToOpenSearchMapping, function(value, key, list){
+			_.each(self.attributes, function(value, key, list){
 				
-				if (self.attributes[key] && self.attributes[key]  != ""){
+				if (self.attributes[key]  != ""){
 					url = url  +  "&" + value + "=" + self.attributes[key] ;
 				}
 			});
@@ -142,7 +142,7 @@ var DataSetSearch = Backbone.Model.extend({
 				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
 					
 					if (!_.has(self.attributes, attribute.id)){
-						url = url  +  '&' + Configuration.getCriterionOpenSearchMapping(attribute.id) + '=' + self.dataset.getDefaultCriterionValue(attribute.id);	
+						url = url  +  '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);	
 					}
 				});
 			}
