@@ -28,40 +28,7 @@
 		
 			   <!-- the criterion is an enumeration has multiple options so create a select  -->
 				<% if (criterion.type == 'enumeration') { %> 
-		
-		 			<!-- the criterion has 2 options so create two radio buttons  -->
-					<% if (criterion.possibleValues.length == 2) { %> 
-						<div data-role="fieldcontain">
-							
-							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
-								
-								<legend><%= criterion.id %>:</legend>
-    	
-       							<input id="<%=criterion.id%>_<%=criterion.possibleValues[0].possibleValue%>_input" type="radio" name="<%=criterion.id%>" data-mini="true" checked="true">
-								<label for="<%=criterion.id%>_<%=criterion.possibleValues[0].possibleValue%>_input" id="<%=criterion.id%>_<%=criterion.possibleValues[0].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[0].possibleValue%></label>         	
 
-								<input id="<%=criterion.id%>_<%=criterion.possibleValues[1].possibleValue%>_input" type="radio" name="<%=criterion.id%>" data-mini="true">
-								<label for="<%=criterion.id%>_<%=criterion.possibleValues[1].possibleValue%>_input" id="<%=criterion.id%>_<%=criterion.possibleValues[1].possibleValue%>_label" data-mini="true" data-corners="false"><%=criterion.possibleValues[1].possibleValue%></label>         	
-								
-    						</fieldset>
-   						</div>
-					 <!-- the criterion has multiple options with only one value allowed so create a select  -->
-					<% } else if (criterion.value == 'single') { %>	
-							
-						 <div data-role='fieldcontain'> 
-							
-							<label for="<%= criterion.id %>" data-mini="true"><%=criterion.id%>: </label>   
-							
-							<select id="<%= criterion.id %>" data-mini="true" data-theme="c">
-								<% _.each(criterion.possibleValues, function(possibleValue) { %>
-									<option value="<%=possibleValue.possibleValue%>"><%=possibleValue.possibleValue%></option>
-								<% }); %>
-						 	</select>	
-						 	
-						</div>
-						 <!-- the criterion has multiple options with multiple values allowed so create a group of checkboxes  -->
-					<% } else if (criterion.value == 'multiple') { %>	
-							
 						 <div data-role="fieldcontain">
 							
 							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
@@ -76,9 +43,6 @@
     						</fieldset>
    						</div>
 					
-					<% } else { %>
-					
-					<% }  %>
 				<!-- the criterion is an integer within a range  -->	
 				<% } else if (criterion.type == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 					
