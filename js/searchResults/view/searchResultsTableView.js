@@ -248,7 +248,7 @@ var SearchResultsTableView = Backbone.View.extend({
 					position: 'right'
 				});
 		
-		this.exportButton.button('enable');
+		this.exportButton.button('disable');
 		
 		//Displays the download options of the selected products in order tobe changed in one shot
 		//for the moment all product belong to the unique selected dataset 
