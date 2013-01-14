@@ -3,7 +3,7 @@
   */
 
 
-define( [ "map/map", "toolbar", "widget" ], function(Map, ToolBar) {
+define( [ "map/map", "widget" ], function(Map) {
 
 return function(dsa) {
 	dsa.append('<div id="layersWidget"/>');
