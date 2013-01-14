@@ -10,17 +10,13 @@ define( [ "configuration", "externs/OpenLayers.ngeo" ],
  * Constructor
  * parentElement : the parent element div for the map
  */
-OpenLayersMapEngine = function( parentElement )
+OpenLayersMapEngine = function( element )
 {
-	// Create element
-	var elt = document.createElement('div');
-	elt.id = "map";
-	parentElement.appendChild(elt);
-	this.element = elt;
-	this.parentElement = parentElement;
+	// Store element
+	this.element = element;
 	
 	// Create the map
-	this._map = new OpenLayers.Map(elt, {
+	this._map = new OpenLayers.Map(this.element, {
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
 					 new OpenLayers.Control.Attribution() ]
 		,projection: new OpenLayers.Projection(Configuration.data.map.projection)
@@ -369,7 +365,7 @@ OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 OpenLayersMapEngine.prototype.destroy = function()
 {
 	this._map.destroy();
-	this.parentElement.removeChild(this.element);
+	this.element.className = "";
 }
 
 return OpenLayersMapEngine;

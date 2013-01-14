@@ -334,9 +334,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			mapEngine = new engines['2d'](element);
 			
 			// Manage window resize
-			$(window).resize( function() {
+			// FL: Commented because it is now managed by the panel module
+			/*$(window).resize( function() {
 				self.updateViewportSize();
-			});
+			});*/
 			
 			
 			// Check layers from configuration

@@ -1,7 +1,7 @@
 
 require.config({
      paths: {
-        "jquery": "externs/jquery-1.8.2.min",
+        "jquery": "externs/jquery-1.8.3",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
@@ -60,7 +60,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile"] ,
+require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile", "panel"] ,
 		function(require, $, Configuration, MenuBar, Backbone) {
 
 /** Console fix	: create a dummy console.log when console is not present. Otherwise it is not working on some browser configuration */
@@ -82,9 +82,17 @@ $.when(doc_ready, Configuration.load())
 		// Load the map module and initialize it
 		require(["map/map"], function(Map) {
 		
+			// Initialze the panel container
+			$("#mapContainer").panelManager({
+				center: "#map",
+				update: Map.updateViewportSize
+			});
+			
 			// Initialize menu bar
 			MenuBar.initialize("header nav");
-			Map.initialize("mapContainer");
+			
+			// Initialize map
+			Map.initialize("map");
 			
 		});
 		

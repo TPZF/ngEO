@@ -90,6 +90,7 @@ var SearchResultsTableView = Backbone.View.extend({
 	fillTable: function() {
 		this.table.fnClearTable();
 		this.table.fnAddData( this.model.get('features') );
+		this.$el.panel('update');
 	},
 
 	/**
@@ -151,6 +152,7 @@ var SearchResultsTableView = Backbone.View.extend({
 						}											
 																	
 						self.$el.trigger('create');// to insure that JQM styling is still kept
+						self.$el.panel('update');
 					 },		
 					
 				});
@@ -202,7 +204,7 @@ var SearchResultsTableView = Backbone.View.extend({
 
 		//add button to the widget footer in order to download products
 		this.retrieveProduct = this.$el
-				.ngeowidget('addButton', {
+				.panel('addButton', {
 					id : 'retrieve',
 					name : 'Retrieve Product',
 					position: 'left'
@@ -223,7 +225,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		
 		//add button to the widget footer in order to download products
 		this.downloadOptionsButton = this.$el
-				.ngeowidget('addButton', {
+				.panel('addButton', {
 					id : 'downloadOptionsButton',
 					name : 'Download Options',
 					position: 'right'
@@ -242,7 +244,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		
 		//add button to the widget footer in order to download products
 		this.exportButton = this.$el
-				.ngeowidget('addButton', {
+				.panel('addButton', {
 					id : 'exportButton',
 					name : 'Export',
 					position: 'right'
@@ -257,17 +259,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			var exportWidget = new ExportWidget();
 			exportWidget.open();
 		});
-		
-		//display a popup with the search criteria already chosen for the search request
-		//for the moment there is only date and time
-		$("#searchCriteriaSummary").click(function(){
-				
-				$("#searchCriteriaPopupText").html(DatasetSearch.getSearchCriteriaSummary() );	
-				$('#searchCriteriaSummaryPopup').popup("open",  $( {} )
-						.jqmData( "position-to", "window" )
-						.jqmData( "transition", "slide" ));
-				$('#searchCriteriaSummaryPopup').trigger('create');
-		});
+
 
 		this.$el.trigger('create');
 
