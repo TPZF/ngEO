@@ -3,8 +3,8 @@ define(["jquery", "menubar", "map/map", "searchResults/model/searchResults", "se
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable",
 		"shopcart/widget/shopcart", "map/widget/toolbarMap",
 		"map/widget/mapPopup",
-		"text!../pages/data-services-area.html"], 
-	function($, MenuBar, Map, SearchResults, DatasetSearch, DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea) {
+		"text!../pages/data-services-area.html", "context-help"], 
+	function($, MenuBar, Map, SearchResults, DatasetSearch, DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 	
 return {
 
@@ -14,7 +14,17 @@ return {
 	buildElement: function() {
 	
 		var dsa = $(dataservicesarea);
-		dsa.find('#toolbar').toolbar();
+		var toolbar = dsa.find('#toolbar');
+		
+		// Wrap the image with a div to display both image and text below, and then add class for button styling
+		toolbar.find('img')
+			.wrap('<div class="tb-elt" />')
+			.addClass('tb-button');
+			
+		// Add text for each element
+		toolbar.find('img').each( function(index) {
+			$(this).after('<div class="tb-text">' + $(this).attr('name') + '</div>');
+		});
 	
 		return dsa;
 	},
@@ -26,13 +36,14 @@ return {
 	 * @param element The root element of the module
 	 */
 	initialize: function(element) {
-	
+			
 		// Create all widgets
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget(element);
 		ResultsTableWidget(element);
 		//ShopcartWidget(element);
 		ToolBarMap(element);
+		ContextHelp(element);
 		
 		// Setup the router for shared URL support
 		var router = new Backbone.Router();
@@ -63,17 +74,6 @@ return {
 		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
 		SearchResults.on('selectFeatures',Map.selectFeatures);
 		SearchResults.on('unselectFeatures',Map.unselectFeatures);		
-		
-		// TODO : experiment for context help
-		$("#help").click( function() {
-			var div = $('<div></div>').appendTo('.ui-page-active');
-			div.load('man/GettingStarted.html', function() {
-				div.popup().popup("open");
-			});
-			
-			
-			$(this).toggleClass('toggle');
-		});
 	}
 };
 

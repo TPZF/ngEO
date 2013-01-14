@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map', 'toolbar', "map/widget/layers", "map/widget/background"], function($,Map,ToolBar, LayersWidget, BackgroundWidget) {
+define(['jquery', 'map/map', "map/widget/layers", "map/widget/background"], function($, Map, LayersWidget, BackgroundWidget) {
 
 var mode2D = true;
 
