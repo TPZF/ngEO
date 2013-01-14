@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Overview</title>
+</head>
+<body>
+
+ <h1>Overview</h1>
+ <ol>
+ 	<li>
+ 		<h2 id="WhatIsNGEO">What Is ngEO?</h2>
+		<p>
+			<p> ngEO is the Next Generation Earth Observation system designed to manage end-user Earth Observation services. </p>
+			<p> It is deployable in several contexts such as: the Sentinel PDGS, the CDS, the Multi-mission infrastructure and EarthCARE.</p>
+ 		</p>
+ 	</li>	
+ 	<li>
+		 <h2 id="Purpose">Document Purpose</h2>
+		 <p>This user guide provides a description of ngEO User Client interface and how to use it.</p> 
+	</li>		  
+	<li>
+		<h2 id="MainConcepts">ngEO Main Concepts</h2>
+		<p>
+			<ol>
+				<li><h3>Dataset</h3>
+					<p> A dataset is a group of products. Various criteria are used to define a dataset such as : the use of products in a particular domain, the products meta data attributes, the user community. </p>
+					<p> There are four types of datasets: </p>
+					<ul>
+						<li>Native Dataset: products are grouped by the same mission/sensor/sensor mode/product type, it is basically an eoli like collection.</li>
+						<li>Logical Dataset: is a dataset handled by the ngeo system for which products are associated . </li>
+						<li>Remote Dataset: is a  dataset handled by external catalogues either by another ngeo instances or by HMA catalogues. Like HMA datsets and GCM.</li>
+						<li>Virtual Dataset: it is a dataset composed by one of the above three type.</li>
+					</ul>
+					
+					<p> From the user interface, the dataset types are not visible but according to its profile, the user can see the list of datasets his is authorized to access. </p>
+				</li>	
+				
+				<li><h3>Product</h3>
+					<p> There are four types of products supported by ngEO: </p>
+					<ul>
+						<li>Archived Products: 
+							<p>An archived product is a downloadable unit of Earth Observation data acquired during a given period, 
+							having a given footprint (except in the case of global products) and processed to a certain level (i.e. Level 0, 1, 2, 3 or n).
+							An archived product has always a product URI.
+							</p>
+						</li>
+						<li>Acquired Products: 
+							<p>Acquired products are similar, in ngEO, to archived products except that product URL is not provided.
+							Thus acquired products cannot be downloaded. Acquired products are only expected to be used in CDS datasets.
+							</p> 
+						</li>
+						<li>Planned Products: 
+						<p>Planned products are products that are not already acquired (i.e. their acquisition time is normally in the future) 
+						but whose acquisition that can be nonetheless predicted.
+						</p> 
+						</li>
+						<li>Cancelled  Products: 
+							<p>They are former planned products that were removed from the planning. They are handled exactly as planned products and are only expected to be used in CDS datasets.</p>
+						</li>
+					</ul>
+					<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
+				</li>
+			
+				<li><h3>Download Manager</h3>
+					<p>It is software which is retrieved and run in standalone. It is used to the download of product data.</p>
+				</li>
+				<li><h3>Simple Data Access Request</h3>
+					<p>It is a request issued from the user client in order to retrive products having a url.</p>
+				</li>
+				<li><h3>Standing Order Data Access Request</h3>
+					<p>It is a request issued from the user client in order to schedule searches either by data or by time.</p>
+				</li>
+			
+			</ol>
+		</p> 
+	</li>
+</ol>
+</body>
+</html>
