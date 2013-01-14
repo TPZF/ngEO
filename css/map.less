@@ -12,17 +12,28 @@
     margin: 0;
     padding: 0;
 	overflow: hidden;
-	min-width: 960px;	
+	min-width: 960px;
+/*	display: -moz-box;
+	-moz-box-orient: vertical;
+	display: -webkit-flex;
+	-webkit-flex-direction: column;*/
 }
 
+/**
+ * Map styling
+ * Note : Size is managed by panel module
+ */
 #map {
-	width: 100%;
-	height: 100%;
+//	width: 100%;
+//	height: 100%;
     margin: 0;
     padding: 0;
-	z-index: 0;
+	position: relative;
 }
 
+/** 
+ * Styling for loading message
+ */
 #loading {
 	position: absolute;
 	z-index: 1;
@@ -39,6 +50,9 @@
 	left: 5px;
 }
 
+/** 
+ * Styling for a message displaying the current dataset selected
+ */
 #datasetMessage {
 	position: absolute;
 	z-index: 1005;
