@@ -8,7 +8,16 @@ define( [ "jquery", "jquery.mobile" ],
 // The function to define the Widget module
 function($) {
 
+/**
+ * The array of widgets
+ */
 var _widgets = [];
+
+/**
+ * An element to block user interactions when opening a modal pop-up
+ */
+var modalScreen = $('<div class="ui-popup-screen ui-overlay-a ui-screen-hidden"></div>').appendTo('.ui-page-active');
+ 
 	
 $.widget( "ngeo.ngeowidget", {
 	// default options
@@ -71,7 +80,7 @@ $.widget( "ngeo.ngeowidget", {
 				data-role="button" data-corners="true" data-shadow="true"\
 				data-iconshadow="true" data-wrapperels="span" title="Close">')
 					.prependTo(this.parentElement)
-					.click( $.proxy(this.hide,this) ); 
+					.click( $.proxy(this.hide,this) );
 		}
 			
 		this.parentElement
@@ -150,7 +159,12 @@ $.widget( "ngeo.ngeowidget", {
 		this.parentElement.fadeIn(this.options.durationEffect); 
 		if (this.arrow) this.arrow.fadeIn(this.options.durationEffect); 
 	
-		if (this.activator) this.activator.addClass('toggle');
+		if (this.activator) {
+			this.activator.addClass('toggle');
+		} else {
+			modalScreen.removeClass('ui-screen-hidden');
+			modalScreen.addClass('in');
+		}
 		
 		if ( this.options.show ) {
 			this.options.show();
@@ -160,7 +174,12 @@ $.widget( "ngeo.ngeowidget", {
 	hide: function() {
 		this.parentElement.fadeOut(this.options.durationEffect,this.options.hide ); 
 		if (this.arrow) this.arrow.fadeOut(this.options.durationEffect); 
-		if (this.activator) this.activator.removeClass('toggle');
+		if (this.activator) {
+			this.activator.removeClass('toggle');
+		} else {
+			modalScreen.addClass('ui-screen-hidden');
+			modalScreen.removeClass('in');
+		}
 	},
 		
 	// events bound via _bind are removed automatically
