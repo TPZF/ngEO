@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Data Access Services</title>
+	<meta charset="utf-8" />
+	<style>
+		.center-img {
+			display: block;
+			margin: auto;
+		}
+	</style>
+</head>
+
+<body>
+
+<div data-role="page" data-theme="a">
+
+	<!-- Content -->
+	<div data-role="content">
+
+		<h2>My Account Services</h2>		
+		<ol>
+			<li><h3>Download Managers Monitoring</h3>	
+					<ul>
+						<li><p>Click on My account on the menu bar <img src="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>.</p>
+							<p>The download managers already registered are displayed with the information details on each one of them.
+							<img class="center-img" src="screenshots/downloadManagersView.png" alt='DOWNLOAD MANAGERS'/>.
+							</p>
+						</li>
+						<li><p>If there is no download manager, click on Install Download Manager to install a new one.</p>
+						</li>
+						<li><p>Select the row of the download manager to monitor, then, the command buttons statuses are updated 
+							according to the download manager status.
+							<img class="center-img" src="screenshots/downloadManagerCommands.png" alt='DOWNLOAD MANAGERS COMMANDS'/>.
+							<p><b>A STOPPED download manager cannot no more be monitored, so the command buttons are disabled.</b>
+							<img src="screenshots/stoppedDM.png" alt='STOPPED DOWNLOAD MANAGER'/></p>
+							</p>
+						</li>
+						<li><p>Click on the Stop button <img src="screenshots/dmStopButton.png" alt='DOWNLOAD MANAGER STOP BUTTON'/>
+							The Stop an ACTIVE or an INACTIVE download manager. 
+							</p>
+							<li><p>Click on the Stop Immediately button <img src="screenshots/dmStopImmediatelyButton.png" alt='DOWNLOAD MANAGER STOP IMMEDIATELY BUTTON'/>
+							The Stop definitively an ACTIVE or an INACTIVE download manager. 
+							</p>
+							<p><b>Please note that once the Stop or the Stop Immediately buttons are clicked, a new command cannot be issued from the user interface.
+							A notification message is displayed to notify the user.</b>
+							<img class="center-img" src="screenshots/dmMonitoringMessage.png" alt='DOWNLOAD MANAGER MONITORING MESSAGE'/>
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li id="darsHowTo"><h3>Data Access Requests Monitoring</h3>
+					<ul>
+						<li><p>Click on My account on the menu bar <img src="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>.</p></li>
+						<li><p>Click Data Access Requests tab. On the left side, the download managers already assigned to data access requests
+							are displayed. On the right side is displayed the list of the users' data access requests.
+							<img class="center-img" src="screenshots/darsView.png" alt='DARS VIEW'/>.
+							</p>
+						</li>
+						<li><p>Click on the first download manager name: only the data access requests assigned to the clicked download manager are displayed .
+							<img class="center-img" src="screenshots/darsFiltering.png" alt='DARS FILTERING'/>.
+							</p>
+						</li>
+						<li><p>Click on the second download manager name: only the data access requests assigned to the clicked download manager are displayed .
+							<img class="center-img" src="screenshots/darsFiltering2.png" alt='DARS FILTERING 2'/>.
+							</p>
+						</li>
+						<li><p>Click on the highlighted download manager name to disable the filtering.</p>
+						</li>
+						<li><p>Click on the a data access request to expand it.</p>
+							<img src="screenshots/expandedDAR.png" alt='EXPANDED DAR'/>.
+							<p>The data access request id, status, completion percentage and the number of products are displayed.</p>
+							<p>Buttons Pause, Resume and Stop Immediately buttons are displayed according to the request status.<p>
+						</li>
+						<li><p>Click on the Products button to visualize the products details.
+							<img src="screenshots/expandedDARProducts.png" alt='EXPANDED DAR PRODUCTS'/>
+							</p>
+						</li>	
+						<li><p>Click on the Stop definitively button <img src="screenshots/stopDefinitivelyButton.png" alt='DOWNLOAD MANAGER STOP DEFINITIVELY BUTTON'/>
+							to cancel a processing or a paused data access request. 
+							</p>
+						</li>
+						<li><p>Click on the Pause button <img src="screenshots/pauseButton.png" alt='PAUSE BUTTON'/>
+							to pause a processing data access request. 
+							</p>
+						</li>
+						<li><p>Click on the Resume button <img src="screenshots/resumeButton.png" alt='RESUME BUTTON'/>
+							to change the status of a paused data access request to processing. 
+							</p>
+						</li>
+				</li>
+			
+			</ol>
+		</p>  
+	</div>
+</div>
+
+</body>
+
+</html>
