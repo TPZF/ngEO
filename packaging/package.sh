@@ -24,3 +24,4 @@ mv esa-webclient-testserver-ngeo.tar.gz ~/rpmbuild/SOURCES
 # Build the rpm
 rpmbuild -ba esa-webclient-testserver-ngeo.spec
 
+
