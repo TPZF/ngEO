@@ -67,7 +67,8 @@ var DatasetSelectionView = Backbone.View.extend({
 		_.each(self.model.attributes.criteria, function(criterion, index){
 			
 			//bind a change event handler to the select id
-			$("#"+ criterion.criterionName).change(function(event){
+			//Fixes the binding after the display of the widget in case of success
+			self.$el.find("#"+ criterion.criterionName).change(function(event){
 
 				var string = '';
 				
@@ -113,7 +114,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		var listContent = _.template(datasetsList_template, this.model);
 		$dslListContainer.append(listContent);
 		$dslListContainer.trigger('create');
-	},
+	}
 		
 });
 
