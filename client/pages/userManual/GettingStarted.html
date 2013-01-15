@@ -4,7 +4,6 @@
 <head>
 	<title>Getting Started</title>
 	<meta charset="utf-8" />
-	
 	<style>
 		.center-img {
 			display: block;
@@ -20,6 +19,19 @@
 	<!-- Content -->
 	<div data-role="content">
 		<h2>Getting Started</h2>		
+		<ol>
+			<li><a href="#catalogSearchHowTo">How to make a Catalog Search?</a></li>
+			<li><a href="#downloadProductsHowTo">How to Download Products?</a></li>
+			<li><a href="#STOHowTo">How to submit a Standing Order?</a></li>
+			<li><a href="#simpleDARHowTo">How to submit a Simple Data Access request?</a></li>
+			<li><a href="#mapModeHowTo">How to change Map Mode?</a></li>
+			<li><a href="#mapNavigationHowTo">How to navigate on the Map?</a></li>
+			<li><a href="#productsOnMapHowTo">How to use products on the Map?</a></li>
+			<li><a href="#layersHowTo">How to select Layers?</a></li>
+			<li><a href="#backgroundsHowTo">How to change Map Background?</a></li>
+			<li><a href="#downloadManagersHowTo">How to manage Download Managers?</a></li>
+			<li><a href="#darsHowTo">How to manage Data Access Requests?</a></li>
+		</ol>
 		<p>
 			<ol>
 				<li id="catalogSearchHowTo"><h3>How to make a Catalog Search?</h3>
@@ -28,7 +40,8 @@
 							<img class="center-img" src="screenshots/homePage.png" height="700px" width="1000px"/>
 							</p>
 						</li>
-						<li><p>Click on the Datasets icon on the tool bar.<img src="screenshots/toolBarIcons/datasetsIcon.png"/>
+						<li><p>Click on the Datasets icon on the tool bar.
+							<img src="screenshots/toolBarIcons/datasetsIcon.png"/>
 							The Dataset Selection widget is opened.
 							<img class="center-img" src="screenshots/datasetSelectionWidget.png"/>
 							</p>
@@ -43,13 +56,14 @@
 							</p>
 						</li>
 						<li><p>Fill in the search criteria and then click on the Submit Search button.
+							<img src="screenshots/toolBarIcons/searchButton.png"/>
 							The seach results table is displayed with the results.
 							<img class="center-img" src="screenshots/resultsTable.png"/>
 							</p>
 						</li>
 					</ul>
 				</li>	
-				<li><h3>How to Download Products</h3>
+				<li id="downloadProductsHowTo"><h3>How to Download Products</h3>
 					<ul>
 						<li><p>Make a catalogue search See <a href="#catalogSearchHowTo">How to make a catalogue search</a>.</p>
 						</li>
@@ -69,14 +83,16 @@
 						</li>
 						<li><p>If the Browser Download menu is selected, the browser starts the product download.</p>
 						</li>
-						<li><p>If the Download manager Download menu is selected, if the url is validated a button Download appears.
+						<li><p>If the Download manager Download menu is selected and the download url is validated, a button Download appears.
 							<img src="screenshots/directDownloadByDM.png" alt='DIRECT DOWNLOAD WIDGET BY dm'/>;
 							
+						</li>
+						<li><p>Click on the Download button to start the download.</p>
 						</li>
 					</ul>
 				</li>
 				
-				<li><h3>How to submit a Standing Order?</h3>
+				<li id="STOHowTo"><h3>How to submit a Standing Order?</h3>
 					<ul>
 						<li><p>Launch the application: the main home page is displayed.</p>
 						</li>
@@ -85,7 +101,7 @@
 							The Dataset Selection widget is opened.
 							</p>
 						</li>
-						<li><p>Click on one of the datasets
+						<li><p>Click on one of the datasets.
 							<img class="center-img" src="screenshots/datasetSelectionWidget.png"/>
 							The Dataset is selected.
 							</p></li>
@@ -112,15 +128,15 @@
 						If the Retrieve Product button <img src="screenshots/retrieveProductButton.png" alt='RETRIEVE PRODUCT BUTTON'/>;is still disabled this means that the products selected does not have a url.
 						</p>
 						</li>
-						<li><p>Click on Retrieve Product button, the data access widget is opened displaying the list of available download managers.
-							<img class="center-img" src="screenshots/simpleDARWidget.png" alt='SIMPLE DAR WIDGET'/> 
+						<li><p>Click on Retrieve Product button, the data access widget is opened
+							<img class="center-img" src="screenshots/simpleDARWidget.png" alt='SIMPLE DAR WIDGET'/> displaying the list of available download managers.
 							</p>
 						</li>
 						<li><p>Click on Validate Your Request button. The request is validated and the server response is displayed underneath the button.
 						If the request is successfully validated, the estimated size of the products are displayed and a notifiction message confirms that the
 						request has been acknoleged. The Validation button is renaled into 'Confirm Your Request'
 						If the validation has failed an error message is dispalyed.
-							<img class="center-img" src="screenshots/simpleDARValidatedWidget.png" alt='SIMPLE DAR Validated WIDGET'/> 
+							<img class="center-img" src="screenshots/simpleDARValidatedWidget.png" alt='SIMPLE DAR Validated WIDGET'/> displaying the list of available download managers.
 							</p>
 						</li>
 						<li><p>Click on Confirm Your Request button. The request is confirmed and the server response is displayed underneath the button.
@@ -133,11 +149,11 @@
 					</ul>
 					<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
 				</li>
-				<li><h3>How to change Map Mode?</h3>
+				<li id="mapModeHowTo"><h3>How to change Map Mode?</h3>
 					<p>Click on the 2D/3D <img src="screenshots/toolBarIcons/mapMode.png"/> button on the toolbar to change the map mode
 						from 2D to 3D and inversely.<p>
 				</li>
-				<li><h3>How to navigate on the Map?</h3>
+				<li id="mapNavigationHowTo"><h3>How to navigate on the Map?</h3>
 					<ul>
 						<li><p> In order to zoom in either:
 							<ul>
@@ -158,7 +174,7 @@
 					</ul>
 				</li>
 
-				<li><h3>How to use products on the Map?</h3>
+				<li id="productsOnMapHowTo"><h3>How to use products on the Map?</h3>
 					<ul>
 						<li><p>Make a catalogue search See <a href="#catalogSearchHowTo">How to make a catalogue search</a>.</p>
 						</li>
@@ -178,7 +194,7 @@
 						</li>
 					</ul>
 				</li>
-				<li><h3>How to select Layers?</h3>
+				<li id="layersHowTo"><h3>How to select Layers?</h3>
 					<ul>
 						<li><p>Click on the layers icon on the toolbar <img src="screenshots/toolBarIcons/layersIcon.png" alt='LAYERS ICON'/>.</p>
 						</li>
@@ -193,7 +209,7 @@
 						</li>
 					</ul>
 				</li>
-				<li><h3>How to change Map Background?</h3>
+				<li id="backgroundsHowTo"><h3>How to change Map Background?</h3>
 					<ul>
 						<li><p>Click on the background icon on the toolbar <img src="screenshots/toolBarIcons/backgroundIcon.png" alt='BACKGROUND ICON'/>.</p>
 						</li>
@@ -204,20 +220,74 @@
 						</li>
 					</ul>
 				</li>
-				<li><h3>How to manage Download Managers?</h3>
+				<li id="downloadManagersHowTo"><h3>How to manage Download Managers?</h3>
 					<ul>
-						<li><p>Click on account on the menu bar.</p> <img class="center-img" src="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>
-						<p>The download managers already registered are displayed with the information details on each one of them.
-						</p>
-						<img class="center-img" src="screenshots/downloadManagersView.png" alt='DOWNLOAD MANAGERS'/>.
+						<li><p>Click on My account on the menu bar <img src="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>.</p>
+							<p>The download managers already registered are displayed with the information details on each one of them.
+							<img class="center-img" src="screenshots/downloadManagersView.png" alt='DOWNLOAD MANAGERS'/>.
+							</p>
 						</li>
-						<li><p>Click on Install Download Manager to install a local download manager.
-						</p>
+						<li><p>If there is no download manager, click on Install Download Manager to install a new one.</p>
+						</li>
+						<li><p>Select the row of the download manager to monitor, then, the command buttons statuses are updated 
+							according to the download manager status.
+							<img class="center-img" src="screenshots/downloadManagerCommands.png" alt='DOWNLOAD MANAGERS COMMANDS'/>.
+							<p><b>A STOPPED download manager cannot no more be monitored, so the command buttons are disabled.</b>
+							<img src="screenshots/stoppedDM.png" alt='STOPPED DOWNLOAD MANAGER'/></p>
+							</p>
+						</li>
+						<li><p>Click on the Stop button <img src="screenshots/dmStopButton.png" alt='DOWNLOAD MANAGER STOP BUTTON'/>
+							The Stop an ACTIVE or an INACTIVE download manager. 
+							</p>
+							<li><p>Click on the Stop Immediately button <img src="screenshots/dmStopImmediatelyButton.png" alt='DOWNLOAD MANAGER STOP IMMEDIATELY BUTTON'/>
+							The Stop definitively an ACTIVE or an INACTIVE download manager. 
+							</p>
+							<p><b>Please note that once the Stop or the Stop Immediately buttons are clicked, a new command cannot be issued from the user interface.
+							A notification message is displayed to notify the user.</b>
+							<img class="center-img" src="screenshots/dmMonitoringMessage.png" alt='DOWNLOAD MANAGER MONITORING MESSAGE'/>
+							</p>
 						</li>
 					</ul>
 				</li>
-				<li><h3>How to manage Data Access Requests?</h3>
-					
+				<li id="darsHowTo"><h3>How to manage Data Access Requests?</h3>
+					<ul>
+						<li><p>Click on My account on the menu bar <img src="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>.</p></li>
+						<li><p>Click Data Access Requests tab. On the left side, the download managers already assigned to data access requests
+							are displayed. On the right side is displayed the list of the users' data access requests.
+							<img class="center-img" src="screenshots/darsView.png" alt='DARS VIEW'/>.
+							</p>
+						</li>
+						<li><p>Click on the first download manager name: only the data access requests assigned to the clicked download manager are displayed .
+							<img class="center-img" src="screenshots/darsFiltering.png" alt='DARS FILTERING'/>.
+							</p>
+						</li>
+						<li><p>Click on the second download manager name: only the data access requests assigned to the clicked download manager are displayed .
+							<img class="center-img" src="screenshots/darsFiltering2.png" alt='DARS FILTERING 2'/>.
+							</p>
+						</li>
+						<li><p>Click on the highlighted download manager name to disable the filtering.</p>
+						</li>
+						<li><p>Click on the a data access request to expand it.</p>
+							<img src="screenshots/expandedDAR.png" alt='EXPANDED DAR'/>.
+							<p>The data access request id, status, completion percentage and the number of products are displayed.</p>
+							<p>Buttons Pause, Resume and Stop Immediately buttons are displayed according to the request status.<p>
+						</li>
+						<li><p>Click on the Products button to visualize the products details.
+							<img src="screenshots/expandedDARProducts.png" alt='EXPANDED DAR PRODUCTS'/>
+							</p>
+						</li>	
+						<li><p>Click on the Stop definitively button <img src="screenshots/stopDefinitivelyButton.png" alt='DOWNLOAD MANAGER STOP DEFINITIVELY BUTTON'/>
+							to cancel a processing or a paused data access request. 
+							</p>
+						</li>
+						<li><p>Click on the Pause button <img src="screenshots/pauseButton.png" alt='PAUSE BUTTON'/>
+							to pause a processing data access request. 
+							</p>
+						</li>
+						<li><p>Click on the Resume button <img src="screenshots/resumeButton.png" alt='RESUME BUTTON'/>
+							to change the status of a paused data access request to processing. 
+							</p>
+						</li>
 				</li>
 			
 			</ol>
