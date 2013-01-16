@@ -2,14 +2,14 @@
 	appDir: "../client",
     baseUrl: "js",
 	paths: {
-        "jquery": "externs/jquery-1.8.2.min",
+        "jquery": "externs/jquery-1.8.3.min",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0.min",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
 		"jquery.dataTables" : "externs/jquery.dataTables",
-        "underscore": "externs/underscore",
-		"backbone": "externs/backbone",
+        "underscore": "externs/underscore-min",
+		"backbone": "externs/backbone-min",
 		"text": "externs/text"
 	},
 	removeCombined: true,
@@ -58,8 +58,8 @@
 	modules: [
 		{ name: "main" },
 		{ name: "map/map", exclude: ["configuration","backbone","underscore"]},
-		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables"]},
-		{ name: "account", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables"]},
+		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables","panel","menubar"]},
+		{ name: "account", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables","panel","menubar"]},
 	],
 	dir: "output"
 })
