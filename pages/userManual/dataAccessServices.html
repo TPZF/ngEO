@@ -14,330 +14,327 @@
 
 <body>
 
-	<div data-role="page" data-theme="a">
+<!-- Content -->
+<h2>Data Access Services</h2>
 
-		<!-- Content -->
-		<div data-role="content">
-			<h2>Data Access Services</h2>
+<p>The data access services are the main functionalities of ngeo.
+	They consist in :
+<ul>
+	<li>catalogue searching using dataset geo-temporal criteria
+		and/or dataset inhert criteria</li>
+	<li>retrieving products metadata and data</li>
+	<li>submitting data access requests</li>
+	<li>Visualizing and manipulating data on the map.</li>
+</ul>
+</p>
 
-			<p>The data access services are the main functionalities of ngeo.
-				They consist in :
-			<ul>
-				<li>catalogue searching using dataset geo-temporal criteria
-					and/or dataset inhert criteria</li>
-				<li>retrieving products metadata and data</li>
-				<li>submitting data access requests</li>
-				<li>Visualizing and manipulating data on the map.</li>
-			</ul>
-			</p>
+<ol>
+	<li><h3 id="catalogSearch">Catalog Search</h3>
+		<ol>
+			<li><h4 id="datasetSelection">Datasets Selection</h4>
+				<p>
+					The first and necessary step to make a catalogue search is to
+					choose a dataset. The dataset selection widget is accessible via
+					the <img src="screenshots/toolBarIcons/datasetsIcon.png" />.
+					When the button is clicked, the widget is opened and it displays
+					the list of available datasets. Each dataset is represented by
+					its name and the number of items it contains. <img
+						class="center-img" src="screenshots/datasetSelectionWidget.png" />
+				</p>
+				<p>
+					<img src="screenshots/warning.png" /> If there where a
+					connection problem with the server an error message is spawned
+					and the user is notified. The datasets button is then disabled.
+					If the server sends no datsets, a notification message is
+					displayed inside the dataset selection widget.
+				</p>
+				<p>
+					To select a dataset, the user has to scroll out the list and
+					choose the dataset by clicking on the list entry. It is also
+					possible to filter the available list of datasets by the means
+					of the filter comboBoxes. The filtering criteria are received
+					from the server, but they should mainly contain : mission,
+					sensor and keywords. <img class="center-img"
+						src="screenshots/datasetFilters.png" /> By defaults all the
+					criteria are set to "None". As soon as a criteria is choosen in
+					one of the combo boxes, the datsets are filtred and the list is
+					updated, taken into account the other combo boxes selected
+					criteria. <img class="center-img"
+						src="screenshots/datasetFiltering1.png" /> <img
+						class="center-img" src="screenshots/datasetFiltering2.png" />
+					In order to disable the filtering for a criterion, set back the
+					selected option to "None".
+				</p>
+			</li>
+			<li><h4 id="searchCriteria">Search Criteria</h4>
+				<p>
+					Once a dataset has been selected, to set the search criteria,
+					the user has to click on the <img
+						src="screenshots/toolBarIcons/searchIcon.png" /> on the
+					toolbar. The search criteria widget is then displayed. <img
+						class="center-img" src="screenshots/dateCriteria.png" /> It is
+					composed of several tabs, each tab displays one search criteria
+					type. Each button on the footer has his own role.
+				<p>
+					The Search URL button <img src="screenshots/searchURLButton.png" />,
+					when clicked, displays the openSearch Url wich will be
+					submitted.<img class="center-img"
+						src="screenshots/openSearchUrlPopup.png" />. The Standing
+					Order button <img src="screenshots/STOButton.png" />, when
+					clicked, displays the Standing Order Widget. See <a
+						href="#STODar">Standing Order Data Access Request</a>. The
+					Submit Search button submits the search request to the server to
+					retrive the results. See <a href="#resultsTable">Search
+						Results</a>.
+				</p>
+				<p>
+					<img src="screenshots/tip.png" /> <b>The openSearch url to
+						submit is created according to all the criteria selected inside
+						the search criteria widget.</b>
+				</p> There search criteria types are :
+				<ul>
+					<li>
+						<h5 id="dateCriteria">Date Criteria</h5>
+						<p>
+							They consist in the start and stop dates of the selected
+							dataset. In order to change the selected date, click on the
+							icon <img src="screenshots/calendarTriggererButton.png" /> to
+							display the calendar widget. <img class="center-img"
+								src="screenshots/calandarWidget.png" /> Choose the month and
+							year using the combo boxes, then click on the day date. The
+							calendar widget is closed and the chosen date does appear in
+							the text field.
+						</p>
+						<p>It is also possible to modify the date using the text
+							field widget, by entering manually the date to select.</p>
+						<p>
+							<img src="screenshots/tip.png" /> <b>The same methods are
+								used to modify both the start and stop dates.</b>
+						</p>
 
-			<ol>
-				<li><h3 id="catalogSearch">Catalog Search</h3>
-					<ol>
-						<li><h4 id="datasetSelection">Datasets Selection</h4>
-							<p>
-								The first and necessary step to make a catalogue search is to
-								choose a dataset. The dataset selection widget is accessible via
-								the <img src="screenshots/toolBarIcons/datasetsIcon.png" />.
-								When the button is clicked, the widget is opened and it displays
-								the list of available datasets. Each dataset is represented by
-								its name and the number of items it contains. <img
-									class="center-img" src="screenshots/datasetSelectionWidget.png" />
-							</p>
-							<p>
-								<img src="screenshots/warning.png" /> If there where a
-								connection problem with the server an error message is spawned
-								and the user is notified. The datasets button is then disabled.
-								If the server sends no datsets, a notification message is
-								displayed inside the dataset selection widget.
-							</p>
-							<p>
-								To select a dataset, the user has to scroll out the list and
-								choose the dataset by clicking on the list entry. It is also
-								possible to filter the available list of datasets by the means
-								of the filter comboBoxes. The filtering criteria are received
-								from the server, but they should mainly contain : mission,
-								sensor and keywords. <img class="center-img"
-									src="screenshots/datasetFilters.png" /> By defaults all the
-								criteria are set to "None". As soon as a criteria is choosen in
-								one of the combo boxes, the datsets are filtred and the list is
-								updated, taken into account the other combo boxes selected
-								criteria. <img class="center-img"
-									src="screenshots/datasetFiltering1.png" /> <img
-									class="center-img" src="screenshots/datasetFiltering2.png" />
-								In order to disable the filtering for a criterion, set back the
-								selected option to "None".
-							</p></li>
-						<li><h4 id="searchCriteria">Search Criteria</h4>
-							<p>
-								Once a dataset has been selected, to set the search criteria,
-								the user has to click on the <img
-									src="screenshots/toolBarIcons/searchIcon.png" /> on the
-								toolbar. The search criteria widget is then displayed. <img
-									class="center-img" src="screenshots/dateCriteria.png" /> It is
-								composed of several tabs, each tab displays one search criteria
-								type. Each button on the footer has his own role.
-							<p>
-								The Search URL button <img src="screenshots/searchURLButton.png" />,
-								when clicked, displays the openSearch Url wich will be
-								submitted.<img class="center-img"
-									src="screenshots/openSearchUrlPopup.png" />. The Standing
-								Order button <img src="screenshots/STOButton.png" />, when
-								clicked, displays the Standing Order Widget. See <a
-									href="#STODar">Standing Order Data Access Request</a>. The
-								Submit Search button submits the search request to the server to
-								retrive the results. See <a href="#resultsTable">Search
-									Results</a>.
-							</p>
-							<p>
-								<img src="screenshots/tip.png" /> <b>The openSearch url to
-									submit is created according to all the criteria selected inside
-									the search criteria widget.</b>
-							</p> There search criteria types are :
-							<ul>
-								<li>
-									<h5 id="dateCriteria">Date Criteria</h5>
-									<p>
-										They consist in the start and stop dates of the selected
-										dataset. In order to change the selected date, click on the
-										icon <img src="screenshots/calendarTriggererButton.png" /> to
-										display the calendar widget. <img class="center-img"
-											src="screenshots/calandarWidget.png" /> Choose the month and
-										year using the combo boxes, then click on the day date. The
-										calendar widget is closed and the chosen date does appear in
-										the text field.
-									</p>
-									<p>It is also possible to modify the date using the text
-										field widget, by entering manually the date to select.</p>
-									<p>
-										<img src="screenshots/tip.png" /> <b>The same methods are
-											used to modify both the start and stop dates.</b>
-									</p>
+					</li>
+					<li><h5 id="areaCriteria">Area Criteria</h5>
+						<p>
+							They consist in geographical criteria to be used in the
+							search. To visualize the area widget, click on Area tab inside
+							the search criteria widget. <img class="center-img"
+								src="screenshots/areaWidget.png" />
+						</p> <b>For the moment,</b> the area is created only using a
+						rectangular zone defined by :
+						<ul>
+							<li>West: the maximum longitude</li>
+							<li>East: the minimum longitude</li>
+							<li>North: the maximum latitude</li>
+							<li>South: the minimum latitude</li>
+						</ul> By default, the coordinates are synchronized with the map
+						extent. To disable this behaviour uncheck the <img
+						src="screenshots/useExtentCheckBox.png" /> check box. Thus the
+						coordinates can be entered manually is each text field.</li>
 
-								</li>
-								<li><h5 id="areaCriteria">Area Criteria</h5>
-									<p>
-										They consist in geographical criteria to be used in the
-										search. To visualize the area widget, click on Area tab inside
-										the search criteria widget. <img class="center-img"
-											src="screenshots/areaWidget.png" />
-									</p> <b>For the moment,</b> the area is created only using a
-									rectangular zone defined by :
-									<ul>
-										<li>West: the maximum longitude</li>
-										<li>East: the minimum longitude</li>
-										<li>North: the maximum latitude</li>
-										<li>South: the minimum latitude</li>
-									</ul> By default, the coordinates are synchronized with the map
-									extent. To disable this behaviour uncheck the <img
-									src="screenshots/useExtentCheckBox.png" /> check box. Thus the
-									coordinates can be entered manually is each text field.</li>
+					<li><h5 id="advancedCriteria">Advanced Criteria</h5>
+						<p>They are criteria relative to the selected dataset, so
+							they change depending on the dataset chosen.
+						<p>
+							<img src="screenshots/tip.png" /> <b>Different datasets
+								can have the same criteria. It is a configurtion matter on
+								the server side.</b>
+						</p> To visualize the advanced criteria, click on Advanced Criteria
+						tab inside the search criteria widget. <img class="center-img"
+						src="screenshots/advancedCriteria.png" /> Each criterion is
+						displayed by its name and a selection widget. Criteria having a
+						range are displayed with sliders. Move the slider or set the
+						value inside the text field to change the selected value.
+						Criteria having a multiple selection possibilities are
+						displayed with a list of checkboxes. Check or uncheck the check
+						boxes to change the criterion selected value. In order to make
+						the selected advanced criteria taken into account in the
+						search, check the <img
+						src="screenshots/advancedCriteriaCheckBox.png" />check box.
+						</p>
+						<p>
+							<img src="screenshots/warning.png" /> <b>If no dataset
+								has been selected and the Advnaced Criteria tab is selected a
+								notification message is displayed to the user and no criteria
+								is displayed.</b>
+						</p></li>
 
-								<li><h5 id="advancedCriteria">Advanced Criteria</h5>
-									<p>They are criteria relative to the selected dataset, so
-										they change depending on the dataset chosen.
-									<p>
-										<img src="screenshots/tip.png" /> <b>Different datasets
-											can have the same criteria. It is a configurtion matter on
-											the server side.</b>
-									</p> To visualize the advanced criteria, click on Advanced Criteria
-									tab inside the search criteria widget. <img class="center-img"
-									src="screenshots/advancedCriteria.png" /> Each criterion is
-									displayed by its name and a selection widget. Criteria having a
-									range are displayed with sliders. Move the slider or set the
-									value inside the text field to change the selected value.
-									Criteria having a multiple selection possibilities are
-									displayed with a list of checkboxes. Check or uncheck the check
-									boxes to change the criterion selected value. In order to make
-									the selected advanced criteria taken into account in the
-									search, check the <img
-									src="screenshots/advancedCriteriaCheckBox.png" />check box.
-									</p>
-									<p>
-										<img src="screenshots/warning.png" /> <b>If no dataset
-											has been selected and the Advnaced Criteria tab is selected a
-											notification message is displayed to the user and no criteria
-											is displayed.</b>
-									</p></li>
+					<li><h5 id="downloadOptions">Download Options</h5>
+						<p>They are options relative to the selected dataset, so
+							they change depending on the dataset chosen.
+						<p>
+							<img src="screenshots/tip.png" /> <b>Different datasets
+								can have the same download options. It is a configuration
+								matter on the server side.</b>
+						</p> To visualize the download options, click on the Download
+						Options tab inside the search criteria widget. <img
+						class="center-img" src="screenshots/downloadOptions.png" />
 
-								<li><h5 id="downloadOptions">Download Options</h5>
-									<p>They are options relative to the selected dataset, so
-										they change depending on the dataset chosen.
-									<p>
-										<img src="screenshots/tip.png" /> <b>Different datasets
-											can have the same download options. It is a configuration
-											matter on the server side.</b>
-									</p> To visualize the download options, click on the Download
-									Options tab inside the search criteria widget. <img
-									class="center-img" src="screenshots/downloadOptions.png" />
+						Each option is displayed by its name and a combobox containing
+						the possible values. In order to make the selected download
+						options taken into account in the search, check the <img
+						src="screenshots/downloadOptionsCheckBox.png" />check box.
+						</p>
+						<p>
+							<img src="screenshots/warning.png" /> <b>If no dataset
+								has been selected and the Download Options tab is selected a
+								notification message is displayed to the user and no download
+								option is displayed.</b>
+						</p></li>
+				</ul></li>
+		</ol></li>
 
-									Each option is displayed by its name and a combobox containing
-									the possible values. In order to make the selected download
-									options taken into account in the search, check the <img
-									src="screenshots/downloadOptionsCheckBox.png" />check box.
-									</p>
-									<p>
-										<img src="screenshots/warning.png" /> <b>If no dataset
-											has been selected and the Download Options tab is selected a
-											notification message is displayed to the user and no download
-											option is displayed.</b>
-									</p></li>
-							</ul></li>
-					</ol></li>
+	<li><h3 id="retrieveProducts">Retrieve Products</h3>
+		<ol>
+			<li><h4 id="resultsTable">Search Results</h4>
+				<p>
+					Once the search criteria have been filled in and the Submit
+					Search button <img
+						src="screenshots/toolBarIcons/searchButton.png" /> clicked,
+					the search results table is displayed with the products metadata
+					in the bottom of the home page. <img class="center-img"
+						src="screenshots/resultsTable.png" />
+				<p>
+					<img src="screenshots/warning.png" /> <b>If no dataset has
+						been selected and the <img
+						src="screenshots/toolBarIcons/searchButton.png" /> is clicked,
+						the results table is empty.
+					</b>
+				</p>
+				<p>
+					<img src="screenshots/tip.png" /> <b>The results table can
+						be hidden by clicking on the <img
+						src="screenshots/toolBarIcons/tableViewIcon.png" /> button on
+						the toolbar.
+					</b>
+				</p>
 
-				<li><h3 id="retrieveProducts">Retrieve Products</h3>
-					<ol>
-						<li><h4 id="resultsTable">Search Results</h4>
-							<p>
-								Once the search criteria have been filled in and the Submit
-								Search button <img
-									src="screenshots/toolBarIcons/searchButton.png" /> clicked,
-								the search results table is displayed with the products metadata
-								in the bottom of the home page. <img class="center-img"
-									src="screenshots/resultsTable.png" />
-							<p>
-								<img src="screenshots/warning.png" /> <b>If no dataset has
-									been selected and the <img
-									src="screenshots/toolBarIcons/searchButton.png" /> is clicked,
-									the results table is empty.
-								</b>
-							</p>
-							<p>
-								<img src="screenshots/tip.png" /> <b>The results table can
-									be hidden by clicking on the <img
-									src="screenshots/toolBarIcons/tableViewIcon.png" /> button on
-									the toolbar.
-								</b>
-							</p>
+				<p>
+					The combobox <img src="screenshots/resultsShowCombo.png" />
+					changes to number of result entries to display.
+				</p>
+				<p>
+					The button <img src="screenshots/resultsNextButton.png" /> when
+					clicked, goes to the next results page.
+				</p>
+				<p>
+					The button <img src="screenshots/resultsPreviousButton.png" />
+					when clicked, goes to the previous results page.
+				</p>
+				<p>
+					The field <img src="screenshots/resultsSearchFilter.png" />
+					allows to filter the results according to the text entred.
+				</p>
+				</p></li>
+			<li><h4 id="directDownload">Direct Download</h4>
+				<p>
+					The Direct Download is a functionnality of the user client which
+					makes the user download the retrieved products if they have a
+					url starting with <b>http or https.</b>. In the results table,
+					downloadable products are highlighted by an underlined product
+					identifier. <img src="screenshots/downloadableProduct.png"
+						alt='DOWNLOADABLE PRODUCT IMAGE' />
+				</p>
 
-							<p>
-								The combobox <img src="screenshots/resultsShowCombo.png" />
-								changes to number of result entries to display.
-							</p>
-							<p>
-								The button <img src="screenshots/resultsNextButton.png" /> when
-								clicked, goes to the next results page.
-							</p>
-							<p>
-								The button <img src="screenshots/resultsPreviousButton.png" />
-								when clicked, goes to the previous results page.
-							</p>
-							<p>
-								The field <img src="screenshots/resultsSearchFilter.png" />
-								allows to filter the results according to the text entred.
-							</p>
-							</p></li>
-						<li><h4 id="directDownload">Direct Download</h4>
-							<p>
-								The Direct Download is a functionnality of the user client which
-								makes the user download the retrieved products if they have a
-								url starting with <b>http or https.</b>. In the results table,
-								downloadable products are highlighted by an underlined product
-								identifier. <img src="screenshots/downloadableProduct.png"
-									alt='DOWNLOADABLE PRODUCT IMAGE' />
-							</p>
+				<p>
+					For a downloadable product, click on the product id. The direct
+					download widget is opened. <img
+						src="screenshots/directDownloadWidget.png"
+						alt='DIRECT DOWNLOAD WIDGET IMAGE' />.
+				</p>
+				<p>According to the product url and to the download managers
+					registered, the user can have the choice to either choose a
+					download via:
+				<ul>
+					<li>the browser</li>
+					<li>or the local download manager.</li>
+				</ul>
+				<p>If the Browser Download menu is selected, the browser
+					starts the product download.</p>
+				<p>
+					If the "Download manager Download" entry is selected and the
+					download url is validated, a button Download is displayed. <img
+						src="screenshots/directDownloadByDM.png"
+						alt='DIRECT DOWNLOAD WIDGET BY dm' />. When the button is
+					clicked, the download starts.
+				</p>
+				</p>
+			<li><h4 id="simpleDar">Simple Data Access Request</h4>
 
-							<p>
-								For a downloadable product, click on the product id. The direct
-								download widget is opened. <img
-									src="screenshots/directDownloadWidget.png"
-									alt='DIRECT DOWNLOAD WIDGET IMAGE' />.
-							</p>
-							<p>According to the product url and to the download managers
-								registered, the user can have the choice to either choose a
-								download via:
-							<ul>
-								<li>the browser</li>
-								<li>or the local download manager.</li>
-							</ul>
-							<p>If the Browser Download menu is selected, the browser
-								starts the product download.</p>
-							<p>
-								If the "Download manager Download" entry is selected and the
-								download url is validated, a button Download is displayed. <img
-									src="screenshots/directDownloadByDM.png"
-									alt='DIRECT DOWNLOAD WIDGET BY dm' />. When the button is
-								clicked, the download starts.
-							</p>
-							</p>
-						<li><h4 id="simpleDar">Simple Data Access Request</h4>
+				<p>A Simple data Access Request is a request to the server
+					issued from the results table with product items having a url
+					but which are not necesseraly ready to be downloaded. This
+					request aims to issue a download request for all the items
+					included when they will be downloadable. A download manager has
+					to be assigned to the request and will insure the download.</p>
 
-							<p>A Simple data Access Request is a request to the server
-								issued from the results table with product items having a url
-								but which are not necesseraly ready to be downloaded. This
-								request aims to issue a download request for all the items
-								included when they will be downloadable. A download manager has
-								to be assigned to the request and will insure the download.</p>
+				<p>To include products in a Simple Data Access request, check
+					the products checkbox in the results table.</p>
+				<p>
+					<img src="screenshots/tip.png" /> <b>If the Retrieve
+						Product button <img src="screenshots/retrieveProductButton.png"
+						alt='RETRIEVE PRODUCT BUTTON' /> is still disabled this means
+						that the products selected does not have a url. So change the
+						selected products.
+					</b>
+				</p>
 
-							<p>To include products in a Simple Data Access request, check
-								the products checkbox in the results table.</p>
-							<p>
-								<img src="screenshots/tip.png" /> <b>If the Retrieve
-									Product button <img src="screenshots/retrieveProductButton.png"
-									alt='RETRIEVE PRODUCT BUTTON' /> is still disabled this means
-									that the products selected does not have a url. So change the
-									selected products.
-								</b>
-							</p>
+				<p>
+					Click on Retrieve Product button to display the data access
+					widget <img class="center-img"
+						src="screenshots/simpleDARWidget.png" alt='SIMPLE DAR WIDGET' />
+					with the list of available download managers.
+				</p>
 
-							<p>
-								Click on Retrieve Product button to display the data access
-								widget <img class="center-img"
-									src="screenshots/simpleDARWidget.png" alt='SIMPLE DAR WIDGET' />
-								with the list of available download managers.
-							</p>
-
-							<p>The "Validate Your Request" button makes the validation
-								request sent to the server, and the server response displayed
-								underneath the button. If the request is successfully validated,
-								the estimated size of the products are displayed and a
-								notification message confirms that the request has been
-								acknowleged. The Validation button is renamed into 'Confirm Your
-								Request'</p>
-							<p>
-								<img src="screenshots/tip.png" /> <b>If the validation has
-									failed an error message is dispalyed.</b>
-							</p>
+				<p>The "Validate Your Request" button makes the validation
+					request sent to the server, and the server response displayed
+					underneath the button. If the request is successfully validated,
+					the estimated size of the products are displayed and a
+					notification message confirms that the request has been
+					acknowleged. The Validation button is renamed into 'Confirm Your
+					Request'</p>
+				<p>
+					<img src="screenshots/tip.png" /> <b>If the validation has
+						failed an error message is dispalyed.</b>
+				</p>
 
 
-							<p>
-								Click on Confirm Your Request button to submit, the confirmation
-								request to the server. The server response is displayed
-								underneath the button. If the request has been successfully
-								confirmed, the request is being processed, unless an error
-								message is dispalyed. <img class="center-img"
-									src="screenshots/simpleDARConfirmeddWidget.png"
-									alt='SIMPLE DAR Confirmed WIDGET' />
-							</p>
-							<p>
-								The close icon <img src="screenshots/widgetCloseIcon.png"
-									alt='WIDGET CLOSE ICON' /> aims to close the widget.
-							</p></li>
+				<p>
+					Click on Confirm Your Request button to submit, the confirmation
+					request to the server. The server response is displayed
+					underneath the button. If the request has been successfully
+					confirmed, the request is being processed, unless an error
+					message is dispalyed. <img class="center-img"
+						src="screenshots/simpleDARConfirmeddWidget.png"
+						alt='SIMPLE DAR Confirmed WIDGET' />
+				</p>
+				<p>
+					The close icon <img src="screenshots/widgetCloseIcon.png"
+						alt='WIDGET CLOSE ICON' /> aims to close the widget.
+				</p></li>
 
-						<li><h4 id="STODar">Standing Order Data Access Request</h4>
-							See <a href="Getting Started.html#STOHowTo">How to submit a Standing Order?</a>
-						</li>
-					</ol></li>
+			<li><h4 id="STODar">Standing Order Data Access Request</h4>
+				See <a href="Getting Started.html#STOHowTo">How to submit a Standing Order?</a>
+			</li>
+		</ol></li>
 
-				<li><h3 id="map">Map</h3>
-					<ol>
-						<li><h4 id="mapModes">Map Modes</h4> See <a
-							href="Getting Started.html#mapModeHowTo">How to change Map Mode?</a> productsOnMapHowTo
-						</li>
+	<li><h3 id="map">Map</h3>
+		<ol>
+			<li><h4 id="mapModes">Map Modes</h4> See <a
+				href="Getting Started.html#mapModeHowTo">How to change Map Mode?</a> productsOnMapHowTo
+			</li>
 
-						<li><h4 id="navigation">Navigation</h4> 
-						See <a href="Getting Started.html#mapNavigationHowTo">How to navigate on the Map?</a></li>
+			<li><h4 id="navigation">Navigation</h4> 
+			See <a href="Getting Started.html#mapNavigationHowTo">How to navigate on the Map?</a></li>
 
-						<li><h4 id="layers">Map Layers</h4> See <a
-							href="Getting Started.html#layersHowTo">How to select Layers?</a></li>
+			<li><h4 id="layers">Map Layers</h4> See <a
+				href="Getting Started.html#layersHowTo">How to select Layers?</a></li>
 
-						<li><h4 id="backgroudS">Map Background</h4> See <a
-							href="Getting Started.html#backgroundsHowTo">How to change Map Background?</a></li>
-					</ol></li>
+			<li><h4 id="backgroudS">Map Background</h4> See <a
+				href="Getting Started.html#backgroundsHowTo">How to change Map Background?</a></li>
+		</ol></li>
 
-			</ol>
-		</div>
-	</div>
+</ol>
+
 
 </body>
 
