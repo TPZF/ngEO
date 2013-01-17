@@ -291,7 +291,10 @@
 					the estimated size of the products are displayed and a
 					notification message confirms that the request has been
 					acknowleged. The Validation button is renamed into 'Confirm Your
-					Request'</p>
+					Request':
+					<img class="center-img"
+						src="screenshots/simpleDARValidateddWidget.png"
+						alt='SIMPLE DAR Confirmed WIDGET' /></p>
 				<p>
 					<img src="screenshots/tip.png" /> <b>If the validation has
 						failed an error message is dispalyed.</b>
@@ -313,9 +316,58 @@
 				</p></li>
 
 			<li><h4 id="STODar">Standing Order Data Access Request</h4>
-				All the products in the ngEO catalogue can be retrieved with their metadata during a catalogue search.
-				However, they are not necessarly available 
-				See <a href="Getting Started.html#STOHowTo">How to submit a Standing Order?</a>
+				<p>A Standing Order Data Access Request allows the user to schedule a search either by time or data criteria
+				in order to retrieve and download products. Thus, a download manager has
+					to be assigned to the request and will insure the download.</p>
+									
+				<p>This functionnality is available from all the tabs of the search Criteria Widget.
+				<img class="center-img" src="screenshots/dateCriteria.png" />
+				<p>	First of all, click on the Standing Order button <img
+						src="screenshots/STOButton.png" alt='STO DAR BUTTON' /> to display the data access
+					widget with the scheduling options.
+					<img class="center-img"
+						src="screenshots/STOWidget.png" alt='STO DAR WIDGET' />
+				</p>	
+				<p>The Data-driven radio is selected by default to submit a <b>Data-driven</b>Standing Order</p>
+				
+				<p>Fill in the fields and click on Create Request Button. Then the list of available download managers is displayed.
+				<img class="center-img"
+						src="screenshots/STODM.png" alt='STO DAR DM WIDGET' />
+				</p>
+				
+				<p>The "Validate Your Request" button makes the validation
+					request sent to the server, and the server response displayed
+					underneath the button. If the request is successfully validated, a
+					notification message confirms that the request has been
+					acknowleged. The Validation button is renamed into 'Confirm Your
+					Request' <img class="center-img"
+						src="screenshots/validatedSTOWidget.png" alt='STO DAR WIDGET' /></p>
+				<p>
+					<img src="screenshots/tip.png" /> <b>If the validation has
+						failed an error message is dispalyed.</b>
+				</p>
+
+				<p>
+					Click on Confirm Your Request button to submit, the confirmation
+					request to the server. The server response is displayed
+					underneath the button. If the request has been successfully
+					confirmed, the request is being processed, unless an error
+					message is dispalyed. <img class="center-img"
+						src="screenshots/confirmedSTOWidget.png"
+						alt='STO DAR Confirmed WIDGET' />
+				</p>
+				<p>
+					The close icon <img src="screenshots/widgetCloseIcon.png"
+						alt='WIDGET CLOSE ICON' /> aims to close the widget.
+				</p>
+				
+				<p> To submit a <b>time-driven </b> standing order click on the Time Driven radio button
+				<img src="screenshots/timeSTORadio.png" /> and fill in the additionnal time-driven scheduling options and follow the same steps than the <b>Data-Driven</b> Standing Order.
+				<img class="center-img"
+						src="screenshots/timeSTOWidget.png"
+						alt='time STO DAR WIDGET' /></p>
+				</li>
+
 			</li>
 		</ol></li>
 
@@ -335,23 +387,63 @@
 				</ul>
 				These functionnalities are detailed in the next sections.
 				
-				<p>
-					To change from a map mode to another, See <a href="GettingStarted.html#mapModeHowTo">How to change Map Mode?</a> 
-				</p>
-				
+				<p>Click on the 2D/3D <img src="screenshots/toolBarIcons/mapMode.png"/> button on the toolbar to change the map mode
+				from 2D to 3D and inversely.</p>
 			</li>
 
 			<li><h4 id="navigation">Navigation</h4> 
-			See <a href="GettingStarted.html#mapNavigationHowTo">How to navigate on the Map?</a></li>
+				<p> In order to zoom in either:
+					<ul>
+						<li>Click on the Zooum In <img src="screenshots/toolBarIcons/zoomInIcon.png"/>button on the toolbar</li>
+						<li>or move the mouse wheel in.</li>
+					</ul>
+				</p>
+
+				<p> In order to zoom out either:
+					<ul>
+						<li>Click on the Zooum Out <img src="screenshots/toolBarIcons/zoomOutIcon.png"/>button on the toolbar to zoom out. </p>
+						<li>or move the mouse wheel out.</li>
+					</ul>
+				</p>
+				<p>Click on the Start View <img src="screenshots/toolBarIcons/startViewIcon.png"/>button on the toolbar to return back to the initial view.</p>
+				
+				</p>
+			</li>
 
 			<li><h4 id="productsOnMap">Products  on Map</h4> 
-			See <a href="GettingStarted.html#productsOnMapHowTo">How to use products on the Map?</a></li>
+				<p>Once a catalogue search in done and the products are retrieved, the related footprints are drawn on the map.
+				</p>
+				
+				<p>Click inside a footprint:
+					<ul>
+						<li>the browse image is projected on the footprint,</li>
+						<li>the product row is checked on the results table</li>
+						<li>a popup widget is displayed with information on the selected product</li>
+						<li>the icon <img src="screenshots/darIcon.png" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
+						Follow the same steps as in section <a href="#simpleDARHowTo">How to submit a Simple Data Access request?</a>.
+						</li> 							
+						<img src="screenshots/itemOnMap.png" alt='ITEM ON MAP'/>
+					</ul>
+				</p>
+			</li>
 
-			<li><h4 id="layers">Map Layers</h4> See <a
-				href="GettingStarted.html#layersHowTo">How to select Layers?</a></li>
+			<li><h4 id="layers">Map Layers</h4> 
+				<p>To access the map layers, click on the layers icon on the toolbar <img src="screenshots/toolBarIcons/layersIcon.png" alt='LAYERS ICON'/>.</p>
+				<p>The layers widget is displayed <img src="screenshots/layersWidget.png" alt='LAYERS WIDGET'/>.
+				The Results Fooptprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
+				</p>
+				<p>Check the checkbox in front of the layer name, the layer is mapped on the map. 
+					<img src="screenshots/projectedLayers.png" alt='PROJECTED LAYERS'/></p>
+				<p>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</p>
 
-			<li><h4 id="backgroudS">Map Background</h4> See <a
-				href="GettingStarted.html#backgroundsHowTo">How to change Map Background?</a></li>
+			</li>
+
+			<li><h4 id="backgroudS">Map Background</h4> 
+				<p>To access the available map backgrouds, click on the background icon on the toolbar <img src="screenshots/toolBarIcons/backgroundIcon.png" alt='BACKGROUND ICON'/>.</p>
+				<p>The backgrounds' widget is displayed <img src="screenshots/backgroundsWidget.png" alt='BACKGROUND WIDGET'/>.
+				</p>
+				<p>Click, then, on the radio button in front of the background name to change the map background.</p>
+			</li>
 		</ol></li>
 
 </ol>
