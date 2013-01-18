@@ -27,23 +27,32 @@ html, body {
 	height: 100%;
 	padding: 0;
 	margin: 0;
-	//overflow: hidden;
+	overflow: hidden;
 	min-width: 960px;
 }
 
 /**
- * Main content : full screen
+ * Contaitner for content
+ * Height is controlled by Javascript to have a full height div.
+ * Left-margin to have space for the table of content
  */
-#mainContent {
-	position: absolute;
-	top: @header-height + 2px;
-	bottom: 0;
-	right: 0;
-	left: 0;
+#contentContainer {
+	margin-left: 260px;
+    padding: 0;
+	overflow: auto;
+	min-width: 700px;
+	border-left: 1px solid @text-color;
+	padding-left: 15px;
+}
+
+/**
+ * Layout to set table of contents as a left column
+ */
+#toc {
+	float: left;
     margin: 0;
     padding: 0;
-	overflow: hidden;
-	min-width: 960px;
+	width: 250px;
 }
 
 @import "mixins.less";
