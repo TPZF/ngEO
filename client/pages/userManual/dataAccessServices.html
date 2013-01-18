@@ -21,10 +21,10 @@
 	They consist in :
 <ul>
 	<li>catalogue searching using dataset geo-temporal criteria
-		and/or dataset inhert criteria</li>
+		and/or dataset inherent criteria</li>
 	<li>retrieving products metadata and data</li>
 	<li>submitting data access requests</li>
-	<li>Visualizing and manipulating data on the map.</li>
+	<li>visualizing and manipulating data on the map.</li>
 </ul>
 </p>
 
@@ -34,8 +34,8 @@
 			<li><h4 id="datasetSelection">Datasets Selection</h4>
 				<p>
 					The first and necessary step to make a catalogue search is to
-					choose a dataset. The dataset selection widget is accessible via
-					the <img src="screenshots/toolBarIcons/datasetsIcon.png" />.
+					choose a dataset. The dataset selection widget is accessible by clicking on
+					the <img src="screenshots/toolBarIcons/datasetsIcon.png" /> button.
 					When the button is clicked, the widget is opened and it displays
 					the list of available datasets. Each dataset is represented by
 					its name and the number of items it contains. <img
@@ -45,19 +45,19 @@
 					<img src="screenshots/warning.png" /> If there where a
 					connection problem with the server an error message is spawned
 					and the user is notified. The datasets button is then disabled.
-					If the server sends no datsets, a notification message is
+					If the server sends no datasets, a notification message is
 					displayed inside the dataset selection widget.
 				</p>
 				<p>
 					To select a dataset, the user has to scroll out the list and
 					choose the dataset by clicking on the list entry. It is also
 					possible to filter the available list of datasets by the means
-					of the filter comboBoxes. The filtering criteria are received
+					of the filter combo boxes. The filtering criteria are received
 					from the server, but they should mainly contain : mission,
 					sensor and keywords. <img class="center-img"
-						src="screenshots/datasetFilters.png" /> By defaults all the
-					criteria are set to "None". As soon as a criteria is choosen in
-					one of the combo boxes, the datsets are filtred and the list is
+						src="screenshots/datasetFilters.png" /> By default, all the
+					criteria are set to "None". As soon as a criteria is chosen in
+					one of the combo boxes, the datasets are filtered and the list is
 					updated, taken into account the other combo boxes selected
 					criteria. <img class="center-img"
 						src="screenshots/datasetFiltering1.png" /> <img
@@ -69,7 +69,7 @@
 			<li><h4 id="searchCriteria">Search Criteria</h4>
 				<p>
 					Once a dataset has been selected, to set the search criteria,
-					the user has to click on the <img
+					the user has to click on the button <img
 						src="screenshots/toolBarIcons/searchIcon.png" /> on the
 					toolbar. The search criteria widget is then displayed. <img
 						class="center-img" src="screenshots/dateCriteria.png" /> It is
@@ -77,15 +77,16 @@
 					type. Each button on the footer has his own role.
 				<p>
 					The Search URL button <img src="screenshots/searchURLButton.png" />,
-					when clicked, displays the openSearch Url wich will be
+					when clicked, displays the openSearch url which will be
 					submitted.<img class="center-img"
-						src="screenshots/openSearchUrlPopup.png" />. The Standing
+						src="screenshots/openSearchUrlPopup.png" />
+					<p>The Standing
 					Order button <img src="screenshots/STOButton.png" />, when
 					clicked, displays the Standing Order Widget. See <a
 						href="#STODar">Standing Order Data Access Request</a>. The
 					Submit Search button submits the search request to the server to
-					retrive the results. See <a href="#resultsTable">Search
-						Results</a>.
+					retrieve the results. See <a href="#resultsTable">Search
+						Results</a>.</p>
 				</p>
 				<p>
 					<img src="screenshots/tip.png" /> <b>The openSearch url to
@@ -127,7 +128,7 @@
 							<li>North: the maximum latitude</li>
 							<li>South: the minimum latitude</li>
 						</ul> By default, the coordinates are synchronized with the map
-						extent. To disable this behaviour uncheck the <img
+						extent. To disable this behavior uncheck the <img
 						src="screenshots/useExtentCheckBox.png" /> check box. Thus the
 						coordinates can be entered manually is each text field.</li>
 
@@ -136,7 +137,7 @@
 							they change depending on the dataset chosen.
 						<p>
 							<img src="screenshots/tip.png" /> <b>Different datasets
-								can have the same criteria. It is a configurtion matter on
+								can have the same criteria. It is a configuration matter on
 								the server side.</b>
 						</p> To visualize the advanced criteria, click on Advanced Criteria
 						tab inside the search criteria widget. <img class="center-img"
@@ -153,7 +154,7 @@
 						</p>
 						<p>
 							<img src="screenshots/warning.png" /> <b>If no dataset
-								has been selected and the Advnaced Criteria tab is selected a
+								has been selected and the Advanced Criteria tab is selected a
 								notification message is displayed to the user and no criteria
 								is displayed.</b>
 						</p></li>
@@ -196,7 +197,7 @@
 				<p>
 					<img src="screenshots/warning.png" /> <b>If no dataset has
 						been selected and the <img
-						src="screenshots/toolBarIcons/searchButton.png" /> is clicked,
+						src="screenshots/toolBarIcons/tableViewIcon.png" /> is clicked,
 						the results table is empty.
 					</b>
 				</p>
@@ -209,7 +210,7 @@
 				</p>
 
 				<p>
-					The combobox <img src="screenshots/resultsShowCombo.png" />
+					The combo box <img src="screenshots/resultsShowCombo.png" />
 					changes to number of result entries to display.
 				</p>
 				<p>
@@ -227,9 +228,9 @@
 				</p></li>
 			<li><h4 id="directDownload">Direct Download</h4>
 				<p>
-					The Direct Download is a functionnality of the user client which
-					makes the user download the retrieved products if they have a
-					url starting with <b>http or https.</b>. In the results table,
+					The Direct Download is a functionnality of the user client
+					making the user download the retrieved products if they have a
+					url starting with <b>http or https</b>. In the results table,
 					downloadable products are highlighted by an underlined product
 					identifier. <img src="screenshots/downloadableProduct.png"
 						alt='DOWNLOADABLE PRODUCT IMAGE' />
@@ -248,16 +249,16 @@
 					<li>the browser</li>
 					<li>or the local download manager.</li>
 				</ul>
-				<p>If the Browser Download menu is selected, the browser
+				<p>If the "Browser Download" menu is selected, the browser
 					starts the product download.</p>
 				<p>
 					If the "Download manager Download" entry is selected and the
-					download url is validated, a button Download is displayed. <img
+					download url is validated, a button Download is displayed. <img class="center-img"
 						src="screenshots/directDownloadByDM.png"
-						alt='DIRECT DOWNLOAD WIDGET BY dm' />. When the button is
-					clicked, the download starts.
+						alt='DIRECT DOWNLOAD WIDGET BY dm' /><p> When the button is
+					clicked, the download starts.</p>
 				</p>
-				</p>
+			
 			<li><h4 id="simpleDar">Simple Data Access Request</h4>
 
 				<p>A Simple data Access Request is a request to the server
@@ -267,8 +268,8 @@
 					included when they will be downloadable. A download manager has
 					to be assigned to the request and will insure the download.</p>
 
-				<p>To include products in a Simple Data Access request, check
-					the products checkbox in the results table.</p>
+				<p>To include products in a Simple Data Access Request, check
+					the products checkboxes in the results table.</p>
 				<p>
 					<img src="screenshots/tip.png" /> <b>If the Retrieve
 						Product button <img src="screenshots/retrieveProductButton.png"
@@ -280,9 +281,8 @@
 
 				<p>
 					Click on Retrieve Product button to display the data access
-					widget <img class="center-img"
+					widget with the list of available download managers. <img class="center-img"
 						src="screenshots/simpleDARWidget.png" alt='SIMPLE DAR WIDGET' />
-					with the list of available download managers.
 				</p>
 
 				<p>The "Validate Your Request" button makes the validation
@@ -293,13 +293,12 @@
 					acknowleged. The Validation button is renamed into 'Confirm Your
 					Request':
 					<img class="center-img"
-						src="screenshots/simpleDARValidateddWidget.png"
+						src="screenshots/simpleDARValidatedWidget.png"
 						alt='SIMPLE DAR Confirmed WIDGET' /></p>
 				<p>
 					<img src="screenshots/tip.png" /> <b>If the validation has
 						failed an error message is dispalyed.</b>
 				</p>
-
 
 				<p>
 					Click on Confirm Your Request button to submit, the confirmation
@@ -307,7 +306,7 @@
 					underneath the button. If the request has been successfully
 					confirmed, the request is being processed, unless an error
 					message is dispalyed. <img class="center-img"
-						src="screenshots/simpleDARConfirmeddWidget.png"
+						src="screenshots/simpleDARConfirmedWidget.png"
 						alt='SIMPLE DAR Confirmed WIDGET' />
 				</p>
 				<p>
@@ -320,7 +319,7 @@
 				in order to retrieve and download products. Thus, a download manager has
 					to be assigned to the request and will insure the download.</p>
 									
-				<p>This functionnality is available from all the tabs of the search Criteria Widget.
+				<p>This functionnality is available from all the tabs of the search criteria Widget.
 				<img class="center-img" src="screenshots/dateCriteria.png" />
 				<p>	First of all, click on the Standing Order button <img
 						src="screenshots/STOButton.png" alt='STO DAR BUTTON' /> to display the data access
@@ -328,19 +327,19 @@
 					<img class="center-img"
 						src="screenshots/STOWidget.png" alt='STO DAR WIDGET' />
 				</p>	
-				<p>The Data-driven radio is selected by default to submit a <b>Data-driven</b>Standing Order</p>
+				<p>The "Data-driven Order" radio button is selected by default to submit a <b>data-driven</b> Standing Order</p>
 				
-				<p>Fill in the fields and click on Create Request Button. Then the list of available download managers is displayed.
+				<p>Fill in the fields and click on the "Create Request" button. Then the list of available download managers is displayed.
 				<img class="center-img"
 						src="screenshots/STODM.png" alt='STO DAR DM WIDGET' />
 				</p>
 				
 				<p>The "Validate Your Request" button makes the validation
-					request sent to the server, and the server response displayed
+					request sent to the server, and the server response is displayed
 					underneath the button. If the request is successfully validated, a
 					notification message confirms that the request has been
-					acknowleged. The Validation button is renamed into 'Confirm Your
-					Request' <img class="center-img"
+					acknowleged. The validation button is renamed into "Confirm Your
+					Request" <img class="center-img"
 						src="screenshots/validatedSTOWidget.png" alt='STO DAR WIDGET' /></p>
 				<p>
 					<img src="screenshots/tip.png" /> <b>If the validation has
@@ -362,7 +361,7 @@
 				</p>
 				
 				<p> To submit a <b>time-driven </b> standing order click on the Time Driven radio button
-				<img src="screenshots/timeSTORadio.png" /> and fill in the additionnal time-driven scheduling options and follow the same steps than the <b>Data-Driven</b> Standing Order.
+				<img src="screenshots/timeSTORadio.png" /> and fill in the additionnal time-driven scheduling options and follow the same steps than the <b>data-Driven</b> Standing Order.
 				<img class="center-img"
 						src="screenshots/timeSTOWidget.png"
 						alt='time STO DAR WIDGET' /></p>
@@ -430,7 +429,7 @@
 			<li><h4 id="layers">Map Layers</h4> 
 				<p>To access the map layers, click on the layers icon on the toolbar <img src="screenshots/toolBarIcons/layersIcon.png" alt='LAYERS ICON'/>.</p>
 				<p>The layers widget is displayed <img src="screenshots/layersWidget.png" alt='LAYERS WIDGET'/>.
-				The Results Fooptprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
+				The Results Footprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
 				</p>
 				<p>Check the checkbox in front of the layer name, the layer is mapped on the map. 
 					<img src="screenshots/projectedLayers.png" alt='PROJECTED LAYERS'/></p>
