@@ -120,10 +120,10 @@ var onPageLoaded = function() {
 		$.mobile.loading("hide");
 	
 		// Start backbone history
-		Backbone.history.start();
+		var routeMatch = Backbone.history.start();
 		
 		// Go to default page if none requested
-		if (!location.hash || location.hash == "") {
+		if (!routeMatch) {
 			var defaut = $("header nav").data("default");
 			Backbone.history.navigate(defaut, { trigger: true });
 		}
