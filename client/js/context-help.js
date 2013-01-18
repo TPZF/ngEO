@@ -61,9 +61,13 @@ return function(element) {
 	tooltip = $('<div class="ui-popup-container ui-popup-active">\
 					<div class="ui-popup ui-overlay-shadow ui-corner-all ui-body-e"><p></p>\
 					</div></div>').appendTo(element);
+					
+	// Increment the z-index, 1100 is for widget and popup, 1101 for icons in the popup (close button)
+	// So 1102 is used for context help tooltip to be always above
+	tooltip.css("z-index", 1102 );
 	tooltip.hide();
 	
-
+	// Setup behavioir when the context help button is clicked
 	$("#help").click( function() {
 		var $this = $(this);
 		if ( $this.hasClass('toggle') ) {
