@@ -33,11 +33,15 @@ $.widget( "ngeo.panelManager", {
 	
 		// Compute size of each element
 		
-		var centerHeight = this.element.outerHeight();
+		// TODO : this version does not work well, the height of element is not always correct at that time
+		//var centerHeight = this.element.outerHeight();
+		// Note : 		
+		var centerHeight = $(window).height() - this.element.offset().top;
+		
 		if	( this.bottom ) {
 			centerHeight -= this.bottom.parent().outerHeight();
 		}
-	
+
 		$(this.options.center).css({
 			width: this.element.outerWidth(),
 			height: centerHeight
