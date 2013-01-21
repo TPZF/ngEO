@@ -37,10 +37,11 @@ var SearchCriteriaView = Backbone.View.extend({
 			this.searchButton.button('enable');
 			this.searchUrlButton.button('enable');
 			this.standingOrderButton.button('enable');
+			this.shareButton.button('enable');
 		} else {
 			this.searchButton.button('disable');
 			this.searchUrlButton.button('disable');
-			this.standingOrderButton.button('disable');
+			this.shareButton.button('disable');
 		}
 		//if the dataset is defined load it from the server unless it is set to undefined
 		this.model.updateDatasetModel();		
@@ -51,11 +52,16 @@ var SearchCriteriaView = Backbone.View.extend({
 	 */
 	onDatasetLoaded : function(){
 		this.$el.find("#searchCriteria").empty();
+		console.log("this.model.attributes");
+		
+		console.log(this.model.attributes);
+		console.log("this.model.dataset.attributes.datasetSearchInfo");
+		console.log(this.model.dataset.attributes.datasetSearchInfo);
 		this.advancedCriteriaView.render();
 		this.$el.find("#downloadOptions").empty();
 		this.downloadOptionsView.render();
 	},
-	
+		
 	/**
 	 * Render the view
 	 */
@@ -92,10 +98,8 @@ var SearchCriteriaView = Backbone.View.extend({
 			standingOrderWidget.open();
 		});
 		
-		var self = this;
-		
 		this.searchUrlButton.click( function() {
-			// Set the opensearch url
+			// Set the openSearch url
 			$("#popupText").html( '<b>' + Configuration.serverHostName + self.model.getOpenSearchURL() + '<b>');	
 			$('#openSearchUrlPopup').popup("open",  $( {} )
 				    .jqmData( "position-to", "window" )
@@ -103,6 +107,22 @@ var SearchCriteriaView = Backbone.View.extend({
 			$('#openSearchUrlPopup').trigger('create');
 
 		});	
+		
+		//add share button to share search criteria widget
+		this.shareButton = this.$el.ngeowidget('addButton', { id: 'shareSearch', name: 'Share' });
+	
+		this.shareButton.click( function() {
+			
+			console.log(window.location.pathname)
+			console.log( self.model.getSharedUrl() );
+			// Set the opensearch url
+			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedUrl() + '<b>');	
+			$('#sharedUrlPopup').popup("open",  $( {} )
+				    .jqmData( "position-to", "window" )
+				    .jqmData( "transition", "slide" ));
+			$('#sharedUrlPopup').trigger('create');
+			
+		});
 		
 		this.$el.append(content);
 		
@@ -146,6 +166,7 @@ var SearchCriteriaView = Backbone.View.extend({
 			this.searchButton.button('disable');
 			this.searchUrlButton.button('disable');
 			this.standingOrderButton.button('disable');
+			this.shareButton.button('disable');
 		}
 
 		return this;
