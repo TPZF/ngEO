@@ -11,7 +11,8 @@ var TimeExtentView = Backbone.View.extend({
 
 	initialize : function(options){
 		// Refresh the time extent when the dataset is changed
-		this.model.on("change:datasetId", this.update, this);
+		this.model.on("change:startdate", this.update, this);
+		this.model.on("change:stopdate", this.update, this);
 	},
 	
 	events :{
@@ -34,8 +35,9 @@ var TimeExtentView = Backbone.View.extend({
 	update: function() {
 		$('#fromDateInput').val( this.model.get("startdate") );
 		$('#toDateInput').val( this.model.get("stopdate") );
-		$('#fromTimeInput').val( this.model.get("startTime") );
-		$('#toTimeInput').val( this.model.get("stopTime") );
+		//Uncomment to use back times
+//		$('#fromTimeInput').val( this.model.get("startTime") );
+//		$('#toTimeInput').val( this.model.get("stopTime") );
 	},
 	
 	render: function(){
