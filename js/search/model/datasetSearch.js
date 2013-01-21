@@ -204,10 +204,10 @@ var DataSetSearch = Backbone.Model.extend({
 			
 			url += ")";
 		
-		}else (this.get("west") != "" && this.get("south") != ""
+		}else if (this.get("west") != "" && this.get("south") != ""
 			&& this.get("east") != "" && this.get("north") != ""){
 		
-			var url = url  +  "&" + 
+			url = url  +  "&" + 
 			"bbox=" + this.get("west") + "," + this.get("south") + "," 
 			+ this.get("east") + "," + this.get("north");
 		}
