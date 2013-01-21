@@ -21,6 +21,7 @@ var DataSetSearch = Backbone.Model.extend({
 		stopdate: "", //name of the opensearch request parameter
 		startTime : "",
 		stopTime: "", 
+		polygon: null,
 		west: "",
 		south : "",
 		east : "",
@@ -115,11 +116,31 @@ var DataSetSearch = Backbone.Model.extend({
 				"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime")) + "&count=10";
 		
 		//add area criteria if set
-		if (this.get("west") != "" && this.get("south") != ""
+		if (this.get("polygon")) {
+		
+			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
+			var polygon = this.get("polygon");
+			url += "&g=POLYGON(";
+			for ( var j = 0; j < polygon.length; j++ ) {
+				if ( j != 0 ) {
+					url += ",";
+				}
+				url += "(";
+				for ( var i = 0; i < polygon[j].length; i++ ) {
+					if ( i != 0 ) {
+						url += ",";
+					}
+					url += polygon[j][i][1] + " " + polygon[j][i][0]
+				}
+				url += ")";
+			}
+			
+			url += ")";
+		
+		} else if (this.get("west") != "" && this.get("south") != ""
 			&& this.get("east") != "" && this.get("north") != ""){
 		
-			var url = url  +  "&" + 
-			"bbox=" + this.get("west") + "," + this.get("south") + "," 
+			url +=  "&bbox=" + this.get("west") + "," + this.get("south") + "," 
 			+ this.get("east") + "," + this.get("north");
 		}
 		

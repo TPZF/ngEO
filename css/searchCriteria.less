@@ -4,15 +4,27 @@
 	overflow-y: auto;
 }
 
-///////////////////   			 Area criteria styling 		//////////////////////////////////
-
-#coordinatesChoice, #coordinates, #mapExtent {
-	text-align: center;
+// Change the font-size 
+#datasetSearchCriteria label {
+	font-size : 14px;
 }
 
-#coordinates label {
-	font-weight:bold;
-	font-size: 14px;
+// Capitalize the advanced criteria title
+#datasetSearchCriteria .ui-controlgroup-label {
+	font-size : 14px;
+	text-transform: capitalize;
+}
+
+///////////////////   			 Area criteria styling 		//////////////////////////////////
+
+// Setup the drop zone for import
+#dropZone {
+    border: 5px dashed black;
+    height: 100px;
+	text-align: center;
+	line-height: 100px; // To vertically centered the text
+	font-size: 1.4em;
+	font-weight : bold;
 }
 
 ///////////////////   			 Date search criteria styling 		//////////////////////////////////
@@ -21,9 +33,6 @@
 // Give a width to label to properly aligned date input
 // Date input is 75% width, so 22% seems to fit well...
 #date label {
-	
-	font-size : 14px;
-	font-weight : bold;
 	display : inline-block;
 	width: 20%;
 }
@@ -38,11 +47,11 @@
 
 //harmonize labels styling respectively for
 //labels inside fieldcontain divs and for fieldset headers 
-#searchCriteria label, #searchCriteria .ui-controlgroup-label{
+/*#searchCriteria label, #searchCriteria .ui-controlgroup-label{
 	
 	font-size : 14px;
 	font-weight : bold;
-}
+}*/
 
 //enlarge the input of the slider in order to display
 //big orbit numbers since in Chrome the field does not fit to the number length
@@ -58,8 +67,8 @@
 
 #downloadOptions .ui-field-contain label{
 
-	font-size : 14px;
-	font-weight : bold;
+//	font-size : 14px;
+//	font-weight : bold;
 	display : inline-block;
 	width: 25%;
 }
