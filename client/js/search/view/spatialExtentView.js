@@ -14,12 +14,17 @@ var SpatialExtentView = Backbone.View.extend({
 		this.importedPolygon = null;
 		this.importedLayer = null;
 		this.mode = "bbox";
+		//update the coordinates when the model has been changed via setting the parameters : Share URL case
+		this.model.on("change:west", function(){$("#west").val(this.model.get("west"));}, this);
+		this.model.on("change:south", function(){$("#south").val(this.model.get("south"));}, this);
+		this.model.on("change:east", function(){$("#east").val(this.model.get("east"));}, this);
+		this.model.on("change:north", function(){$("#north").val(this.model.get("north"));}, this);
+		//TODO fix the check box selection
+		this.model.on("change:useExtent", function(){this.$el.find("input[type='checkbox']").prop("checked", this.model.get("useExtent"))}, this);
 		Map.on("endNavigation", this.synchronizeWithMapExtent, this);
 	},
 	
-	// List of events managed by the view
 	events :{
-		
 		'change #toolsChoice' : function(event) {
 			var val = $(event.currentTarget).find('input:radio:checked').val();
 			
@@ -34,20 +39,20 @@ var SpatialExtentView = Backbone.View.extend({
 			this.updateModel(this.mode,val);
 			this.mode = val;
 		},
-		
-		'change #west' : function(event){
+		//blur insure that values has been manually changed by the user
+		'blur #west' : function(event){
 			this.model.set({"west" : $(event.currentTarget).val()});
 		},
 		
-		'change #south' : function(event){
+		'blur #south' : function(event){
 			this.model.set({"south" : $(event.currentTarget).val()});
 		},
 		
-		'change #east' : function(event){
+		'blur #east' : function(event){
 			this.model.set({"east" : $(event.currentTarget).val()});
 		},
 		
-		'change #north' : function(event){
+		'blur #north' : function(event){
 			this.model.set({"north": $(event.currentTarget).val()});
 		},
 		
@@ -110,7 +115,7 @@ var SpatialExtentView = Backbone.View.extend({
 		LayerImport.addDropArea( $('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
 		
 		// Forces the update of the checkbox status according to model
-		$("input[type='checkbox']").prop("checked",this.model.get("useExtent"));
+		this.$el.find("input[type='checkbox']").prop("checked",this.model.get("useExtent"));
 		this.synchronizeWithMapExtent();
 		return this;
 	},
