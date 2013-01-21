@@ -110,12 +110,79 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	getOpenSearchURL : function(){
 
-		var self = this;
 		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.get("datasetId") + "?" +
-				"start="+ this.formatDate(this.get("startdate"), this.get("startTime")) + "&" + 
-				"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime")) + "&count=10";
+				 "&count=10";
 		
 		//add area criteria if set
+		url = this.addGeoTemporalParams(url);
+		
+		//add the advanced criteria values selected and already set to the model
+		if (this.get("useAdvancedCriteria")){
+			url = this.addAdvancedCriteria(url);
+		}
+		//add the download options values selected and already set to the model
+		if (this.get("useDownloadOptions")){
+			url = this.addDownloadOptions(url);
+		}
+		
+		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
+	
+		return url;
+	},
+	
+	/**
+	 * Get the shared url given the selected view id 
+	 */
+	getSharedUrl : function(){
+
+		//var url = Configuration.baseServerUrl + "/" + viewId + "/"+ this.get("datasetId") + "?";
+		var url = "#data-services-area/search/" +  this.get("datasetId") + "?";
+		//add area criteria if set
+		url = this.addGeoTemporalParams(url);
+		
+		//add use extent
+		url =url + "&useExtent=" + this.get("useExtent");
+		
+		//add the advanced criteria values selected and already set to the model
+		if (this.get("useAdvancedCriteria")){
+			url = url + "&useAdvancedCriteria=true";
+			url = this.addAdvancedCriteria(url);
+		}
+		//add the download options values selected and already set to the model
+		if (this.get("useDownloadOptions")){
+			url = url + "&useDownloadOptions=true";
+			url = this.addDownloadOptions(url);
+		}
+		return url;
+	},
+	
+	//Uncomment to set back the time 
+	//NOT USED for the moment 
+	//add date and time and area parameters
+//	addGeoTemporalParams : function (url){
+//	
+//		url = url + "start="+ this.formatDate(this.get("startdate"), this.get("startTime")) + "&" + 
+//		"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime"));
+//
+//		//add area criteria if set
+//		if (this.get("west") != "" && this.get("south") != ""
+//			&& this.get("east") != "" && this.get("north") != ""){
+//		
+//			var url = url  +  "&" + 
+//			"bbox=" + this.get("west") + "," + this.get("south") + "," 
+//			+ this.get("east") + "," + this.get("north");
+//		}
+//		
+//		return url;
+//	},
+	
+
+	//add date WITHOUT cf ngeo 368 time and area parameters
+	addGeoTemporalParams : function (url){
+	
+		url = url + "start=" + this.get("startdate")  + "&" + 
+		"stop=" + this.get("stopdate");
+
 		if (this.get("polygon")) {
 		
 			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
@@ -137,58 +204,60 @@ var DataSetSearch = Backbone.Model.extend({
 			
 			url += ")";
 		
-		} else if (this.get("west") != "" && this.get("south") != ""
+		}else (this.get("west") != "" && this.get("south") != ""
 			&& this.get("east") != "" && this.get("north") != ""){
 		
-			url +=  "&bbox=" + this.get("west") + "," + this.get("south") + "," 
+			var url = url  +  "&" + 
+			"bbox=" + this.get("west") + "," + this.get("south") + "," 
 			+ this.get("east") + "," + this.get("north");
 		}
 		
-		//add the advanced criteria values selected and already set to the model
-		if (this.get("useAdvancedCriteria")){
-			
-			//iterate on the configured criteria with the advanced criterion id
-			//and for each criterion, add the openSearch mapped criterion with the selected advanced criteria value set in the model 
-			_.each(self.attributes, function(value, key, list){
-				
-				if (self.attributes[key]  != ""){
-					url = url  +  "&" + value + "=" + self.attributes[key] ;
-				}
-			});
-			
-			//add the advanced criteria not set in the model ie not changed by the user
-			//with their default values from the dataset 
-			if (this.dataset.attributes.datasetSearchInfo.attributes){
-				
-				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
-					
-					if (!_.has(self.attributes, attribute.id)){
-						url = url  +  '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);	
-					}
-				});
-			}
-		}
-		
-		//add the selected download options to the opensearch url
-		if (this.get("useDownloadOptions")){
-			
-			if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
-				
-				_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
-					
-					if (_.has(self.attributes, option.argumentName)){
-						url = url  +  '&' + option.argumentName + '=' + self.attributes[option.argumentName];
-					}else{
-						url = url  +  '&' + option.argumentName + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
-					}
-				});
-			}
-		}
-		
-		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
-	
 		return url;
 	},
+	
+	//add advanced criteria to the given url
+	addAdvancedCriteria : function(url){
+		
+		var self = this;
+		
+		//add the advanced criteria not set in the model ie not changed by the user
+		//with their default values from the dataset 
+		if (this.dataset.attributes.datasetSearchInfo.attributes){
+			
+			_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
+				
+				if (_.has(self.attributes, attribute.id)){
+					url = url  +  '&' + attribute.id + '=' + self.attributes[attribute.id];
+				}else{
+					url = url  +  '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);
+				}
+			});
+		}
+		
+		return url;
+	},
+	
+	//add download options to the given url
+	addDownloadOptions : function(url){
+	
+		var self = this;
+		//add the selected download options to the opensearch url
+			
+		if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
+			
+			_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+				
+				if (_.has(self.attributes, option.argumentName)){
+					url = url  +  '&' + option.argumentName + '=' + self.attributes[option.argumentName];
+				}else{
+					url = url  +  '&' + option.argumentName + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
+				}
+			});
+		}
+
+		return url;
+	},
+
 	
 	/** Get the selected download options as a json object.
 	 * If the download options have been changed by the user, their are set as an attribute to the DatasetSearch
@@ -222,26 +291,28 @@ var DataSetSearch = Backbone.Model.extend({
 	
 	/** 
 	 * Splits a given date/time into date and time for start and stop dates & times.
+	 * Uncomment the code to use back the time
 	 */
 	setDateAndTime : function(startDate, stopDate){
 		
-		//set start date and time
+		//set start date and time TO USE IF TIME IS REUSED BACK
 		var dateOnly = startDate.substring(0, startDate.indexOf('T'));
 		var timeOnly = startDate.substring(startDate.indexOf('T')+1, startDate.lastIndexOf(':'));
-		
+
 		this.set("startdate",dateOnly);
-		this.set("startTime",timeOnly);
-		
+//		this.set("startTime",timeOnly);
+//		
 		if (startDate != stopDate){
 			dateOnly = stopDate.substring(0, stopDate.indexOf('T'));
 			timeOnly = stopDate.substring(stopDate.indexOf('T')+1, stopDate.lastIndexOf(':'));
 			this.set("stopdate",dateOnly);
-			this.set("stopTime",timeOnly);
+//			this.set("stopTime",timeOnly);
 		}
-		
-		//set stop date and time
+//		
+//		//set stop date and time
 		this.set("stopdate",dateOnly);
-		this.set("stopTime",timeOnly);
+//		this.set("stopTime",timeOnly);
+		
 		
 	},
 	
