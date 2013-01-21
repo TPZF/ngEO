@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "configuration", "externs/OpenLayers.ngeo" ],
+define( [ "configuration", "externs/OpenLayers.debug" ],
  
  function(Configuration) {
   
@@ -22,6 +22,7 @@ OpenLayersMapEngine = function( element )
 		,projection: new OpenLayers.Projection(Configuration.data.map.projection)
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,theme:null
+		,fractionalZoom: true
 	});
 	
 	// Create the converter for GeoJSON format
@@ -165,23 +166,42 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
         });
 		break;
 	case "KML":
-		olLayer =  new OpenLayers.Layer.Vector(layer.name, {
-            strategies: [new OpenLayers.Strategy.Fixed()],
-            protocol: new OpenLayers.Protocol.HTTP({
-                url: layer.location,
-                format: new OpenLayers.Format.KML({
-                    extractStyles: true, 
-                    extractAttributes: true,
-                    maxDepth: 0
-                })
-            }),
-			projection: "EPSG:4326"
-        });
+		if ( layer.data ) {
+			var kmlFormat = new OpenLayers.Format.KML({
+						extractStyles: true, 
+						extractAttributes: true,
+						maxDepth: 0
+					});
+			var features = kmlFormat.read(layer.data);
+			olLayer =  new OpenLayers.Layer.Vector(layer.name, {
+				projection: "EPSG:4326"
+			});
+			olLayer.addFeatures(features);
+		} else if ( layer.location ) {
+			olLayer =  new OpenLayers.Layer.Vector(layer.name, {
+				strategies: [new OpenLayers.Strategy.Fixed()],
+				protocol: new OpenLayers.Protocol.HTTP({
+					url: layer.location,
+					format: new OpenLayers.Format.KML({
+						extractStyles: true, 
+						extractAttributes: true,
+						maxDepth: 0
+					})
+				}),
+				projection: "EPSG:4326"
+			});
+		}
 		break;
+	case "JSON":
 	case "GEOJSON":
 		olLayer = new OpenLayers.Layer.Vector(layer.name, {
 			projection: "EPSG:4326"
         });
+		if ( layer.data ) {
+			var geojsonFormat = new OpenLayers.Format.GeoJSON();
+			var features = geojsonFormat.read(layer.data);
+			olLayer.addFeatures(features);
+		}
 	}
 	
 	if (olLayer) {
@@ -313,7 +333,8 @@ OpenLayersMapEngine.prototype.zoomToExtent = function(extent)
 {
 	var bounds = new OpenLayers.Bounds(extent[0], extent[1], extent[2], extent[3]);
 	bounds.transform( this._map.displayProjection, this._map.projection );
-	this._map.zoomToExtent( bounds, true );
+	var center = bounds.getCenterLonLat();
+	this._map.setCenter( center, Math.max(3,this._map.getZoomForExtent(bounds, true)) );
 }
 
 
