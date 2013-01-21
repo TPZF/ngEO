@@ -1,40 +1,56 @@
-<fieldset id="coordinatesChoice" data-role="controlgroup" data-type="horizontal" data-mini="true">
+<fieldset id="toolsChoice" data-role="controlgroup" data-type="horizontal" data-mini="true">
 				     
-	<input type="radio" name="radio-area-criteria" id="radio-coordinates" value="on" data-theme="c" checked="checked">
-	<label for="radio-coordinates" id="radio-coordinates-label" data-corners="false">Coordinates</label>
+	<input type="radio" name="radio-area-criteria" id="radio-bbox" value="bbox" data-theme="c" checked="checked">
+	<label for="radio-bbox" id="radio-bbox-label" data-corners="false">Box</label>
+	
+	<input type="radio" name="radio-area-criteria" id="radio-polygon" value="polygon" data-theme="c">
+	<label for="radio-polygon" id="radio-polygon-label" data-corners="false">Polygon</label>
 			         	
-	<input type="radio" name="radio-area-criteria" id="radio-gazetteer" data-theme="c" value="off">
+	<input type="radio" name="radio-area-criteria" id="radio-gazetteer" data-theme="c" value="gazetteer">
 	<label for="radio-gazetteer" id="radio-gazetteer-label" data-corners="false">Gazetteer</label>
+	
+	<input type="radio" name="radio-area-criteria" id="radio-import" data-theme="c" value="import">
+	<label for="radio-import" id="radio-import-label" data-corners="false">Import</label>
 	    	
 </fieldset>
 
-<div id="coordinates" class="ui-grid-a">
+<div id="bbox">
 
-		<div class="ui-block-a" >
-			<label for="west">West:</label>
-			<div data-role="fieldcontain"><input type="text" name="west" id="west" data-mini="true" data-theme="c" value="<%=attributes.west%>"></div>
-		</div>
-		
-		<div class="ui-block-b">
-			<label for="south">South:</label>
-			<div data-role="fieldcontain"><input type="text" name="south" id="south" data-mini="true" data-theme="c" value="<%=attributes.south%>"></div>
-		</div>
-		
-		<div class="ui-block-c">
-			<label for="east">East:</label>
-			<div data-role="fieldcontain"><input type="text" name="east" id="east" data-mini="true" data-theme="c" value="<%=attributes.east%>"></div>
-		</div>
-		
-		<div class="ui-block-d">
-			<label for="north">North:</label>
-			<div data-role="fieldcontain"><input type="text" name="north" id="north" data-mini="true" data-theme="c" value="<%=attributes.north%>"></div>
-		</div>
+	<div data-role="fieldcontain">
+		<label  for="west">West:</label>
+		<input type="text" name="west" id="west" data-mini="true" data-theme="c" value="<%=attributes.west%>">
+	</div>
 	
+		<div data-role="fieldcontain">
+		<label for="south">South:</label>
+		<input type="text" name="south" id="south" data-mini="true" data-theme="c" value="<%=attributes.south%>">
+	</div>
+	
+	<div data-role="fieldcontain">
+		<label for="east">East:</label>
+		<input type="text" name="east" id="east" data-mini="true" data-theme="c" value="<%=attributes.east%>">
+	</div>
+
+	<div data-role="fieldcontain">
+		<label for="north">North:</label>
+		<input type="text" name="north" id="north" data-mini="true" data-theme="c" value="<%=attributes.north%>">
+	</div>
+
+	<div id="mapExtent" data-role="fieldcontain">
+		<label id="mapExtentCheckBoxLabel" for="mapExtentCheckBox">Use map extent</label>
+		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c" checked="false">
+	</div>
+
+
 </div>
 
-<div id="mapExtent" data-role="fieldcontain">
-	<label id="mapExtentCheckBoxLabel" for="mapExtentCheckBox">Use map extent</label>
-	<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c" checked="false">
+<div id="gazetteer">
 </div>
 
-<div id="gazetteer"></div>
+<div id="import">
+	<!-- <input type="file" id="importFile"> -->
+	<div id="dropZone">
+		Drop a KML, GeoJSON or GML file
+	</div>
+	<p id="importMessage"></p>
+</div>

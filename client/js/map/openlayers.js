@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "configuration", "externs/OpenLayers.debug" ],
+define( [ "configuration", "externs/OpenLayers.ngeo" ],
  
  function(Configuration) {
   
@@ -23,6 +23,7 @@ OpenLayersMapEngine = function( element )
 		,displayProjection: new OpenLayers.Projection("EPSG:4326")
 		,theme:null
 		,fractionalZoom: true
+		,autoUpdateSize: false
 	});
 	
 	// Create the converter for GeoJSON format

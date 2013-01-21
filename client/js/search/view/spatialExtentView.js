@@ -1,21 +1,39 @@
 
 
-define( ['jquery', 'backbone', 'map/map',
+define( ['jquery', 'backbone', 'map/map', 'map/layerImport', 'map/geojsonconverter',
          'text!search/template/areaCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, Map, areaCriteria_template) {
+		function($, Backbone, Map, LayerImport, GeoJSONConverter, areaCriteria_template) {
 
 var SpatialExtentView = Backbone.View.extend({
 
-	//the model is a DatasetSearch
+	// The model is a DatasetSearch
 	
+	// Constructor
 	initialize : function(options){
 		
-		this.searchCriteriaView = options.searchCriteriaView;
-		this.model.on("change", this.searchCriteriaView.update, this.searchCriteriaView);
+		this.importedPolygon = null;
+		this.importedLayer = null;
+		this.mode = "bbox";
 		Map.on("endNavigation", this.synchronizeWithMapExtent, this);
 	},
 	
+	// List of events managed by the view
 	events :{
+		
+		'change #toolsChoice' : function(event) {
+			var val = $(event.currentTarget).find('input:radio:checked').val();
+			
+			// Hide the previous tools
+			this.$selectedTool.hide();
+			
+			// Show the new one
+			this.$selectedTool = $('#' + val);
+			this.$selectedTool.show();
+			
+			// And update datasetsearch
+			this.updateModel(this.mode,val);
+			this.mode = val;
+		},
 		
 		'change #west' : function(event){
 			this.model.set({"west" : $(event.currentTarget).val()});
@@ -42,29 +60,124 @@ var SpatialExtentView = Backbone.View.extend({
 		}		
 	},
 	
+	/**
+	 * Update the model after the mode have been changed
+	 * TODO : improve design
+	 */
+	updateModel: function(prevMode,newMode) {
+		if ( prevMode == "import" && this.importedLayer ) {
+			Map.removeLayer(this.importedLayer);
+		}
+		
+		if ( newMode == "bbox" ) {
+			this.model.set({
+				west : $("#west").val(),
+				south: $("#south").val(),
+				east: $("#east").val(),
+				north: $("#north").val()
+			});
+		} else {
+			this.model.set({
+				west : "",
+				south: "",
+				east: "",
+				north: ""
+			});
+		}
+		
+		if ( newMode == "import" && this.importedPolygon ) {
+			this.model.set("polygon", this.importedPolygon);
+		} else {
+			this.model.set("polygon", null);
+		}
+		
+		if ( newMode == "import" && this.importedLayer ) {
+			Map.addLayer(this.importedLayer);
+		}
+	},
+	
+	// Build the view
 	render: function(){
 
 		this.$el.append(_.template(areaCriteria_template, this.model));
-		//forces the update of the checkbox status according to model
+		
+		// Set the default selected tool between bbox, polygon, gazetteer, import
+		$('#gazetteer').hide();
+		$('#import').hide();
+		this.$selectedTool = $('#bbox');
+		
+		// Setup the drop are for import
+		LayerImport.addDropArea( $('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
+		
+		// Forces the update of the checkbox status according to model
 		$("input[type='checkbox']").prop("checked",this.model.get("useExtent"));
 		this.synchronizeWithMapExtent();
-		this.delegateEvents();
 		return this;
-	},	
-
+	},
 	
-	// TODO move to Backbone.View.prototype
-    close : function() {
-    	this.$el.empty();
-    	this.undelegateEvents();
-       if (this.onClose) {
-          this.onClose();
-       }
-    }, 
-    
+	// Get the imported feature from a layer
+	getImportedFeature: function(layer) {
+	
+		// First convert the layer to GeoJSON
+		if ( !GeoJSONConverter.convert(layer) ) {
+			return { valid: false, message: 'format not supported' };
+		}
+		
+		var feature;
+		// Then check if the data is a feature collection or not
+		if ( layer.data.type == 'FeatureCollection' ) {
+			if ( layer.data.features.length == 1 ) {
+				feature = layer.data.features[0];
+			} else {
+				return { valid: false, message: 'file must have only one feature, ' + layer.data.features.length + ' found'};
+			}
+		} else {
+			feature = layer.data;
+		}
+	
+		// Then check feature is geojson
+		if ( feature.type != 'Feature' ) {
+			return { valid: false, message: 'invalid feature' };
+		}
+	
+		// Then check feature is polygon
+		if ( feature.geometry.type != 'Polygon' ) {
+			return { valid: false, message: 'feature must be a polygon' };
+		}
+		
+		return { valid: true, feature: feature };
+	},
+	
+	// Callback called when a file is loaded
+	onFileLoaded: function(layer,file) {
+	
+		// Remove previous imported layer if any
+		if ( this.importedLayer ) {
+			Map.removeLayer(this.importedLayer);
+			this.importedLayer = null;
+		}
+		
+		var res = this.getImportedFeature(layer);
+		if (!res.valid) {
+			$('#importMessage').html('Failed to import ' + file.name + ' : ' + res.message + '.' );
+		} else {
+			// Set the polygon on the model
+			this.model.set("polygon",res.feature.geometry.coordinates);
+			// Keep the imported polygon (to be re-used when user click between the serveral tools)
+			this.importedPolygon = res.feature.geometry.coordinates;
+			$('#importMessage').html("File sucessfully imported : " + file.name);
+			layer.name = 'Imported search area (' + file.name + ')';
+			Map.addLayer(layer);
+			this.importedLayer = layer;
+			Map.zoomToFeature(res.feature);
+		}
+		
+	},
+
+	// Synchronize map extent
     synchronizeWithMapExtent : function(){
     	
-    	if(this.model.get("useExtent")){
+    	if (this.model.get("useExtent")) {
 	    	
     		var mapExtent = Map.getViewportExtent();
 			this.model.set({"west" : mapExtent[0]});
@@ -77,12 +190,7 @@ var SpatialExtentView = Backbone.View.extend({
 			$("#east").val(mapExtent[2]);
 			$("#north").val(mapExtent[3]);
     	}
-    },
-
-    onClose : function() {
-    	this.model.off("change", this.searchCriteriaView.update, this.searchCriteriaView);
-   		Map.off("endNavigation", this.synchronizeWithMapExtent, this);	
-    },
+    }
 	
 });
 

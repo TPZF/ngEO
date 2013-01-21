@@ -372,11 +372,14 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		 * @param i	The layer index
 		 * @param vis The new visibility
 		 */
-		setLayerVisible: function(i,vis) {
-			// Store visibilty in configuration data
-			self.layers[i].visible = vis;
-			// Modify engine layers
-			mapEngine.setLayerVisible(engineLayers[i],vis);
+		setLayerVisible: function(layerDesc,vis) {
+			var i = self.layers.indexOf(layerDesc);
+			if ( i >= 0 ) {
+				// Store visibilty in configuration data
+				self.layers[i].visible = vis;
+				// Modify engine layers
+				mapEngine.setLayerVisible(engineLayers[i],vis);
+			}
 		},
 		
 		/**
@@ -387,7 +390,25 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		addLayer: function(layerDesc) {
 			engineLayers.push( mapEngine.addLayer(layerDesc) );
 			self.layers.push(layerDesc);
-			self.trigger('layerAdded',layerDesc,self.layers.length-1);		
+			self.trigger('layerAdded',layerDesc);	
+		},
+	
+		/**
+		 * Dynamically remove a layer from the map
+		 *
+		 * @param layerDesc	The layer description
+		 */
+		removeLayer: function(layerDesc) {
+			var index = self.layers.indexOf(layerDesc);
+			if ( index >= 0 ) {
+				mapEngine.removeLayer( engineLayers[index] );
+				engineLayers.splice( index, 1 );
+				self.layers.splice( index, 1 );
+				self.trigger('layerRemoved',layerDesc);
+				return true;
+			} else {
+				return false;
+			}
 		},
 		
 		zoomIn: function() {
@@ -404,6 +425,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		
 		zoomToFeature: function(feature) {
 			// Zoom on the product in the carto
+			if (!feature.bbox) {
+				computeExtent(feature);
+			}
 			var extent = feature.bbox;
 			var width = extent[2] - extent[0];
 			var height = extent[3] - extent[1];

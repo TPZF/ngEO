@@ -15,17 +15,17 @@ var container;
  */
 var layerCheckedCallback = function() {
 	var $this = $(this);
-	Map.setLayerVisible($this.data('id'),$this.prop('checked'));
+	Map.setLayerVisible($this.data('layer'),$this.prop('checked'));
 };
 
 /**
  * Build the HTML for a layer
  */
-var buildHTML = function(layer,i) {
+var buildHTML = function(layer) {
 
 	// Build the input
 	var input = $("<input data-theme='c' type='checkbox'" + (layer.visible ? "checked='checked'" : "") + ">")
-		.data('id',i);
+		.data('layer',layer);
 	
 	// Callback called when the input is changed
 	input.change(layerCheckedCallback);
@@ -44,16 +44,25 @@ return function(dsa) {
 	
 	var layers = Map.layers;
 	for ( var i=0; i < layers.length; i++ ) {
-		buildHTML( layers[i], i );
+		buildHTML( layers[i] );
 	}
 	container.appendTo("#layersWidget");
 	
 	// Callback when a layer is added on the map
-	Map.on('layerAdded', function(layer,i) {
-		buildHTML(layer,i);
+	Map.on('layerAdded', function(layer) {
+		buildHTML(layer);
 		$('#layersWidget').trigger('create');
 	});
 	
+	// Callback when a layer is removed from the map
+	Map.on('layerRemoved', function(layer) {
+		container.find('input').each( function() {
+			if ( $(this).data('layer') == layer ) {
+				$(this).parent().remove();
+			}
+		});
+	});
+
 	// Create widget
 	$("#layersWidget").ngeowidget({
 		activator: '#layers'

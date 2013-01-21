@@ -142,11 +142,15 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		}
 		gwLayer = new GlobWeb.WMTSLayer(config);
 		break;
+	case "JSON":
 	case "GEOJSON":
 		gwLayer = new GlobWeb.VectorLayer({ 
 			name: layer.name, 
 			visible: layer.visible 
 		});
+		if ( layer.data ) {
+			gwLayer.addFeatureCollection( layer.data );
+		}
 		break;
 	case "WFS":
 	case "GEORSS":
