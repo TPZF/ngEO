@@ -9,6 +9,10 @@ var AdvancedSearchView = Backbone.View.extend({
 	/* the dataset property of DatasetSearch is the Dataset backbone model containing the advanced criteria 
 	 */
 	
+	initialize : function(){
+		this.model.on("change", this.updateView, this);
+	}, 
+	
 	events : {
 		
 		//for every criteria modified by a select element, set in the DatasetSearch the criterion 
@@ -16,7 +20,7 @@ var AdvancedSearchView = Backbone.View.extend({
 		'change select' : function(event){
 			var criterion = {};
 			criterion[event.currentTarget.id] = $(event.currentTarget).val();
-			this.model.set(criterion);			
+			this.model.set(criterion, {silent:true});			
 		},
 		
 		//catch the criterion range changes of once the slider moving is finished
@@ -44,7 +48,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			if (criterionIdValue == "useAdvancedCriteria"){
 				
 				var useAdvancedCriteria = $target.hasClass('ui-checkbox-off');
-				this.model.set({"useAdvancedCriteria" : useAdvancedCriteria});
+				this.model.set({"useAdvancedCriteria" : useAdvancedCriteria}, {silent:true});
 			
 			}else{//handle radio/checkbox search criteria fields
 				
@@ -94,7 +98,7 @@ var AdvancedSearchView = Backbone.View.extend({
 				}
 				//set the new value to the json object and add it to the model
 				openSearchCriterion[criterionId] = newValue;
-				this.model.set(openSearchCriterion);	
+				this.model.set(openSearchCriterion, {silent:true});	
 			}
 		}		
 	},
@@ -141,7 +145,7 @@ var AdvancedSearchView = Backbone.View.extend({
 		}
 		//set the new value to the json object and add it to the model
 		openSearchCriterion[criterionId] = criterionValue;
-		this.model.set(openSearchCriterion);	
+		this.model.set(openSearchCriterion, {silent:true});	
 	},
 	
 	render: function(){
@@ -160,7 +164,12 @@ var AdvancedSearchView = Backbone.View.extend({
        if (this.onClose) {
           this.onClose();
        }
-    }, 
+    },
+    
+    //TODO TO IMPLMENT
+    updateView : function(){
+    	
+    },
 
     onClose : function() {
     },
