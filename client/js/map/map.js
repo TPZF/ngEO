@@ -331,14 +331,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	
 			element = document.getElementById(eltId);
 			
-			mapEngine = new engines['2d'](element);
-			
-			// Manage window resize
-			// FL: Commented because it is now managed by the panel module
-			/*$(window).resize( function() {
-				self.updateViewportSize();
-			});*/
-			
+			mapEngine = new engines['2d'](element);			
 			
 			// Check layers from configuration
 			isGeo = Configuration.data.map.projection == "EPSG:4326";
@@ -381,9 +374,20 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		 */
 		setLayerVisible: function(i,vis) {
 			// Store visibilty in configuration data
-			Configuration.data.map.layers[i].visible = vis;
+			self.layers[i].visible = vis;
 			// Modify engine layers
 			mapEngine.setLayerVisible(engineLayers[i],vis);
+		},
+		
+		/**
+		 * Dynamically add a layer to the map
+		 *
+		 * @param layerDesc	The layer description
+		 */
+		addLayer: function(layerDesc) {
+			engineLayers.push( mapEngine.addLayer(layerDesc) );
+			self.layers.push(layerDesc);
+			self.trigger('layerAdded',layerDesc,self.layers.length-1);		
 		},
 		
 		zoomIn: function() {
