@@ -110,9 +110,18 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	getOpenSearchURL : function(){
 
-		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.get("datasetId") + "?" +
-				 "&count=10";
+		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.getCoreURL() + "&count=10";
 		
+		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
+		
+		return url;
+	},
+	
+	/** get the url without base url with all search criteria */
+	getCoreURL : function(){
+		
+		var url =  this.get("datasetId") + "?";
+
 		//add area criteria if set
 		url = this.addGeoTemporalParams(url);
 		
@@ -125,35 +134,93 @@ var DataSetSearch = Backbone.Model.extend({
 			url = this.addDownloadOptions(url);
 		}
 		
-		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
-	
+		console.log("DatasetSearch module : getCoreURL method : " + url);
+		
 		return url;
 	},
 	
 	/**
-	 * Get the shared url given the selected view id 
+	 * Get the shared search URL
 	 */
-	getSharedUrl : function(){
+	getSharedSearchURL : function(){
 
 		//var url = Configuration.baseServerUrl + "/" + viewId + "/"+ this.get("datasetId") + "?";
-		var url = "#data-services-area/search/" +  this.get("datasetId") + "?";
-		//add area criteria if set
-		url = this.addGeoTemporalParams(url);
+		var url = "#data-services-area/search/" +  this.getCoreURL();
 		
 		//add use extent
-		url =url + "&useExtent=" + this.get("useExtent");
+		url +=  "&useExtent=" + this.get("useExtent");
 		
 		//add the advanced criteria values selected and already set to the model
 		if (this.get("useAdvancedCriteria")){
-			url = url + "&useAdvancedCriteria=true";
-			url = this.addAdvancedCriteria(url);
+			url += "&useAdvancedCriteria=true";
 		}
 		//add the download options values selected and already set to the model
 		if (this.get("useDownloadOptions")){
-			url = url + "&useDownloadOptions=true";
-			url = this.addDownloadOptions(url);
+			url += "&useDownloadOptions=true";
 		}
+		
+		console.log("DatasetSearch module : getSharedSearchURL method : " + url);
+		
 		return url;
+	},
+	
+	/**
+	 * Populate the model with the parameters retrieved from the ShareD URL
+	 */
+	populateModelfromURL : function(query){
+			
+		var vars = query.split("&");
+	    var attributes = {};
+		
+	    for (var i = 0; i < vars.length; i++) {
+	        
+	    	var pair = vars[i].split("=");
+	    		
+			switch (pair[0]) {
+				case "bbox": 
+					var coords = pair[1].split(",");
+					console.log(coords);
+					this.set({west : coords[0]});
+					this.set({south : coords[1]});
+					this.set({east : coords[2]});
+					this.set({north: coords[3]});
+					break;
+				case "start" : 
+					this.set({startdate: pair[1]});
+					break;
+				case "stop" : 
+					this.set({stopdate: pair[1]});
+					break;
+					
+				default :
+					
+					if (_.has(this.attributes, pair[0])){
+						attributes[pair[0]] = pair[1];
+					
+					}else{
+						//set the parameters if there are advanced attributes, download options or attributes of the model
+						//skip any other parameter
+						_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(criterion){
+							if (criterion.id == pair[0]){
+								console.log("set criterion " + criterion.id + "====" + pair[1]);
+								attributes[pair[0]] = pair[1];
+							}
+						});
+					
+						_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+							if (option.argumentName == pair[0]){
+								console.log("set option " + option.argumentName + "====" + pair[1]);
+								attributes[pair[0]] = pair[1];
+							}
+						});
+					}
+					break;
+			}
+					
+	   	}
+		
+	    this.set(attributes);	
+
 	},
 	
 	//Uncomment to set back the time 
@@ -207,11 +274,11 @@ var DataSetSearch = Backbone.Model.extend({
 		}else if (this.get("west") != "" && this.get("south") != ""
 			&& this.get("east") != "" && this.get("north") != ""){
 		
-			url = url  +  "&" + 
-			"bbox=" + this.get("west") + "," + this.get("south") + "," 
+			url += "&bbox=" + this.get("west") + "," + this.get("south") + "," 
 			+ this.get("east") + "," + this.get("north");
 		}
 		
+		console.log("DatasetSearch module : addGeoTemporalParams : " + url);
 		return url;
 	},
 	
@@ -227,13 +294,14 @@ var DataSetSearch = Backbone.Model.extend({
 			_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
 				
 				if (_.has(self.attributes, attribute.id)){
-					url = url  +  '&' + attribute.id + '=' + self.attributes[attribute.id];
+					url += '&' + attribute.id + '=' + self.attributes[attribute.id];
 				}else{
-					url = url  +  '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);
+					url += '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);
 				}
 			});
 		}
 		
+		console.log("DatasetSearch module : addAdvancedCriteria : " + url);
 		return url;
 	},
 	
@@ -248,13 +316,14 @@ var DataSetSearch = Backbone.Model.extend({
 			_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
 				
 				if (_.has(self.attributes, option.argumentName)){
-					url = url  +  '&' + option.argumentName + '=' + self.attributes[option.argumentName];
+					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
 				}else{
-					url = url  +  '&' + option.argumentName + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
+					url += '&' + option.argumentName + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
 				}
 			});
 		}
 
+		console.log("DatasetSearch module : addDownloadOptions : " + url);
 		return url;
 	},
 
@@ -283,7 +352,7 @@ var DataSetSearch = Backbone.Model.extend({
 				}
 			});
 		}
-		console.log("Selected options of dataset : " + this.dataset.attributes.datasetId + " : ");
+		console.log("Selected download options of dataset : " + this.dataset.attributes.datasetId + " : ");
 		console.log(selectedOptions);
 		
 		return selectedOptions;
