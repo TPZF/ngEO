@@ -140,8 +140,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			criterionValue = "[" + $('#' + otherRangeLimitId).val() + "," + currentValue + "]";
 			
 		}else{//simple text input 
-			criterionValue = $(event.currentTarget).val();
-			
+			criterionValue = $(event.currentTarget).val();	
 		}
 		//set the new value to the json object and add it to the model
 		openSearchCriterion[criterionId] = criterionValue;
@@ -164,16 +163,7 @@ var AdvancedSearchView = Backbone.View.extend({
        if (this.onClose) {
           this.onClose();
        }
-    },
-    
-    //TODO TO IMPLMENT
-    updateView : function(){
-    	
-    },
-
-    onClose : function() {
-    },
-	
+    }
 });
 
 return AdvancedSearchView;
