@@ -1,6 +1,6 @@
   
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest', 'search/model/datasetSearch'], 
-		function($, Backbone, Configuration, DataAccessRequest, DataSetSearch) {
+		function($, Backbone, Configuration, DataAccessRequest, DatasetSearch) {
 
 /**
  * This module deals with the creation and submission of a Standing order data access request
@@ -88,14 +88,95 @@ var StandingOrderDataAccessRequest = {
 		
 	},
 	
+	/** the shared standing order url contains :
+	 * 	1- all the search parameters as for as for a shared  search url. 
+	 *  2- scheduling options parameters relative to a standing order request
+	 *  NOTE that the download options parameters are already included in the getCoreURL. 
+	 *  and the openSearch URL can be retrieved from the DatasetSearch model.
+	 */
+	getSharedURL : function(){
+		//get the scheduling object either the STO is TimeDriven or Data-Driven
+		var options = _.values(this.getSchedulingOptions())[0];
+		//TODO EM :update $.param(options)!
+		var url = "#data-services-area/sto/" + DatasetSearch.getCoreURL() + "&" + $.param(options);
+		//add the advanced criteria values selected and already set to the model
+		if (DatasetSearch.get("useAdvancedCriteria")){
+			url += "&useAdvancedCriteria=true";
+		}
+		//add the download options values selected and already set to the model
+		if (DatasetSearch.get("useDownloadOptions")){
+			url += "&useDownloadOptions=true";
+		}
+		return url;
+	},
+	
+	/** Method used in the case of a shared standing order url.
+	 * It fill in the STO request with the given values.
+	 */
+	populateModelfromURL : function(query){
+		
+		this.initialize();
+		
+		var vars = query.split("&");
+		
+	    for (var i = 0; i < vars.length; i++) {
+	        
+	    	var pair = vars[i].split("=");
+	    		
+			switch (pair[0]) {
+				
+			case "startDate": 
+				this.startDate = pair[1].substring(0, pair[1].indexOf('T'));
+				break;
+			case "startTime" : 
+				this.startTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
+				break;
+			case "endTime": 
+				this.endTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
+				break;
+			case "endDate" : 
+				this.endDate = pair[1].substring(0, pair[1].indexOf('T'));
+				break;
+			case "repeatPeriod": 
+				this.repeatPeriod = pair[1];
+				this.timeDriven = true;
+				break;
+			case "slideAcquisitionTime" : 
+				this.slideAcquisitionTime = (pair[1]=="true"); //set boolean value not the string !
+				this.timeDriven = true;
+				break;
+				
+			default :
+//					//set the parameters if there are advanced attributes, download options or attributes of the model
+//					//skip any other parameter
+//					if (_.has(DatasetSearch.dataset.attributes.datasetSearchInfo.attributes, pair[0]) ||
+//							_.has(DatasetSearch.dataset.attributes.datasetSearchInfo.downloadOptions, pair[0]) ||
+//							_.has(DatasetSearch.attributes, pair[0])){ 
+//						
+//						attributes[pair[0]] = pair[1];
+//						//console.log("attributes"); 
+//						//console.log(attributes);
+//					}
+				break;
+	    	}
+	    }
+	    
+		//set open search url
+	    console.log("DatasetSearch.getOpenSearchURL()");
+	    console.log(DatasetSearch.getOpenSearchURL());
+	    this.OpenSearchURL = DatasetSearch.getOpenSearchURL();
+		//set selected download options
+	    this.DownloadOptions = DatasetSearch.getSelectedDownloadOptions();
+	},
+	
 	/** build the Scheduling option property depending on the STO type */
 	getSchedulingOptions : function (){
 		
 		if (this.timeDriven){
 			
 			return { TimeDriven : { 
-				startDate : DataSetSearch.formatDate(this.startDate, this.startTime),
-				endDate : DataSetSearch.formatDate(this.endDate, this.endTime),
+				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
+				endDate : DatasetSearch.formatDate(this.endDate, this.endTime),
 				repeatPeriod : this.repeatPeriod, 
 				slideAcquisitionTime : this.slideAcquisitionTime 
 				} 
@@ -103,9 +184,9 @@ var StandingOrderDataAccessRequest = {
 
 		}else{
 			return { DataDriven : { 
-				startDate : DataSetSearch.formatDate(this.startDate, this.startTime),
-				endDate : DataSetSearch.formatDate(this.endDate, this.endTime)
-				} };
+				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
+				endDate : DatasetSearch.formatDate(this.endDate, this.endTime)
+			} };
 		}
 	},
 	
