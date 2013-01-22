@@ -1,15 +1,15 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
-		function($, Backbone, Configuration, DatasetSearch, SearchResults, SpatialExtentView, TimeExtentView, 
+		function($, Backbone, Configuration, SearchResults, SpatialExtentView, TimeExtentView, 
 				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget,
 				 searchCriteria_template) {
 
 /**
- * The model for this view is a backbone model : DataSetSearch 
+ * The model for this view is a backbone model : DatasetSearch 
  */
 var SearchCriteriaView = Backbone.View.extend({
 
@@ -24,7 +24,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	 */
 	initialize : function() {
 		this.model.on("change:datasetId", this.onDataSetChanged, this);
-		this.model.on("datasetLoaded", this.onDatasetLoaded, this);
+		this.model.on("datasetLoaded", this.displayDatasetRelatedViews, this);
 	},
 	
 	/**
@@ -50,13 +50,8 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Callback method to display the advanced search criteria and the download options
 	 * for the selected dataset once they are loaded
 	 */
-	onDatasetLoaded : function(){
+	displayDatasetRelatedViews : function(){
 		this.$el.find("#searchCriteria").empty();
-		console.log("this.model.attributes");
-		
-		console.log(this.model.attributes);
-		console.log("this.model.dataset.attributes.datasetSearchInfo");
-		console.log(this.model.dataset.attributes.datasetSearchInfo);
 		this.advancedCriteriaView.render();
 		this.$el.find("#downloadOptions").empty();
 		this.downloadOptionsView.render();
@@ -74,7 +69,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 	
 		this.searchButton.click( function() {
-			SearchResults.url = DatasetSearch.getOpenSearchURL();
+			SearchResults.url = self.model.getOpenSearchURL();
 			SearchResults.set({"features" : [] }, {silent : true});
 			SearchResults.fetch();
 			self.$el.ngeowidget('hide');
@@ -113,10 +108,8 @@ var SearchCriteriaView = Backbone.View.extend({
 	
 		this.shareButton.click( function() {
 			
-			console.log(window.location.pathname)
-			console.log( self.model.getSharedUrl() );
 			// Set the opensearch url
-			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedUrl() + '<b>');	
+			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL() + '<b>');	
 			$('#sharedUrlPopup').popup("open",  $( {} )
 				    .jqmData( "position-to", "window" )
 				    .jqmData( "transition", "slide" ));
