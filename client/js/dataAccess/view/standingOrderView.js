@@ -17,6 +17,14 @@ define( ['jquery', 'backbone', 'configuration',
 		},
 		
 		events : {
+			//triggered when Share button is clicked
+			'click #shareSTORequest' : function(event){
+				$("#sharedSTOUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + this.request.getSharedURL() + '<b>');	
+				$('#sharedSTOUrlPopup').popup("open",  $( {} )
+					    .jqmData( "position-to", "window" )
+					    .jqmData( "transition", "slide" ));
+				$('#sharedSTOUrlPopup').trigger('create');
+			},
 			
 			'change #startDateSTO' : function(event){
 				this.request.startDate = $(event.currentTarget).val();
@@ -26,7 +34,7 @@ define( ['jquery', 'backbone', 'configuration',
 				this.request.endDate = $(event.currentTarget).val();
 			},		
 			
-			//set repeat period
+			//set search url
 			'change #openSearchURLArea' : function(event){
 				this.request.OpenSearchURL = $(event.currentTarget).val();
 			},
@@ -94,14 +102,20 @@ define( ['jquery', 'backbone', 'configuration',
 		},
 		
 		render: function(){
+			//get the default values from the model
 			var content = _.template(standingOrderView_template, {startDate : this.request.startDate, 
 																	startTime : this.request.startTime, 
 																	endDate : this.request.endDate,
 																	endTime : this.request.endTime,
+																	timeDriven : this.request.timeDriven,
+																	repeatPeriod  : this.request.repeatPeriod,
+																	slideAcquisitionTime : this.request.slideAcquisitionTime,
 																	OpenSearchURL : this.request.OpenSearchURL});
 			this.$el.append(content);
 			this.$el.find("#standingOrderSpecificMessage").append(this.request.getSpecificMessage());
-			this.$el.find("#timeDrivenParams").hide();
+			if (!this.request.timeDriven){
+				this.$el.find("#timeDrivenParams").hide();
+			}
 			this.delegateEvents();
 
 			return this;
