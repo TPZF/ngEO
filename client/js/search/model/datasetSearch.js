@@ -134,7 +134,7 @@ var DataSetSearch = Backbone.Model.extend({
 			url = this.addDownloadOptions(url);
 		}
 		
-		console.log("DatasetSearch module : getCoreURL method : " + url);
+		//console.log("DatasetSearch module : getCoreURL method : " + url);
 		
 		return url;
 	},
@@ -159,7 +159,7 @@ var DataSetSearch = Backbone.Model.extend({
 			url += "&useDownloadOptions=true";
 		}
 		
-		console.log("DatasetSearch module : getSharedSearchURL method : " + url);
+		//console.log("DatasetSearch module : getSharedSearchURL method : " + url);
 		
 		return url;
 	},
@@ -179,7 +179,6 @@ var DataSetSearch = Backbone.Model.extend({
 			switch (pair[0]) {
 				case "bbox": 
 					var coords = pair[1].split(",");
-					console.log(coords);
 					this.set({west : coords[0]});
 					this.set({south : coords[1]});
 					this.set({east : coords[2]});
@@ -278,7 +277,7 @@ var DataSetSearch = Backbone.Model.extend({
 			+ this.get("east") + "," + this.get("north");
 		}
 		
-		console.log("DatasetSearch module : addGeoTemporalParams : " + url);
+		//console.log("DatasetSearch module : addGeoTemporalParams : " + url);
 		return url;
 	},
 	
@@ -301,7 +300,7 @@ var DataSetSearch = Backbone.Model.extend({
 			});
 		}
 		
-		console.log("DatasetSearch module : addAdvancedCriteria : " + url);
+		//console.log("DatasetSearch module : addAdvancedCriteria : " + url);
 		return url;
 	},
 	
@@ -323,7 +322,7 @@ var DataSetSearch = Backbone.Model.extend({
 			});
 		}
 
-		console.log("DatasetSearch module : addDownloadOptions : " + url);
+		//console.log("DatasetSearch module : addDownloadOptions : " + url);
 		return url;
 	},
 
@@ -352,8 +351,8 @@ var DataSetSearch = Backbone.Model.extend({
 				}
 			});
 		}
-		console.log("Selected download options of dataset : " + this.dataset.attributes.datasetId + " : ");
-		console.log(selectedOptions);
+		//console.log("Selected download options of dataset : " + this.dataset.attributes.datasetId + " : ");
+		//console.log(selectedOptions);
 		
 		return selectedOptions;
 	},
