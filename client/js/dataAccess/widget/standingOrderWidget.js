@@ -36,7 +36,6 @@ define(
 
 				var standingOrderView = new StandingOrderView({
 					el : element,
-					downloadOptions : {},
 					request : StandingOrderDataAccessRequest,
 					parentWidget : self
 				});
