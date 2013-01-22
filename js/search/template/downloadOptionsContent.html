@@ -22,7 +22,12 @@
 		<form>
 				
 			<label id="useDownloadOptions_label" for="useDownloadOptions_input">Use download options</label>
-	  		<input type="checkbox" name="useDownloadOptions" id="useDownloadOptions_input" data-mini="true"/>		
+	  		
+			<% if (attributes.useDownloadOptions == "true") {  %>
+				<input type="checkbox" name="useDownloadOptions" id="useDownloadOptions_input" data-mini="true" checked/>		
+			<% } else { %>	 
+			 	<input type="checkbox" name="useDownloadOptions" id="useDownloadOptions_input" data-mini="true"/>		
+			<% } %>	 
 			
 			<% _.each(dataset.attributes.datasetSearchInfo.downloadOptions, function(option, i) { %>		
 
@@ -32,7 +37,11 @@
 						 
 					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
 						<% _.each(option.values, function(value) { %>
-							<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+							<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName] == value.name)) {  %>						
+								<option value="<%= value.name%>" selected><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+							<% } else { %>	 
+			 					<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>		
+							<% } %>	 
 						<% }); %>
 					</select>	
 			   
