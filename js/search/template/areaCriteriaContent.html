@@ -38,13 +38,15 @@
 
 	<div id="mapExtent" data-role="fieldcontain">
 		<label id="mapExtentCheckBoxLabel" for="mapExtentCheckBox">Use map extent</label>
-		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c" checked="false">
+		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c" <% if (attributes.useExtent) print('checked="checked"'); %> >
 	</div>
 
 
 </div>
 
 <div id="gazetteer">
+	<input type="text" data-type="search" name="search" id="search-gazetteer" value="" />
+	<div id="gazetteer-results"></div>
 </div>
 
 <div id="import">

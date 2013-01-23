@@ -28,6 +28,10 @@
 	   "collapseProducts" : true
 	},
 	
+	"gazetteer" : {
+		"maxResults": 3
+	},
+	
 	"map": {
 	
 		"pp": "EPSG:900913", 
