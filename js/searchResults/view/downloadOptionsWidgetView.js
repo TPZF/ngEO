@@ -43,25 +43,6 @@ var DownloadOptionsWidgetView = Backbone.View.extend({
 		return this;
 	},	
 	
-	setSelectedValues : function(){
-
-		var self = this;
-		var optionSelectId;
-		
-		//set the selected values from the model
-		_.each(this.model.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
-			
-			if (_.has(self.model.attributes, option.argumentName)){
-				optionSelectId = "#" + option.argumentName + Configuration.localConfig.fieldIdSuffixSepartor + Configuration.data.widgetSuffix;
-				//TODO FIX THE SELECTED VALUE FOR THE SELECT
-				//console.log("optionSelectId : " + optionSelectId);
-				//console.log(self.model.attributes[option.argumentName]);
-				//console.log(self.$el.find(optionSelectId));
-				self.$el.find(optionSelectId).val(self.model.attributes[option.argumentName]);
-			}
-		});
-	},
-	
     close : function() {
        this.undelegateEvents();
        this.$el.empty();
