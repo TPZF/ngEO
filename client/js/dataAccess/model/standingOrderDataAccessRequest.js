@@ -53,9 +53,9 @@ var StandingOrderDataAccessRequest = {
 		
 		this.startDate = dateOnly;
 		this.endDate = dateOnly;
-		
-		this.startTime = timeOnly;
-		this.endTime = timeOnly;
+//		UNCOMMENT TO REUSE THE TIME	
+//		this.startTime = timeOnly;
+//		this.endTime = timeOnly;
 	},
 	
 	/** build the request to submit */
@@ -128,12 +128,13 @@ var StandingOrderDataAccessRequest = {
 			case "startDate": 
 				this.startDate = pair[1].substring(0, pair[1].indexOf('T'));
 				break;
-			case "startTime" : 
-				this.startTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
-				break;
-			case "endTime": 
-				this.endTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
-				break;
+//			UNCOMMENT TO REUSE THE TIME	
+//			case "startTime" : 
+//				this.startTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
+//				break;
+//			case "endTime": 
+//				this.endTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
+//				break;
 			case "endDate" : 
 				this.endDate = pair[1].substring(0, pair[1].indexOf('T'));
 				break;
@@ -175,8 +176,11 @@ var StandingOrderDataAccessRequest = {
 		if (this.timeDriven){
 			
 			return { TimeDriven : { 
-				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
-				endDate : DatasetSearch.formatDate(this.endDate, this.endTime),
+//				UNCOMMENT TO REUSE THE TIME				
+//				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
+//				endDate : DatasetSearch.formatDate(this.endDate, this.endTime),
+				startDate : this.startDate,
+				endDate : this.endDate,
 				repeatPeriod : this.repeatPeriod, 
 				slideAcquisitionTime : this.slideAcquisitionTime 
 				} 
@@ -184,8 +188,11 @@ var StandingOrderDataAccessRequest = {
 
 		}else{
 			return { DataDriven : { 
-				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
-				endDate : DatasetSearch.formatDate(this.endDate, this.endTime)
+//				UNCOMMENT TO REUSE THE TIME	
+//				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
+//				endDate : DatasetSearch.formatDate(this.endDate, this.endTime)			
+				startDate : this.startDate,
+				endDate : this.endDate
 			} };
 		}
 	},
