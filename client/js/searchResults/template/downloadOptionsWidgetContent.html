@@ -9,7 +9,11 @@
 					 
 				<select id="<%= option.argumentName %>_widget" data-mini="true" data-theme="c">
 					<% _.each(option.values, function(value) { %>
-						<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+						<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName] == value.name)) {  %>						
+								<option value="<%= value.name%>" selected><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+							<% } else { %>	 
+			 					<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>		
+							<% } %>	 
 					<% }); %>
 				</select>		   
 		   </div>	 	
