@@ -37,8 +37,6 @@ var DownloadOptionsWidget = function() {
 			
 		//trigger jqm styling
 		parentElement.ngeowidget("show"); 
-		//TODO fix the selected value for the combos
-		downloadOptionsWidgetView.setSelectedValues();
 	};
 		
 	/**
