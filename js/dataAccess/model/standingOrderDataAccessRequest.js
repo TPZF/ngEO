@@ -126,7 +126,9 @@ var StandingOrderDataAccessRequest = {
 			switch (pair[0]) {
 				
 			case "startDate": 
-				this.startDate = pair[1].substring(0, pair[1].indexOf('T'));
+//				this.startDate = pair[1].substring(0, pair[1].indexOf('T'));
+				this.startDate = pair[1];
+				console.log(this.startDate);
 				break;
 //			UNCOMMENT TO REUSE THE TIME	
 //			case "startTime" : 
@@ -136,7 +138,9 @@ var StandingOrderDataAccessRequest = {
 //				this.endTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
 //				break;
 			case "endDate" : 
-				this.endDate = pair[1].substring(0, pair[1].indexOf('T'));
+//				this.endDate = pair[1].substring(0, pair[1].indexOf('T'));
+				this.endDate = pair[1];
+				console.log(this.endDate);
 				break;
 			case "repeatPeriod": 
 				this.repeatPeriod = pair[1];
