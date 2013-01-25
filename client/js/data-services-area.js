@@ -1,12 +1,12 @@
 
 define(["jquery", "menubar", "map/map", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
-		"search/widget/searchCriteria", "searchResults/widget/resultsTable",
-		"shopcart/widget/shopcart", "map/widget/toolbarMap",
-		"map/widget/mapPopup",
-		"text!../pages/data-services-area.html", "context-help"], 
+		"search/widget/searchCriteria", "searchResults/widget/resultsTable", "search/widget/dateSliderWidget",  
+		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
+		"text!../pages/data-services-area.html", "context-help", 'jquery.dateRangeSlider'], 
 	function($, MenuBar, Map, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
-			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
+			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, DateSliderWidget,
+			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 	
 return {
 
@@ -104,6 +104,21 @@ return {
 				$('#datasetMessage').html( "Current dataset : " + model.get('datasetId') );
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
+			}
+		});
+		
+		//TODO to be improved
+		$('#timeSlider').hide();
+		// Display the time slider in the bottom of the window when 
+		// the useTimeSlider check box is checked unless remove it
+		DatasetSearch.on('change:useTimeSlider', function(datasetSearch) {
+			var useTimeSlider = datasetSearch.get('datasetId');
+			if ( useTimeSlider ) {
+				$('#timeSlider').show();
+				$('#timeSlider').dateRangeSlider();
+			//	DateSliderWidget($('#timeSlider'));
+			}else{
+				$('#timeSlider').hide();
 			}
 		});
 
