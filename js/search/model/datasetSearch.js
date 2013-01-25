@@ -28,7 +28,8 @@ var DataSetSearch = Backbone.Model.extend({
 		north : "",
 		useExtent : true,
 		useAdvancedCriteria : false, //flag for including advanced search criteria or not		
-		useDownloadOptions : false //flag for including download options or not		
+		useDownloadOptions : false, //flag for including download options or not		
+		useTimeSlider : false //flag for displaying time slider or not
 	},
 	
 	initialize : function() {
