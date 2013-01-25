@@ -19,7 +19,6 @@ var SpatialExtentView = Backbone.View.extend({
 		this.model.on("change:south", function(){$("#south").val(this.model.get("south"));}, this);
 		this.model.on("change:east", function(){$("#east").val(this.model.get("east"));}, this);
 		this.model.on("change:north", function(){$("#north").val(this.model.get("north"));}, this);
-		//TODO fix the check box selection
 		this.model.on("change:useExtent", function(){this.$el.find("input[type='checkbox']").prop("checked", this.model.get("useExtent"))}, this);
 	},
 	
