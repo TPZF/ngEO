@@ -1,0 +1,126 @@
+/**
+ * default development theme for jQRangeSlider
+ * Using fam fam icon set from Mark James, http://www.famfamfam.com/lab/icons/silk/ (Creative Commons Attribution 2.5 License)
+ */
+
+.ui-rangeSlider{
+	font-size: 0.8em;
+	//color:#993366;
+	color:#000000;
+//	height:22px;
+	z-index:1;
+}
+
+.ui-rangeSlider .ui-rangeSlider-innerBar{
+	height: 40px;
+	margin:3px 0px;
+	//background:#709BCD;
+	//background: black;
+	background: @widget-background-color;
+	z-index:2;
+}
+/**  oli  */
+.ui-rangeSlider .ui-rangeSlider-scaleBar{
+	height:40px;
+	margin:3px 0px;
+//	background:#FF9BCD;
+//	background: @widget-background-color;
+	
+//	background:rgba(100,100,100, 0);
+	
+	z-index:1;
+}
+
+.ui-rangeSlider .ui-rangeSlider-scaleUnit{
+	height:40px;
+	margin:0px 0px;
+//	background:#FF9BCD;
+//	background:rgba(100,100,100, 0);
+	//color:#999999;
+	color: white;
+	font-style:normal;
+	z-index:1;
+}
+
+.ui-rangeSlider .ui-rangeSlider-bigScaleUnit{
+	height:40px;
+	margin:0px 0px;
+//	background:#FF9BCD;
+//	background:rgba(100,100,100, 0);
+//	background: @widget-background-color;
+	color: white;
+	font-style:normal;
+	font-weight:900;
+	font-size:190%;
+	z-index:1;
+}
+
+.ui-rangeSlider .ui-rangeSlider-handle{
+	width:3px;
+	height:40px;
+	margin:3px 0px;
+	background:#8F325E;
+	background:rgba(100,100,100, 0.3);
+	
+	cursor:col-resize;
+	z-index:4;
+}
+
+.ui-rangeSlider .ui-rangeSlider-bar{
+	margin: 4px 0;
+	background:#64328F;
+	//background : rgba(50,140,143, 0.5);
+	background : rgba(45, 120, 245, 0.63);
+	height:40px;
+	cursor:move;
+	cursor:grab;
+	cursor: -moz-grab;
+	z-index:3;
+}
+
+.ui-rangeSlider .ui-rangeSlider-bar.ui-draggable-dragging{
+	cursor:	-moz-grabbing;
+	cursor:grabbing;
+}
+
+.ui-rangeSlider-arrow{
+	height:24px;
+	margin:0px 60 0 0;
+	width:26px;
+	background-repeat:no-repeat;
+	cursor:pointer;
+}
+
+.ui-rangeSlider-arrow.ui-rangeSlider-leftArrow{
+	background-image: url('../images/left.png');
+	background-position:left center ;
+	margin:0px 15px 0 0;
+}
+
+.ui-rangeSlider-arrow.ui-rangeSlider-rightArrow{
+	background-image: url('../images/right.png');
+	background-position:left center ;
+	margin:0px 14px 0 0;
+}
+
+.ui-rangeSlider-container{
+	height:22px;
+	margin:0 0 50 0;
+}
+
+.ui-rangeSlider-withArrows .ui-rangeSlider-container{
+	margin:0 35px;
+}
+
+.ui-rangeSlider-noArrow .ui-rangeSlider-container{
+	margin:0;
+}
+
+.ui-rangeSlider-label{
+	padding:2px 5px 6px;
+	margin:0 2px 2px;
+//background-image:url('../images/label.png');
+	background-position:bottom center;
+	background-repeat:no-repeat;
+	color: white;
+}
