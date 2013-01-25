@@ -23,7 +23,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			this.model.set(criterion, {silent:true});			
 		},
 		
-		//catch the criterion range changes of once the slider moving is finished
+		//catch the criterion range changes once the slider moving is finished
 		'slidestop input' : function(event) {
 			this.setInputCriterionValues(event);
 		},
