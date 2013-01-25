@@ -3,10 +3,16 @@ require.config({
      paths: {
         "jquery": "externs/jquery-1.8.3",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+//TODO TO BE REMOVED 
+//		"jqm-datebox-slidebox" : "externs/jqm-datebox-1.1.0.mode.slidebox",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
 		"jquery.dataTables" : "externs/jquery.dataTables",
+		"jquery.dateRangeSlider" : "externs/jQDateRangeSlider",
+		"jquery.rangeSlider" : "externs/jQRangeSlider",
+//TODO TO BE REMOVED 
+//		"jquery.ui" : "externs/jquery-ui-1.10.0.custom.min",		
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"
@@ -30,6 +36,12 @@ require.config({
              exports: 'jQuery'
         },
         
+//TODO TO BE REMOVED        
+//        'jqm-datebox-slidebox': {
+//            deps: ['jqm-datebox-core'],
+//            exports: 'jQuery'
+//        },
+        
         'jqm-datebox-calbox': {
             deps: ['jqm-datebox-core'],
             exports: 'jQuery'
@@ -44,6 +56,11 @@ require.config({
         	 deps: ['jquery'],
              exports: 'jQuery'
         },
+        
+        'jquery.dateRangeSlider' : {
+			deps: ['jquery','jquery.rangeSlider'],
+            exports: 'jQuery'
+		},
         
 		'underscore': {
             deps: [],
