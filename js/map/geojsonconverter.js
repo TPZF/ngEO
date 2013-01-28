@@ -88,7 +88,9 @@ return {
 				break;
 			case "JSON":
 			case "GEOJSON":
-				layer.data = JSON.parse(layer.data);
+				if ( typeof layer.data == "string" ) {
+					layer.data = JSON.parse(layer.data);
+				}
 				layer.type = 'GeoJSON';
 				return true;
 		}

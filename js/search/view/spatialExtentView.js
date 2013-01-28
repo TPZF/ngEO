@@ -9,17 +9,22 @@ var SpatialExtentView = Backbone.View.extend({
 	// The model is a DatasetSearch
 	
 	// Constructor
-	initialize : function(options){
-		
-		this.importedPolygon = null;
+	initialize : function(options) {
+	
 		this.importedLayer = null;
+		this.searchAreaLayer = null;
 		this.mode = "bbox";
-		//update the coordinates when the model has been changed via setting the parameters : Share URL case
-		this.model.on("change:west", function(){$("#west").val(this.model.get("west"));}, this);
-		this.model.on("change:south", function(){$("#south").val(this.model.get("south"));}, this);
-		this.model.on("change:east", function(){$("#east").val(this.model.get("east"));}, this);
-		this.model.on("change:north", function(){$("#north").val(this.model.get("north"));}, this);
-		this.model.on("change:useExtent", function(){this.$el.find("input[type='checkbox']").prop("checked", this.model.get("useExtent"))}, this);
+		
+		// Listen when the searchArea has changed to update the view
+		this.model.on("change:searchArea",  this.onModelChanged, this);
+		
+		// Listen when useExtent is changed to update the view
+		this.model.on("change:useExtent",  function() {
+			var useExtent = $('#mapExtentCheckBoxLabel').hasClass('ui-checkbox-on');
+			if ( useExtent != this.model.get('useExtent') ) {
+				$('#mapExtentCheckBoxLabel').trigger('click');
+			}
+		}, this);
 	},
 	
 	events :{
@@ -39,32 +44,29 @@ var SpatialExtentView = Backbone.View.extend({
 		},
 		
 		//blur insure that values has been manually changed by the user
-		'blur #west' : function(event){
-			this.model.set({"west" : $(event.currentTarget).val()});
+		'blur #bbox input' : function(event){
+			this.model.searchArea.setBBox({
+				west : $("#west").val(),
+				south: $("#south").val(),
+				east: $("#east").val(),
+				north: $("#north").val()
+			});
+			this.updateSearchAreaLayer();
+
 		},
-		
-		'blur #south' : function(event){
-			this.model.set({"south" : $(event.currentTarget).val()});
-		},
-		
-		'blur #east' : function(event){
-			this.model.set({"east" : $(event.currentTarget).val()});
-		},
-		
-		'blur #north' : function(event){
-			this.model.set({"north": $(event.currentTarget).val()});
-		},
-		
-		'click #mapExtentCheckBoxLabel' : function(event){
 			
+		'click #mapExtentCheckBoxLabel' : function(event){
 			var $target = $(event.currentTarget);
 			var useExtent = !($(event.currentTarget).hasClass('ui-checkbox-on'));
-			this.model.set({"useExtent" : useExtent});
+			this.model.set({"useExtent" : useExtent}, { silent: true });
 			if ( useExtent ) {
 				this.synchronizeWithMapExtent();
 				Map.on("endNavigation", this.synchronizeWithMapExtent, this);
+				// Remove the search area layer
+				Map.removeLayer(this.searchAreaLayer);
 			} else {
 				Map.off("endNavigation", this.synchronizeWithMapExtent, this);
+				this.updateSearchAreaLayer();
 			}
 		},
 
@@ -73,6 +75,11 @@ var SpatialExtentView = Backbone.View.extend({
 			if ( !$target.hasClass('ui-btn-active') ) {
 				this.selectGazetteerResult( $target );
 			}
+		},
+		
+		'blur #polygontext': function(event) {
+			this.model.searchArea.setPolygonFromText( $(event.currentTarget).val() );
+			this.updateSearchAreaLayer();
 		},
 		
 		'change #search-gazetteer': function(event) {
@@ -112,22 +119,54 @@ var SpatialExtentView = Backbone.View.extend({
 	 * Update the model with bounding box of the gazetteer result and zoom on it.
 	 */
 	selectGazetteerResult: function($item) {
+		if ( $item.length == 0 )
+			return;
+			
 		$item.parent().find('.ui-btn-active').removeClass('ui-btn-active');
 		$item.addClass('ui-btn-active');
 		var data = $item.data('data');
-			
-		var south = parseFloat(data.boundingbox[0]);
-		var north = parseFloat(data.boundingbox[1]); 
-		var west = parseFloat(data.boundingbox[2]);
-		var east = parseFloat(data.boundingbox[3]);
-		Map.zoomTo( [ west, south, east,  north ] );
 		
-		this.model.set({
-			west : west,
-			south: south,
-			east: east,
-			north: north
-		});
+		if ( data.geotext ) {
+			this.model.searchArea.setFromWKT(data.geotext,true);
+			this.updateSearchAreaLayer();
+		} else {	
+			var south = parseFloat(data.boundingbox[0]);
+			var north = parseFloat(data.boundingbox[1]); 
+			var west = parseFloat(data.boundingbox[2]);
+			var east = parseFloat(data.boundingbox[3]);
+			
+			this.model.searchArea.setBBox({
+				west : west,
+				south: south,
+				east: east,
+				north: north
+			});
+			this.updateSearchAreaLayer();
+		}
+	},
+	
+	/**
+	 * Update the search area layer
+	 */
+	updateSearchAreaLayer: function() {
+		if ( this.searchAreaLayer ) {
+			Map.removeLayer( this.searchAreaLayer );
+		} else {
+			
+			// Fill the layer description
+			this.searchAreaLayer = {
+				name: "Search Area",
+				type: "GeoJSON",
+				visible: true,
+				style: "imported",
+				data: {
+					type: "FeatureCollection",
+					features: [ this.model.searchArea.getFeature() ]
+				}
+			};
+		}
+		Map.addLayer( this.searchAreaLayer );
+		Map.zoomTo( this.model.searchArea.getFeature().bbox );
 	},
 	
 	/**
@@ -135,54 +174,42 @@ var SpatialExtentView = Backbone.View.extend({
 	 * TODO : improve design
 	 */
 	updateModel: function(prevMode,newMode) {
-	
 		// Clean-up previous mode
 		switch (prevMode) {
-			case "import":
-				if ( this.importedLayer ) {
-					Map.removeLayer(this.importedLayer);
-				}
-				break;
 			case "bbox":
 				if ( this.model.get("useExtent") ) {
 					Map.off("endNavigation", this.synchronizeWithMapExtent, this);
 				}
 				break;
 		}
-		
-		// Reset the model
-		this.model.set({
-			west : "",
-			south: "",
-			east: "",
-			north: "",
-			polygon: null
-		}, {
-			silent: true
-		});
-		
 		// Setup new mode
 		switch (newMode) {
 			case "bbox": 
 				if (this.model.get("useExtent")) {
 					Map.on("endNavigation", this.synchronizeWithMapExtent, this);
 					this.synchronizeWithMapExtent();
+					// Remove the search area layer
+					Map.removeLayer(this.searchAreaLayer);
 				} else {
-					this.model.set({
+					this.model.searchArea.setBBox({
 						west : $("#west").val(),
 						south: $("#south").val(),
 						east: $("#east").val(),
 						north: $("#north").val()
-					}, {
-						silent: true
 					});
 				}
 				break;
 			
 			case "import":
 				if ( this.importedLayer ) {
-					Map.addLayer(this.importedLayer);
-					this.model.set("polygon", this.importedPolygon);
+					this.model.searchArea.setFromLayer(this.importedLayer);
+				}
+				break;
+				
+			case "polygon":
+				var text = this.$el.find('#polygontext').val();
+				if ( text && text != "" ) {
+					this.model.searchArea.setPolygonFromText( text );
 				}
 				break;
 				
@@ -193,8 +220,30 @@ var SpatialExtentView = Backbone.View.extend({
 				}
 				break;
 		}
+		
+		// Update the search area layer
+		if (!this.model.get("useExtent")) {
+			this.updateSearchAreaLayer();
+		}
 	},
 	
+	// Called when model has changed
+	onModelChanged: function() {
+		if ( this.model.searchArea.getMode() == 0 ) {
+			var bbox = this.model.searchArea.getBBox();
+			$("#west").val( bbox.west );
+			$("#south").val( bbox.south );
+			$("#east").val( bbox.east );
+			$("#north").val( bbox.north );
+		} else if ( this.model.searchArea.getMode() == 1 ) {
+			$('#polygontext').val( this.model.searchArea.getPolygonText() );
+			$('#radio-polygon-label').trigger('click'); 
+		}
+		if (!this.model.get("useExtent")) {
+			this.updateSearchAreaLayer();
+		}
+	},
+		
 	// Build the view
 	render: function(){
 
@@ -203,85 +252,41 @@ var SpatialExtentView = Backbone.View.extend({
 		// Set the default selected tool between bbox, polygon, gazetteer, import
 		this.$el.find('#gazetteer').hide();
 		this.$el.find('#import').hide();
+		this.$el.find('#polygon').hide();
 		this.$selectedTool = this.$el.find('#bbox');
 				
 		// Setup the drop are for import
 		LayerImport.addDropArea( $('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
 		
-		// Synchronize with map extent if requested
-		if ( this.model.get("useExtent") ) {
-			this.synchronizeWithMapExtent();
+		// Synchronize with use extent
+		if (this.model.get("useExtent")) {
 			Map.on("endNavigation", this.synchronizeWithMapExtent, this);
+			this.synchronizeWithMapExtent();
 		}
+		
 		return this;
-	},
-	
-	// Get the imported feature from a layer
-	getImportedFeature: function(layer) {
-	
-		// First convert the layer to GeoJSON
-		if ( !GeoJSONConverter.convert(layer) ) {
-			return { valid: false, message: 'format not supported' };
-		}
-		
-		var feature;
-		// Then check if the data is a feature collection or not
-		if ( layer.data.type == 'FeatureCollection' ) {
-			if ( layer.data.features.length == 1 ) {
-				feature = layer.data.features[0];
-			} else {
-				return { valid: false, message: 'file must have only one feature, ' + layer.data.features.length + ' found'};
-			}
-		} else {
-			feature = layer.data;
-		}
-	
-		// Then check feature is geojson
-		if ( feature.type != 'Feature' ) {
-			return { valid: false, message: 'invalid feature' };
-		}
-	
-		// Then check feature is polygon
-		if ( feature.geometry.type != 'Polygon' ) {
-			return { valid: false, message: 'feature must be a polygon' };
-		}
-		
-		return { valid: true, feature: feature };
 	},
 	
 	// Callback called when a file is loaded
 	onFileLoaded: function(layer,file) {
-	
-		// Remove previous imported layer if any
-		if ( this.importedLayer ) {
-			Map.removeLayer(this.importedLayer);
-			this.importedLayer = null;
-		}
-		
-		var res = this.getImportedFeature(layer);
+		this.importedLayer = layer;
+		var res = this.model.searchArea.setFromLayer(layer);
 		if (!res.valid) {
 			$('#importMessage').html('Failed to import ' + file.name + ' : ' + res.message + '.' );
 		} else {
-			// Set the polygon on the model
-			this.model.set("polygon",res.feature.geometry.coordinates);
-			// Keep the imported polygon (to be re-used when user click between the serveral tools)
-			this.importedPolygon = res.feature.geometry.coordinates;
 			$('#importMessage').html("File sucessfully imported : " + file.name);
-			layer.name = 'Imported search area (' + file.name + ')';
-			Map.addLayer(layer);
-			this.importedLayer = layer;
-			Map.zoomToFeature(res.feature);
-		}
-		
+			this.updateSearchAreaLayer();
+		}		
 	},
 
 	// Synchronize map extent
     synchronizeWithMapExtent : function(){
     	var mapExtent = Map.getViewportExtent();
-		this.model.set({"west" : mapExtent[0]});
-		this.model.set({"south" : mapExtent[1]});
-		this.model.set({"east" : mapExtent[2]});
-		this.model.set({"north" : mapExtent[3]});
+		this.model.searchArea.setBBox({west : mapExtent[0],
+			south : mapExtent[1],
+			east : mapExtent[2],
+			north : mapExtent[3]
+		});
 		
 		$("#west").val(mapExtent[0]);
 		$("#south").val(mapExtent[1]);
