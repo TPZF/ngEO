@@ -29,7 +29,9 @@
 	},
 	
 	"gazetteer" : {
-		"maxResults": 3
+		"maxResults": 3,
+		"timeout": 5000,
+		"outputPolygon": true
 	},
 	
 	"map": {

@@ -18,22 +18,22 @@
 
 	<div data-role="fieldcontain">
 		<label  for="west">West:</label>
-		<input type="text" name="west" id="west" data-mini="true" data-theme="c" value="<%=attributes.west%>">
+		<input type="text" name="west" id="west" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().west%>">
 	</div>
 	
 		<div data-role="fieldcontain">
 		<label for="south">South:</label>
-		<input type="text" name="south" id="south" data-mini="true" data-theme="c" value="<%=attributes.south%>">
+		<input type="text" name="south" id="south" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().south%>">
 	</div>
 	
 	<div data-role="fieldcontain">
 		<label for="east">East:</label>
-		<input type="text" name="east" id="east" data-mini="true" data-theme="c" value="<%=attributes.east%>">
+		<input type="text" name="east" id="east" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().east%>">
 	</div>
 
 	<div data-role="fieldcontain">
 		<label for="north">North:</label>
-		<input type="text" name="north" id="north" data-mini="true" data-theme="c" value="<%=attributes.north%>">
+		<input type="text" name="north" id="north" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().north%>">
 	</div>
 
 	<div id="mapExtent" data-role="fieldcontain">
@@ -42,6 +42,11 @@
 	</div>
 
 
+</div>
+
+<div id="polygon">
+	<p>Enter coordinates:</p>
+	<textarea id="polygontext"></textarea>
 </div>
 
 <div id="gazetteer">

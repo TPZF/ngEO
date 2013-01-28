@@ -1,6 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataset'], 
-		function($, Backbone, Configuration, Dataset) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/searchArea'], 
+		function($, Backbone, Configuration, Dataset, SearchArea) {
 
 	/**
 	 * This backbone model holds in its attributes :
@@ -21,11 +21,6 @@ var DataSetSearch = Backbone.Model.extend({
 		stopdate: "", //name of the opensearch request parameter
 		startTime : "",
 		stopTime: "", 
-		polygon: null,
-		west: "",
-		south : "",
-		east : "",
-		north : "",
 		useExtent : true,
 		useAdvancedCriteria : false, //flag for including advanced search criteria or not		
 		useDownloadOptions : false, //flag for including download options or not		
@@ -39,6 +34,8 @@ var DataSetSearch = Backbone.Model.extend({
 		this.setDateAndTime(today, today); 
 		//no dataset is selected
 		this.dataset = undefined;
+		// The search area
+		this.searchArea = new SearchArea();
 	},
 	
 	/** load the information for the selected dataset from the server 
@@ -148,8 +145,9 @@ var DataSetSearch = Backbone.Model.extend({
 		//var url = Configuration.baseServerUrl + "/" + viewId + "/"+ this.get("datasetId") + "?";
 		var url = "#data-services-area/search/" +  this.getCoreURL();
 		
-		//add use extent
-		url +=  "&useExtent=" + this.get("useExtent");
+		// add use extent
+		// FL : for now never set useExtent can introduce bugs when dealing with polygon
+		// url +=  "&useExtent=" + this.get("useExtent");
 		
 		//add the advanced criteria values selected and already set to the model
 		if (this.get("useAdvancedCriteria")){
@@ -170,6 +168,9 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	populateModelfromURL : function(query){
 			
+		// Force useExtent to false to avoid bug when setting the geometry
+		this.set('useExtent',false);
+	
 		var vars = query.split("&");
 	    var attributes = {};
 		
@@ -180,10 +181,10 @@ var DataSetSearch = Backbone.Model.extend({
 			switch (pair[0]) {
 				case "bbox": 
 					var coords = pair[1].split(",");
-					this.set({west : coords[0]});
-					this.set({south : coords[1]});
-					this.set({east : coords[2]});
-					this.set({north: coords[3]});
+					this.searchArea.setBBox({west : coords[0],south : coords[1],east : coords[2],north: coords[3]});
+					break;
+				case "g":
+					this.searchArea.setFromWKT(pair[1]);
 					break;
 				case "start" : 
 					this.set({startdate: pair[1]});
@@ -197,7 +198,7 @@ var DataSetSearch = Backbone.Model.extend({
 					if (_.has(this.attributes, pair[0])){
 						attributes[pair[0]] = pair[1];
 					
-					}else{
+					} else {
 						//set the parameters if there are advanced attributes, download options or attributes of the model
 						//skip any other parameter
 						_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(criterion){
@@ -218,8 +219,11 @@ var DataSetSearch = Backbone.Model.extend({
 			}
 					
 	   	}
+				
+	    this.set(attributes);
 		
-	    this.set(attributes);	
+		// Manual trigger of a change:searchArea event because SearchArea is not (yet?) a Backbone model
+		this.trigger('change:searchArea');
 
 	},
 	
@@ -249,34 +253,8 @@ var DataSetSearch = Backbone.Model.extend({
 	
 		url = url + "start=" + this.get("startdate")  + "&" + 
 		"stop=" + this.get("stopdate");
-
-		if (this.get("polygon")) {
 		
-			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
-			var polygon = this.get("polygon");
-			url += "&g=POLYGON(";
-			for ( var j = 0; j < polygon.length; j++ ) {
-				if ( j != 0 ) {
-					url += ",";
-				}
-				url += "(";
-				for ( var i = 0; i < polygon[j].length; i++ ) {
-					if ( i != 0 ) {
-						url += ",";
-					}
-					url += polygon[j][i][1] + " " + polygon[j][i][0]
-				}
-				url += ")";
-			}
-			
-			url += ")";
-		
-		}else if (this.get("west") != "" && this.get("south") != ""
-			&& this.get("east") != "" && this.get("north") != ""){
-		
-			url += "&bbox=" + this.get("west") + "," + this.get("south") + "," 
-			+ this.get("east") + "," + this.get("north");
-		}
+		url += "&" + this.searchArea.getOpenSearchParameter();
 		
 		//console.log("DatasetSearch module : addGeoTemporalParams : " + url);
 		return url;
