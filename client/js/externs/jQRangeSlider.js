@@ -91,107 +91,117 @@
 				.css("position", "absolute")
 				.addClass("ui-draggable");
 			
-//			this.leftHandle.bind({
-//				// add focus to the leftHandle
-//				mousedown: function(event) {		
-//					$( this ).focus();
-//
-//					//$(this).addClass(".ui-draggable-dragging");
-//					
-//					console.log("startMovingLeftHandle...." + event);
-//		        	//evt = evt || window.event;
-//		            var posX = event.clientX;
-//		            divLeft = self.leftHandle.offset().left;
-//		            
-//		            var diffX = divLeft - posX;
-//		           
-//		            document.onmousemove = function(event){
-//		            	
-//		            	event = event || window.event;
-//		                var posX = event.clientX;
-//		                var left = posX - diffX;
-//						var right = left + self.bar.outerWidth(true) - 1;
-//						var min = this._values.min;
-			//			var max = this._values.max;
-			//
-			//			// oli 
-			//			this.moveScale=false;
-			//			min = this._getValue(ui.position.left);
-			//			
-			//			if (min > max){
-			//				this._switchHandles();
-			//				var temp = min;
-			//				min = max;
-			//				max = temp;
-			//			}
-			//
-			//				
-			//			this._privateValues(min, max);
-			//			
-			//			console.log("min: "+min+" max: "+max);
-			//			this._startScaleScroll();		// oli	
-//		            };
-//					//self.userModified_bar = false;
-//					//self.mouseMoved_bar = false;
-//
-//					//self.refresh( event );
-//				//	self._trigger( "start" );
-//				//	return false;
-//				},
-//				
-//				
-//				focus: function() {
-//					$( this ).addClass( $.mobile.focusClass );
-//				}
-//
-//			});
-//			
+			this.leftHandle.bind({
+				// add focus to the rightHandle
+				mousedown: function(event) {
+					
+					$( this ).focus();
+	
+					//$(this).addClass(".ui-draggable-dragging");
+					
+					console.log("startMovingLeftHandle...." + event);
+		        	//evt = evt || window.event;
+	
+					var posX = event.clientX;
+
+				 	var leftHandle = $(this).offset().left;
+				 	console.log('leftHandle' + leftHandle);
+		            console.log('posX' + posX);
+		            var diffX = posX - leftHandle;
+		            console.log('diffX' + diffX);
+		            
+		            document.onmousemove = function(event){
+	            	
+		            	event = event || window.event;
+		                var posX = event.clientX;
+		                var left = posX - diffX;
+		                
+		            	var min = self._values.min;
+		    			var max = self._values.max;
+	
+		    			// oli 
+		    			self.moveScale=false;
+		    			
+		    			console.log("posX == " + posX);
+		    			min = self._getValue(left);
+		    			
+		    			if (min > max){
+		    				self._switchHandles();
+		    				var temp = min;
+		    				min = max;
+		    				max = temp;
+		    			}
+		    				
+		    			self._privateValues(min, max);
+		    			//self._position();
+		    			console.log("min: "+min+" max: "+max);
+		    			self._startScaleScroll();		// oli	
+		            };
+	
+				},
+				
+				focus: function() {
+					$( this ).addClass( $.mobile.focusClass );
+				}
+		});
 			
 			this.rightHandle = $("<div class='ui-rangeSlider-handle ui-rangeSlider-rightHandle' />")
 				.css("position", "absolute")
 				.addClass("ui-draggable");
 			
-//			this.rightHandle.bind({
-//				// add focus to the rightHandle
-//				mousedown: function(event) {
-//					
-//					$( this ).focus();
-//
-//					//$(this).addClass(".ui-draggable-dragging");
-//					
-//					console.log("startMovingRightHandle...." + event);
-//		        	//evt = evt || window.event;
-//		            var posX = event.clientX;
-//
-//		            document.onmousemove = function(event){
-//		            	
-//		            	var min = self._values.min;
-//		    			var max = self._values.max;
-//
-//		    			// oli 
-//		    			self.moveScale=false;
-//		    			max = self._getValue(posX);
-//		    			
-//		    			if (min > max){
-//		    				self._switchHandles();
-//		    				var temp = min;
-//		    				min = max;
-//		    				max = temp;
-//		    			}
-//		    				
-//		    			self._setValues(min, max);
-//		    			//self._position();
-//		    			console.log("min: "+min+" max: "+max);
-//		    			self._startScaleScroll();		// oli	
-//		            };
-//				},
-//				
-//				
-//				focus: function() {
-//					$( this ).addClass( $.mobile.focusClass );
-//				}
-//
-//			});
+			this.rightHandle.bind({
+				// add focus to the rightHandle
+				mousedown: function(event) {
+					
+					$( this ).focus();
+
+					//$(this).addClass(".ui-draggable-dragging");
+					
+					console.log("startMovingRightHandle...." + event);
+		        	//evt = evt || window.event;
+
+						var posX = event.clientX;
+
+					 	var barRight = $(this).offset().left;
+					 	console.log('barRight' + barRight);
+			            console.log('posX' + posX);
+			            var diffX = posX - barRight;
+			            console.log('diffX' + diffX);
+			            
+			            document.onmousemove = function(event){
+		            	
+		            	event = event || window.event;
+		                var posX = event.clientX;
+		                var left = posX - diffX;
+		                
+		            	var min = self._values.min;
+		    			var max = self._values.max;
+
+		    			// oli 
+		    			self.moveScale=false;
+		    			
+		    			console.log("posX == " + posX);
+		    			max = self._getValue(left);
+		    			
+		    			if (min > max){
+		    				self._switchHandles();
+		    				var temp = min;
+		    				min = max;
+		    				max = temp;
+		    			}
+		    				
+		    			self._privateValues(min, max);
+		    			//self._position();
+		    			console.log("min: "+min+" max: "+max);
+		    			self._startScaleScroll();		// oli	
+		            };
+
+				},
+				
+				focus: function() {
+					$( this ).addClass( $.mobile.focusClass );
+				}
+			});
 			
 			this.innerBar = $("<div class='ui-rangeSlider-innerBar' />")
 				.css("position", "absolute")
@@ -214,23 +224,23 @@
 				.css("position", "absolute")
 				.addClass("ui-draggable");
 			
-			
-			
 			this.bar.bind({
+				
 				// add focus to the bar
 				mousedown: function(event) {
 					$( this ).focus();
 					
-					//$(this).addClass(".ui-draggable-dragging");
+					$(this).addClass(".ui-draggable-dragging");
 					
 					console.log("startMovingBar...." + event);
 		        	//evt = evt || window.event;
 		            var posX = event.clientX;
 		            
 		            var barLeft = self.bar.offset().left;
-		            
+		            console.log('barLeft' + barLeft);
+		            console.log('posX' + posX);
 		            var diffX = posX - barLeft;
-		           
+		            console.log('diffX' + diffX);
 		            document.onmousemove = function(event){
 		            	
 		            	event = event || window.event;
@@ -242,27 +252,19 @@
 						self._setValues(self._getValue(left), self._getValue(right));
 						self._positionHandles();
 		            };
-					//self.userModified_bar = false;
-					//self.mouseMoved_bar = false;
-
-					//self.refresh( event );
-				//	self._trigger( "start" );
-				//	return false;
 				},
-				
-				
-				focus: function() {
+			
+				focus : function() {
 					$( this ).addClass( $.mobile.focusClass );
 				},
 
 				mouseout : function() {
 					$( this ).removeClass( $.mobile.focusClass );
-				},			
+				}			
 			});
 
-
-				//TODO REMOVE mouse wheel
-				//.bind("mousewheel", $.proxy(this._wheelOnBar, this));
+			//TODO REMOVE mouse wheel
+			//.bind("mousewheel", $.proxy(this._wheelOnBar, this));
 			
 			this.arrows.left = $("<div class='ui-rangeSlider-arrow ui-rangeSlider-leftArrow' />")
 				.css("position", "absolute")
@@ -277,7 +279,6 @@
 				.bind("mousedown", $.proxy(this._startScrollRight, this));
 			
 			$(document).bind("mouseup", $.proxy(function(){this._barStop(); this._stopScroll(); document.onmousemove = function(){};}, this));
-
 
  			//oli
  			this.innerBar
@@ -350,8 +351,7 @@
 				min = max;
 				max = temp;
 			}
-
-				
+	
 			this._privateValues(min, max);
 			
 			console.log("min: "+min+" max: "+max);
@@ -381,7 +381,7 @@
 			this._position();
 			console.log("Bar stopped");
 			this.bar.addClass( $.mobile.focusClass );
-			//this.bar.removeClass(".ui-draggable-dragging");
+			this.bar.removeClass(".ui-draggable-dragging");
 			this._prepareFiringChanged();
 		},
 
