@@ -1,11 +1,11 @@
 
 define(["jquery", "menubar", "map/map", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
-		"search/widget/searchCriteria", "searchResults/widget/resultsTable", "search/widget/dateSliderWidget",  
+		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help", 'jquery.dateRangeSlider'], 
 	function($, MenuBar, Map, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
-			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget, DateSliderWidget,
+			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 	
 return {
@@ -116,7 +116,15 @@ return {
 			if ( useTimeSlider ) {
 				$('#timeSlider').show();
 				$('#timeSlider').dateRangeSlider();
-			//	DateSliderWidget($('#timeSlider'));
+//												({"bounds": {"min" : new Date(2013,1,26), "max" : new Date(2017,12,30)},
+//												"scaleBounds", {"min" : new Date(2013,1,26), "max" :new Date(2017,12,30)}
+//												});
+//								._setOption(bounds, {min : new Date(datasetSearch.get('startdate')), max:new Date(datasetSearch.get('stopdate'))})
+//								._setOption(scaleBounds, {min : new Date(datasetSearch.get('startdate')), max:new Date(datasetSearch.get('stopdate'))});
+//				._setOption(bounds, {min : new Date(2013,1,26), max:new Date(2017,12,30)})
+//				._setOption();
+
+				//	DateSliderWidget($('#timeSlider'));
 			}else{
 				$('#timeSlider').hide();
 			}
