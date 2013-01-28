@@ -115,18 +115,14 @@ return {
 			var useTimeSlider = datasetSearch.get('datasetId');
 			if ( useTimeSlider ) {
 				$('#timeSlider').show();
-				$('#timeSlider').dateRangeSlider();
-//												({"bounds": {"min" : new Date(2013,1,26), "max" : new Date(2017,12,30)},
-//												"scaleBounds", {"min" : new Date(2013,1,26), "max" :new Date(2017,12,30)}
-//												});
-//								._setOption(bounds, {min : new Date(datasetSearch.get('startdate')), max:new Date(datasetSearch.get('stopdate'))})
-//								._setOption(scaleBounds, {min : new Date(datasetSearch.get('startdate')), max:new Date(datasetSearch.get('stopdate'))});
-//				._setOption(bounds, {min : new Date(2013,1,26), max:new Date(2017,12,30)})
-//				._setOption();
+				$('#timeSlider').dateRangeSlider({bounds: {min : datasetSearch.getStartDate(), max : datasetSearch.getStopDate()},
+												scaleBounds: {min : datasetSearch.getStartDate(), max : datasetSearch.getStopDate()},
+												defaultValues : {min : datasetSearch.getStartDate(), max : datasetSearch.getStopDate()}});
 
-				//	DateSliderWidget($('#timeSlider'));
 			}else{
-				$('#timeSlider').hide();
+				//TODO EM : destroy does not work
+				$('#timeSlider').dateRangeSlider('destroy');
+				//$('#timeSlider').empty();
 			}
 		});
 
