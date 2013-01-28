@@ -82,6 +82,11 @@
 			}
 			
 			return new Date($.ui.rangeSlider.prototype.max.apply(this));
-		}		
+		}, 
+		
+		//TODO destroy does not work
+		destroy: function(){
+			$.ui.rangeSlider.prototype.destroy.apply(this);
+		}
 	});
 })(jQuery);
