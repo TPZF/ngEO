@@ -68,8 +68,14 @@
 		speed: 0,
 		toc: true,
 		
-		//dragging_rightHandle: false,
-		
+
+//		dragging_leftHandle: false,
+//		dragging_rightHandle: false,
+//		dragging_bar: false,
+//
+//		beforeStart: null,
+//		userModified: false,
+//		mouseMoved: false,
 		
 		_create: function(){
 			this._values = this.options.defaultValues;
@@ -79,24 +85,123 @@
 			this.changing = {min:false, max:false};
 			this.changed = {min:false, max:false};
 			
+			var self = this;
+			
 			this.leftHandle = $("<div class='ui-rangeSlider-handle  ui-rangeSlider-leftHandle' />")
-//				.draggable({axis:"x", containment: "parent",
-//					drag: $.proxy(this._handleMoved, this), 
-//					stop: $.proxy(this._handleStop, this),
-//					containment: "parent"})
-				.css("position", "absolute");
+				.css("position", "absolute")
+				.addClass("ui-draggable");
+			
+//			this.leftHandle.bind({
+//				// add focus to the leftHandle
+//				mousedown: function(event) {		
+//					$( this ).focus();
+//
+//					//$(this).addClass(".ui-draggable-dragging");
+//					
+//					console.log("startMovingLeftHandle...." + event);
+//		        	//evt = evt || window.event;
+//		            var posX = event.clientX;
+//		            divLeft = self.leftHandle.offset().left;
+//		            
+//		            var diffX = divLeft - posX;
+//		           
+//		            document.onmousemove = function(event){
+//		            	
+//		            	event = event || window.event;
+//		                var posX = event.clientX;
+//		                var left = posX - diffX;
+//						var right = left + self.bar.outerWidth(true) - 1;
+//						var min = this._values.min;
+			//			var max = this._values.max;
+			//
+			//			// oli 
+			//			this.moveScale=false;
+			//			min = this._getValue(ui.position.left);
+			//			
+			//			if (min > max){
+			//				this._switchHandles();
+			//				var temp = min;
+			//				min = max;
+			//				max = temp;
+			//			}
+			//
+			//				
+			//			this._privateValues(min, max);
+			//			
+			//			console.log("min: "+min+" max: "+max);
+			//			this._startScaleScroll();		// oli	
+//		            };
+//					//self.userModified_bar = false;
+//					//self.mouseMoved_bar = false;
+//
+//					//self.refresh( event );
+//				//	self._trigger( "start" );
+//				//	return false;
+//				},
+//				
+//				
+//				focus: function() {
+//					$( this ).addClass( $.mobile.focusClass );
+//				}
+//
+//			});
+//			
+			
 			this.rightHandle = $("<div class='ui-rangeSlider-handle ui-rangeSlider-rightHandle' />")
-//				.draggable({axis:"x", containment: "parent",
-//					drag: $.proxy(this._handleMoved, this), 
-//					stop: $.proxy(this._handleStop, this),
-//					containment: "parent"})
-				.css("position", "absolute");
+				.css("position", "absolute")
+				.addClass("ui-draggable");
+			
+//			this.rightHandle.bind({
+//				// add focus to the rightHandle
+//				mousedown: function(event) {
+//					
+//					$( this ).focus();
+//
+//					//$(this).addClass(".ui-draggable-dragging");
+//					
+//					console.log("startMovingRightHandle...." + event);
+//		        	//evt = evt || window.event;
+//		            var posX = event.clientX;
+//		            var diffX = self.rightHandle.offset().left - posX;
+//		           
+//		            document.onmousemove = function(event){
+//		            	
+//		            	var min = self._values.min;
+//		    			var max = self._values.max;
+//
+//		    			// oli 
+//		    			self.moveScale=false;
+//		    			max = self._getValue(self.rightHandle.offset().left - 1 + self.rightHandle.outerWidth(true));
+//		    			
+//		    			if (min > max){
+//		    				self._switchHandles();
+//		    				var temp = min;
+//		    				min = max;
+//		    				max = temp;
+//		    			}
+//		    				
+//		    			self._privateValues(min, max);
+//		    			
+//		    			console.log("min: "+min+" max: "+max);
+//		    			self._startScaleScroll();		// oli	
+//		            };
+//				},
+//				
+//				
+//				focus: function() {
+//					$( this ).addClass( $.mobile.focusClass );
+//				}
+//
+//			});
 			
 			this.innerBar = $("<div class='ui-rangeSlider-innerBar' />")
 				.css("position", "absolute")
 				.css("overflow","hidden")
 				.css("top", 0)
-				.css("left", 0);
+				.css("left", 0)
+				.bind("click", function(event){event.preventDefault()})
+				.bind("mousemouve", function(event){event.preventDefault()})
+				.bind("mousedown", function(event){event.preventDefault()});
 			//oli
 			this.scaleBar = $("<div class='ui-rangeSlider-scaleBar' />")
 				.css("position", "absolute")
@@ -104,15 +209,63 @@
 				.css("left", 0);
 		
 			this.container = $("<div class='ui-rangeSlider-container' />")
-				.css("position", "absolute");
+				.css("position", "absolute")
+				//prevent default behaviour of clcik and start drag on the container
+				.bind("mousedown", function(event){event.preventDefault()});
 			
 			this.bar = $("<div class='ui-rangeSlider-bar' />")
-//				.draggable({axis:"x", containment: "parent",
-//					drag: $.proxy(this._barMoved, this), 
-//					stop: $.proxy(this._barStop, this),
-//					containment: this.container})
 				.css("position", "absolute")
-				.bind("mousewheel", $.proxy(this._wheelOnBar, this));
+				.addClass("ui-draggable");
+			
+			
+			
+			this.bar.bind({
+				// add focus to the bar
+				mousedown: function(event) {
+					$( this ).focus();
+					
+					//$(this).addClass(".ui-draggable-dragging");
+					
+					console.log("startMovingBar...." + event);
+		        	//evt = evt || window.event;
+		            var posX = event.clientX;
+		            
+		            var barLeft = self.bar.offset().left;
+		            
+		            var diffX = posX - barLeft;
+		           
+		            document.onmousemove = function(event){
+		            	
+		            	event = event || window.event;
+		                var posX = event.clientX;
+		                var left = posX - diffX;
+						var right = left + self.bar.outerWidth(true) - 1;
+						self._startScaleScroll();	// oli	
+
+						self._setValues(self._getValue(left), self._getValue(right));
+						self._positionHandles();
+		            };
+					//self.userModified_bar = false;
+					//self.mouseMoved_bar = false;
+
+					//self.refresh( event );
+				//	self._trigger( "start" );
+				//	return false;
+				},
+				
+				
+				focus: function() {
+					$( this ).addClass( $.mobile.focusClass );
+				},
+
+				mouseout : function() {
+					$( this ).removeClass( $.mobile.focusClass );
+				},			
+			});
+
+
+				//TODO REMOVE mouse wheel
+				//.bind("mousewheel", $.proxy(this._wheelOnBar, this));
 			
 			this.arrows.left = $("<div class='ui-rangeSlider-arrow ui-rangeSlider-leftArrow' />")
 				.css("position", "absolute")
@@ -126,7 +279,7 @@
 				.css("top", 10)
 				.bind("mousedown", $.proxy(this._startScrollRight, this));
 			
-			$(document).bind("mouseup", $.proxy(this._stopScroll, this));
+			$(document).bind("mouseup", $.proxy(function(){this._barStop(); this._stopScroll(); document.onmousemove = function(){};}, this));
 
 
  			//oli
@@ -144,7 +297,7 @@
 				.append(this.arrows.left)
 				.append(this.arrows.right)
 				.addClass("ui-rangeSlider")
-				.bind("mousewheel", $.proxy(this._wheelOnContainer, this));
+//				.bind("mousewheel", $.proxy(this._wheelOnContainer, this));
 			
 			if (this.element.css("position") != "absolute"){
 				this.element.css("position", "relative");
@@ -175,20 +328,66 @@
 			setTimeout($.proxy(this._initValues, this), 1);
 
 			//this._createScale();
-			
-			//EM draggable
-			$.extend( this, {
-				valuebg: valuebg,
-				dragging_leftHandle: false,
-				dragging_rightHandle: false,
-				dragging_bar: false,
-				beforeStart: null,
-				userModified: false,
-				mouseMoved: false
-			});
 
 		},
 		
+		_handleMoved: function(){
+			var min = this._values.min;
+			var max = this._values.max;
+
+			// oli 
+			this.moveScale=false;
+
+			if (ui.helper[0] == this.leftHandle[0]){
+					min = this._getValue(ui.position.left);
+			}else if (ui.helper[0] == this.rightHandle[0])
+			{
+				max = this._getValue(ui.position.left - 1 + ui.helper.outerWidth(true));
+			}else{
+				return;
+			}
+			
+			if (min > max){
+				this._switchHandles();
+				var temp = min;
+				min = max;
+				max = temp;
+			}
+
+				
+			this._privateValues(min, max);
+			
+			console.log("min: "+min+" max: "+max);
+			this._startScaleScroll();		// oli	
+		},
+		
+		_handleStop: function(){
+			this._position();
+			this._prepareFiringChanged();
+			// oli 
+			this.moveScale=true;
+		},
+		
+//		_barMoved: function(xpos){
+//			//FIXME
+//			var left = event.target.position.left;
+//			
+//			var right = left + this.bar.outerWidth(true) - 1;
+//			this._startScaleScroll();	// oli	
+//
+//			this._setValues(this._getValue(left), this._getValue(right));
+//			this._positionHandles();
+//				
+//		},
+		
+		_barStop: function(){
+			this._position();
+			console.log("Bar stopped");
+			this.bar.addClass( $.mobile.focusClass );
+			//this.bar.removeClass(".ui-draggable-dragging");
+			this._prepareFiringChanged();
+		},
+
 		_initWidth: function(){
 			this.container.css("width", this.element.width() - this.container.outerWidth(true) + this.container.width());
 			this.innerBar.css("width", this.container.width() - this.innerBar.outerWidth(true) + this.innerBar.width());
@@ -424,11 +623,7 @@
 				//.css("left",tickWidth*tickNb*-1+tickWidth*tickNb);
 	
 		},
-
-
-			
-
-	
+		
 		//oli
 		_positionScaleRight: function(quantity){
 			var lastPos=this.scalePosition;
@@ -465,26 +660,7 @@
 			this._positionLabels();
 		},
 		
-		_barMoved: function(event, ui){
-			var left = ui.position.left;
-			
-			var right = left + this.bar.outerWidth(true) - 1;
-			this._startScaleScroll();	// oli	
 
-			this._setValues(this._getValue(left), this._getValue(right));
-			this._positionHandles();
-				
-		},
-		
-		_barStop: function(event, ui){
-			this._position();
-			
-			// oli 
-			console.log("Bar stopped");
-			
-			this._prepareFiringChanged();
-		},
-		
 		_switchHandles: function(){
 				var temp = this.leftHandle;
 				this.leftHandle = this.rightHandle;
@@ -496,43 +672,6 @@
 				this.rightHandle
 					.addClass("ui-rangeSlider-rightHandle")
 					.removeClass("ui-rangeSlider-leftHandle");
-		},
-		
-		_handleMoved: function(event, ui){
-			var min = this._values.min;
-			var max = this._values.max;
-
-			// oli 
-			this.moveScale=false;
-
-			if (ui.helper[0] == this.leftHandle[0]){
-					min = this._getValue(ui.position.left);
-			}else if (ui.helper[0] == this.rightHandle[0])
-			{
-				max = this._getValue(ui.position.left - 1 + ui.helper.outerWidth(true));
-			}else{
-				return;
-			}
-			
-			if (min > max){
-				this._switchHandles();
-				var temp = min;
-				min = max;
-				max = temp;
-			}
-
-				
-			this._privateValues(min, max);
-			
-			console.log("min: "+min+" max: "+max);
-			this._startScaleScroll();		// oli	
-		},
-		
-		_handleStop: function(event, ui){
-			this._position();
-			this._prepareFiringChanged();
-			// oli 
-			this.moveScale=true;
 		},
 		
 		_changing: function(min, max){
@@ -562,6 +701,7 @@
 			setTimeout($.proxy(function(){this._fireChanged(last);}, this), 1000);
 		},
 		
+
 		_fireChanged: function(last){
 			if (this.lastWheel == last && !this.bar.hasClass("ui-draggable-dragging") && !this.leftHandle.hasClass("ui-draggable-dragging") && !this.rightHandle.hasClass("ui-draggable-dragging")){
 				var changed = false;
@@ -679,13 +819,13 @@
 		 * Scrolling
 		 */
 		
-		_startScrollLeft: function(event, ui){
+		_startScrollLeft: function(event){
 			this.lastScroll = Math.random();
 			this.scrollCount = 0;
 			this._continueScrollingRight(-10, this.lastScroll);
 		},
 		
-		_startScrollRight: function(event, ui){
+		_startScrollRight: function(event){
 			this.lastScroll = Math.random();
 			this.scrollCount = 0;
 			this._continueScrollingRight(10, this.lastScroll);
@@ -701,7 +841,7 @@
 			}
 		},
 		
-		_stopScroll: function(event, ui){
+		_stopScroll: function(){
 			this.lastScroll = Math.random();
 			//this.toc = true;
 			this.lastScaleScroll = Math.random();
