@@ -162,8 +162,7 @@
 //					console.log("startMovingRightHandle...." + event);
 //		        	//evt = evt || window.event;
 //		            var posX = event.clientX;
-//		            var diffX = self.rightHandle.offset().left - posX;
-//		           
+//
 //		            document.onmousemove = function(event){
 //		            	
 //		            	var min = self._values.min;
@@ -171,7 +170,7 @@
 //
 //		    			// oli 
 //		    			self.moveScale=false;
-//		    			max = self._getValue(self.rightHandle.offset().left - 1 + self.rightHandle.outerWidth(true));
+//		    			max = self._getValue(posX);
 //		    			
 //		    			if (min > max){
 //		    				self._switchHandles();
@@ -180,8 +179,8 @@
 //		    				max = temp;
 //		    			}
 //		    				
-//		    			self._privateValues(min, max);
-//		    			
+//		    			self._setValues(min, max);
+//		    			//self._position();
 //		    			console.log("min: "+min+" max: "+max);
 //		    			self._startScaleScroll();		// oli	
 //		            };
@@ -198,10 +197,8 @@
 				.css("position", "absolute")
 				.css("overflow","hidden")
 				.css("top", 0)
-				.css("left", 0)
-				.bind("click", function(event){event.preventDefault()})
-				.bind("mousemouve", function(event){event.preventDefault()})
-				.bind("mousedown", function(event){event.preventDefault()});
+				.css("left", 0);
+
 			//oli
 			this.scaleBar = $("<div class='ui-rangeSlider-scaleBar' />")
 				.css("position", "absolute")
