@@ -363,6 +363,18 @@ var DataSetSearch = Backbone.Model.extend({
 		
 	},
 	
+	/** get startdate as a date */
+	getStartDate : function(){
+		var dmy = this.get("startdate").split('-');
+		return new Date(dmy[2], dmy[1], dmy[0]);
+	},
+	
+	/** get stop date as a date */
+	getStopDate : function(){
+		var dmy = this.get("stopdate").split('-');
+		return new Date(dmy[2], dmy[1], dmy[0]);
+	},
+	
 	/** Format to openSearch compliant date format : 
 	 * the seconds are added manually since not handled by the TimeBox widget
 	 * to confirm later whether to use another widget...
