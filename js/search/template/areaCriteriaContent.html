@@ -40,13 +40,14 @@
 		<label id="mapExtentCheckBoxLabel" for="mapExtentCheckBox">Use map extent</label>
 		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c" <% if (attributes.useExtent) print('checked="checked"'); %> >
 	</div>
-
+	<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>
 
 </div>
 
 <div id="polygon">
 	<p>Enter coordinates:</p>
-	<textarea id="polygontext"></textarea>
+	<textarea id="polygontext" rows="10"></textarea>
+	<button data-role="button" data-mini="true"  id="drawpolygon">Draw</button>
 </div>
 
 <div id="gazetteer">

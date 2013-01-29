@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'map/map', 'map/layerImport', 'map/geojsonconverter', 'map/gazetteer',
+define( ['jquery', 'backbone', 'map/map', 'map/layerImport', 'map/geojsonconverter', 'map/gazetteer', 'map/rectangleHandler', 'map/polygonHandler',
          'text!search/template/areaCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, Map, LayerImport, GeoJSONConverter, Gazetteer, areaCriteria_template) {
+		function($, Backbone, Map, LayerImport, GeoJSONConverter, Gazetteer, RectangleHandler, PolygonHandler, areaCriteria_template) {
 
 var SpatialExtentView = Backbone.View.extend({
 
@@ -43,6 +43,35 @@ var SpatialExtentView = Backbone.View.extend({
 			this.mode = val;
 		},
 		
+		'click #drawbbox': function(event) {
+			$('#datasetSearchCriteria').ngeowidget('hide');
+			this.model.set('useExtent',false);
+			var self = this;
+			RectangleHandler.start({
+				layer: this.searchAreaLayer,
+				stop: function() {
+					$('#datasetSearchCriteria').ngeowidget('show');
+					var bbox = self.model.searchArea.getBBox();
+					$("#west").val( bbox.west );
+					$("#south").val( bbox.south );
+					$("#east").val( bbox.east );
+					$("#north").val( bbox.north );
+				}
+			});
+		},
+		
+		'click #drawpolygon': function(event) {
+			$('#datasetSearchCriteria').ngeowidget('hide');
+			var self = this;
+			PolygonHandler.start({
+				layer: this.searchAreaLayer,
+				stop: function() {
+					$('#datasetSearchCriteria').ngeowidget('show');
+					$('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
+				}
+			});
+		},
+		
 		//blur insure that values has been manually changed by the user
 		'blur #bbox input' : function(event){
 			this.model.searchArea.setBBox({
@@ -74,6 +103,7 @@ var SpatialExtentView = Backbone.View.extend({
 			var $target = $(event.currentTarget);			
 			if ( !$target.hasClass('ui-btn-active') ) {
 				this.selectGazetteerResult( $target );
+				Map.zoomTo( this.model.searchArea.getFeature().bbox );
 			}
 		},
 		
@@ -107,6 +137,7 @@ var SpatialExtentView = Backbone.View.extend({
 								.listview();
 
 							self.selectGazetteerResult( $('#gazetteer-results').find('li:first') );
+							Map.zoomTo( self.model.searchArea.getFeature().bbox );
 						}
 					});
 			}
@@ -152,21 +183,19 @@ var SpatialExtentView = Backbone.View.extend({
 		if ( this.searchAreaLayer ) {
 			Map.removeLayer( this.searchAreaLayer );
 		} else {
-			
-			// Fill the layer description
+			// Create a layer for the search area
 			this.searchAreaLayer = {
 				name: "Search Area",
 				type: "GeoJSON",
 				visible: true,
-				style: "imported",
-				data: {
-					type: "FeatureCollection",
-					features: [ this.model.searchArea.getFeature() ]
-				}
+				style: "search-area",
+				data: this.model.searchArea.getFeature()
 			};
 		}
 		Map.addLayer( this.searchAreaLayer );
-		Map.zoomTo( this.model.searchArea.getFeature().bbox );
+		
+		// TODO maybe a 'smart' zoomTo is needed?
+		//Map.zoomTo( this.model.searchArea.getFeature().bbox );
 	},
 	
 	/**
@@ -188,7 +217,7 @@ var SpatialExtentView = Backbone.View.extend({
 				if (this.model.get("useExtent")) {
 					Map.on("endNavigation", this.synchronizeWithMapExtent, this);
 					this.synchronizeWithMapExtent();
-					// Remove the search area layer
+					// Remove the search area layer when using extent
 					Map.removeLayer(this.searchAreaLayer);
 				} else {
 					this.model.searchArea.setBBox({
@@ -203,6 +232,8 @@ var SpatialExtentView = Backbone.View.extend({
 			case "import":
 				if ( this.importedLayer ) {
 					this.model.searchArea.setFromLayer(this.importedLayer);
+				} else {
+					this.model.searchArea.empty();
 				}
 				break;
 				
@@ -210,6 +241,8 @@ var SpatialExtentView = Backbone.View.extend({
 				var text = this.$el.find('#polygontext').val();
 				if ( text && text != "" ) {
 					this.model.searchArea.setPolygonFromText( text );
+				} else {
+					this.model.searchArea.empty();
 				}
 				break;
 				
@@ -217,17 +250,19 @@ var SpatialExtentView = Backbone.View.extend({
 				var $item = $('#gazetteer-results').find('li.ui-btn-active');
 				if ( $item.length > 0 ) {
 					this.selectGazetteerResult($item);
+				} else {
+					this.model.searchArea.empty();
 				}
 				break;
 		}
 		
 		// Update the search area layer
-		if (!this.model.get("useExtent")) {
+		if (newMode != "bbox" || !this.model.get("useExtent")) {
 			this.updateSearchAreaLayer();
 		}
 	},
 	
-	// Called when model has changed
+	// Called when model has changed, i.e. when a search URL is given by the user
 	onModelChanged: function() {
 		if ( this.model.searchArea.getMode() == 0 ) {
 			var bbox = this.model.searchArea.getBBox();
@@ -236,7 +271,7 @@ var SpatialExtentView = Backbone.View.extend({
 			$("#east").val( bbox.east );
 			$("#north").val( bbox.north );
 		} else if ( this.model.searchArea.getMode() == 1 ) {
-			$('#polygontext').val( this.model.searchArea.getPolygonText() );
+			$('#polygontext').val( this.model.searchArea.getPolygonText() ).keyup();
 			$('#radio-polygon-label').trigger('click'); 
 		}
 		if (!this.model.get("useExtent")) {
@@ -255,7 +290,7 @@ var SpatialExtentView = Backbone.View.extend({
 		this.$el.find('#polygon').hide();
 		this.$selectedTool = this.$el.find('#bbox');
 				
-		// Setup the drop are for import
+		// Setup the drop area for import
 		LayerImport.addDropArea( $('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
 		
 		// Synchronize with use extent
