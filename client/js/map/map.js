@@ -30,122 +30,12 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	var element = null;
 	// The current background layer
 	var backgroundLayer = null;
-	// The current picked features
-	var pickedFeatures = [];
-	// The index when using stack picking
-	var stackPickingIndex = -1;
-	// To know if we are currently picking
-	var inPicking = false;
 	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
 	// An object to store all  browse layers 
 	var browseLayers = {};
 	// To know if map is in geographic or not
 	var isGeo = false;
-
-	/**
-	 * Private methods
-	 */
-	 
-	/**
-	 * Check if the point is inside the given ring
-	 */
-	var pointInRing = function ( point, ring )
-	{
-		var nvert = ring.length;
-		if ( ring[0][0] == ring[nvert-1][0] && ring[0][1] == ring[nvert-1][1] )
-		{
-			nvert--;
-		}
-		var inPoly = false;
-		
-		var j = nvert-1;
-		for (var i = 0; i < nvert; j = i++)
-		{
-			if ( ((ring[i][1] > point[1]) != (ring[j][1] > point[1])) &&
-			 (point[0] < (ring[j][0] - ring[i][0]) * (point[1] - ring[i][1]) / (ring[j][1] - ring[i][1]) + ring[i][0]) )
-			{
-				inPoly = !inPoly;
-			}
-		}
-		return inPoly;
-	}
-	
-	/**
-	 * Get the feature from a point : test if the point is inside the footprint
-	 */
-	var getFeaturesFromPoint = function(lonlat) {
-	
-		var features = [];
-		
-		for ( var i = 0; i < resultsFeatureCollection.features.length; i++ ) {
-			var feature = resultsFeatureCollection.features[i];
-			var isMultiPolygon = feature.geometry.type == "MultiPolygon";
-			if ( pointInRing(lonlat,isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0]) ) {
-				features.push( feature );
-			}
-		}
-				
-		return features;
-	};
-	
-	 /** 
-	  *	Test if a new selection is equal to the previous selection
-	  */
-	var isSelectionEqual = function( newSelection ) {
-		if ( pickedFeatures.length == newSelection.length) {
-			
-			for ( var i=0; i < pickedFeatures.length; i++ ) {
-				if ( pickedFeatures[i] != newSelection[i] )
-					return false;
-			}
-			
-			return true;
-		}
-		else
-			return false;
-	};
-
-	/**
-	 * Call when the user click on the map
-	 */
-	var mapClickHandler = function(pageX,pageY)
-	{
-		if (!resultsFeatureCollection)
-			return;
-			
-		var position = $('#mapContainer').offset();
-		var clientX = pageX - position.left;
-		var clientY = pageY - position.top;
-				
-		var lonlat = mapEngine.getLonLatFromPixel(clientX,clientY);
-		if ( lonlat ) {
-			var features = getFeaturesFromPoint(lonlat);
-			
-			inPicking = true;
-			if ( isSelectionEqual(features) ) {
-			
-				stackPickingIndex++;
-				
-				if ( stackPickingIndex == pickedFeatures.length ) {
-					stackPickingIndex = -1;
-					self.trigger("pickedFeatures", pickedFeatures);
-				} else {
-					self.trigger("pickedFeatures", [ pickedFeatures[stackPickingIndex] ]);
-				}
-			
-			} else {
-			
-				pickedFeatures = features;
-				stackPickingIndex = -1;
-				self.trigger("pickedFeatures", pickedFeatures);
-				
-			}
-			inPicking = false;
-		}
-	};
-	
-
 
 	/**
 	 * Compute the extent of a feature
@@ -199,23 +89,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		mapEngine.subscribe("startNavigation", function() {
 			self.trigger("startNavigation",self);
 		});
-	
-		// Click for selection
-		var prevX, prevY;
-		var prevTime;
-		mapEngine.subscribe( 'mousedown',function(evt){
-			prevX = evt.pageX;
-			prevY = evt.pageY;
-			prevTime = Date.now();
-		}, true);
-		mapEngine.subscribe( 'mouseup', function(evt) {
-			var dx = evt.pageX - prevX;
-			var dy = evt.pageY - prevY;
-			var dt = Date.now() - prevTime;
-			if ( dx <= 1 && dy <= 1 && dt < 1000 ) {
-				mapClickHandler(evt.pageX,evt.pageY);
-			}
-		}, true);
 	};
 	
 	/**
@@ -339,6 +212,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			// Check layers from configuration
 			isGeo = Configuration.data.map.projection == "EPSG:4326";
 			
+			// Build the background layers from the configuration
 			var confBackgroundLayers = Configuration.data.map.backgroundLayers;
 			for ( var i = 0; i < confBackgroundLayers.length; i++ ) {
 				if ( isLayerCompatible( confBackgroundLayers[i] ) ) {
@@ -346,6 +220,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				}
 			}
 			
+			// Build the addtionnal layers from the configuration
 			var confLayers = Configuration.data.map.layers;
 			for ( var i = 0; i < confLayers.length; i++ ) {
 				if ( isLayerCompatible( confLayers[i] ) ) {
@@ -372,11 +247,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		/**
 		 * Change visibilty of a layer
 		 *
-		 * @param i	The layer index
+		 * @param layer	The layer
 		 * @param vis The new visibility
 		 */
-		setLayerVisible: function(layerDesc,vis) {
-			var i = self.layers.indexOf(layerDesc);
+		setLayerVisible: function(layer,vis) {
+			var i = self.layers.indexOf(layer);
 			if ( i >= 0 ) {
 				// Store visibilty in configuration data
 				self.layers[i].visible = vis;
@@ -501,6 +376,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			mapEngine.removeAllFeatures( resultFootprintLayer );
 			// Add it new
 			resultsFeatureCollection = results.attributes;
+			// Update the data layer
+			self.layers[0].data = resultsFeatureCollection;
 			// Process the feature collection
 			for ( var i = 0; i < resultsFeatureCollection.features.length; i++ ) {
 				if (!resultsFeatureCollection.features[i].bbox)
@@ -513,9 +390,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		 * Select the features in the map
 		 */
 		selectFeatures: function(features) {
-			if (!inPicking) {
-				pickedFeatures = [];
-			}
 			for ( var i=0; i < features.length; i++ ) {
 				mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i], "select");
 				showBrowseLayer(features[i]);
@@ -526,21 +400,21 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		 * Unselect the features in the map
 		 */
 		unselectFeatures: function(features) {
-			if (!inPicking) {
-				pickedFeatures = [];
-			}
 			for ( var i=0; i < features.length; i++ ) {
 				mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i], "default");
 				hideBrowseLayer(features[i]);
 			}
 		},
 
-		
 		/**
 		 * Switch the map engine
 		 */
 		switchMapEngine: function(id)
 		{
+			if (!engines[id]) {
+				return false;
+			}
+			
 			if ( mapEngine ) {
 				// Retrieve the current viewport extent
 				var extent = mapEngine.getViewportExtent();
@@ -548,10 +422,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				// Destroy the old map engine
 				mapEngine.destroy();
 				mapEngine = null;
-			}
-			
-			if (!engines[id]) {
-				return false;
 			}
 				
 			// Callback called by the map engine when the map engine is initialized
@@ -563,12 +433,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
-				
-				// Display footprints if any
-				if ( resultsFeatureCollection && resultsFeatureCollection.features.length > 0 ) {
-					mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
-				}
-				
+							
 				// Display browse
 				for ( var x in browseLayers ) {
 					if ( browseLayers.hasOwnProperty(x) ) {
