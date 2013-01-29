@@ -96,6 +96,9 @@ return {
 		// Create the popup for the map
 		var mapPopup = new MapPopup('.ui-page-active');
 		mapPopup.close();
+	
+		//By default the time slider container is not hidden
+		$('#timeSlider').hide();
 		
 		// Display a message about dataset in the map
 		DatasetSearch.on('change:datasetId', function(model) {
@@ -105,14 +108,41 @@ return {
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
 			}
-			//when the selection changes remove the time slider of the previously selected dataset
-			$('#timeSlider').dateRangeSlider('destroy');
+			
+			//if the selection has changed and a time slider exists remove it
+			if ($('#timeSlider').children().length != 0){
+				$('#timeSlider').dateRangeSlider('destroy');
+			}
+
 			$('#timeSlider').hide();
 		});
 		
+		/** This handler shall be called after the user has chosen a dataset, 
+		 * activated the timeslider checkbox and then selected a new dataset.
+		 * It is used to creta e time slider for the dataset.
+		 */
+		DatasetSearch.on("datasetLoaded", function(){
+			
+			var useTimeSlider = DatasetSearch.get('useTimeSlider');
+			if ( useTimeSlider  ) {
+				$('#timeSlider').show();
+				$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
+												scaleBounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
+												defaultValues : {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()}});
 
+			}		
+		});
+
+		
+		//when the selection changes remove the time slider of the previously selected dataset
+		var useTimeSlider = DatasetSearch.get('useTimeSlider');
+		
+		if ( useTimeSlider ) {
+			$('#timeSlider').dateRangeSlider('destroy');
+			$('#timeSlider').hide();
+		}
 		// Display the time slider in the bottom of the window when 
-		// the useTimeSlider check box is checked unless remove it
+		// the useTimeSlider check box is checked unless destroy the widget and hide the timeslider element
 		DatasetSearch.on('change:useTimeSlider', function() {
 			var useTimeSlider = DatasetSearch.get('useTimeSlider');
 			if ( useTimeSlider ) {
@@ -126,6 +156,7 @@ return {
 				$('#timeSlider').hide();
 			}
 		});
+		
 
 		// Connect with map feature picking
 		Map.on('pickedFeatures', SearchResults.setSelection,SearchResults);
