@@ -17,9 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
- (function ($, undefined) {
+define( [ "jquery", "jquery.mobile" ], 
+
+// The function to define the rangeslider module
+function($) {
+
 	
-	 $.widget("ui.rangeSlider", {
+	 $.widget("ngeo.rangeSlider",  $.mobile.widget,{
 		
 		options: {
 			bounds: {min:0, max:100},
@@ -329,34 +333,34 @@
 
 		},
 		
-		_handleMoved: function(){
-			var min = this._values.min;
-			var max = this._values.max;
-
-			// oli 
-			this.moveScale=false;
-
-			if (ui.helper[0] == this.leftHandle[0]){
-					min = this._getValue(ui.position.left);
-			}else if (ui.helper[0] == this.rightHandle[0])
-			{
-				max = this._getValue(ui.position.left - 1 + ui.helper.outerWidth(true));
-			}else{
-				return;
-			}
-			
-			if (min > max){
-				this._switchHandles();
-				var temp = min;
-				min = max;
-				max = temp;
-			}
-	
-			this._privateValues(min, max);
-			
-			console.log("min: "+min+" max: "+max);
-			this._startScaleScroll();		// oli	
-		},
+//		_handleMoved: function(){
+//			var min = this._values.min;
+//			var max = this._values.max;
+//
+//			// oli 
+//			this.moveScale=false;
+//
+//			if (ui.helper[0] == this.leftHandle[0]){
+//					min = this._getValue(ui.position.left);
+//			}else if (ui.helper[0] == this.rightHandle[0])
+//			{
+//				max = this._getValue(ui.position.left - 1 + ui.helper.outerWidth(true));
+//			}else{
+//				return;
+//			}
+//			
+//			if (min > max){
+//				this._switchHandles();
+//				var temp = min;
+//				min = max;
+//				max = temp;
+//			}
+//	
+//			this._privateValues(min, max);
+//			
+//			console.log("min: "+min+" max: "+max);
+//			this._startScaleScroll();		// oli	
+//		},
 		
 		_handleStop: function(){
 			this._position();
@@ -1052,27 +1056,26 @@
 			max = this._values.max + quantity * this.options.wheelSpeed * diff / 100;
 			
 			this._startScaleScroll();			
-
-			
 			this._privateValues(min, max);
 			
 		},
 		
+		/** Implement detroy with calling remove rather than detach */
 		destroy: function(){
 			this.element.removeClass("ui-rangeSlider-withArrows")
 			.removeClass("ui-rangeSlider-noArrow");
-			this.bar.detach();
-			this.leftHandle.detach();
-			this.rightHandle.detach();
-			this.innerBar.detach();
-			this.container.detach();
-			this.arrows.left.detach();
-			this.arrows.right.detach();
+			this.bar.remove();
+			this.leftHandle.remove();
+			this.rightHandle.remove();
+			this.innerBar.remove();
+			this.container.remove();
+			this.arrows.left.remove();
+			this.arrows.right.remove();
 			this.element.removeClass("ui-rangeSlider");
 			this._destroyLabels();
 			delete this.options;
 			
-			$.Widget.prototype.destroy.apply(this, arguments);
+			$.Widget.prototype.destroy.apply(this);
 		}
 	});
-})(jQuery);
+});
