@@ -360,19 +360,30 @@ var DataSetSearch = Backbone.Model.extend({
 		this.set("stopdate",dateOnly);
 //		this.set("stopTime",timeOnly);
 		
-		
 	},
 	
-	/** get startdate as a date */
+	/** get startdate as a Date object */
 	getStartDate : function(){
 		var dmy = this.get("startdate").split('-');
 		return new Date(dmy[2], dmy[1], dmy[0]);
 	},
 	
-	/** get stop date as a date */
+	/** get stop date as a Date object */
 	getStopDate : function(){
 		var dmy = this.get("stopdate").split('-');
 		return new Date(dmy[2], dmy[1], dmy[0]);
+	},
+	
+	/** set the start date from a Date object */
+	setStartDate : function(date){
+		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+		this.set("startdate", dateString);
+	},
+	
+	/** set the stop date from a Date object */
+	setStopDate : function(date){
+		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+		this.set("stopdate", dateString);
 	},
 	
 	/** Format to openSearch compliant date format : 
@@ -382,7 +393,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	formatDate : function(date, time){
 		return date + "T" + time + ":00.00Z"; 
-	}
+	} 
 	
 });
 
