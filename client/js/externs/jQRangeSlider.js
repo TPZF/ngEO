@@ -17,10 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
  
-define( [ "jquery", "jquery.mobile" ], 
+/** jQRangeSlider changed to a jquery mobile widget.
+ * The widget handles JQM mouse "equivalent" events to cope with mouse and touch events.
+ * Changed to not depend on jquery UI and implements it own drag events.
+ * 
+ * However it is tightly related to ngeo since it depends on the DatasetSearch and SearchResults
+ * in order to be able to submit a search.
+ */
+define( [ "jquery", "search/model/datasetSearch", "searchResults/model/searchResults", "jquery.mobile" ], 
 
 // The function to define the rangeslider module
-function($) {
+function($, DatasetSearch, SearchResults) {
 
 	
 	 $.widget("ngeo.rangeSlider",  $.mobile.widget,{
@@ -71,17 +78,9 @@ function($) {
 		scrollScaleCount: 0,
 		speed: 0,
 		toc: true,
-		
 
-//		dragging_leftHandle: false,
-//		dragging_rightHandle: false,
-//		dragging_bar: false,
-//
-//		beforeStart: null,
-//		userModified: false,
-//		mouseMoved: false,
-		
 		_create: function(){
+		
 			this._values = this.options.defaultValues;
 			this._scaleValues = this.options.scaleBounds;  //oli
 			this.labels = {left: null, right:null, leftDisplayed:true, rightDisplayed:true};
@@ -97,109 +96,18 @@ function($) {
 			
 			this.leftHandle.bind({
 				// add focus to the rightHandle
-				mousedown: function(event) {
+				vmousedown: function(event) {
 					
 					$( this ).focus();
-	
 					//$(this).addClass(".ui-draggable-dragging");
-					
 					console.log("startMovingLeftHandle...." + event);
-		        	//evt = evt || window.event;
-	
+					
 					var posX = event.clientX;
-
 				 	var leftHandle = $(this).offset().left;
-				 	console.log('leftHandle' + leftHandle);
-		            console.log('posX' + posX);
 		            var diffX = posX - leftHandle;
-		            console.log('diffX' + diffX);
-		            
-		            document.onmousemove = function(event){
-	            	
-		            	event = event || window.event;
-		                var posX = event.clientX;
-		                var left = posX - diffX;
-		                
-		            	var min = self._values.min;
-		    			var max = self._values.max;
-	
-		    			// oli 
-		    			self.moveScale=false;
-		    			
-		    			console.log("posX == " + posX);
-		    			min = self._getValue(left);
-		    			
-		    			if (min > max){
-		    				self._switchHandles();
-		    				var temp = min;
-		    				min = max;
-		    				max = temp;
-		    			}
-		    				
-		    			self._privateValues(min, max);
-		    			//self._position();
-		    			console.log("min: "+min+" max: "+max);
-		    			self._startScaleScroll();		// oli	
-		            };
-	
-				},
-				
-				focus: function() {
-					$( this ).addClass( $.mobile.focusClass );
-				}
-		});
-			
-			this.rightHandle = $("<div class='ui-rangeSlider-handle ui-rangeSlider-rightHandle' />")
-				.css("position", "absolute")
-				.addClass("ui-draggable");
-			
-			this.rightHandle.bind({
-				// add focus to the rightHandle
-				mousedown: function(event) {
-					
-					$( this ).focus();
-
-					//$(this).addClass(".ui-draggable-dragging");
-					
-					console.log("startMovingRightHandle...." + event);
-		        	//evt = evt || window.event;
-
-						var posX = event.clientX;
-
-					 	var barRight = $(this).offset().left;
-					 	console.log('barRight' + barRight);
-			            console.log('posX' + posX);
-			            var diffX = posX - barRight;
-			            console.log('diffX' + diffX);
-			            
-			            document.onmousemove = function(event){
-		            	
-		            	event = event || window.event;
-		                var posX = event.clientX;
-		                var left = posX - diffX;
-		                
-		            	var min = self._values.min;
-		    			var max = self._values.max;
-
-		    			// oli 
-		    			self.moveScale=false;
-		    			
-		    			console.log("posX == " + posX);
-		    			max = self._getValue(left);
-		    			
-		    			if (min > max){
-		    				self._switchHandles();
-		    				var temp = min;
-		    				min = max;
-		    				max = temp;
-		    			}
-		    				
-		    			self._privateValues(min, max);
-		    			//self._position();
-		    			console.log("min: "+min+" max: "+max);
-		    			self._startScaleScroll();		// oli	
-		            };
-
+		            /** the jquery handle object and the start offest are passed into the handler through event.data*/
+		            /** event.target does not always return the correct handle object*/
+		            $(self.element).bind("vmousemove", {handle : $(this), diffX: diffX}, $.proxy(self.handleDragged, self));
 				},
 				
 				focus: function() {
@@ -207,6 +115,30 @@ function($) {
 				}
 			});
 			
+			this.rightHandle = $("<div class='ui-rangeSlider-handle ui-rangeSlider-rightHandle' />")
+				.css("position", "absolute")
+				.addClass("ui-draggable");
+			
+			this.rightHandle.bind({
+				// add focus to the rightHandle
+				vmousedown: function(event) {
+					
+					$( this ).focus();
+					//$(this).addClass(".ui-draggable-dragging");
+					console.log("startMovingRightHandle...." + event);
+					var posX = event.clientX;
+				 	var barRight = $(this).offset().left;
+		            var diffX = posX - barRight;
+		            /** the jquery handle object and the start offest are passed into the handler through event.data*/
+		            /** event.target does not always return the correct handle object*/
+		            $(self.element).bind("vmousemove",  {handle : $(this), diffX: diffX}, $.proxy(self.handleDragged, self));
+				},
+				
+				focus: function() {
+					$( this ).addClass( $.mobile.focusClass );
+				}
+			});
+			      
 			this.innerBar = $("<div class='ui-rangeSlider-innerBar' />")
 				.css("position", "absolute")
 				.css("overflow","hidden")
@@ -221,8 +153,8 @@ function($) {
 		
 			this.container = $("<div class='ui-rangeSlider-container' />")
 				.css("position", "absolute")
-				//prevent default behaviour of clcik and start drag on the container
-				.bind("mousedown", function(event){event.preventDefault()});
+				//prevent default behaviour of click and start drag on the container
+				.bind("vmousedown", function(event){event.preventDefault()});
 			
 			this.bar = $("<div class='ui-rangeSlider-bar' />")
 				.css("position", "absolute")
@@ -231,62 +163,47 @@ function($) {
 			this.bar.bind({
 				
 				// add focus to the bar
-				mousedown: function(event) {
+				vmousedown: function(event) {
 					$( this ).focus();
 					
 					$(this).addClass(".ui-draggable-dragging");
 					
 					console.log("startMovingBar...." + event);
-		        	//evt = evt || window.event;
-		            var posX = event.clientX;
-		            
-		            var barLeft = self.bar.offset().left;
-		            console.log('barLeft' + barLeft);
-		            console.log('posX' + posX);
-		            var diffX = posX - barLeft;
-		            console.log('diffX' + diffX);
-		            document.onmousemove = function(event){
-		            	
-		            	event = event || window.event;
-		                var posX = event.clientX;
-		                var left = posX - diffX;
-						var right = left + self.bar.outerWidth(true) - 1;
-						self._startScaleScroll();	// oli	
-
-						self._setValues(self._getValue(left), self._getValue(right));
-						self._positionHandles();
-		            };
+		        	var posX = event.clientX; 
+		      		var barLeft = self.bar.offset().left;
+		        	var diffX = posX - barLeft;
+		        	
+		            $(self.element).bind("vmousemove", {diffX: diffX}, $.proxy(self.barDragged, self));
 				},
 			
 				focus : function() {
 					$( this ).addClass( $.mobile.focusClass );
 				},
 
-				mouseout : function() {
+				vmouseout : function() {
 					$( this ).removeClass( $.mobile.focusClass );
 				}			
 			});
 
-			//TODO REMOVE mouse wheel
+
 			//.bind("mousewheel", $.proxy(this._wheelOnBar, this));
 			
 			this.arrows.left = $("<div class='ui-rangeSlider-arrow ui-rangeSlider-leftArrow' />")
 				.css("position", "absolute")
 				.css("left", 0)
 				.css("top", 10)
-				.bind("mousedown", $.proxy(this._startScrollLeft, this));
+				.bind("vmousedown", $.proxy(this._startScrollLeft, this));
 			
 			this.arrows.right = $("<div class='ui-rangeSlider-arrow ui-rangeSlider-rightArrow' />")
 				.css("position", "absolute")
 				.css("right", 0)
 				.css("top", 10)
-				.bind("mousedown", $.proxy(this._startScrollRight, this));
+				.bind("vmousedown", $.proxy(this._startScrollRight, this));
 			
-			$(document).bind("mouseup", $.proxy(function(){this._barStop(); this._stopScroll(); document.onmousemove = function(){};}, this));
+			 $(self.element).bind("vmouseup", $.proxy(this.mouseUpHandler, this));
 
  			//oli
- 			this.innerBar
-			.append(this.scaleBar);
+ 			this.innerBar.append(this.scaleBar);
 			
 			this.container
 				.append(this.leftHandle)
@@ -298,8 +215,7 @@ function($) {
 				.append(this.container)
 				.append(this.arrows.left)
 				.append(this.arrows.right)
-				.addClass("ui-rangeSlider")
-//				.bind("mousewheel", $.proxy(this._wheelOnContainer, this));
+				.addClass("ui-rangeSlider");
 			
 			if (this.element.css("position") != "absolute"){
 				this.element.css("position", "relative");
@@ -328,58 +244,95 @@ function($) {
 			
 			//this._initWidth();
 			setTimeout($.proxy(this._initValues, this), 1);
-
 			//this._createScale();
+		},
+		
+		/**  Callback method when the mouse is up after a click or m */
+		mouseUpHandler  : function(event) {
+			
+			console.log("Mouse up target ");
+			console.log(event.target);
+			//if ($.contains($('#timeSlider').get(), event.target)){
+			this._barStop(); 
+			this._stopScroll(); 
+			
+			 $(this.element).unbind("vmousemove");
+			
+			//set the selected start and end dates in the search model
+			DatasetSearch.setStartDate(this.min());
+			DatasetSearch.setStopDate(this.max());
+			
+			//submit search after the selection has been set
+			SearchResults.url = DatasetSearch.getOpenSearchURL();
+			SearchResults.set({"features" : [] });
+			SearchResults.fetch();
+			//}
+		},
+		
+		/**
+		 * Callback method when the right or left handlers are dragged
+		 * the event.data contains the jquery handler object and the diffX
+		 * when the drag starts. 
+		 */
+		handleDragged : function(event){
+        	
+            var posX = event.clientX;
+            var left = posX - event.data.diffX;
+            
+        	var min = this._values.min;
+			var max = this._values.max;
 
-		},
-		
-//		_handleMoved: function(){
-//			var min = this._values.min;
-//			var max = this._values.max;
-//
-//			// oli 
-//			this.moveScale=false;
-//
-//			if (ui.helper[0] == this.leftHandle[0]){
-//					min = this._getValue(ui.position.left);
-//			}else if (ui.helper[0] == this.rightHandle[0])
-//			{
-//				max = this._getValue(ui.position.left - 1 + ui.helper.outerWidth(true));
-//			}else{
-//				return;
-//			}
-//			
-//			if (min > max){
-//				this._switchHandles();
-//				var temp = min;
-//				min = max;
-//				max = temp;
-//			}
-//	
-//			this._privateValues(min, max);
-//			
-//			console.log("min: "+min+" max: "+max);
-//			this._startScaleScroll();		// oli	
-//		},
-		
-		_handleStop: function(){
-			this._position();
-			this._prepareFiringChanged();
 			// oli 
-			this.moveScale=true;
+			this.moveScale=false;
+			
+			console.log("posX == " + posX);
+			 var handle = event.data.handle;
+			 
+			 console.log("handle ::::");
+			 console.log(handle);
+			 
+			if (handle.hasClass('ui-rangeSlider-leftHandle')){
+				min = this._getValue(left);				
+			}else if (handle.hasClass('ui-rangeSlider-rightHandle')){
+				max = this._getValue(left);
+			}else {
+				return;
+			}
+
+			if (min > max){
+				this._switchHandles();
+				var temp = min;
+				min = max;
+				max = temp;
+			}
+				
+			this._privateValues(min, max);
+			//self._position();
+			console.log("min: "+min+" max: "+max);
+			this._startScaleScroll();		// oli	
 		},
 		
-//		_barMoved: function(xpos){
-//			//FIXME
-//			var left = event.target.position.left;
-//			
-//			var right = left + this.bar.outerWidth(true) - 1;
-//			this._startScaleScroll();	// oli	
-//
-//			this._setValues(this._getValue(left), this._getValue(right));
-//			this._positionHandles();
-//				
+		/** Callback method when the bar is dragged
+		 *  the event.data contains the diffX when the drag starts. 
+		 */
+		barDragged : function(event){
+        
+            var posX = event.clientX;
+            var left = posX - event.data.diffX;
+			var right = left + this.bar.outerWidth(true) - 1;
+			this._startScaleScroll();	// oli	
+
+			this._setValues(this._getValue(left), this._getValue(right));
+			this._positionHandles();
+        },
+	
+//		_handleStop: function(){
+//			this._position();
+//			this._prepareFiringChanged();
+//			// oli 
+//			this.moveScale=true;
 //		},
+//	
 		
 		_barStop: function(){
 			this._position();
@@ -858,15 +811,15 @@ function($) {
 				return false;
 			}
 		},
-		
-		_wheelOnContainer: function(event, delta, deltaX, deltaY){
-			if (this.options.wheelMode == "scroll"){
-				//this.speed+=Math.abs(deltaY);
-				this.scrollRight(-deltaY);
-				
-				return false;
-			}
-		},
+// mouse wheel is not used
+//		_wheelOnContainer: function(event, delta, deltaX, deltaY){
+//			if (this.options.wheelMode == "scroll"){
+//				//this.speed+=Math.abs(deltaY);
+//				this.scrollRight(-deltaY);
+//				
+//				return false;
+//			}
+//		},
 		
 		/*
 		 * Value labels
@@ -1060,7 +1013,7 @@ function($) {
 			
 		},
 		
-		/** Implement detroy with calling remove rather than detach */
+		/**  detroy with calling remove rather than detach */
 		destroy: function(){
 			this.element.removeClass("ui-rangeSlider-withArrows")
 			.removeClass("ui-rangeSlider-noArrow");
