@@ -105,24 +105,25 @@ return {
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
 			}
+			//when the selection changes remove the time slider of the previously selected dataset
+			$('#timeSlider').dateRangeSlider('destroy');
+			$('#timeSlider').hide();
 		});
 		
-		//TODO to be improved
-		$('#timeSlider').hide();
+
 		// Display the time slider in the bottom of the window when 
 		// the useTimeSlider check box is checked unless remove it
-		DatasetSearch.on('change:useTimeSlider', function(datasetSearch) {
-			var useTimeSlider = datasetSearch.get('datasetId');
+		DatasetSearch.on('change:useTimeSlider', function() {
+			var useTimeSlider = DatasetSearch.get('useTimeSlider');
 			if ( useTimeSlider ) {
 				$('#timeSlider').show();
-				$('#timeSlider').dateRangeSlider({bounds: {min : datasetSearch.getStartDate(), max : datasetSearch.getStopDate()},
-												scaleBounds: {min : datasetSearch.getStartDate(), max : datasetSearch.getStopDate()},
-												defaultValues : {min : datasetSearch.getStartDate(), max : datasetSearch.getStopDate()}});
+				$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
+												scaleBounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
+												defaultValues : {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()}});
 
 			}else{
-				//TODO EM : destroy does not work
 				$('#timeSlider').dateRangeSlider('destroy');
-				//$('#timeSlider').empty();
+				$('#timeSlider').hide();
 			}
 		});
 
