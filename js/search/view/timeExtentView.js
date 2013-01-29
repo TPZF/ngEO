@@ -14,6 +14,7 @@ var TimeExtentView = Backbone.View.extend({
 		//typically for shared parameters urls
 		this.model.on("change:startdate", this.update, this);
 		this.model.on("change:stopdate", this.update, this);
+		this.searchCriteriaView = options.searchCriteriaView;
 		//this.model.on("change:useTimeSlider", function(){this.$el.find("input[type='checkbox']").prop("checked", this.model.get("useTimeSlider"));}, this);
 	},
 	
@@ -36,6 +37,11 @@ var TimeExtentView = Backbone.View.extend({
 		'click #useTimeSliderLabel' : function(event){
 			var $target = $(event.currentTarget);	
 			var checked = $target.hasClass('ui-checkbox-off');
+			//hide the search criteria widget when the time slider is enabled
+			//this is to keep the map visible 
+			if (checked){
+				this.searchCriteriaView.$el.ngeowidget('hide');
+			}
 			this.model.set({"useTimeSlider" : checked});
 		}
 		
