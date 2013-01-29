@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map', "map/widget/layers", "map/widget/background"], function($, Map, LayersWidget, BackgroundWidget) {
+define(['jquery', 'map/map', "map/widget/layers", "map/widget/background", "map/rectangleHandler"], function($, Map, LayersWidget, BackgroundWidget, RectangleHandler) {
 
 var mode2D = true;
 
@@ -23,6 +23,17 @@ return function (dsa) {
 			mode2D = true;
 			// Switch back to 2D
 			Map.switchMapEngine('2d'); 
+		}
+	});
+
+	// TEMPO : use draw button to launch drawing
+	dsa.find("#draw").click( function(event) {
+		$(this).toggleClass('toggle');
+		mapEngine = Map.getMapEngine();
+		if ( $(this).hasClass('toggle') ) {
+			RectangleHandler.start();
+		} else {
+			RectangleHandler.stop();
 		}
 	});
 

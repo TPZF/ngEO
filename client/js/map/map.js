@@ -282,6 +282,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		}
 	};
 
+	/**
+	 * Check if layers are compatible
+	 */
 	var isLayerCompatible = function(layer) {
 		switch (layer.type)
 		{
@@ -410,6 +413,22 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				return false;
 			}
 		},
+
+		/**
+		 * Update a feature in a layer
+		 *
+		 * @param layerDesc	The layer description
+		 * @param feature	The feature
+		 */
+		updateFeature: function(layerDesc,feature) {
+			var index = self.layers.indexOf(layerDesc);
+			if ( index >= 0 ) {
+				mapEngine.updateFeature( engineLayers[index], feature );
+				return true;
+			} else {
+				return false;
+			}
+		},
 		
 		zoomIn: function() {
 			mapEngine.zoomIn();
@@ -448,10 +467,20 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		},
 		
 		/**
-		 * Get the page position from a lonlat
+		 * Get the page (?) position from a lonlat
 		 */
 		getPixelFromLonLat: function(lon,lat) {
 			return mapEngine.getPixelFromLonLat(lon,lat);
+		},
+		
+		/**
+		 * Get the page position from a lonlat
+		 */
+		getLonLatFromEvent: function(event) {
+			var rect = element.getBoundingClientRect();
+			var clientX = event.pageX - rect.left;
+			var clientY = event.pageY - rect.top;
+			return mapEngine.getLonLatFromPixel(clientX,clientY);
 		},
 				
 		/**
@@ -551,10 +580,13 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			// Create the new engine and catch any error
 			try {
 				mapEngine = new engines[id](element);			
-				mapEngine.subscribe("init",initCallback);
 			} catch (err) {
 				mapEngine = null;
-			}	
+			}
+			
+			if ( mapEngine ) {
+				mapEngine.subscribe("init",initCallback);
+			}
 			
 			return mapEngine != null;
 		},
@@ -566,6 +598,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			if (mapEngine)
 				mapEngine.updateSize();
 		},
+		
+		getMapEngine: function() {
+			return mapEngine;
+		}
 	};
 });
 

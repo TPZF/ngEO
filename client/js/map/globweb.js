@@ -149,7 +149,12 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 			visible: layer.visible 
 		});
 		if ( layer.data ) {
-			gwLayer.addFeatureCollection( layer.data );
+			var isCollection = layer.data.type == 'FeatureCollection';
+			if ( isCollection ) {
+				gwLayer.addFeatureCollection( layer.data );
+			} else {
+				gwLayer.addFeature( layer.data );
+			}
 		}
 		break;
 	case "WFS":
@@ -207,7 +212,10 @@ GlobWebMapEngine.prototype.subscribe = function(name,callback)
 		this.globe.subscribe("endNavigation",callback);
 		break;
 	case "mousedown":
+	case "mousemove":
 	case "mouseup":
+	case "click":
+	case "dblclick":
 		this.canvas.addEventListener( name, callback );
 		break;
 	}
@@ -227,7 +235,10 @@ GlobWebMapEngine.prototype.unsubscribe = function(name,callback)
 		this.globe.unsubscribe("endNavigation",callback);
 		break;
 	case "mousedown":
+	case "mousemove":
 	case "mouseup":
+	case "click":
+	case "dblclick":
 		this.canvas.removeEventListener( name, callback );
 		break;
 	}
@@ -248,7 +259,10 @@ GlobWebMapEngine.prototype.updateSize = function()
  */
 GlobWebMapEngine.prototype.getLonLatFromPixel = function(x,y)
 {
-	return this.globe.getLonLatFromPixel(x,y);
+	var pt = this.globe.getLonLatFromPixel(x,y);
+	// To be compliant with OpenLayers remove Z
+	pt.length = 2;
+	return pt;
 }
 
 /**
@@ -341,6 +355,26 @@ GlobWebMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 	this.globe.refresh();
 }
 
+/**
+ * Block the navigation
+ */
+GlobWebMapEngine.prototype.blockNavigation = function(flag)
+{
+	if ( flag ) {
+		this.navigation.stop();
+	} else {
+		this.navigation.start();
+	}
+}
+
+/**
+ * Update a feature
+ */
+GlobWebMapEngine.prototype.updateFeature = function(layer,feature)
+{
+	layer.removeFeature(feature);
+	layer.addFeature(feature);
+}
 
 /**
  *  Destroy the map engine

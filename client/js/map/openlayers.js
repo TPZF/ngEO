@@ -244,6 +244,9 @@ OpenLayersMapEngine.prototype.subscribe = function(name,callback)
 		break;
 	case "mousedown":
 	case "mouseup":
+	case "mousemove":
+	case "click":
+	case "dblclick":
 		this.element.addEventListener( name, callback, true );
 		break;
 	}
@@ -266,7 +269,10 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
 		break;
 	case "mousedown":
 	case "mouseup":
-		this.element.removeEventListener( name, callback );
+	case "mousemove":
+	case "click":
+	case "dblclick":
+		this.element.removeEventListener( name, callback, true );
 		break;
 	}
 }
@@ -379,6 +385,28 @@ OpenLayersMapEngine.prototype.addFeatureCollection = function(layer,featureColle
 OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 {
 	layer.drawFeature( layer.getFeatureByFid(feature.id), style );
+}
+
+/**
+ * Block the navigation
+ */
+OpenLayersMapEngine.prototype.blockNavigation = function(flag)
+{
+	if ( flag ) {
+		this._map.controls[0].deactivate();
+	} else {
+		this._map.controls[0].activate();
+	}
+}
+
+/**
+ * Update a feature
+ */
+OpenLayersMapEngine.prototype.updateFeature = function(layer,feature)
+{
+	var olFeature = layer.getFeatureByFid(feature.id);
+	layer.removeFeatures( olFeature );
+	layer.addFeatures( this._geoJsonFormat.read(feature) );
 }
 
 /**
