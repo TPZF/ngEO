@@ -1,10 +1,10 @@
 
-define(["jquery", "menubar", "map/map", "searchResults/model/searchResults", "search/model/datasetSearch",  
+define(["jquery", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help", 'jquery.dateRangeSlider'], 
-	function($, MenuBar, Map, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
+	function($, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 	
@@ -157,9 +157,12 @@ return {
 			}
 		});
 		
+		
+		// TODO : maybe find a better way for the default handler ?
+		SelectHandler.start();
 
 		// Connect with map feature picking
-		Map.on('pickedFeatures', SearchResults.setSelection,SearchResults);
+		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);
 	
 		// Connect search results events with map
 		SearchResults.on('change',Map.setResults);
