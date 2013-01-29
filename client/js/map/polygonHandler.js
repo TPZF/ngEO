@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map'], function($, Map) {
+define(['jquery', 'map/map', 'map/selectHandler'], function($, Map, SelectHandler) {
 	
 /**
  * Private variables
@@ -11,11 +11,12 @@ var mapEngine;
 var coords;
 var started = false;
 var lastClickTime = -1;
+var onstop = null;
+var self = null;
 
 // Called when a double click is detected
 function finishHandler() {
-	// TODO : improve, does not use directyle an element with 'draw' id
-	$("#draw").click();
+	self.stop();
 }
 
 // Called on a click : add a new point in the polygon
@@ -55,19 +56,16 @@ function onMouseMove(event) {
  */
 return {
 	// Start the handler
-	start: function() {
+	start: function(options) {
+		self = this;
 		mapEngine = Map.getMapEngine();
 		
-		// No navigation when drawing a polygon
-		mapEngine.blockNavigation(true);
-		
-		// Subscribe to mouse events
-		mapEngine.subscribe("mousemove", onMouseMove);
-		mapEngine.subscribe("mouseup", onClick);
-		
 		// Create the layer if not already created
-		// TODO : the layer should be given
-		if (!layer) {
+		if (options.layer) {
+			layer = options.layer;
+			feature = layer.data;
+			coords = feature.geometry.coordinates[0];
+		} else if (!layer) {
 			coords = [];
 			feature = {
 				id: '0',
@@ -87,9 +85,21 @@ return {
 			Map.addLayer(layer);
 		}
 		
+		// No navigation when drawing a polygon
+		mapEngine.blockNavigation(true);
+		
+		// Subscribe to mouse events
+		mapEngine.subscribe("mousemove", onMouseMove);
+		mapEngine.subscribe("mouseup", onClick);
+		
+		onstop = options.stop;
+				
 		// Prepare mouse listening and reset coordinates
 		coords.length = 0;
 		started = true;
+		
+		// TODO : find a better way to manage the default handler
+		SelectHandler.stop();
 	},
 	
 	// Stop the handler
@@ -99,6 +109,13 @@ return {
 		// Unsubscribe to mouse events
 		mapEngine.unsubscribe("mousemove", onMouseMove);
 		mapEngine.unsubscribe("mouseup", onClick);
+		
+		// TODO : find a better way to manage the default handler
+		SelectHandler.start();
+		
+		if (onstop) {
+			onstop();
+		}
 	}
 };
 		

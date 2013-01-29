@@ -20,11 +20,17 @@ var SearchArea = function() {
 	 
 	// Search area is represented by a GeoJSON feature
 	var _feature = {
+		id: '0',
 		bbox: [-180,-90,180,90],
 		type: 'Feature',
 		geometry: {
 			type: 'Polygon',
-			coordinates: null
+			coordinates: [[ [ -180, -90 ],
+				[ 180, -90 ],
+				[ 180, 90 ],
+				[ -180, 90 ],
+				[ -180, -90 ]
+			]]
 		}
 	};
 	// The search area mode : BBOX or POLYGON
@@ -154,6 +160,13 @@ var SearchArea = function() {
 		return param;
 	};
 	
+	// Set an empty search area
+	this.empty = function() {
+		_feature.bbox = [ 0, 0, 0, 0 ];
+		_feature.geometry.coordinates = [[ [0,0] ]];
+		_updateFeature();
+	};
+	
 	// Set the BBox
 	this.setBBox = function(bbox) {
 		_feature.bbox = [ parseFloat(bbox.west), parseFloat(bbox.south), parseFloat(bbox.east), parseFloat(bbox.north) ];
@@ -163,7 +176,7 @@ var SearchArea = function() {
 	
 	// Set the search area from a layer
 	this.setFromLayer = function(layer) {
-		var result = getPolygonFromLayer(layer);
+		var result = _getPolygonFromLayer(layer);
 		if ( result.valid ) {
 			_feature.geometry.coordinates = result.feature.geometry.coordinates;
 			_mode = SearchArea.POLYGON;
