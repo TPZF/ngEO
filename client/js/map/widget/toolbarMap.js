@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map', "map/widget/layers", "map/widget/background", "map/polygonHandler"], function($, Map, LayersWidget, BackgroundWidget, RectangleHandler) {
+define(['jquery', 'map/map', "map/widget/layers", "map/widget/background"], function($, Map, LayersWidget, BackgroundWidget) {
 
 var mode2D = true;
 
@@ -27,7 +27,7 @@ return function (dsa) {
 	});
 
 	// TEMPO : use draw button to launch drawing, useful for testing
-	dsa.find("#draw").click( function(event) {
+/*	dsa.find("#draw").click( function(event) {
 		var $this = $(this);
 		$this.toggleClass('toggle');
 		mapEngine = Map.getMapEngine();
@@ -40,7 +40,7 @@ return function (dsa) {
 		} else {
 			RectangleHandler.stop();
 		}
-	});
+	});*/
 
 };
 
