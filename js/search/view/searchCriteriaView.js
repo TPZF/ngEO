@@ -104,7 +104,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		});	
 		
 		//add share button to share search criteria widget
-		this.shareButton = this.$el.ngeowidget('addButton', { id: 'shareSearch', name: 'Share' });
+		this.shareButton = this.$el.ngeowidget('addButton', { id: 'shareSearch', name: 'Share', position: 'left' });
 	
 		this.shareButton.click( function() {
 			
