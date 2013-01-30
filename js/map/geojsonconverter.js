@@ -58,16 +58,50 @@ return {
 				});
 		}
 	},
+	
+	/*!
+	 * Convert GeoJSON features to any format
+	 *
+	 * @param features the features to convert
+	 * @param format the format
+	 *
+	 * @return the data as a string
+	 */
+	convert: function(features,format) {
+		var f = format.toUpperCase();
+		
+		var fc = {
+			type: 'FeatureCollection',
+			features: features
+		};
+		
+		switch (f) {
+			case "KML":
+				// Convert to OpenLayers
+				var olFeatures = geoJsonFormat.read(fc);
+				var kmlFormat = new OpenLayers.Format.KML();
+				return kmlFormat.write(olFeatures);
+				break;
+			case "GML":
+				var olFeatures = geoJsonFormat.read(fc);
+				var gmlFormat = new OpenLayers.Format.GML();
+				return gmlFormat.write(olFeatures);
+				break;
+			case "JSON":
+			case "GEOJSON":
+				return JSON.stringify(fc);
+		}
+	},
 
 	/*!
 	 * Convert a vector layer to GeoJSON
-	 * The layer in parameter is converted to GeoJSON
+	 * The layer data is converted to GeoJSON
 	 *
 	 * @param layer the layer to convert
 	 *
 	 * @return if the function succeeds
 	 */
-	convert: function(layer) {
+	toGeoJSON: function(layer) {
 		if (!layer.data) {
 			return false;
 		}

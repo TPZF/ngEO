@@ -70,7 +70,7 @@ var SearchArea = function() {
 	var _getPolygonFromLayer = function(layer) {
 	
 		// First convert the layer to GeoJSON
-		if ( !GeoJSONConverter.convert(layer) ) {
+		if ( !GeoJSONConverter.toGeoJSON(layer) ) {
 			return { valid: false, message: 'format not supported' };
 		}
 		
