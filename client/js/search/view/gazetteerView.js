@@ -53,6 +53,9 @@ var GazetteerView = Backbone.View.extend({
 							Map.zoomTo( self.model.searchArea.getFeature().bbox );
 						}
 					});
+			} else {
+				this.model.searchArea.empty();
+				this.parentView.updateSearchAreaLayer();
 			}
 		}
 		
