@@ -189,6 +189,10 @@ var SearchArea = function() {
 	this.setPolygonFromText = function(text) {
 		var polygonRe = /\s*([-+]?)(\d+):(\d+):(\d+)\s+([-+]?)(\d+):(\d+):(\d+)/gm;
 		var match = polygonRe.exec(text);
+		if (!match) {
+			this.empty();
+			return false;
+		}
 		var coordinates = [];
 		while (match) {
 			var lat = parseFloat(match[2]) + (parseFloat(match[3])/60.0) + (parseFloat(match[4])/3600.0);
@@ -201,6 +205,7 @@ var SearchArea = function() {
 		_feature.geometry.coordinates = [coordinates];
 		_mode = SearchArea.POLYGON;
 		_updateFeature();
+		return true;
 	};
 	
 	// Import from WKT

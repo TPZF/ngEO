@@ -107,8 +107,12 @@ var SpatialExtentView = Backbone.View.extend({
 			}
 		},
 		
-		'blur #polygontext': function(event) {
-			this.model.searchArea.setPolygonFromText( $(event.currentTarget).val() );
+		'change #polygontext': function(event) {
+			if (!this.model.searchArea.setPolygonFromText( $(event.currentTarget).val() )) {
+				// Erase content
+				$(event.currentTarget).val('');
+				// TODO : display a message to user
+			}
 			this.updateSearchAreaLayer();
 		},
 		
