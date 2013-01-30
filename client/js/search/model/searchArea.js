@@ -190,6 +190,7 @@ var SearchArea = function() {
 		var polygonRe = /\s*([-+]?)(\d+):(\d+):(\d+)\s+([-+]?)(\d+):(\d+):(\d+)/gm;
 		var match = polygonRe.exec(text);
 		if (!match) {
+			_mode = SearchArea.POLYGON;
 			this.empty();
 			return false;
 		}
