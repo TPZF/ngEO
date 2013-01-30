@@ -46,12 +46,7 @@ require.config({
         	 deps: ['jquery'],
              exports: 'jQuery'
         },
-        
-        'jquery.dateRangeSlider' : {
-			deps: ['jquery','jquery.rangeSlider'],
-            exports: 'jQuery'
-		},
-        
+                
 		'underscore': {
             deps: [],
             exports: '_'

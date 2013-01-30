@@ -8,6 +8,8 @@
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
 		"jquery.dataTables" : "externs/jquery.dataTables",
+ 		"jquery.dateRangeSlider" : "externs/jQDateRangeSlider",
+		"jquery.rangeSlider" : "externs/jQRangeSlider",	
         "underscore": "externs/underscore-min",
 		"backbone": "externs/backbone-min",
 		"text": "externs/text"
@@ -47,7 +49,7 @@
     		deps: ['jqm-datebox-core'],
     		exports: 'jQuery'
     	},
-    	
+		
     	'jquery.dataTables' : {
     	 deps: ['jquery'],
          	exports: 'jQuery'
