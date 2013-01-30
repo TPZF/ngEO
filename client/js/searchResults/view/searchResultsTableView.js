@@ -50,9 +50,11 @@ var SearchResultsTableView = Backbone.View.extend({
 			if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
 				this.retrieveProduct.button('disable');
 				this.downloadOptionsButton.button('disable');
+				this.exportButton.button('disable');
 			} else {
 				this.retrieveProduct.button('enable');
 				this.downloadOptionsButton.button('enable');
+				this.exportButton.button('enable');
 			}
 		}, 
 		

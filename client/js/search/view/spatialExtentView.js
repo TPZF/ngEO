@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'map/map', 'map/layerImport', 'map/geojsonconverter', 'map/gazetteer', 'map/rectangleHandler', 'map/polygonHandler',
+define( ['jquery', 'backbone', 'map/map', 'map/layerImport', 'map/gazetteer', 'map/rectangleHandler', 'map/polygonHandler',
          'text!search/template/areaCriteriaContent.html', "jqm-datebox-calbox"], 
-		function($, Backbone, Map, LayerImport, GeoJSONConverter, Gazetteer, RectangleHandler, PolygonHandler, areaCriteria_template) {
+		function($, Backbone, Map, LayerImport, Gazetteer, RectangleHandler, PolygonHandler, areaCriteria_template) {
 
 var SpatialExtentView = Backbone.View.extend({
 

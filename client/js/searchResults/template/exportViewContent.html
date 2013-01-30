@@ -1,14 +1,13 @@
-<ul data-role="listview" data-inset="true" style="min-width:210px;" data-theme="c">
-	
-	<li data-role="divider" data-theme="a">Export formats</li>
-	<li id='kmlExportElt'>Kml</li>
-	<li id="xmlExportElt">Xml</li>
-	<li id="gmlExportElt">Gml</li>
-</ul>
+<label for="export-format">Choose format:</label>
+<select name="export-format" id="export-format" data-mini="true">
+   <option value="">...</option>
+   <option value="kml">KML</option>
+   <option value="gml">GML</option>
+   <option value="geojson">GeoJson</option>
+</select>
+
 
 <div class="popup-widget-footer">
-	
-	<button id="okExportButton" data-role="button" data-mini="true"
-		data-inline="true" data-theme="a">Export</button>
-
+	<a id="download" target="_blank" data-role="button" data-mini="true"
+		data-inline="true" data-theme="a">Download</a>
 </div>

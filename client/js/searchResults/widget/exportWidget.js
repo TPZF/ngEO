@@ -10,11 +10,18 @@ define( [ "jquery", "configuration", 'searchResults/view/exportView', 'search/mo
 
 var ExportWidget = function() {
 
-	var parentElement = $('<div id="exportPopup" data-role="popup" data-position-to="origin" data-overlay-theme="a" class="ui-content">');
-	parentElement = parentElement.appendTo('.ui-page-active');
-	
-	var element = $('<div id="exportPopupContent"></div>'); 
+	var parentElement = $('<div id="exportPopup">');
+	var element = $('<div id="exportPopupContent"></div>');
+	element.css('min-width','200px');
 	element.appendTo(parentElement);
+	parentElement.appendTo('.ui-page-active');
+	parentElement.ngeowidget({
+		title: "Export",
+		// Reinit the standing order when the widget is closed (FL: is it really needed?)
+		hide: function() {
+			parentElement.remove();
+		}
+	});
 
 	var exportView = new ExportView({
 		model : DataSetSearch,
@@ -27,19 +34,9 @@ var ExportWidget = function() {
 	this.open = function() {
 	
 		exportView.render();
-		parentElement.popup(); 		
-
-		//after closing the popup reset the simple data access parameters 
-		//and remove the popup elements
-		parentElement.bind({
-		   popupafterclose: function(event, ui) {
-			   parentElement.remove();
-		   }
-		
-		});
-		
+			
 		//trigger jqm styling
-		parentElement.popup("open"); 
+		parentElement.ngeowidget("show"); 
 	};
 		
 	/**
@@ -47,7 +44,7 @@ var ExportWidget = function() {
 	 *	closed by clicking out side its content.
 	 */
 	this.close = function() {
-		parentElement.popup("close");
+		parentElement.ngeowidget("hide");
 	};
 };
 
