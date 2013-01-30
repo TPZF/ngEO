@@ -108,7 +108,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	getOpenSearchURL : function(){
 
-		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.getCoreURL() + "&count=10";
+		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.getCoreURL() + "&count=10&format=json";
 		
 		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
