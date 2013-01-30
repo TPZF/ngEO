@@ -13,7 +13,7 @@ var configuration = {
 	baseServerUrl : '/ngeo',
 	
 	// The  server host name
-	serverHostName : 'http://localhost:3000',
+	serverHostName : window.location.protocol + '//' + window.location.host,
 	
 	//the local configuration is got from requirejs.config module config
 	//set in main.js
