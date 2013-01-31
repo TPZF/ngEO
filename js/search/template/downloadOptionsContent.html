@@ -10,10 +10,13 @@
 	
 	<!-- if the selected dataset has no download options display an information message to the user -->
 	
-	<% if (dataset.attributes.datasetSearchInfo.attributes.length == 0 ) { %>
+	<% if (!dataset.attributes.datasetSearchInfo.downloadOptions || !_.isArray(dataset.attributes.datasetSearchInfo.downloadOptions) ) { %>
 		<div id="downloadOptionsMessage" class="widget-content ui-body-c">
-			<p><b>The selected dataset : <%=dataset.attributes.id %> </b></p>
-			<p><b>Does not have download options</b></p>
+			<p><b>The selected dataset : <%=dataset.attributes.datasetId %> has invalid download options.</b></p>
+		</div>
+	<% } else if (dataset.attributes.datasetSearchInfo.downloadOptions.length == 0 ) { %>
+		<div id="downloadOptionsMessage" class="widget-content ui-body-c">
+			<p><b>The selected dataset : <%=dataset.attributes.datasetId %> does not have download options.</b></p>
 		</div>
 	
 	<% } else { %>	 		
