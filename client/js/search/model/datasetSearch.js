@@ -52,8 +52,18 @@ var DataSetSearch = Backbone.Model.extend({
 			this.dataset.fetch({
 				
 				success: function(model, response, options) {
+					// quick fix when the server is not sending us startDate/endDate
+					// TODO : maybe return an error message, this is not an exepcted behaviour from the server
+					var startDate = model.attributes.datasetSearchInfo.startDate;
+					if (!startDate) {
+						startDate = (new Date()).toISOString();
+					}
+					var endDate = model.attributes.datasetSearchInfo.endDate;
+					if (!endDate) {
+						endDate = (new Date()).toISOString();
+					}
 					//update dates/times from dataset dates/times
-					self.setDateAndTime(model.attributes.datasetSearchInfo.startDate, model.attributes.datasetSearchInfo.endDate); 
+					self.setDateAndTime(startDate, endDate); 
 					self.trigger('datasetLoaded');
 				},
 				
