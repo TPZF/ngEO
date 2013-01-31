@@ -11,22 +11,6 @@
 			
 			"widgetSuffix" : "widget",
 			
-			"searchCriteriaToOpenSearchMapping" : {
-				"orbit" : "on",
-				"pass" : "od",
-				"status" : "status",
-				"sensor" : "isn",
-				"sensorType" : "st",
-				"sensorMode" : "som",
-				"satellite" : "psn",
-				"startTimeFromAscendingNode" : "axsa",
-				"completionTimeFromAscendingNode" : "axso", 
-				"track" : "track",
-				"daynight flag" : "daynight flag",
-				"granule": "granule"
-			},
-			
-			
 			"downloadManager" : {
 				
 				"undefinedDownloadManagerId"	: "undefined download manager id",
@@ -106,5 +90,9 @@
 			"standingOrder" : {
 				"invalidOpenSearchURLError": "Invalid OpenSearch URL : Empty URL.",
 				"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
+			},
+			
+			"timeSlider" : {
+				"defautScaleStart" : "01-01-2000"
 			}
 		}
