@@ -48,9 +48,11 @@ var SearchResults = Backbone.Model.extend({
 	
 	// Set the selection, replace the previous one
 	setSelection: function(features) {
+		var unselected = _.difference(this.selection, features);
+		var selected = _.difference(features, this.selection);
 		this.selection = features;
-		this.trigger( "unselectFeatures", _.difference(this.selection, features) );
-		this.trigger( "selectFeatures", _.difference(features, this.selection) );
+		this.trigger( "unselectFeatures", unselected );
+		this.trigger( "selectFeatures", selected );
 	},
 	
 	// Select a feature
