@@ -164,7 +164,7 @@ var DataSetSearch = Backbone.Model.extend({
 	},
 	
 	/**
-	 * Populate the model with the parameters retrieved from the ShareD URL
+	 * Populate the model with the parameters retrieved from the Shared URL
 	 */
 	populateModelfromURL : function(query){
 			
@@ -357,7 +357,7 @@ var DataSetSearch = Backbone.Model.extend({
 		}
 //		
 //		//set stop date and time
-		this.set("stopdate",dateOnly);
+		this.set("stopdate", dateOnly);
 //		this.set("stopTime",timeOnly);
 		
 	},
@@ -365,26 +365,52 @@ var DataSetSearch = Backbone.Model.extend({
 	/** get startdate as a Date object */
 	getStartDate : function(){
 		var dmy = this.get("startdate").split('-');
-		return new Date(dmy[2], dmy[1], dmy[0]);
+		return new Date(dmy[2], dmy[1]-1, dmy[0]);
 	},
 	
 	/** get stop date as a Date object */
 	getStopDate : function(){
 		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[2], dmy[1], dmy[0]);
+		return new Date(dmy[2], dmy[1]-1, dmy[0]);
 	},
 	
-	/** set the start date from a Date object */
+	/** Method called from dateRangeSlider 
+	 * set the start date from a Date object */
 	setStartDate : function(date){
 		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
 		this.set("startdate", dateString);
 	},
 	
-	/** set the stop date from a Date object */
+	/** Method called from dateRangeSlider  
+	 * set the stop date from a Date object */
 	setStopDate : function(date){
 		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
 		this.set("stopdate", dateString);
 	},
+	
+	getSliderBoundStartDate :function(){
+//		/var scaleStartString = Configuration.localConfig.timeSlider.defautBoundStart;
+		var dmy = this.get("stopdate").split('-');
+		return new Date(dmy[2]-2, dmy[1]-2, dmy[0]);
+	},
+	
+	/** Get the slider scale start date */
+	getSliderScaleDate : function(){
+		var scaleStartString = Configuration.localConfig.timeSlider.defautScaleStart;
+		var dmy = scaleStartString.split('-');
+		return new Date(dmy[2], dmy[1]-1, dmy[0]);
+	},
+	
+	/** substract 2 from the month because the months for a Date object
+	 * are between 0 and 11 and that the slider date is a month before the stop date*/
+	getSliderStartDate : function(){
+		var dmy = this.get("stopdate").split('-');
+		return new Date(dmy[2], dmy[1]-2, dmy[0]);
+	},
+	
+	
+	/** add the time slider to the bottom of the map view  and
+	 * move the dataset message up */
 	
 	/** Format to openSearch compliant date format : 
 	 * the seconds are added manually since not handled by the TimeBox widget
