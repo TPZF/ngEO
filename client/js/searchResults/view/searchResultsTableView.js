@@ -72,12 +72,15 @@ var SearchResultsTableView = Backbone.View.extend({
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
 		}
+		
+		// Disable export if no product selected
 		if ( this.model.selection.length > 0 ) {
 			this.exportButton.button('enable');
 		} else {
 			this.exportButton.button('disable');
 		}
-		//Disable the Retrieve Product button if no product item is selected 
+		
+		//Disable the retrieve Product and download options button if no product item is selected 
 		//and/or if the products checked do not have a product url
 		if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
 			this.retrieveProduct.button('disable');
