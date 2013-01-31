@@ -155,7 +155,7 @@ return {
 	 * move the dataset message up */
 	addTimeSlider : function(){
 		$('#datasetMessage').css('bottom', '70px');
-		$('#timeSlider').addClass('ui-timeSlider-container ');
+		$('#timeSlider').addClass('ui-timeSlider-container');
 		$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getSliderStartDate(), max : DatasetSearch.getStopDate()},
 										scaleBounds: {min : DatasetSearch.getSliderScaleDate(), max : DatasetSearch.getStopDate()},
 										defaultValues : {min : DatasetSearch.getSliderStartDate(), max : DatasetSearch.getStopDate()}});
@@ -165,7 +165,7 @@ return {
 	 * move the dataset message down */
 	removeTimeSlider : function(){
 		$('#timeSlider').dateRangeSlider('destroy');
-		$('#timeSlider').removeClass('ui-timeSlider-container ');
+		$('#timeSlider').removeClass('ui-timeSlider-container');
 		$('#datasetMessage').css('bottom', '0px');
 	} 
 };
