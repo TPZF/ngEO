@@ -4,8 +4,10 @@
  */
 
 module.exports = function(req, res){
+
+	res.sendfile('./datasetSearchInfo/' + req.params.id + '_datasetInfo.json');
 	
-	switch (req.params.id) {
+/*	switch (req.params.id) {
 		case 'ND_SAR_1':
 			res.sendfile('./datasetSearchInfo/ND_SAR_1_datasetInfo.json');
 			break;
@@ -30,5 +32,5 @@ module.exports = function(req, res){
 		default:
 			res.sendfile('./datasetSearchInfo/datasetInfo.json');
 			break;
-	}
+	}*/
 };

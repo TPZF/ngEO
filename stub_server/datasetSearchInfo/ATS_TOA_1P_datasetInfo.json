@@ -1,0 +1,33 @@
+{
+	"datasetSearchInfo": {
+		"dataSetId": "ATS_TOA_1P",
+		"description":"",
+		"keywords": [{"keyword":""}],
+		"downloadOptions": {
+			"downloadOption": [{ 
+				"argumentName":"DownloadMode",
+				"description": "wait until completion or download continuously",
+				"value": [ {"name": "DLcontinuous",
+						"humanReadable":"Download continuously",
+						"sizeFactor":"1"
+						},{ "name":"DLcomplete",
+						    "humanReadable":"Download on completion",
+							"sizeFactor":"1"
+						}]
+					}]
+		},
+		"attributes": [{ 
+			"id":"start",
+			"type":"String",
+			"possibleValues":[]
+		}, {
+			"id":"stop",
+			"type":"String",
+			"possibleValues":[]
+		},{
+			"id":"bbox",
+			"type":"String",
+			"possibleValues":[]
+		}]
+	}
+}
