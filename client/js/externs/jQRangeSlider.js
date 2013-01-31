@@ -24,10 +24,10 @@
  * However it is tightly related to ngeo since it depends on the DatasetSearch and SearchResults
  * in order to be able to submit a search.
  */
-define( [ "jquery", "search/model/datasetSearch", "searchResults/model/searchResults", "jquery.mobile" ], 
+define( [ "jquery", "jquery.mobile" ], 
 
 // The function to define the rangeslider module
-function($, DatasetSearch, SearchResults) {
+function($) {
 
 	
 	 $.widget("ngeo.rangeSlider",  $.mobile.widget,{
@@ -184,9 +184,6 @@ function($, DatasetSearch, SearchResults) {
 					$( this ).removeClass( $.mobile.focusClass );
 				}			
 			});
-
-
-			//.bind("mousewheel", $.proxy(this._wheelOnBar, this));
 			
 			this.arrows.left = $("<div class='ui-rangeSlider-arrow ui-rangeSlider-leftArrow' />")
 				.css("position", "absolute")
@@ -247,26 +244,13 @@ function($, DatasetSearch, SearchResults) {
 			//this._createScale();
 		},
 		
-		/**  Callback method when the mouse is up after a click or m */
+		/**  Callback method when the mouse is up after a mouse up event (after a mouse move) */
 		mouseUpHandler  : function(event) {
-			
-			console.log("Mouse up target ");
-			console.log(event.target);
-			//if ($.contains($('#timeSlider').get(), event.target)){
+
 			this._barStop(); 
 			this._stopScroll(); 
-			
-			 $(this.element).unbind("vmousemove");
-			
-			//set the selected start and end dates in the search model
-			DatasetSearch.setStartDate(this.min());
-			DatasetSearch.setStopDate(this.max());
-			
-			//submit search after the selection has been set
-			SearchResults.url = DatasetSearch.getOpenSearchURL();
-			SearchResults.set({"features" : [] });
-			SearchResults.fetch();
-			//}
+			$(this.element).unbind("vmousemove");
+
 		},
 		
 		/**
@@ -287,10 +271,7 @@ function($, DatasetSearch, SearchResults) {
 			
 			console.log("posX == " + posX);
 			 var handle = event.data.handle;
-			 
-			 console.log("handle ::::");
-			 console.log(handle);
-			 
+
 			if (handle.hasClass('ui-rangeSlider-leftHandle')){
 				min = this._getValue(left);				
 			}else if (handle.hasClass('ui-rangeSlider-rightHandle')){
@@ -607,7 +588,7 @@ function($, DatasetSearch, SearchResults) {
 		
 		_positionHandles: function(){
 			var left = this._getPosition(this._values.min);
-			var right = this._getPosition(this._values.max) - this.rightHandle.outerWidth(true) + 1;
+			var right = this._getPosition(this._values.max) - this.rightHandle.outerWidth(true);
 			this.leftHandle.css("left", left);
 			this.rightHandle.css("left", right);
 			
@@ -805,12 +786,12 @@ function($, DatasetSearch, SearchResults) {
 		 * Mouse wheel
 		 */
 		
-		_wheelOnBar: function(event, delta, deltaX, deltaY){
-			if (this.options.wheelMode == "zoom"){
-				this.zoomIn(-deltaY);
-				return false;
-			}
-		},
+//		_wheelOnBar: function(event, delta, deltaX, deltaY){
+//			if (this.options.wheelMode == "zoom"){
+//				this.zoomIn(-deltaY);
+//				return false;
+//			}
+//		},
 // mouse wheel is not used
 //		_wheelOnContainer: function(event, delta, deltaX, deltaY){
 //			if (this.options.wheelMode == "scroll"){
