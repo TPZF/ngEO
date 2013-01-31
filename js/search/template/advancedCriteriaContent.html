@@ -75,7 +75,45 @@
     						</fieldset>
    					</div>
 
-				<% } else { %>	
+				<!-- the criterion is an string  -->	
+				<% } else if (criterion.type == 'string') { %>	
+				
+					<div data-role="fieldcontain">
+							
+						<legend><%= criterion.id %>:</legend>
+
+						<% if (_.has(attributes, criterion.id)){ %>
+							<label for="<%= criterion.id %>"><%= criterion.id %></label>
+							<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= attributes[criterion.id] %>" data-mini="true"/>
+							 
+								
+						<% } else { %>	
+						 	<label for="<%= criterion.id %>"><%= criterion.id %></label>
+						 	<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" data-mini="true"/>
+					
+						<% } %>
+   					</div>
+
+				<!-- the criterion is an float  -->	
+				<% } else if (criterion.type == 'float') { %>	
+				
+					<div data-role="fieldcontain">
+							
+						<legend><%= criterion.id %>:</legend>
+
+						<% if (_.has(attributes, criterion.id)){ %>
+							<label for="<%= criterion.id %>"><%= criterion.id %></label>
+							<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= attributes[criterion.id] %>" data-mini="true"/>
+							 
+								
+						<% } else { %>	
+						 	<label for="<%= criterion.id %>"><%= criterion.id %></label>
+						 	<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" data-mini="true"/>
+					
+						<% } %>
+   					</div>
+				<% } else { %>
+					
 					 <label> ERROR: Undefined Criterion type <%= criterion.id %> </label>
 				<% } %>
 		
