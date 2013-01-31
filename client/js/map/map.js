@@ -92,58 +92,49 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	};
 	
 	/**
-	 * Create a browse layer for the given feature
-	 */
-	var createBrowseLayer = function(feature) {
-	
-		var eo = feature.properties.EarthObservation;
-		if (eo.EarthObservationResult && eo.EarthObservationResult.eop_BrowseInformation) {
-		
-			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
-			
-			var params = {
-				time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
-				transparent: true
-			};
-			
-			if ( eoBrowse.eop_type == "wms" ) {
-				params.layers = eoBrowse.eop_layer;
-				params.styles = "ellipsoid";
-			} else if ( eoBrowse.eop_type == "wmts" ) {
-				params.layer = eoBrowse.eop_layer;
-				params.matrixSet = "WGS84";
-			}
-			
-			var layerDesc = {
-				name: feature.id,
-				type: eoBrowse.eop_type,
-				visible: true,
-				baseUrl: eoBrowse.eop_url,
-				opacity: Configuration.data.map.browseDisplay.opacity,
-				params: params,
-				bbox: feature.bbox
-			};
-			
-			return { 
-				desc: layerDesc,
-				engine: mapEngine.addLayer(layerDesc)
-			};
-			
-		}
-		
-		return null;
-	};
-	
-	/**
 	 * Show a browse layer for the given feature
 	 */
-	var showBrowseLayer = function(feature) {			
-		// Create the WMS if it does not exists
+	var showBrowseLayer = function(feature) {
+	
 		if (!browseLayers.hasOwnProperty(feature.id)) {
-			browseLayers[ feature.id ] = createBrowseLayer(feature);
+	
+			var eo = feature.properties.EarthObservation;
+			if (eo.EarthObservationResult && eo.EarthObservationResult.eop_BrowseInformation) {
+			
+				var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
+				
+				var params = {
+					time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
+					transparent: true
+				};
+				
+				if ( eoBrowse.eop_type == "wms" ) {
+					params.layers = eoBrowse.eop_layer;
+					params.styles = "ellipsoid";
+				} else if ( eoBrowse.eop_type == "wmts" ) {
+					params.layer = eoBrowse.eop_layer;
+					params.matrixSet = "WGS84";
+				}
+				
+				var layerDesc = {
+					name: feature.id,
+					type: eoBrowse.eop_type,
+					visible: true,
+					baseUrl: eoBrowse.eop_url,
+					opacity: Configuration.data.map.browseDisplay.opacity,
+					params: params,
+					bbox: feature.bbox
+				};
+				
+				browseLayers[feature.id] = { 
+					desc: layerDesc,
+					engine: mapEngine.addLayer(layerDesc)
+				};
+				
+			}
 		}
 	};
-	
+		
 	/**
 	 * Hide the browse layer of the given feature
 	 */
