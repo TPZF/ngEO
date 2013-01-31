@@ -97,9 +97,6 @@ return {
 		var mapPopup = new MapPopup('.ui-page-active');
 		mapPopup.close();
 	
-		//By default the time slider container is not hidden
-		$('#timeSlider').hide();
-		
 		// Display a message about dataset in the map
 		DatasetSearch.on('change:datasetId', function(model) {
 			var datasetId = model.get('datasetId');
@@ -111,10 +108,8 @@ return {
 			
 			//if the selection has changed and a time slider exists remove it
 			if ($('#timeSlider').children().length != 0){
-				$('#timeSlider').dateRangeSlider('destroy');
+				self.removeTimeSlider();
 			}
-
-			$('#timeSlider').hide();
 		});
 		
 		/** This handler shall be called after the user has chosen a dataset, 
@@ -125,35 +120,20 @@ return {
 			
 			var useTimeSlider = DatasetSearch.get('useTimeSlider');
 			if ( useTimeSlider  ) {
-				$('#timeSlider').show();
-				$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
-												scaleBounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
-												defaultValues : {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()}});
-
+				self.addTimeSlider();
 			}		
 		});
 
 		
-		//when the selection changes remove the time slider of the previously selected dataset
-		var useTimeSlider = DatasetSearch.get('useTimeSlider');
-		
-		if ( useTimeSlider ) {
-			$('#timeSlider').dateRangeSlider('destroy');
-			$('#timeSlider').hide();
-		}
 		// Display the time slider in the bottom of the window when 
 		// the useTimeSlider check box is checked unless destroy the widget and hide the timeslider element
 		DatasetSearch.on('change:useTimeSlider', function() {
 			var useTimeSlider = DatasetSearch.get('useTimeSlider');
 			if ( useTimeSlider ) {
-				$('#timeSlider').show();
-				$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
-												scaleBounds: {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()},
-												defaultValues : {min : DatasetSearch.getStartDate(), max : DatasetSearch.getStopDate()}});
+				self.addTimeSlider();
 
 			}else{
-				$('#timeSlider').dateRangeSlider('destroy');
-				$('#timeSlider').hide();
+				self.removeTimeSlider();
 			}
 		});
 		
@@ -169,7 +149,25 @@ return {
 		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
 		SearchResults.on('selectFeatures',Map.selectFeatures);
 		SearchResults.on('unselectFeatures',Map.unselectFeatures);		
-	}
+	},
+	
+	/** add the time slider to the bottom of the map view  and
+	 * move the dataset message up */
+	addTimeSlider : function(){
+		$('#datasetMessage').css('bottom', '70px');
+		$('#timeSlider').addClass('ui-timeSlider-container ');
+		$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getSliderStartDate(), max : DatasetSearch.getStopDate()},
+										scaleBounds: {min : DatasetSearch.getSliderScaleDate(), max : DatasetSearch.getStopDate()},
+										defaultValues : {min : DatasetSearch.getSliderStartDate(), max : DatasetSearch.getStopDate()}});
+	},
+	
+	/** remove the time slider from the bottom of the map view  and
+	 * move the dataset message down */
+	removeTimeSlider : function(){
+		$('#timeSlider').dateRangeSlider('destroy');
+		$('#timeSlider').removeClass('ui-timeSlider-container ');
+		$('#datasetMessage').css('bottom', '0px');
+	} 
 };
 
 });
