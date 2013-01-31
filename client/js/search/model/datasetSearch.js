@@ -22,7 +22,6 @@ var DataSetSearch = Backbone.Model.extend({
 		startTime : "",
 		stopTime: "", 
 		useExtent : true,
-		useAdvancedCriteria : false, //flag for including advanced search criteria or not		
 		useDownloadOptions : false, //flag for including download options or not		
 		useTimeSlider : false //flag for displaying time slider or not
 	},
@@ -78,8 +77,6 @@ var DataSetSearch = Backbone.Model.extend({
 		var self = this;
 		
 		if (this.dataset){
-			//reset the useAdvancedCriteria flag
-			this.set({useAdvancedCriteria : false});
 			
 			//remove selected search criteria
 			if (this.dataset.attributes.datasetSearchInfo.attributes){			
@@ -123,10 +120,9 @@ var DataSetSearch = Backbone.Model.extend({
 		//add area criteria if set
 		url = this.addGeoTemporalParams(url);
 		
-		//add the advanced criteria values selected and already set to the model
-		if (this.get("useAdvancedCriteria")){
-			url = this.addAdvancedCriteria(url);
-		}
+		//always add the advanced criteria values selected and already set to the model
+		url = this.addAdvancedCriteria(url);
+
 		//add the download options values selected and already set to the model
 		if (this.get("useDownloadOptions")){
 			url = this.addDownloadOptions(url);
@@ -149,10 +145,6 @@ var DataSetSearch = Backbone.Model.extend({
 		// FL : for now never set useExtent can introduce bugs when dealing with polygon
 		// url +=  "&useExtent=" + this.get("useExtent");
 		
-		//add the advanced criteria values selected and already set to the model
-		if (this.get("useAdvancedCriteria")){
-			url += "&useAdvancedCriteria=true";
-		}
 		//add the download options values selected and already set to the model
 		if (this.get("useDownloadOptions")){
 			url += "&useDownloadOptions=true";
@@ -273,9 +265,11 @@ var DataSetSearch = Backbone.Model.extend({
 				
 				if (_.has(self.attributes, attribute.id)){
 					url += '&' + attribute.id + '=' + self.attributes[attribute.id];
-				}else{
-					url += '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);
 				}
+				//default values are not included in the Url
+//				else{
+//					url += '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);
+//				}
 			});
 		}
 		
