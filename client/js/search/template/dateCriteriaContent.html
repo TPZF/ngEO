@@ -4,7 +4,7 @@
 	<label id="fromDateLabel" for="fromDateInput">Start Date : </label>
 	
 	<input name="From" id="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.startdate %>"
-		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.startdate %>", 
+		  data-options='{"mode": "calbox", "overrideDateFormat":"%d-%m-%Y", "defaultDate": "<%=attributes.startdate %>", 
 		  "useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
 </div>
 
@@ -21,7 +21,7 @@
 	<label id="toDateLabel" for="toDateInput">End Date : </label>
 	
 	<input name="toDate" id="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.stopdate %>"
-	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.stopdate %>", 
+	   data-options='{"mode": "calbox", "overrideDateFormat":"%d-%m-%Y", "defaultDate": "<%=attributes.stopdate %>", 
 	   	"useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
 
 </div>
