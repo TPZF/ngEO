@@ -35,20 +35,23 @@ $.widget( "ngeo.panelManager", {
 		
 		// TODO : this version does not work well, the height of element is not always correct at that time
 		//var centerHeight = this.element.outerHeight();
-		// Note : 		
 		var centerHeight = $(window).height() - this.element.offset().top;
 		
 		if	( this.bottom ) {
 			centerHeight -= this.bottom.parent().outerHeight();
 		}
-
-		$(this.options.center).css({
-			width: this.element.outerWidth(),
-			height: centerHeight
-		});
 		
-		if ( this.options.update ) {
-			this.options.update();
+		// Only update the panel when height has really changed
+		var prevHeight = $(this.options.center).height();
+		if ( prevHeight != centerHeight ) {
+			$(this.options.center).css({
+				width: this.element.outerWidth(),
+				height: centerHeight
+			});
+			
+			if ( this.options.update ) {
+				this.options.update();
+			}
 		}
 	},
 	

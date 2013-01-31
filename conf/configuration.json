@@ -7,15 +7,14 @@
 						{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
 						{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
 						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
-						{"sTitle" : "Product", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_identifier" }, 
+						{"sTitle" : "Product", "mData" : "id" }, 
 						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
 						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
-					   ],
-		"columnsDef_Terradue" : [{"sTitle" : "Start", "mData": "properties.ical:dtstart"},
-						{"sTitle" : "Stop", "mData": "properties.ical:dtend"},
-						{"sTitle" : "Orbit", "mData": "properties.eop:orbitNumber"},
-						{"sTitle" : "Product", "mData": "properties.dc:identifier"} ]
+					   ]
+	},
 	
+	"searchResults": {
+		"countPerPage": 10
 	},
 	
 	"downloadManager" : {		
