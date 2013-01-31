@@ -42,64 +42,54 @@ var AdvancedSearchView = Backbone.View.extend({
 			
 			var $target = $(event.currentTarget);			
 			var suffix = Configuration.localConfig.fieldIdSuffixSepartor + Configuration.localConfig.inputLabelSuffix;
-			var criterionIdValue = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(suffix));
+			var criterionIdValue = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(suffix));	
+			var criterionId = criterionIdValue.substring(0, criterionIdValue.indexOf(Configuration.localConfig.fieldIdSuffixSepartor));
+			var criterionValue = criterionIdValue.substring(criterionIdValue.indexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, criterionIdValue.length);		
+			var openSearchCriterion = {};
+			var newValue;
 			
-			//case where the use advanced criteria is checked
-			if (criterionIdValue == "useAdvancedCriteria"){
+			if ($target.hasClass("ui-radio-off")){//Radio button
+				//look for class ui-radio-off because it is going to be changed to ui-radio-on at the end of the handler
+				newValue = criterionValue;
 				
-				var useAdvancedCriteria = $target.hasClass('ui-checkbox-off');
-				this.model.set({"useAdvancedCriteria" : useAdvancedCriteria}, {silent:true});
-			
-			}else{//handle radio/checkbox search criteria fields
-				
-				var criterionId = criterionIdValue.substring(0, criterionIdValue.indexOf(Configuration.localConfig.fieldIdSuffixSepartor));
-				var criterionValue = criterionIdValue.substring(criterionIdValue.indexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, criterionIdValue.length);		
-				var openSearchCriterion = {};
-				var newValue;
-				
-				if ($target.hasClass("ui-radio-off")){//Radio button
-					//look for class ui-radio-off because it is going to be changed to ui-radio-on at the end of the handler
+			}else if ($target.hasClass('ui-checkbox-off')){//Checkbox button checked
+		
+				var criterionSetValue = this.model.get(criterionId);
+				//if the criterion has not been changed then set the checked value
+				//unless the criterion has already been changed by the user, then add the new checked value
+				//the multiple-valued string
+				//if the set value is the the default one update it with the new checked values
+				if (criterionSetValue == undefined || criterionSetValue == this.model.dataset.getDefaultCriterionValue(criterionId)){
 					newValue = criterionValue;
-					
-				}else if ($target.hasClass('ui-checkbox-off')){//Checkbox button checked
-			
-					var criterionSetValue = this.model.get(criterionId);
-					//if the criterion has not been changed then set the checked value
-					//unless the criterion has already been changed by the user, then add the new checked value
-					//the multiple-valued string
-					//if the set value is the the default one update it with the new checked values
-					if (criterionSetValue == undefined || criterionSetValue == this.model.dataset.getDefaultCriterionValue(criterionId)){
-						newValue = criterionValue;
-					}else{
-						newValue = criterionSetValue + "," + criterionValue;
-					}
-				
-				}else if ($target.hasClass('ui-checkbox-on')){ //unselect a value
-					
-					var criterionSetValue = this.model.get(criterionId);
-					//console.log("Criterion : "  + criterionId + " old value :" + criterionSetValue);
-					
-					if (criterionSetValue == criterionValue){//one value is selected so set the default value to the whole possible values
-						newValue = this.model.dataset.getDefaultCriterionValue(criterionId);
-					
-					}else{
-						var index = criterionSetValue.indexOf(criterionValue);
-						//add +1 to remove the comma after!
-						if (index == 0 || index != criterionSetValue.length - criterionValue.length){
-							newValue = criterionSetValue.replace(criterionValue + ",", "");	
-						}else {//criteria value at the end then remove the comma before
-							newValue = criterionSetValue.replace("," + criterionValue, "");
-						} 
-					}
-					//console.log("Criterion : "  + criterionId + " new value :" + newValue);
-				
-				} else {
-					//do nothing ! console.log(" not ui-radio-off");
+				}else{
+					newValue = criterionSetValue + "," + criterionValue;
 				}
-				//set the new value to the json object and add it to the model
-				openSearchCriterion[criterionId] = newValue;
-				this.model.set(openSearchCriterion, {silent:true});	
+			
+			}else if ($target.hasClass('ui-checkbox-on')){ //unselect a value
+				
+				var criterionSetValue = this.model.get(criterionId);
+				//console.log("Criterion : "  + criterionId + " old value :" + criterionSetValue);
+				
+				if (criterionSetValue == criterionValue){//one value is selected so set the default value to the whole possible values
+					newValue = this.model.dataset.getDefaultCriterionValue(criterionId);
+				
+				}else{
+					var index = criterionSetValue.indexOf(criterionValue);
+					//add +1 to remove the comma after!
+					if (index == 0 || index != criterionSetValue.length - criterionValue.length){
+						newValue = criterionSetValue.replace(criterionValue + ",", "");	
+					}else {//criteria value at the end then remove the comma before
+						newValue = criterionSetValue.replace("," + criterionValue, "");
+					} 
+				}
+				//console.log("Criterion : "  + criterionId + " new value :" + newValue);
+			
+			} else {
+				//do nothing ! console.log(" not ui-radio-off");
 			}
+			//set the new value to the json object and add it to the model
+			openSearchCriterion[criterionId] = newValue;
+			this.model.set(openSearchCriterion, {silent:true});	
 		}		
 	},
 	
