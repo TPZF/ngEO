@@ -44,10 +44,10 @@ return function(root) {
 	
 	view.render();
 
-	// Show the widget when search results are retreived
-	SearchResults.on("change", function() {
-		view.$el.panel('show');		
-	});
+//	// Show the widget when search results are retreived
+//	SearchResults.on("change", function() {
+//		view.$el.panel('show');		
+//	});
 	
 	return view.$el;
 };
