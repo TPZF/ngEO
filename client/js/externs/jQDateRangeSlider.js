@@ -111,9 +111,7 @@ function($, DatasetSearch, SearchResults) {
 			DatasetSearch.setStopDate(this.max());
 			
 			//submit search after the selection has been set
-			SearchResults.url = DatasetSearch.getOpenSearchURL();
-			SearchResults.set({"features" : [] });
-			SearchResults.fetch();
+			SearchResults.launch( DatasetSearch.getOpenSearchURL() );
 			
 		},
 		

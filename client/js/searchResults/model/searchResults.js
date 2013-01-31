@@ -1,25 +1,56 @@
 /**
  * results table model as received from the server
  */
-define( ['jquery', 'backbone'], function($, Backbone) {
+define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var SearchResults = Backbone.Model.extend({
 	
 	defaults : {
 		// Geojson feature's table as returned by the server
 		features: [],
+		type: "FeatureCollection"
 	},
 	
 	// Construtor : intialize the selection as an empty array
 	initialize: function() {
 		this.selection = [];
+		this.countPerPage = Configuration.data.searchResults.countPerPage || 10;
+	},
+	
+	// fetch the results using the given start index
+	fetch: function(startIndex,currentUrl) {
+		var self = this;
+		$.ajax({
+			url: this.url + "&startIndex=" + startIndex,
+			dataType: 'json',
+			success: function(data) {
+				// Update data if a new launch has not been done, the launch is new if the url has changed
+				// TODO : improve the mechanism?
+				if ( self.url == currentUrl ) {
+					// Update the features
+					self.set( 'features', self.get('features').concat(data.features) );
+					
+					// Relaunch a search on next page if there is still some results
+					if ( data.features.length == self.countPerPage ) {
+						self.fetch(startIndex + self.countPerPage, currentUrl);
+					}
+				}				
+			}
+		});
+	},
+	
+	// launch a search
+	launch: function(url) {
+		this.url = url + "&count=" + this.countPerPage;
+		this.set({"features" : [] }, {silent : true});
+		this.fetch(1,this.url);
 	},
 	
 	// Set the selection, replace the previous one
 	setSelection: function(features) {
+		this.selection = features;
 		this.trigger( "unselectFeatures", _.difference(this.selection, features) );
 		this.trigger( "selectFeatures", _.difference(features, this.selection) );
-		this.selection = features;
 	},
 	
 	// Select a feature

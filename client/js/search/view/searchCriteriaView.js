@@ -69,9 +69,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 	
 		this.searchButton.click( function() {
-			SearchResults.url = self.model.getOpenSearchURL();
-			SearchResults.set({"features" : [] }, {silent : true});
-			SearchResults.fetch();
+			SearchResults.launch( self.model.getOpenSearchURL() );
 			self.$el.ngeowidget('hide');
 		});		
 				

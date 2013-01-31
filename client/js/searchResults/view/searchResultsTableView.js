@@ -44,18 +44,6 @@ var SearchResultsTableView = Backbone.View.extend({
 			} else {
 				this.model.unselect( this.model.get('features')[rowPos] );
 			}
-											
-			//Disable the Retrieve Product button if no product item is selected 
-			//and/or if the products checked do not have a product url
-			if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
-				this.retrieveProduct.button('disable');
-				this.downloadOptionsButton.button('disable');
-				this.exportButton.button('disable');
-			} else {
-				this.retrieveProduct.button('enable');
-				this.downloadOptionsButton.button('enable');
-				this.exportButton.button('enable');
-			}
 		}, 
 		
 		//Called when the user clicks on the product id of an item
@@ -84,6 +72,20 @@ var SearchResultsTableView = Backbone.View.extend({
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
 		}
+		if ( this.model.selection.length > 0 ) {
+			this.exportButton.button('enable');
+		} else {
+			this.exportButton.button('disable');
+		}
+		//Disable the Retrieve Product button if no product item is selected 
+		//and/or if the products checked do not have a product url
+		if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
+			this.retrieveProduct.button('disable');
+			this.downloadOptionsButton.button('disable');
+		} else {
+			this.retrieveProduct.button('enable');
+			this.downloadOptionsButton.button('enable');
+		}
 	},
 		
 	/**
@@ -107,7 +109,14 @@ var SearchResultsTableView = Backbone.View.extend({
 		// Add checkbox as first colum
 		var columnsDef = [{	'sTitle' : '', 'bSortable': false, 'mData': null, 'sWidth': '20px', 'sDefaultContent': '<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>' }];
 		columnsDef = columnsDef.concat( Configuration.data.resultsTable.columnsDef );
+		
+		// Add a default content for each row to avoid error messages
+		for ( var i = 1; i < columnsDef.length; i++ ) {
+			columnsDef[i].sDefaultContent = "None";
+		}
 
+		this._currentLength = 5;
+		
 		var self = this;
 		this.table = this.$el.find("#datatable").dataTable({
 					"sDom" : '<"top"i>rt<"bottom"flp><"clear">',
@@ -115,8 +124,8 @@ var SearchResultsTableView = Backbone.View.extend({
 					"aoColumns" : columnsDef, 
 					"bDestroy": true,
 					"bAutoWidth": false,
-					"aLengthMenu": [5, 10, 25, 50],
-					"iDisplayLength": 5,	
+					"aLengthMenu": [5, 10, 25],
+					"iDisplayLength": this._currentLength,	
 					"bLengthChange" : true,
 					"bPaginate" : true,
 					//"sPaginationType": "full_numbers",
@@ -154,7 +163,10 @@ var SearchResultsTableView = Backbone.View.extend({
 						}											
 																	
 						self.$el.trigger('create');// to insure that JQM styling is still kept
-						self.$el.panel('update');
+						
+						if (oSettings._iDisplayLength != this._currentLength) {
+							self.$el.panel('update');
+						}
 					 },		
 					
 				});
