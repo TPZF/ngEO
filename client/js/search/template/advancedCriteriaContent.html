@@ -20,14 +20,7 @@
 	<% } else { %>	 		
 	
 	<!-- 	display search criteria -->
-		<form>
-			
-			<label id="useAdvancedCriteria_label" for="useAdvancedCriteria_input">Use advanced criteria </label>
-			<% if (attributes.useAdvancedCriteria == "true") {  %>
-				<input type="checkbox" name="useAdvancedCriteria" id="useAdvancedCriteria_input" data-mini="true" checked/>				
-			<% } else { %>	 
-			 	<input type="checkbox" name="useAdvancedCriteria" id="useAdvancedCriteria_input" data-mini="true"/>				
-		 	<% } %>	 
+		<form>			
 
 		<% _.each(dataset.attributes.datasetSearchInfo.attributes, function(criterion, i) { %>		
 		
