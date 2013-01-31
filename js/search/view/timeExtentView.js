@@ -40,7 +40,14 @@ var TimeExtentView = Backbone.View.extend({
 			//hide the search criteria widget when the time slider is enabled
 			//this is to keep the map visible 
 			if (checked){
+				//disable the dates start and stop widgets if the time slider is enabled
+				$("#fromDateInput").datebox("disable");
+				$("#toDateInput").datebox("disable");
 				this.searchCriteriaView.$el.ngeowidget('hide');
+			}else{
+				//enable the dates start and stop widgets if the time slider is disabled
+				$("#fromDateInput").datebox("enable");
+				$("#toDateInput").datebox("enable");
 			}
 			this.model.set({"useTimeSlider" : checked});
 		}
