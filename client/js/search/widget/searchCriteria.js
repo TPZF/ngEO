@@ -25,15 +25,12 @@ define( ["jquery", "backbone", "search/model/datasetSearch", "search/view/search
 			// Disable search criteria and result buttons if there is no dataset selected
 			if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
 				$('#search').parent().addClass('ui-disabled');
-				$('#result').parent().addClass('ui-disabled');
 			}
 			DatasetSearch.on('change:datasetId', function() {
 				if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
 					$('#search').parent().addClass('ui-disabled');
-					$('#result').parent().addClass('ui-disabled');
 				} else {
 					$('#search').parent().removeClass('ui-disabled');
-					$('#result').parent().removeClass('ui-disabled');
 				}
 			});
 			
