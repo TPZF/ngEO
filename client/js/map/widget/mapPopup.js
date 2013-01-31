@@ -70,10 +70,14 @@ var MapPopup = function(container) {
 	var getData = function(product,path) {
 		var names = path.split('.');
 		var obj = product;
-		for ( var i = 0; i < names.length-1; i++ ) {
+		for ( var i = 0; obj && i < names.length-1; i++ ) {
 			obj = obj[ names[i] ];
 		}
-		return obj[ names[names.length-1] ];
+		if ( obj && obj.hasOwnProperty(names[names.length-1]) ) {
+			return obj[ names[names.length-1] ];
+		} else {
+			return "";
+		}
 	};
 
 	/**
@@ -136,7 +140,7 @@ var MapPopup = function(container) {
 			pos.y += toolbarTop;
 			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() );
 		
-			arrow.css('top',pos.y);
+			arrow.css('top',pos.y - 0.5 * arrow.outerHeight());
 			arrow.css('left',pos.x - arrow.outerWidth());
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
@@ -146,7 +150,7 @@ var MapPopup = function(container) {
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');
 			arrow.addClass('mapPopup-arrow-left');
-			arrow.css('top', pos.y);
+			arrow.css('top', pos.y - 0.5 * arrow.outerHeight() );
 			arrow.css('left', pos.x);
 		}
 		
