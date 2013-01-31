@@ -394,11 +394,16 @@ var DataSetSearch = Backbone.Model.extend({
 		return new Date(dmy[2]-2, dmy[1]-2, dmy[0]);
 	},
 	
-	/** Get the slider scale start date */
+	/** Get the slider scale start date. 
+	 * Use a configurable scale width rather a fixed start date 
+	 * in order optimize time slider creation performance 
+	 * */
 	getSliderScaleDate : function(){
-		var scaleStartString = Configuration.localConfig.timeSlider.defautScaleStart;
-		var dmy = scaleStartString.split('-');
-		return new Date(dmy[2], dmy[1]-1, dmy[0]);
+//		var scaleStartString = Configuration.localConfig.timeSlider.defautScaleStart;
+//		var dmy = scaleStartString.split('-');
+		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
+		var dmy = this.get("stopdate").split('-');	
+		return new Date(dmy[2]-width, dmy[1]-1, dmy[0]);
 	},
 	
 	/** substract 2 from the month because the months for a Date object
