@@ -1,6 +1,6 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'map/geojsonConverter',
+define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'map/geojsonconverter',
           'text!searchResults/template/exportViewContent.html'], 
 		function($, Backbone, Configuration, SearchResults, GeoJsonConverter, exportViewContent) {
 
