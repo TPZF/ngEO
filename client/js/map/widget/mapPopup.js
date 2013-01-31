@@ -3,8 +3,7 @@
   */
 
 
-define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
-	"text!map/template/mapPopupContent.html", "underscore" ], function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, mapPopup_template) {
+define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget" ], function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget) {
 
 
 var MapPopup = function(container) {
@@ -25,9 +24,22 @@ var MapPopup = function(container) {
 	parentElement = element.parent();
 	
 	// Add buttons for some simple actions
-	var btn = $("<button data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
-		.appendTo( element.find('#buttons') );
-	var btn = $("<button data-icon='grid' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
+	
+	// Info
+	var btn = $("<button id='info' data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Information/button>")
+		.appendTo( element.find('#buttons') )
+		.click( function() {
+			if ( $(this).parent().hasClass('ui-btn-active') ) {
+				buildContent(false);
+				$(this).parent().removeClass('ui-btn-active ui-focus');
+			} else {
+				buildContent(true);
+				$(this).parent().addClass('ui-btn-active');
+			}
+		});
+
+	// DAR
+	var btn = $("<button data-icon='arrow-d' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo( element.find('#buttons') )
 		.click( function() {
 			SimpleDataAccessRequest.initialize();
@@ -83,10 +95,34 @@ var MapPopup = function(container) {
 	/**
 		Build the content of the popup from the given product
 	 */
-	var buildContent = function(product) {
-		var content = _.template(mapPopup_template, { contentDefs: Configuration.data.resultsTable.columnsDef,
-						getData: getData,
-						product: product });
+	var buildContent = function(adv) {
+		var content;
+
+		if ( products.length == 1 ) {
+			content = '<p><b>Product: ' + products[0].id + '</b></p>';
+			if ( adv ) {
+				var columnDefs = Configuration.data.resultsTable.columnsDef;
+				for ( var i = 0; i < columnDefs.length; i++ ) {
+					if ( columnDefs[i].sTitle != 'Product' ) {
+						var value = getData( products[0], columnDefs[i].mData );
+						if ( value ) {
+							content += '<p>' + columnDefs[i].sTitle + ': ' + value + '</p>';
+						}
+					}
+				}
+			} else {
+				content += '<p>Date: ' + products[0].properties.EarthObservation.gml_beginPosition + '</p>';
+			}
+		} else {
+			content = products.length + " products selected.<br>Click again to cycle through the different products.";
+			if ( adv ) {
+				content += "<p>Products:</p>";
+				for ( var i = 0; i < products.length; i++ ) {
+					content += "<p>" + products[i].id + "</p>";
+				}
+			}
+		}
+		
 		element.find('#text').html(content);
 	};
 	
@@ -112,12 +148,8 @@ var MapPopup = function(container) {
 	
 		products = features;
 		
-		if ( products.length == 1 ) {
-			buildContent(products[0]);
-		} else {
-			element.find('#text').html( products.length + " products selected.<br>Click again to cycle through the different products." );
-		}
-		
+		buildContent(false);
+				
 		var bbox = computeBbox(features);
 		var pos = Map.getPixelFromLonLat( bbox[2], (bbox[1] + bbox[3])*0.5);
 			
