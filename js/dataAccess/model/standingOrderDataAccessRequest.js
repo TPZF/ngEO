@@ -99,10 +99,6 @@ var StandingOrderDataAccessRequest = {
 		var options = _.values(this.getSchedulingOptions())[0];
 		//TODO EM :update $.param(options)!
 		var url = "#data-services-area/sto/" + DatasetSearch.getCoreURL() + "&" + $.param(options);
-		//add the advanced criteria values selected and already set to the model
-		if (DatasetSearch.get("useAdvancedCriteria")){
-			url += "&useAdvancedCriteria=true";
-		}
 		//add the download options values selected and already set to the model
 		if (DatasetSearch.get("useDownloadOptions")){
 			url += "&useDownloadOptions=true";
