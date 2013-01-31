@@ -1,9 +1,11 @@
 
 define(["jquery", "configuration", "account/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "account/view/dataAccessRequestMonitoringView", 
-        "account/view/downloadManagersMonitoringView", "text!../pages/account.html", "tabs"], 
+        "account/view/downloadManagersMonitoringView", "account/view/inquiriesView",
+        "text!../pages/account.html", "tabs"], 
 
-        function($, Configuration, DataAccessRequestStatuses, DownloadManagers, DataAccessRequestMonitoringView, DownloadManagersMonitoringView, account_html) {
+        function($, Configuration, DataAccessRequestStatuses, DownloadManagers, 
+        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, account_html) {
 	
 return {
 
@@ -50,11 +52,19 @@ return {
 				});
 				
 				darView.render();
-			});
-			
+			});	
 		});
 		
+		//Create the inquiries View
+		var inquiriesView = new InquiriesView({
+			//model : inquiery,
+			el : "#inquiries"
+		});
+		
+		inquiriesView.render();
+		
 	}
+		
 };
 
 });
