@@ -998,11 +998,13 @@ function($) {
 		destroy: function(){
 			this.element.removeClass("ui-rangeSlider-withArrows")
 			.removeClass("ui-rangeSlider-noArrow");
+			this.container.remove();
 			this.bar.remove();
 			this.leftHandle.remove();
 			this.rightHandle.remove();
 			this.innerBar.remove();
 			this.container.remove();
+			this.scaleBar.remove();
 			this.arrows.left.remove();
 			this.arrows.right.remove();
 			this.element.removeClass("ui-rangeSlider");
