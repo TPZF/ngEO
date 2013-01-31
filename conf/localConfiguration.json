@@ -93,6 +93,6 @@
 			},
 			
 			"timeSlider" : {
-				"defautScaleStart" : "01-01-2000"
+				"scaleYearsWidth" : "10"
 			}
 		}
