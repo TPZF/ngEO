@@ -16,18 +16,31 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-define( [ "jquery", "jquery.rangeSlider" ], 
+
 
 // The function to define the rangeslider module
-function($) {
+define( [ "jquery", "search/model/datasetSearch", "searchResults/model/searchResults", "jquery.rangeSlider", "jquery.mobile" ], 
 
+// The function to define the daterangeslider module
+function($, DatasetSearch, SearchResults) {
 	
 	$.widget("ngeo.dateRangeSlider", $.ngeo.rangeSlider, {
+		
 		options: {
 			bounds: {min: new Date(2010,0,1), max: new Date(2012,0,1)},
 			scaleBounds: {min: new Date(2000,0,1), max: new Date(2012,0,1)},
 			defaultValues: {min: new Date(2010,1,11), max: new Date(2011,1,11)}
 		},
+		
+		//uncomment to synchronize the date and time slider widgets
+//		_create: function(){
+//			$.ngeo.rangeSlider.prototype._create.apply(this, arguments);
+//			var self = this;
+//			DatasetSearch.on("change:startdate", function(){ self._setValuesHandles(DatasetSearch.getStartDate(), self.max());
+//															self._position();});
+//			DatasetSearch.on("change:stopdate", function(){ self._privateValues(self.min(), DatasetSearch.getStopDate());
+//															self._position();});
+//		},
 	
 		_setOption: function(key, value){
 			if ((key == "defaultValues" || key== "bounds" || key== "scaleBounds"|| key== "scaleRatio") && typeof value != "undefined" && value != null && typeof value.min != "undefined" && typeof value.max != "undefined" && value.min instanceof Date && value.max instanceof Date){
@@ -86,6 +99,23 @@ function($) {
 			
 			return new Date($.ngeo.rangeSlider.prototype.max.apply(this));
 		}, 
+		
+		/**  Callback method when the mouse is up after a mouse mouve */
+		mouseUpHandler  : function(event) {
+			
+			$.ngeo.rangeSlider.prototype.mouseUpHandler.apply(this, arguments);
+
+			console.log("mouseUpHandler  ------ this.min" + this.min());
+			//set the selected start and end dates in the search model
+			DatasetSearch.setStartDate(this.min());
+			DatasetSearch.setStopDate(this.max());
+			
+			//submit search after the selection has been set
+			SearchResults.url = DatasetSearch.getOpenSearchURL();
+			SearchResults.set({"features" : [] });
+			SearchResults.fetch();
+			
+		},
 		
 		destroy: function(){
 			$.ngeo.rangeSlider.prototype.destroy.apply(this);
