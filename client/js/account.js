@@ -1,11 +1,11 @@
 
 define(["jquery", "configuration", "account/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "account/view/dataAccessRequestMonitoringView", 
-        "account/view/downloadManagersMonitoringView", "account/view/inquiriesView",
+        "account/view/downloadManagersMonitoringView", "account/view/inquiriesView", "account/view/userPrefsView",
         "text!../pages/account.html", "tabs"], 
 
         function($, Configuration, DataAccessRequestStatuses, DownloadManagers, 
-        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, account_html) {
+        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, UserPrefsView, account_html) {
 	
 return {
 
@@ -92,8 +92,14 @@ return {
 			//model : inquiery,
 			el : "#inquiries"
 		});
-		
 		inquiriesView.render();
+		
+		//Create the user prefs View
+		var userPrefsView = new UserPrefsView({
+			el : "#userPrefs"
+		});
+		
+		userPrefsView.render();
 		
 	}
 		
