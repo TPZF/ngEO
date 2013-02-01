@@ -146,7 +146,7 @@ return {
 		//when the dataset selected is not loaded display an error message
 		DatasetSearch.on("datasetNotLoadError", function(datasetId){
 			$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
-					'</p><p>The time slider cannot be used.</p></div>')
+					'</p><p>The dataset related criteria cannot be used.</p></div>')
 			.appendTo('.ui-page-active')
 			.popup()
 			.popup('open');
