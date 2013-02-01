@@ -372,9 +372,9 @@ OpenLayersMapEngine.prototype.removeAllFeatures = function(layer)
 /**
  * Add a feature on the map
  */
-OpenLayersMapEngine.prototype.addFeatureCollection = function(layer,featureCollection)
+OpenLayersMapEngine.prototype.addFeature = function(layer,feature)
 {
-	var olFeatures = this._geoJsonFormat.read(featureCollection);
+	var olFeatures = this._geoJsonFormat.read(feature);
 	layer.addFeatures( olFeatures );
 
 }

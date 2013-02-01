@@ -3,19 +3,19 @@
  */
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
-var SearchResults = Backbone.Model.extend({
+// Store the count per page
+var _countPerPage = Configuration.data.searchResults.countPerPage || 10;
+
+var SearchResults = {
 	
-	defaults : {
-		// Geojson feature's table as returned by the server
-		features: [],
-		type: "FeatureCollection"
-	},
+	// Array of features
+	features: [],
+		
+	// The current selection
+	selection: [],
 	
-	// Construtor : intialize the selection as an empty array
-	initialize: function() {
-		this.selection = [];
-		this.countPerPage = Configuration.data.searchResults.countPerPage || 10;
-	},
+	// The URL for search results
+	url: "",
 	
 	// fetch the results using the given start index
 	fetch: function(startIndex,currentUrl) {
@@ -27,12 +27,16 @@ var SearchResults = Backbone.Model.extend({
 				// Update data if a new launch has not been done, the launch is new if the url has changed
 				// TODO : improve the mechanism?
 				if ( self.url == currentUrl ) {
-					// Update the features
-					self.set( 'features', self.get('features').concat(data.features) );
+				
+					// Add the features to the results
+					for ( var i = 0; i < data.features.length; i++ ) {
+						self.features.push( data.features[i] );
+					}
+					self.trigger('add:features',data.features);
 					
 					// Relaunch a search on next page if there is still some results
-					if ( data.features.length == self.countPerPage ) {
-						self.fetch(startIndex + self.countPerPage, currentUrl);
+					if ( data.features.length == _countPerPage ) {
+						self.fetch(startIndex + _countPerPage, currentUrl);
 					}
 				}				
 			}
@@ -41,8 +45,9 @@ var SearchResults = Backbone.Model.extend({
 	
 	// launch a search
 	launch: function(url) {
-		this.url = url + "&count=" + this.countPerPage;
-		this.set({"features" : [] }, {silent : true});
+		this.url = url + "&count=" + _countPerPage;
+		this.features.length = 0;
+		this.trigger('reset:features');
 		this.fetch(1,this.url);
 	},
 	
@@ -143,8 +148,12 @@ var SearchResults = Backbone.Model.extend({
 		return false;
 	},
 	
-});
+};
 
-return new SearchResults();
+// Add events
+_.extend(SearchResults, Backbone.Events);
+
+
+return SearchResults;
 
 });

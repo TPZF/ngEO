@@ -145,7 +145,8 @@ return {
 		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);
 	
 		// Connect search results events with map
-		SearchResults.on('change',Map.setResults);
+		SearchResults.on('reset:features',Map.clearResults);
+		SearchResults.on('add:features',Map.addResults);
 		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
 		SearchResults.on('selectFeatures',Map.selectFeatures);
 		SearchResults.on('unselectFeatures',Map.unselectFeatures);		

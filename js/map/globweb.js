@@ -149,11 +149,10 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 			visible: layer.visible 
 		});
 		if ( layer.data ) {
-			var isCollection = layer.data.type == 'FeatureCollection';
-			if ( isCollection ) {
-				gwLayer.addFeatureCollection( layer.data );
+			if ( typeof layer.data == "string" ) {
+				this.addFeature( gwLayer, JSON.parse(layer.data) );
 			} else {
-				gwLayer.addFeature( layer.data );
+				this.addFeature( gwLayer, layer.data );
 			}
 		}
 		break;
@@ -341,9 +340,14 @@ GlobWebMapEngine.prototype.removeAllFeatures = function(layer)
 /**
  * Add a feature on the map
  */
-GlobWebMapEngine.prototype.addFeatureCollection = function(layer,featureCollection)
+GlobWebMapEngine.prototype.addFeature = function(layer,feature)
 {
-	layer.addFeatureCollection( featureCollection );
+	var isCollection = feature.type == 'FeatureCollection';
+	if ( isCollection ) {
+		layer.addFeatureCollection( feature );
+	} else {
+		layer.addFeature( feature );
+	}
 }
 
 /**
