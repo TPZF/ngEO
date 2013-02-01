@@ -70,6 +70,15 @@ return {
 				SearchCriteriaWidget.refresh();
 				searchWidget.ngeowidget("show");
 			});
+			
+			//when the dataset selected is not loaded display an error message
+			DatasetSearch.on("datasetNotLoadError", function(datasetId){
+				$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
+						'</p><p>The Search cannot be shared.</p></div>')
+				.appendTo('.ui-page-active')
+				.popup()
+				.popup('open');
+			});
 		});
 		
 		//Route standing order url
@@ -91,6 +100,16 @@ return {
 				var standingOrderWidget = new StandingOrderWidget();
 				standingOrderWidget.open();			
 			});
+			
+			//when the dataset selected is not loaded display an error message
+			DatasetSearch.on("datasetNotLoadError", function(datasetId){
+				$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
+						'</p><p>The Standing Order cannot be shared.</p></div>')
+				.appendTo('.ui-page-active')
+				.popup()
+				.popup('open');
+			});
+			
 		});
 		
 		// Create the popup for the map
@@ -114,7 +133,7 @@ return {
 		
 		/** This handler shall be called after the user has chosen a dataset, 
 		 * activated the timeslider checkbox and then selected a new dataset.
-		 * It is used to creta e time slider for the dataset.
+		 * It is used to create time slider for the dataset.
 		 */
 		DatasetSearch.on("datasetLoaded", function(){
 			
@@ -124,6 +143,14 @@ return {
 			}		
 		});
 
+		//when the dataset selected is not loaded display an error message
+		DatasetSearch.on("datasetNotLoadError", function(datasetId){
+			$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
+					'</p><p>The time slider cannot be used.</p></div>')
+			.appendTo('.ui-page-active')
+			.popup()
+			.popup('open');
+		});
 		
 		// Display the time slider in the bottom of the window when 
 		// the useTimeSlider check box is checked unless destroy the widget and hide the timeslider element
