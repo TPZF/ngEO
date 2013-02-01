@@ -20,9 +20,10 @@ var SearchResults = {
 	// fetch the results using the given start index
 	fetch: function(startIndex,currentUrl) {
 		var self = this;
-
+		var searchUrl = this.url + "&startIndex=" + startIndex;
+		
 		$.ajax({
-			url: this.url + "&startIndex=" + startIndex,
+			url: searchUrl,
 			dataType: 'json'
 				
 		}).done(function(data) {
@@ -44,7 +45,7 @@ var SearchResults = {
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
 			  console.log("ERROR when retrieving the products :" + textStatus + ' ' + errorThrown);
 			  //notify that the product search has Failed
-			  self.trigger('error:features', "ERROR when retrieving products : " + textStatus + ' ' + errorThrown);  
+			  self.trigger('error:features', searchUrl);  
 		});
 	},
 	
