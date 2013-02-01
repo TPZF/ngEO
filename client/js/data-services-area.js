@@ -172,11 +172,19 @@ return {
 		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);
 	
 		// Connect search results events with map
-		SearchResults.on('reset:features',Map.clearResults);
-		SearchResults.on('add:features',Map.addResults);
-		SearchResults.on('zoomToProductExtent',Map.zoomToFeature);
-		SearchResults.on('selectFeatures',Map.selectFeatures);
-		SearchResults.on('unselectFeatures',Map.unselectFeatures);		
+		SearchResults.on('reset:features', Map.clearResults);
+		SearchResults.on('add:features', Map.addResults);
+		SearchResults.on('zoomToProductExtent', Map.zoomToFeature);
+		SearchResults.on('selectFeatures', Map.selectFeatures);
+		SearchResults.on('unselectFeatures', Map.unselectFeatures);	
+		//display a pop-up message when the product search has failed
+		SearchResults.on('error:features', function(searchUrl){
+			$('<div><p>Failure : An error occured when retrieving the products with the search url :</p>' + 
+					'<p> ' + searchUrl + '.</p></div>')
+			.appendTo('.ui-page-active')
+			.popup()
+			.popup('open');
+		});	
 	},
 	
 	/** add the time slider to the bottom of the map view  and
