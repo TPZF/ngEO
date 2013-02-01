@@ -19,8 +19,13 @@ var InquiriesView = Backbone.View.extend({
 		},
 		
 		//the button clicked to submit the inquiry 
-		'click submitInquiry' : function(event){
-			// this.model.submit();
+		'click #submitInquiry' : function(event){
+			event.preventDefault();
+			$('<div><p>Not Implemented Yet.' +
+			'</p><p>Interface Not defined</p></div>')
+				.appendTo('.ui-page-active')
+				.popup()
+				.popup('open');
 		}
 	},
 	
