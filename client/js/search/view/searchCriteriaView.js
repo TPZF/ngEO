@@ -58,11 +58,11 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.downloadOptionsView.render();
 	},
 	
-	displayErrorMessages :function(){
+	displayErrorMessages: function(){
 		this.$el.find("#searchCriteria").empty();
-		this.$el.find("#searchCriteria").append("<p><b>The dataset has not been loaded. No criteria available.</b></p>");
+		this.$el.find("#searchCriteria").append("<div id='searchCriteriaMessage'><p><b>The dataset has not been loaded. No criteria available.</b></p></div>");
 		this.$el.find("#downloadOptions").empty();
-		this.$el.find("#downloadOptions").append("<p><b>The dataset has not been loaded. No download options available.</b></p>");
+		this.$el.find("#downloadOptions").append("<div id='downloadOptionsMessage'><p><b>The dataset has not been loaded. No download options available.</b></p></div>");
 	},
 		
 	/**
