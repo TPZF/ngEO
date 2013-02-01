@@ -25,6 +25,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	initialize : function() {
 		this.model.on("change:datasetId", this.onDataSetChanged, this);
 		this.model.on("datasetLoaded", this.displayDatasetRelatedViews, this);
+		this.model.on("datasetNotLoadError", this.displayErrorMessages, this);
 	},
 	
 	/**
@@ -55,6 +56,13 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.advancedCriteriaView.render();
 		this.$el.find("#downloadOptions").empty();
 		this.downloadOptionsView.render();
+	},
+	
+	displayErrorMessages :function(){
+		this.$el.find("#searchCriteria").empty();
+		this.$el.find("#searchCriteria").append("<p><b>The dataset has not been loaded. No criteria available.</b></p>");
+		this.$el.find("#downloadOptions").empty();
+		this.$el.find("#downloadOptions").append("<p><b>The dataset has not been loaded. No download options available.</b></p>");
 	},
 		
 	/**
