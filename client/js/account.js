@@ -64,19 +64,19 @@ return {
 					//Handle the case when the loading of DARS has failed
 					error : function(){
 						$("#DARMonitoring").empty();
-						$("#DARMonitoring").append("<p><b> Failure: Error when loading the data access requests.</p></b>" + 
-								"<p><b> Please check the interface with the server.</p></b>");
+						$("#DARMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the data access requests.</p></b>" + 
+								"<p><b> Please check the interface with the server.</p></b></div>");
 					}
 				});	
 			},
 			//Handle the case when the loading of download managers has failed
 			error : function(){
 				$("#downloadManagersMonitoring").empty();
-				$("#downloadManagersMonitoring").append("<p><b> Failure: Error when loading the download managers.</p></b>"+ 
-												"<p><b> Please check the interface with the server.</p></b>");
+				$("#downloadManagersMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>"+ 
+												"<p><b> Please check the interface with the server.</p></b></div>");
 				$("#DARMonitoring").empty();
-				$("#DARMonitoring").append("<p><b> Failure: Error when loading the download managers.</p></b>" + 
-						"<p><b> The data access requests cannot be displayed.</p></b>");
+				$("#DARMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>" + 
+						"<p><b> The data access requests cannot be displayed.</p></b></div>");
 
 				$('<div><p>Error : An error occured when loading the download managers for My account.</p>' + 
 						'<p>Please check the server side interface.</p></div>')
