@@ -69,7 +69,8 @@ var DataSetSearch = Backbone.Model.extend({
 				
 				error: function(model, xhr, options) {
 					console.log(model);
-					//model.trigger('datasetLoaded');
+					//fire datasetNotLoadError event with the datasetId to notify the failure when loading the dataset
+					self.trigger('datasetNotLoadError', self.get("datasetId"));
 				}
 			});
 	
@@ -382,6 +383,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 * set the start date from a Date object */
 	setStartDate : function(date){
 		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+		//console.log("dateString");console.log(dateString);
 		this.set("startdate", dateString);
 	},
 	
