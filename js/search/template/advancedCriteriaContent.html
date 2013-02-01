@@ -113,8 +113,9 @@
 						<% } %>
    					</div>
 				<% } else { %>
-					
-					 <p> ERROR: Invalid Criterion type <%= criterion.type %> for <%= criterion.id %> </p>
+					<div class="ui-error-message">
+					 	<p><b>ERROR: Invalid Criterion type <%= criterion.type %> for <%= criterion.id %> </b></p>
+					 </div>
 				<% } %>
 		
 				
