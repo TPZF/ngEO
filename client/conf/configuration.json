@@ -14,7 +14,7 @@
 	},
 	
 	"searchResults": {
-		"countPerPage": 10
+		"countPerPage": 100
 	},
 	
 	"downloadManager" : {		

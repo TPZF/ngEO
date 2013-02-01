@@ -24,8 +24,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 	var engineLayers = [];
 	// The layer to store the results footprints
 	var resultFootprintLayer = null;
-	// The feature collection for results
-	var resultsFeatureCollection = null;
 	// The map DOM element
 	var element = null;
 	// The current background layer
@@ -219,6 +217,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				}
 			}
 			
+			self.layers[0].data = {
+				type: 'FeatureCollection',
+				features: []
+			};
+			
 			backgroundLayer = self.backgroundLayers[0];
 			configureMapEngine(Configuration.data.map);
 		},
@@ -350,10 +353,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		},
 				
 		/**
-		 * Set results
-		 * Called when new results has been received
+		 * Clear results
 		 */
-		setResults: function(results) {
+		clearResults: function(results) {
 			// Remove browse browse layers
 			for ( var x in browseLayers ) {
 				if ( browseLayers.hasOwnProperty(x) ) {
@@ -365,16 +367,19 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 		
 			// Remove all features
 			mapEngine.removeAllFeatures( resultFootprintLayer );
-			// Add it new
-			resultsFeatureCollection = results.attributes;
-			// Update the data layer
-			self.layers[0].data = resultsFeatureCollection;
+			
+			// Reset the results feature collection
+			self.layers[0].data.features.length = 0;
+		},
+		
+		addResults: function(features) {
 			// Process the feature collection
-			for ( var i = 0; i < resultsFeatureCollection.features.length; i++ ) {
-				if (!resultsFeatureCollection.features[i].bbox)
-					computeExtent(resultsFeatureCollection.features[i]);
+			for ( var i = 0; i < features.length; i++ ) {
+				if (!features[i].bbox)
+					computeExtent(features[i]);
+				self.layers[0].data.features.push( features[i] );
+				mapEngine.addFeature( resultFootprintLayer, features[i] );
 			}
-			mapEngine.addFeatureCollection( resultFootprintLayer, resultsFeatureCollection );
 		},
 		
 		/**

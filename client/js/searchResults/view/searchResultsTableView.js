@@ -15,7 +15,14 @@ var SearchResultsTableView = Backbone.View.extend({
 	 * Connect to model change
 	 */
 	initialize : function() {
-		this.model.on("change", this.fillTable, this);
+		this.model.on("reset:features", function() {
+			this.table.fnClearTable();
+			this.$el.panel('update');
+		}, this);
+		this.model.on("add:features", function(features) {
+			this.table.fnAddData( features );
+			this.$el.panel('update');
+		}, this);
 		this.model.on("selectFeatures", this.toggleSelection, this );
 		this.model.on("unselectFeatures", this.toggleSelection, this );
 	},
@@ -31,7 +38,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			if (rowPos != null) {// Don't select the header
 				this.table.find('.row_selected').removeClass('row_selected');
 				$(event.currentTarget).toggleClass('row_selected');
-				this.model.trigger("zoomToProductExtent", this.model.get('features')[rowPos]);
+				this.model.trigger("zoomToProductExtent", this.model.features[rowPos]);
 			}
 		},
 		
@@ -40,9 +47,9 @@ var SearchResultsTableView = Backbone.View.extend({
 			// retreive the position of the selected row
 			var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
 			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
-				this.model.select( this.model.get('features')[rowPos] );
+				this.model.select( this.model.features[rowPos] );
 			} else {
-				this.model.unselect( this.model.get('features')[rowPos] );
+				this.model.unselect( this.model.features[rowPos] );
 			}
 		}, 
 		
@@ -53,7 +60,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			//console.log(this.model.get('features')[rowPos]);
 			//console.log("Selected url");
 			var featureArray = [];
-			featureArray.push(this.model.get('features')[rowPos]);
+			featureArray.push(this.model.features[rowPos]);
 			//console.log(this.model.getProductUrls(featureArray)[0]);
 			var directDownloadWidget = new DirectDownloadWidget(this.model.getProductUrls(featureArray)[0]);
 			directDownloadWidget.open(event);
@@ -67,7 +74,7 @@ var SearchResultsTableView = Backbone.View.extend({
 	toggleSelection: function(features) {
 		var checkboxes = this.table.$(".dataTables_chekbox",{order: "original"});
 		for ( var i = 0; i < features.length; i++ ) {
-			var index = this.model.get("features").indexOf(features[i]);
+			var index = this.model.features.indexOf(features[i]);
 			checkboxes.eq(index)
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
@@ -89,15 +96,6 @@ var SearchResultsTableView = Backbone.View.extend({
 			this.retrieveProduct.button('enable');
 			this.downloadOptionsButton.button('enable');
 		}
-	},
-		
-	/**
-	 * Fill the table with new results
-	 */
-	fillTable: function() {
-		this.table.fnClearTable();
-		this.table.fnAddData( this.model.get('features') );
-		this.$el.panel('update');
 	},
 
 	/**
@@ -123,7 +121,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		var self = this;
 		this.table = this.$el.find("#datatable").dataTable({
 					"sDom" : '<"top"i>rt<"bottom"flp><"clear">',
-					"aaData" : this.model.get('features'),
+					"aaData" : this.model.features,
 					"aoColumns" : columnsDef, 
 					"bDestroy": true,
 					"bAutoWidth": false,
@@ -141,7 +139,7 @@ var SearchResultsTableView = Backbone.View.extend({
 								var rowPos = self.table.fnGetPosition(elt);
 								var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
 								
-								if (self.model.isBrowserSupportedUrl( self.model.get('features')[rowPos])){
+								if (self.model.isBrowserSupportedUrl( self.model.features[rowPos])){
 									$(elt).find(selector).addClass("ui-direct-download");
 								}
 							}
