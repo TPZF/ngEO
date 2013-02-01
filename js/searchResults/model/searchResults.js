@@ -20,26 +20,31 @@ var SearchResults = {
 	// fetch the results using the given start index
 	fetch: function(startIndex,currentUrl) {
 		var self = this;
+
 		$.ajax({
 			url: this.url + "&startIndex=" + startIndex,
-			dataType: 'json',
-			success: function(data) {
-				// Update data if a new launch has not been done, the launch is new if the url has changed
-				// TODO : improve the mechanism?
-				if ( self.url == currentUrl ) {
+			dataType: 'json'
 				
-					// Add the features to the results
-					for ( var i = 0; i < data.features.length; i++ ) {
-						self.features.push( data.features[i] );
-					}
-					self.trigger('add:features',data.features);
-					
-					// Relaunch a search on next page if there is still some results
-					if ( data.features.length == _countPerPage ) {
-						self.fetch(startIndex + _countPerPage, currentUrl);
-					}
-				}				
-			}
+		}).done(function(data) {
+			// Update data if a new launch has not been done, the launch is new if the url has changed
+			// TODO : improve the mechanism?
+			if ( self.url == currentUrl ) {
+			
+				// Add the features to the results
+				for ( var i = 0; i < data.features.length; i++ ) {
+					self.features.push( data.features[i] );
+				}
+				self.trigger('add:features',data.features);
+				
+				// Relaunch a search on next page if there is still some results
+				if ( data.features.length == _countPerPage ) {
+					self.fetch(startIndex + _countPerPage, currentUrl);
+				}
+			}		
+		}).fail(function(jqXHR, textStatus, errorThrown) {		
+			  console.log("ERROR when retrieving the products :" + textStatus + ' ' + errorThrown);
+			  //notify that the product search has Failed
+			  self.trigger('error:features', "ERROR when retrieving products : " + textStatus + ' ' + errorThrown);  
 		});
 	},
 	
