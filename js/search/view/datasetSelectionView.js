@@ -66,12 +66,15 @@ var DatasetSelectionView = Backbone.View.extend({
 		if (datasetId != "None"){
 			var selector = "#" + datasetId;
 			var datasetObject = this.$el.find(selector);
+			//if the dataset is in the list select it unless reset the datset in the preferences and display on error message 
 			if (datasetObject){
-				//make the list item selected
+				//make the dataset list item selected
 				datasetObject.addClass('ui-btn-active');
 				//set the selected dataset in the model
 				DatasetSearch.set("datasetId", datasetId);
 			}else{
+				//reset the preferences since the dataset set in the preferences is no more in the catalogue
+				//and notify the user.
 				UserPrefs.save("datasetId", "None");
 				$('<div><p>The dataset ' + datasetId + ' stored in the preferences is no more in the catalogue,</p>' + 
 				'<p>it cannot be seleted.</p></div>')
