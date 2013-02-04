@@ -16,14 +16,25 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 		//to avoid overwriting items in the local storage and conflicts with other applications*/
 		preffix : 'ngeo_',
 		
-		data : {datasets : [] , layers : []},
+		data : {datasetIds: [], datasets : [] , layerIds : [], layers : []},
 		
 		load : function(){
 			
 			if (localStorage){				
 				
-				this.data.datasets.push({"datasetId" : localStorage.getItem[this.preffix + '_' + 'datasetId'] });
-				this.data.layers.push({"layerUrl" : localStorage.getItem[this.preffix + '_' + 'layerUrl'] });	
+				//load the datsets ids
+				this.data.datasetIds = JSON.parse(localStorage.getItem[this.preffix + '_' + 'datasetIds'] );
+				//load each dataset object
+				_.each(this.data.datasetIds, function(value, key) {
+					this.data.datasets[value] = localStorage.getItem[this.preffix + '_' + value] });
+				});
+				//load the layerIds
+				this.data.layerIds = JSON.parse(localStorage.getItem[this.preffix + '_' + 'layerIds'] );
+				
+				//load each layer object
+				_.each(this.data.layerIds, function(value, key) {
+					this.data.layers[value] = localStorage.getItem[this.preffix + '_' + value] });
+				});
 				
 				this.trigger("localStorageLoaded")
 			
@@ -34,44 +45,68 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 		
 		/** Save the preferences object passed to the local storage 
 		 *  EM Use for features later ?*/
-		save : function (key, object){
+		saveDataset : function (key, object){
 			
 			if (localStorage && _.isObject(object) && !_.isArray(object) && !_.isFunction(object)){
 				
 				localStorage.setItem(this.preffix + '_' + key, JSON.stringify(object));
+				this.data.datasets[key] = object;
+				this.data.datasetIds.push({'datasetId' : key});
 				
 			}else{	
 				this.trigger("UnAllowedStorageException", object);		
 			}
 		},
 		
-		/** store the dataset id in the UserPrefs loaded models and in the local storage*/ 
-		saveDataset : function (datasetId){
+		/** Save the preferences object passed to the local storage */ 
+		saveLayer : function (key, object){
 			
-			if (localStorage && _.isString(datasetId)){
+			if (localStorage && _.isObject(object) && !_.isArray(object) && !_.isFunction(object)){
 				
-				this.data.datasets.push({"datasetId" : localStorage.getItem[this.preffix + '_' + 'datasetId'] });
-				localStorage.setItem(this.preffix + '_' + datasetId, datasetId);
+				localStorage.setItem(this.preffix + '_' + key, JSON.stringify(object));
+				this.data.layers[key] = object;
+				this.data.layerIds.push({'layerId' : key});
 				
 			}else{	
 				this.trigger("UnAllowedStorageException", object);		
 			}
 		},
 		
+		
+//		/** store the dataset id in the UserPrefs loaded models and in the local storage*/ 
+//		saveDataset : function (datasetId){
+//			
+//			if (localStorage && _.isString(datasetId)){
+//				
+//				this.data.datasets.push({"datasetId" : localStorage.getItem[this.preffix + '_' + 'datasetId'] });
+//				localStorage.setItem(this.preffix + '_' + datasetId, datasetId);
+//				
+//			}else{	
+//				this.trigger("UnAllowedStorageException", object);		
+//			}
+//		},
+//		
 		
 		reset : function(){
 			//remove stored datasets
-			_.each(this.data.datasets, function(value, key) {
+			_.each(this.data.datasetIds, function(value, key) {
 				localStorage.removeItem(this.preffix + '_' + value);
 			});
 			
+			localStorage.removeItem(this.preffix + '_' + 'datasetIds');
+			
 			//remove stored layers
-			_.each(this.data.layers, function(value, key) {
+			_.each(this.data.layerIds, function(value, key) {
 				localStorage.removeItem(this.preffix + '_' + value);
 			});
+			
+			localStorage.removeItem(this.preffix + '_' + 'layerIds');
 			
 			this.data.datasets = [];
 			this.data.layers = [];
+			
+			this.data.datasetIds = [];
+			this.data.layerIds = [];
 
 		}
 	};
