@@ -94,5 +94,9 @@
 			
 			"timeSlider" : {
 				"scaleYearsWidth" : "10"
+			},
+			
+			"userPrefs": {
+				"keys": ["datasetId", "layerId"]
 			}
 		}
