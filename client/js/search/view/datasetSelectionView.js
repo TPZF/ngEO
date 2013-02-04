@@ -27,7 +27,7 @@ var DatasetSelectionView = Backbone.View.extend({
 				$target.removeClass('ui-btn-active');
 				this.selectedDatasetId = undefined;
 				DatasetSearch.set("datasetId",undefined);
-				UserPrefs.save("datasetId", "None");
+				UserPrefs.save("Dataset", "None");
 				
 			} else {
 				this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
@@ -35,7 +35,7 @@ var DatasetSelectionView = Backbone.View.extend({
 				this.selectedDatasetId = event.currentTarget.id;
 				DatasetSearch.set("datasetId", this.selectedDatasetId);
 				//save the selected dataste id 
-				UserPrefs.save("datasetId", this.selectedDatasetId);
+				UserPrefs.save("Dataset", this.selectedDatasetId);
 			}
 		}
 	},
