@@ -12,6 +12,8 @@ define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/
 	 * 
 	 * the dataset property is a nested backbone model loaded through the datasetSearchInfo interface.
 	 * the DataSetSearch is a singleton used throughout the application.
+	 *
+	 * IMPORTANT: the startdate and stopdate dates are managed internally with format dd-mm-yyyy 
 	 */
 var DataSetSearch = Backbone.Model.extend({
 	
@@ -52,19 +54,19 @@ var DataSetSearch = Backbone.Model.extend({
 			this.dataset.fetch({
 				
 				success: function(model, response, options) {
-					// quick fix when the server is not sending us startDate/endDate
-					// TODO : maybe return an error message, this is not an exepcted behaviour from the server
+					
 					var startDate = model.attributes.datasetSearchInfo.startDate;
-					if (!startDate) {
-						startDate = (new Date()).toISOString();
-					}
 					var endDate = model.attributes.datasetSearchInfo.endDate;
-					if (!endDate) {
+					
+					if (!startDate || !endDate) {
+						startDate = (new Date()).toISOString();
 						endDate = (new Date()).toISOString();
 					}
+					
 					//update dates/times from dataset dates/times
 					self.setDateAndTime(startDate, endDate); 
 					self.trigger('datasetLoaded');
+					
 				},
 				
 				error: function(model, xhr, options) {
@@ -351,12 +353,23 @@ var DataSetSearch = Backbone.Model.extend({
 		var dateOnly = startDate.substring(0, startDate.indexOf('T'));
 		var timeOnly = startDate.substring(startDate.indexOf('T')+1, startDate.lastIndexOf(':'));
 
+		//handle the case when the date set has the format yyyy-mm-dd
+		//when the datset has no start/stop dates and the dates have been initialized from the current date
+		var ymd = dateOnly.split('-');
+		if (ymd[0].length > ymd[2].length){ 
+			dateOnly = ymd[2] + '-' + ymd[1] + '-' + ymd[0];
+		}
+		
 		this.set("startdate",dateOnly);
 //		this.set("startTime",timeOnly);
 //		
 		if (startDate != stopDate){
 			dateOnly = stopDate.substring(0, stopDate.indexOf('T'));
 			timeOnly = stopDate.substring(stopDate.indexOf('T')+1, stopDate.lastIndexOf(':'));
+			
+			if (ymd[0].length > ymd[2].length){ 
+				dateOnly = ymd[2] + '-' + ymd[1] + '-' + ymd[0];
+			}
 			this.set("stopdate",dateOnly);
 //			this.set("stopTime",timeOnly);
 		}
