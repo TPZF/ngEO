@@ -6,7 +6,7 @@ var UserPrefsView = Backbone.View.extend({
 	
 	/**
 	 * The model is the UserPrefs singleton.
-	 * Simple Implemetantion with only reset of the preferences 
+	 * Simple Implemetantion with only the reset of the preferences 
 	 * without knowledge on the type of the feature to remove.
 	 */
 	initialize : function(){
