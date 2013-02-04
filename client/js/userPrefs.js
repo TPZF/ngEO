@@ -1,4 +1,4 @@
-define( ['jquery', 'backbone'], function($, Backbone) {
+define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 	/** Singleton Model for storing and retrieving user preferences */
 	
@@ -16,98 +16,77 @@ define( ['jquery', 'backbone'], function($, Backbone) {
 		//to avoid overwriting items in the local storage and conflicts with other applications*/
 		preffix : 'ngeo_',
 		
-		data : {datasetIds: [], datasets : [] , layerIds : [], layers : []},
+		//get the keys, use to display the stored preferences in the view
+		keys : Configuration.localConfig.userPrefs.keys,
 		
-		load : function(){
+		/** get the string related to the given key */
+		get : function(key){
 			
 			if (localStorage){				
 				
-				//load the datsets ids
-				this.data.datasetIds = JSON.parse(localStorage.getItem[this.preffix + '_' + 'datasetIds'] );
-				//load each dataset object
-				_.each(this.data.datasetIds, function(value, key) {
-					this.data.datasets[value] = localStorage.getItem[this.preffix + '_' + value] });
-				});
-				//load the layerIds
-				this.data.layerIds = JSON.parse(localStorage.getItem[this.preffix + '_' + 'layerIds'] );
+				return localStorage.getItem(this.preffix + key);
 				
-				//load each layer object
-				_.each(this.data.layerIds, function(value, key) {
-					this.data.layers[value] = localStorage.getItem[this.preffix + '_' + value] });
-				});
-				
-				this.trigger("localStorageLoaded")
-			
 			}else{
 				this.trigger("localStorageException");
 			}
 		},
 		
-		/** Save the preferences object passed to the local storage 
-		 *  EM Use for features later ?*/
-		saveDataset : function (key, object){
+		/** Save the preferences key, value passed to the local storage */ 
+		save : function (key, value){
 			
-			if (localStorage && _.isObject(object) && !_.isArray(object) && !_.isFunction(object)){
+			if (localStorage && _.isString(value) && !_.isArray(value) && !_.isFunction(value)){
 				
-				localStorage.setItem(this.preffix + '_' + key, JSON.stringify(object));
-				this.data.datasets[key] = object;
-				this.data.datasetIds.push({'datasetId' : key});
+				var oldValue = localStorage.setItem(this.preffix + key, value);
+				localStorage.setItem(this.preffix + key, value);
 				
+				if (this.keys.indexOf(key) == -1){
+					this.keys.push(key);
+					this.trigger('addedPreference');
+				}
+				
+				if (oldValue != value){
+					this.trigger('addedPreference');
+				}
 			}else{	
-				this.trigger("UnAllowedStorageException", object);		
+				this.trigger("UnAllowedStorageException", key);		
 			}
 		},
 		
-		/** Save the preferences object passed to the local storage */ 
-		saveLayer : function (key, object){
+		/** Save the preferences object passed to the local storage */
+		saveObject : function (key, object){
 			
-			if (localStorage && _.isObject(object) && !_.isArray(object) && !_.isFunction(object)){
+			if (_.isObject(localStorage) && _.isObject(object) && !_.isArray(object) && !_.isFunction(object)){
 				
-				localStorage.setItem(this.preffix + '_' + key, JSON.stringify(object));
-				this.data.layers[key] = object;
-				this.data.layerIds.push({'layerId' : key});
+				var oldValue = localStorage.setItem(this.preffix + key);
+				localStorage.setItem(this.preffix + key, JSON.stringify(object));
 				
-			}else{	
-				this.trigger("UnAllowedStorageException", object);		
-			}
-		},
-		
-		
-//		/** store the dataset id in the UserPrefs loaded models and in the local storage*/ 
-//		saveDataset : function (datasetId){
-//			
-//			if (localStorage && _.isString(datasetId)){
-//				
-//				this.data.datasets.push({"datasetId" : localStorage.getItem[this.preffix + '_' + 'datasetId'] });
-//				localStorage.setItem(this.preffix + '_' + datasetId, datasetId);
-//				
-//			}else{	
-//				this.trigger("UnAllowedStorageException", object);		
-//			}
-//		},
-//		
-		
-		reset : function(){
-			//remove stored datasets
-			_.each(this.data.datasetIds, function(value, key) {
-				localStorage.removeItem(this.preffix + '_' + value);
-			});
-			
-			localStorage.removeItem(this.preffix + '_' + 'datasetIds');
-			
-			//remove stored layers
-			_.each(this.data.layerIds, function(value, key) {
-				localStorage.removeItem(this.preffix + '_' + value);
-			});
-			
-			localStorage.removeItem(this.preffix + '_' + 'layerIds');
-			
-			this.data.datasets = [];
-			this.data.layers = [];
-			
-			this.data.datasetIds = [];
-			this.data.layerIds = [];
+				if (this.keys.indexOf(key) == -1){
+					this.keys.push(key);
+					this.trigger('addedPreference');
+				}
 
+				if (oldValue != JSON.stringify(object)){
+					this.trigger('addedPreference');
+				}
+				
+			}else{	
+				this.trigger("UnAllowedStorageException", object);		
+			}
+		},
+			
+		/** removed stored keys */ 
+		reset : function(){
+			var self = this;
+			//remove stored keys
+			_.each(this.keys, function(key) {
+				var itemName = self.preffix  + key;
+				localStorage.removeItem(itemName);
+				self.trigger('removedPreference', key);
+			});
+			
+			this.keys =  Configuration.localConfig.userPrefs.keys;
+			
+			//this.trigger('resetPreferences');
 		}
 	};
 	
