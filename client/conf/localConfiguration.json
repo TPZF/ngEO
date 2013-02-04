@@ -97,6 +97,6 @@
 			},
 			
 			"userPrefs": {
-				"keys": ["datasetId", "layerId"]
+				"keys": ["Dataset", "Background"]
 			}
 		}
