@@ -79,13 +79,6 @@ var DatasetSelectionView = Backbone.View.extend({
 		}
 		
 		var self = this;
-		//EM do the reset in the this direction or not?
-		//clear the selection if the prefernces are reset
-		UserPrefs.on("removedPreference", function(key){
-			if (key == "datasetId"){
-				self.$el.find('.ui-btn-active').removeClass('ui-btn-active');
-			}
-		}); 
 		
 		//notify the user if the browser does not support local storage
 		UserPrefs.on("localStorageException", function(key){
