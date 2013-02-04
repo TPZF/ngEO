@@ -81,9 +81,6 @@ $.when(doc_ready, Configuration.load())
 		$("body").removeClass("ui-mobile-viewport");
 		$("header").find("a").removeClass("ui-link");
 
-		//TODO load user preferences
-		UserPrefs.load()
-		//TODO set the the datset selected? get the first one in the prefs.
 		// Load the map module and initialize it
 		require(["map/map"], function(Map) {
 		
