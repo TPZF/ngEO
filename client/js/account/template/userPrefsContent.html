@@ -1,22 +1,11 @@
 <div id="userPrefsContent" class="widget-content ui-body-c">
 
-	<div class="ui-grid-a">
-		<div id="datasetsPrefs" class="ui-block-a widget-content">
-			<ul data-role='listview' data-insets='true' id="datasetsPrefsList">
-				<li data-role="list-divider" data-divider-theme="a">Datasets</li>
-			</ul>
-		</div>
-		
-		<div id="layersPrefs" class="ui-block-b widget-content">
-			<ul data-role='listview' data-insets="true" id="layersPrefsList">
-				<li data-role="list-divider" data-divider-theme="a">Backgrounds</li>
-			</ul>
-		</div>
-	</div>
-<!--  <div id="productsPrefs" class="widget-content> -->
-<!--  	<table></table> -->
-<!--  </div> -->
-
+	<ul data-role='listview' data-insets="true" id="layersPrefsList">
+		<li data-role="list-divider" data-divider-theme="a">Last Selected Features:</li>
+		<% _.each(keys, function(key) { %> 
+			<li><b><%= key %> : </b> <%= (!get(key))? 'None' : get(key)%></li> 
+		<% }); %>
+	</ul>
 	
 </div>
 
