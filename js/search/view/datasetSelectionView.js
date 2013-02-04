@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'search/model/datasetSearch',
+define( ['jquery', 'backbone', 'search/model/datasetSearch', 'userPrefs',
          'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
-		function($, Backbone, DatasetSearch, datasetsSelection_template, datasetsList_template) {
+		function($, Backbone, DatasetSearch, UserPrefs, datasetsSelection_template, datasetsList_template) {
 
 /**
  * The related model is DatasetsPopulationModel
@@ -26,13 +26,16 @@ var DatasetSelectionView = Backbone.View.extend({
 			if ( $target.hasClass('ui-btn-active') ) {
 				$target.removeClass('ui-btn-active');
 				this.selectedDatasetId = undefined;
-				DatasetSearch.set("datasetId",undefined);				
+				DatasetSearch.set("datasetId",undefined);
+				UserPrefs.save("datasetId", "None");
 				
 			} else {
 				this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
 				$target.addClass('ui-btn-active');
 				this.selectedDatasetId = event.currentTarget.id;
 				DatasetSearch.set("datasetId", this.selectedDatasetId);
+				//save the selected dataste id 
+				UserPrefs.save("datasetId", this.selectedDatasetId);
 			}
 		}
 	},
@@ -57,6 +60,32 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.$el.append(mainContent);
 		this.$el.find("#datasetListContainer").append(listContent);
 		this.$el.trigger('create');
+		
+		//select the dataset id stored in the prefs
+		var datasetId = UserPrefs.get("datasetId");
+		if (datasetId != "None"){
+			var selector = "#" + datasetId;
+			var datasetObject = this.$el.find(selector);
+			if (datasetObject){
+				datasetObject.addClass('ui-btn-active');
+			}else{
+				UserPrefs.save("datasetId", "None");
+				$('<div><p>The dataset ' + datasetId + ' stored in the preferences is no more in the catalogue,</p>' + 
+				'<p>it cannot be seleted.</p></div>')
+				.appendTo('.ui-page-active')
+				.popup()
+				.popup('open');
+			}
+		}
+		
+		var self = this;
+		//EM do the reset in the this direction or not?
+		//clear the selection if the prefernces are reset
+		UserPrefs.on("removedPreference", function(key){
+			if (key == "datasetId"){
+				self.$el.find('.ui-btn-active').removeClass('ui-btn-active');
+			}
+		}); 
 		
 		//iterate on all the combo boxes identifiers and bind the event handler which will generate 
 		//a regExp : "\b(criteria_1,criteria_2,...., criteria_n,[^"]*,[^"]*)
