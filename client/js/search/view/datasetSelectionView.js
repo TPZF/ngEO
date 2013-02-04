@@ -87,6 +87,15 @@ var DatasetSelectionView = Backbone.View.extend({
 			}
 		}); 
 		
+		//notify the user if the browser does not support local storage
+		UserPrefs.on("localStorageException", function(key){
+			$('<div><p>Your browser does not support HTML5 local storage.</p>' + 
+			'<p>The preferences cannot be stored.</p></div>')
+			.appendTo('.ui-page-active')
+			.popup()
+			.popup('open');
+		}); 
+		
 		//iterate on all the combo boxes identifiers and bind the event handler which will generate 
 		//a regExp : "\b(criteria_1,criteria_2,...., criteria_n,[^"]*,[^"]*)
 		//the two last elements are the dataset identifier and the items 
