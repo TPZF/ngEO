@@ -62,7 +62,7 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.$el.trigger('create');
 		
 		//select the dataset id stored in the prefs
-		var datasetId = UserPrefs.get("datasetId");
+		var datasetId = UserPrefs.get("Dataset");
 		if (datasetId != "None"){
 			var selector = "#" + datasetId;
 			var datasetObject = this.$el.find(selector);
