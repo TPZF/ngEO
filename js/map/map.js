@@ -2,10 +2,10 @@
   * Map module
   */
 
-define( [ "configuration", "map/openlayers", "map/globweb", "backbone" ], 
+define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPrefs"], 
 
 // The function to define the map module
-function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
+function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs ) {
 	
 	/**
 	 * Private attributes
@@ -222,12 +222,25 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 				features: []
 			};
 			
-			backgroundLayer = self.backgroundLayers[0];
+			//set the background layer from the preferences if it exists,
+			//unless set it to be the first one in the list of background layers.
+			var preferedBackgroundId = UserPrefs.get("Background");
+			
+			if (preferedBackgroundId){
+				_.each(self.backgroundLayers, function(bgLayer, index){
+					if (bgLayer.id == preferedBackgroundId){
+						backgroundLayer = bgLayer;
+					}
+				});
+			}else{
+				backgroundLayer = self.backgroundLayers[0];
+			}
+			
 			configureMapEngine(Configuration.data.map);
 		},
 				
 		/**
-		 * Modify the background layer
+		 * Modify the background layer on the map and save it to the preferences.
 		 *
 		 * @param layer The layer to use as new background
 		 */
@@ -236,6 +249,12 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone ) {
 			backgroundLayer = layer;
 			// Set the active background
 			mapEngine.setBackgroundLayer(layer);
+			UserPrefs.save('Background', layer.id);
+		},
+		
+		/** get the selected background layer */
+		getBackgroundLayer : function() {
+			return backgroundLayer;
 		},
 		
 		/**
