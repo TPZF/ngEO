@@ -40,18 +40,22 @@
 		"projection": "EPSG:4326", 
 		
 		"backgroundLayers": [{
+			"id" : "OSM_Official",
 			"name": "Open Street Map (Official)",
 			"type": "OSM",
 			"baseUrl": "http://tile.openstreetmap.org"
 		}, {
+			"id" : "OSM_Mapquest",
 			"name": "Open Street Map (Mapquest)",
 			"type": "OSM",
 			"baseUrl": "http://otile1.mqcdn.com/tiles/1.0.0/osm"
 		}, {
+			"id" : "OSM_OpenCycleMap",
 			"name": "Open Street Map (OpenCycleMap)",
 			"type": "OSM",
 			"baseUrl": "http://a.tile.opencyclemap.org/cycle"
 		}, {
+			"id" : "BlueMarble_TPZ_WMS",
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
@@ -59,16 +63,19 @@
 				"layers": "BlueMarble"
 			}
 		}, {
+			"id" : "BingRoad",
 			"name": "Bing Road",
 			"type": "Bing",
 			"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
 			"imageSet": "Road"
 		}, {
+			"id" : "BingAerial",
 			"name": "Bing Aerial",
 			"type": "Bing",
 			"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
 			"imageSet": "Aerial"
 		}, {
+			"id" : "Terra_Modis_NASA",
 			"name": "Terra/MODIS (NASA)",
 			"type": "WMTS",
 			"baseUrl": "http://map1b.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
@@ -80,6 +87,7 @@
 			},
 			"projection": "EPSG:4326"
 	   }, {
+	   		"id" : "VMAP0",
 			"name": "VMAP0",
 			"type": "WMS",
 			"baseUrl": "http://vmap0.tiles.osgeo.org/wms/vmap0",
@@ -88,6 +96,7 @@
 			},
 			"projection": "EPSG:4326"
 	   }, {
+	   		"id" : "OSM_TPZ_Fr",
 			"name": "OSM (TPZ Fr)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/geocache/wms",
