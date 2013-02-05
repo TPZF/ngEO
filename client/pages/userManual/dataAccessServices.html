@@ -55,15 +55,21 @@
 					of the filter combo boxes. The filtering criteria are received
 					from the server, but they should mainly contain : mission,
 					sensor and keywords. <img class="center-img"
-						src="screenshots/datasetFilters.png" /> By default, all the
+						src="screenshots/datasetFilters.png" /> 
+					<p>By default, all the
 					criteria are set to "None". As soon as a criteria is chosen in
 					one of the combo boxes, the datasets are filtered and the list is
 					updated, taken into account the other combo boxes selected
-					criteria. <img class="center-img"
-						src="screenshots/datasetFiltering1.png" /> <img
-						class="center-img" src="screenshots/datasetFiltering2.png" />
+					criteria.</p>
+					<img class="center-img"
+						src="screenshots/datasetFiltering1.png" /> 
+						
+					<p>Here is an examaple of the mission and sensor criteria set to S2 and OPT.</p>	
+						<img class="center-img" src="screenshots/datasetFiltering2.png" />
+					
+					<p>
 					In order to disable the filtering for a criterion, set back the
-					selected option to "None".
+					selected option to "None".</p>
 				</p>
 			</li>
 			<li><h4 id="searchCriteria">Search Criteria</h4>
@@ -72,21 +78,26 @@
 					the user has to click on the button <img
 						src="screenshots/toolBarIcons/searchIcon.png" /> on the
 					toolbar. The search criteria widget is then displayed. <img
-						class="center-img" src="screenshots/dateCriteria.png" /> It is
+						class="center-img" src="screenshots/dateCriteria.png" />
+					<p>	It is
 					composed of several tabs, each tab displays one search criteria
-					type. Each button on the footer has his own role.
+					type. Each button on the footer has his own role.</p>
 				<p>
 					The Search URL button <img src="screenshots/searchURLButton.png" />,
 					when clicked, displays the openSearch url which will be
-					submitted.<img class="center-img"
+					submitted.</p>
+					<img class="center-img"
 						src="screenshots/openSearchUrlPopup.png" />
-					<p>The Standing
-					Order button <img src="screenshots/STOButton.png" />, when
-					clicked, displays the Standing Order Widget. See <a
-						href="#STODar">Standing Order Data Access Request</a>. The
-					Submit Search button submits the search request to the server to
-					retrieve the results. See <a href="#resultsTable">Search
-						Results</a>.</p>
+				<p>The Standing
+				Order button <img src="screenshots/STOButton.png" />, when
+				clicked, displays the Standing Order Widget. See <a
+					href="#STODar">Standing Order Data Access Request</a>. The
+				Submit Search button submits the search request to the server to
+				retrieve the results. See <a href="#resultsTable">Search
+					Results</a>.</p>
+				<p>The Share button <img src="screenshots/shareButton.png" />, when
+				clicked, displays a popup with the search shared url.</p>
+				Copy the url and paste it in a new browser window, the search widget is displayed with all the search parameters set.
 				</p>
 				<p>
 					<img src="screenshots/tip.png" /> <b>The openSearch url to
@@ -106,11 +117,19 @@
 							calendar widget is closed and the chosen date does appear in
 							the text field.
 						</p>
-						<p>It is also possible to modify the date using the text
-							field widget, by entering manually the date to select.</p>
 						<p>
 							<img src="screenshots/tip.png" /> <b>The same methods are
 								used to modify both the start and stop dates.</b>
+						</p>
+						<p>
+							It is also possible to change the dates using a time slider. To enable the time slider, check the checkbox <img src="screenshots/timeSliderCheckBox.png" />.
+							The search widget is then hidden and the timeSlider is displayed in the bottom of the map.
+						</p>						
+						<img class="center-img" src="screenshots/timeSlider.png" />
+						<p>	Drag the time bar to move and change the time range</p>
+						<img class="center-img" src="screenshots/timeSliderBar.png" />
+						<p>
+							Drag the bar left handle <img src="screenshots/leftHandle.png" /> and the bar right <img src="screenshots/rightHandle.png" /> handle to enlarge the time range or to make it smaller.
 						</p>
 
 					</li>
@@ -120,18 +139,19 @@
 							search. To visualize the area widget, click on Area tab inside
 							the search criteria widget. <img class="center-img"
 								src="screenshots/areaWidget.png" />
-						</p> <b>For the moment,</b> the area is created only using a
-						rectangular zone defined by :
-						<ul>
-							<li>West: the maximum longitude</li>
-							<li>East: the minimum longitude</li>
-							<li>North: the maximum latitude</li>
-							<li>South: the minimum latitude</li>
-						</ul> By default, the coordinates are synchronized with the map
-						extent. To disable this behavior uncheck the <img
-						src="screenshots/useExtentCheckBox.png" /> check box. Thus the
-						coordinates can be entered manually is each text field.</li>
-
+						</p>The area is created using either a rectangular zone, a polygon a Gazetteer or can be imported from a file.</p>
+						
+						<p> A rectangle zone or a BBOX is defined by :
+							<ul>
+								<li>West: the maximum longitude</li>
+								<li>East: the minimum longitude</li>
+								<li>North: the maximum latitude</li>
+								<li>South: the minimum latitude</li>
+							</ul> By default, the coordinates are synchronized with the map
+							extent. To disable this behavior uncheck the <img
+							src="screenshots/useExtentCheckBox.png" /> check box. Thus the
+							coordinates can be entered manually is each text field.</li>
+						</p>
 					<li><h5 id="advancedCriteria">Advanced Criteria</h5>
 						<p>They are criteria relative to the selected dataset, so
 							they change depending on the dataset chosen.
@@ -147,10 +167,7 @@
 						value inside the text field to change the selected value.
 						Criteria having a multiple selection possibilities are
 						displayed with a list of checkboxes. Check or uncheck the check
-						boxes to change the criterion selected value. In order to make
-						the selected advanced criteria taken into account in the
-						search, check the <img
-						src="screenshots/advancedCriteriaCheckBox.png" />check box.
+						boxes to change the criterion selected value.
 						</p>
 						<p>
 							<img src="screenshots/warning.png" /> <b>If no dataset
