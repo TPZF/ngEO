@@ -71,11 +71,11 @@ var DatasetSelectionView = Backbone.View.extend({
 				//make the dataset list item selected
 				datasetObject.addClass('ui-btn-active');
 				//set the selected dataset in the model
-				DatasetSearch.set("datasetId", datasetId);
+				DatasetSearch.set("Dataset", datasetId);
 			}else{
 				//reset the preferences since the dataset set in the preferences is no more in the catalogue
 				//and notify the user.
-				UserPrefs.save("datasetId", "None");
+				UserPrefs.save("Dataset", "None");
 				$('<div><p>The dataset ' + datasetId + ' stored in the preferences is no more in the catalogue,</p>' + 
 				'<p>it cannot be seleted.</p></div>')
 				.appendTo('.ui-page-active')
