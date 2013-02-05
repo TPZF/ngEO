@@ -18,6 +18,7 @@ return function(element) {
 	// It was called every time the search widget was shown before, but it can trigger a bug!
 	datasetPopulation.fetch({
 		success: function() {
+			
 			view.render();
 			// Append it to the data services area
 			element.append(view.$el);
@@ -32,7 +33,7 @@ return function(element) {
 		},//when the fetch fails display an error message and disable the datasets "button"
 		// so the application is still usable and the user can still see the other menus.
 		error: function(){
-			$("#dataset").addClass("ui-disabled");
+			$("#dataset").parent().addClass('ui-disabled');
 			$('<div><p>Error : a error occured with DataSetPopulationMatrix interface.</p><p>Please check the server side interface and relaunch the application.</p></div>')
 			.appendTo('.ui-page-active')
 			.popup()
