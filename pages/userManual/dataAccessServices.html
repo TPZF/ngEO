@@ -15,7 +15,7 @@
 <body>
 
 <!-- Content -->
-<h2>Data Access Services</h2>
+<h2>4. Data Access Services</h2>
 
 <p>The data access services are the main functionalities of ngeo.
 	They consist in :
@@ -28,10 +28,10 @@
 </ul>
 </p>
 
-<ol>
-	<li><h3 id="catalogSearch">Catalog Search</h3>
-		<ol>
-			<li><h4 id="datasetSelection">Datasets Selection</h4>
+<ul>
+	<li><h3 id="catalogSearch">4.1 Catalog Search</h3>
+		<ul>
+			<li><h4 id="datasetSelection">4.1.1 Datasets Selection</h4>
 				<p>
 					The first and necessary step to make a catalogue search is to
 					choose a dataset. The dataset selection widget is accessible by clicking on
@@ -72,7 +72,7 @@
 					selected option to "None".</p>
 				</p>
 			</li>
-			<li><h4 id="searchCriteria">Search Criteria</h4>
+			<li><h4 id="searchCriteria">4.1.2 Search Criteria</h4>
 				<p>
 					Once a dataset has been selected, to set the search criteria,
 					the user has to click on the button <img
@@ -106,7 +106,7 @@
 				</p> There search criteria types are :
 				<ul>
 					<li>
-						<h5 id="dateCriteria">Date Criteria</h5>
+						<h5 id="dateCriteria">4.1.2.1 Date Criteria</h5>
 						<p>
 							They consist in the start and stop dates of the selected
 							dataset. In order to change the selected date, click on the
@@ -137,7 +137,7 @@
 							<img src="screenshots/tip.png" /> <b>Each time the bar is moved or resized, a search is launched and the results are displayed on the map.</b>
 						</p>
 					</li>
-					<li><h5 id="areaCriteria">Area Criteria</h5>
+					<li><h5 id="areaCriteria">4.1.2.2 Area Criteria</h5>
 						<p>
 							They consist in geographical criteria to be used in the
 							search. To visualize the area widget, click on Area tab inside
@@ -157,7 +157,7 @@
 							src="screenshots/useExtentCheckBox.png" /> check box. Thus the
 							coordinates can be entered manually is each text field.</li>
 						</p>
-					<li><h5 id="advancedCriteria">Advanced Criteria</h5>
+					<li><h5 id="advancedCriteria">4.1.2.3 Advanced Criteria</h5>
 						<p>They are criteria relative to the selected dataset, so
 							they change depending on the dataset chosen.
 						<p>
@@ -181,7 +181,7 @@
 								is displayed.</b>
 						</p></li>
 
-					<li><h5 id="downloadOptions">Download Options</h5>
+					<li><h5 id="downloadOptions">4.1.2.4 Download Options</h5>
 						<p>They are options relative to the selected dataset, so
 							they change depending on the dataset chosen.
 						<p>
@@ -204,11 +204,11 @@
 								option is displayed.</b>
 						</p></li>
 				</ul></li>
-		</ol></li>
+		</ul></li>
 
-	<li><h3 id="retrieveProducts">Retrieve Products</h3>
-		<ol>
-			<li><h4 id="resultsTable">Search Results</h4>
+	<li><h3 id="retrieveProducts">4.1.3 Retrieve Products</h3>
+		<ul>
+			<li><h4 id="resultsTable">4.1.3.1 Search Results</h4>
 				<p>
 					Once the search criteria have been filled in and the Submit
 					Search button <img
@@ -247,7 +247,7 @@
 					allows to filter the results according to the text entred.
 				</p>
 				</p></li>
-			<li><h4 id="directDownload">Direct Download</h4>
+			<li><h4 id="directDownload">4.1.3.2 Direct Download</h4>
 				<p>
 					The Direct Download is a functionnality of the user client
 					making the user download the retrieved products if they have a
@@ -280,7 +280,7 @@
 					clicked, the download starts.</p>
 				</p>
 			
-			<li><h4 id="simpleDar">Simple Data Access Request</h4>
+			<li><h4 id="simpleDar">4.1.3.3 Simple Data Access Request</h4>
 
 				<p>A Simple data Access Request is a request to the server
 					issued from the results table with product items having a url field filled in. </p>
@@ -341,7 +341,7 @@
 						alt='WIDGET CLOSE ICON' /> aims to close the widget.
 				</p></li>
 
-			<li><h4 id="STODar">Standing Order Data Access Request</h4>
+			<li><h4 id="STODar">4.1.3.4 Standing Order Data Access Request</h4>
 				<p>A Standing Order Data Access Request allows the user to schedule a search either by time or data criteria
 				in order to retrieve and download products. Thus, a download manager has
 					to be assigned to the request and will insure the download.</p>
@@ -395,11 +395,11 @@
 				</li>
 
 			</li>
-		</ol></li>
+		</ul></li>
 
-	<li><h3 id="map">Map</h3>
-		<ol>
-			<li><h4 id="mapModes">Map Modes</h4> 
+	<li><h3 id="map">4.3 Map</h3>
+		<ul>
+			<li><h4 id="mapModes">4.3.1 Map Modes</h4> 
 				ngEO user interface offers to the user two map modes 2D and 3D. Both modes are used to :
 				<ul>
 					<li>vizualize the products footprints</li>
@@ -417,7 +417,7 @@
 				from 2D to 3D and inversely.</p>
 			</li>
 
-			<li><h4 id="navigation">Navigation</h4> 
+			<li><h4 id="navigation">4.3.2 Navigation</h4> 
 				<p> In order to zoom in either:
 					<ul>
 						<li>Click on the Zooum In <img src="screenshots/toolBarIcons/zoomInIcon.png"/>button on the toolbar</li>
@@ -436,7 +436,7 @@
 				</p>
 			</li>
 
-			<li><h4 id="productsOnMap">Products on Map</h4> 
+			<li><h4 id="productsOnMap">4.3.3 Products on Map</h4> 
 				<p>Once a catalogue search in done and the products are retrieved, the related footprints are drawn on the map.
 				</p>
 				
@@ -453,7 +453,7 @@
 				</p>
 			</li>
 
-			<li><h4 id="layers">Map Layers</h4> 
+			<li><h4 id="layers">4.3.4 Map Layers</h4> 
 				<p>To access the map layers, click on the layers icon on the toolbar <img src="screenshots/toolBarIcons/layersIcon.png" alt='LAYERS ICON'/>.</p>
 				<p>The layers widget is displayed.
 				 <img class="center-img" src="screenshots/layersWidget.png" alt='LAYERS WIDGET'/>
@@ -465,15 +465,15 @@
 
 			</li>
 
-			<li><h4 id="backgroudS">Map Background</h4> 
+			<li><h4 id="backgroudS">4.3.5 Map Background</h4> 
 				<p>To access the available map backgrouds, click on the background icon on the toolbar <img src="screenshots/toolBarIcons/backgroundIcon.png" alt='BACKGROUND ICON'/>.</p>
 				<p>The backgrounds' widget is displayed.</p>
 				<img class="center-img" src="screenshots/backgroundsWidget.png" alt='BACKGROUND WIDGET'/>
 				<p>Click, then, on the radio button in front of the background name to change the map background.</p>
 			</li>
-		</ol></li>
+		</ul></li>
 
-</ol>
+</ul>
 
 
 </body>
