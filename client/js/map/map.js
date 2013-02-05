@@ -226,12 +226,18 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			//unless set it to be the first one in the list of background layers.
 			var preferedBackgroundId = UserPrefs.get("Background");
 			
-			if (preferedBackgroundId){
-				_.each(self.backgroundLayers, function(bgLayer, index){
-					if (bgLayer.id == preferedBackgroundId){
-						backgroundLayer = bgLayer;
+			if (preferedBackgroundId && preferedBackgroundId != 'None'){
+				
+				for ( var i = 0; i < self.backgroundLayers.length; i++ ) {
+					if (self.backgroundLayers[i].id == preferedBackgroundId){
+						backgroundLayer = self.backgroundLayers[i];
 					}
-				});
+				}
+				
+				//if the bg layer in the preferences does not existset the layer to be the default one.
+				if (backgroundLayer == null){
+					backgroundLayer = self.backgroundLayers[0];
+				}
 			}else{
 				backgroundLayer = self.backgroundLayers[0];
 			}
