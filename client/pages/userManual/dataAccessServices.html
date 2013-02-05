@@ -230,7 +230,6 @@
 						the toolbar.
 					</b>
 				</p>
-
 				<p>
 					The combo box <img src="screenshots/resultsShowCombo.png" />
 					changes to number of result entries to display.
@@ -253,8 +252,8 @@
 					The Direct Download is a functionnality of the user client
 					making the user download the retrieved products if they have a
 					url starting with <b>http or https</b>. In the results table,
-					downloadable products are highlighted by an underlined product
-					identifier. 
+					<b>downloadable products are highlighted by an underlined product
+					identifier.</b> 
 				</p>
 				<img class="center-img" src="screenshots/downloadableProduct.png"
 						alt='DOWNLOADABLE PRODUCT IMAGE' />
@@ -284,9 +283,15 @@
 			<li><h4 id="simpleDar">Simple Data Access Request</h4>
 
 				<p>A Simple data Access Request is a request to the server
-					issued from the results table with product items having a url
-					but which are not necesseraly ready to be downloaded. This
-					request aims to issue a download request for all the items
+					issued from the results table with product items having a url field filled in. </p>
+				
+				<p><b>Even if the product url does not start with http or https, the product can be used in a simple data access request.
+					However it is not directly downloadable. 
+					<p>S2 products are a good example.</p>
+					</b>
+				</p>
+
+				<p>This request aims to issue a download request for all the items
 					included when they will be downloadable. A download manager has
 					to be assigned to the request and will insure the download.</p>
 
