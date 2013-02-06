@@ -145,16 +145,64 @@
 								src="screenshots/areaWidget.png" />
 								
 						</p>The area is created using either a rectangular zone, a polygon a Gazetteer or can be imported from a file.</p>					
-						<p> A rectangle zone or a BBOX is defined by :
+						
+						<p><b>A rectangle search area or a BBOX </b>is defined by :
 							<ul>
-								<li>West: the maximum longitude</li>
-								<li>East: the minimum longitude</li>
-								<li>North: the maximum latitude</li>
-								<li>South: the minimum latitude</li>
+								<li>- West: the maximum longitude</li>
+								<li>- East: the minimum longitude</li>
+								<li>- North: the maximum latitude</li>
+								<li>- South: the minimum latitude</li>
 							</ul> By default, the coordinates are synchronized with the map
 							extent. To disable this behavior uncheck the <img
 							src="screenshots/useExtentCheckBox.png" /> check box. Thus the
 							coordinates can be entered manually is each text field.
+						</p>
+						
+						<p><b>A Polygon search area </b> is defined by its coordinates.</p>
+							<p>To enable drawing polygons, click on the Polygon button <img
+							src="screenshots/polygonButton.png" />in the area widget.
+							The polygon definition view is displayed.
+							</p> 
+							<img class="center-img"
+							src="screenshots/polygonWidget.png" /> 
+							<p>Enter the polygon coordinates in the text field under 'Enter coordinates:' and then press the Draw button
+							<img src="screenshots/drawButton.png" />.</p>
+							<p>The polygon is then drawn on the map.</p>
+							<img class="center-img" src="screenshots/drawnPolygon.png" />
+							
+							<p>It is also possible to draw a polygon using the mouse.
+							On the polygon view, press the Draw button <img src="screenshots/drawButton.png" />, then click on the map to select a polygon edge.
+							Move the mouse to choose another point an so on. When all the points are choosen double click to finish the definition of the polygon.
+							The polygon widget is then displayed with the polygon coordinates.
+							<p>
+							<img src="screenshots/tip.png" /> <b>To remove a polygon, select its coordinates in the text field, delete them an then press the Draw button.</b>
+							</p>
+						</p>
+						
+						<p><b>A Gazetteer search area</b> can be defined by clicking on the <img
+							src="screenshots/gazetteerButton.png" /> in the area widget.</p>
+							The gazetteer view is displayed.
+							</p> 
+							<img class="center-img"
+							src="screenshots/gazetteerWidget.png" /> 
+							<p>Enter the location to search for in the saerch the text field and the press the Enter keyboard.</p>
+							<p>The location items retrieved from the server are displayed in a list.</p>
+							<img class="center-img" src="screenshots/gazetteerFrance.png" />
+							<p>Click on the choosen location to define the search area.</p>
+						</p>
+						
+						<p><b>To import a search Area</b> click on the <img
+							src="screenshots/importButton.png" /> in the area widget.</p>
+							The import view is displayed.
+							</p> 
+							<img class="center-img"
+							src="screenshots/importWidget.png" /> 
+							<p>Drag a KML, GML or GeoJSON file from the file system and then drop it in the Drop zone of the import view.</p>
+							<img class="center-img" src="screenshots/importedFranceGeoJson.png" />
+							<p>The imported zone in the drawn on the map and a notification message appears underneath the Drop zone.</p>
+							<p>
+							<img src="screenshots/warning.png" /> <b>Only KML, GML and GeoJSON files can be imported.</b>
+							</p>
 						</p>
 					</li>
 					<li><h5 id="advancedCriteria">4.1.2.3 Advanced Criteria</h5>
@@ -401,13 +449,13 @@
 			<li><h4 id="mapModes">4.3.1 Map Modes</h4> 
 				ngEO user interface offers to the user two map modes 2D and 3D. Both modes are used to :
 				<ul>
-					<li>vizualize the products footprints</li>
-					<li>navigate on the globe</li>
-					<li>choose search area coordinates</li>
+					<li>- vizualize the products footprints</li>
+					<li>- navigate on the globe</li>
+					<li>- choose search area coordinates</li>
 <!-- 					<li>draw search area</li> -->
-					<li>project product browse images</li>
-					<li>vizualize map layers</li>
-					<li>choose map background</li>
+					<li>- project product browse images</li>
+					<li>- vizualize map layers</li>
+					<li>- choose map background</li>
 				
 				</ul>
 				These functionnalities are detailed in the next sections.
@@ -419,15 +467,15 @@
 			<li><h4 id="navigation">4.3.2 Navigation</h4> 
 				<p> In order to zoom in either:
 					<ul>
-						<li>Click on the Zooum In <img src="screenshots/toolBarIcons/zoomInIcon.png"/>button on the toolbar</li>
-						<li>or move the mouse wheel in.</li>
+						<li>- Click on the Zooum In <img src="screenshots/toolBarIcons/zoomInIcon.png"/>button on the toolbar</li>
+						<li>- or move the mouse wheel in.</li>
 					</ul>
 				</p>
 
 				<p> In order to zoom out either:
 					<ul>
-						<li>Click on the Zooum Out <img src="screenshots/toolBarIcons/zoomOutIcon.png"/>button on the toolbar to zoom out. </li>
-						<li>or move the mouse wheel out.</li>
+						<li>- Click on the Zooum Out <img src="screenshots/toolBarIcons/zoomOutIcon.png"/>button on the toolbar to zoom out. </li>
+						<li>- or move the mouse wheel out.</li>
 					</ul>
 				</p>
 				<p>Click on the Start View <img src="screenshots/toolBarIcons/startViewIcon.png"/>button on the toolbar to return back to the initial view.</p>
@@ -439,10 +487,10 @@
 				
 				<p>Click inside a footprint:
 					<ul>
-						<li>the browse image is projected on the footprint,</li>
-						<li>the product row is checked on the results table</li>
-						<li>a popup widget is displayed with information on the selected product</li>
-						<li>the icon <img src="screenshots/darIcon.png" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
+						<li>- the browse image is projected on the footprint,</li>
+						<li>- the product row is checked on the results table</li>
+						<li>- a popup widget is displayed with information on the selected product</li>
+						<li>- the icon <img src="screenshots/darIcon.png" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
 						Follow the same steps as in section <a href="#simpleDARHowTo">How to submit a Simple Data Access request?</a>.
 						</li> 							
 						<img src="screenshots/itemOnMap.png" alt='ITEM ON MAP'/>
