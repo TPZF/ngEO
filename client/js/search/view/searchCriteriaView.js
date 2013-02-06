@@ -77,6 +77,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		var self = this;
 	
 		this.searchButton.click( function() {
+			SearchResults.setPageCount(Configuration.data.searchResults.countPerPage);
 			SearchResults.launch( self.model.getOpenSearchURL() );
 			self.$el.ngeowidget('hide');
 		});		
