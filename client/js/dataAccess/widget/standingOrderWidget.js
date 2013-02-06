@@ -22,7 +22,7 @@ define(
 				title: "Standing Order",
 				// Reinit the standing order when the widget is closed (FL: is it really needed?)
 				hide: function() {
-					StandingOrderDataAccessRequest.initialize();
+					//StandingOrderDataAccessRequest.initialize();
 					parentElement.remove();
 				}
 			});
