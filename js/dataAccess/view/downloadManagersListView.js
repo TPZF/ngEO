@@ -25,6 +25,9 @@ var DownloadManagersListView = Backbone.View.extend({
 			$("#serverMessage").empty();
 			this.request.setDownloadManager(this.selectedDownloadManager);
 		
+			//disable the DMs list to avoid choosing a different DM once the
+			//validation request has been submitted
+			$('#downloadManagersList').addClass('ui-disabled');
 			var self = this;
 			//when the request has been submitted update the text to the user
 			$.when(this.request.submit()).done(function(){
