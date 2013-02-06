@@ -19,10 +19,11 @@ var DownloadManagersWidget = function(request) {
 	parentElement.ngeowidget({
 		title: 'Data Access Request',
 		hide: function() {
-			request.initialize();
+			//request.initialize();
 			parentElement.remove();
 		}
 	});
+
 
 	/**
 		Open the popup
