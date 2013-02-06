@@ -17,9 +17,12 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 			DownloadManagers.fetch().done(function() {
 				
 				StandingOrderDataAccessRequest.initialize();
+				//No time for the moment
+				//StandingOrderDataAccessRequest.OpenSearchURL = "http://localhost:3000/server/catalogueSearch/ND_OPT_1?start=2012-12-07&stop=2012-12-07&count=10&bbox=-15.5775,47.07669921875,12.5475,57.84330078125";
 				StandingOrderDataAccessRequest.OpenSearchURL = "http://localhost:3000/server/catalogueSearch/ND_OPT_1?start=2012-12-07T09:34:00&stop=2012-12-07T09:34:00&count=10&bbox=-15.5775,47.07669921875,12.5475,57.84330078125";
+				
 				StandingOrderDataAccessRequest.endDate = "2012-12-07";
-				StandingOrderDataAccessRequest.endTime = "10:34";
+				//StandingOrderDataAccessRequest.endTime = "10:34";
 				StandingOrderDataAccessRequest.setDownloadManager(DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid);
 				
 				QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
@@ -34,7 +37,8 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 					
 					QUnit.ok(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven != undefined, "DataDriven SchedulingOptions set");
 					
-					QUnit.equal(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven.endDate, "2012-12-07T10:34:00.00Z", "DataDriven endDate set");
+					//QUnit.equal(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven.endDate, "2012-12-07T10:34:00.00Z", "DataDriven endDate set");
+					QUnit.equal(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven.endDate, "2012-12-07", "DataDriven endDate set");
 					
 					QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
 							"confirmation",  "Request Stage Validation");	
