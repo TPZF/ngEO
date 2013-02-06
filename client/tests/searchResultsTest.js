@@ -4,7 +4,11 @@ define(['jquery', 'configuration', 'searchResults/model/searchResults'],
 	    // Define the QUnit module and lifecycle.
 	    QUnit.module("SearchResults", {
 	    	setup: function() {
-		    	}
+	    		Configuration.url = Configuration.baseServerUrl +"/webClientConfigurationData";
+	    		Configuration.load().done( function() {
+	    			SearchResults.setPageCount(Configuration.data.searchResults.countPerPage);
+	    		});
+	    	}
 	    });
     
 	    QUnit.test("Check selection ", function () {
