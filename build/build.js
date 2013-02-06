@@ -1,6 +1,6 @@
 ({
 	appDir: "../client",
-    baseUrl: "js",
+   	baseUrl: "js",
 	paths: {
         "jquery": "externs/jquery-1.8.3.min",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0.min",
@@ -10,7 +10,7 @@
 		"jquery.dataTables" : "externs/jquery.dataTables",
  		"jquery.dateRangeSlider" : "externs/jQDateRangeSlider",
 		"jquery.rangeSlider" : "externs/jQRangeSlider",	
-        "underscore": "externs/underscore-min",
+        	"underscore": "externs/underscore-min",
 		"backbone": "externs/backbone-min",
 		"text": "externs/text"
 	},
@@ -58,6 +58,7 @@
 	optimizeCss: "none",
 	optimize: "uglify",
 	modules: [
+		{ name: "help" },
 		{ name: "main" },
 		{ name: "map/map", exclude: ["configuration","backbone","underscore"]},
 		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables","panel","menubar"]},
