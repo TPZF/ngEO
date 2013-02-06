@@ -7,104 +7,31 @@
 						{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
 						{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
 						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
-						{"sTitle" : "Product", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_identifier" }, 
+						{"sTitle" : "Product", "mData" : "id" }, 
 						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
 						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
-					   ],
-		"columnsDef_Terradue" : [{"sTitle" : "Start", "mData": "properties.ical:dtstart"},
-						{"sTitle" : "Stop", "mData": "properties.ical:dtend"},
-						{"sTitle" : "Orbit", "mData": "properties.eop:orbitNumber"},
-						{"sTitle" : "Product", "mData": "properties.dc:identifier"} ]
-	
+					   ]
 	},
 	
-	
-	"downloadManager" : {
-		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html",
-		"undefinedDownloadManagerId"	: "undefined download manager id",
-		"activeStatus": {
-            "value": "ACTIVE"
-        },
-        "inactiveStatus": {
-            "value": "INACTIVE"
-        },
-        "stoppedStatus": {
-            "value": "STOPPED"
-        },
-        "stopCommand": {
-            "value": "STOP",
-            "message": "The server has received a STOP command"
-        },
-        "stopImmediatelyCommand": {
-            "value": "STOP_IMMEDIATELY",
-            "message": "The server has received a STOP_IMMEDIATELY command"
-        }
+	"searchResults": {
+		"countPerPage": 100
 	},
 	
-	"directDownload" : {
-		"productColumnIndex" : 8
+	"downloadManager" : {		
+		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html"
 	},
 	
-	"dataAccessRequestStatuses" : {
-	   
+	"dataAccessRequestStatuses" : { 	   
 	   "messagefadeOutTime" : 2500,
-	   
 	   "collapseDAR" : true,
-	    
-	   "collapseProducts" : true, 
-	   
-	   "validationRequestStage" : "validation",
-	   
-	   "confirmationRequestStage" : "confirmation",
-	   
-	    "validStatuses": {
-	        "inProgressStatus": {
-	            "value": 0,
-	            "status" : "Processing",
-	            "message": "Request In Process..."
-	        },
-	        "pausedStatus": {
-	            "value": 1,
-	            "status" : "Paused",
-	            "message": "Request Paused"
-	        },
-	        "completedStatus": {
-	            "value": 2,
-	            "status" : "Completed",
-	            "message": "Request Completed"
-	        },
-	        "cancelledStatus": {
-	            "value": 3,
-	            "status" : "Cancelled",
-	            "message": "Request Cancelled"
-	        },
-	        "validatedStatus": {
-	            "value": 4,
-	            "status" : "Validated",
-	            "message": "Request Acknowledged"
-	        },
-	        "bulkOrderStatus": {
-	            "value": 5,
-	            "status" : "BulkOrdered",
-	            "message": "Request Max Size Exceeded"
-	        }
-	    },
-	    "unExpectedStatusError": "ERROR: The server returned an expected status",
-	    "requestSubmissionError": "FAILURE: Request Submission Failed",
-	    "invalidDownloadManagersError": "Invalid Request : Please select a download manager first.", 
-		"invalidConfirmationRequest" : "Invalid Confirmation Request: The selected download manager has been changed."
+	   "collapseProducts" : true
 	},
 	
-	"simpleDataAccess" : {
-		"invalidProductURLsError": "Invalid Request: Please check products having a url."
-	}, 
-	
-	"standingOrder" : {
-		"invalidOpenSearchURLError": "Invalid OpenSearch URL : Empty URL.",
-		"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
+	"gazetteer" : {
+		"maxResults": 3,
+		"timeout": 5000,
+		"outputPolygon": true
 	},
-	
-	"downloadHelperService" : {"url" : "http://localhost:3000/ngeo/downloadHelper"},
 	
 	"map": {
 	
@@ -113,18 +40,22 @@
 		"projection": "EPSG:4326", 
 		
 		"backgroundLayers": [{
+			"id" : "OSM_Official",
 			"name": "Open Street Map (Official)",
 			"type": "OSM",
 			"baseUrl": "http://tile.openstreetmap.org"
 		}, {
+			"id" : "OSM_Mapquest",
 			"name": "Open Street Map (Mapquest)",
 			"type": "OSM",
 			"baseUrl": "http://otile1.mqcdn.com/tiles/1.0.0/osm"
 		}, {
+			"id" : "OSM_OpenCycleMap",
 			"name": "Open Street Map (OpenCycleMap)",
 			"type": "OSM",
 			"baseUrl": "http://a.tile.opencyclemap.org/cycle"
 		}, {
+			"id" : "BlueMarble_TPZ_WMS",
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
@@ -132,16 +63,19 @@
 				"layers": "BlueMarble"
 			}
 		}, {
+			"id" : "BingRoad",
 			"name": "Bing Road",
 			"type": "Bing",
 			"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
 			"imageSet": "Road"
 		}, {
+			"id" : "BingAerial",
 			"name": "Bing Aerial",
 			"type": "Bing",
 			"key": "Ar7-_U1iwNtChqq64tAQsOfO8G7FwF3DabvgkQ1rziC4Z9zzaKZlRDWJTKTOPBPV",
 			"imageSet": "Aerial"
 		}, {
+			"id" : "Terra_Modis_NASA",
 			"name": "Terra/MODIS (NASA)",
 			"type": "WMTS",
 			"baseUrl": "http://map1b.vis.earthdata.nasa.gov/wmts-geo/wmts.cgi",
@@ -153,6 +87,7 @@
 			},
 			"projection": "EPSG:4326"
 	   }, {
+	   		"id" : "VMAP0",
 			"name": "VMAP0",
 			"type": "WMS",
 			"baseUrl": "http://vmap0.tiles.osgeo.org/wms/vmap0",
@@ -161,6 +96,7 @@
 			},
 			"projection": "EPSG:4326"
 	   }, {
+	   		"id" : "OSM_TPZ_Fr",
 			"name": "OSM (TPZ Fr)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/geocache/wms",
@@ -183,6 +119,11 @@
 					"strokeWidth": 1,
 					"fill" : false
 				}
+			},
+			"search-area": {
+				"strokeColor": "#00ff00",
+				"strokeWidth": 1,
+				"fill" : false
 			}
 		},
 		
