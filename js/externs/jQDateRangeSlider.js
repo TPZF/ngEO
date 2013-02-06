@@ -19,10 +19,10 @@
 
 
 // The function to define the rangeslider module
-define( [ "jquery", "search/model/datasetSearch", "searchResults/model/searchResults", "jquery.rangeSlider", "jquery.mobile" ], 
+define( [ "jquery", "configuration", "search/model/datasetSearch", "searchResults/model/searchResults", "jquery.rangeSlider", "jquery.mobile" ], 
 
 // The function to define the daterangeslider module
-function($, DatasetSearch, SearchResults) {
+function($, Configuration, DatasetSearch, SearchResults) {
 	
 	$.widget("ngeo.dateRangeSlider", $.ngeo.rangeSlider, {
 		
@@ -111,6 +111,7 @@ function($, DatasetSearch, SearchResults) {
 			DatasetSearch.setStopDate(this.max());
 			
 			//submit search after the selection has been set
+			SearchResults.setPageCount(Configuration.data.searchResults.countPerPage);
 			SearchResults.launch( DatasetSearch.getOpenSearchURL() );
 			
 		},
