@@ -3,11 +3,12 @@
  */
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
-// Store the count per page
-var _countPerPage = Configuration.data.searchResults.countPerPage || 10;
 
 var SearchResults = {
 	
+	// Store the count per page
+	countPerPage : 10,
+		
 	// Array of features
 	features: [],
 		
@@ -38,8 +39,8 @@ var SearchResults = {
 				self.trigger('add:features',data.features);
 				
 				// Relaunch a search on next page if there is still some results
-				if ( data.features.length == _countPerPage ) {
-					self.fetch(startIndex + _countPerPage, currentUrl);
+				if ( data.features.length == self.countPerPage ) {
+					self.fetch(startIndex + self.countPerPage, currentUrl);
 				}
 			}		
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
@@ -49,9 +50,13 @@ var SearchResults = {
 		});
 	},
 	
+	setPageCount : function (count){
+		this.countPerPage = count;
+	},
+	
 	// launch a search
 	launch: function(url) {
-		this.url = url + "&count=" + _countPerPage;
+		this.url = url + "&count=" + self.countPerPage;
 		this.features.length = 0;
 		this.trigger('reset:features');
 		this.fetch(1,this.url);
