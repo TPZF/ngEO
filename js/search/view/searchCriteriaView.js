@@ -101,12 +101,19 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.searchUrlButton.click( function() {
 			// Set the openSearch url
-			$("#popupText").html( '<b>' + Configuration.serverHostName + self.model.getOpenSearchURL() + '<b>');	
-			$('#openSearchUrlPopup').popup("open",  $( {} )
-				    .jqmData( "position-to", "window" )
-				    .jqmData( "transition", "slide" ));
-			$('#openSearchUrlPopup').trigger('create');
-
+			var url = Configuration.serverHostName + self.model.getOpenSearchURL();
+			$("#popupText").val( Configuration.serverHostName + self.model.getOpenSearchURL() );	
+			$('#openSearchUrlPopup')
+				.bind({
+					popupafterclose: function(event, ui) {
+						var newUrl = $("#popupText").val();
+						if ( newUrl != url ) {
+							self.model.populateModelfromURL( newUrl );
+						}
+					}
+				})
+				.popup("open")
+				.trigger('create');
 		});	
 		
 		//add share button to share search criteria widget
@@ -116,9 +123,7 @@ var SearchCriteriaView = Backbone.View.extend({
 			
 			// Set the opensearch url
 			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL() + '<b>');	
-			$('#sharedUrlPopup').popup("open",  $( {} )
-				    .jqmData( "position-to", "window" )
-				    .jqmData( "transition", "slide" ));
+			$('#sharedUrlPopup').popup("open");
 			$('#sharedUrlPopup').trigger('create');
 			
 		});

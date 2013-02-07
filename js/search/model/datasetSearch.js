@@ -13,7 +13,6 @@ define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/
 	 * the dataset property is a nested backbone model loaded through the datasetSearchInfo interface.
 	 * the DataSetSearch is a singleton used throughout the application.
 	 *
-	 * IMPORTANT: the startdate and stopdate dates are managed internally with format dd-mm-yyyy 
 	 */
 var DataSetSearch = Backbone.Model.extend({
 	
@@ -70,13 +69,16 @@ var DataSetSearch = Backbone.Model.extend({
 				},
 				
 				error: function(model, xhr, options) {
-					console.log(model);
+					//console.log(model);
 					//fire datasetNotLoadError event with the datasetId to notify the failure when loading the dataset
 					self.trigger('datasetNotLoadError', self.get("datasetId"));
+					
+					self.dataset = undefined;
+					self.set('datasetId','');
 				}
 			});
 	
-		}else{
+		} else {
 			this.dataset = undefined;
 		}
 	},
@@ -172,7 +174,14 @@ var DataSetSearch = Backbone.Model.extend({
 	 * Populate the model with the parameters retrieved from the Shared URL
 	 */
 	populateModelfromURL : function(query){
-			
+		
+		// Check if url is complete
+		if ( query.match(/^http/) ) {
+			var sep = query.indexOf('?');
+			var datasetId = query.slice( query.lastIndexOf('/')+1, sep );
+			this.set('datasetId',datasetId);
+			query = query.substr( sep+1 );
+		}
 		// Force useExtent to false to avoid bug when setting the geometry
 		this.set('useExtent',false);
 	
