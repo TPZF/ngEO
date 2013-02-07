@@ -11,6 +11,8 @@ var mapEngine;
 var coords;
 var started = false;
 var lastClickTime = -1;
+var lastX = -1;
+var lastY = -1;
 var onstop = null;
 var self = null;
 
@@ -19,16 +21,30 @@ function finishHandler() {
 	self.stop();
 }
 
+// Detect a double-click event. Cannot use browser double-click to avoid multiple point added, and because of problem with OpenLayers and double click
+function isDoubleClick(event) {
+
+	var clickTime = Date.now();
+	
+	var isDoubleClick = (clickTime - lastClickTime) < 250
+		&& Math.abs( event.pageX - lastX ) < 1
+		&& Math.abs( event.pageY - lastY ) < 1;
+		
+	lastClickTime = clickTime;
+	lastX = event.pageX;
+	lastY = event.pageY;
+	
+	return isDoubleClick;
+}
+
 // Called on a click : add a new point in the polygon
 function onClick(event) {
-	var clickTime = Date.now();
 	if ( started && event.button == 0 ) {
 		
-		if ( (clickTime - lastClickTime) < 250 ) {
+		if ( isDoubleClick(event) ) {
 			started = false;
 			setTimeout(finishHandler,50);
 		} else {
-			lastClickTime = clickTime;
 			var point = Map.getLonLatFromEvent( event );
 			if ( coords.length == 0 ) {
 				coords.push( point, point, point );
