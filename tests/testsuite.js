@@ -21,7 +21,8 @@
 		"standingOrderDataAccessRequestTest.js",
 		"searchResultsTest.js",
 		"dataAccessRequestStatusesTest.js",
-		"datasetSearchInfoTest.js"
+		"datasetSearchInfoTest.js",
+		"datasetSearchTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
