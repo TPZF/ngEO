@@ -356,25 +356,24 @@ var DataSetSearch = Backbone.Model.extend({
 		//handle the case when the date set has the format yyyy-mm-dd
 		//when the datset has no start/stop dates and the dates have been initialized from the current date
 		var ymd = dateOnly.split('-');
-		if (ymd[0].length > ymd[2].length){ 
+		if (ymd[0].length < ymd[2].length){ 
 			dateOnly = ymd[2] + '-' + ymd[1] + '-' + ymd[0];
 		}
 		
 		this.set("startdate",dateOnly);
 //		this.set("startTime",timeOnly);
 //		
-		if (startDate != stopDate){
+		if (stopDate) {
 			dateOnly = stopDate.substring(0, stopDate.indexOf('T'));
 			timeOnly = stopDate.substring(stopDate.indexOf('T')+1, stopDate.lastIndexOf(':'));
 			
-			if (ymd[0].length > ymd[2].length){ 
+			var ymd = dateOnly.split('-');
+			if (ymd[0].length < ymd[2].length){ 
 				dateOnly = ymd[2] + '-' + ymd[1] + '-' + ymd[0];
 			}
-			this.set("stopdate",dateOnly);
-//			this.set("stopTime",timeOnly);
-		}
-//		
-//		//set stop date and time
+		} 
+		
+		//set stop date and time
 		this.set("stopdate", dateOnly);
 //		this.set("stopTime",timeOnly);
 		
@@ -383,19 +382,19 @@ var DataSetSearch = Backbone.Model.extend({
 	/** get startdate as a Date object */
 	getStartDate : function(){
 		var dmy = this.get("startdate").split('-');
-		return new Date(dmy[2], dmy[1]-1, dmy[0]);
+		return new Date(dmy[0], dmy[1]-1, dmy[2]);
 	},
 	
 	/** get stop date as a Date object */
 	getStopDate : function(){
 		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[2], dmy[1]-1, dmy[0]);
+		return new Date(dmy[0], dmy[1]-1, dmy[2]);
 	},
 	
 	/** Method called from dateRangeSlider 
 	 * set the start date from a Date object */
 	setStartDate : function(date){
-		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+		var dateString = date.getFullYear() +  '-' + (date.getMonth()+1) + '-' + date.getDate();
 		//console.log("dateString");console.log(dateString);
 		this.set("startdate", dateString);
 	},
@@ -403,14 +402,14 @@ var DataSetSearch = Backbone.Model.extend({
 	/** Method called from dateRangeSlider  
 	 * set the stop date from a Date object */
 	setStopDate : function(date){
-		var dateString = date.getDate() +  '-' + (date.getMonth()+1) + '-' + date.getFullYear();
+		var dateString = date.getFullYear() +  '-' + (date.getMonth()+1) + '-' + date.getDate();
 		this.set("stopdate", dateString);
 	},
 	
 	getSliderBoundStartDate :function(){
 //		/var scaleStartString = Configuration.localConfig.timeSlider.defautBoundStart;
 		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[2]-2, dmy[1]-2, dmy[0]);
+		return new Date(dmy[0]-2, dmy[1]-2, dmy[2]);
 	},
 	
 	/** Get the slider scale start date. 
@@ -422,14 +421,14 @@ var DataSetSearch = Backbone.Model.extend({
 //		var dmy = scaleStartString.split('-');
 		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
 		var dmy = this.get("stopdate").split('-');	
-		return new Date(dmy[2]-width, dmy[1]-1, dmy[0]);
+		return new Date(dmy[0]-width, dmy[1]-1, dmy[2]);
 	},
 	
 	/** substract 2 from the month because the months for a Date object
 	 * are between 0 and 11 and that the slider date is a month before the stop date*/
 	getSliderStartDate : function(){
 		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[2], dmy[1]-2, dmy[0]);
+		return new Date(dmy[0], dmy[1]-2, dmy[2]);
 	},
 	
 	
