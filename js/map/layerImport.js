@@ -87,6 +87,10 @@ function(Map ) {
 			});
 		},
 		
+		isSupported: function() {
+			return window.FileReader != undefined;
+		},
+		
 	};
 });
 
