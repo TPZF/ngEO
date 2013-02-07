@@ -6,16 +6,20 @@
 	margin-top: 0.5em;
 	margin-bottom: 0.5em;
 }
-/** set min width to enhance the display of the filter combo boxes */
-#datasetListContainer{
+
+#datasetListContainer { 
+	// set min width to enhance the display of the filter combo boxes
 	max-height : 450px;
 	min-width : 500px;
-	overflow-x: auto;
-	overflow-y: auto;
-}
+	overflow: auto;
 
-// The listview is in read-only mode because no <a> is needed for dataset list view so we need to modify the cursor
-#datasetListContainer li {
-	cursor: pointer;
+	// Fix when using search filter, remvoe all margin is needed
+	.ui-listview-filter-inset {
+		margin: 0;
+	}	
+	
+	// The listview is in read-only mode because no <a> is needed for dataset list view so we need to modify the cursor
+	li {
+		cursor: pointer;
+	}
 }
-
