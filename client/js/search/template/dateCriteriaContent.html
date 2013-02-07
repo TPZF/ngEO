@@ -3,8 +3,8 @@
 
 	<label id="fromDateLabel" for="fromDateInput">Start Date : </label>
 	
-	<input name="From" id="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.startdate %>"
-		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.startdate %>", 
+	<input name="From" id="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.start.toISODateString()) %>"
+		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.start.toISODateString()) %>", 
 		  "useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
 </div>
 
@@ -20,8 +20,8 @@
 
 	<label id="toDateLabel" for="toDateInput">End Date : </label>
 	
-	<input name="toDate" id="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<%=attributes.stopdate %>"
-	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%=attributes.stopdate %>", 
+	<input name="toDate" id="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.stop.toISODateString()) %>"
+	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.stop.toISODateString()) %>", 
 	   	"useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
 
 </div>

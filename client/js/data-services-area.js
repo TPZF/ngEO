@@ -1,10 +1,10 @@
 
-define(["jquery", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
+define(["jquery", "configuration", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help", 'jquery.dateRangeSlider'], 
-	function($, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
+	function($, Configuration, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 	
@@ -192,9 +192,16 @@ return {
 	addTimeSlider : function(){
 		$('#datasetMessage').css('bottom', '70px');
 		$('#timeSlider').addClass('ui-timeSlider-container');
-		$('#timeSlider').dateRangeSlider({bounds: {min : DatasetSearch.getSliderStartDate(), max : DatasetSearch.getStopDate()},
-										scaleBounds: {min : DatasetSearch.getSliderScaleDate(), max : DatasetSearch.getStopDate()},
-										defaultValues : {min : DatasetSearch.getSliderStartDate(), max : DatasetSearch.getStopDate()}});
+		
+		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
+		var scaleDate = new Date( DatasetSearch.get("stop").getTime() );
+		scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
+		
+		var startDate = new Date( DatasetSearch.get("stop").getTime() - 31 * 24 * 3600 * 1000 );
+
+		$('#timeSlider').dateRangeSlider({bounds: {min : startDate, max : DatasetSearch.get("stop")},
+										scaleBounds: {min : scaleDate, max : DatasetSearch.get("stop")},
+										defaultValues : {min : startDate, max : DatasetSearch.get("stop")}});
 	},
 	
 	/** remove the time slider from the bottom of the map view  and

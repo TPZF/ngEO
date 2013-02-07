@@ -12,8 +12,8 @@ var TimeExtentView = Backbone.View.extend({
 	initialize : function(options){
 		// Refresh the dates and time slider checkbox when the values has been changed on the model 
 		//typically for shared parameters urls
-		this.model.on("change:startdate", this.update, this);
-		this.model.on("change:stopdate", this.update, this);
+		this.model.on("change:start", this.update, this);
+		this.model.on("change:stop", this.update, this);
 		this.searchCriteriaView = options.searchCriteriaView;
 		//this.model.on("change:useTimeSlider", function(){this.$el.find("input[type='checkbox']").prop("checked", this.model.get("useTimeSlider"));}, this);
 	},
@@ -21,17 +21,17 @@ var TimeExtentView = Backbone.View.extend({
 	events :{
 		//The 2 next handlers listen to start and stop date changes
 		'change #fromDateInput' : function(event){
-			this.model.set({"startdate" : $(event.currentTarget).val()});
+			this.model.set({"start" : Date.fromISOString($(event.currentTarget).val()+"T00:00:00.000Z")});
 		},
 		'change #toDateInput' : function(event){
-			this.model.set({"stopdate" : $(event.currentTarget).val()});
+			this.model.set({"stop" : Date.fromISOString($(event.currentTarget).val()+"T23:59:59.999Z")});
 		},
 		//the 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
 		'change #fromTimeInput' : function(event){
-			this.model.set({"startTime" : $(event.currentTarget).val()});
+			//this.model.set({"startTime" : $(event.currentTarget).val()});
 		},
 		'change #toTimeInput' : function(event){
-			this.model.set({"stopTime" : $(event.currentTarget).val()});
+			//this.model.set({"stopTime" : $(event.currentTarget).val()});
 		},
 		//check box changes to display or not the time slider widget
 		'click #useTimeSliderLabel' : function(event){
@@ -62,8 +62,8 @@ var TimeExtentView = Backbone.View.extend({
 	},
 	
 	update: function() {
-		$('#fromDateInput').val( this.model.get("startdate") );
-		$('#toDateInput').val( this.model.get("stopdate") );
+		$('#fromDateInput').val( this.model.get("start").toISODateString() );
+		$('#toDateInput').val( this.model.get("stop").toISODateString() );
 		//Uncomment to use back times
 //		$('#fromTimeInput').val( this.model.get("startTime") );
 //		$('#toTimeInput').val( this.model.get("stopTime") );

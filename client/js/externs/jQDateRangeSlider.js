@@ -105,10 +105,10 @@ function($, DatasetSearch, SearchResults) {
 			
 			$.ngeo.rangeSlider.prototype.mouseUpHandler.apply(this, arguments);
 
-			console.log("mouseUpHandler  ------ this.min" + this.min());
+			//console.log("mouseUpHandler  ------ this.min" + this.min());
 			//set the selected start and end dates in the search model
-			DatasetSearch.setStartDate(this.min());
-			DatasetSearch.setStopDate(this.max());
+			DatasetSearch.set("start",this.min());
+			DatasetSearch.set("stop",this.max());
 			
 			//submit search after the selection has been set
 			SearchResults.launch( DatasetSearch.getOpenSearchURL() );
