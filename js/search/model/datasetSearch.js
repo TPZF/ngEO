@@ -2,6 +2,40 @@
 define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/searchArea'], 
 		function($, Backbone, Configuration, Dataset, SearchArea) {
 
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
+
+// Helper function to convert a string in ISO format to date
+Date.fromISOString = function(str) {
+	var ct = str.split(/\D/);
+	var date = new Date();
+	// Hack to support bad date
+	if ( ct[0].length < ct[2].length ) {
+		var tmp = ct[0];
+		ct[0] = ct[2];
+		ct[2] = tmp;
+	}
+	date.setUTCFullYear(ct[0]);
+	date.setUTCMonth(ct[1]-1);
+	date.setUTCDate(ct[2]);
+	if ( ct.length > 3 ) {
+		date.setUTCHours(ct[3]);
+		date.setUTCMinutes(ct[4]);
+		date.setUTCSeconds(ct[5]);
+		date.setUTCMilliseconds(ct[6]);
+	}
+	return date;
+};
+
+// Helper function to convert a date to an iso string, only the date part
+Date.prototype.toISODateString = function() {
+	return this.getUTCFullYear() + "-" + pad(this.getUTCMonth()+1,2) + "-" + pad(this.getUTCDate(),2);
+};
+
+
 	/**
 	 * This backbone model holds in its attributes :
 	 * 
@@ -18,20 +52,14 @@ var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
 		datasetId : "",
-		startdate : "", //name of the opensearch request parameter
-		stopdate: "", //name of the opensearch request parameter
-		startTime : "",
-		stopTime: "", 
+		start : new Date(), //name of the opensearch request parameter
+		stop: new Date(), //name of the opensearch request parameter
 		useExtent : true,
 		useDownloadOptions : false, //flag for including download options or not		
 		useTimeSlider : false //flag for displaying time slider or not
 	},
 	
 	initialize : function() {
-		// Initialize date/time with today
-		var today = (new Date()).toISOString();
-		//set start and stop dates/times to today
-		this.setDateAndTime(today, today); 
 		//no dataset is selected
 		this.dataset = undefined;
 		// The search area
@@ -58,12 +86,14 @@ var DataSetSearch = Backbone.Model.extend({
 					var endDate = model.attributes.datasetSearchInfo.endDate;
 					
 					if (!startDate || !endDate) {
-						startDate = (new Date()).toISOString();
-						endDate = (new Date()).toISOString();
+						self.set("start", new Date() ); 
+						self.set("stop", new Date() ); 
+					} else {
+						//update dates/times from dataset dates/times
+						self.set("start", Date.fromISOString(startDate) ); 
+						self.set("stop", Date.fromISOString(endDate) ); 
 					}
 					
-					//update dates/times from dataset dates/times
-					self.setDateAndTime(startDate, endDate); 
 					self.trigger('datasetLoaded');
 					
 				},
@@ -201,10 +231,10 @@ var DataSetSearch = Backbone.Model.extend({
 					this.searchArea.setFromWKT(pair[1]);
 					break;
 				case "start" : 
-					this.set({startdate: pair[1]});
+					this.set({start: Date.fromISOString(pair[1])});
 					break;
 				case "stop" : 
-					this.set({stopdate: pair[1]});
+					this.set({stop: Date.fromISOString(pair[1])});
 					break;
 					
 				default :
@@ -240,33 +270,12 @@ var DataSetSearch = Backbone.Model.extend({
 		this.trigger('change:searchArea');
 
 	},
-	
-	//Uncomment to set back the time 
-	//NOT USED for the moment 
-	//add date and time and area parameters
-//	addGeoTemporalParams : function (url){
-//	
-//		url = url + "start="+ this.formatDate(this.get("startdate"), this.get("startTime")) + "&" + 
-//		"stop=" + this.formatDate(this.get("stopdate"), this.get("stopTime"));
-//
-//		//add area criteria if set
-//		if (this.get("west") != "" && this.get("south") != ""
-//			&& this.get("east") != "" && this.get("north") != ""){
-//		
-//			var url = url  +  "&" + 
-//			"bbox=" + this.get("west") + "," + this.get("south") + "," 
-//			+ this.get("east") + "," + this.get("north");
-//		}
-//		
-//		return url;
-//	},
-	
 
 	//add date WITHOUT cf ngeo 368 time and area parameters
 	addGeoTemporalParams : function (url){
 	
-		url = url + "start=" + this.get("startdate")  + "&" + 
-		"stop=" + this.get("stopdate");
+		url = url + "start=" + this.get("start").toISOString()  + "&" + 
+		"stop=" + this.get("stop").toISOString();
 		
 		url += "&" + this.searchArea.getOpenSearchParameter();
 		
@@ -351,107 +360,6 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		return selectedOptions;
 	},
-	
-	/** 
-	 * Splits a given date/time into date and time for start and stop dates & times.
-	 * Uncomment the code to use back the time
-	 */
-	setDateAndTime : function(startDate, stopDate){
-		
-		//set start date and time TO USE IF TIME IS REUSED BACK
-		var dateOnly = startDate.substring(0, startDate.indexOf('T'));
-		var timeOnly = startDate.substring(startDate.indexOf('T')+1, startDate.lastIndexOf(':'));
-
-		//handle the case when the date set has the format yyyy-mm-dd
-		//when the datset has no start/stop dates and the dates have been initialized from the current date
-		var ymd = dateOnly.split('-');
-		if (ymd[0].length < ymd[2].length){ 
-			dateOnly = ymd[2] + '-' + ymd[1] + '-' + ymd[0];
-		}
-		
-		this.set("startdate",dateOnly);
-//		this.set("startTime",timeOnly);
-//		
-		if (stopDate) {
-			dateOnly = stopDate.substring(0, stopDate.indexOf('T'));
-			timeOnly = stopDate.substring(stopDate.indexOf('T')+1, stopDate.lastIndexOf(':'));
-			
-			var ymd = dateOnly.split('-');
-			if (ymd[0].length < ymd[2].length){ 
-				dateOnly = ymd[2] + '-' + ymd[1] + '-' + ymd[0];
-			}
-		} 
-		
-		//set stop date and time
-		this.set("stopdate", dateOnly);
-//		this.set("stopTime",timeOnly);
-		
-	},
-	
-	/** get startdate as a Date object */
-	getStartDate : function(){
-		var dmy = this.get("startdate").split('-');
-		return new Date(dmy[0], dmy[1]-1, dmy[2]);
-	},
-	
-	/** get stop date as a Date object */
-	getStopDate : function(){
-		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[0], dmy[1]-1, dmy[2]);
-	},
-	
-	/** Method called from dateRangeSlider 
-	 * set the start date from a Date object */
-	setStartDate : function(date){
-		var dateString = date.getFullYear() +  '-' + (date.getMonth()+1) + '-' + date.getDate();
-		//console.log("dateString");console.log(dateString);
-		this.set("startdate", dateString);
-	},
-	
-	/** Method called from dateRangeSlider  
-	 * set the stop date from a Date object */
-	setStopDate : function(date){
-		var dateString = date.getFullYear() +  '-' + (date.getMonth()+1) + '-' + date.getDate();
-		this.set("stopdate", dateString);
-	},
-	
-	getSliderBoundStartDate :function(){
-//		/var scaleStartString = Configuration.localConfig.timeSlider.defautBoundStart;
-		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[0]-2, dmy[1]-2, dmy[2]);
-	},
-	
-	/** Get the slider scale start date. 
-	 * Use a configurable scale width rather a fixed start date 
-	 * in order optimize time slider creation performance 
-	 * */
-	getSliderScaleDate : function(){
-//		var scaleStartString = Configuration.localConfig.timeSlider.defautScaleStart;
-//		var dmy = scaleStartString.split('-');
-		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
-		var dmy = this.get("stopdate").split('-');	
-		return new Date(dmy[0]-width, dmy[1]-1, dmy[2]);
-	},
-	
-	/** substract 2 from the month because the months for a Date object
-	 * are between 0 and 11 and that the slider date is a month before the stop date*/
-	getSliderStartDate : function(){
-		var dmy = this.get("stopdate").split('-');
-		return new Date(dmy[0], dmy[1]-2, dmy[2]);
-	},
-	
-	
-	/** add the time slider to the bottom of the map view  and
-	 * move the dataset message up */
-	
-	/** Format to openSearch compliant date format : 
-	 * the seconds are added manually since not handled by the TimeBox widget
-	 * to confirm later whether to use another widget...
-	 * TODO CONFIRM TIME FORMAT
-	 */
-	formatDate : function(date, time){
-		return date + "T" + time + ":00.00Z"; 
-	} 
 	
 });
 
