@@ -17,7 +17,11 @@ var ImportView = Backbone.View.extend({
 		this.parentView = options.parentView;
 		
 		// Setup the drop area for import
-		LayerImport.addDropArea( this.$el.find('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
+		if (!LayerImport.isSupported()) {
+			$('#import').html('<p class="ui-error-message"><b>Import is not supported by your browser.</b></p>');
+		} else {
+			LayerImport.addDropArea( this.$el.find('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
+		}
 	},
 	
 	events :{
