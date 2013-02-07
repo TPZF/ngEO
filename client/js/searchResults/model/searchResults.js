@@ -7,7 +7,7 @@ define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configura
 var SearchResults = {
 	
 	// Store the count per page
-	countPerPage : 10,
+	countPerPage : 100,
 		
 	// Array of features
 	features: [],
@@ -50,13 +50,9 @@ var SearchResults = {
 		});
 	},
 	
-	setPageCount : function (count){
-		this.countPerPage = count;
-	},
-	
 	// launch a search
 	launch: function(url) {
-		this.url = url + "&count=" + self.countPerPage;
+		this.url = url + "&count=" + this.countPerPage;
 		this.features.length = 0;
 		this.trigger('reset:features');
 		this.fetch(1,this.url);
@@ -160,6 +156,10 @@ var SearchResults = {
 	},
 	
 };
+
+if ( Configuration.data && Configuration.data.searchResults && Configuration.data.searchResults.countPerPage ) {
+	SearchResults.countPerPage = Configuration.data.searchResults.countPerPage;
+}
 
 // Add events
 _.extend(SearchResults, Backbone.Events);

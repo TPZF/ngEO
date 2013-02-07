@@ -6,7 +6,7 @@ define(['jquery', 'configuration', 'searchResults/model/searchResults'],
 	    	setup: function() {
 	    		Configuration.url = Configuration.baseServerUrl +"/webClientConfigurationData";
 	    		Configuration.load().done( function() {
-	    			SearchResults.setPageCount(Configuration.data.searchResults.countPerPage);
+	    			SearchResults.countPerPage = Configuration.data.searchResults.countPerPage;
 	    		});
 	    	}
 	    });
