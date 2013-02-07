@@ -16,7 +16,9 @@
 								data-overlay-theme="a" 
 								class="ui-content">
 		<a href="#" id="closePopup" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-		<p id="popupText"></p>
+		
+		<!-- Avoid jQM enhancement on the text area because autogrowth is broken with long URLs -->
+		<textarea data-role="none" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" id="popupText" cols="80" rows="3"></textarea>
 </div> 
 
 <div id="sharedUrlPopup" data-role=popup data-theme="c" 
