@@ -37,10 +37,14 @@ var ExportView = Backbone.View.extend({
 	},
 		
 	render: function(){
-
-		this.$el.append(exportViewContent);
-		this.$el.trigger('create');
-		this.$el.find('#download').addClass('ui-disabled');
+		
+		if (!window.Blob) {
+			this.$el.append('<p class="ui-error-message"><b>Export is not supported in your browser</b></p>');
+		} else {
+			this.$el.append(exportViewContent);
+			this.$el.trigger('create');
+			this.$el.find('#download').addClass('ui-disabled');
+		}
 		return this;
 	}
 
