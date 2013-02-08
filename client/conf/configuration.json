@@ -30,7 +30,7 @@
 	"gazetteer" : {
 		"maxResults": 3,
 		"timeout": 5000,
-		"outputPolygon": true
+		"outputPolygon": false
 	},
 	
 	"map": {
