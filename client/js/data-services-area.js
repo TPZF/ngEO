@@ -184,7 +184,13 @@ return {
 			.appendTo('.ui-page-active')
 			.popup()
 			.popup('open');
-		});	
+		});
+		SearchResults.on('startLoading', function() {
+			$.mobile.loading("show");
+		});
+		SearchResults.on('endLoading', function() {
+			$.mobile.loading("hide");
+		});
 	},
 	
 	/** add the time slider to the bottom of the map view  and
