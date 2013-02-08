@@ -41,12 +41,15 @@ var SearchResults = {
 				// Relaunch a search on next page if there is still some results
 				if ( data.features.length == self.countPerPage ) {
 					self.fetch(startIndex + self.countPerPage, currentUrl);
+				} else {
+					self.trigger('endLoading');
 				}
 			}		
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
 			  console.log("ERROR when retrieving the products :" + textStatus + ' ' + errorThrown);
 			  //notify that the product search has Failed
-			  self.trigger('error:features', searchUrl);  
+			  self.trigger('error:features', searchUrl); 
+			  self.trigger('endLoading');
 		});
 	},
 	
@@ -55,6 +58,7 @@ var SearchResults = {
 		this.url = url + "&count=" + this.countPerPage;
 		this.features.length = 0;
 		this.trigger('reset:features');
+		this.trigger('startLoading');
 		this.fetch(1,this.url);
 	},
 	
