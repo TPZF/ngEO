@@ -81,7 +81,8 @@ return function(element) {
 			tooltip.show();
 			placeTooltip();
 			$('[data-help]').css({ 
-				cursor: 'help'
+				cursor: 'help',
+				'pointer-events': 'auto'
 			});
 			$('body').get(0).addEventListener("click", onElementHelpClicked, true );
 			$this.addClass('toggle');
