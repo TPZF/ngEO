@@ -1,6 +1,6 @@
 Name:           esa-webclient-testserver-ngeo
 Version:        0.4
-Release:        SNAPSHOT20130201
+Release:        SNAPSHOT20130208
 Summary:        The ngEO Web Client Test Server
 
 Group:       	NGEO   

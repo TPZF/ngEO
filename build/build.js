@@ -60,9 +60,9 @@
 	modules: [
 		{ name: "help" },
 		{ name: "main" },
-		{ name: "map/map", exclude: ["configuration","backbone","underscore"]},
-		{ name: "data-services-area", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables","panel","menubar"]},
-		{ name: "account", exclude: ["configuration","map/map","backbone","underscore","jquery","jquery.mobile","jquery.dataTables","panel","menubar"]},
+		{ name: "map/map", exclude: ["main"]},
+		{ name: "data-services-area", exclude: ["main", "map/map","jquery.dataTables"]},
+		{ name: "account", exclude: ["main","map/map"]},
 	],
 	dir: "output"
 })
