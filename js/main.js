@@ -62,8 +62,8 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "userPrefs", "menubar", "backbone", "jquery.mobile", "panel"] ,
-		function(require, $, Configuration, UserPrefs, MenuBar, Backbone) {
+require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile", "panel"] ,
+		function(require, $, Configuration, MenuBar, Backbone) {
 
 /** Console fix	: create a dummy console.log when console is not present. Otherwise it is not working on some browser configuration */
 window.console || (console={log:function(){}});
