@@ -31,31 +31,8 @@ $.widget( "ui.dateRangeSlider", {
 		var self = this;
 		
 		this.scalePosition = 0;
-				
-		var scale = $('<div class="dateSlider-scale"></div>');
-		
-		var startYear = parseInt( this.options.scaleBounds.min.getUTCFullYear() );
-		var endYear = parseInt( this.options.scaleBounds.max.getUTCFullYear() );
-		
-		this.minDate = new Date();
-		this.minDate.setUTCFullYear(startYear);
-		this.minDate.setUTCMonth(0);
-		this.minDate.setUTCDate(1);
-		
-		var totalWidth = 0;
-		for ( var i = startYear; i <= endYear; i++ ) {
-			var isBissextile = ((i % 4) == 0) && ((i % 400) != 0);
-			scale.append('<span class="dateSlider-year dateSlider-y' + (isBissextile ? 'bi' : 'n') + '">'+i+'</span>');
-			var monthDay=["31","28","31","30","31","30","31","31","30","31","30","31"];
-			totalWidth += isBissextile ? 60 : 59;
-			for ( var j = 2; j < 12; j++ ) {
-				scale.append('<span class="dateSlider-month dateSlider-m' + monthDay[j] + '">'+monthArray[j]+'</span>');
-				totalWidth += parseInt(monthDay[j]);
-			}
-		}
-		
-		scale.css('width', totalWidth);
-		
+						
+		// Create left and righ arrows
 		$('<div class="dateSlider-rightArrow"></div>')
 			.appendTo(this.element)
 			.mousedown( function(event) {
@@ -76,6 +53,8 @@ $.widget( "ui.dateRangeSlider", {
 				self.autoScaleDirection = 0;
 			});
 			
+
+		// Create the bar that defines the date range
 		this.dragBar = $('<div class="dateSlider-bar"></div>')
 			.appendTo(this.element)
 			.mousedown( function(event) {
@@ -84,6 +63,7 @@ $.widget( "ui.dateRangeSlider", {
 				event.preventDefault();
 			});
 			
+		// Create the labels of the start and end date
 		this.startLabel = $('<div class="dateSlider-label">20-May-2017</div>')
 			.appendTo(this.element)
 			.mousedown( function(event) {
@@ -91,7 +71,7 @@ $.widget( "ui.dateRangeSlider", {
 				$(document).one('mouseup', function() {
 					$(document).off('mousemove', $.proxy(self._moveLeftDrag,self) );
 					if ( self.options.change ) {
-						self.options.change( self._computeDate() ); 
+						self.options.change( self._computeCurrentDate() ); 
 					}
 				});
 			});
@@ -102,15 +82,15 @@ $.widget( "ui.dateRangeSlider", {
 				$(document).one('mouseup', function() {
 					$(document).off('mousemove', $.proxy(self._moveRightDrag,self) );
 					if ( self.options.change ) {
-						self.options.change( self._computeDate() ); 
+						self.options.change( self._computeCurrentDate() ); 
 					}
 				});
 			});
 		
-		
-		this.container = $('<div class="dateSlider-container"></div>').appendTo(this.element);
-		this.scaleBar = scale.appendTo(this.container);
-			
+		// Create the scale bar
+		this._createScaleBar();
+					
+		// Compute the max days to limit the scale bar scrolling
 		this.maxDays = getDaysBetween( this.options.scaleBounds.max, this.minDate );
 		
 		// Initialize dragging
@@ -119,7 +99,44 @@ $.widget( "ui.dateRangeSlider", {
 		this.dragBar.width(this.dragRightDays - this.dragLeftDays );
 		this._moveDrag( 0 );
 	},
+	
+	// Create the scale
+	_createScaleBar: function() {
+				
+		var scale = $('<div class="dateSlider-scale"></div>');
 		
+		var startYear = parseInt( this.options.scaleBounds.min.getUTCFullYear() );
+		var endYear = parseInt( this.options.scaleBounds.max.getUTCFullYear() );
+		
+		this.minDate = new Date();
+		this.minDate.setUTCFullYear(startYear);
+		this.minDate.setUTCMonth(0);
+		this.minDate.setUTCDate(1);
+		
+		var maxDate = new Date();
+		maxDate.setUTCFullYear(endYear);
+		maxDate.setUTCMonth(12);
+		maxDate.setUTCDate(31);
+		
+		var monthDay=["31","28","31","30","31","30","31","31","30","31","30","31"];
+		for ( var i = startYear; i <= endYear; i++ ) {
+			var isBissextile = ((i % 4) == 0) && ((i % 400) != 0);
+			scale.append('<span class="dateSlider-year dateSlider-y' + (isBissextile ? 'bi' : 'n') + '">'+i+'</span>');
+			for ( var j = 2; j < 12; j++ ) {
+				scale.append('<span class="dateSlider-month dateSlider-m' + monthDay[j] + '">'+monthArray[j]+'</span>');
+			}
+		}
+		
+		scale.css('width', getDaysBetween( maxDate, this.minDate) );	
+		scale.on('selectstart', function() { return false; });
+		
+		// Add it to the DOM
+		// Create a container for the scale bar, needed to manage scrolling
+		this.container = $('<div class="dateSlider-container"></div>').appendTo(this.element);
+		this.scaleBar = scale.appendTo(this.container);
+	},
+		
+	// Move the left side of the drag bar
 	_moveLeftDrag: function(event) {
 		var days = event.pageX - event.data.lastX;
 		this.dragLeftDays += days;
@@ -143,6 +160,7 @@ $.widget( "ui.dateRangeSlider", {
 		event.preventDefault();
 	},
 		
+	// Move the right side of the drag bar
 	_moveRightDrag: function(event) {
 		var days = event.pageX - event.data.lastX;
 		this.dragRightDays += days;
@@ -164,20 +182,23 @@ $.widget( "ui.dateRangeSlider", {
 		event.preventDefault();
 	},
 	
-	_computeDate: function() {
+	// Compute the current date
+	_computeCurrentDate: function() {
 		return {
 			min: new Date( this.minDate.getTime() + this.dragLeftDays * 86400000 ),
 			max: new Date( this.minDate.getTime() + this.dragRightDays * 86400000 )
 		};
 	},
 	
+	// Format a date
 	_formatDate: function(date) {
 		return date.getDate() + "-" + monthArray[date.getMonth()] + "-" + date.getFullYear();
 	},
 			
+	// Update date labels
 	_updateLabels : function() {
 	
-		var bounds = this._computeDate();
+		var bounds = this._computeCurrentDate();
 		// Update text
 		this.startLabel.html( this._formatDate(bounds.min) );
 		this.endLabel.html( this._formatDate(bounds.max) );
@@ -236,7 +257,7 @@ $.widget( "ui.dateRangeSlider", {
 		this._updateLabels();
 	},
 
-	
+	// To animate scale scrolling
 	_autoScaleScroll: function() {
 		if ( this.autoScaleDirection != 0.0 ) {
 			this._moveDrag( this.autoScaleDirection );
@@ -244,6 +265,7 @@ $.widget( "ui.dateRangeSlider", {
 		}
 	},
 	
+	// Called when dragging the bar
 	_onDragBar: function(event) {	
 		var rightBlock = (this.dragRightDays == this.scalePosition + this.container.width())
 			&& event.pageX > event.data.lastX;
@@ -260,13 +282,14 @@ $.widget( "ui.dateRangeSlider", {
 		}
 	},
 	
+	// Called when the dragging the bar is stopped
 	_onDragBarStop: function(event) {
 		this.autoScaleDirection = 0.0;
 		$(document).off( 'mousemove', $.proxy(this._onDragBar,this) );
 		$(document).off( 'mouseup', $.proxy(this._onDragBarStop,this) );
 		
 		if ( this.options.change ) {
-			this.options.change( this._computeDate() ); 
+			this.options.change( this._computeCurrentDate() ); 
 		}
 	},
 	
