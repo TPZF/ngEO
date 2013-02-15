@@ -25,13 +25,14 @@ var TimeExtentView = Backbone.View.extend({
 		'change #toDateInput' : function(event){
 			this.model.set({"stop" : Date.fromISOString($(event.currentTarget).val()+"T23:59:59.999Z")});
 		},
-		//the 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
+/*		//the 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
 		'change #fromTimeInput' : function(event){
-			//this.model.set({"startTime" : $(event.currentTarget).val()});
+			this.model.set({"startTime" : $(event.currentTarget).val()});
 		},
 		'change #toTimeInput' : function(event){
-			//this.model.set({"stopTime" : $(event.currentTarget).val()});
+			this.model.set({"stopTime" : $(event.currentTarget).val()});
 		},
+*/		
 		//check box changes to display or not the time slider widget
 		'click #useTimeSliderLabel' : function(event){
 			var $target = $(event.currentTarget);	
