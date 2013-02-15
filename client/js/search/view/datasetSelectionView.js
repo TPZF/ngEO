@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'search/model/datasetSearch', 'userPrefs',
+define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch', 'userPrefs',
          'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
-		function($, Backbone, DatasetSearch, UserPrefs, datasetsSelection_template, datasetsList_template) {
+		function($, Backbone, Logger, DatasetSearch, UserPrefs, datasetsSelection_template, datasetsList_template) {
 
 /**
  * The related model is DatasetsPopulationModel
@@ -76,25 +76,12 @@ var DatasetSelectionView = Backbone.View.extend({
 				//reset the preferences since the dataset set in the preferences is no more in the catalogue
 				//and notify the user.
 				UserPrefs.save("Dataset", "None");
-				$('<div><p>The dataset ' + datasetId + ' stored in the preferences is no more in the catalogue,</p>' + 
-				'<p>it cannot be seleted.</p></div>')
-				.appendTo('.ui-page-active')
-				.popup()
-				.popup('open');
+				Logger.warning('The dataset ' + datasetId + ' stored in the preferences is no more in the catalogue, it cannot be selected.');
 			}
 		}
 		
 		var self = this;
-		
-		//notify the user if the browser does not support local storage
-		UserPrefs.on("localStorageException", function(key){
-			$('<div><p>Your browser does not support HTML5 local storage.</p>' + 
-			'<p>The preferences cannot be stored.</p></div>')
-			.appendTo('.ui-page-active')
-			.popup()
-			.popup('open');
-		}); 
-		
+				
 		//iterate on all the combo boxes identifiers and bind the event handler which will generate 
 		//a regExp : "\b(criteria_1,criteria_2,...., criteria_n,[^"]*,[^"]*)
 		//the two last elements are the dataset identifier and the items 

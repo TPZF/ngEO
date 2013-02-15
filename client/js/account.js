@@ -1,10 +1,10 @@
 
-define(["jquery", "configuration", "account/model/dataAccessRequestStatuses", 
+define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "account/view/dataAccessRequestMonitoringView", 
         "account/view/downloadManagersMonitoringView", "account/view/inquiriesView", "account/view/userPrefsView",
         "text!../pages/account.html", "tabs"], 
 
-        function($, Configuration, DataAccessRequestStatuses, DownloadManagers, 
+        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, 
         		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, UserPrefsView, account_html) {
 	
 return {
@@ -78,12 +78,7 @@ return {
 				$("#DARMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>" + 
 						"<p><b> The data access requests cannot be displayed.</p></b></div>");
 
-				$('<div><p>Error : An error occured when loading the download managers for My account.</p>' + 
-						'<p>Please check the server side interface.</p></div>')
-				.appendTo('.ui-page-active')
-				.popup()
-				.popup('open');
-			
+				Logger.error('Cannot retreive the download managers from the server for My account.');			
 			}
 		});
 		

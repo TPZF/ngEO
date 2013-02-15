@@ -62,11 +62,8 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "menubar", "backbone", "jquery.mobile", "panel"] ,
-		function(require, $, Configuration, MenuBar, Backbone) {
-
-/** Console fix	: create a dummy console.log when console is not present. Otherwise it is not working on some browser configuration */
-window.console || (console={log:function(){}});
+require( ["require", "jquery", "configuration", "menubar", "logger", "backbone", "jquery.mobile", "panel"] ,
+		function(require, $, Configuration, MenuBar, Logger, Backbone) {
 
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
@@ -100,11 +97,7 @@ $.when(doc_ready, Configuration.load())
 		
 	})
 	.fail( function() {
-		// Create a pop-up to warn the user
-		$('<div><p>Error : Cannot load configuration</p></div>')
-			.appendTo('#mapContainer')
-			.popup()
-			.popup('open');
+		Logger.error('Cannot load configuration');
 	});
 
 /** When the document is ready, resolve the deferred object */

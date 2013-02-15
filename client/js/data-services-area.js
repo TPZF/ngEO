@@ -1,13 +1,15 @@
 
-define(["jquery", "configuration", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
+define(["jquery", "configuration", "logger", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
-		"text!../pages/data-services-area.html", "context-help", 'jquery.dateRangeSlider'], 
-	function($, Configuration, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
+		"text!../pages/data-services-area.html", "context-help"], 
+	function($, Configuration, Logger, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
-	
+
+
+			
 return {
 
 	/**
@@ -73,11 +75,7 @@ return {
 			
 			//when the dataset selected is not loaded display an error message
 			DatasetSearch.on("datasetNotLoadError", function(datasetId){
-				$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
-						'</p><p>The Search cannot be shared.</p></div>')
-				.appendTo('.ui-page-active')
-				.popup()
-				.popup('open');
+				Logger.error('An error occured when loading the dataset :' + datasetId + '.<br> The search cannot be shared.');
 			});
 		});
 		
@@ -103,11 +101,7 @@ return {
 			
 			//when the dataset selected is not loaded display an error message
 			DatasetSearch.on("datasetNotLoadError", function(datasetId){
-				$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
-						'</p><p>The Standing Order cannot be shared.</p></div>')
-				.appendTo('.ui-page-active')
-				.popup()
-				.popup('open');
+				Logger.error('An error occured when loading the dataset :' + datasetId + '.<br> The standing order cannot be shared.');
 			});
 			
 		});
@@ -145,25 +139,9 @@ return {
 
 		//when the dataset selected is not loaded display an error message
 		DatasetSearch.on("datasetNotLoadError", function(datasetId){
-			$('<div><p>Failure : An error occured when loading the dataset :' + datasetId + '.' +
-					'</p><p>The dataset related criteria cannot be used.</p></div>')
-			.appendTo('.ui-page-active')
-			.popup()
-			.popup('open');
+			Logger.error('An error occured when loading the dataset :' + datasetId + '.');
 		});
-		
-		// Display the time slider in the bottom of the window when 
-		// the useTimeSlider check box is checked unless destroy the widget and hide the timeslider element
-		DatasetSearch.on('change:useTimeSlider', function() {
-			var useTimeSlider = DatasetSearch.get('useTimeSlider');
-			if ( useTimeSlider ) {
-				self.addTimeSlider();
-
-			}else{
-				self.removeTimeSlider();
-			}
-		});
-		
+				
 		
 		// TODO : maybe find a better way for the default handler ?
 		SelectHandler.start();
@@ -179,11 +157,7 @@ return {
 		SearchResults.on('unselectFeatures', Map.unselectFeatures);	
 		//display a pop-up message when the product search has failed
 		SearchResults.on('error:features', function(searchUrl){
-			$('<div><p>Failure : An error occured when retrieving the products with the search url :</p>' + 
-					'<p> ' + searchUrl + '.</p></div>')
-			.appendTo('.ui-page-active')
-			.popup()
-			.popup('open');
+			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
 		});
 		SearchResults.on('startLoading', function() {
 			$.mobile.loading("show");
@@ -192,31 +166,6 @@ return {
 			$.mobile.loading("hide");
 		});
 	},
-	
-	/** add the time slider to the bottom of the map view  and
-	 * move the dataset message up */
-	addTimeSlider : function(){
-		$('#datasetMessage').css('bottom', '70px');
-		$('#timeSlider').addClass('ui-timeSlider-container');
-		
-		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
-		var scaleDate = new Date( DatasetSearch.get("stop").getTime() );
-		scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
-		
-		var startDate = new Date( DatasetSearch.get("stop").getTime() - 31 * 24 * 3600 * 1000 );
-
-		$('#timeSlider').dateRangeSlider({bounds: {min : startDate, max : DatasetSearch.get("stop")},
-										scaleBounds: {min : scaleDate, max : DatasetSearch.get("stop")},
-										defaultValues : {min : startDate, max : DatasetSearch.get("stop")}});
-	},
-	
-	/** remove the time slider from the bottom of the map view  and
-	 * move the dataset message down */
-	removeTimeSlider : function(){
-		$('#timeSlider').dateRangeSlider('destroy');
-		$('#timeSlider').removeClass('ui-timeSlider-container');
-		$('#datasetMessage').css('bottom', '0px');
-	} 
 };
 
 });

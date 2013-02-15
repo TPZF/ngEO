@@ -1,8 +1,8 @@
 /**
  * DatasetSelection Widget module
  */
-define( ["jquery", "backbone", 'search/model/dataSetPopulation', "search/view/datasetSelectionView", 
-          "widget"], function($, Backbone, DataSetPopulation, DataSetSelectionView) {
+define( ["jquery", "backbone", "logger", 'search/model/dataSetPopulation', "search/view/datasetSelectionView", 
+          "widget"], function($, Backbone, Logger, DataSetPopulation, DataSetSelectionView) {
 
 return function(element) {
 		
@@ -34,10 +34,7 @@ return function(element) {
 		// so the application is still usable and the user can still see the other menus.
 		error: function(){
 			$("#dataset").parent().addClass('ui-disabled');
-			$('<div><p>Error : a error occured with DataSetPopulationMatrix interface.</p><p>Please check the server side interface and relaunch the application.</p></div>')
-			.appendTo('.ui-page-active')
-			.popup()
-			.popup('open');
+			Logger.error('Cannot retreive the DataSetPopulationMatrix from the server');
 		}
 	});
 

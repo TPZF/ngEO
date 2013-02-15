@@ -86,12 +86,12 @@ var DataSetSearch = Backbone.Model.extend({
 					var endDate = model.attributes.datasetSearchInfo.endDate;
 					
 					if (!startDate || !endDate) {
-						self.set("start", new Date() ); 
-						self.set("stop", new Date() ); 
+						self.set({start: new Date(),
+							stop: new Date() }); 
 					} else {
 						//update dates/times from dataset dates/times
-						self.set("start", Date.fromISOString(startDate) ); 
-						self.set("stop", Date.fromISOString(endDate) ); 
+						self.set({start: Date.fromISOString(startDate),
+							stop: Date.fromISOString(endDate) }); 
 					}
 					
 					self.trigger('datasetLoaded');
@@ -212,11 +212,11 @@ var DataSetSearch = Backbone.Model.extend({
 			this.set('datasetId',datasetId);
 			query = query.substr( sep+1 );
 		}
-		// Force useExtent to false to avoid bug when setting the geometry
-		this.set('useExtent',false);
 	
 		var vars = query.split("&");
-	    var attributes = {};
+		
+		// Force useExtent to false to avoid bug when setting the geometry
+	    var attributes = { 'useExtent': false };
 		
 	    for (var i = 0; i < vars.length; i++) {
 	        
@@ -231,10 +231,10 @@ var DataSetSearch = Backbone.Model.extend({
 					this.searchArea.setFromWKT(pair[1]);
 					break;
 				case "start" : 
-					this.set({start: Date.fromISOString(pair[1])});
+					attributes['start'] = Date.fromISOString(pair[1]);
 					break;
 				case "stop" : 
-					this.set({stop: Date.fromISOString(pair[1])});
+					attributes['stop'] = Date.fromISOString(pair[1]);
 					break;
 					
 				default :

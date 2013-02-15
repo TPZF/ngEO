@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'text!search/template/dateCriteriaContent.html', 
-         'jqm-datebox-calbox', 'jqm-datebox-datebox'], 
-		function($, Backbone , dateCriteria_template, advancedCriteria_template) {
+define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'text!search/template/dateCriteriaContent.html', 
+         'jqm-datebox-calbox', 'dateRangeSlider'], 
+		function($, Backbone , Configuration, SearchResults, dateCriteria_template) {
 
 	/**
 	 * The backbone model is DatasetSearch
@@ -15,7 +15,6 @@ var TimeExtentView = Backbone.View.extend({
 		this.model.on("change:start", this.update, this);
 		this.model.on("change:stop", this.update, this);
 		this.searchCriteriaView = options.searchCriteriaView;
-		//this.model.on("change:useTimeSlider", function(){this.$el.find("input[type='checkbox']").prop("checked", this.model.get("useTimeSlider"));}, this);
 	},
 	
 	events :{
@@ -37,26 +36,53 @@ var TimeExtentView = Backbone.View.extend({
 		'click #useTimeSliderLabel' : function(event){
 			var $target = $(event.currentTarget);	
 			var checked = $target.hasClass('ui-checkbox-off');
-			//hide the search criteria widget when the time slider is enabled
-			//this is to keep the map visible 
-			if (checked){
-				//set the start date to the time slider start date 
-//				var dateString = this.model.setStartDate(this.model.getSliderStartDate());
-//				$("#fromDateInput").val(dateString);
-//				$("#fromDateInput").trigger('datebox', {'method':'set', 'value': dateString});
+			this.model.set({"useTimeSlider" : checked});
+					
+			// Display the time slider in the bottom of the window when 
+			if ( checked ) {
 				//disable the dates start and stop widgets if the time slider is enabled
 				$("#fromDateInput").datebox("disable");
 				$("#toDateInput").datebox("disable");
 				//disable the submit search button
-				this.searchCriteriaView.searchButton.button('disable');
-				this.searchCriteriaView.$el.ngeowidget('hide');
-			}else{
+				//this.searchCriteriaView.searchButton.button('disable');
+				//hide the search criteria widget when the time slider is enabled
+				//this is to keep the map visible 
+				//this.searchCriteriaView.$el.ngeowidget('hide');
+				
+				var dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
+				
+				var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
+				var scaleDate = new Date( this.model.get("stop").getTime() );
+				scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
+				
+				this.model.set( "start", new Date( this.model.get("stop").getTime() - 31 * 24 * 3600 * 1000 ) );
+
+				var self = this;
+				dateRangeSlider.dateRangeSlider({
+					bounds: { min : this.model.get("start"), 
+						max : this.model.get("stop")
+					},
+					scaleBounds: { min : scaleDate, 
+						max : this.model.get("stop")
+					},
+					change: function(bounds) {
+							self.model.set({ start: bounds.min,
+								stop: bounds.max });
+							SearchResults.launch( self.model.getOpenSearchURL() );
+						}
+					});
+				$('#datasetMessage').css('bottom', dateRangeSlider.outerHeight() + 12);
+			} else {
+			
+				$('#dateRangeSlider').remove();
+				$('#datasetMessage').css('bottom', '0px');
+				
 				//enable the dates start and stop widgets if the time slider is disabled
 				$("#fromDateInput").datebox("enable");
 				$("#toDateInput").datebox("enable");
-				this.searchCriteriaView.searchButton.button('enable');
-			}
-			this.model.set({"useTimeSlider" : checked});
+				//this.searchCriteriaView.searchButton.button('enable');
+			} 
+			
 		}
 		
 	},
