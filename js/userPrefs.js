@@ -1,4 +1,4 @@
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'logger', 'configuration'], function($, Backbone, Logger, Configuration) {
 
 	/** Singleton Model for storing and retrieving user preferences */
 	
@@ -23,11 +23,10 @@ define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configura
 		get : function(key){
 			
 			if (localStorage){				
-				
-				return localStorage.getItem(this.preffix + key);
-				
-			}else{
-				this.trigger("localStorageException");
+				return localStorage.getItem(this.preffix + key);	
+			} else {
+				//notify the user if the browser does not support local storage
+				Logger.warning('Your browser does not support HTML5 local storage.The preferences cannot be stored.');
 			}
 		},
 		

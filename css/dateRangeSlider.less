@@ -1,0 +1,91 @@
+
+#dateRangeSlider {
+	z-index: 1005;
+	bottom: 0px;
+	left: 0px;
+	background: @widget-background-color; 
+	position: absolute;
+	width: 100%;
+}
+
+.dateSlider-container {
+//	margin-top: 5px;
+	margin-left: 30px;
+	margin-right: 30px;
+	overflow: hidden;
+	position: relative;
+}
+
+.dateSlider-bar{
+	background : rgba(45, 120, 245, 0.63);
+	height: 100%;
+	cursor: move;
+	cursor: grab;
+	cursor: -moz-grab;
+	z-index:3;
+	position: absolute;
+	left: 0;
+	width: 60px;
+	top:0;
+}
+
+.dateSlider-scale {
+}
+
+.dateSlider-year {
+	color: white;
+	font-style:normal;
+	font-weight:900;
+	font-size:1.5em;
+	display: inline-block;
+}
+
+.dateSlider-label {
+	position: absolute;
+	background: rgba(45, 120, 245, 0.63);
+	font-size: 0.7em;
+	padding:1px 2px 2px;
+	cursor: move;
+	cursor: grab;
+	cursor: -moz-grab;
+}
+
+
+.dateSlider-yn {
+	width: 59px;
+}
+
+.dateSlider-ybi {
+	width: 60px;
+}
+
+.dateSlider-month {
+	color: white;
+	font-style:normal;
+	display: inline-block;
+	font-size: 0.8em;
+}
+
+.dateSlider-m30 {
+	width: 30px;
+}
+.dateSlider-m31 {
+	width: 31px;
+}
+
+.dateSlider-leftArrow, .dateSlider-rightArrow {
+	width: 24px;
+	height: 24px;
+	margin-top: 4px;
+	cursor: pointer;
+}
+
+.dateSlider-leftArrow {
+	background-image: url('../images/left.png');
+	float: left;
+}
+
+.dateSlider-rightArrow {
+	background-image: url('../images/right.png');
+	float: right;
+}
