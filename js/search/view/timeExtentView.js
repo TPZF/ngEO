@@ -12,9 +12,34 @@ var TimeExtentView = Backbone.View.extend({
 	initialize : function(options){
 		// Refresh the dates and time slider checkbox when the values has been changed on the model 
 		//typically for shared parameters urls
-		this.model.on("change:start", this.update, this);
-		this.model.on("change:stop", this.update, this);
+		this.listenTo( this.model, "change:start", this.update);
+		this.listenTo( this.model, "change:stop", this.update);
 		this.searchCriteriaView = options.searchCriteriaView;
+		
+		/** 
+		 * This handler is called after the user has chosen a dataset, 
+		 * activated the timeslider checkbox and then selected a new dataset.
+		 * It is used to recreate time slider for the dataset.
+		 */
+		this.listenTo( this.model, "datasetLoaded", function(){
+			
+			var useTimeSlider = this.model.get('useTimeSlider');
+			if ( useTimeSlider  ) {
+				this.addTimeSlider();
+			}		
+		});
+		
+		/**
+		 * This handler is called when the dataset has been changed and the time slider is active.
+		 * Remove the time slider because the scale bounds needs to be changed
+		 */
+		this.listenTo( this.model, "change:datasetId", function(){
+			//if the selection has changed and a time slider exists remove it
+			if ($('#dateRangeSlider').length != 0){
+				this.removeTimeSlider();
+			}
+		});
+		
 	},
 	
 	events :{
@@ -49,34 +74,9 @@ var TimeExtentView = Backbone.View.extend({
 				//hide the search criteria widget when the time slider is enabled
 				//this is to keep the map visible 
 				//this.searchCriteriaView.$el.ngeowidget('hide');
-				
-				var dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
-				
-				var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
-				var scaleDate = new Date( this.model.get("stop").getTime() );
-				scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
-				
-				this.model.set( "start", new Date( this.model.get("stop").getTime() - 31 * 24 * 3600 * 1000 ) );
-
-				var self = this;
-				dateRangeSlider.dateRangeSlider({
-					bounds: { min : this.model.get("start"), 
-						max : this.model.get("stop")
-					},
-					scaleBounds: { min : scaleDate, 
-						max : this.model.get("stop")
-					},
-					change: function(bounds) {
-							self.model.set({ start: bounds.min,
-								stop: bounds.max });
-							SearchResults.launch( self.model.getOpenSearchURL() );
-						}
-					});
-				$('#datasetMessage').css('bottom', dateRangeSlider.outerHeight() + 12);
+				this.addTimeSlider();
 			} else {
-			
-				$('#dateRangeSlider').remove();
-				$('#datasetMessage').css('bottom', '0px');
+				this.removeTimeSlider();
 				
 				//enable the dates start and stop widgets if the time slider is disabled
 				$("#fromDateInput").datebox("enable");
@@ -86,6 +86,39 @@ var TimeExtentView = Backbone.View.extend({
 			
 		}
 		
+	},
+	
+	// Add the time slider to the map
+	addTimeSlider: function() {
+		var dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
+		
+		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
+		var scaleDate = new Date( this.model.get("stop").getTime() );
+		scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
+		
+		this.model.set( "start", new Date( this.model.get("stop").getTime() - 31 * 24 * 3600 * 1000 ) );
+
+		var self = this;
+		dateRangeSlider.dateRangeSlider({
+			bounds: { min : this.model.get("start"), 
+				max : this.model.get("stop")
+			},
+			scaleBounds: { min : scaleDate, 
+				max : this.model.get("stop")
+			},
+			change: function(bounds) {
+					self.model.set({ start: bounds.min,
+						stop: bounds.max });
+					SearchResults.launch( self.model.getOpenSearchURL() );
+				}
+			});
+		$('#datasetMessage').css('bottom', dateRangeSlider.outerHeight() + 12);
+	},
+	
+	// Remove the time slider
+	removeTimeSlider: function() {
+		$('#dateRangeSlider').remove();
+		$('#datasetMessage').css('bottom', '0px');
 	},
 	
 	update: function() {

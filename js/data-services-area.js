@@ -41,7 +41,6 @@ return {
 	 */
 	initialize: function(element) {
 			
-		//_.extend(this, Backbone.Events);
 		// Create all widgets
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget.create(element);
@@ -118,23 +117,6 @@ return {
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
 			}
-			
-			//if the selection has changed and a time slider exists remove it
-			if ($('#timeSlider').children().length != 0){
-				self.removeTimeSlider();
-			}
-		});
-		
-		/** This handler shall be called after the user has chosen a dataset, 
-		 * activated the timeslider checkbox and then selected a new dataset.
-		 * It is used to create time slider for the dataset.
-		 */
-		DatasetSearch.on("datasetLoaded", function(){
-			
-			var useTimeSlider = DatasetSearch.get('useTimeSlider');
-			if ( useTimeSlider  ) {
-				self.addTimeSlider();
-			}		
 		});
 
 		//when the dataset selected is not loaded display an error message
