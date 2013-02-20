@@ -118,93 +118,115 @@ var SearchResultsTableView = Backbone.View.extend({
 
 		this._currentLength = 5;
 		
-		var self = this;
-		this.table = this.$el.find("#datatable").dataTable({
-					"sDom" : '<"top"i>rt<"bottom"flp><"clear">',
-					"aaData" : this.model.features,
-					"aoColumns" : columnsDef, 
-					"bDestroy": true,
-					"bAutoWidth": false,
-					"aLengthMenu": [5, 10, 25],
-					"iDisplayLength": this._currentLength,	
-					"bLengthChange" : true,
-					"bPaginate" : true,
-					//"sPaginationType": "full_numbers",
-					"bSort" : true,
-					"fnDrawCallback": function( oSettings ) {
+		// Build basic parameters for dataTables
+		var parameters = {
+			"aaData" : this.model.features,
+			"aoColumns" : columnsDef, 
+			"bDestroy": true,
+			//"bAutoWidth": true,
+			//"sPaginationType": "full_numbers",
+			"bSort" : true,
+			"fnDrawCallback": function( oSettings ) {
 
-						$("#datatable tbody tr").each(function(i, elt){		
-							//avoid the case where the table has not been loaded yet				
-							if ($(elt).text() != "No data available in table"){
-								var rowPos = self.table.fnGetPosition(elt);
-								var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
-								
-								if (self.model.isBrowserSupportedUrl( self.model.features[rowPos])){
-									$(elt).find(selector).addClass("ui-direct-download");
-								}
-							}
-						});
+				$("#datatable tbody tr").each(function(i, elt){		
+					//avoid the case where the table has not been loaded yet				
+					if ($(elt).text() != "No data available in table"){
+						var rowPos = self.table.fnGetPosition(elt);
+						var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
 						
-						// insure that JQM styling is still kept after sorting and pagination
-						$("#datatable_filter input").attr('data-mini','true');
-						$("#datatable_filter label").attr('data-mini','true');
-						
-						$("#datatable_length select").attr({
-							'data-inline': 'true',
-							'data-mini': 'true',
-						});
-						
-						//enable and disable pagination buttons according to pagination status
-						if($("#datatable_next").hasClass('paginate_disabled_next')){
-							$("#datatable_next").addClass('ui-disabled');
+						if (self.model.isBrowserSupportedUrl( self.model.features[rowPos])){
+							$(elt).find(selector).addClass("ui-direct-download");
 						}
-						
-						if($("#datatable_previous").hasClass('paginate_disabled_previous')){
-							$("#datatable_previous").addClass('ui-disabled');
-						}											
-																	
-						self.$el.trigger('create');// to insure that JQM styling is still kept
-						
-						if (oSettings._iDisplayLength != this._currentLength) {
-							self.$el.panel('update');
-						}
-					 },		
-					
+					}
 				});
-	
-		//Style the div of the datatable footer 	
-		$(".bottom").addClass("ui-grid-b");
-		$("#datatable_length").addClass("ui-block-a");
+				
+				// insure that JQM styling is still kept after sorting and pagination
+				$("#datatable_filter input").attr('data-mini','true');
+				$("#datatable_filter label").attr('data-mini','true');
+				
+				if ( Configuration.data.resultsTable.pagination ) {
+					
+					$("#datatable_length select").attr({
+						'data-inline': 'true',
+						'data-mini': 'true',
+					});
+					
+					//enable and disable pagination buttons according to pagination status
+					if($("#datatable_next").hasClass('paginate_disabled_next')){
+						$("#datatable_next").addClass('ui-disabled');
+					}
+					
+					if($("#datatable_previous").hasClass('paginate_disabled_previous')){
+						$("#datatable_previous").addClass('ui-disabled');
+					}
+				}
+															
+				self.$el.trigger('create');// to insure that JQM styling is still kept
+				
+				if (oSettings._iDisplayLength != this._currentLength) {
+					self.$el.panel('update');
+				}
+			 }	
+		};
 		
-		//Add JQM styling for pagination elements
-		$("#datatable_paginate").addClass("ui-block-b");
-		//add JQM styling to the previous button
-		$("#datatable_previous").attr({
-			"data-mini": "true",
-			"data-role": "button",
-			"data-icon": "arrow-l",
-			"data-iconpos": "left",
-			"data-inline": "true"
-		});
-		//add JQM styling to the next button
-		$("#datatable_next").attr({
-			"data-mini": "true",
-			"data-role": "button",
-			"data-icon": "arrow-r",
-			"data-iconpos": "right",
-			"data-inline": "true"
-		});
-		
-		//enable and disable pagination buttons according to pagination status
-		if($("#datatable_next").hasClass('paginate_disabled_next')){
-			$("#datatable_next").addClass('ui-disabled');
+		// Configure dataTables for pagination or not
+		if ( Configuration.data.resultsTable.pagination ) {
+			_.extend(parameters, {
+				"sDom" : '<"top"i>t<"bottom"lpf><"clear">',
+				"aLengthMenu": [5, 10, 25],
+				"iDisplayLength": this._currentLength,	
+				"bLengthChange" : true,
+				"bPaginate" : true
+			});
+		} else {
+			_.extend(parameters, {
+				"sDom" : '<"top"f>t<"clear">',
+				"sScrollY": "200px",
+				"bPaginate": false,
+				"bScrollCollapse": true
+			});
 		}
-		if($("#datatable_previous").hasClass('paginate_disabled_previous')){
-			$("#datatable_previous").addClass('ui-disabled');
+		
+		var self = this;
+		this.table = this.$el.find("#datatable").dataTable(parameters);
+		
+		if ( Configuration.data.resultsTable.pagination ) {
+		
+			//Style the div of the datatable footer 	
+			$(".bottom").addClass("ui-grid-b");
+			$("#datatable_length").addClass("ui-block-a");
+			
+			//Add JQM styling for pagination elements
+			$("#datatable_paginate").addClass("ui-block-b");
+			//add JQM styling to the previous button
+			$("#datatable_previous").attr({
+				"data-mini": "true",
+				"data-role": "button",
+				"data-icon": "arrow-l",
+				"data-iconpos": "left",
+				"data-inline": "true"
+			});
+			//add JQM styling to the next button
+			$("#datatable_next").attr({
+				"data-mini": "true",
+				"data-role": "button",
+				"data-icon": "arrow-r",
+				"data-iconpos": "right",
+				"data-inline": "true"
+			});
+			
+			//enable and disable pagination buttons according to pagination status
+			if($("#datatable_next").hasClass('paginate_disabled_next')){
+				$("#datatable_next").addClass('ui-disabled');
+			}
+			if($("#datatable_previous").hasClass('paginate_disabled_previous')){
+				$("#datatable_previous").addClass('ui-disabled');
+			}
+			
+			//add JQM styling for filter text input
+			$("#datatable_filter").addClass("ui-block-c");
 		}
 		
-		//add JQM styling for filter text input
-		$("#datatable_filter").addClass("ui-block-c");
 		$("#datatable_filter input").attr("data-mini", "true");
 		
 		//add button to the widget footer in order to add items to the shopcart
