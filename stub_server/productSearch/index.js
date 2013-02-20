@@ -10,16 +10,19 @@ var fs = require('fs'),
 	
 //wcsCoveragePaser.parse('./productSearch/sar_coverage.xml');
 
+var featureCollections = {
+};
+
 /*
  * Fill the features with 'good' properties
  */
-var featureCollection = null;
-	fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
+
+fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	var inputFeatureCollection = JSON.parse(data);
-	//featureCollection = eoliParser.parse('./productSearch/dataFromEOLI.txt',inputFeatureCollection);
-	featureCollection = wcsCoveragePaser.parse('./productSearch/sar_coverage.xml',inputFeatureCollection);
+	featureCollections['ND_OPT_1'] = eoliParser.parse('./productSearch/dataFromEOLI.txt',inputFeatureCollection);
+	featureCollections['default'] = wcsCoveragePaser.parse('./productSearch/sar_coverage.xml',inputFeatureCollection);
 });
-	/*
+/*
 module.exports = function(req, res){
 	sleep.sleep(3);
 	res.send(featureCollection);
@@ -28,9 +31,16 @@ module.exports = function(req, res){
 
 //USE THIS CODE TO TEST PAGINATION
 fs.readFile('./productSearch/Response.json', 'utf8', function (err, data) {
-	featureCollection = JSON.parse(data);
+	featureCollections['ATS_TOA_1P']  = JSON.parse(data);
 });
+
 module.exports = function(req, res){
+	var featureCollection;
+	if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ) {
+		featureCollection = featureCollections[req.param('datasetId')];
+	} else {
+		featureCollection = featureCollections['default'];
+	}
 	var count = req.query.count || 10;
 	var startIndex = req.query.startIndex || 1;
 	startIndex = parseInt(startIndex);
