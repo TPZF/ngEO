@@ -142,10 +142,30 @@ return {
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
 		});
 		SearchResults.on('startLoading', function() {
-			$.mobile.loading("show");
+			$('#resultsMessage').html( "Searching..." );
+			
+			// Pulsate animation when searching
+			var fadeOutOptions = {
+				duration: 300,
+				easing: "linear",
+				complete: function() {
+					$(this).animate({opacity:1.0},fadeInOptions);
+				}
+			};
+			var fadeInOptions = {
+				duration: 300,
+				easing: "linear",
+				complete: function() {
+					$(this).animate({opacity:0.2},fadeOutOptions);
+				}
+			};
+			$('#resultsMessage').animate({opacity:0.2},fadeOutOptions);
+			$('#resultsMessage').show();
 		});
-		SearchResults.on('endLoading', function() {
-			$.mobile.loading("hide");
+		SearchResults.on('add:features', function(features) {
+			$('#resultsMessage').stop();
+			$('#resultsMessage').css('opacity',1.0);
+			$('#resultsMessage').html( SearchResults.features.length + " products received." );
 		});
 	},
 };

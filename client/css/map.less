@@ -50,19 +50,35 @@
 	left: 5px;
 }
 
+#statusBar {
+	position: absolute;
+	z-index: 1005;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	font-size: 0.9em;
+	color: white;
+	text-shadow: 0 0 0;
+}
+
 /** 
  * Styling for a message displaying the current dataset selected
  */
 #datasetMessage {
-	position: absolute;
-	z-index: 1005;
-	bottom: 0px;
-	left: 5px;
-	font-size: 0.9em;
 	padding: 7px 7px 7px 7px;
-	.horizontal-gradient( rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.45) 50px, right );
-	color: white;
-	text-shadow: 0 0 0;
+	background: @widget-background-color;
+	float: left;
+	margin-left: 5px;
+	display: inline-block;
+}
+
+/** 
+ * Styling for a message displaying the current dataset selected
+ */
+#resultsMessage {
+	padding: 7px 7px 7px 7px;
 	background: @widget-background-color; 
-	background-clip: padding-box;	
+	float: right;
+	margin-right: 5px;
+	display: inline-block;
 }
