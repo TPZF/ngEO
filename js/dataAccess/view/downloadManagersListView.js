@@ -1,5 +1,6 @@
-define( ['jquery', 'backbone', 'configuration', 'text!dataAccess/template/downloadManagersListContent.html'], 
-		function($, Backbone, Configuration, downloadManagersList_template) {
+define( ['jquery', 'backbone', 'configuration', 'text!dataAccess/template/downloadManagersListContent.html',
+	 'text!dataAccess/template/downloadManagerInstallContent.html'], 
+		function($, Backbone, Configuration, downloadManagersList_template, downloadManagerInstall_template) {
 
 	/**
 	 * This view handles the displaying of download managers and the assignment 
@@ -63,19 +64,12 @@ var DownloadManagersListView = Backbone.View.extend({
 		//if no download manager is already registered : propose a link to the user to install one
 		if (this.model.attributes.downloadmanagers == 0) {
 			
-			this.$el.append(downloadManagersList_template);
-			//empty the status to cover the case where a user has stopped a download manager after it has install it
-			this.$el.find("#downloadManagerStatusMessage")
-				.empty()
-				.append("<p><b>No download manager has been registered.</b></p><p><b>To install a Download Manager click on the following button : </b></p>") 
-				//style the download manager installation link
-				.append("<a data-mini='true' data-inline='true' data-theme='a' data-role='button' href='" +
-												Configuration.data.downloadManager.downloadManagerInstallationLink + "'>" + 
-												"Install Download Manager" +"</a>");
-			this.$el.find("#downloadManagersList").hide();
-			this.$el.find("#downloadManagersFooter").hide();
+			var installContent = _.template(downloadManagerInstall_template, { downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink,
+				downloadmanagers: this.model.get('downloadmanagers')
+			});
+			this.$el.append( installContent );
 					
-		}else{
+		} else {
 			var content = _.template(downloadManagersList_template, this.model.attributes);
 			this.$el.append(content);
 			//empty the status to cover the case where a user has registered a download manager after it has no one installed
@@ -89,7 +83,7 @@ var DownloadManagersListView = Backbone.View.extend({
 			//set the first download manager to be selected by default
 			//console.log(this.$el.find('input[type="radio"]:eq(0)')[0]);
 			var firstDM = $(this.$el.find('input[type="radio"]:eq(0)')[0]);
-			console.log(this.selectedDownloadManager);
+			//console.log(this.selectedDownloadManager);
 			firstDM.prop("checked", true);
 			this.selectedDownloadManager = firstDM.attr("value");
 			//console.log(this.selectedDownloadManager);
