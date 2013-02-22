@@ -1,7 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 'text!account/template/accountDownloadManagersContent.html'], 
-		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_template) {
+define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 'text!account/template/accountDownloadManagersContent.html',
+	 'text!dataAccess/template/downloadManagerInstallContent.html'], 
+		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_template, downloadManagerInstall_template) {
 
 var DownloadManagersMonitoringView = Backbone.View.extend({
 
@@ -134,9 +135,17 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 	
 	render: function(){
 	
-		var content = _.template(downloadManagersMonitoring_template, 
-				_.extend({downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink}, this.model.attributes));
-		this.$el.append(content);
+		// Add HTML to install a download manager
+		var installContent = _.template(downloadManagerInstall_template, { downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink,
+			downloadmanagers: this.model.get('downloadmanagers')
+		});
+		this.$el.append(installContent);
+		
+		// Add HTML for monitoring download managers if there is any
+		if ( this.model.get('downloadmanagers').length > 0 ) {
+			var content = _.template(downloadManagersMonitoring_template, this.model.attributes);
+			this.$el.append(content);
+		}
 		this.$el.trigger('create');		
 
 		$("#dm_server_response").hide();

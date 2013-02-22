@@ -19,7 +19,11 @@
 	},
 	
 	"downloadManager" : {		
-		"downloadManagerInstallationLink" : "http://localhost:3000/ngeo/downloadManager/install.html"
+		"downloadManagerInstallationLink" : {
+			"Windows" : "/ngeo/downloadManagerInstall/ngeo.downloadmanager-0.1-1.winXP.32bit.msi",
+			"Linux" : "/ngeo/downloadManagerInstall/ngeo.downloadmanager-0.1-1.el6.x86_64.tar.gz",
+			"MacOS" : "/ngeo/downloadManagerInstall/ngeo.downloadmanager-0.1-1.macosx10.x86.dmg"
+		}
 	},
 	
 	"dataAccessRequestStatuses" : { 	   
