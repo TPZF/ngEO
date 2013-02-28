@@ -5,6 +5,89 @@ define(
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
+$.fn.dataTableExt.oPagination.four_button = {
+    /*
+     * Function: oPagination.four_button.fnInit
+     * Purpose:  Initalise dom elements required for pagination with a list of the pages
+     * Returns:  -
+     * Inputs:   object:oSettings - dataTables settings object
+     *           node:nPaging - the DIV which contains this pagination control
+     *           function:fnCallbackDraw - draw function which must be called on update
+     */
+    "fnInit": function ( oSettings, nPaging, fnCallbackDraw )
+    {
+		var $first = $('<a id="dataTables_First">First</a>').appendTo(nPaging);
+		var $prev = $('<a id="dataTables_Previous">Previous</a>').appendTo(nPaging);
+		var $next = $('<a id="dataTables_Next">Next</a>').appendTo(nPaging);
+		var $last = $('<a id="dataTables_Last">Last</a>').appendTo(nPaging);
+		
+		$(nPaging).find('a')
+			.attr({
+				"data-mini": "true",
+				"data-role": "button",
+				"data-inline": "true"
+			}).button();
+		
+         
+         $first.click( function () {
+            oSettings.oApi._fnPageChange( oSettings, "first" );
+            fnCallbackDraw( oSettings );
+        } );
+         
+        $prev.click( function() {
+            oSettings.oApi._fnPageChange( oSettings, "previous" );
+            fnCallbackDraw( oSettings );
+        } );
+         
+        $next.click( function() {
+            oSettings.oApi._fnPageChange( oSettings, "next" );
+            fnCallbackDraw( oSettings );
+        } );
+         
+       $last.click( function() {
+            oSettings.oApi._fnPageChange( oSettings, "last" );
+            fnCallbackDraw( oSettings );
+        } );
+   },
+     
+    /*
+     * Function: oPagination.four_button.fnUpdate
+     * Purpose:  Update the list of page buttons shows
+     * Returns:  -
+     * Inputs:   object:oSettings - dataTables settings object
+     *           function:fnCallbackDraw - draw function which must be called on update
+     */
+    "fnUpdate": function ( oSettings, fnCallbackDraw )
+    {
+        if ( !oSettings.aanFeatures.p )
+        {
+            return;
+        }
+         
+		if ( oSettings._iDisplayStart === 0 )
+		{
+			$('#dataTables_First').addClass('ui-disabled');
+			$('#dataTables_Previous').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#dataTables_First').removeClass('ui-disabled');
+			$('#dataTables_Previous').removeClass('ui-disabled');
+		}
+		 
+		if ( oSettings.fnDisplayEnd() == oSettings.fnRecordsDisplay() )
+		{
+			$('#dataTables_Next').addClass('ui-disabled');
+			$('#dataTables_Last').addClass('ui-disabled');
+		}
+		else
+		{
+			$('#dataTables_Next').removeClass('ui-disabled');
+			$('#dataTables_Last').removeClass('ui-disabled');
+		}
+    }
+};
+			
 /**
  * The model is the backbone model SearchResults 
  */
@@ -123,50 +206,13 @@ var SearchResultsTableView = Backbone.View.extend({
 			"aaData" : this.model.features,
 			"aoColumns" : columnsDef, 
 			"bDestroy": true,
-			//"bAutoWidth": true,
-			//"sPaginationType": "full_numbers",
 			"bSort" : true,
-			"fnDrawCallback": function( oSettings ) {
-
-				$("#datatable tbody tr").each(function(i, elt){		
-					//avoid the case where the table has not been loaded yet				
-					if ($(elt).text() != "No data available in table"){
-						var rowPos = self.table.fnGetPosition(elt);
-						var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
-						
-						if (self.model.isBrowserSupportedUrl( self.model.features[rowPos])){
-							$(elt).find(selector).addClass("ui-direct-download");
-						}
-					}
-				});
-				
-				// insure that JQM styling is still kept after sorting and pagination
-				$("#datatable_filter input").attr('data-mini','true');
-				$("#datatable_filter label").attr('data-mini','true');
-				
-				if ( Configuration.data.resultsTable.pagination ) {
-					
-					$("#datatable_length select").attr({
-						'data-inline': 'true',
-						'data-mini': 'true',
-					});
-					
-					//enable and disable pagination buttons according to pagination status
-					if($("#datatable_next").hasClass('paginate_disabled_next')){
-						$("#datatable_next").addClass('ui-disabled');
-					}
-					
-					if($("#datatable_previous").hasClass('paginate_disabled_previous')){
-						$("#datatable_previous").addClass('ui-disabled');
-					}
+			"fnCreatedRow": function( nRow, aData, iDataIndex ) {
+				var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
+				if (self.model.isBrowserSupportedUrl( self.model.features[iDataIndex])){
+					$(nRow).find(selector).addClass("ui-direct-download");
 				}
-															
-				self.$el.trigger('create');// to insure that JQM styling is still kept
-				
-				if (oSettings._iDisplayLength != this._currentLength) {
-					self.$el.panel('update');
-				}
-			 }	
+			}
 		};
 		
 		// Configure dataTables for pagination or not
@@ -176,7 +222,13 @@ var SearchResultsTableView = Backbone.View.extend({
 				"aLengthMenu": [5, 10, 25],
 				"iDisplayLength": this._currentLength,	
 				"bLengthChange" : true,
-				"bPaginate" : true
+				"bPaginate" : true,
+				"sPaginationType": "four_button",
+				"fnDrawCallback": function( oSettings ) {
+					if (oSettings._iDisplayLength != this._currentLength) {
+						self.$el.panel('update');
+					}
+				}	
 			});
 		} else {
 			_.extend(parameters, {
@@ -192,39 +244,16 @@ var SearchResultsTableView = Backbone.View.extend({
 		
 		if ( Configuration.data.resultsTable.pagination ) {
 		
-			//Style the div of the datatable footer 	
+			// Add a grid layout for the dataTables footer	
 			$(".bottom").addClass("ui-grid-b");
 			$("#datatable_length").addClass("ui-block-a");
-			
-			//Add JQM styling for pagination elements
-			$("#datatable_paginate").addClass("ui-block-b");
-			//add JQM styling to the previous button
-			$("#datatable_previous").attr({
-				"data-mini": "true",
-				"data-role": "button",
-				"data-icon": "arrow-l",
-				"data-iconpos": "left",
-				"data-inline": "true"
-			});
-			//add JQM styling to the next button
-			$("#datatable_next").attr({
-				"data-mini": "true",
-				"data-role": "button",
-				"data-icon": "arrow-r",
-				"data-iconpos": "right",
-				"data-inline": "true"
-			});
-			
-			//enable and disable pagination buttons according to pagination status
-			if($("#datatable_next").hasClass('paginate_disabled_next')){
-				$("#datatable_next").addClass('ui-disabled');
-			}
-			if($("#datatable_previous").hasClass('paginate_disabled_previous')){
-				$("#datatable_previous").addClass('ui-disabled');
-			}
-			
-			//add JQM styling for filter text input
+			$(".dataTables_paginate").addClass("ui-block-b");
 			$("#datatable_filter").addClass("ui-block-c");
+			
+			$("#datatable_length select").attr({
+				'data-inline': 'true',
+				'data-mini': 'true',
+			});
 		}
 		
 		$("#datatable_filter input").attr("data-mini", "true");

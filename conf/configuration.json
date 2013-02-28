@@ -1,6 +1,6 @@
 {
 	"resultsTable": {
-		"pagination": false,
+		"pagination": true,
 		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
 						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
 						{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
