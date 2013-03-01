@@ -2,29 +2,29 @@
 	"downloadmanagers" : [
 
 	   {
-	        "downloadmanagerid": "DM_01",
-	        "downloadmanagerfriendlyname": "Magellium Limited Main DM",
-	        "userid" : "esa_user1",
+	        "downloadManagerId": "DM_01",
+	        "downloadManagerFriendlyName": "Magellium Limited Main DM",
+	        "userId" : "esa_user1",
 	        "status": "ACTIVE",
-	        "ipaddress": "dmServer.magellium.fr",
-	        "lastaccessdate": "2001-12-17T09:30:47-05:00"
+	        "ipAddress": "dmServer.magellium.fr",
+	        "lastAccessDate": "2001-12-17T09:30:47-05:00"
 	    },
 	    
 	    {
-	        "downloadmanagerid": "DM_02",
-	        "downloadmanagerfriendlyname": "TPZ Limited Main DM",
-	        "userid" : "tpz_user1",
+	        "downloadManagerId": "DM_02",
+	        "downloadManagerFriendlyName": "TPZ Limited Main DM",
+	        "userId" : "tpz_user1",
 	        "status" : "INACTIVE",
-	        "ipaddress": "dmServer.tpz.fr",
-	        "lastaccessdate" : "2012-11-22T09:30:47-05:00"
+	        "ipAddress": "dmServer.tpz.fr",
+	        "lastAccessDate" : "2012-11-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadmanagerid": "DM_03",
-	        "downloadmanagerfriendlyname": "TPZ Test NGEO DM",
-	        "userid" : "tpz_user2",
+	        "downloadManagerId": "DM_03",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
-	        "ipaddress": "dmServer.tpz.ngeo.fr",
-	        "lastaccessdate" : "2012-12-22T09:30:47-05:00"
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    }
 	]
 } 

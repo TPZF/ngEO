@@ -13,7 +13,7 @@
 		<tbody>
 		<% _.each(downloadmanagers, function(downloadManager, i) { %>
 		
-			<tr id="row_<%= downloadManager.downloadmanagerid %>">
+			<tr id="row_<%= downloadManager.downloadManagerId %>">
 				<% if (downloadManager.status == 'ACTIVE'){ %>
 					<td><span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span></td>
 				<% } else if (downloadManager.status == 'INACTIVE') { %>
@@ -23,12 +23,12 @@
 				<% } else { %>
 					<td><span class="ui-icon-unknown ui-icon ui-shadow">&nbsp;</span></td> 
 				<% } %>
-				<td><%= downloadManager.downloadmanagerfriendlyname %></td>
-				<td><%= downloadManager.downloadmanagerid %></td>
+				<td><%= downloadManager.downloadManagerFriendlyName %></td>
+				<td><%= downloadManager.downloadManagerId %></td>
 				<td><%= downloadManager.status %></td>
-				<td><%= downloadManager.userid %></td>
-				<td><%= downloadManager.ipaddress %></td>
-				<td><%= downloadManager.lastaccessdate %></td>
+				<td><%= downloadManager.userId %></td>
+				<td><%= downloadManager.ipAddress %></td>
+				<td><%= downloadManager.lastAccessDate %></td>
 			</tr>
 		<% }); %>
 		</tbody>

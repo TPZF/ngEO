@@ -10,8 +10,8 @@
 	<fieldset id="downloadManagersList" data-role="controlgroup" data-mini="true">
 	
 		<% _.each(downloadmanagers, function(downloadManager) { %>		     
-			<input id="<%= downloadManager.downloadmanagerid %>_input" type="radio" name="downloadManager" value="<%= downloadManager.downloadmanagerid %>">
-			<label for="<%= downloadManager.downloadmanagerid %>_input" id="<%= downloadManager.downloadmanagerid %>" data-corners="false" data-theme="c"><%= downloadManager.downloadmanagerfriendlyname %></label>
+			<input id="<%= downloadManager.downloadManagerId %>_input" type="radio" name="downloadManager" value="<%= downloadManager.downloadManagerId %>">
+			<label for="<%= downloadManager.downloadManagerId %>_input" id="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></label>
 		<% }); %>	         	
 	
 	</fieldset>
