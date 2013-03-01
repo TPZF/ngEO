@@ -4,6 +4,19 @@
   
 define( ['jquery', 'text!../conf/localConfiguration.json'], function($, localConfiguration) {
 
+/**
+ * Helper function to remove comments from the JSON file
+ */
+var removeComments = function(string)
+{
+	var starCommentRe = new RegExp("/\\\*(.|[\r\n])*?\\\*/", "g");
+	var slashCommentRe = new RegExp("[^:]//.*[\r\n]", "g");
+	string = string.replace(slashCommentRe, "");
+	string = string.replace(starCommentRe, "");
+
+	return string;
+}
+
 var configuration = {
 
 	// The base url to retreive the configuration
@@ -24,6 +37,11 @@ var configuration = {
 		return $.ajax({
 		  url: this.url,
 		  dataType: 'json',
+		  // Remove comments from JSON file
+		  dataFilter: function(data) {
+			var dataWoComments = removeComments(data);
+			return dataWoComments;
+		  },
 		  success: function(data) {
 			configuration.data = data;
 		  },

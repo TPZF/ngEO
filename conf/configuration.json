@@ -1,4 +1,5 @@
 {
+	// Parameters for result table
 	"resultsTable": {
 		"pagination": true,
 		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
@@ -40,8 +41,8 @@
 	
 	"map": {
 	
-		"pp": "EPSG:900913", 
-		"pprojection": "EPSG:3857", 
+		//"projection": "EPSG:900913", 
+		//"projection": "EPSG:3857", 
 		"projection": "EPSG:4326", 
 		
 		"backgroundLayers": [{
@@ -148,13 +149,13 @@
 			"location": "data/earthquake.kml",
 			"visible": false
 		}, {
-			"name": "States (WFS)",
+/*			"name": "States (WFS)",
 			"type": "WFS",
 			"baseUrl": "/demoWFS",
 			"featureType": "states",
 			"featureNS": "http://www.openplans.org/topp",
 			"visible": false
-		}, {
+		}, {*/
 			"name": "EOX SAR WMTS",
 			"type": "WMTS",
 			"baseUrl": "http://ngeo.eox.at/c/wmts/",
