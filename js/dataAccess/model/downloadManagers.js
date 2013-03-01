@@ -24,8 +24,8 @@ var DownloadManagers = Backbone.Model.extend({
 		var name = Configuration.localConfig.downloadManager.undefinedDownloadManagerId;
 		
 		_.each(this.get("downloadmanagers"), function(dm) {
-			if (dm.downloadmanagerid == id){
-				name =  dm.downloadmanagerfriendlyname;
+			if (dm.downloadManagerId == id){
+				name =  dm.downloadManagerFriendlyName;
 			} 
 		 });
 		
@@ -38,7 +38,7 @@ var DownloadManagers = Backbone.Model.extend({
 		var status = null;
 		
 		_.each(this.get("downloadmanagers"), function(dm) {
-			if (dm.downloadmanagerid == id){
+			if (dm.downloadManagerId == id){
 				status =  dm.status;
 			} 
 		 });
@@ -52,7 +52,7 @@ var DownloadManagers = Backbone.Model.extend({
 		var index = null;
 		
 		_.each(this.get("downloadmanagers"), function(dm, i) {
-			if (dm.downloadmanagerid == id){
+			if (dm.downloadManagerId == id){
 				index =  i;
 			} 
 		 });
