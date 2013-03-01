@@ -96,8 +96,8 @@ $.when(doc_ready, Configuration.load())
 		});
 		
 	})
-	.fail( function() {
-		Logger.error('Cannot load configuration');
+	.fail( function(jqXHR, textStatus, errorThrown) {
+		Logger.error('Cannot load configuration : ' + errorThrown);
 	});
 
 /** When the document is ready, resolve the deferred object */
