@@ -1,10 +1,10 @@
 Name:           esa-webclient-ngeo
-Version:        0.4
-Release:        SNAPSHOT20130208
+Version:        0.5
+Release:        SNAPSHOT20130301
 Summary:        The ngEO Web Client
 
 Group:       	NGEO   
-License:     	2012, ESA   
+License:     	2013, ESA   
 BuildArch: 	noarch
 Source0:  	esa-webclient-ngeo.tar.gz
 Requires:  	httpd     
