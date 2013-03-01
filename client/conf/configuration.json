@@ -43,7 +43,26 @@
 	
 		//"projection": "EPSG:900913", 
 		//"projection": "EPSG:3857", 
-		"projection": "EPSG:4326", 
+		"projection": "EPSG:4326",
+		
+		// OpenLayers configuration
+		"openlayers": {
+			"restrictedExtent": [-180,-90,180,90],
+			"transitionEffect": "resize"
+		},
+		
+		// GlobWeb configuration
+		"globweb": {
+			"elevationLayer": {
+				"type": "WCS",
+				"baseUrl": "http://demonstrator.telespazio.com/wcspub", 
+				"coverage": "GTOPO", 
+				"version": "1.0.0"
+			},
+			"tileErrorTreshold": 2,
+			"displayStats": false,
+			"continuousRendering": false
+		},
 		
 		"backgroundLayers": [{
 			"id" : "OSM_Official",
