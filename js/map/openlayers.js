@@ -15,15 +15,32 @@ OpenLayersMapEngine = function( element )
 	// Store element
 	this.element = element;
 	
+	// Retreive restricted extent from configuration
+	var resExtent = Configuration.get('map.openlayers.restrictedExtent',[-180,-90,180,90]);
+	
+	// Get projection
+	var mapProjection = new OpenLayers.Projection( Configuration.get('map.projection',"EPSG:4326") );
+	var displayProjection = new OpenLayers.Projection( "EPSG:4326" );
+	
+	// Transform restricted extent to the map projection
+	var restrictedExtent = new OpenLayers.Bounds(resExtent);
+	restrictedExtent.transform( displayProjection, mapProjection );
+	
+	// Compute the max resolution
+	var maxWRes = (restrictedExtent.right - restrictedExtent.left) / element.offsetWidth;
+	var maxHRes = (restrictedExtent.top - restrictedExtent.bottom) / element.offsetHeight;
+	
 	// Create the map
 	this._map = new OpenLayers.Map(this.element, {
 		controls : [ new OpenLayers.Control.Navigation( { zoomWheelEnabled: true } ),
 					 new OpenLayers.Control.Attribution() ]
-		,projection: new OpenLayers.Projection(Configuration.data.map.projection)
-		,displayProjection: new OpenLayers.Projection("EPSG:4326")
+		,projection: mapProjection
+		,displayProjection: displayProjection
+		,restrictedExtent: restrictedExtent
 		,theme:null
 		,fractionalZoom: true
 		,autoUpdateSize: false
+		,maxResolution: Math.min(maxWRes,maxHRes)
 	});
 	
 	// Create the converter for GeoJSON format
@@ -60,13 +77,22 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 	var olLayer;
 	switch (layer.type.toUpperCase()) {
 	case "OSM":
-		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png");
+		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png", {
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+		});
 		break;
 	case "WMS":
-		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params);
+		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params, {
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+		});
 		break;
 	case "BING":
-		olLayer = new OpenLayers.Layer.Bing({ name: layer.name, key: layer.key, type: layer.imageSet});
+		olLayer = new OpenLayers.Layer.Bing({ 
+			name: layer.name, 
+			key: layer.key, 
+			type: layer.imageSet,
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+		});
 		break;
 	case "WMTS":
 		olLayer = new OpenLayers.Layer.WMTS({
@@ -77,7 +103,8 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			format: layer.params.format,
 			style: layer.params.style,
 			isBaseLayer: true,
-			projection: layer.projection
+			projection: layer.projection,
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
 		});
 		break;
 	}
@@ -341,7 +368,7 @@ OpenLayersMapEngine.prototype.zoomToExtent = function(extent)
 	var bounds = new OpenLayers.Bounds(extent[0], extent[1], extent[2], extent[3]);
 	bounds.transform( this._map.displayProjection, this._map.projection );
 	var center = bounds.getCenterLonLat();
-	this._map.setCenter( center, Math.max(3,this._map.getZoomForExtent(bounds, true)) );
+	this._map.setCenter( center, this._map.getZoomForExtent(bounds, true) ); //Math.max(3,this._map.getZoomForExtent(bounds, true)) );
 }
 
 

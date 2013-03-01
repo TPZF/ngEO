@@ -2,9 +2,9 @@
  * GlobWeb map engine
  */
 
-define( [ "jquery", "map/geojsonconverter", "externs/GlobWeb.min" ],
+define( [ "jquery", "configuration", "map/geojsonconverter", "externs/GlobWeb.min" ],
 
-function($,GeojsonConverter) {
+function($,Configuration,GeojsonConverter) {
 
 /**
  * GlobeWeb Map Engine constructor
@@ -30,14 +30,26 @@ GlobWebMapEngine = function( parentElement )
 	
 		// Create the globe
 		var globe = new GlobWeb.Globe({ canvas: canvas, 
-				tileErrorTreshold: 2, 
-				continuousRendering: false });
+			tileErrorTreshold: Configuration.get('map.globweb.tileErrorTreshold',2), 
+			continuousRendering: Configuration.get('map.globweb.continuousRendering',false) 
+		});
+		
+		var elevationParams = Configuration.get('map.globweb.elevationLayer');
+		if (elevationParams) {
+			var elevationLayer = new GlobWeb.WCSElevationLayer(elevationParams);
+			globe.setBaseElevation( elevationLayer );
+		}
 				
 		// Display some stats
-		/*var stats = document.createElement('div');
-		stats.id = "stats";
-		parentElement.appendChild(stats);
-		new GlobWeb.Stats(globe,{ element: stats, verbose: true });*/
+		if ( Configuration.get('map.globweb.displayStats',false) ) {
+			this.stats = document.createElement('div');
+			this.stats.id = "stats";
+			parentElement.appendChild(this.stats);
+			new GlobWeb.Stats(globe, { 
+				element: this.stats, 
+				verbose: true
+			});
+		}
 		
 		// Create the loading element
 		this.$loading = $('<img src="css/images/ajax-loader.gif" id="loading"></img>')
@@ -388,6 +400,9 @@ GlobWebMapEngine.prototype.destroy = function()
 	this.globe.dispose();
 	
 	this.parentElement.removeChild(this.canvas);
+	if (this.stats) {
+		this.parentElement.removeChild(this.stats);
+	}
 	this.$loading.remove();
 	
 	// Free the object
