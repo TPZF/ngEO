@@ -17,6 +17,26 @@ var removeComments = function(string)
 	return string;
 }
 
+/**
+ * Helper function to get a parameter from the configuration data
+ */
+var _get = function(object,path,defaultValue) {
+	var dotIndex = path.indexOf('.');
+	if ( dotIndex >= 0 ) {
+		var key = path.substr(0,dotIndex);
+		if ( object[key] ) {
+			return _get( object[key], path.substr(dotIndex+1), defaultValue );
+		}
+	} else {
+		var value = object[path];
+		if (value) {
+			return value;
+		}
+	}
+	
+	return defaultValue;
+};
+
 var configuration = {
 
 	// The base url to retreive the configuration
@@ -49,6 +69,11 @@ var configuration = {
 			console.log("Configuration not found " + textStatus + ' ' + errorThrown);
 		  }
 		});
+	},
+	
+	// Get a configuration parameter
+	get: function(path,defaultValue) {
+		return _get(this.data,path,defaultValue);
 	}
 };
 
