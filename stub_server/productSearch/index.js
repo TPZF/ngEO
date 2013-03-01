@@ -4,7 +4,6 @@
  */
 
 var fs = require('fs'),
-	sleep = require('sleep'),
 	wcsCoveragePaser = require('./wcsCoverageParser'),
 	eoliParser = require('./EOLIParser');
 	
@@ -49,6 +48,6 @@ module.exports = function(req, res){
 		type: 'FeatureCollection',
 		features: featureCollection.features.slice(startIndex-1,startIndex-1+count)
 	};
-	sleep.sleep(1);
-	res.send(response);
+	setTimeout( function() { res.send(response); }, 1000 );
+	
 };
