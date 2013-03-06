@@ -290,17 +290,21 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		//add the advanced criteria not set in the model ie not changed by the user
 		//with their default values from the dataset 
-		if (this.dataset.attributes.datasetSearchInfo.attributes){
-			
-			_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
-				
-				if (_.has(self.attributes, attribute.id)){
-					url += '&' + attribute.id + '=' + self.attributes[attribute.id];
+		var advancedAttributes = this.dataset.attributes.datasetSearchInfo.attributes;
+		if (advancedAttributes) {
+					
+			_.each(advancedAttributes, function(attribute){
+
+				// Check if the avanced attribute has a value in the DatasetSearch
+				if ( _.has(self.attributes, attribute.id) ) {
+					// Remove defaults attribute from advanced
+					if ( _.has(DataSetSearch.prototype.defaults, attribute.id) ) {
+						console.log("Advanced criteria warning : " + attribute.id + " is a base attribute.");
+					} else {
+						url += '&' + attribute.id + '=' + self.attributes[attribute.id];
+					}
 				}
-				//default values are not included in the Url
-//				else{
-//					url += '&' + attribute.id + '=' + self.dataset.getDefaultCriterionValue(attribute.id);
-//				}
+				
 			});
 		}
 		

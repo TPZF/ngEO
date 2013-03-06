@@ -97,7 +97,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		if (!browseLayers.hasOwnProperty(feature.id)) {
 	
 			var eo = feature.properties.EarthObservation;
-			if (eo.EarthObservationResult && eo.EarthObservationResult.eop_BrowseInformation) {
+			if (eo.EarthObservationResult && eo.EarthObservationResult.eop_BrowseInformation
+				&& eo.EarthObservationResult.eop_BrowseInformation.eop_url) {
 			
 				var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
 				
@@ -106,17 +107,22 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 					transparent: true
 				};
 				
-				if ( eoBrowse.eop_type == "wms" ) {
+				var type = eoBrowse.eop_type;
+				if (!type) {
+					type = "wmts";
+				}
+				
+				if ( type == "wms" ) {
 					params.layers = eoBrowse.eop_layer;
 					params.styles = "ellipsoid";
-				} else if ( eoBrowse.eop_type == "wmts" ) {
+				} else if ( type == "wmts" ) {
 					params.layer = eoBrowse.eop_layer;
 					params.matrixSet = "WGS84";
 				}
 				
 				var layerDesc = {
 					name: feature.id,
-					type: eoBrowse.eop_type,
+					type: type,
 					visible: true,
 					baseUrl: eoBrowse.eop_url,
 					opacity: Configuration.data.map.browseDisplay.opacity,
