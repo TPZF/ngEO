@@ -2,14 +2,16 @@
 	
 	<li data-role="divider" data-theme="a">Direct Download Links</li>
 	<li>
-		<a href="<%= url %>">Browser Download</a>
+		<a href="<%= url %>" target="_blank">Browser Download</a>
 	</li>
 	<% if (downloadHelperUrl){ %>
-		<li id="downloadHelperUrl"><a>Download Manager Download</a></li>
+		<li>
+			<a id="downloadHelperUrl" href="" class="ui-disabled" target="_blank">Download Manager Download</a>
+		</li>
 	<% } %>	
 </ul>
 
-<div class="popup-widget-footer">
+<div class="popup-widget-footer" style="display:none;">
 	
 	<div id="directDownloadMessage"/>
 
