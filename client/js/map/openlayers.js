@@ -6,6 +6,37 @@ define( [ "configuration", "externs/OpenLayers.ngeo" ],
  
  function(Configuration) {
   
+var _projection = Configuration.get('map.projection',"EPSG:4326");
+  
+/**
+ * Setup the resolution to be used by a WMTS layer using the grid for the given projection
+ */
+var _buildWMTSResolution = function(  ) {
+	if ( _projection == "EPSG:4326" ) {
+		var resolutions = [ 180.0 / 256 ];
+		for ( var i = 0; i < 15; i ++ ) {
+			resolutions.push( resolutions[resolutions.length-1] * 0.5 );
+		}
+		return resolutions;
+	} else {
+		console.log("WMTS : no resolution exists for this projection  : " + _projection);
+		return null;
+	}
+};
+
+/**
+ * Setup WMTS
+ */
+var _setupWMTS = function( config ) {
+	config.serverResolutions = _buildWMTSResolution();
+	if ( _projection == "EPSG:4326" ) {
+		config.tileFullExtent = new OpenLayers.Bounds(-180,-90,180,90);
+		config.tileOrigin = new OpenLayers.LonLat(-180,90);
+	} else {
+		console.log("WMTS : no setup exists for this projection  : " + _projection);
+	}
+}
+
 /**
  * Constructor
  * parentElement : the parent element div for the map
@@ -26,9 +57,18 @@ OpenLayersMapEngine = function( element )
 	var restrictedExtent = new OpenLayers.Bounds(resExtent);
 	restrictedExtent.transform( displayProjection, mapProjection );
 	
+	// Setup the resolution, the same as used for WMTS
+	var resolutions = _buildWMTSResolution();
+	
 	// Compute the max resolution
 	var maxWRes = (restrictedExtent.right - restrictedExtent.left) / element.offsetWidth;
 	var maxHRes = (restrictedExtent.top - restrictedExtent.bottom) / element.offsetHeight;
+	var maxResolution = Math.min(maxWRes,maxHRes)
+	
+	// Modify the resolutions array to be strictly inferior to maxResolution
+	while ( resolutions[0] > maxResolution ) {
+		resolutions.shift();
+	}
 	
 	// Create the map
 	this._map = new OpenLayers.Map(this.element, {
@@ -38,9 +78,11 @@ OpenLayersMapEngine = function( element )
 		,displayProjection: displayProjection
 		,restrictedExtent: restrictedExtent
 		,theme:null
-		,fractionalZoom: true
+		// NEVER USE fractionnal zoom right now, break the WMTS display as overlay
+		//,fractionalZoom: true
 		,autoUpdateSize: false
-		,maxResolution: Math.min(maxWRes,maxHRes)
+		,resolutions : resolutions
+		
 	});
 	
 	// Create the converter for GeoJSON format
@@ -152,9 +194,11 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			format: layer.params.format,
 			style: layer.params.style,
 			isBaseLayer: false,
-			zoomOffset: -1,
 			projection: layer.projection,
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
 		};
+		
+		_setupWMTS(config);
 		
 		// Manage time
 		if ( layer.params.time ) {
@@ -166,7 +210,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 		
 		// Manage bbox
 		if ( layer.bbox ) {
-			config.tileFullExtent = new OpenLayers.Bounds(layer.bbox);
+			config.maxExtent = new OpenLayers.Bounds(layer.bbox);
 		}
 		olLayer = new OpenLayers.Layer.WMTS(config);
 		break;
