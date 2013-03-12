@@ -9,7 +9,7 @@ QUnit.asyncTest("Check Received datasets", 9, function () {
 	model.fetch().done( function() {
 			var datasets = model.attributes.datasets;
 			QUnit.ok($.isArray(datasets),"Datasets retrieved");
-			QUnit.ok(datasets.length == 9 ,"Datasets length 9");
+			QUnit.ok(datasets.length == 10 ,"Datasets length 10");
 			
 			//check the criteria 
 			QUnit.ok(model.attributes.criteria.length == 3,"three criteria found");
