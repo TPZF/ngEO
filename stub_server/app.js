@@ -32,6 +32,7 @@ app.configure(function(){
   app.use('/client-dev',express.static(path.join(__dirname, '../client')));
   app.use('/client-opt',express.static(path.join(__dirname, '../build/output')));
   app.use('/client',express.static(path.join(__dirname, '../webclient')));
+  app.use('/files',express.static(path.join(__dirname, 'files')));
 });
 
 app.configure('development', function(){
