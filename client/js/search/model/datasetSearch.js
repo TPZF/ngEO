@@ -32,29 +32,6 @@ Date.fromISOString = function(str) {
 	} else {
 		throw "Invalid ISO date";
 	}
-	
-/*	var ct = str.split(/\D/);
-	
-	if ( ct.length < 3 )
-		throw "Invalid ISO date";
-		
-	var date = new Date();
-	// Hack to support bad date
-	if ( ct[0].length < ct[2].length ) {
-		var tmp = ct[0];
-		ct[0] = ct[2];
-		ct[2] = tmp;
-	}
-	date.setUTCFullYear(ct[0]);
-	date.setUTCMonth(ct[1]-1);
-	date.setUTCDate(ct[2]);
-	if ( ct.length > 3 ) {
-		date.setUTCHours(ct[3]);
-		date.setUTCMinutes(ct[4]);
-		date.setUTCSeconds(ct[5]);
-		date.setUTCMilliseconds(ct[6]);
-	}
-	return date;*/
 };
 
 // Helper function to convert a date to an iso string, only the date part
@@ -112,14 +89,32 @@ var DataSetSearch = Backbone.Model.extend({
 					var startDate = model.attributes.datasetSearchInfo.startDate;
 					var endDate = model.attributes.datasetSearchInfo.endDate;
 					
+					var start;
+					var stop;
 					if (!startDate || !endDate) {
-						self.set({start: new Date(),
-							stop: new Date() }); 
+						stop = new Date(); // Set it to now
+						start = new Date( stop.getTime() - 31 * 24 * 3600 * 1000 ); // One month before today
 					} else {
 						//update dates/times from dataset dates/times
-						self.set({start: Date.fromISOString(startDate),
-							stop: Date.fromISOString(endDate) }); 
+						start = Date.fromISOString(startDate);
+						stop = Date.fromISOString(endDate);	
 					}
+					
+					// Reset start time
+					start.setUTCHours(0);
+					start.setUTCMinutes(0);
+					start.setUTCSeconds(0);
+					start.setUTCMilliseconds(0);
+					
+					// Reset stop time
+					stop.setUTCHours(23);
+					stop.setUTCMinutes(59);
+					stop.setUTCSeconds(59);
+					stop.setUTCMilliseconds(999);
+					
+					self.set({ start: start,
+							stop: stop
+						}); 
 					
 					self.trigger('datasetLoaded');
 					

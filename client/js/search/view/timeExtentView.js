@@ -92,14 +92,24 @@ var TimeExtentView = Backbone.View.extend({
 	addTimeSlider: function() {
 		var dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
 		
+		// Compute the range for the full time slider scale
 		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
 		var scaleDate = new Date( this.model.get("stop").getTime() );
 		scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
 		
-		this.model.set( "start", new Date( this.model.get("stop").getTime() - 31 * 24 * 3600 * 1000 ) );
+		// Compute the range for time slider to begin, max to 1 month before the stop date
+		// Reset the time to 0 to have the full day in the range
+		var start = new Date( this.model.get("stop").getTime() - Configuration.localConfig.timeSlider.startRangeWidthInDays * 24 * 3600 * 1000 );
+		start.setUTCHours(0);
+		start.setUTCMinutes(0);
+		start.setUTCSeconds(0);
+		start.setUTCMilliseconds(0);
+		this.model.set( "start", start );
 
 		var self = this;
 		dateRangeSlider.dateRangeSlider({
+			boundsMaxLength: Configuration.localConfig.timeSlider.boundsMaxLength,
+			boundsMinLength: Configuration.localConfig.timeSlider.boundsMinLength,
 			bounds: { min : this.model.get("start"), 
 				max : this.model.get("stop")
 			},

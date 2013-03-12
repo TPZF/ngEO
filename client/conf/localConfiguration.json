@@ -93,7 +93,10 @@
 			},
 			
 			"timeSlider" : {
-				"scaleYearsWidth" : "30"
+				"scaleYearsWidth" : 30,
+				"startRangeWidthInDays": 60,
+				"boundsMaxLength" : 365,
+				"boundsMinLength": 7
 			},
 			
 			"userPrefs": {
