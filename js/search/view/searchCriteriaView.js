@@ -1,10 +1,10 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
          'text!search/template/searchCriteriaContent_template.html', "tabs"], 
-		function($, Backbone, Configuration, SearchResults, SpatialExtentView, TimeExtentView, 
+		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
 				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget,
 				 searchCriteria_template) {
 
@@ -98,22 +98,12 @@ var SearchCriteriaView = Backbone.View.extend({
 			var standingOrderWidget = new StandingOrderWidget();
 			standingOrderWidget.open();
 		});
-		
+				
 		this.searchUrlButton.click( function() {
 			// Set the openSearch url
 			var url = Configuration.serverHostName + self.model.getOpenSearchURL();
-			$("#popupText").val( Configuration.serverHostName + self.model.getOpenSearchURL() );	
-			$('#openSearchUrlPopup')
-				.bind({
-					popupafterclose: function(event, ui) {
-						var newUrl = $("#popupText").val();
-						if ( newUrl != url ) {
-							self.model.populateModelfromURL( newUrl );
-						}
-					}
-				})
-				.popup("open")
-				.trigger('create');
+			$("#popupText").val( url );	
+			$('#openSearchUrlPopup').popup("open");
 		});	
 		
 		//add share button to share search criteria widget
@@ -164,6 +154,21 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		// Remove class added by jQM
 		this.$el.find("#tabs").find("a").removeClass('ui-link');
+		
+		// Bind the popupafterclose event on the SearchURL popup
+		// Must be called after this.$el.trigger('create'); to have the popup created.
+		$('#openSearchUrlPopup').bind("popupafterclose", function(event, ui) {
+				var newUrl = $("#popupText").val();
+				var prevUrl = Configuration.serverHostName + self.model.getOpenSearchURL();
+				if ( newUrl != prevUrl ) {
+					try {
+						self.model.populateModelfromURL( newUrl );
+					} catch (err) {
+						Logger.error(err);
+					}
+				}
+			}
+		);
 		
 		// Disable all button if no dataset
 		if ( !this.model.get("datasetId") ) {

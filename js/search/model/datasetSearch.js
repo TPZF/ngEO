@@ -10,7 +10,34 @@ function pad(num, size) {
 
 // Helper function to convert a string in ISO format to date
 Date.fromISOString = function(str) {
-	var ct = str.split(/\D/);
+
+	var reDate = /(\d+)-(\d+)-(\d+)(?:T(\d+):(\d+)(?::(\d+)(?:.(\d+))?)?Z)?/;
+	var match = reDate.exec(str);
+	if ( match ) {
+		// Hack to support bad date
+		if ( match[1].length < match[3].length ) {
+			var tmp = match[1];
+			match[1] = match[3];
+			match[3] = tmp;
+		}
+		var date = new Date();
+		date.setUTCFullYear(match[1]);
+		date.setUTCMonth(match[2]-1);
+		date.setUTCDate(match[3]);
+		date.setUTCHours(match[4] || 0);
+		date.setUTCMinutes(match[5] || 0);
+		date.setUTCSeconds(match[6] || 0);
+		date.setUTCMilliseconds(match[7] || 0);
+		return date;
+	} else {
+		throw "Invalid ISO date";
+	}
+	
+/*	var ct = str.split(/\D/);
+	
+	if ( ct.length < 3 )
+		throw "Invalid ISO date";
+		
 	var date = new Date();
 	// Hack to support bad date
 	if ( ct[0].length < ct[2].length ) {
@@ -27,7 +54,7 @@ Date.fromISOString = function(str) {
 		date.setUTCSeconds(ct[5]);
 		date.setUTCMilliseconds(ct[6]);
 	}
-	return date;
+	return date;*/
 };
 
 // Helper function to convert a date to an iso string, only the date part
@@ -209,6 +236,7 @@ var DataSetSearch = Backbone.Model.extend({
 		if ( query.match(/^http/) ) {
 			var sep = query.indexOf('?');
 			var datasetId = query.slice( query.lastIndexOf('/')+1, sep );
+			// TODO : check the datasetId ?
 			this.set('datasetId',datasetId);
 			query = query.substr( sep+1 );
 		}
@@ -221,20 +249,33 @@ var DataSetSearch = Backbone.Model.extend({
 	    for (var i = 0; i < vars.length; i++) {
 	        
 	    	var pair = vars[i].split("=");
+			if (pair.length != 2) 
+				throw "Invalid OpenSearch URL : parameter " + vars[i] + "not correctly defined."
 	    		
 			switch (pair[0]) {
 				case "bbox": 
 					var coords = pair[1].split(",");
+					if ( coords.length != 4 )
+						throw "Invalid OpenSearch URL : bbox parameter is not correct."
 					this.searchArea.setBBox({west : coords[0],south : coords[1],east : coords[2],north: coords[3]});
 					break;
 				case "g":
+					// TODO : check polygon is correct
 					this.searchArea.setFromWKT(pair[1]);
 					break;
 				case "start" : 
-					attributes['start'] = Date.fromISOString(pair[1]);
+					try {
+						attributes['start'] = Date.fromISOString(pair[1]);
+					} catch (err) {
+						throw "Invalid OpenSearch URL : start parameter is not correct."
+					}
 					break;
 				case "stop" : 
+					try {
 					attributes['stop'] = Date.fromISOString(pair[1]);
+					} catch (err) {
+						throw "Invalid OpenSearch URL : stop parameter is not correct."
+					}
 					break;
 					
 				default :
