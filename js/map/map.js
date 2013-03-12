@@ -97,11 +97,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		if (!browseLayers.hasOwnProperty(feature.id)) {
 	
 			var eo = feature.properties.EarthObservation;
-			if (eo.EarthObservationResult && eo.EarthObservationResult.eop_BrowseInformation
-				&& eo.EarthObservationResult.eop_BrowseInformation.eop_url) {
-			
-				var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
-				
+			if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return;
+			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
+			if (eoBrowse) {
+							
 				var params = {
 					time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
 					transparent: true
@@ -116,7 +115,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 					params.layers = eoBrowse.eop_layer;
 					params.styles = "ellipsoid";
 				} else if ( type == "wmts" ) {
-					params.layer = eoBrowse.eop_layer;
+					params.layer = eoBrowse.eop_layer || "TEST_SAR";
 					params.matrixSet = "WGS84";
 				}
 				
@@ -124,7 +123,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 					name: feature.id,
 					type: type,
 					visible: true,
-					baseUrl: eoBrowse.eop_url,
+					baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
 					opacity: Configuration.data.map.browseDisplay.opacity,
 					params: params,
 					bbox: feature.bbox
