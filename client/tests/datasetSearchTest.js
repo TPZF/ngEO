@@ -3,6 +3,22 @@ define(['jquery','search/model/datasetSearch'], function ($, DatasetSearch) {
 // Define the QUnit module and lifecycle.
 QUnit.module("DatasetSearch");
 
+// Check fromISOString
+QUnit.test("Check fromISOString", function () {
+	var s1 = "2002-11-30";
+	var d1 = Date.fromISOString(s1);
+	QUnit.equal( d1.toISOString(), s1+"T00:00:00.000Z", "date equal without time" );
+	var s2 = "2012-01-31T18:54:00.000Z";
+	var d2 = Date.fromISOString(s2);
+	QUnit.equal( d2.toISOString(), s2, "date equal with time" );
+	var s3 = "2012-01-31T18:54Z";
+	var d3 = Date.fromISOString(s3);
+	QUnit.equal( d3.toISOString(), s2, "date equal with time, without second" );
+	var s4 = "2012-01-31T18:54:11Z";
+	var d4 = Date.fromISOString(s4);
+	QUnit.equal( d4.toISOString(), "2012-01-31T18:54:11.000Z", "date equal with time, without millisecond" );
+});
+
 // Check from URL with bbox
 QUnit.test("Check dataset search from URL with bbox", function () {
 
