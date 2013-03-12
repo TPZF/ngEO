@@ -73,7 +73,7 @@ var configuration = {
 	
 	// Get a configuration parameter
 	get: function(path,defaultValue) {
-		return _get(this.data,path,defaultValue);
+		return this.data ? _get(this.data,path,defaultValue) : defaultValue;
 	}
 };
 
