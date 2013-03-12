@@ -112,7 +112,11 @@ $.widget( "ui.dateRangeSlider", {
 		this.minDate.setUTCFullYear(startYear);
 		this.minDate.setUTCMonth(0);
 		this.minDate.setUTCDate(1);
-		
+		this.minDate.setUTCHours(0);
+		this.minDate.setUTCMinutes(0);
+		this.minDate.setUTCSeconds(0);
+		this.minDate.setUTCMilliseconds(0);
+	
 		var maxDate = new Date();
 		maxDate.setUTCFullYear(endYear);
 		maxDate.setUTCMonth(12);
@@ -186,13 +190,13 @@ $.widget( "ui.dateRangeSlider", {
 	_computeCurrentDate: function() {
 		return {
 			min: new Date( this.minDate.getTime() + this.dragLeftDays * 86400000 ),
-			max: new Date( this.minDate.getTime() + this.dragRightDays * 86400000 )
+			max: new Date( this.minDate.getTime() + this.dragRightDays * 86400000 + (3600 * 1000 * 24 - 1) )
 		};
 	},
 	
 	// Format a date
 	_formatDate: function(date) {
-		return date.getDate() + "-" + monthArray[date.getMonth()] + "-" + date.getFullYear();
+		return date.getUTCDate() + "-" + monthArray[date.getUTCMonth()] + "-" + date.getUTCFullYear();
 	},
 			
 	// Update date labels
