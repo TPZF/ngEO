@@ -93,7 +93,7 @@ var SearchResults = {
 		
 		for ( var i = 0; i < features.length; i++ ) {
 			eor = features[i].properties.EarthObservation.EarthObservationResult;
-			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
+			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" ) {
 				productUrls.push(eor.eop_ProductInformation.eop_filename);
 			} 
 		}
