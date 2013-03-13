@@ -44,7 +44,7 @@ var BoxView = Backbone.View.extend({
 		},
 				
 		//blur insure that values has been manually changed by the user
-		'blur #bbox input' : function(event){
+		'blur input' : function(event){
 			this.model.searchArea.setBBox({
 				west : $("#west").val(),
 				south: $("#south").val(),
@@ -60,17 +60,9 @@ var BoxView = Backbone.View.extend({
 			var useExtent = !($(event.currentTarget).hasClass('ui-checkbox-on'));
 			this.model.set({"useExtent" : useExtent}, { silent: true });
 			if ( useExtent ) {
-				this.synchronizeWithMapExtent();
-				Map.on("endNavigation", this.synchronizeWithMapExtent, this);
-				if (this.parentView.searchAreaLayer) {
-					Map.removeLayer(this.parentView.searchAreaLayer);
-				}
+				this.activateUseExtent();
 			} else {
-				Map.off("endNavigation", this.synchronizeWithMapExtent, this);
-				if (this.parentView.searchAreaLayer) {
-					Map.addLayer(this.parentView.searchAreaLayer);
-				}
-				this.parentView.updateSearchAreaLayer();
+				this.deactivateUseExtent();
 			}
 		},
 
@@ -95,15 +87,29 @@ var BoxView = Backbone.View.extend({
 		}
 	},
 	
+	activateUseExtent: function() {
+		Map.on("endNavigation", this.synchronizeWithMapExtent, this);
+		this.synchronizeWithMapExtent();
+		// Remove the search area layer when using extent
+		if (this.parentView.searchAreaLayer) {
+			Map.removeLayer(this.parentView.searchAreaLayer);
+		}
+		this.$el.find("input").addClass( "ui-disabled" );
+	},
+	
+	deactivateUseExtent: function() {
+		Map.off("endNavigation", this.synchronizeWithMapExtent, this);
+		if (this.parentView.searchAreaLayer) {
+			Map.addLayer(this.parentView.searchAreaLayer);
+		}
+		this.parentView.updateSearchAreaLayer();
+		this.$el.find("input").removeClass( "ui-disabled" );
+	},
+
 	// Open the view
 	open: function() {
 		if (this.model.get("useExtent")) {
-			Map.on("endNavigation", this.synchronizeWithMapExtent, this);
-			this.synchronizeWithMapExtent();
-			// Remove the search area layer when using extent
-			if (this.parentView.searchAreaLayer) {
-				Map.removeLayer(this.parentView.searchAreaLayer);
-			}
+			this.activateUseExtent();
 		} else {
 			this.model.searchArea.setBBox({
 				west : $("#west").val(),
@@ -120,10 +126,7 @@ var BoxView = Backbone.View.extend({
 	close: function() {
 		// Stop listening to map extent
 		if ( this.model.get("useExtent") ) {
-			Map.off("endNavigation", this.synchronizeWithMapExtent, this);
-			if (this.parentView.searchAreaLayer) {
-				Map.addLayer(this.parentView.searchAreaLayer);
-			}
+			this.deactivateUseExtent();
 		}
 		this.$el.hide();
 	},
