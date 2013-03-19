@@ -148,16 +148,6 @@ var StandingOrderDataAccessRequest = {
 				break;
 				
 			default :
-//					//set the parameters if there are advanced attributes, download options or attributes of the model
-//					//skip any other parameter
-//					if (_.has(DatasetSearch.dataset.attributes.datasetSearchInfo.attributes, pair[0]) ||
-//							_.has(DatasetSearch.dataset.attributes.datasetSearchInfo.downloadOptions, pair[0]) ||
-//							_.has(DatasetSearch.attributes, pair[0])){ 
-//						
-//						attributes[pair[0]] = pair[1];
-//						//console.log("attributes"); 
-//						//console.log(attributes);
-//					}
 				break;
 	    	}
 	    }

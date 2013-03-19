@@ -11,7 +11,7 @@
 	
 	<!-- if the selected dataset has no advanced criteria display an information message to the user -->
 	
-	<% if (dataset.attributes.datasetSearchInfo.attributes.length == 0 ) { %>
+	<% if (dataset.get("attributes").length == 0 ) { %>
 		<div id="advancedCriteriaMessage" class="widget-content ui-body-c">
 			<p><b>The selected dataset : <%=dataset.attributes.id %> </b></p>
 			<p><b>Does not have advanced criteria </b></p>
@@ -22,7 +22,7 @@
 	<!-- 	display search criteria -->
 		<form>			
 
-		<% _.each(dataset.attributes.datasetSearchInfo.attributes, function(criterion, i) { %>		
+		<% _.each(dataset.get("attributes"), function(criterion, i) { %>		
 		
 			   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes  -->
 				<% if (criterion.type == 'enumeration') { %> 
