@@ -33,7 +33,7 @@ fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, d
 var timeInsideFeature = function(feature,start,stop) {
 	var startFeature = feature.properties.EarthObservation.gml_beginPosition;
 	var stopFeature = feature.properties.EarthObservation.gml_endPosition;
-	console.log(startFeature + ' ' + stopFeature);
+	//console.log(startFeature + ' ' + stopFeature);
 	
 	if ( stopFeature < start )
 		return false;
@@ -44,8 +44,8 @@ var timeInsideFeature = function(feature,start,stop) {
 };
 
 var sortBytTime = function(a,b) {
-	var starta = a.properties.EarthObservation.gml_beginPosition;
-	var startb = b.properties.EarthObservation.gml_beginPosition;
+	var starta = new Date(a.properties.EarthObservation.gml_beginPosition);
+	var startb = new Date(b.properties.EarthObservation.gml_beginPosition);
 	return starta < startb;
 };
 
@@ -96,7 +96,7 @@ module.exports = function(req, res){
 		}
 	}
 	
-	filterFeatures.sort( sortBytTime );
+	filterFeatures = filterFeatures.sort( sortBytTime );
 	
 	var count = req.query.count || 10;
 	var startIndex = req.query.startIndex || 1;
