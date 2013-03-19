@@ -86,8 +86,8 @@ var DataSetSearch = Backbone.Model.extend({
 				
 				success: function(model, response, options) {
 					
-					var startDate = model.attributes.datasetSearchInfo.startDate;
-					var endDate = model.attributes.datasetSearchInfo.endDate;
+					var startDate = model.get('startDate');
+					var endDate = model.get('endDate');
 					
 					var start;
 					var stop;
@@ -146,19 +146,19 @@ var DataSetSearch = Backbone.Model.extend({
 		if (this.dataset){
 			
 			//remove selected search criteria
-			if (this.dataset.attributes.datasetSearchInfo.attributes){			
-				_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(attribute){
+			if (this.dataset.get('attributes')){			
+				_.each(this.dataset.get('attributes'), function(attribute){
 					if (_.has(self.attributes, attribute.id)){
 						self.unset(attribute.id, {silent: true});
 					}				
 				});
 			}
 			//remove selected download options
-			if (this.dataset.attributes.datasetSearchInfo.downloadOptions){			
+			if (this.dataset.get('downloadOptions')){			
 				//reset the useDownloadOptions flag
 				this.set({useDownloadOptions : false});
 				
-				_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+				_.each(this.dataset.get('downloadOptions'), function(option){
 					if (_.has(self.attributes, option.argumentName)){
 						self.unset(option.argumentName, {silent: true});
 					}				
@@ -281,14 +281,14 @@ var DataSetSearch = Backbone.Model.extend({
 					} else {
 						//set the parameters if there are advanced attributes, download options or attributes of the model
 						//skip any other parameter
-						_.each(this.dataset.attributes.datasetSearchInfo.attributes, function(criterion){
+						_.each(this.dataset.get('attributes'), function(criterion){
 							if (criterion.id == pair[0]){
 								console.log("set criterion " + criterion.id + "====" + pair[1]);
 								attributes[pair[0]] = pair[1];
 							}
 						});
 					
-						_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+						_.each(this.dataset.get('downloadOptions'), function(option){
 							if (option.argumentName == pair[0]){
 								console.log("set option " + option.argumentName + "====" + pair[1]);
 								attributes[pair[0]] = pair[1];
@@ -326,7 +326,7 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		//add the advanced criteria not set in the model ie not changed by the user
 		//with their default values from the dataset 
-		var advancedAttributes = this.dataset.attributes.datasetSearchInfo.attributes;
+		var advancedAttributes = this.dataset.get('attributes');
 		if (advancedAttributes) {
 					
 			_.each(advancedAttributes, function(attribute){
@@ -354,9 +354,9 @@ var DataSetSearch = Backbone.Model.extend({
 		var self = this;
 		//add the selected download options to the opensearch url
 			
-		if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
+		if (this.dataset.get('downloadOptions')) {
 			
-			_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
+			_.each(this.dataset.get('downloadOptions'), function(option){
 				
 				if (_.has(self.attributes, option.argumentName)){
 					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
@@ -382,11 +382,11 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		//add the options set to the model ie changed by the user with the selected value
 		//add options not set in the model ie not changed by the user with their default values from the dataset 
-		if (this.dataset.attributes.datasetSearchInfo.downloadOptions){
+		if ( this.dataset.get('downloadOptions') ){
 			
-			_.each(this.dataset.attributes.datasetSearchInfo.downloadOptions, function(option){
-				console.log("option" + option);
-				console.log("option.argumentName : " + option.argumentName);
+			_.each( this.dataset.get('downloadOptions'), function(option){
+				//console.log("option" + option);
+				//console.log("option.argumentName : " + option.argumentName);
 				
 				if (_.has(self.attributes, option.argumentName)){
 					selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;

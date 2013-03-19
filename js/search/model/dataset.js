@@ -1,16 +1,46 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 var Dataset = Backbone.Model.extend({
-//	datasetSearchInfo attribute does include {datasetId : "", description : "", keywords : [], downloadOptions : [], attributes : [] }
+
+	//	Dataset attributes
 	defaults :{
-		datasetSearchInfo : {},
-		datasetId : "" //the datasetId shall correspond to datasetSearchInfo.datasetId received from the server	
+		description : "",
+		keywords: null,
+		downloadOptions: null,
+		attributes: null,
+		datasetId : "",
+		startDate: null,
+		endDate: null
 	},
 	
-	// Constructor : initialize the url from the configuration
+	/** Constructor : initialize the url from the configuration */
 	initialize : function () {
 		// The base url to retreive the dataset Search Info
 		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
+	},
+	
+	/** Parse the response from server */
+	parse: function(response,options) {
+		var resp = {};
+		if ( response.datasetSearchInfo  ) {
+			resp.description = response.datasetSearchInfo.description;
+			if ( _.isArray(response.datasetSearchInfo.downloadOptions) ) {
+				// TODO : check the content?
+				resp.downloadOptions = response.datasetSearchInfo.downloadOptions;
+			}
+			if ( _.isArray(response.datasetSearchInfo.attributes) ) {
+				// TODO : check the content?
+				resp.attributes = response.datasetSearchInfo.attributes;
+			}
+			if ( _.isArray(response.datasetSearchInfo.keywords) ) {
+				// TODO : check the keywords?
+				resp.keywords = response.datasetSearchInfo.keywords;
+			}
+			
+			resp.startDate = response.datasetSearchInfo.startDate;
+			resp.endDate = response.datasetSearchInfo.endDate;
+		}
+		return resp;
 	},
 	
 	/** Get the default criterion value according to its type or number of allowed selected elements */
@@ -19,7 +49,7 @@ var Dataset = Backbone.Model.extend({
 		var attribute;
 		var criterionValue;
 		
-		_.each(this.attributes.datasetSearchInfo.attributes, function(criterion){
+		_.each(this.get('attributes'), function(criterion){
 			if (criterion.id == criterionId) attribute = criterion;
 		});
 
@@ -43,7 +73,7 @@ var Dataset = Backbone.Model.extend({
 		
 		var value;
 		
-		_.each(this.attributes.datasetSearchInfo.downloadOptions, function(option){
+		_.each(this.get('downloadOptions'), function(option){
 			if (option.argumentName == optionName){
 				value = option.values[0].name;
 			}
