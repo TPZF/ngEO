@@ -46,7 +46,7 @@ var timeInsideFeature = function(feature,start,stop) {
 var sortBytTime = function(a,b) {
 	var starta = new Date(a.properties.EarthObservation.gml_beginPosition);
 	var startb = new Date(b.properties.EarthObservation.gml_beginPosition);
-	return starta < startb;
+	return startb - starta;
 };
 
 var contains = function(g1,g2) {
@@ -96,7 +96,7 @@ module.exports = function(req, res){
 		}
 	}
 	
-	filterFeatures = filterFeatures.sort( sortBytTime );
+	filterFeatures.sort( sortBytTime );
 	
 	var count = req.query.count || 10;
 	var startIndex = req.query.startIndex || 1;

@@ -18,7 +18,7 @@
         ],
         "downloadOptions": [
             {
-                "argumentName": "ProductFormat_ND_SAR_1",
+                "argumentName": "productFormat",
                 "description": "desired download format",
                 "values": [
                     {
@@ -29,7 +29,7 @@
                 ]
             },
             {
-                "argumentName": "Download mode_ND_SAR_1",
+                "argumentName": "downloadMode",
                 "description": "wait until completion or download continuously",
                 "values": [
                     {

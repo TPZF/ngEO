@@ -18,8 +18,8 @@
         ],
         "downloadOptions": [
             {
-                "argumentName": "ProductFormat",
-                "description": "desired download format",
+                "argumentName": "productFormat",
+                "description": "Desired download format",
                 "values": [
                     {
                         "name": "GeoTIFF",
@@ -29,8 +29,8 @@
                 ]
             },
             {
-                "argumentName": "Download mode",
-                "description": "wait until completion or download continuously",
+                "argumentName": "downloadMode",
+                "description": "Download mode",
                 "values": [
                     {
                         "name": "DLcomplete",
