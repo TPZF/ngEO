@@ -70,8 +70,6 @@ var DataAccessRequest = {
 						  if (self.step == 0 && self.id == "" &&  self.requestStage == statusesConfig.validationRequestStage) {
 							  self.step = 1;
 							  self.id = data.DataAccessRequestStatus.ID;
-							  //store the first request 
-							  self.keepFirstRequestMembers();
 							  self.requestStage = statusesConfig.confirmationRequestStage;
 							  self.serverResponse = "<p>" + validStatusesConfig.validatedStatus.message + "<p>";
 							  
@@ -90,8 +88,6 @@ var DataAccessRequest = {
 						  if (self.step == 0 && self.requestStage == statusesConfig.validationRequestStage) {
 							  self.step = 1;
 							  self.id = data.DataAccessRequestStatus.ID;
-							  //store the first request 
-							  self.keepFirstRequestMembers();
 							  //Bulk order is considered add the createBulkOrder
 							  self.createBulkOrder = true;
 							  self.requestStage = statusesConfig.confirmationRequestStage;
