@@ -20,37 +20,33 @@ var SimpleDataAccessRequest = {
 		
 		this.rejectedProductsNB = 0;
 		this.productURLs = [];
-		this.firstRequest = {SimpleDataAccessRequest : {
-								requestStage :  "",
-								downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""},
-								productURLs : []
-								}
-							};
 	},
 	
 	/** get the current request to submit */
-	getRequest : function() {	
-		
-		if (this.createBulkOrder){
-			
-			return {
+	getRequest : function() {
+
+		// The JSON to send to the server
+		var request = {
 				SimpleDataAccessRequest : {
 					requestStage :  this.requestStage,
-					createBulkOrder: true,
 					downloadLocation : this.downloadLocation, 
-					productURLs : this.productURLs
+					productURLs : []
 				}
 			};
+		
+		// Add create bulk order if needed
+		if (this.createBulkOrder){
+			request.SimpleDataAccessRequest.createBulkOrder =  true;
 		}
 		
-		return {
-			SimpleDataAccessRequest : {
-				requestStage :  this.requestStage,
-				downloadLocation : this.downloadLocation, 
-				productURLs : this.productURLs
-			}
-		};
+		// Transform product URLs
+		for ( var i = 0; i < this.productURLs.length; i++ ) {
+			request.SimpleDataAccessRequest.productURLs.push({
+				productURL: this.productURLs[i]
+			});
+		}
 		
+		return request;	
 	},
 		
 	/** get message the display when a simple DAT creation is triggered */
@@ -94,18 +90,6 @@ var SimpleDataAccessRequest = {
 			this.trigger('RequestNotValidEvent');
 			return false;
 		}
-
-		//second stage submission with and without bulk order if the user changes the download manager 
-		if (this.step == 1 &&
-			this.id != "" &&
-			this.requestStage == dataAccessConfig.confirmationRequestStage &&
-		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId != 
-		    	this.downloadLocation.DownloadManagerId)) {
-			
-				this.serverResponse = dataAccessConfig.invalidConfirmationRequest;
-				this.trigger('RequestNotValidEvent');
-				return false;
-		}	
 		
 		//initial request : nominal case
 		if (this.step == 0 && 
@@ -114,14 +98,10 @@ var SimpleDataAccessRequest = {
 			return true;
 		}
 		
-		
 		//second stage submission with and without bulk order
 		if (this.step == 1 &&
 			this.id != "" &&
-			this.requestStage == dataAccessConfig.confirmationRequestStage &&
-		    (this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId ==
-		    	this.downloadLocation.DownloadManagerId)
-		 ){
+			this.requestStage == dataAccessConfig.confirmationRequestStage) {
 			return true;
 		}
 		
@@ -129,15 +109,6 @@ var SimpleDataAccessRequest = {
 		this.trigger('RequestNotValidEvent');
 		
 		return false;
-	},
-	
-	/** save the validation request in order to proceed to confirmation*/
-	keepFirstRequestMembers : function(){
-		 this.firstRequest.SimpleDataAccessRequest.requestStage = this.requestStage;
-		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadManagerId = this.downloadLocation.DownloadManagerId;
-		 this.firstRequest.SimpleDataAccessRequest.downloadLocation.DownloadDirectory = this.downloadLocation.DownloadDirectory;
-		 this.firstRequest.SimpleDataAccessRequest.productURLs = this.productURLs;
-		 
 	},
 	
 	/** specific simple DAR additional processing after validation request */

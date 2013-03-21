@@ -38,13 +38,6 @@ var StandingOrderDataAccessRequest = {
 		this.timeDriven = false;
 		this.repeatPeriod = 0;
 		this.slideAcquisitionTime = false;
-		this.firstRequest = {StandingOrderDataAccessRequest : {
-								requestStage :  "",
-								OpenSearchURL : "",
-								DownloadOptions : {},
-								SchedulingOptions : {},
-								downloadLocation : {DownloadManagerId : "" , DownloadDirectory : ""}
-							 }};
 		
 		//set date to the current date
 		var today = (new Date()).toISOString();
@@ -59,32 +52,25 @@ var StandingOrderDataAccessRequest = {
 	},
 	
 	/** build the request to submit */
-	getRequest : function() {	
-		//if createBulkOrder is set to true after a validation request
-		//take into account the createBulkOrder for the confirmation request
-		if (self.createBulkOrder){
-			
-			return {
+	getRequest : function() {
+
+		var request = {
 				StandingOrderDataAccessRequest : {
 					requestStage :  this.requestStage,
-					createBulkOrder: true,
 					OpenSearchURL : this.OpenSearchURL,
 					DownloadOptions : this.DownloadOptions,
 					SchedulingOptions : this.getSchedulingOptions(),
 					downloadLocation : this.downloadLocation 
 				}
 			};
+			
+		//if createBulkOrder is set to true after a validation request
+		//take into account the createBulkOrder for the confirmation request
+		if (self.createBulkOrder){
+			request.StandingOrderDataAccessRequest.createBulkOrder = true;
 		}
 		
-		return {
-			StandingOrderDataAccessRequest : {
-				requestStage :  this.requestStage,
-				OpenSearchURL : this.OpenSearchURL,
-				DownloadOptions : this.DownloadOptions,
-				SchedulingOptions : this.getSchedulingOptions(),
-				downloadLocation : this.downloadLocation 
-			}
-		};
+		return  request;
 		
 	},
 	
@@ -231,21 +217,7 @@ var StandingOrderDataAccessRequest = {
 			this.serverResponse = standingOrderConfig.invalidDownloadOptionsError;
 			return false;
 		}
-
-		//second stage submission with and without bulk order if the user changes the download manager 
-		//between validation and confirmation
-		if (this.step == 1 &&
-			this.id != "" &&
-			this.requestStage == dataAccessConfig.confirmationRequestStage &&
-		    (this.firstRequest.StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId != 
-		    	this.downloadLocation.DownloadManagerId)) {
-			
-				this.serverResponse = dataAccessConfig.invalidConfirmationRequest;
-				this.trigger('RequestNotValidEvent');
-				
-				return false;
-		}	
-		
+	
 		var computedShedulingOptions = this.getSchedulingOptions();		
 		
 		//initial request : nominal case
@@ -267,9 +239,7 @@ var StandingOrderDataAccessRequest = {
 		//no need to test the other properties because they cannot be changed in the meantime
 		if (this.step == 1 &&
 			this.id != "" &&
-			this.requestStage == dataAccessConfig.confirmationRequestStage &&
-		    (this.firstRequest.StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId ==
-		    	this.downloadLocation.DownloadManagerId)
+			this.requestStage == dataAccessConfig.confirmationRequestStage
 		 ){
 			return true;
 		}
@@ -279,18 +249,7 @@ var StandingOrderDataAccessRequest = {
 		
 		return false;
 	},
-	
-	/** store the standing order validation request */ 
-	keepFirstRequestMembers: function(){
-		 this.firstRequest.StandingOrderDataAccessRequest.requestStage = this.requestStage;
-		 this.firstRequest.StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId = this.downloadLocation.DownloadManagerId;
-		 this.firstRequest.StandingOrderDataAccessRequest.downloadLocation.DownloadDirectory = this.downloadLocation.DownloadDirectory;
-		 this.firstRequest.StandingOrderDataAccessRequest.OpenSearchURL = this.OpenSearchURL;
-		 this.firstRequest.StandingOrderDataAccessRequest.DownloadOptions = this.DownloadOptions;
-		 this.firstRequest.StandingOrderDataAccessRequest.SchedulingOptions = this.SchedulingOptions;
-		 
-	},
-	
+		
 	/** specific Standing order additional processing after validation request */
 	validationProcessing : function (dataAccessRequestStatus){
 		//there is nothing specific for standing orders
