@@ -1,5 +1,5 @@
 
-define(['jquery','jquery.mobile'], function($) {
+define(['jquery','jquery.mobile','externs/jquery.mousewheel'], function($) {
 
 // Helper function
 function getDaysBetween(date1,date2) {
@@ -20,6 +20,8 @@ $.widget( "ui.dateRangeSlider", {
 		bounds: null,
 		boundsMaxLength: 180, // 3 months
 		boundsMinLength: 10, // 10 days
+		wheelFactor : 10,
+		wheelTimeout : 1000,
 		
 		// events
 		change: null
@@ -89,6 +91,22 @@ $.widget( "ui.dateRangeSlider", {
 		
 		// Create the scale bar
 		this._createScaleBar();
+		
+		this.wheelTimeoutVar = null;
+		this.element.mousewheel( function(event,delta) {
+			 self._moveDrag(delta * self.options.wheelFactor);
+			 
+			 // Call change after a few milliseconds
+			 if ( self.options.change ) {
+				 if ( self.wheelTimeoutVar ) {
+					clearTimeout( self.wheelTimeoutVar );
+				}
+				self.wheelTimeoutVar = setTimeout( function() {
+					self.options.change( self._computeCurrentDate() );
+					self.wheelTimeoutVar = null;
+				}, self.options.wheelTimeout );
+			}
+		});
 					
 		// Compute the max days to limit the scale bar scrolling
 		this.maxDays = getDaysBetween( this.options.scaleBounds.max, this.minDate );
