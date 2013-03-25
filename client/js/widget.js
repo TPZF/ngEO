@@ -24,8 +24,8 @@ $.widget( "ngeo.ngeowidget", {
 	options: {
 		title: "",
 		activator: null,
-		buttons: null,
 		effectDuration: 1000,
+		modal: true,
 		
 		// callbacks
 		show: null,
@@ -48,21 +48,7 @@ $.widget( "ngeo.ngeowidget", {
 		
 		if ( this.options.title ) {
 			this.parentElement.prepend('<h2>' + this.options.title + '</h2>');
-		}
-									
-		// Add footer
-		this.footer = $("<div class='widget-footer'><div class='widget-footer-left'/><div class='widget-footer-right'/></div>")
-			.insertAfter(this.element);
-			
-		if ( this.options.buttons )	{
-			$.each( this.options.buttons, function (index,  value ) {
-				//self.footer.append("<a class='button' href='#'>" + value + "</a>");
-				self.footer.append("<button data-role='button' data-inline='true'>" + value + "</button>");
-			});
-		} else {
-			this.footer.hide();
-		}
-		
+		}				
 
 		// Activator
 		if ( this.options.activator ) {
@@ -95,32 +81,6 @@ $.widget( "ngeo.ngeowidget", {
 		}
 		_widgets.push(this);
 	},
-
-	// Add a button in the footer
-	addButton: function(options) {
-	
-		if ( this.footer.find('button').length == 0 ) {
-			this.footer.show();
-		}
-		
-		var pos = options.position || 'right';
-		
-		var btn = $("<button data-role='button' data-inline='true' data-mini='true' id='"+options.id+"'>" + options.name + "</button>")
-			.appendTo( pos == "right" ? this.footer.find('.widget-footer-right') : this.footer.find('.widget-footer-left') )
-			.button();
-			
-			
-		return btn;
-	},
-	
-	// Remove a button from the footer
-	removeButton: function(el) {
-		var $el = typeof el == "string" ? this.footer.find(el) : $(el);
-		$el.parent().remove();
-		if ( this.footer.find('button').length == 0 ) {
-			this.footer.hide();
-		}
-	},
 	
 	update: function() {
 		var $tb = $('#toolbar');
@@ -141,8 +101,8 @@ $.widget( "ngeo.ngeowidget", {
 			this.arrow
 				.css( 'top', toolbarBottom );
 		} else {
-			var widgetLeft = $(window).width()/2 - (this.parentElement.outerWidth()/2);
-			var widgetTop = ($(window).height() - toolbarBottom)/2- (this.parentElement.outerHeight()/2);
+			var widgetLeft = this.options.left || ($(window).width()/2 - (this.parentElement.outerWidth()/2));
+			var widgetTop = this.options.top || (($(window).height() - toolbarBottom)/2- (this.parentElement.outerHeight()/2));
 			this.parentElement.css({ top: widgetTop, left: widgetLeft });
 		}
 	},
@@ -161,7 +121,7 @@ $.widget( "ngeo.ngeowidget", {
 	
 		if (this.activator) {
 			this.activator.addClass('toggle');
-		} else {
+		} else if (this.options.modal) {
 			modalScreen.removeClass('ui-screen-hidden');
 			modalScreen.addClass('in');
 		}
@@ -176,7 +136,7 @@ $.widget( "ngeo.ngeowidget", {
 		if (this.arrow) this.arrow.fadeOut(this.options.durationEffect); 
 		if (this.activator) {
 			this.activator.removeClass('toggle');
-		} else {
+		} else if (this.options.modal) {
 			modalScreen.addClass('ui-screen-hidden');
 			modalScreen.removeClass('in');
 		}

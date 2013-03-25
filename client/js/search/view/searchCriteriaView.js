@@ -32,18 +32,6 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Update the view when the datasetId have been changed
 	 */
 	onDataSetChanged: function() {
-		
-		if ( this.model.get("datasetId") ) {
-			//load the selected dataset from the server
-			this.searchButton.button('enable');
-			this.searchUrlButton.button('enable');
-			this.standingOrderButton.button('enable');
-			this.shareButton.button('enable');
-		} else {
-			this.searchButton.button('disable');
-			this.searchUrlButton.button('disable');
-			this.shareButton.button('disable');
-		}
 		//if the dataset is defined load it from the server unless it is set to undefined
 		this.model.updateDatasetModel();		
 	},
@@ -71,23 +59,25 @@ var SearchCriteriaView = Backbone.View.extend({
 	render: function(){
 	
 		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
+		
+		this.$el.append(content);
+		
+		// Move footer to parent widget
+		var $footer = this.$el.find('#sc-footer')
+			.insertAfter(this.$el)
+			.trigger('create');
 					
-		// Add a search button to submit the search request
-		this.searchButton = this.$el.ngeowidget('addButton', { id: 'searchRequest', name: 'Submit Search' });
 		var self = this;
-	
-		this.searchButton.click( function() {
+			
+		// Launch a search when the user clicks on the button
+		$footer.find('#searchRequest').click( function() {
 			SearchResults.launch( self.model.getOpenSearchURL() );
 			self.$el.ngeowidget('hide');
 		});		
 				
-		// Add a search url button to display the openSearch request url
-		this.searchUrlButton = this.$el.ngeowidget('addButton', { id: 'searchUrl', name: 'Search URL', position: 'left' });
-		
-		 //Add a standing order button to create a standing order
-		this.standingOrderButton = this.$el.ngeowidget('addButton', { id: 'standingOrder', name: 'Standing Order', position: 'left' });
-
-		this.standingOrderButton.click( function() {
+			
+		 // To create a standing order
+		$footer.find('#standingOrder').click( function() {
 			
 			StandingOrderDataAccessRequest.initialize();
 			//set open search url
@@ -99,29 +89,25 @@ var SearchCriteriaView = Backbone.View.extend({
 			standingOrderWidget.open();
 		});
 				
-		this.searchUrlButton.click( function() {
+		// Open the searchURL popup when the user click on the button
+		$footer.find('#searchUrl').click( function() {
 			// Set the openSearch url
 			var url = Configuration.serverHostName + self.model.getOpenSearchURL();
 			$("#popupText").val( url );	
 			$('#openSearchUrlPopup').popup("open");
 		});	
-		
-		//add share button to share search criteria widget
-		this.shareButton = this.$el.ngeowidget('addButton', { id: 'shareSearch', name: 'Share', position: 'left' });
-	
-		this.shareButton.click( function() {
 			
+		// To share a search
+		$footer.find('#shareSearch').click( function() {
 			// Set the opensearch url
 			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL() + '<b>');	
 			$('#sharedUrlPopup').popup("open");
 			$('#sharedUrlPopup').trigger('create');
-			
 		});
-		
-		this.$el.append(content);
+	
 		
 		// Create the tabs
-		this.$el.find("#tabs").tabs();
+		var $tabs = this.$el.find("#sc-tabs").tabs();
 		
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
@@ -153,7 +139,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.$el.trigger('create');
 		
 		// Remove class added by jQM
-		this.$el.find("#tabs").find("a").removeClass('ui-link');
+		$tabs.find("a").removeClass('ui-link');
 		
 		// Bind the popupafterclose event on the SearchURL popup
 		// Must be called after this.$el.trigger('create'); to have the popup created.
@@ -170,14 +156,6 @@ var SearchCriteriaView = Backbone.View.extend({
 			}
 		);
 		
-		// Disable all button if no dataset
-		if ( !this.model.get("datasetId") ) {
-			this.searchButton.button('disable');
-			this.searchUrlButton.button('disable');
-			this.standingOrderButton.button('disable');
-			this.shareButton.button('disable');
-		}
-
 		return this;
 	}
 	
