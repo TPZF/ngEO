@@ -151,7 +151,7 @@ var SearchResults = {
 	isBrowserSupportedUrl : function(feature) {
 
 		var eor = feature.properties.EarthObservation.EarthObservationResult;
-		if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" &&
+		if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" &&
 				(eor.eop_ProductInformation.eop_filename.indexOf("http") != -1 ||
 						eor.eop_ProductInformation.eop_filename.indexOf("https") != -1)) {
 			return true;
