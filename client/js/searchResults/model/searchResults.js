@@ -15,6 +15,9 @@ var SearchResults = {
 	// The current selection
 	selection: [],
 	
+	// The hightlighted feature
+	_highlight: null,
+	
 	// The URL for search results
 	url: "",
 	
@@ -69,6 +72,19 @@ var SearchResults = {
 		this.selection = features;
 		this.trigger( "unselectFeatures", unselected );
 		this.trigger( "selectFeatures", selected );
+	},
+	
+	// Check if a feature is selected
+	isSelected: function(feature) {
+		return this.selection.indexOf(feature) >= 0;
+	},
+	
+	// Highlight a feature, only one can be highlight at a time
+	highlight: function(feature) {
+		if ( feature != this._highlight ) {
+			this.trigger( "highlightFeature", feature, this._highlight, this );
+			this._highlight = feature;
+		}
 	},
 	
 	// Select a feature

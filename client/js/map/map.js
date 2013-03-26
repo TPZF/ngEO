@@ -402,6 +402,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			self.layers[0].data.features.length = 0;
 		},
 		
+		/**
+		 * Add some results to the map
+		 */
 		addResults: function(features) {
 			// Process the feature collection
 			for ( var i = 0; i < features.length; i++ ) {
@@ -409,6 +412,22 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 					computeExtent(features[i]);
 				self.layers[0].data.features.push( features[i] );
 				mapEngine.addFeature( resultFootprintLayer, features[i] );
+			}
+		},
+		
+		/**
+		 * Highlight a feature in the map
+		 */
+		highlightFeature: function(feature, prevFeature, searchResults) {
+		
+			if ( prevFeature && !searchResults.isSelected(prevFeature) ) {
+				mapEngine.modifyFeatureStyle(resultFootprintLayer,prevFeature, "default");
+				hideBrowseLayer(prevFeature);
+			}
+			
+			if ( feature && !searchResults.isSelected(feature) ) {
+				mapEngine.modifyFeatureStyle(resultFootprintLayer,feature, "select");
+				showBrowseLayer(feature);
 			}
 		},
 		

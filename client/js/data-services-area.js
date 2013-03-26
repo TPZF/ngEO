@@ -134,9 +134,10 @@ return {
 		// Connect search results events with map
 		SearchResults.on('reset:features', Map.clearResults);
 		SearchResults.on('add:features', Map.addResults);
-		SearchResults.on('zoomToProductExtent', Map.zoomToFeature);
+		SearchResults.on('zoomToFeature', Map.zoomToFeature);
 		SearchResults.on('selectFeatures', Map.selectFeatures);
 		SearchResults.on('unselectFeatures', Map.unselectFeatures);	
+		SearchResults.on('highlightFeature', Map.highlightFeature);	
 		//display a pop-up message when the product search has failed
 		SearchResults.on('error:features', function(searchUrl){
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
