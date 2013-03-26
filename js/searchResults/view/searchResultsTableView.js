@@ -104,6 +104,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		}, this);
 		this.model.on("add:features", function(features) {
 			this.table.fnAddData( features );
+			this.table.fnAdjustColumnSizing( true );
 			this.$el.panel('update');
 		}, this);
 		this.model.on("selectFeatures", this.toggleSelection, this );
@@ -116,39 +117,65 @@ var SearchResultsTableView = Backbone.View.extend({
 	events : {
 			
 		'click tr' : function (event) {
+		
+			var $row = $(event.currentTarget);
+			if ( $row.hasClass('row_selected') ) {
+				return; // Nothing to do
+			}
 			
-			var rowPos = this.table.fnGetPosition(event.currentTarget);
-			if (rowPos != null) {// Don't select the header
-				this.table.find('.row_selected').removeClass('row_selected');
-				$(event.currentTarget).toggleClass('row_selected');
-				this.model.trigger("zoomToProductExtent", this.model.features[rowPos]);
+			// Remove previous selection
+			this.table.find('.row_selected').removeClass('row_selected');
+			
+			var feature = this.getFeatureFromRow(event.currentTarget);
+			if (feature != null) {
+				this.model.highlight(feature);
+				$row.addClass('row_selected');
+			}
+		},
+		
+		'dblclick tr' : function (event) {
+			var feature = this.getFeatureFromRow(event.currentTarget);
+			if (feature != null) {
+				this.model.trigger("zoomToFeature", feature);
 			}
 		},
 		
 		// Called when the user clicks on the checkbox of the dataTables
 		'click .dataTables_chekbox' : function(event){
 			// retreive the position of the selected row
-			var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
+			var feature = this.getFeatureFromRow( $(event.currentTarget).closest('tr').get(0) );
 			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
-				this.model.select( this.model.features[rowPos] );
+				this.model.select( feature );
 			} else {
-				this.model.unselect( this.model.features[rowPos] );
+				this.model.unselect( feature );
 			}
 		}, 
 		
 		//Called when the user clicks on the product id of an item
 		'click .ui-direct-download' : function(event){
-			var rowPos = this.table.fnGetPosition( $(event.currentTarget).closest('tr').get(0) );
+			var feature = this.getFeatureFromRow( $(event.currentTarget).closest('tr').get(0) );
 			//console.log("Selected Feature");
 			//console.log(this.model.get('features')[rowPos]);
 			//console.log("Selected url");
 			var featureArray = [];
-			featureArray.push(this.model.features[rowPos]);
+			featureArray.push(feature);
 			//console.log(this.model.getProductUrls(featureArray)[0]);
 			var directDownloadWidget = new DirectDownloadWidget(this.model.getProductUrls(featureArray)[0]);
 			directDownloadWidget.open(event);
 		}, 
 	
+	},
+	
+	/**
+	 * Get the feature from the table row
+	 */
+	getFeatureFromRow: function(row) {
+		var rowPos = this.table.fnGetPosition( row );
+		if (rowPos != null) {
+			return this.model.features[rowPos];
+		} else {
+			return null;
+		}
 	},
 			
 	/**
@@ -191,7 +218,7 @@ var SearchResultsTableView = Backbone.View.extend({
 
 		// Take column definitions from Configuration
 		// Add checkbox as first colum
-		var columnsDef = [{	'sTitle' : '', 'bSortable': false, 'mData': null, 'sWidth': '20px', 'sDefaultContent': '<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>' }];
+		var columnsDef = [{	'sTitle' : '', 'bSortable': false, 'mData': null, 'sWidth': '16px', 'sDefaultContent': '<span class="dataTables_chekbox ui-icon ui-icon-checkbox-off "></span>' }];
 		columnsDef = columnsDef.concat( Configuration.data.resultsTable.columnsDef );
 		
 		// Add a default content for each row to avoid error messages
@@ -207,6 +234,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			"aoColumns" : columnsDef, 
 			"bDestroy": true,
 			"bSort" : true,
+			"autoWidth": true,
 			"fnCreatedRow": function( nRow, aData, iDataIndex ) {
 				var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
 				if (self.model.isBrowserSupportedUrl( self.model.features[iDataIndex])){
