@@ -271,8 +271,10 @@ GlobWebMapEngine.prototype.updateSize = function()
 GlobWebMapEngine.prototype.getLonLatFromPixel = function(x,y)
 {
 	var pt = this.globe.getLonLatFromPixel(x,y);
-	// To be compliant with OpenLayers remove Z
-	pt.length = 2;
+	if ( pt ) {
+		// To be compliant with OpenLayers remove Z
+		pt.length = 2;
+	}
 	return pt;
 }
 
