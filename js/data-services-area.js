@@ -117,6 +117,7 @@ return {
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
 			}
+			SearchResults.reset();
 		});
 
 		//when the dataset selected is not loaded display an error message
@@ -143,7 +144,11 @@ return {
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
 		});
 		SearchResults.on('startLoading', function() {
-			$('#resultsMessage').html( "Searching..." );
+		
+			$('#paging a').addClass('ui-disabled');
+
+			var $resultsMessage = $('#resultsMessage');
+			$resultsMessage.html( "Searching..." );
 			
 			// Pulsate animation when searching
 			var fadeOutOptions = {
@@ -160,13 +165,55 @@ return {
 					$(this).animate({opacity:0.2},fadeOutOptions);
 				}
 			};
-			$('#resultsMessage').animate({opacity:0.2},fadeOutOptions);
-			$('#resultsMessage').show();
+			$resultsMessage.animate({opacity:0.2},fadeOutOptions);
+			$resultsMessage.show();
 		});
+		
+		SearchResults.on('reset:features', function() {
+			$('#paging a').addClass('ui-disabled');
+			var $resultsMessage = $('#resultsMessage');
+			$resultsMessage.hide();
+		});
+		
 		SearchResults.on('add:features', function(features) {
-			$('#resultsMessage').stop();
-			$('#resultsMessage').css('opacity',1.0);
-			$('#resultsMessage').html( SearchResults.features.length + " products received." );
+			var $resultsMessage = $('#resultsMessage');
+			$resultsMessage.stop();
+			$resultsMessage.css('opacity',1.0);
+			
+			if ( SearchResults.totalResults != 0 ) {
+				var startIndex = 1 + (SearchResults.currentPage-1) * SearchResults.countPerPage;
+				$resultsMessage.html( 'Showing ' + startIndex + ' to ' + (startIndex + features.length - 1) + " of " + SearchResults.totalResults + " products." );
+				
+				// Updage paging button according to the current page
+				$('#paging a').removeClass('ui-disabled');
+				if ( SearchResults.currentPage == 1 ) {
+					$('#paging_prev').addClass('ui-disabled');
+					$('#paging_first').addClass('ui-disabled');
+				} 
+				if ( SearchResults.currentPage == SearchResults.lastPage ) {
+					$('#paging_next').addClass('ui-disabled');
+					$('#paging_last').addClass('ui-disabled');
+				}
+			} else {
+				$resultsMessage.html( 'No product found.' );
+			}
+		});
+		
+		// To start paging is disable
+		$('#paging a').addClass('ui-disabled');
+
+		// Manage paging through buttons
+		$('#paging_first').click( function() {
+			SearchResults.changePage(1);
+		});
+		$('#paging_last').click( function() {
+			SearchResults.changePage( SearchResults.lastPage );
+		});
+		$('#paging_next').click( function() {
+			SearchResults.changePage( SearchResults.currentPage + 1 );
+		});
+		$('#paging_prev').click( function() {
+			SearchResults.changePage( SearchResults.currentPage - 1 );
 		});
 	},
 };

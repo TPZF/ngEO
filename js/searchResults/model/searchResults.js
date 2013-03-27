@@ -8,6 +8,18 @@ var SearchResults = {
 	
 	// Store the count per page
 	countPerPage : 100,
+	
+	// Store the current page index
+	currentPage : 0,
+	
+	// The last page
+	lastPage : 0,
+	
+	// Store the number of total results
+	totalResults: 0,
+	
+	// Keep the page results
+	_pageCache: [],
 		
 	// Array of features
 	features: [],
@@ -35,18 +47,25 @@ var SearchResults = {
 			// TODO : improve the mechanism?
 			if ( self.url == currentUrl ) {
 			
-				// Add the features to the results
-				for ( var i = 0; i < data.features.length; i++ ) {
-					self.features.push( data.features[i] );
+				self._pageCache[self.currentPage] = data.features;
+				
+				if ( data.properties && data.properties.totalResults ) {
+					self.totalResults = data.properties.totalResults;
+				} else {
+					self.totalResults = data.features.length;
 				}
-				self.trigger('add:features',data.features);
+				
+				self.lastPage = Math.ceil( self.totalResults / self.countPerPage );
+			
+				// Add the features to the results
+				self._addFeatures( data.features );
 				
 				// Relaunch a search on next page if there is still some results
-				if ( data.features.length == self.countPerPage ) {
+				/*if ( data.features.length == self.countPerPage ) {
 					self.fetch(startIndex + self.countPerPage, currentUrl);
 				} else {
 					self.trigger('endLoading');
-				}
+				}*/
 			}		
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
 			  console.log("ERROR when retrieving the products :" + textStatus + ' ' + errorThrown);
@@ -59,10 +78,49 @@ var SearchResults = {
 	// launch a search
 	launch: function(url) {
 		this.url = url + "&count=" + this.countPerPage;
+		// reset the cache
+		this._pageCache.length = 0;
+		// resest the count of results
+		this.lastPage = 1;
+		this.totalResults = 0;
+		// Change to first page, will trigger the first search
+		this.changePage(1);
+	},
+	
+	// Reset the results
+	reset: function() {
+		this.url = "";
+		// reset the cache
+		this._pageCache.length = 0;
+		// resest the count of results
+		this.lastPage = 1;
+		this.totalResults = 0;
+		// reset the features
 		this.features.length = 0;
 		this.trigger('reset:features');
-		this.trigger('startLoading');
-		this.fetch(1,this.url);
+	},
+	
+	// Add features to the result
+	_addFeatures: function(features) {
+		for ( var i = 0; i < features.length; i++ ) {
+			this.features.push( features[i] );
+		}
+		this.trigger('add:features',features);
+	},
+	
+	// Method to change the current page of results
+	changePage: function(page) {
+		if ( page >= 1 && page <= this.lastPage ) {
+			this.currentPage = page;
+			this.features.length = 0;
+			this.trigger('reset:features');
+			if ( this._pageCache[this.currentPage] ) {
+				this._addFeatures( this._pageCache[this.currentPage] );
+			} else {
+				this.trigger('startLoading');
+				this.fetch(1 + (this.currentPage-1)*this.countPerPage, this.url);
+			}
+		}
 	},
 	
 	// Set the selection, replace the previous one
