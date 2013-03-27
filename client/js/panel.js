@@ -61,11 +61,11 @@ $.widget( "ngeo.panelManager", {
 
 	// _setOptions is called with a hash of all options that are changing
 	// always refresh when changing options
-	_setOptions: function() {
+/*	_setOptions: function() {
 		// in 1.9 would use _superApply
 		$.Widget.prototype._setOptions.apply( this, arguments );
 		// TODO : refresh?
-	},
+	},*/
 
 	// _setOption is called for each individual option that is changing
 	_setOption: function( key, value ) {
@@ -98,12 +98,7 @@ $.widget( "ngeo.panel", {
 		// Wrap with the parent div for panel
 		this.element.wrap("<div class='panel'/>");
 		this.parentElement = this.element.parent();
-		
-		// Add footer
-		this.footer = $("<div class='panel-footer'></div>")
-			.insertAfter(this.element);
-		this.footer.hide();
-		
+			
 		if ( this.options.activator ) {
 			this.activator = $( this.options.activator );
 			this.activator.click( function() {
@@ -130,31 +125,6 @@ $.widget( "ngeo.panel", {
 		this.parentElement.hide();
 	},
 	
-	// Add a button in the footer
-	addButton: function(options) {
-	
-		if ( this.footer.find('button').length == 0 ) {
-			this.footer.show();
-		}
-		
-		var pos = options.position || 'right';
-		
-		var btn = $("<button data-role='button' data-inline='true' data-mini='true' id='"+options.id+"'>" + options.name + "</button>")
-			.appendTo(this.footer)
-			.button();
-			
-		return btn;
-	},
-	
-	// Remove a button from the footer
-	removeButton: function(el) {
-		var $el = typeof el == "string" ? this.footer.find(el) : $(el);
-		$el.parent().remove();
-		if ( this.footer.find('button').length == 0 ) {
-			this.footer.hide();
-		}
-	},
-	
 	// Update the panel
 	update: function() {
 		this.options.panelManager.panelManager('update');
@@ -170,18 +140,18 @@ $.widget( "ngeo.panel", {
 
 	// _setOptions is called with a hash of all options that are changing
 	// always refresh when changing options
-	_setOptions: function() {
+/*	_setOptions: function() {
 		// in 1.9 would use _superApply
 		$.Widget.prototype._setOptions.apply( this, arguments );
 		// TODO : refresh?
-	},
+	},*/
 
 	// _setOption is called for each individual option that is changing
-	_setOption: function( key, value ) {
+/*	_setOption: function( key, value ) {
 		// TODO : manage options?
 		// in 1.9 would use _super
 		$.Widget.prototype._setOption.call( this, key, value );
-	}
+	}*/
 });
 
 

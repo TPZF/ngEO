@@ -122,13 +122,11 @@ var TimeExtentView = Backbone.View.extend({
 					SearchResults.launch( self.model.getOpenSearchURL() );
 				}
 			});
-		$('#statusBar').css('bottom', dateRangeSlider.outerHeight() + 15);
 	},
 	
 	// Remove the time slider
 	removeTimeSlider: function() {
 		$('#dateRangeSlider').remove();
-		$('#statusBar').css('bottom', '0px');
 	},
 	
 	update: function() {
