@@ -66,6 +66,15 @@ app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
 //data access statuses interface
 app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
 
+// user inquiry
+app.post('/ngeo/userInquiry', function(req,res) {
+	if (req.body.inquiryType && req.body.inquiryText ) {
+		res.send(200);
+	} else {
+		res.send(400);
+	}
+});
+
 //download helper interface
 app.get(/\/ngeo\/downloadHelper.*/, downloadHelper);
 
