@@ -16,12 +16,17 @@
                 	}, 
                 	{
                         "productURL" : "https://S2PF/XXXXXXXXXXXX0055", 
-                        "expectedSize" : 1000
+                        "expectedSize" : 10000
                 	}, 
                 	{
                         "productURL" : "https://S2PF/XXXXXXXXXXXX0058",
-                        "expectedSize" : 1000 
+                        "expectedSize" : 10000 
                 	}
-                ]
+					, 
+                	{
+                        "productURL" : "https://S2PF/XXXXXXXXXXXX0058",
+                        "expectedSize" : 10000 
+                	}
+				]
         }
 } 
