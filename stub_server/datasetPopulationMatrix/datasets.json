@@ -5,27 +5,27 @@
         "criteriaTitles" : ["mission","sensor", "keyword"], 
        
         "datasetPopulationValues" : [ 
-			[ "", "", "", "ATS_TOA_1P", "20" ],
-			[ "", "", "", "ASA_WS__0P", "20" ],
-			[ "", "", "", "ND_SAR_1", "20"], 
-            [ "S1", "SAR", "interferometry", "ND_SAR_1", "20"],
-            [ "S1", "SAR", "polarimetry", "ND_SAR_1", "20"], 
+			[ "", "", "", "ATS_TOA_1P", "100" ],
+			[ "", "", "", "ASA_WS__0P", "5" ],
+			[ "", "", "", "ND_SAR_1", "7"], 
+            [ "S1", "SAR", "interferometry", "ND_SAR_1", "7"],
+            [ "S1", "SAR", "polarimetry", "ND_SAR_1", "7"], 
             
-            [ "", "", "", "ND_OPT_1", "6"],
+            [ "", "", "", "ND_OPT_1", "365"],
 
 			[ "S2", "OPT", "optical", "ND_S2_1", "6"],
             [ "S2", "OPT", "land mapping", "ND_S2_1", "6"], 
             [ "S2", "OPT", "reflectance", "ND_S2_1", "6"],
          
-            [ "", "", "", "LD_SENTINEL_1", "2000"], 
-            [ "S1", "SAR", "land mapping", "LD_SENTINEL_1","800"],
-            [ "S1", "OPT", "ice mapping", "LD_SENTINEL_1", "1200"],
+            [ "", "", "", "LD_SENTINEL_1", "7"], 
+            [ "S1", "SAR", "land mapping", "LD_SENTINEL_1","7"],
+            [ "S1", "OPT", "ice mapping", "LD_SENTINEL_1", "7"],
             
-            [ "S2", "", "land mapping", "SENTINEL2_L1", "800"],
+            [ "S2", "", "land mapping", "SENTINEL2_L1", "7"],
             
-            [ "S3", "", "land mapping", "SENTINEL3", "800"],
-            [ "S3", "", "", "SENTINEL3_L1", "2000"], 
-            [ "S3", "SAR", "land mapping", "SENTINEL3_L2","800"]
+            [ "S3", "", "land mapping", "SENTINEL3", "7"],
+            [ "S3", "", "", "SENTINEL3_L1", "7"], 
+            [ "S3", "SAR", "land mapping", "SENTINEL3_L2","7"]
          ]
     }
         

@@ -10,7 +10,7 @@ var fs = require('fs'),
 	eoliParser = require('./EOLIParser');
 
 /**
- * Store the feature collections for each vertices
+ * Store the feature collections for each datasets
  */ 
 var featureCollections = {
 };
@@ -30,6 +30,9 @@ fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, d
 	featureCollections['ASA_WS__0P']  = JSON.parse(data);
 });
 
+/**
+ * Time filter
+ */
 var timeInsideFeature = function(feature,start,stop) {
 	var startFeature = feature.properties.EarthObservation.gml_beginPosition;
 	var stopFeature = feature.properties.EarthObservation.gml_endPosition;
@@ -43,12 +46,18 @@ var timeInsideFeature = function(feature,start,stop) {
 		return true;
 };
 
+/**
+ * Time sorting
+ */
 var sortBytTime = function(a,b) {
 	var starta = new Date(a.properties.EarthObservation.gml_beginPosition);
 	var startb = new Date(b.properties.EarthObservation.gml_beginPosition);
 	return startb - starta;
 };
 
+/**
+ * Geometry contains
+ */
 var contains = function(g1,g2) {
 	var coords = g2.type == "MultiPolygon" ? g2.coordinates[0][0] : g2.coordinates[0];
 	for ( var i =0; i < coords.length; i++ ) {
@@ -104,6 +113,9 @@ module.exports = function(req, res){
 	count = parseInt(count);
 	var response = {
 		type: 'FeatureCollection',
+		properties: {
+			totalResults : filterFeatures.length
+		},
 		features: filterFeatures.slice(startIndex-1,startIndex-1+count)
 	};
 	setTimeout( function() { res.send(response); }, 1000 );
