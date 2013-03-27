@@ -13,6 +13,15 @@ return {
 			.popup('open');
 	},
 	
+	inform: function(message) {
+		console.log(message);
+		// Create a pop-up to warn the user
+		$('<div><p>' + message + '</p></div>')
+			.appendTo('.ui-page-active')
+			.popup()
+			.popup('open');
+	},
+	
 	warning: function(message) {
 		console.log('Warning : ' + message);
 	},
