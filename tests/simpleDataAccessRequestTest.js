@@ -19,7 +19,7 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 	    });
 
     
-    	QUnit.asyncTest("Create Simple DAR & Assign a downloadManager", 8, function () {
+    	QUnit.asyncTest("Create Simple DAR & Assign a downloadManager", 7, function () {
     	
 			DownloadManagers.fetch().done(function() {
 				
@@ -60,10 +60,7 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 					QUnit.equal(SimpleDataAccessRequest.requestStage, 
 							"confirmation",  "Request Stage Changed to Confirmation");
 					
-					QUnit.equal(SimpleDataAccessRequest.serverResponse, 
-							"<p>Request Acknowledged<p><p> Estimated Size : 4000" + 
-							"<p><p>Data Access Request validated<p>",  "Validation Server Response Ok");
-				
+							
 					//submit confirmation request
 					SimpleDataAccessRequest.submit().done(function() {
 						
