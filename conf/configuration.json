@@ -1,7 +1,6 @@
 {
 	// Parameters for result table
 	"resultsTable": {
-		"pagination": true,
 		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
 						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
 						{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
@@ -25,6 +24,10 @@
 			"Linux" : "/ngeo/downloadManagerInstall/ngeo.downloadmanager-0.1-1.el6.x86_64.tar.gz",
 			"MacOS" : "/ngeo/downloadManagerInstall/ngeo.downloadmanager-0.1-1.macosx10.x86.dmg"
 		}
+	},
+	
+	"simpleDataAccessRequest" : {
+		"warningMaximumSize": 10000
 	},
 	
 	"dataAccessRequestStatuses" : { 	   

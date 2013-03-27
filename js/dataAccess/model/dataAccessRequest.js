@@ -78,7 +78,7 @@ var DataAccessRequest = {
 							  self.trigger('SuccessValidationRequest');
 							  
 						  }else{
-							  self.trigger('FailureValidationRequest');
+							  self.trigger('FailureRequest');
 							 
 						  }
 						  break;
@@ -94,21 +94,25 @@ var DataAccessRequest = {
 							  self.serverResponse = validStatusesConfig.bulkOrderStatus.message;
 							  self.trigger('SuccessValidationRequest');
 						  }else{
-							  self.trigger('FailureValidationRequest');
+							  self.trigger('FailureRequest');
 						  }
 						  
 						  break;
 						  
+					  case validStatusesConfig.pausedStatus.value:	  
 					  case validStatusesConfig.inProgressStatus.value:
 						  
 						  if (self.step == 1 && self.id == data.DataAccessRequestStatus.ID &&
 								self.requestStage == statusesConfig.confirmationRequestStage) {//2 steps done
 							  self.serverResponse = validStatusesConfig.inProgressStatus.message;
-						  }  
-						  self.trigger('FailureValidationRequest');
+							  self.trigger('SuccessConfirmationRequest');
+						  }  else {
+							self.trigger('FailureRequest');
+						  }	
 						  break;
 					
-					  case validStatusesConfig.pausedStatus.value:
+/*					 // FL : this status should never happen?
+					case validStatusesConfig.pausedStatus.value:
 						  self.serverResponse = validStatusesConfig.pausedStatus.message;
 						  self.trigger('FailureValidationRequest');
 						  break;
@@ -116,11 +120,11 @@ var DataAccessRequest = {
 					  case validStatusesConfig.cancelledStatus.value:
 						  self.serverResponse = validStatusesConfig.cancelledStatus.message;
 						  self.trigger('FailureValidationRequest');
-						  break;
+						  break;*/
 					  
 					  default: 
 						  self.serverResponse = self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.unExpectedStatusError ;
-					  	  self.trigger('FailureValidationRequest');
+					  	  self.trigger('FailureRequest');
 					  	  break;
 				  }	  
 					   
@@ -132,9 +136,9 @@ var DataAccessRequest = {
 		  	  },
 		  
 			  error: function(jqXHR, textStatus, errorThrown) {
-				  //console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
+				  console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
 				  self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.requestSubmissionError ;
-				  self.trigger('FailureValidationRequest');
+				  self.trigger('FailureRequest');
 			  }
 		});	
 	}

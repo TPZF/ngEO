@@ -15,9 +15,10 @@ var DownloadManagersListView = Backbone.View.extend({
 	initialize : function(options){
 		this.request = options.request;
 		this.selectedDownloadManager = options.selectedDownloadManager;
-		this.request.on('SuccessValidationRequest', this.requestButtonTextChange, this);
-		this.request.on('FailureValidationRequest', this.disableRequestButton, this);
-		this.request.on('RequestNotValidEvent', this.disableRequestButton, this);
+		this.request.on('SuccessValidationRequest', this.onValidationSuccess, this);
+		this.request.on('SuccessConfirmationRequest', this.onConfirmationSuccess, this);
+		this.request.on('FailureRequest', this.onFailure, this);
+		this.request.on('RequestNotValidEvent', this.onFailure, this);
 		
 	},
 	
@@ -46,17 +47,25 @@ var DownloadManagersListView = Backbone.View.extend({
 	},
 	
 	/** change the button status to disabled in case the requests are not valid */
-	disableRequestButton : function(){
-		$("#validateRequest").button('disable'); 
+	onFailure : function(){
+		$("#validateRequest").button('disable');
+		$("#serverMessage").append("Invalid server response");
 	},
 	
 	/** change the button text to highlight the request stage "Confirmation" 
 	 * update the button text in the jqm span for button text to make the
 	 * button text updated*/
-	requestButtonTextChange : function(){
-		$("#validateRequest").html("Confirm Your Request"); 
-		$("#downloadManagersFooter .ui-btn-text").html("Confirm Your Request"); ;
+	onValidationSuccess : function(){
+		$("#validateRequest").html("Confirm"); 
+		$("#downloadManagersFooter .ui-btn-text").html("Confirm"); ;
 	},
+	
+	/**
+	 * Just disable the confirmation button on success
+	 */
+	onConfirmationSuccess : function(){
+		$("#validateRequest").button('disable');
+	},	
 	
 	render: function(){
 	
