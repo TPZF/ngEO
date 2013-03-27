@@ -57,7 +57,7 @@ var SimpleDataAccessRequest = {
 		if (this.rejectedProductsNB == 0){
 			collapsibleContent += "<p>All the selected items have been included in the request.<p>";
 		}else{
-			collapsibleContent += "<p> " + this.rejectedProductsNB + " products were not included in the request since they do not have a url.";
+			collapsibleContent += "<p> " + this.rejectedProductsNB + " products are not included in the request since they do not have a url.";
 		}
 		
 		return collapsibleContent; 
@@ -116,11 +116,15 @@ var SimpleDataAccessRequest = {
 		
 		//calculate the total download estimated size  
 		  var totalSize = 0;
-		  _.each(dataAccessRequestStatus.productStatuses, function(productStatus){
-			  totalSize += productStatus.expectedSize;
-		  });
+		  var productStatuses = dataAccessRequestStatus.productStatuses; 
+		  for ( var i = 0; i < productStatuses.length; i++) {
+			  totalSize += productStatuses[i].expectedSize;
+		  }
 		  
 		  this.serverResponse += "<p> Estimated Size : " + totalSize + "<p>";
+		  if ( totalSize > Configuration.get('simpleDataAccessRequest.warningMaximumSize',1e9) ) {
+			this.serverResponse += "<p>WARNING : The amount of data to download is huge.</p><p>Are you sure you want to confirm your request?</p>"; 
+		  }
 	}
 }
 
