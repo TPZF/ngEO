@@ -25,6 +25,9 @@ require.config({
 		'backbone': {
             deps: ['underscore','jquery'],
             exports: 'Backbone'
+		},
+		'externs/jquery.imagesloaded': {
+            deps: ['jquery']
 		}
 	}
   });
@@ -32,7 +35,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["jquery.mobile", "backbone"] ,
+require( ["jquery.mobile", "backbone", "externs/jquery.imagesloaded"] ,
 		function() {
 		
 /** 
@@ -59,7 +62,10 @@ function loadPage(url) {
 		if ( posFrag >= 0 ) {
 			var $fragment = $( url.substr( posFrag ) );
 			if ( $fragment.length > 0 ) {
-				$container.scrollTop( $fragment.offset().top + $container.scrollTop() - $container.offset().top );
+			
+				$container.imagesLoaded( function() {
+					$container.scrollTop( $fragment.offset().top + $container.scrollTop() - $container.offset().top );
+				});
 			}
 		} else {
 			$container.scrollTop(0);
