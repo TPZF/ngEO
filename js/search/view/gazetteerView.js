@@ -39,7 +39,8 @@ var GazetteerView = Backbone.View.extend({
 							// Build a list view for the results
 							var listView = $('<ul data-inset="true"></ul>');
 							for ( var i = 0; i < data.length; i++ ) {
-								var fullName = data[i].display_name + ' (' + data[i].class + ' ' + data[i].type + ')';
+								// Fix for Safari 5.x, do not use .class directly
+								var fullName = data[i].display_name + ' (' + data[i]['class'] + ' ' + data[i].type + ')';
 								$('<li>' + fullName + '</li>')
 									// Store the data into the DOM element
 									.data('data',data[i])
