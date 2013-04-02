@@ -37,8 +37,19 @@ var ExportView = Backbone.View.extend({
 	},
 		
 	render: function(){
+	
+		// Check for blob support
+		var blob = null;
+		if (window.Blob) {
+			// For Safari 5.1, test if we can create Blob.
+			try {
+				blob = new Blob();
+			} catch(err) {
+				blob = null;
+			}
+		}
 		
-		if (!window.Blob) {
+		if (!blob) {
 			this.$el.append('<p class="ui-error-message"><b>Export is not supported in your browser</b></p>');
 		} else {
 			this.$el.append(exportViewContent);
