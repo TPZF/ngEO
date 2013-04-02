@@ -106,6 +106,16 @@ module.exports = function(req, res){
 	}
 	
 	filterFeatures.sort( sortBytTime );
+
+	// Fix product download
+	for ( var i = 0; i < filterFeatures.length; i++ ) {
+		var feature = filterFeatures[i];
+		var eop = feature.properties.EarthObservation;
+		if ( eop && eop.EarthObservationResult.eop_ProductInformation
+			&& eop.EarthObservationResult.eop_ProductInformation.eop_filename ) {
+			eop.EarthObservationResult.eop_ProductInformation.eop_filename = eop.EarthObservationResult.eop_ProductInformation.eop_filename.replace('localhost:3000',req.headers.host);
+		}
+	}
 	
 	var count = req.query.count || 10;
 	var startIndex = req.query.startIndex || 1;
