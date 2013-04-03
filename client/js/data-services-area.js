@@ -177,7 +177,7 @@ return {
 		
 		SearchResults.on('add:features', function(features) {
 			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.stop();
+			$resultsMessage.stop(true);
 			$resultsMessage.css('opacity',1.0);
 			$resultsMessage.show();
 			
