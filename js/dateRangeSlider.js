@@ -41,9 +41,7 @@ $.widget( "ui.dateRangeSlider", {
 				self.autoScaleDirection = 10;
 				setTimeout( $.proxy(self._autoScaleScroll,self), 50 );
 			})
-			.mouseup( function(event) {
-				self.autoScaleDirection = 0;
-			});
+			.mouseup( $.proxy(this._onArrowMouseUp,this) );
 
 		$('<div class="dateSlider-leftArrow"></div>')
 			.appendTo(this.element)
@@ -51,9 +49,7 @@ $.widget( "ui.dateRangeSlider", {
 				self.autoScaleDirection = -10;
 				setTimeout( $.proxy(self._autoScaleScroll,self), 50 );
 			})
-			.mouseup( function(event) {
-				self.autoScaleDirection = 0;
-			});
+			.mouseup( $.proxy(this._onArrowMouseUp,this) );
 			
 
 		// Create the bar that defines the date range
@@ -116,6 +112,14 @@ $.widget( "ui.dateRangeSlider", {
 		this.dragRightDays = getDaysBetween( this.options.bounds.max, this.minDate );
 		this.dragBar.width(this.dragRightDays - this.dragLeftDays );
 		this._moveDrag( 0 );
+	},
+	
+	// Call when mouse up on an arrow
+	_onArrowMouseUp: function() {
+		this.autoScaleDirection = 0;
+		if ( this.options.change ) {
+			this.options.change( this._computeCurrentDate() ); 
+		}
 	},
 	
 	// Create the scale
