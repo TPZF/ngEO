@@ -179,6 +179,7 @@ return {
 			var $resultsMessage = $('#resultsMessage');
 			$resultsMessage.stop();
 			$resultsMessage.css('opacity',1.0);
+			$resultsMessage.show();
 			
 			if ( SearchResults.totalResults != 0 ) {
 				var startIndex = 1 + (SearchResults.currentPage-1) * SearchResults.countPerPage;
