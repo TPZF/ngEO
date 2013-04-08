@@ -62,18 +62,18 @@ var DataAccessRequest = {
 			  var statusesConfig = Configuration.localConfig.dataAccessRequestStatuses;
 			  var validStatusesConfig = statusesConfig.validStatuses;
 			  
-				  switch (data.DataAccessRequestStatus.status){
+				  switch (data.dataAccessRequestStatus.status){
 					  
 				  	  case validStatusesConfig.validatedStatus.value:
 						 
 				  		  //initial stage
 						  if (self.step == 0 && self.id == "" &&  self.requestStage == statusesConfig.validationRequestStage) {
 							  self.step = 1;
-							  self.id = data.DataAccessRequestStatus.ID;
+							  self.id = data.dataAccessRequestStatus.ID;
 							  self.requestStage = statusesConfig.confirmationRequestStage;
 							  self.serverResponse = "<p>" + validStatusesConfig.validatedStatus.message + "<p>";
 							  
-							  self.validationProcessing(data.DataAccessRequestStatus);
+							  self.validationProcessing(data.dataAccessRequestStatus);
 							  
 							  self.trigger('SuccessValidationRequest');
 							  
@@ -87,7 +87,7 @@ var DataAccessRequest = {
 						   
 						  if (self.step == 0 && self.requestStage == statusesConfig.validationRequestStage) {
 							  self.step = 1;
-							  self.id = data.DataAccessRequestStatus.ID;
+							  self.id = data.dataAccessRequestStatus.ID;
 							  //Bulk order is considered add the createBulkOrder
 							  self.createBulkOrder = true;
 							  self.requestStage = statusesConfig.confirmationRequestStage;
@@ -102,7 +102,7 @@ var DataAccessRequest = {
 					  case validStatusesConfig.pausedStatus.value:	  
 					  case validStatusesConfig.inProgressStatus.value:
 						  
-						  if (self.step == 1 && self.id == data.DataAccessRequestStatus.ID &&
+						  if (self.step == 1 && self.id == data.dataAccessRequestStatus.ID &&
 								self.requestStage == statusesConfig.confirmationRequestStage) {//2 steps done
 							  self.serverResponse = validStatusesConfig.inProgressStatus.message;
 							  self.trigger('SuccessConfirmationRequest');
@@ -129,8 +129,8 @@ var DataAccessRequest = {
 				  }	  
 					   
 				  //if the server sends a response message append it to the message to display
-				  if (data.DataAccessRequestStatus.message){
-					   self.serverResponse =  self.serverResponse + "<p>" + data.DataAccessRequestStatus.message + "<p>";
+				  if (data.dataAccessRequestStatus.message){
+					   self.serverResponse =  self.serverResponse + "<p>" + data.dataAccessRequestStatus.message + "<p>";
 				  }
 				   
 		  	  },
