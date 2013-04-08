@@ -47,7 +47,7 @@
 			        "inProgressStatus": {
 			            "value": 0,
 			            "status" : "Processing",
-			            "message": "Request In Process..."
+			            "message": "Request In Progress..."
 			        },
 			        "pausedStatus": {
 			            "value": 1,
