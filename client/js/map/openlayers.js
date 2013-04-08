@@ -60,14 +60,18 @@ OpenLayersMapEngine = function( element )
 	// Setup the resolution, the same as used for WMTS
 	var resolutions = _buildWMTSResolution();
 	
-	// Compute the max resolution
-	var maxWRes = (restrictedExtent.right - restrictedExtent.left) / element.offsetWidth;
-	var maxHRes = (restrictedExtent.top - restrictedExtent.bottom) / element.offsetHeight;
-	var maxResolution = Math.min(maxWRes,maxHRes)
-	
-	// Modify the resolutions array to be strictly inferior to maxResolution
-	while ( resolutions[0] > maxResolution ) {
-		resolutions.shift();
+	if ( resolutions ) {
+		
+		// Compute the max resolution
+		var maxWRes = (restrictedExtent.right - restrictedExtent.left) / element.offsetWidth;
+		var maxHRes = (restrictedExtent.top - restrictedExtent.bottom) / element.offsetHeight;
+		var maxResolution = Math.min(maxWRes,maxHRes)
+		
+		// Modify the resolutions array to be strictly inferior to maxResolution
+		while ( resolutions[0] > maxResolution ) {
+			resolutions.shift();
+		}
+		
 	}
 	
 	// Create the map
