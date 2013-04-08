@@ -189,7 +189,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		
 		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo('.bottom');
 						
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retreive Product</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 		
