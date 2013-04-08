@@ -84,7 +84,11 @@ $.widget( "ngeo.panel", {
 	// default options
 	options: {
 		panelManager: null,
-		activator: ""
+		activator: "",
+		
+		// events
+		show: null,
+		hide: null
 	},
 
 	// Constructor
@@ -109,11 +113,14 @@ $.widget( "ngeo.panel", {
 				}
 			});
 		}
+		
+		this.parentElement.hide();
 	},
 	
 	// Show the panel
 	show: function() {
 		this.parentElement.show();
+		if (this.options.show) this.options.show();
 		this.options.panelManager.panelManager('option', 'bottom', this.element);
 		if (this.activator) this.activator.addClass('toggle');
 	},
@@ -123,6 +130,7 @@ $.widget( "ngeo.panel", {
 		this.options.panelManager.panelManager('option', 'bottom', null);
 		if (this.activator) this.activator.removeClass('toggle');
 		this.parentElement.hide();
+		if (this.options.hide) this.options.hide();
 	},
 	
 	// Update the panel
@@ -147,11 +155,10 @@ $.widget( "ngeo.panel", {
 	},*/
 
 	// _setOption is called for each individual option that is changing
-/*	_setOption: function( key, value ) {
-		// TODO : manage options?
+	_setOption: function( key, value ) {		
 		// in 1.9 would use _super
 		$.Widget.prototype._setOption.call( this, key, value );
-	}*/
+	}
 });
 
 
