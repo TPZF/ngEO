@@ -11,8 +11,8 @@ module.exports = function(req, res){
 		fs.readFile('./simpleDataAccessRequest/validationResponse.json', 'utf8', function (err, data) {
 			var response = JSON.parse(data);
 			console.log(req.data);
-			response.DataAccessRequestStatus.dlManagerId = req.body.SimpleDataAccessRequest.downloadLocation.DownloadManagerId;
-			response.DataAccessRequestStatus.productStatuses.length = req.body.SimpleDataAccessRequest.productURLs.length;
+			response.dataAccessRequestStatus.dlManagerId = req.body.SimpleDataAccessRequest.downloadLocation.DownloadManagerId;
+			response.dataAccessRequestStatus.productStatuses.length = req.body.SimpleDataAccessRequest.productURLs.length;
 			res.send(response);
 		});
 		

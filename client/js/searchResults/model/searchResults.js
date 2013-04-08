@@ -166,10 +166,14 @@ var SearchResults = {
 		var eor;
 		
 		for ( var i = 0; i < features.length; i++ ) {
-			eor = features[i].properties.EarthObservation.EarthObservationResult;
+/*			eor = features[i].properties.EarthObservation.EarthObservationResult;
 			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" ) {
 				productUrls.push(eor.eop_ProductInformation.eop_filename);
-			} 
+			} */
+			
+			if ( features[i].properties && features[i].properties.productUrl ) {
+				productUrls.push( features[i].properties.productUrl );
+			}
 		}
 		return productUrls;
 	},
@@ -179,44 +183,41 @@ var SearchResults = {
 	 * containing the selected download options.
 	 */
 	updateProductUrls: function(selectedDownloadOptions) {
-		var eor;
+		
 		
 		_.each(this.selection, function(feature){
-			eor = feature.properties.EarthObservation.EarthObservationResult;
-			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename!= "" ) {
-				var url;
+			if ( feature.properties && feature.properties.productUrl  ) {
+				var url = feature.properties.productUrl;
 				_.each(selectedDownloadOptions, function(optionValue, optionKey, list){
 					//the download option is not set in the url
-					if (eor.eop_ProductInformation.eop_filename.indexOf(optionKey) == -1){
+					if (url.indexOf(optionKey) == -1){
 						//no parameters set in the url
-						if (eor.eop_ProductInformation.eop_filename.indexOf("?") == -1){
-							url = eor.eop_ProductInformation.eop_filename + "?" + optionKey + "=" + optionValue;
+						if (url.indexOf("?") == -1){
+							url += "?" + optionKey + "=" + optionValue;
 						} else {//there are parameters in the url
-							url = eor.eop_ProductInformation.eop_filename + "&" + optionKey + "=" + optionValue;
+							url += "&" + optionKey + "=" + optionValue;
 						}
-					}else{
+					} else {
 						//the option has already been set : replace the existent value
-						var valueStartIndex = eor.eop_ProductInformation.eop_filename.indexOf(optionKey) + optionKey.length + 1; //+1 to cover = after the param
-						var firstPart = eor.eop_ProductInformation.eop_filename.substring(0, valueStartIndex);
+						var valueStartIndex = url.indexOf(optionKey) + optionKey.length + 1; //+1 to cover = after the param
+						var firstPart = url.substring(0, valueStartIndex);
 						//console.log("first part :: " + firstPart);
-						var valuePart = eor.eop_ProductInformation.eop_filename.substring(valueStartIndex, eor.eop_ProductInformation.eop_filename.length);
+						var valuePart = url.substring(valueStartIndex, url.length);
 						//console.log("value part :: " + valuePart);
 						var valueStopIndex = valuePart.indexOf("&");
 						
 						if (valueStopIndex == -1){//the value is the last value in the url
 							url = firstPart + optionValue;
 						}else{//option in the middle of the url
-							var remainingPart = valuePart.substring(valueStopIndex, eor.eop_ProductInformation.eop_filename.length);
+							var remainingPart = valuePart.substring(valueStopIndex, url.length);
 							//console.log("remainingPart :: " + remainingPart);
 							url = firstPart +  optionValue + remainingPart;
 							
 						}					
 						
 					}
-					console.log("current url with new download options:: " + eor.eop_ProductInformation.eop_filename);
-					console.log("Updated url with new download options:: " + url);
-					eor.eop_ProductInformation.eop_filename =  url;
 				});	
+				feature.properties.productUrl =  url;
 			} 
 		});
 	},

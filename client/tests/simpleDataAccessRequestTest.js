@@ -28,6 +28,7 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 				// Create a dummy feature
 				var feature = {
 					properties: {
+						productUrl: "dummy",
 						EarthObservation: {
 							EarthObservationResult : {
 								eop_ProductInformation: {

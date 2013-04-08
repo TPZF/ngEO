@@ -24,6 +24,8 @@ define(['jquery', 'configuration', 'searchResults/model/searchResults'],
 			SearchResults.unselect( features[0] );
 	        QUnit.ok( SearchResults.selection.length == 1, "selection length ok after unselect" );
 	        QUnit.ok( SearchResults.selection[0] == features[2], "selection content ok after unselect" );
+			
+			SearchResults.selection = [];
 	    });
 
     

@@ -23,7 +23,7 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	featureCollections['ND_OPT_1'] = eoliParser.parse('./productSearch/dataFromEOLI.txt',inputFeatureCollection);
 	featureCollections['default'] = wcsCoveragePaser.parse('./productSearch/sar_coverage.xml',inputFeatureCollection);
 });
-fs.readFile('./productSearch/Response.json', 'utf8', function (err, data) {
+fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, data) {
 	featureCollections['ATS_TOA_1P']  = JSON.parse(data);
 });
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
