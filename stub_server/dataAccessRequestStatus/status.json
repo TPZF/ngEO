@@ -1,0 +1,8 @@
+{ "dataAccessRequestStatus" : {
+   "ID":"ed236b8c-f33d-4d04-8e52-465efcf54a8c",
+   "type":"Simple Data Access Request",
+   "status":1,
+   "message":"Update successful",
+   "dlManagerId":"DM_GMV1",
+   "productStatuses":[{"productURL":"http://webs.novalocal/ngeo/catalogue/ASA_WS__0P/search?id=a20120101T105756130-20120101T105914490_D_T-XS_B","productStatus":"NOT_STARTED","percentageCompleted":"0","expectedSize":"0"}]}
+}

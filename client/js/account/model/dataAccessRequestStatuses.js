@@ -171,8 +171,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		var changeStatusURL = self.url + '/' + darID;
 		//console.log ("changeStatusURL : ");
 		//console.log (changeStatusURL);
-		var message = "";
-		
+			
 		return $.ajax({
 		  url: changeStatusURL,
 		  type : 'POST',
@@ -182,14 +181,15 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  success: function(data) {
 			 
 			  //If the server sends back a message get it in order to be displayed
-			  if (data.DataAccessRequestStatus.message){
-				  message = data.DataAccessRequestStatus.message;
+			  var message = "";
+			  if (data.dataAccessRequestStatus.message){
+				  message = data.dataAccessRequestStatus.message;
 			  }
 			  
-			  if (data.DataAccessRequestStatus.status == newStatus){
+			  if (data.dataAccessRequestStatus.status == newStatus){
 				  self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(darID)].status = newStatus;
 				  //notify that the DAR status has been successfully changed
-				  self.trigger('DARStatusChanged', ['SUCCESS', darID, newStatus, 'SUCCESS Status changed to : ' + self.getStatusReadableString(newStatus) + ' ' + message]);  
+				  self.trigger('DARStatusChanged', ['SUCCESS', darID, newStatus, 'Status changed to ' + self.getStatusReadableString(newStatus) + ' : ' + message]);  
  
 			  }else{
 				  self.trigger('DARStatusChanged', ['ERROR', darID, newStatus, 'ERROR : ' + message]);  
@@ -200,7 +200,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  error: function(jqXHR, textStatus, errorThrown) {
 			  console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
 			  //notify that the download manager status change has Failed
-			  self.trigger('DARStatusChanged', ['ERROR', darID, newStatus,  "ERROR when posting Change status Request : " + textStatus + ' ' + errorThrown]);  
+			  self.trigger('DARStatusChanged', ['ERROR', darID, newStatus,  "ERROR when trying to change status : " + textStatus + ' ' + errorThrown]);  
 
 		  }
 		});	
