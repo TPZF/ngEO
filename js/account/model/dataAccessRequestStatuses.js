@@ -32,28 +32,27 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	 */
 	getOrderedStatuses : function (){
 	
-		var statuses = [];
-		var foundDM = [];
-		var dars = [];
-		var self = this;
-			
-		 _.each(self.get("dataAccessRequestStatuses"), function(status) {
-			 
-			 if (foundDM.indexOf(status.dlManagerId) == -1){
-				 foundDM.push(status.dlManagerId);
-				 dars = [];
-				 dars.push({"ID" : status.ID, "type": status.type, "status": status.status, "productStatuses" : status.productStatuses });
-				 statuses.push({"downloadManagerName" : DownloadManagers.getDownloadManagerName(status.dlManagerId), "dlManagerId" : status.dlManagerId, "DARs" : dars }); 
-			 }else{
-				 _.each(statuses, function(newStatus) {
-					 if (newStatus.dlManagerId == status.dlManagerId){
-						 newStatus.DARs.push({"ID" : status.ID, "type": status.type, "status": status.status, "productStatuses" : status.productStatuses}); 
-					 }
-				 });
-			 }
-		 });
+		// TODO : the method is only used by the DARMonitoringView. Maybe remove it ?
 		
-		 return statuses;
+		var dm2Dars = {};
+		var orderedStatuses = [];
+		
+		var statuses = this.get("dataAccessRequestStatuses");
+		for ( var i = 0; i < statuses.length; i++ ) {
+			var status = statuses[i];
+			
+			if (!dm2Dars[status.dlManagerId]) {
+				var dmDars = { downloadManagerName : DownloadManagers.getDownloadManagerName(status.dlManagerId),
+						dlManagerId : status.dlManagerId, DARs : [] };
+				dm2Dars[status.dlManagerId] = dmDars;
+				orderedStatuses.push( dmDars );
+			}
+			
+			dm2Dars[status.dlManagerId].DARs.push( status );
+			
+		}
+		
+		return orderedStatuses;
 
 	},
 	
