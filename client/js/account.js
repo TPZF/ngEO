@@ -7,6 +7,16 @@ define(["jquery", "configuration", "logger", "account/model/dataAccessRequestSta
         function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, 
         		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, UserPrefsView, account_html) {
 	
+	
+// Function call when a tab is activated
+var onTabActivated = function($link) {
+	if ( $link.attr('href') == "#downloadManagersMonitoring" ) {
+		DownloadManagers.fetch();
+	} else if ( $link.attr('href') == "#DARMonitoring" ) {
+		DataAccessRequestStatuses.fetch();
+	}
+};
+
 return {
 
 	/**
@@ -17,7 +27,8 @@ return {
 	
 		var acc = $(account_html);
 		acc.find('#tabs').tabs({ 
-			theme: "b" 
+			theme: "b",
+			activate: onTabActivated
 		});
 		return acc;
 	},
@@ -27,60 +38,19 @@ return {
 	 * Called after buildElement
 	 */
 	initialize: function() {
-		
-		DownloadManagers.fetch({
-				
-			success : function(){
-			
-				//remove any error message if any
-				$("#downloadManagersMonitoring").empty();
-				
-				// create the download managers monitoring view
-				var dmView = new DownloadManagersMonitoringView({
-					model : DownloadManagers,
-					el : "#downloadManagersMonitoring"
-				});
-				
-				dmView.render();
-				
-				DataAccessRequestStatuses.set({collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
-					collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts});
 	
-				//create the DARs monitoring view
-				DataAccessRequestStatuses.fetch({
-					
-					success : function(){
-						//remove any error message if any
-						$("#DARMonitoring").empty();
-						//console.log("statuses");
-						//console.log(DataAccessRequestStatuses.attributes);
-						var darView = new DataAccessRequestMonitoringView({
+	
+		// Create the download managers monitoring view
+		var dmView = new DownloadManagersMonitoringView({
+			model : DownloadManagers,
+			el : "#downloadManagersMonitoring"
+		});	
+				
+		// Create the view to monitor data access requests
+		var darView = new DataAccessRequestMonitoringView({
 							model : DataAccessRequestStatuses,
 							el : "#DARMonitoring"
 						});
-						
-						darView.render();
-					},
-					//Handle the case when the loading of DARS has failed
-					error : function(){
-						$("#DARMonitoring").empty();
-						$("#DARMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the data access requests.</p></b>" + 
-								"<p><b> Please check the interface with the server.</p></b></div>");
-					}
-				});	
-			},
-			//Handle the case when the loading of download managers has failed
-			error : function(){
-				$("#downloadManagersMonitoring").empty();
-				$("#downloadManagersMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>"+ 
-												"<p><b> Please check the interface with the server.</p></b></div>");
-				$("#DARMonitoring").empty();
-				$("#DARMonitoring").append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>" + 
-						"<p><b> The data access requests cannot be displayed.</p></b></div>");
-
-				Logger.error('Cannot retreive the download managers from the server for My account.');			
-			}
-		});
 		
 		//Create the inquiries View
 		var inquiriesView = new InquiriesView({
@@ -92,10 +62,17 @@ return {
 		//Create the user prefs View
 		var userPrefsView = new UserPrefsView({
 			el : "#userPrefs"
-		});
-		
+		});	
 		userPrefsView.render();
 		
+		// Fetch data for DM
+		DownloadManagers.fetch();
+		
+		DataAccessRequestStatuses.set({collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
+			collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts});
+			
+		// Fetch DAR : maybe not needed right now
+		DataAccessRequestStatuses.fetch();
 	}
 		
 };
