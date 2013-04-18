@@ -21,7 +21,7 @@ var DownloadManagers = Backbone.Model.extend({
 	/** get a download manager user friendly name given its id */
 	getDownloadManagerName : function (id) {
 	
-		var name = Configuration.localConfig.downloadManager.undefinedDownloadManagerId;
+		var name = id;
 		
 		_.each(this.get("downloadmanagers"), function(dm) {
 			if (dm.downloadManagerId == id){

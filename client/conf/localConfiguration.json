@@ -13,7 +13,6 @@
 			
 			"downloadManager" : {
 				
-				"undefinedDownloadManagerId"	: "undefined download manager id",
 		        "activeStatus": {
 		            "value": "ACTIVE"
 		        },
