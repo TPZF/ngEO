@@ -75,7 +75,7 @@ var GazetteerView = Backbone.View.extend({
 		var data = $item.data('data');
 		
 		if ( data.geotext ) {
-			this.model.searchArea.setFromWKT(data.geotext,true);
+			this.model.searchArea.setFromWKT(data.geotext);
 			this.parentView.updateSearchAreaLayer();
 		} else {	
 			var south = parseFloat(data.boundingbox[0]);

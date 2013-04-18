@@ -134,7 +134,7 @@ var SearchArea = function() {
 		
 			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
 			var coords = _feature.geometry.coordinates;
-			param = "g=POLYGON(";
+			param = "geom=POLYGON(";
 			for ( var j = 0; j < coords.length; j++ ) {
 				if ( j != 0 ) {
 					param += ",";
@@ -144,7 +144,7 @@ var SearchArea = function() {
 					if ( i != 0 ) {
 						param += ",";
 					}
-					param += coords[j][i][1] + " " + coords[j][i][0]
+					param += coords[j][i][0] + " " + coords[j][i][1];
 				}
 				param += ")";
 			}
@@ -210,7 +210,7 @@ var SearchArea = function() {
 	};
 	
 	// Import from WKT
-	this.setFromWKT = function(wkt, invertLatLon) {
+	this.setFromWKT = function(wkt) {
 		var polygonRe = /POLYGON\(\(([^\)]+)\)\)/gm;
 		var match = polygonRe.exec( decodeURIComponent(wkt) );
 		if ( match ) {
@@ -219,8 +219,8 @@ var SearchArea = function() {
 			var coordinates = [];
 			for ( var i = 0; i < strCoords.length; i++ ) {
 				var strLatLon = strCoords[i].split(/\s+/);
-				var lat = parseFloat(strLatLon[invertLatLon ? 1 : 0]);
-				var lon = parseFloat(strLatLon[invertLatLon ? 0 : 1]);
+				var lat = parseFloat(strLatLon[1]);
+				var lon = parseFloat(strLatLon[0]);
 				coordinates.push( [lon,lat] );
 			}
 			_feature.geometry.coordinates = [coordinates];

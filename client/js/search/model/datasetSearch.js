@@ -254,7 +254,7 @@ var DataSetSearch = Backbone.Model.extend({
 						throw "Invalid OpenSearch URL : bbox parameter is not correct."
 					this.searchArea.setBBox({west : coords[0],south : coords[1],east : coords[2],north: coords[3]});
 					break;
-				case "g":
+				case "geom":
 					// TODO : check polygon is correct
 					this.searchArea.setFromWKT(pair[1]);
 					break;
