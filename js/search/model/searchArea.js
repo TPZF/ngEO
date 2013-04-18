@@ -209,10 +209,18 @@ var SearchArea = function() {
 		return true;
 	};
 	
-	// Import from WKT
+	// Import from WKT, POLYGON or MULTIPOLYGON
 	this.setFromWKT = function(wkt) {
 		var polygonRe = /POLYGON\(\(([^\)]+)\)\)/gm;
 		var match = polygonRe.exec( decodeURIComponent(wkt) );
+		
+		if ( match ) {
+			data = match[1];
+		} else {
+			var multiPolygonRe = /MULTIPOLYGON\(\(\(([^\)]+)/gm;
+			match = multiPolygonRe.exec( decodeURIComponent(wkt) );
+		}
+		
 		if ( match ) {
 			var data = match[1];
 			var strCoords = data.split(',');
