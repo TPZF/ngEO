@@ -14,9 +14,10 @@ $.widget( "ngeo.tabs", {
 	options: {
 	
 		// A theme to be applied, added as a class on the whole tab
-		theme: "a"
+		theme: "a",
 		
 		// callbacks
+		activate : null
 	},
 
 	// the constructor
@@ -51,6 +52,10 @@ $.widget( "ngeo.tabs", {
 			
 			self.activeDiv = $(href);
 			self.activeLink = $(this);
+			
+			if ( self.options.activate ) {
+				self.options.activate(self.activeLink,self.activeDiv);
+			}
 			
 			event.preventDefault();
 		});
