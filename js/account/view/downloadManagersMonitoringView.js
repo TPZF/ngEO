@@ -8,6 +8,8 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 
 	initialize : function(){
 		this.model.on("DownloadManagerStatusChanged" , this.updateDownloadManagerStatusView, this);
+		this.model.on("sync" , this.render, this);
+		this.model.on("error" , this.error, this);
 	},
 	
 	events :{
@@ -133,7 +135,26 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		}
 	},
 	
+	/**
+	 * Call when an error occurs on the server
+	 */
+	error: function(model, xhr) {
+		if ( xhr.status == 404 ) {
+			// This is normal, the user has no download managers so just render it.
+			this.render();
+		} else {
+			this.$el.empty();
+			this.$el.append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>"+ 
+												"<p><b> Please check the interface with the server.</p></b></div>");
+		}
+	},
+	
+	/**
+	 * Call to build the view when the download managers are synced
+	 */
 	render: function(){
+	
+		this.$el.empty();
 	
 		// Add HTML to install a download manager
 		var installContent = _.template(downloadManagerInstall_template, { downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink,

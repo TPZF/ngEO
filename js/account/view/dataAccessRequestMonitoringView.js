@@ -8,11 +8,9 @@ define(
 
 			initialize : function(){
 				this.model.on("DARStatusChanged" , this.updateDARStatusView, this);
-				//orderedStatuses is the model for the monitoring view, it wrappes the DataAccessRequestStatuses model
-				//and the orderedStatusesToDisplay which the array of the DARs to be displayed.
-				//It is useful to update the orderedStatusesToDisplay according the DM selected.
-				this.orderedStatuses = { orderedStatusesToDisplay : this.model.getOrderedStatuses(),
-										 model : this.model};
+										 
+				this.model.on("sync" , this.render, this);
+				this.model.on("error" , this.error, this);
 			},
 			
 			events : {
@@ -158,11 +156,29 @@ define(
 				this.setUpStatusIcons();
 			},
 			
+			error: function(model,xhr) {
+				if ( xhr.status == 404 ) {
+					// This is normal, the user has no download managers so just render it.
+					this.render();
+				} else {
+					this.$el.empty();
+					this.$el.append("<div class='ui-error-message'><p><b> Failure: Error when loading the data access requests.</p></b>" + 
+							"<p><b> Please check the interface with the server.</p></b></div>");
+				}
+			},
+			
 			/** Display the list of DMs assigned to Data Access Requests in the left side and the list of 
 			 * Data access request in the right side.
 			 * By default all the DARS are displayed.  */
 			render : function() {
-
+	
+				//orderedStatuses is the model for the monitoring view, it wrappes the DataAccessRequestStatuses model
+				//and the orderedStatusesToDisplay which the array of the DARs to be displayed.
+				//It is useful to update the orderedStatusesToDisplay according the DM selected.
+				this.orderedStatuses = { orderedStatusesToDisplay : this.model.getOrderedStatuses(),
+										 model : this.model};
+			
+				this.$el.empty();
 				var mainContent = _.template(accountDARs_template, this.model);
 				this.$el.append(mainContent);
 				var darsContent = _.template(DAR_monitoring_template, this.orderedStatuses);
