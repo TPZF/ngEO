@@ -23,14 +23,6 @@
 	
 		<!-- 	display  download options -->
 		<form>
-				
-			<label id="useDownloadOptions_label" for="useDownloadOptions_input">Use download options</label>
-	  		
-			<% if (attributes.useDownloadOptions == "true") {  %>
-				<input type="checkbox" name="useDownloadOptions" id="useDownloadOptions_input" data-mini="true" checked/>		
-			<% } else { %>	 
-			 	<input type="checkbox" name="useDownloadOptions" id="useDownloadOptions_input" data-mini="true"/>		
-			<% } %>	 
 			
 			<% _.each(dataset.get("downloadOptions"), function(option, i) { %>		
 
