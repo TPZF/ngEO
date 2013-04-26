@@ -59,7 +59,6 @@ var DataSetSearch = Backbone.Model.extend({
 		start : new Date(), //name of the opensearch request parameter
 		stop: new Date(), //name of the opensearch request parameter
 		useExtent : true,
-		useDownloadOptions : false, //flag for including download options or not		
 		useTimeSlider : false //flag for displaying time slider or not
 	},
 	
@@ -155,8 +154,6 @@ var DataSetSearch = Backbone.Model.extend({
 			}
 			//remove selected download options
 			if (this.dataset.get('downloadOptions')){			
-				//reset the useDownloadOptions flag
-				this.set({useDownloadOptions : false});
 				
 				_.each(this.dataset.get('downloadOptions'), function(option){
 					if (_.has(self.attributes, option.argumentName)){
@@ -191,9 +188,7 @@ var DataSetSearch = Backbone.Model.extend({
 		url = this.addAdvancedCriteria(url);
 
 		//add the download options values selected and already set to the model
-		if (this.get("useDownloadOptions")){
-			url = this.addDownloadOptions(url);
-		}
+		url = this.addDownloadOptions(url);
 		
 		//console.log("DatasetSearch module : getCoreURL method : " + url);
 		
@@ -361,7 +356,7 @@ var DataSetSearch = Backbone.Model.extend({
 				if (_.has(self.attributes, option.argumentName)){
 					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
 				}else{
-					url += '&' + option.argumentName + '=' + self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
+					url += '&' + option.argumentName + '=""' ;	
 				}
 			});
 		}
@@ -391,7 +386,8 @@ var DataSetSearch = Backbone.Model.extend({
 				if (_.has(self.attributes, option.argumentName)){
 					selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;
 				}else{
-					selectedOptions[option.argumentName] = self.dataset.getDefaultDownloadOptionValue(option.argumentName);	
+					 //WEBC_FAT_12 set the download options not changed to have an empty value
+					selectedOptions[option.argumentName] = "";	
 				}
 			});
 		}
