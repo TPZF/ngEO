@@ -1,6 +1,6 @@
 Name:           esa-webclient-ngeo
-Version:        0.7
-Release:        SNAPSHOT20130320
+Version:        1.0
+Release:        SNAPSHOT20130426
 Summary:        The ngEO Web Client
 
 Group:       	NGEO   
