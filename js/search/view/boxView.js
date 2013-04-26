@@ -44,13 +44,27 @@ var BoxView = Backbone.View.extend({
 		},
 				
 		//blur insure that values has been manually changed by the user
+		//change the bbox in the model only and inly if it is valid
 		'blur input' : function(event){
-			this.model.searchArea.setBBox({
-				west : $("#west").val(),
-				south: $("#south").val(),
-				east: $("#east").val(),
-				north: $("#north").val()
-			});
+			
+			var bbox = {
+					west : $("#west").val(),
+					south: $("#south").val(),
+					east: $("#east").val(),
+					north: $("#north").val()
+				};
+			
+			if (this.model.searchArea.isValidBBox(bbox)){
+				this.model.searchArea.setBBox(bbox);
+			
+			}else{
+				bbox = this.model.searchArea.getBBox();
+				$("#west").val( bbox.west );
+				$("#south").val( bbox.south );
+				$("#east").val( bbox.east );
+				$("#north").val( bbox.north );
+			}
+			
 			this.parentView.updateSearchAreaLayer();
 
 		},
