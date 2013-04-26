@@ -16,7 +16,8 @@ var DownloadOptionsView = Backbone.View.extend({
 		'change select' : function(event){
 			var option = {};
 			option[event.currentTarget.id] = $(event.currentTarget).val();
-			this.model.set(option);			
+			this.model.set(option);	
+		//WEBC_FAT_12 Removed Download options checkbox
 		}
 	
 	},
