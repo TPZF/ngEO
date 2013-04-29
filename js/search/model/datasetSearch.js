@@ -356,7 +356,7 @@ var DataSetSearch = Backbone.Model.extend({
 				if (_.has(self.attributes, option.argumentName)){
 					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
 				}else{
-					url += '&' + option.argumentName + '=""' ;	
+					url += '&' + option.argumentName + '=' ;	
 				}
 			});
 		}
