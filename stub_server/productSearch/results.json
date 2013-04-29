@@ -23,6 +23,8 @@
 
       "properties":
       {
+      	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
             "gml_beginPosition": "2001-01-01T10:00:00.00Z",
@@ -119,6 +121,8 @@
 
       "properties":
       {
+       	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
 
@@ -214,6 +218,9 @@
 
       "properties":
       {
+      
+      	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
 
@@ -309,6 +316,8 @@
 
       "properties":
       {
+      	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+      	
         "EarthObservation":
           {
 
@@ -404,6 +413,8 @@
 
       "properties":
       {
+       "productUrl": "http://localhost:3000/ngeo/files/product.zip",
+       
         "EarthObservation":
           {
 
@@ -499,6 +510,8 @@
 
       "properties":
       {
+      	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+      	
         "EarthObservation":
           {
 
@@ -594,6 +607,9 @@
 
       "properties":
       {
+      
+      	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
 
@@ -689,6 +705,8 @@
 
       "properties":
       {
+     	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+     	
         "EarthObservation":
           {
 
@@ -784,6 +802,8 @@
 
       "properties":
       {
+        "productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
 
@@ -878,7 +898,9 @@
       "id": "S11A00010",
 
       "properties":
-      {
+      
+      { "productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
 
@@ -974,6 +996,8 @@
 
       "properties":
       {
+       	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
+        
         "EarthObservation":
           {
 
