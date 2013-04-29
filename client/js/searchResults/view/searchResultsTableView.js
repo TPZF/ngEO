@@ -79,7 +79,8 @@ var SearchResultsTableView = Backbone.View.extend({
 			var feature = this.getFeatureFromRow( $(event.currentTarget).closest('tr').get(0) );
 			var featureArray = [];
 			featureArray.push(feature);
-			var directDownloadWidget = new DirectDownloadWidget(this.model.getProductUrls(featureArray)[0]);
+			//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
+			var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrls(featureArray)[0]);
 			directDownloadWidget.open(event);
 		}, 
 	
