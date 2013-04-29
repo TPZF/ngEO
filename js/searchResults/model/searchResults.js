@@ -178,6 +178,23 @@ var SearchResults = {
 		return productUrls;
 	},
 	
+	/** the direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */
+	getDirectDownloadProductUrls : function(features) {
+		
+		var productUrls = [];
+		var eor;
+		
+		for ( var i = 0; i < features.length; i++ ) {
+			eor = features[i].properties.EarthObservation.EarthObservationResult;
+			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" ) {
+				productUrls.push(eor.eop_ProductInformation.eop_filename);
+			} 
+			
+		}
+		return productUrls;
+	},
+	
+	
 	/** After a download options selection change on results table, update the selected(checked) product urls 
 	 * with the new selected downloadOptions. The selectedDownloadOptions argument is a json object 
 	 * containing the selected download options.
@@ -222,7 +239,7 @@ var SearchResults = {
 		});
 	},
 	
-	/**  Check whether the given feature has a url supported by a browser */
+	/**  Check whether the given feature has a direct download url supported by a browser */
 	isBrowserSupportedUrl : function(feature) {
 
 		var eor = feature.properties.EarthObservation.EarthObservationResult;
