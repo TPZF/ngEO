@@ -8,6 +8,7 @@
 				<label for="<%= option.argumentName %>_widget"><%= option.argumentName %> : </label>
 					 
 				<select id="<%= option.argumentName %>_widget" data-mini="true" data-theme="c">
+					<option value="None">None</option>
 					<% _.each(option.values, function(value) { %>
 						<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName] == value.name)) {  %>						
 								<option value="<%= value.name%>" selected><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
