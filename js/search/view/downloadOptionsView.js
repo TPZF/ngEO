@@ -15,11 +15,13 @@ var DownloadOptionsView = Backbone.View.extend({
 		//with the selected value.
 		'change select' : function(event){
 			var option = {};
-			option[event.currentTarget.id] = $(event.currentTarget).val();
-			this.model.set(option);	
-		//WEBC_FAT_12 Removed Download options checkbox
+			//WEBC_FAT_12 Removed Download options checkbox
+			//In case one choice is in the select box, the change event is not fired so the None is added 
+			//to allow changing the values.
+			option[event.currentTarget.id] = ($(event.currentTarget).val() != "None") ? $(event.currentTarget).val() : "";
+			//option[event.currentTarget.id] = $(event.currentTarget).val();
+			this.model.set(option);		
 		}
-	
 	},
 	
 	render: function(){
