@@ -34,11 +34,23 @@ var DatasetSelectionView = Backbone.View.extend({
 				$target.addClass('ui-btn-active');
 				this.selectedDatasetId = event.currentTarget.id;
 				DatasetSearch.set("datasetId", this.selectedDatasetId);
-				//save the selected dataste id 
+				//save the selected dataset id 
 				UserPrefs.save("Dataset", this.selectedDatasetId);
 			}
 		}
 	},
+	
+	/**
+	 * Constructor
+	 */
+	initialize: function() {
+		this.criteriaFilter = [];
+	},
+	
+	/**
+	 * The template used to build the dataset list
+	 */
+	datasetsListTemplate : _.template(datasetsList_template),
 	
 	/**
 	 * Render the view
@@ -48,28 +60,29 @@ var DatasetSelectionView = Backbone.View.extend({
 		//if datasets array has no items that means that the server has sent a response
 		//since the fetch was a success (it is called from the dataseSelection widget).
 		//However, there was problem since the datsets were not created. 
-		if (this.model.get("datasets").length == 0){
-			$(this.el).append("<p>Error: There was a problem when creating the datasets.<p>");
+		if ( !this.model.isValid() ){
+			this.$el.append("<p>Error: There was a problem when creating the datasets.<p>");
 			return this;		
 		}
-		var self = this;
 		
-		var mainContent = _.template(datasetsSelection_template, this.model);
-		var listContent = _.template(datasetsList_template, this.model);
-		
+		// Build the main content
+		var mainContent = _.template(datasetsSelection_template, this.model);		
 		this.$el.append(mainContent);
-		this.$el.find("#datasetListContainer").append(listContent);
+		
+		// Build the criteria select element and datasets list
+		this.updateSelectCriteria();
+		this.updateDatasetsList();
+		
 		this.$el.trigger('create');
 		
 		//select the dataset id stored in the prefs
 		var datasetId = UserPrefs.get("Dataset");
 		if (datasetId != "None"){
-			var selector = "#" + datasetId;
-			var datasetObject = this.$el.find(selector);
+			var $elt = this.$el.find("#" + datasetId);
 			//if the dataset is in the list select it unless reset the datset in the preferences and display on error message 
-			if (datasetObject){
+			if ($elt.length != 0){
 				//make the dataset list item selected
-				datasetObject.addClass('ui-btn-active');
+				$elt.addClass('ui-btn-active');
 				//set the selected dataset in the model
 				DatasetSearch.set("datasetId", datasetId);
 			}else{
@@ -82,62 +95,78 @@ var DatasetSelectionView = Backbone.View.extend({
 		
 		var self = this;
 				
-		//iterate on all the combo boxes identifiers and bind the event handler which will generate 
-		//a regExp : "\b(criteria_1,criteria_2,...., criteria_n,[^"]*,[^"]*)
-		//the two last elements are the dataset identifier and the items 
-		//.* was not uses because it covers the caracter '"' and so the filtering is not correct.
-		//to cover the all the values (especially "") the expression : ([^"]*|"") is used.
-		
-		_.each(self.model.attributes.criteria, function(criterion, index){
+		//iterate on criteria to add a callback when the user selects a new criteria filter
+		_.each(self.model.get('criterias'), function(criteria, index){
 			
 			//bind a change event handler to the select id
 			//Fixes the binding after the display of the widget in case of success
-			self.$el.find("#"+ criterion.criterionName).change(function(event){
+			self.$el.find("#criteria_" + index).change(function(event){
 
-				var string = '';
+				self.criteriaFilter[index] = $(this).val();
+				if ( self.criteriaFilter[index] == '' ) {
+					self.criteriaFilter[index] = undefined;
+				}
 				
-				_.each(self.model.attributes.criteria, function(otherCriterion, i){
-					
-					if (i == 0){
-						string = string + '\\b(';
-					}
-
-					//console.log($("#"+ otherCriterion.criterionName).val());
-					
-					if ($("#"+ otherCriterion.criterionName).val() != ''){
-						string = string + $("#"+ otherCriterion.criterionName).val() + ',';
-					}else{
-						string = string + '([^"]*|""),'
-					}
-	
-					if (i == self.model.attributes.criteria.length-1){
-						string = string + '[^"]*,[^"]*)'
-					}					
-				});				
-				
-				//console.log("created string from select boxes"); 
-				//console.log(string);
-				
-				//filter the datasets according to the selected parameters reg exp
-				//the datsets filtred as stored in the model
-				self.model.filter(string);
+				// Update datasets list and criteria according to the new criteria filter
 				self.updateDatasetsList();
+				self.updateSelectCriteria();
 			});
 		});		
 		
 		return this;
 	},
 	
+	/**
+	 * Update the select element for criterias
+	 */
+	updateSelectCriteria : function(filterResult) {
+	
+		// Rebuilt the criterias to select
+		var criterias = this.model.get('criterias');
+		for ( var i = 0; i < criterias.length; i++ ) {
+		
+			var $selectCriteria = this.$el.find("#criteria_" + i);
+							
+			$selectCriteria.empty();
+			$selectCriteria.append( '<option value="">' + criterias[i].title + ' : None</option>');
+			
+			var criteriaValues = this.model.filterCriteriaValues(this.criteriaFilter,i);
+			for ( var j = 0; j < criteriaValues.length; j++ ) {
+			
+				// Add the option to the select element
+				var $opt = $( '<option value="' + criteriaValues[j] + '">' + criterias[i].title + ' : ' + criteriaValues[j] + '</option>')
+					.appendTo( $selectCriteria );
+				
+				// Select it if necessary
+				if ( this.criteriaFilter[i] == criteriaValues[j] ) {
+					$opt.attr('selected','selected');
+				}
+			}
+		}
+		
+	},
+	
 	/** 
 	 * Update only the list of datasets in the view 
 	 */
-	updateDatasetsList : function(){
+	updateDatasetsList : function() {
+		var datasets = this.model.filterDatasets(this.criteriaFilter);
 		var $dslListContainer = this.$el.find("#datasetListContainer")
-		$dslListContainer.empty();
-		$dslListContainer.unbind();
-		var listContent = _.template(datasetsList_template, this.model);
-		$dslListContainer.append(listContent);
+		var listContent = this.datasetsListTemplate({
+			datasets: datasets
+		});
+		$dslListContainer.html(listContent);	
 		$dslListContainer.trigger('create');
+	
+		var selectedDatasetId = DatasetSearch.get("datasetId");
+		if ( selectedDatasetId && selectedDatasetId != "" ) {
+			var $elt = $dslListContainer.find('#' + selectedDatasetId);
+			if ( $elt.length == 0 ) {
+				 DatasetSearch.set("datasetId",undefined)
+			} else {
+				$elt.addClass('ui-btn-active');
+			}
+		}
 	}
 		
 });
