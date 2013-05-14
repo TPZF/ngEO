@@ -80,15 +80,13 @@
 				
 					<div data-role="fieldcontain">
 							
-						<legend><%= criterion.id %>:</legend>
+						<label class="capitalize" for="<%= criterion.id %>"><%= criterion.id %>:</label>
 
 						<% if (_.has(attributes, criterion.id)){ %>
-							<label for="<%= criterion.id %>"><%= criterion.id %></label>
 							<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= attributes[criterion.id] %>" data-mini="true"/>
 							 
 								
 						<% } else { %>	
-						 	<label for="<%= criterion.id %>"><%= criterion.id %></label>
 						 	<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" data-mini="true"/>
 					
 						<% } %>
@@ -99,15 +97,13 @@
 				
 					<div data-role="fieldcontain">
 							
-						<legend><%= criterion.id %>:</legend>
+						<label class="capitalize" for="<%= criterion.id %>"><%= criterion.id %>:</label>
 
 						<% if (_.has(attributes, criterion.id)){ %>
-							<label for="<%= criterion.id %>"><%= criterion.id %></label>
 							<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= attributes[criterion.id] %>" data-mini="true"/>
 							 
 								
 						<% } else { %>	
-						 	<label for="<%= criterion.id %>"><%= criterion.id %></label>
 						 	<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" data-mini="true"/>
 					
 						<% } %>
