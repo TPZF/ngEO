@@ -1,22 +1,44 @@
-/**
-  * Datasets population model 
-  * Handled transparently the criteria received from the server.
-  * Filters the daatsets according the regex created from the criteria
-  */
+
 
   
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
+/**
+ * Function to match a row from the matrix with the given filter
+ */
+var matchRow = function( filter, row )  {
+	for ( var i = 0; i < filter.length; i++ ) {
+		if ( filter[i] && filter[i] != row[i] ) {
+			return false;
+		}	
+	}
+	return true;
+};
+
+/**
+ * Small criteria structure
+ */
+var Criteria = function(name) {
+	this.title = name;
+	this.possibleValues = [];
+};
+
+Criteria.prototype.addValue = function(value) {
+	if ( value != '' && !_.contains(this.possibleValues,value) ) {
+		this.possibleValues.push(value);
+	}
+};
+
+/**
+  * Datasets population model 
+  * Handled transparently the criteria received from the server.
+  * Filters the datasets according to a criteria list
+  */
 var DataSetPopulation = Backbone.Model.extend({
 	
 	defaults:{
-		criteria : [], //table of criteria each element is a json {"criterionName": "", "indexInRow" : index, "values" : [{"value" : ""}] }
-					  //"criterionName" is the name of the criterion received from the server
-					  //"indexInRow" is the index of the criterion within the criteria table "criteriaTitles" received 
-					  //"values" is table of the values got from the matrix values received from the server.
-		datasets : [], // the datsets without filtering
-		matrixStr : "", //the whole string created from the received values matrix
-		datasetsToDisplay : [] //the datasets filtred according to a given expression
+		criterias : null,
+		matrix: null,
 	},
 	
 	// Constructor : initialize the url from the configuration
@@ -26,93 +48,85 @@ var DataSetPopulation = Backbone.Model.extend({
 	},
 
 	parse: function(response){
-		
-		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
-		var valuesTab = response.datasetpopulationmatrix.datasetPopulationValues;
-		var self = this;
-		var matrixStr = "";
-		
-		//create criteria as a table of json objects
-		var criteria = [];
-		_.each(criteriaTitles, function(column, index){
-			criteria.push({ "criterionName" : column, "indexInRow" : index, "values" : [{"value" : ""}] }); 
-		});
-		
-		//create datasets as a table of json object {"datsetId" : id, "itemsCount" : itemsCount}
-		var datasets = [];
-		var treatedCriterions = [];
-		var treatedDatasets = [];
-		
-		_.each(valuesTab, function(row){		
-			
-			_.each(criteria, function(criterion){
 				
-				//index of the json object is not correct so use of treatedMissions array
-				//if (row[0] != "" && missions.indexOf({"mission" : row[0]}) == -1){
-				if (row[criterion.indexInRow] != '' && treatedCriterions.indexOf(row[criterion.indexInRow]) == -1){
-					treatedCriterions.push(row[criterion.indexInRow]);
-					criterion.values.push({"value" : row[criterion.indexInRow]}); 
-				}
-			});
-			
-			//create the matrix as a one long string: each table row is transformed into a commar-separated string
-			//wrapped with "" in order to keep a row isolated into the whole matrix
-			matrixStr = matrixStr.concat('"' + row.join() + '"');
-			
-			//the first row for a dataset is supposed to be the one with no filters
-			if (treatedDatasets.indexOf(row[row.length-2]) == -1){
-				treatedDatasets.push(row[row.length-2]);
-				datasets.push({"datasetId": row[row.length-2], "itemsCount" : row[row.length-1]});
-			}
-			
-		});
-
-//		console.log("datasets :");
-//		console.log(datasets);
-//		console.log("the matrix to set : ");
-//		console.log(matrixStr);	
+		var matrix = response.datasetpopulationmatrix.datasetPopulationValues;
+		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
+		var criterias = [];
 		
-		this.set({"datasetsToDisplay" : datasets}, {silent: true});
+		// Build the criterias
+		for ( var i = 0; i < criteriaTitles.length; i++ ) {
+			var criteria = new Criteria(criteriaTitles[i]);
+			for ( var n = 0; n < matrix.length; n++ ) {
+				criteria.addValue( matrix[n][i] );
+			}
+			criterias.push( criteria );
+		}
 	
-		return {"criteria" : criteria, "matrixStr" : matrixStr, "datasets" : datasets, "datasetsToDisplay" : datasets};
+		return { 
+			criterias: criterias,
+			matrix: matrix
+		};
+	},	
+	
+	/**
+	 * Return the criteria values filtered by the given filter for the given criteria index
+	 */
+	filterCriteriaValues : function( criteriaFilter, index ) {
+	
+		var criteriaValues = [];
+		
+		// Remove the criteria from the filter
+		var backupFilter = criteriaFilter[index];
+		criteriaFilter[index] = undefined;
+		
+		// Process all rows of the dataset population matrix
+		for ( var i = 0; i < this.get('matrix').length; i++ ) {
+			var row = this.get('matrix')[i];	
+			if ( row[index] != '' && matchRow(criteriaFilter, row) ) {
+				if ( !_.contains(criteriaValues,row[index]) ) {
+					criteriaValues.push( row[index] );
+				}									
+			}
+		}
+		
+		// restore the criteria filter
+		criteriaFilter[index] = backupFilter;
+		
+		return criteriaValues;
 	},
-	
-	
 
-	filter : function (selectedValues){
+	/**
+	 * Return the datasets filtered by the given filter
+	 */
+	filterDatasets : function ( criteriaFilter ) {
+	
+		var filteredDatasets = [];
+		var treatedDatasets = {};
 		
-		var filterExp = new RegExp(selectedValues, "g");
-		console.log("reg exp :");
-		console.log(filterExp);
-		//the match function returns an array of strings having this form:
-		//"(criteria_1,criteria_2,...., criteria_n,dataset_id,itemsCount"
-		var filtredStrings = this.get("matrixStr").match(filterExp);
-		console.log("filtredStrings");
-		//console.log(filtredStrings);
+		// Keep the id and count index for the dataset population row
+		var id_index = this.get('criterias').length;
+		var count_index = this.get('criterias').length + 1;
 		
-		var datasetsToDisplay = [];
-		var treatedDatasets = [];
-		
-		//iterate on the table of the matched strings.
-		//for each string split the commar-separated string into and array 
-		//in order to access the dateset id and the items count values.
-		//the dateset id and the items count values are respectively the two last items in the table 
-		
-		_.each(filtredStrings, function(string){
-			var row = string.split(",");
-			//avoid adding the same dataset id to the final filtered table
-			//by keeping the track of already processed dataset ids
-			if (treatedDatasets.indexOf(row[row.length-2]) == -1){
-				treatedDatasets.push(row[row.length-2]);
-				//
-				datasetsToDisplay.push({"datasetId" : row[row.length-2], "itemsCount" : row[row.length-1].substring(0, row[row.length-1].length)});
-			}
-		});
+		// Process all rows of the dataset population matrix
+		for ( var i = 0; i < this.get('matrix').length; i++ ) {
+			var row = this.get('matrix')[i];
+			var datasetId = row[id_index];
 			
-		//console.log(datasetsToDisplay);
-
-		this.set({"datasetsToDisplay" : datasetsToDisplay}, {silent: true});
-	
+			if ( matchRow(criteriaFilter, row) ) {
+				
+				if ( !treatedDatasets.hasOwnProperty(datasetId) ) {
+					filteredDatasets.push({
+						datasetId : datasetId, 
+						itemsCount : row[count_index]
+					});
+					
+					treatedDatasets[ datasetId ] = true;
+				}
+					
+			}
+		}
+			
+		return filteredDatasets;
 	},
 
 });

@@ -1,7 +1,7 @@
 <h3 data-help="Filter the dataset list using various criterias.">Filters : </h3>
 <div id="filters" class="ui-grid-b">
 
-	<% _.each(attributes.criteria, function(criterion, i) { %>		
+	<% _.each( get("criterias"), function(criteria, i) { %>		
 
 		<% if (i%3 == 0) { %>
 			<div class="ui-block-a"> 
@@ -11,10 +11,7 @@
 			<div class="ui-block-c"> 	
 		<% } %>
 
-		<select id="<%= criterion.criterionName%>" data-mini="true" data-theme="a">
-			<% _.each(criterion.values, function(value) { %>
-				<option value="<%=value.value%>"><%= criterion.criterionName%> : <%= (value.value == '')? 'None' : value.value%></option>
-			<% }); %>
+		<select id="criteria_<%= i%>" data-mini="true" data-theme="a">
 		</select>
 	   		
 		</div>
