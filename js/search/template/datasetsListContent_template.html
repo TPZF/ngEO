@@ -3,7 +3,7 @@
 
 	<% _.each(datasets, function(dataset) { %>
 		<li id="<%= dataset.datasetId %>" data-theme="d" data-mini="true" >
-					<%= dataset.datasetId %>
+					<%= dataset.name %>
 					<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
 		</li> 
 	<% }); %>
