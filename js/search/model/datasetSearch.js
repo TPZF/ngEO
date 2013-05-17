@@ -278,15 +278,15 @@ var DataSetSearch = Backbone.Model.extend({
 						//skip any other parameter
 						_.each(this.dataset.get('attributes'), function(criterion){
 							if (criterion.id == pair[0]){
-								console.log("set criterion " + criterion.id + "====" + pair[1]);
+								//console.log("set criterion " + criterion.id + "====" + pair[1]);
 								attributes[pair[0]] = pair[1];
 							}
 						});
 					
 						_.each(this.dataset.get('downloadOptions'), function(option){
 							if (option.argumentName == pair[0]){
-								console.log("set option " + option.argumentName + "====" + pair[1]);
-								attributes[pair[0]] = pair[1];
+								//console.log("set option " + option.argumentName + "====" + pair[1]);
+								attributes[pair[0]] = option.cropProductSearchArea ? true : pair[1];
 							}
 						});
 					}
@@ -353,10 +353,13 @@ var DataSetSearch = Backbone.Model.extend({
 			
 			_.each(this.dataset.get('downloadOptions'), function(option){
 				
-				if (_.has(self.attributes, option.argumentName)){
-					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
-				}else{
-					url += '&' + option.argumentName + '=' ;	
+				if (_.has(self.attributes, option.argumentName)) {
+					if ( !option.cropProductSearchArea ) {
+						url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
+					} else if (self.attributes[option.argumentName]) {
+						url += '&' + option.argumentName + '=' + self.searchArea.toWKT(); 
+					}
+					
 				}
 			});
 		}
@@ -380,14 +383,9 @@ var DataSetSearch = Backbone.Model.extend({
 		if ( this.dataset.get('downloadOptions') ){
 			
 			_.each( this.dataset.get('downloadOptions'), function(option){
-				//console.log("option" + option);
-				//console.log("option.argumentName : " + option.argumentName);
 				
 				if (_.has(self.attributes, option.argumentName)){
 					selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;
-				}else{
-					 //WEBC_FAT_12 set the download options not changed to have an empty value
-					selectedOptions[option.argumentName] = "";	
 				}
 			});
 		}

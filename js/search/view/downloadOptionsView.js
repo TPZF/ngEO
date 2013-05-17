@@ -18,9 +18,21 @@ var DownloadOptionsView = Backbone.View.extend({
 			//WEBC_FAT_12 Removed Download options checkbox
 			//In case one choice is in the select box, the change event is not fired so the None is added 
 			//to allow changing the values.
-			option[event.currentTarget.id] = ($(event.currentTarget).val() != "None") ? $(event.currentTarget).val() : "";
-			//option[event.currentTarget.id] = $(event.currentTarget).val();
-			this.model.set(option);		
+			var value = $(event.currentTarget).val();
+			if ( value != "None" )
+			{
+				this.model.set( event.currentTarget.id, value );
+			}
+			else
+			{
+				this.model.unset( event.currentTarget.id );
+			}
+		},
+		
+		// For input checkbox, ie cropProductSearhArea
+		'change input': function(event) {
+			var value = $(event.currentTarget).val();
+			this.model.set( event.currentTarget.id, value );
 		}
 	},
 	
@@ -29,22 +41,9 @@ var DownloadOptionsView = Backbone.View.extend({
 		var content = _.template(downloadOptions_template, this.model);
 		this.$el.append(content);
 		this.$el.trigger('create');
-		this.delegateEvents();
 		return this;
-	},	
-	
-	// TODO move to Backbone.View.prototype
-    close : function() {
-       this.undelegateEvents();
-       this.$el.empty();
-       if (this.onClose) {
-          this.onClose();
-       }
-    }, 
-
-    onClose : function() {
-    },
-	
+	}
+		
 });
 
 return DownloadOptionsView;
