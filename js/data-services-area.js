@@ -30,6 +30,7 @@ return {
 			$(this).after('<div class="tb-text">' + $(this).attr('name') + '</div>');
 		});
 	
+	
 		return dsa;
 	},
 	
@@ -40,6 +41,22 @@ return {
 	 * @param element The root element of the module
 	 */
 	initialize: function(element) {
+	
+		// Hide/show widgets
+		element.trigger('create');
+		$('#showHideToolbar').click( { hide: true }, function(event) {
+			if ( event.data.hide ) {
+				$('#toolbar').hide();
+				$('#statusBar').hide();
+				$(this).buttonMarkup({ icon: 'plus' });
+			} else {
+				$('#toolbar').show();
+				$('#statusBar').show();
+				$(this).buttonMarkup({ icon: 'minus' });
+			}
+			event.data.hide = !event.data.hide;			
+		});
+		
 			
 		// Create all widgets
 		DataSetSelectionWidget(element);
