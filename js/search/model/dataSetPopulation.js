@@ -53,6 +53,17 @@ var DataSetPopulation = Backbone.Model.extend({
 		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
 		var criterias = [];
 		
+		// Special treatment for name : remove it as a criteria and push it at end in the matrix
+		var nameIndex = criteriaTitles.indexOf('name');
+		if ( nameIndex >= 0 ) {
+			criteriaTitles.splice( nameIndex, 1 );
+			for ( var n = 0; n < matrix.length; n++ ) {
+				var row = matrix[n];
+				row.push( row[nameIndex] );
+				row.splice( nameIndex, 1 );
+			}
+		}
+		
 		// Build the criterias
 		for ( var i = 0; i < criteriaTitles.length; i++ ) {
 			var criteria = new Criteria(criteriaTitles[i]);
@@ -106,6 +117,7 @@ var DataSetPopulation = Backbone.Model.extend({
 		// Keep the id and count index for the dataset population row
 		var id_index = this.get('criterias').length;
 		var count_index = this.get('criterias').length + 1;
+		var name_index = this.get('criterias').length + 2;
 		
 		// Process all rows of the dataset population matrix
 		for ( var i = 0; i < this.get('matrix').length; i++ ) {
@@ -116,7 +128,8 @@ var DataSetPopulation = Backbone.Model.extend({
 				
 				if ( !treatedDatasets.hasOwnProperty(datasetId) ) {
 					filteredDatasets.push({
-						datasetId : datasetId, 
+						datasetId : datasetId,
+						name : name_index < row.length ? row[name_index] : datasetId,
 						itemsCount : row[count_index]
 					});
 					
