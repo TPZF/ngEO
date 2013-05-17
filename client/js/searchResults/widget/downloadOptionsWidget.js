@@ -4,8 +4,8 @@
   */
 
 
-define( [ "jquery", "configuration", 'searchResults/view/downloadOptionsWidgetView', 'search/model/datasetSearch'], 
-		function($, Configuration, DownloadOptionsWidgetView, DataSetSearch) {
+define( [ "jquery", "configuration", 'search/view/downloadOptionsView', 'search/model/datasetSearch', 'searchResults/model/searchResults'], 
+		function($, Configuration, DownloadOptionsView, DataSetSearch, SearchResults) {
 
 
 var DownloadOptionsWidget = function() {
@@ -23,7 +23,7 @@ var DownloadOptionsWidget = function() {
 		}
 	});
 
-	var downloadOptionsWidgetView = new DownloadOptionsWidgetView({
+	var downloadOptionsView = new DownloadOptionsView({
 		model : DataSetSearch,
 		el: element
 	});
@@ -33,7 +33,25 @@ var DownloadOptionsWidget = function() {
 	 */
 	this.open = function() {
 	
-		downloadOptionsWidgetView.render();
+		downloadOptionsView.render();
+		
+		downloadOptionsView.$el.append('\
+			<div class="popup-widget-footer">\
+				<button id="downloadOptionsUpdate" data-role="button" data-mini="true"\
+						data-inline="true" data-theme="a">Update</button>\
+				<div id="downloadOptionsMessage"></div>\
+			</div>').trigger('create');
+			
+		// called when  'Update' is clicked
+		downloadOptionsView.$el.find('#downloadOptionsUpdate').click( function(event){
+			//update the product url of the selected products with the selected download options
+			//and display a message to the user.
+			$.when(SearchResults.updateProductUrls(DataSetSearch.getSelectedDownloadOptions())).done(function(){
+				$("#downloadOptionsMessage").empty();
+				$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
+			});
+		});
+			
 			
 		//trigger jqm styling
 		parentElement.ngeowidget("show"); 

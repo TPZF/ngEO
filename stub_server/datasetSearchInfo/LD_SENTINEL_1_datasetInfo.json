@@ -19,7 +19,7 @@
         "downloadOptions": [
             {
                 "argumentName": "ProductFormat_LD_S1",
-                "description": "desired download format",
+                "description": "Desired download format",
                 "values": [
                     {
                         "name": "GeoTIFF",
@@ -28,9 +28,14 @@
                     }
                 ]
             },
+			{
+                "argumentName": "cropProduct",
+				"description" : "Crop product to search area",
+				"cropProductSearchArea" : "true"
+			},
             {
                 "argumentName": "Download mode_LD_S1",
-                "description": "wait until completion or download continuously",
+                "description": "Wait until completion or download continuously",
                 "values": [
                     {
                         "name": "DLcomplete",
@@ -78,7 +83,12 @@
                 "rangeMinValue": "1",
                 "rangeMaxValue": "70000"
             },
-            
+         
+            {
+                "id": "uid",
+                "type": "string"
+            },
+             
             {
                 "id": "track",
                 "type": "integer",

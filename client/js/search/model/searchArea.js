@@ -127,29 +127,36 @@ var SearchArea = function() {
 		return text;
 	};
 	
+	// Transform to WKT
+	this.toWKT = function() {
+		var coords = _feature.geometry.coordinates;
+		var param = "POLYGON(";
+		for ( var j = 0; j < coords.length; j++ ) {
+			if ( j != 0 ) {
+				param += ",";
+			}
+			param += "(";
+			for ( var i = 0; i < coords[j].length; i++ ) {
+				if ( i != 0 ) {
+					param += ",";
+				}
+				param += coords[j][i][0] + " " + coords[j][i][1];
+			}
+			param += ")";
+		}
+		
+		param += ")";
+		
+		return param;
+	};
+	
 	// 	Get the opensearch parameter for the search area
 	this.getOpenSearchParameter = function() {
 		var param;
 		if (_mode == SearchArea.POLYGON) {
 		
 			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
-			var coords = _feature.geometry.coordinates;
-			param = "geom=POLYGON(";
-			for ( var j = 0; j < coords.length; j++ ) {
-				if ( j != 0 ) {
-					param += ",";
-				}
-				param += "(";
-				for ( var i = 0; i < coords[j].length; i++ ) {
-					if ( i != 0 ) {
-						param += ",";
-					}
-					param += coords[j][i][0] + " " + coords[j][i][1];
-				}
-				param += ")";
-			}
-			
-			param += ")";
+			param = "geom=" + this.toWKT(); 
 		
 		} else if (_mode == SearchArea.BBOX){
 		

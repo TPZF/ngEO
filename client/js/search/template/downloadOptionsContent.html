@@ -22,15 +22,11 @@
 	<% } else { %>	 		
 	
 		<!-- 	display  download options -->
-		<form>
-			
+		<form>			
 			<% _.each(dataset.get("downloadOptions"), function(option, i) { %>		
-
-				<div data-role="fieldcontain">
-					
+				<% if (!option.cropProductSearchArea) { %>
 					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.argumentName %> : </label>
-						 
-					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
 						<option value="None">None</option>
 						<% _.each(option.values, function(value) { %>
 							<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName] == value.name)) {  %>						
@@ -40,10 +36,20 @@
 							<% } %>	 
 						<% }); %>
 					</select>	
-			   
-			   </div>	 	
+				<% } %>
 			<% }); %>
-		
+			
+			<% _.each(dataset.get("downloadOptions"), function(option, i) { %>		
+				<% if (option.cropProductSearchArea) { %>
+					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.description %></label>
+					<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName])) {  %>						
+						<input type="checkbox" id="<%= option.argumentName %>" checked="checked" data-mini="true"/>
+					<% } else { %>	 
+						<input type="checkbox" id="<%= option.argumentName %>" data-mini="true"/>		
+					<% } %>	 					
+				<% } %>			
+			<% }); %>
+			
 		</form>
 	
 	<% } %>
