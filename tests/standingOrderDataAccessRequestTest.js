@@ -12,7 +12,7 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 	    	}
 	    });
     
-    	QUnit.asyncTest("Create Standing Order & Assign a downloadManager", 13, function () {
+    	QUnit.asyncTest("Create Standing Order & Assign a downloadManager", 11, function () {
     	
 			DownloadManagers.fetch().done(function() {
 				
@@ -48,16 +48,9 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 					
 					//Check that the server has returned the id of the DAR
 					QUnit.ok(true, "Validation Request Submitted to the server");
-					//Check that the server has returned the id of the DAR
-					QUnit.equal(StandingOrderDataAccessRequest.id , "DAR_00000011092", "Request Submitted : STO ID returned by the server");
 					
 					QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
-							"confirmation",  "Request Stage Changed to Confirmation");
-					
-					QUnit.equal(StandingOrderDataAccessRequest.serverResponse, 
-							"<p>Request Acknowledged<p>" + 
-							"<p>Standing order data Access Request validated<p>",  "Validation Server Response Ok");
-				
+							"confirmation",  "Request Stage Changed to Confirmation");				
 				
 					//submit confirmation request
 					StandingOrderDataAccessRequest.submit().done(function() {

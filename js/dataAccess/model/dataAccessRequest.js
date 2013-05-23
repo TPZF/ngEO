@@ -17,8 +17,6 @@ var DataAccessRequest = {
 
 	createBulkOrder : false,
 	
-	serverResponse : "A validation request has been send to the server...",
-	
 	firstRequest : {}, //keeps track of the first stage request in order to validate the second stage request 
 
 
@@ -71,11 +69,10 @@ var DataAccessRequest = {
 							  self.step = 1;
 							  self.id = data.dataAccessRequestStatus.ID;
 							  self.requestStage = statusesConfig.confirmationRequestStage;
-							  self.serverResponse = "<p>" + validStatusesConfig.validatedStatus.message + "<p>";
 							  
 							  self.validationProcessing(data.dataAccessRequestStatus);
 							  
-							  self.trigger('SuccessValidationRequest');
+							  self.trigger('SuccessValidationRequest',data.dataAccessRequestStatus.message,validStatusesConfig.validatedStatus.message);
 							  
 						  }else{
 							  self.trigger('FailureRequest');
@@ -91,8 +88,8 @@ var DataAccessRequest = {
 							  //Bulk order is considered add the createBulkOrder
 							  self.createBulkOrder = true;
 							  self.requestStage = statusesConfig.confirmationRequestStage;
-							  self.serverResponse = validStatusesConfig.bulkOrderStatus.message;
-							  self.trigger('SuccessValidationRequest');
+
+							  self.trigger('SuccessValidationRequest',data.dataAccessRequestStatus.message,validStatusesConfig.bulkOrderStatus.message);
 						  }else{
 							  self.trigger('FailureRequest');
 						  }
@@ -102,12 +99,11 @@ var DataAccessRequest = {
 					  case validStatusesConfig.pausedStatus.value:	  
 					  case validStatusesConfig.inProgressStatus.value:
 						  
-						  if (self.step == 1 && self.id == data.dataAccessRequestStatus.ID &&
-								self.requestStage == statusesConfig.confirmationRequestStage) {//2 steps done
-							  self.serverResponse = validStatusesConfig.inProgressStatus.message;
-							  self.trigger('SuccessConfirmationRequest');
+						  if (self.step == 1 /*&& self.id == data.dataAccessRequestStatus.ID*/ &&
+								self.requestStage == statusesConfig.confirmationRequestStage) { //2 steps done
+								self.trigger('SuccessConfirmationRequest',data.dataAccessRequestStatus.message,validStatusesConfig.inProgressStatus.message);
 						  }  else {
-							self.trigger('FailureRequest');
+								self.trigger('FailureRequest');
 						  }	
 						  break;
 					
@@ -123,16 +119,11 @@ var DataAccessRequest = {
 						  break;*/
 					  
 					  default: 
-						  self.serverResponse = self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.unExpectedStatusError ;
+						  self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.unExpectedStatusError ;
 					  	  self.trigger('FailureRequest');
 					  	  break;
 				  }	  
-					   
-				  //if the server sends a response message append it to the message to display
-				  if (data.dataAccessRequestStatus.message){
-					   self.serverResponse =  self.serverResponse + "<p>" + data.dataAccessRequestStatus.message + "<p>";
-				  }
-				   
+					   				   
 		  	  },
 		  
 			  error: function(jqXHR, textStatus, errorThrown) {

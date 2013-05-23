@@ -19,7 +19,7 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 	    });
 
     
-    	QUnit.asyncTest("Create Simple DAR & Assign a downloadManager", 7, function () {
+    	QUnit.asyncTest("Create Simple DAR & Assign a downloadManager", 6, function () {
     	
 			DownloadManagers.fetch().done(function() {
 				
@@ -55,8 +55,6 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 				
 					//Check that the server has returned the id of the DAR
 					QUnit.ok(true, "Validation Request Submitted to the server");
-					//Check that the server has returned the id of the DAR
-					QUnit.equal(SimpleDataAccessRequest.id , "DAR_00000011092", "Request Submitted : DAR ID returned by the server");
 					
 					QUnit.equal(SimpleDataAccessRequest.requestStage, 
 							"confirmation",  "Request Stage Changed to Confirmation");

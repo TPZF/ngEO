@@ -15,6 +15,8 @@ var SimpleDataAccessRequest = {
 	
 	productURLs : [],
 	
+	totalSize : 0,
+	
 	/** reset specific parameters of a simple DAR */
 	resetRequest : function (){
 		
@@ -115,15 +117,10 @@ var SimpleDataAccessRequest = {
 	validationProcessing : function(dataAccessRequestStatus){
 		
 		//calculate the total download estimated size  
-		  var totalSize = 0;
+		  this.totalSize = 0;
 		  var productStatuses = dataAccessRequestStatus.productStatuses; 
 		  for ( var i = 0; i < productStatuses.length; i++) {
-			  totalSize += productStatuses[i].expectedSize;
-		  }
-		  
-		  this.serverResponse += "<p> Estimated Size : " + totalSize + "<p>";
-		  if ( totalSize > Configuration.get('simpleDataAccessRequest.warningMaximumSize',1e9) ) {
-			this.serverResponse += "<p>WARNING : The amount of data to download is huge.</p><p>Are you sure you want to confirm your request?</p>"; 
+			  this.totalSize += parseInt( productStatuses[i].expectedSize );
 		  }
 	}
 }
