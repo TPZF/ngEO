@@ -30,11 +30,9 @@ var DownloadManagersListView = Backbone.View.extend({
 			//disable the DMs list to avoid choosing a different DM once the
 			//validation request has been submitted
 			$('#downloadManagersList').addClass('ui-disabled');
-			var self = this;
-			//when the request has been submitted update the text to the user
-			$.when(this.request.submit()).done(function(){
-				$("#serverMessage").append(self.request.serverResponse);
-			});
+			
+			// Submit the request
+			this.request.submit();
 		},
 		
 		'click label' : function(event){
@@ -49,22 +47,38 @@ var DownloadManagersListView = Backbone.View.extend({
 	/** change the button status to disabled in case the requests are not valid */
 	onFailure : function(){
 		$("#validateRequest").button('disable');
+		// TODO : improve message according to the failure ?
 		$("#serverMessage").append("Invalid server response");
 	},
 	
 	/** change the button text to highlight the request stage "Confirmation" 
 	 * update the button text in the jqm span for button text to make the
 	 * button text updated*/
-	onValidationSuccess : function(){
+	onValidationSuccess : function(serverMessage,configMessage) {
 		$("#validateRequest").html("Confirm"); 
-		$("#downloadManagersFooter .ui-btn-text").html("Confirm"); ;
+		$("#downloadManagersFooter .ui-btn-text").html("Confirm");
+		
+		var message = '<p>'+configMessage+'</p><p>'+serverMessage+'</p>';
+				  
+		// Display the estimated size and a warning message if the size exceeds a thresold (REQ)
+		if ( this.request.totalSize ) {
+			message += "<p> Estimated Size : " + this.request.totalSize + "<p>";
+			if ( this.request.totalSize > Configuration.get('simpleDataAccessRequest.warningMaximumSize',1e9) ) {
+				message += "<p>WARNING : The amount of data to download is huge.</p><p>Are you sure you want to confirm your request?</p>"; 
+			}
+		}
+
+		$("#serverMessage").append(message);
 	},
 	
 	/**
-	 * Just disable the confirmation button on success
+	 * Called when the confirmation succeeds
 	 */
-	onConfirmationSuccess : function(){
+	onConfirmationSuccess : function(serverMessage,configMessage) {
+		// Disable the confirm button
 		$("#validateRequest").button('disable');
+		// Display the message
+		$("#serverMessage").append('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
 	},	
 	
 	render: function(){
