@@ -174,6 +174,8 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.$el.panel('option','show', function() {
 			if ( self.featuresToAdd.length >  0 ) {
 				self.table.fnAddData( self.featuresToAdd, false );
+				// adjust selection
+				self.toggleSelection(self.model.selection);
 				self.featuresToAdd.length = 0;
 			}
 			self.table.fnAdjustColumnSizing( true );
