@@ -129,7 +129,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 				  break;
 
 		   		default :
-		   		  return "Unknown Status";
+		   		  return status;
 		   		  break;
 		  }	
 	},
