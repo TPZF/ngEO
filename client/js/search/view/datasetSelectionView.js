@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch', 'userPrefs',
+define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch',
          'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
-		function($, Backbone, Logger, DatasetSearch, UserPrefs, datasetsSelection_template, datasetsList_template) {
+		function($, Backbone, Logger, DatasetSearch, datasetsSelection_template, datasetsList_template) {
 
 /**
  * The related model is DatasetsPopulationModel
@@ -27,15 +27,12 @@ var DatasetSelectionView = Backbone.View.extend({
 				$target.removeClass('ui-btn-active');
 				this.selectedDatasetId = undefined;
 				DatasetSearch.set("datasetId",undefined);
-				UserPrefs.save("Dataset", "None");
 				
 			} else {
 				this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
 				$target.addClass('ui-btn-active');
 				this.selectedDatasetId = event.currentTarget.id;
 				DatasetSearch.set("datasetId", this.selectedDatasetId);
-				//save the selected dataset id 
-				UserPrefs.save("Dataset", this.selectedDatasetId);
 			}
 		}
 	},
@@ -74,24 +71,6 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.updateDatasetsList();
 		
 		this.$el.trigger('create');
-		
-		//select the dataset id stored in the prefs
-		var datasetId = UserPrefs.get("Dataset");
-		if (datasetId != "None"){
-			var $elt = this.$el.find("#" + datasetId);
-			//if the dataset is in the list select it unless reset the datset in the preferences and display on error message 
-			if ($elt.length != 0){
-				//make the dataset list item selected
-				$elt.addClass('ui-btn-active');
-				//set the selected dataset in the model
-				DatasetSearch.set("datasetId", datasetId);
-			}else{
-				//reset the preferences since the dataset set in the preferences is no more in the catalogue
-				//and notify the user.
-				UserPrefs.save("Dataset", "None");
-				Logger.warning('The dataset ' + datasetId + ' stored in the preferences is no more in the catalogue, it cannot be selected.');
-			}
-		}
 		
 		var self = this;
 				
