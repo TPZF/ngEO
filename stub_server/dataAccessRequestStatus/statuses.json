@@ -7,8 +7,8 @@
             "dlManagerId": "DM_01",
             "productStatuses": [
                 {
-                    "productURL": "https://S2PF/XXXXXXXXXXXX0001",
-                    "productStatus": 0,
+                    "productURL": "https://S2PF/XXXXXXXXXXXXfgdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd0001",
+                    "productStatus": "NOT_STARTED",
                     "percentageCompleted": "80",
                     "expectedSize": "1000"
                 },

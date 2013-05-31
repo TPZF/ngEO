@@ -51,69 +51,17 @@
             }
         ],
         "attributes": [
-             {
-                "id": "satellite",
-                "type": "enumeration",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Sentinel-1A"
-                    },
-                    {
-                        "possibleValue": "Sentinel-1B"
-                    }
-                ]
-            },
-             
-             {
-                "id": "pass",
-                "type": "enumeration",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Ascending"
-                    },
-                    {
-                        "possibleValue": "Descending"
-                    }
-                ]
-            },
-            
-            {
-                "id": "orbit",
-                "type": "integer",
-                "rangeMinValue": "1",
-                "rangeMaxValue": "70000"
-            },
-         
+           
             {
                 "id": "uid",
                 "type": "string"
             },
-             
+			
             {
-                "id": "track",
-                "type": "integer",
-                "rangeMinValue": "1",
-                "rangeMaxValue": "501"
-            },
-            
-            {
-                "id": "status",
-                "type": "enumeration",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Archived"
-                    },
-                    {
-                        "possibleValue": "Aquired"
-                    },
-                    {
-                        "possibleValue": "Planned"
-                    },
-                    {
-                        "possibleValue": "Cancelled"
-                    }
-                ]
+                "id": "number",
+                "type": "float"
             }
+
         ],
         "startDate": "01-06-2014T12:45:07:00.57Z",
         "endDate": "31-07-2024T23:27:05:00.57Z"
