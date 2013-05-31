@@ -139,9 +139,13 @@ var AdvancedSearchView = Backbone.View.extend({
 			criterionValue = $(event.currentTarget).val();	
 		}
 		//set the new value to the json object and add it to the model
-		var openSearchCriterion = {};
-		openSearchCriterion[criterionId] = criterionValue;
-		this.model.set(openSearchCriterion, {silent:true});	
+		if (criterionValue == '') {
+			this.model.unset(criterionId, {silent:true});	
+		} else {
+			var openSearchCriterion = {};
+			openSearchCriterion[criterionId] = criterionValue;
+			this.model.set(openSearchCriterion, {silent:true});	
+		}
 	},
 	
 	render: function(){
