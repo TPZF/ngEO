@@ -1,10 +1,10 @@
 
-define(["jquery", "configuration", "logger", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
+define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help"], 
-	function($, Configuration, Logger, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
+	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 
@@ -73,17 +73,15 @@ return {
 		router.route(
 				"data-services-area/search/:datasetId?:query", 
 				"search", function(datasetId, query) {		
-			
-//	"data-services-area/search/:datasetId?start=:startdate&stop=:stopdate&bbox=:bbox&useExtent=:useExtent&useAdvancedCriteria=:useAdvancedCriteria&:criteria&useDownloadOptions=:useDownloadOptions&:downloadOptions)?
-//	"search", function(datasetId, startdate, stopdate, bbox, useExtent, useAdvancedCriteria, criteria, useDownloadOptions, downloadOptions) {		
-					
-			DatasetSearch.set({"datasetId" : datasetId});
+				
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.on("datasetLoaded", function(){
 				
 				DatasetSearch.populateModelfromURL(query);
+				
 				MenuBar.showPage("data-services-area");
+				
 				//refresh the search widget after the model has been update
 				SearchCriteriaWidget.refresh();
 				searchWidget.ngeowidget("show");
@@ -91,8 +89,13 @@ return {
 			
 			//when the dataset selected is not loaded display an error message
 			DatasetSearch.on("datasetNotLoadError", function(datasetId){
-				Logger.error('An error occured when loading the dataset :' + datasetId + '.<br> The search cannot be shared.');
+				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
+				MenuBar.showPage("data-services-area");
 			});
+
+			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
+			DatasetSearch.set({"datasetId" : datasetId});
+
 		});
 		
 		//Route standing order url
@@ -100,7 +103,6 @@ return {
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
 						
-			DatasetSearch.set({"datasetId" : datasetId});
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.on("datasetLoaded", function(){
@@ -117,31 +119,50 @@ return {
 			
 			//when the dataset selected is not loaded display an error message
 			DatasetSearch.on("datasetNotLoadError", function(datasetId){
-				Logger.error('An error occured when loading the dataset :' + datasetId + '.<br> The standing order cannot be shared.');
+				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
+				MenuBar.showPage("data-services-area");
 			});
+
+			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
+			DatasetSearch.set({"datasetId" : datasetId});
 			
+		});
+		
+		// Route default
+		router.route(
+			"data-services-area", "dsa", function() {
+			
+				//when the dataset selected is not loaded display an error message
+				DatasetSearch.on("datasetNotLoadError", function(datasetId){
+					Logger.error('Cannot load the dataset :' + datasetId + '.');
+				});
+
+				//select the dataset id stored in the prefs
+				var datasetId = UserPrefs.get("Dataset");
+				if (datasetId != "None") {
+					//set the selected dataset in the model
+					DatasetSearch.set("datasetId", datasetId);
+				}
+				// Show the page
+				MenuBar.showPage("data-services-area");
 		});
 		
 		// Create the popup for the map
 		var mapPopup = new MapPopup('.ui-page-active');
 		mapPopup.close();
 	
-		// Display a message about dataset in the map
+		// Display a message about dataset in the map, and save user preferences
 		DatasetSearch.on('change:datasetId', function(model) {
 			var datasetId = model.get('datasetId');
 			if ( datasetId ) {
 				$('#datasetMessage').html( "Current dataset : " + model.get('datasetId') );
+				UserPrefs.save("Dataset", datasetId);
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
+				UserPrefs.save("Dataset", "None");
 			}
 			SearchResults.reset();
-		});
-
-		//when the dataset selected is not loaded display an error message
-		DatasetSearch.on("datasetNotLoadError", function(datasetId){
-			Logger.error('An error occured when loading the dataset :' + datasetId + '.');
-		});
-				
+		});				
 		
 		// TODO : maybe find a better way for the default handler ?
 		SelectHandler.start();
@@ -233,6 +254,7 @@ return {
 		$('#paging_prev').click( function() {
 			SearchResults.changePage( SearchResults.currentPage - 1 );
 		});
+		
 	},
 };
 
