@@ -98,9 +98,15 @@ var AdvancedSearchView = Backbone.View.extend({
 	 */
 	setInputCriterionValues : function(event){
 
-		var criterionId = event.currentTarget.id.substring(0, event.currentTarget.id.lastIndexOf(Configuration.localConfig.fieldIdSuffixSepartor));
-		var inputSuffix =  event.currentTarget.id.substring(event.currentTarget.id.lastIndexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, event.currentTarget.id.length);
-		var openSearchCriterion = {};
+		var sepIndex = event.currentTarget.id.lastIndexOf(Configuration.localConfig.fieldIdSuffixSepartor);
+		var criterionId;
+		var inputSuffix;
+		if (sepIndex >= 0) {
+			criterionId = event.currentTarget.id.substring(0, sepIndex);
+			inputSuffix =  event.currentTarget.id.substring(event.currentTarget.id.lastIndexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, event.currentTarget.id.length);
+		} else {
+			criterionId = event.currentTarget.id;
+		}
 		var criterionValue, currentValue;
 		var otherRangeLimitId  = criterionId + Configuration.localConfig.fieldIdSuffixSepartor;
 		//if the start range has been changed set the new value of the criteria by retrieving the 
@@ -133,6 +139,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			criterionValue = $(event.currentTarget).val();	
 		}
 		//set the new value to the json object and add it to the model
+		var openSearchCriterion = {};
 		openSearchCriterion[criterionId] = criterionValue;
 		this.model.set(openSearchCriterion, {silent:true});	
 	},
