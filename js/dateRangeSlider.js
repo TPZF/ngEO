@@ -112,6 +112,15 @@ $.widget( "ui.dateRangeSlider", {
 		this.dragRightDays = getDaysBetween( this.options.bounds.max, this.minDate );
 		this.dragBar.width(this.dragRightDays - this.dragLeftDays );
 		this._moveDrag( 0 );
+		
+		// Manage window resize
+		$(window).resize( function() {
+			// Recompute the scale position
+			self.scalePosition = self.dragRightDays - self.container.width();
+			self.container.scrollLeft( self.scalePosition );
+			// Update the drag bar
+			self._moveDrag( 0 );
+		});
 	},
 	
 	// Call when mouse up on an arrow
