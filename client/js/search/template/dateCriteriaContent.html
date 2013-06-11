@@ -5,7 +5,7 @@
 	
 	<input name="From" id="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.start.toISODateString()) %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.start.toISODateString()) %>", 
-		  "useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
+		  "useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
 </div>
 
 <!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
@@ -22,13 +22,13 @@
 	
 	<input name="toDate" id="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.stop.toISODateString()) %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.stop.toISODateString()) %>", 
-	   	"useTodayButton": false, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
+	   	"useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
 
 </div>
 
 <div data-role="fieldcontain">
 		<label id="useTimeSliderLabel" for="useTimeSliderCheckBox">Use Time Slider</label>
-		<input type="checkbox" id="useTimeSliderCheckBox" data-mini="true" data-theme="c"> 
+		<input type="checkbox" <% print( attributes.useTimeSlider ? "checked='checked'" : "") %>  id="useTimeSliderCheckBox" data-mini="true" data-theme="c"> 
 </div>
 
 <!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
