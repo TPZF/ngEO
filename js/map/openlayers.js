@@ -57,22 +57,9 @@ OpenLayersMapEngine = function( element )
 	var restrictedExtent = new OpenLayers.Bounds(resExtent);
 	restrictedExtent.transform( displayProjection, mapProjection );
 	
-	// Setup the resolution, the same as used for WMTS
-	var resolutions = _buildWMTSResolution();
-	
-	if ( resolutions ) {
-		
-		// Compute the max resolution
-		var maxWRes = (restrictedExtent.right - restrictedExtent.left) / element.offsetWidth;
-		var maxHRes = (restrictedExtent.top - restrictedExtent.bottom) / element.offsetHeight;
-		var maxResolution = Math.min(maxWRes,maxHRes)
-		
-		// Modify the resolutions array to be strictly inferior to maxResolution
-		while ( resolutions[0] > maxResolution ) {
-			resolutions.shift();
-		}
-		
-	}
+	// Setup the best resolutions to use with the following constraint :
+	// fit the WMTS layers and depends on the viewport size
+	var resolutions = this.computeResolutions(restrictedExtent);
 	
 	// Create the map
 	this._map = new OpenLayers.Map(this.element, {
@@ -96,7 +83,32 @@ OpenLayersMapEngine = function( element )
 	});
 	
 	this._styles = {};
-}
+};
+
+
+/**
+ * Compute the resolutions array from the given extent and the element size
+ */
+OpenLayersMapEngine.prototype.computeResolutions = function(restrictedExtent) {
+	// Setup the resolution, the same as used for WMTS
+	var resolutions = _buildWMTSResolution();
+	
+	if ( resolutions ) {
+		
+		// Compute the max resolution
+		var maxWRes = (restrictedExtent.right - restrictedExtent.left) / this.element.offsetWidth;
+		var maxHRes = (restrictedExtent.top - restrictedExtent.bottom) / this.element.offsetHeight;
+		var maxResolution = Math.min(maxWRes,maxHRes)
+		
+		// Modify the resolutions array to be strictly inferior to maxResolution
+		while ( resolutions[0] > maxResolution ) {
+			resolutions.shift();
+		}
+		
+	}
+	
+	return resolutions;
+};
 
 /**
  * Add a style
@@ -358,6 +370,11 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
  */
 OpenLayersMapEngine.prototype.updateSize = function()
 {
+	// Update the resolutions array
+	this._map.resolutions = this.computeResolutions( this._map.restrictedExtent );
+	this._map.baseLayer.initResolutions();
+	
+	// Then update the size
 	this._map.updateSize();
 }
 
