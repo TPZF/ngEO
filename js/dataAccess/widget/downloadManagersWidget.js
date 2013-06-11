@@ -11,6 +11,8 @@ define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView',
 
 var DownloadManagersWidget = function(request) {
 
+	var downloadManagersListView;
+	
 	var parentElement = $('<div id="downloadManagersPopup">');
 
 	var element = $('<div id="downloadManagersPopupContent"></div>'); 
@@ -21,6 +23,7 @@ var DownloadManagersWidget = function(request) {
 		hide: function() {
 			//request.initialize();
 			parentElement.remove();
+			downloadManagersListView.remove();
 		}
 	});
 
@@ -34,7 +37,7 @@ var DownloadManagersWidget = function(request) {
 		DownloadManagers.fetch().done(function() {
 		
 			// Create the view and render it
-			var downloadManagersListView = new DownloadManagersListView({
+			downloadManagersListView = new DownloadManagersListView({
 				model : DownloadManagers,
 				el: element,
 				selectedDownloadManager : "",
