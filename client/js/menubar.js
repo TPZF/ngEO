@@ -70,6 +70,7 @@ var loadPage = function($link,onload) {
 				// First build the div and add it to build content
 				var $div = Module.buildElement();
 				addPageContent($link,$div);
+				$div.data('module',Module);
 				Module.initialize($div);
 				if (onload) onload($div);
 		});
@@ -82,11 +83,11 @@ var loadPage = function($link,onload) {
  * Show a page
  */
 var _showPage = function(page) {
-	if ( activePage ) {
-		activePage.slideUp( 200, function() { page.slideDown(200); activePage = page; } );
-	} else {
-		page.slideDown(200);
-		activePage = page;
+	page.slideDown(200);
+	activePage = page;
+	var module = activePage.data('module');
+	if ( module && module.show ) {
+		module.show();
 	}
  };
 
@@ -98,7 +99,15 @@ var showInternalLink = function(link) {
 	var linkRef = link.attr('href');
 	var page = pageCache[ linkRef ];
 	if (page) {
-		_showPage(page);
+		if ( activePage ) {
+			var module = activePage.data('module');
+			if ( module && module.hide ) {
+				module.hide();
+			}
+			activePage.slideUp( 200, function() { _showPage(page); } );
+		} else {
+			_showPage(page);
+		}
 	}
 	
 	// Update active menu item
