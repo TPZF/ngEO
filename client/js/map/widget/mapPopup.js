@@ -26,7 +26,7 @@ var MapPopup = function(container) {
 	// Add buttons for some simple actions
 	
 	// Info
-	var btn = $("<button id='info' data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Information/button>")
+	var btn = $("<button id='info' data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Information</button>")
 		.appendTo( element.find('#buttons') )
 		.click( function() {
 			if ( $(this).parent().hasClass('ui-btn-active') ) {
@@ -39,7 +39,7 @@ var MapPopup = function(container) {
 		});
 
 	// DAR
-	var btn = $("<button data-icon='arrow-d' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
+	var btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo( element.find('#buttons') )
 		.click( function() {
 			SimpleDataAccessRequest.initialize();
