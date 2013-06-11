@@ -59,7 +59,7 @@ var DataSetSearch = Backbone.Model.extend({
 		start : new Date(), //name of the opensearch request parameter
 		stop: new Date(), //name of the opensearch request parameter
 		useExtent : true,
-		useTimeSlider : false //flag for displaying time slider or not
+		useTimeSlider : true //flag for displaying time slider or not
 	},
 	
 	initialize : function() {

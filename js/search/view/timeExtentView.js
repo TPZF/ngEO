@@ -140,6 +140,16 @@ var TimeExtentView = Backbone.View.extend({
 	render: function(){
 		var content = _.template(dateCriteria_template, this.model);
 		this.$el.append($(content));
+		
+		// Need to call create to disable the datebox when timeSlider is enabled by default
+		this.$el.trigger('create');
+
+		if ( this.model.get("useTimeSlider") ) {
+			//disable the dates start and stop widgets if the time slider is enabled
+			$("#fromDateInput").datebox("disable");
+			$("#toDateInput").datebox("disable");
+		}
+
 		return this;
 	}
 		
