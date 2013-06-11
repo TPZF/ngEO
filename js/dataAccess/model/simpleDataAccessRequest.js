@@ -120,7 +120,9 @@ var SimpleDataAccessRequest = {
 		  this.totalSize = 0;
 		  var productStatuses = dataAccessRequestStatus.productStatuses; 
 		  for ( var i = 0; i < productStatuses.length; i++) {
-			  this.totalSize += parseInt( productStatuses[i].expectedSize );
+				if ( productStatuses[i] && productStatuses[i].expectedSize ) {
+					this.totalSize += parseInt( productStatuses[i].expectedSize );
+				}
 		  }
 	}
 }
