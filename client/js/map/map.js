@@ -30,7 +30,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 	var backgroundLayer = null;
 	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
-	// An object to store all  browse layers 
+	// An object to store all  browse layers
+	// TODO : rename browse layers to selected layers ?
 	var browseLayers = {};
 	// To know if map is in geographic or not
 	var isGeo = false;
@@ -131,7 +132,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				
 				browseLayers[feature.id] = { 
 					desc: layerDesc,
-					engine: mapEngine.addLayer(layerDesc)
+					engine: mapEngine.addLayer(layerDesc),
+					feature: feature
 				};
 				
 			}
@@ -482,9 +484,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				// Display browse
 				for ( var x in browseLayers ) {
 					if ( browseLayers.hasOwnProperty(x) ) {
+						mapEngine.modifyFeatureStyle( resultFootprintLayer, browseLayers[x].feature, "select" );
 						browseLayers[x].engine = mapEngine.addLayer( browseLayers[x].desc );
 					}
 				}
+					
 			};
 						
 			// Create the new engine and catch any error
