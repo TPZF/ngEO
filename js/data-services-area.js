@@ -8,7 +8,8 @@ define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", 
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
 
-
+// Private variable
+var _$resultsTableWidget;
 			
 return {
 
@@ -32,6 +33,23 @@ return {
 	
 	
 		return dsa;
+	},
+	
+	/**
+	 * Called when the module main page is hidden
+	 */
+	hide: function() {
+		_$resultsTableWidget.panel('hide');
+		$('#statusBar').hide();
+		$('#dateRangeSlider').hide();
+	},
+	
+	/**
+	 * Called when the module main page is shown
+	 */
+	show: function() {
+		$('#statusBar').show();
+		$('#dateRangeSlider').show();
 	},
 	
 	/**
@@ -61,7 +79,7 @@ return {
 		// Create all widgets
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget.create(element);
-		ResultsTableWidget(element);
+		_$resultsTableWidget = ResultsTableWidget(element);
 		//ShopcartWidget(element);
 		ToolBarMap(element);
 		ContextHelp(element);
