@@ -15,10 +15,10 @@ var DownloadManagersListView = Backbone.View.extend({
 	initialize : function(options){
 		this.request = options.request;
 		this.selectedDownloadManager = options.selectedDownloadManager;
-		this.request.on('SuccessValidationRequest', this.onValidationSuccess, this);
-		this.request.on('SuccessConfirmationRequest', this.onConfirmationSuccess, this);
-		this.request.on('FailureRequest', this.onFailure, this);
-		this.request.on('RequestNotValidEvent', this.onFailure, this);
+		this.listenTo(this.request,'SuccessValidationRequest', this.onValidationSuccess);
+		this.listenTo(this.request,'SuccessConfirmationRequest', this.onConfirmationSuccess);
+		this.listenTo(this.request,'FailureRequest', this.onFailure);
+		this.listenTo(this.request,'RequestNotValidEvent', this.onFailure);
 		
 	},
 	
