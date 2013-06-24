@@ -148,6 +148,9 @@ var MapPopup = function(container) {
 	
 		products = features;
 		
+		// Clean-up previou state
+		$('#info').parent().removeClass('ui-btn-active ui-focus');
+		
 		buildContent(false);
 				
 		var bbox = computeBbox(features);
