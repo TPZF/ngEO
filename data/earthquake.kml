@@ -35,7 +35,7 @@
       <Style id="CCB">
           <IconStyle>
             <Icon>
-              <href>eqs7day-age/images/Plates_CCB.png</href>
+              <href>data/images/Plates_CCB.png</href>
             </Icon>
           </IconStyle>
           <LineStyle id="CCB_Line">
@@ -279,7 +279,7 @@
       <Style id="CRB">
         <IconStyle>
           <Icon>
-            <href>eqs7day-age/images/Plates_CRB.png</href>
+            <href>data/images/Plates_CRB.png</href>
           </Icon>
         </IconStyle>
         <LineStyle id="CRB_Line">
@@ -580,7 +580,7 @@
       <Style id="CTF">
         <IconStyle>
           <Icon>      
-            <href>eqs7day-age/images/Plates_CTF.png</href>
+            <href>data/images/Plates_CTF.png</href>
           </Icon>
         </IconStyle>
         <LineStyle id="CTF_Line">
@@ -1019,7 +1019,7 @@
       <Style id="OCB">
         <IconStyle>
           <Icon>
-            <href>eqs7day-age/images/Plates_OCB.png</href>
+            <href>data/images/Plates_OCB.png</href>
         </Icon>
         </IconStyle>
         <LineStyle id="OCB_Line">
@@ -1245,7 +1245,7 @@
       <Style id="OSR">
         <IconStyle>
           <Icon>
-            <href>eqs7day-age/images/Plates_OSR.png</href>
+            <href>data/images/Plates_OSR.png</href>
           </Icon>
         </IconStyle>
         <LineStyle id="OSR_Line">
@@ -3007,7 +3007,7 @@
       <Style id="OTF">
         <IconStyle>
           <Icon>
-            <href>eqs7day-age/images/Plates_OTF.png</href>
+            <href>data/images/Plates_OTF.png</href>
           </Icon>
         </IconStyle>
         <LineStyle id="OTF_Line">
@@ -4805,7 +4805,7 @@
       <Style id="SUB">
         <IconStyle>
           <Icon>
-            <href>eqs7day-age/images/Plates_SUB.png</href>
+            <href>data/images/Plates_SUB.png</href>
           </Icon>
         </IconStyle>
         <LineStyle id="SUB_Line">
@@ -5361,7 +5361,7 @@
             <color>FF0000FF</color>
             <scale>1</scale>
             <Icon>
-              <href>eqs7day-age/images/Plates_Icon_Clear.png</href>
+              <href>data/images/Plates_Icon_Clear.png</href>
             </Icon>
           </IconStyle>
           <LabelStyle>
@@ -5555,7 +5555,7 @@
   <ScreenOverlay>
     <name>USGS Logo</name>
     <Icon>
-      <href>eqs7day-age/images/USGSlogo.png</href>
+      <href>data/images/USGSlogo.png</href>
     </Icon>
     <overlayXY x="1" y="0" xunits="fraction" yunits="pixels"/>
     <screenXY x=".82" y="30" xunits="fraction" yunits="pixels"/>
@@ -5565,7 +5565,7 @@
   <ScreenOverlay>
     <name>Legend</name>
     <Icon>
-      <href>eqs7day-age/images/legend.png</href>
+      <href>data/images/legend.png</href>
     </Icon>
     <overlayXY x="0" y="380" xunits="pixels" yunits="pixels"/>
     <screenXY x="5" y="1" xunits="pixels" yunits="fraction"/>
