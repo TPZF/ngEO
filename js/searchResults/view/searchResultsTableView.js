@@ -32,6 +32,9 @@ var SearchResultsTableView = Backbone.View.extend({
 		}, this);
 		this.model.on("selectFeatures", this.toggleSelection, this );
 		this.model.on("unselectFeatures", this.toggleSelection, this );
+		//uncheck the select all checkbox if any item has been unselected.
+		this.model.on("unselectFeatures", this.updateSelectAllChechBox, this );
+		
 	},
 
 	/**
@@ -61,7 +64,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			if (feature != null) {
 				this.model.trigger("zoomToFeature", feature);
 			}
-		},
+		 },
 		
 		// Called when the user clicks on the checkbox of the dataTables
 		'click .dataTables_chekbox' : function(event){
@@ -72,7 +75,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			} else {
 				this.model.unselect( feature );
 			}
-		}, 
+		 }, 
 		
 		//Called when the user clicks on the product id of an item
 		'click .ui-direct-download' : function(event){
@@ -83,7 +86,21 @@ var SearchResultsTableView = Backbone.View.extend({
 			var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrls(featureArray)[0]);
 			directDownloadWidget.open(event);
 		}, 
+		
+		// Called when the user clicks on the checkbox to select/unselect all the table elements
+		'click .dataTables-select-all' : function(event){
 	
+			var features = this.table.fnGetData();
+			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
+				$(event.currentTarget).removeClass('ui-icon-checkbox-off')
+									  .addClass('ui-icon-checkbox-on');	
+				this.model.selectAll();
+			} else {
+				$(event.currentTarget).removeClass('ui-icon-checkbox-on')
+									  .addClass('ui-icon-checkbox-off');	
+				this.model.unselectAll();
+			}
+		 }, 
 	},
 	
 	/**
@@ -97,11 +114,25 @@ var SearchResultsTableView = Backbone.View.extend({
 			return null;
 		}
 	},
-			
+	
+	/** 
+	 * metod called if any one or many items have been unselected to update the 
+	 * seleclect all checkbox.
+	 */
+	updateSelectAllChechBox : function(features){
+		
+		var selectAllCheckBox = $(".dataTables-select-all");
+		if (this.model.features.length != 0 && selectAllCheckBox.hasClass('ui-icon-checkbox-on')){
+			selectAllCheckBox.removeClass('ui-icon-checkbox-on')
+							 .addClass('ui-icon-checkbox-off');
+		}	
+	},
+	
 	/**
 	 * Toggle selection for the given features
 	 */
 	toggleSelection: function(features) {
+
 		var checkboxes = this.table.$(".dataTables_chekbox",{order: "original"});
 		for ( var i = 0; i < features.length; i++ ) {
 			var index = this.model.features.indexOf(features[i]);
@@ -189,7 +220,8 @@ var SearchResultsTableView = Backbone.View.extend({
 		$(".bottom").addClass("ui-grid-a");
 		$("#datatable_filter").addClass("ui-block-a");
 		$("#datatable_filter input").attr("data-mini", "true");
-		
+		var $selectAllContainer = $('<div><label>Select All : <span class="dataTables-select-all ui-icon ui-icon-checkbox-off"></span></label></div>').appendTo($('#datatable_filter'));
+	
 		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo('.bottom');
 						
 		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
