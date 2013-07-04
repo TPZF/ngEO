@@ -16,6 +16,7 @@ var express = require('express')
   , standingOrderDataAccessRequest = require('./standingOrderDataAccessRequest')
   , downloadStatuses = require('./dataAccessRequestStatus')
   , downloadHelper = require('./downloadHelper')
+  , shopcarts = require('./shopcarts')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
@@ -65,6 +66,12 @@ app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
 
 //data access statuses interface
 app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
+
+//shopcarts list interface
+app.get('/ngeo/shopcarts', shopcarts);
+
+//shopcart creation interface
+//app.put('/ngeo/shopcarts', shopcarts);
 
 // user inquiry
 app.post('/ngeo/userInquiry', function(req,res) {

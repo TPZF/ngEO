@@ -1,0 +1,35 @@
+{
+    "shopcarts" : [
+                 {
+                    "id" : "TPZ_SHP_10",
+                    "name" : "SAR product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : true
+                },
+                {
+                    "id" : "TPZ_SHP_20",
+                    "name" : "S1 product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                },
+                 {
+                    "id" : "TPZ_SHP_30",
+                    "name" : "S2 product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                },
+                {
+                    "id" : "TPZ_SHP_40",
+                    "name" : "S3 product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                },
+                {
+                    "id" : "TPZ_SHP_50",
+                    "name" : "Optical product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                }
+        ]
+
+}
