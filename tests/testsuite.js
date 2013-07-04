@@ -23,7 +23,8 @@
 		"dataAccessRequestStatusesTest.js",
 		"datasetSearchInfoTest.js",
 		"datasetSearchTest.js",
-		"downloadOptionsTest.js"
+		"downloadOptionsTest.js",
+		"shopcartsTest.js"
 	];
 	
     // Resolve all testModules and then start the Test Runner.
