@@ -23,13 +23,17 @@
 ///////////////////   			 Area criteria styling 		//////////////////////////////////
 
 // Setup the drop zone for import
-#dropZone {
+.dropZoneStyle {
     border: 5px dashed black;
     height: 100px;
 	text-align: center;
 	line-height: 100px; // To vertically centered the text
 	font-size: 1.4em;
 	font-weight : bold;
+}
+
+#dropZone{
+	.dropZoneStyle;
 }
 
 #gazetteer-results li {
