@@ -1,0 +1,47 @@
+<div id="shopcartManagerContent" class="widget-content ui-body-c">
+
+	<div id="shopcartImportdIV">
+		<div id="shopcartDropZone">
+			Drop a Shopcart File Here (KML, GeoJSON or GML)
+		</div>
+		<p id="shopcartImportMessage"></p>
+	</div>
+
+	<div id="shopcartListDiv">
+		<fieldset id="shopcartList" data-role=controlgroup data-inset="true">	
+		
+			<% _.each(shopcarts, function(shopcart) { %>
+				
+				<label id="<%= shopcart.name %>_label"><input id="<%= shopcart.id %>" type="checkbox" name="<%= shopcart.name %>_checkbox" data-theme="c" data-mini="true" />  <%= shopcart.name %> </label> 
+			
+			<% }); %>
+				
+		</fieldset>
+	</div>
+	
+	<div class="popup-widget-footer">
+
+	<div id="shp_server_response"></div>
+		<button id="new_shp" data-role="button" data-mini="true"
+			data-inline="true" data-theme="a">New</button>
+		
+		<button id="load_shp" data-mini="true" data-inline="true"
+			data-theme="a">Load</button>
+			
+		<button id="share_shp" data-role="button" data-mini="true"
+			data-inline="true" data-theme="a">Share</button>
+				
+		<button id="rename_shp" data-mini="true" data-inline="true"
+			data-theme="a">Export</button>
+			
+		<button id="rename_shp" data-mini="true" data-inline="true"
+			data-theme="a">Rename</button>
+			
+		<button id="duplicate_shp" data-mini="true" data-inline="true"
+		data-theme="a">Duplicate</button>
+		
+		<button id="delete_shp" data-mini="true" data-inline="true"
+		data-theme="a">Delete</button>
+</div>
+	
+</div>

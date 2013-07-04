@@ -1,11 +1,11 @@
 
 define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
-        "dataAccess/model/downloadManagers", "account/view/dataAccessRequestMonitoringView", 
-        "account/view/downloadManagersMonitoringView", "account/view/inquiriesView", "account/view/userPrefsView",
+        "dataAccess/model/downloadManagers", "account/model/shopcartList", "account/view/dataAccessRequestMonitoringView", 
+        "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView",
         "text!../pages/account.html", "tabs"], 
 
-        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, 
-        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, UserPrefsView, account_html) {
+        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartList,
+        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_html) {
 	
 	
 // Function call when a tab is activated
@@ -14,6 +14,8 @@ var onTabActivated = function($link) {
 		DownloadManagers.fetch();
 	} else if ( $link.attr('href') == "#DARMonitoring" ) {
 		DataAccessRequestStatuses.fetch();
+	} else if ( $link.attr('href') == "#shopcarts" ) {
+		ShopcartList.fetch();
 	}
 };
 
@@ -52,6 +54,12 @@ return {
 							el : "#DARMonitoring"
 						});
 		
+		//Create the shopcart manager view 
+		var shopcartManagerView = new ShopcartManagerView({
+			model : ShopcartList,
+			el : "#shopcarts"
+		});
+		
 		//Create the inquiries View
 		var inquiriesView = new InquiriesView({
 			//model : inquiery,
@@ -73,6 +81,9 @@ return {
 			
 		// Fetch DAR : maybe not needed right now
 		DataAccessRequestStatuses.fetch();
+		
+		//fetch for shopcarts
+		ShopcartList.fetch();
 	}
 		
 };
