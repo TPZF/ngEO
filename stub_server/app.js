@@ -67,11 +67,26 @@ app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
 //data access statuses interface
 app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
 
-//shopcarts list interface
-app.get('/ngeo/shopcarts', shopcarts);
+//shopcarts list
+app.get('/ngeo/shopcarts/:id?', shopcarts);
 
-//shopcart creation interface
-//app.put('/ngeo/shopcarts', shopcarts);
+//create shopcart
+app.post('/ngeo/shopcarts', shopcarts);
+
+//rename shopcart interface
+app.put('/ngeo/shopcarts/:id?', shopcarts);
+
+////shopcarts list, shopcart content interfaces
+//app.get('/ngeo/shopcarts/:id?/:items?', shopcarts);
+//
+////create shopcart, add items to shopcart, interfaces
+//app.post('/ngeo/shopcarts/:id?/:items?', shopcarts);
+
+////rename shopcart, update items of  shopcart, interfaces
+//app.put('/ngeo/shopcarts/:id/:items?', shopcarts);
+
+////delete shopcart, delete items of  shopcart, interfaces
+//app.del('/ngeo/shopcarts/:id/:items?', shopcarts);
 
 // user inquiry
 app.post('/ngeo/userInquiry', function(req,res) {
