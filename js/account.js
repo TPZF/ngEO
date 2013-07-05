@@ -1,10 +1,10 @@
 
 define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
-        "dataAccess/model/downloadManagers", "account/model/shopcartList", "account/view/dataAccessRequestMonitoringView", 
+        "dataAccess/model/downloadManagers", "account/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
         "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView",
         "text!../pages/account.html", "tabs"], 
 
-        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartList,
+        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
         		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_html) {
 	
 	
@@ -15,7 +15,7 @@ var onTabActivated = function($link) {
 	} else if ( $link.attr('href') == "#DARMonitoring" ) {
 		DataAccessRequestStatuses.fetch();
 	} else if ( $link.attr('href') == "#shopcarts" ) {
-		ShopcartList.fetch();
+		ShopcartCollection.fetch();
 	}
 };
 
@@ -56,7 +56,7 @@ return {
 		
 		//Create the shopcart manager view 
 		var shopcartManagerView = new ShopcartManagerView({
-			model : ShopcartList,
+			model : ShopcartCollection,
 			el : "#shopcarts"
 		});
 		
@@ -83,7 +83,7 @@ return {
 		DataAccessRequestStatuses.fetch();
 		
 		//fetch for shopcarts
-		ShopcartList.fetch();
+		ShopcartCollection.fetch();
 	}
 		
 };
