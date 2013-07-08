@@ -30,8 +30,8 @@ module.exports = function(req, res){
 		}		
 	}else {
 
-		//Rename shopcart : 
-		if (req.body.shopcart){	
+		//Rename shopcart 
+		if (req.body.id && req.body.name){	
 			var response = req.body;
 			res.send(response);
 		}

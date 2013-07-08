@@ -1,5 +1,5 @@
-define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 'account/view/importShopcartView','account/widget/actionWidget', 'text!account/template/shopcartManagerContent.html'], 
-			function($, Backbone, Configuration, CreateShopcartView, ImportShopcartView, ActionWidget, shopcartManagerContent_template) {
+define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 'account/view/renameShopcartView','account/view/importShopcartView','account/widget/actionWidget', 'text!account/template/shopcartManagerContent.html'], 
+			function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, ImportShopcartView, ActionWidget, shopcartManagerContent_template) {
 
 var ShopcartManagerView = Backbone.View.extend({
 
@@ -44,21 +44,82 @@ var ShopcartManagerView = Backbone.View.extend({
 //			createShopcartView.render();
 //			parentElement.ngeowidget('show');
 			
+			var parentElement = $('<div id="actionPopup">');
+
+			var element = $('<div id="actionPopupContent"></div>'); 
+			element.appendTo(parentElement);
+			parentElement.appendTo('.ui-page-active');
+			parentElement.ngeowidget({
+				title: "Create a new shopcart",
+				hide: function() {
+					//request.initialize();
+					parentElement.remove();
+				}
+			});
+			
 			var createShopcartView = new CreateShopcartView({
 				model : this.model,
-				el: this.popupElement
+				el: element
 			});
-			var actionWidget = new ActionWidget("Import a new shopcart", createShopcartView);
-			actionWidget.open();
+			
+			createShopcartView.render();
+			
+			//Open the popup
+			parentElement.ngeowidget("show");
+//			var actionWidget = new ActionWidget("Import a new shopcart", createShopcartView);
+//			actionWidget.open();
+		},
+		
+		'click #rename_shp' : function(event){
+			
+			var parentElement = $('<div id="actionPopup">');
+
+			var element = $('<div id="actionPopupContent"></div>'); 
+			element.appendTo(parentElement);
+			parentElement.appendTo('.ui-page-active');
+			parentElement.ngeowidget({
+				title: "Rename the shopcart",
+				hide: function() {
+					//request.initialize();
+					parentElement.remove();
+				}
+			});
+			
+			var renameShopcartView = new RenameShopcartView({
+				model : this.model,
+				el: element
+			});
+			
+			renameShopcartView.render();
+			
+			//Open the popup
+			parentElement.ngeowidget("show");
 		},
 		
 		'click #import_shp' : function(event){
+			
+			var parentElement = $('<div id="actionPopup">');
+
+			var element = $('<div id="actionPopupContent"></div>'); 
+			element.appendTo(parentElement);
+			parentElement.appendTo('.ui-page-active');
+			parentElement.ngeowidget({
+				title: "Import a shopcart",
+				hide: function() {
+					//request.initialize();
+					parentElement.remove();
+				}
+			});
+			
 			var importShopcartView = new ImportShopcartView({
 				model : this.model,
-				el: this.popupElement
+				el: element
 			});
-			var actionWidget = new ActionWidget("Import a new shopcart", importShopcartView);
-			actionWidget.open();
+			
+			importShopcartView.render();
+			
+			//Open the popup
+			parentElement.ngeowidget("show");
 		}
 	},
 	

@@ -116,8 +116,8 @@ var SearchResultsTableView = Backbone.View.extend({
 	},
 	
 	/** 
-	 * metod called if any one or many items have been unselected to update the 
-	 * seleclect all checkbox.
+	 * method called if any one or many items have been unselected to update the 
+	 * select all checkbox.
 	 */
 	updateSelectAllChechBox : function(features){
 		

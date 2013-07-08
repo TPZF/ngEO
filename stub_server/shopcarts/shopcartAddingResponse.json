@@ -1,0 +1,19 @@
+{
+        "items" : [
+                 {
+                        "shopcartId" : "SC_0000190092",
+                        "id" : "SCI_0000001203",
+                        "product" : "AVeryLongProductURL"
+                },
+                 {
+                        "shopcartId" : "SC_0000190092",
+                        "id" : "SCI_0000001203",
+                        "product" : "AVeryLongProductURL"
+                },
+                   {
+                        "shopcartId" : "SC_0000190092",
+                        "id" : "SCI_0000001203",
+                        "product" : "AVeryLongProductURL"
+                }
+        ]
+}

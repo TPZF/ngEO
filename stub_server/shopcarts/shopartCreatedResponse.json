@@ -1,0 +1,8 @@
+{
+	"shopcart" : {
+                    "id" : "",
+                     "name" : "new ShopCart",
+                     "userId" : "",
+                     "isDefault" : false
+                }
+}
