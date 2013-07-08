@@ -4,7 +4,6 @@ define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView
 var ShopcartManagerView = Backbone.View.extend({
 
 	initialize : function(){
-		this.popupElement = $('<div id="actionPopupContent"></div>');
 		this.model.on("sync" , this.render, this);
 		this.model.on("error" , this.error, this);
 	},
@@ -22,30 +21,8 @@ var ShopcartManagerView = Backbone.View.extend({
 		
 		
 		'click #new_shp' : function(event){
-			
-			//FIXME TODO Emna
-//			var parentElement = $('<div id="actionPopup">');
-//			var element = $('<div id="actionPopupContent"></div>');
-//			
-//			var createShopcartView = new CreateShopcartView({
-//				model : this.model,
-//				el: element
-//			});
-//			
-//			parentElement.appendTo('.ui-page-active');
-//			parentElement.ngeowidget({
-//				
-//				title: "Create a new shopcart",
-//				
-//				hide: function() {
-//					parentElement.remove();
-//				}
-//			});
-//			createShopcartView.render();
-//			parentElement.ngeowidget('show');
-			
-			var parentElement = $('<div id="actionPopup">');
 
+			var parentElement = $('<div id="actionPopup">');
 			var element = $('<div id="actionPopupContent"></div>'); 
 			element.appendTo(parentElement);
 			parentElement.appendTo('.ui-page-active');
@@ -66,8 +43,7 @@ var ShopcartManagerView = Backbone.View.extend({
 			
 			//Open the popup
 			parentElement.ngeowidget("show");
-//			var actionWidget = new ActionWidget("Import a new shopcart", createShopcartView);
-//			actionWidget.open();
+
 		},
 		
 		'click #rename_shp' : function(event){
