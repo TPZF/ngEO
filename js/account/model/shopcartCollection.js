@@ -46,6 +46,18 @@ var ShopcartCollection = Backbone.Collection.extend({
 			}
 		}	
 		return response.shopcarts;
+	},
+	
+	/** get the shopcart config given the id of the shopcart */
+	getCurrentShopcartConfig : function(){
+		
+		var shopcartConfig;		
+		for (var i = 0; i<this.models.length; i++){
+			if (this.models[i].id == this.currentShopcartId){
+				shopcartConfig = this.models[i];
+			}
+		}
+		 return shopcartConfig;
 	}
 	
 	

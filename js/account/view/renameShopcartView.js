@@ -3,7 +3,7 @@
 define( ['jquery', 'logger', 'backbone',  'text!account/template/nameShopcartTemplate.html'], 
 		function($, Logger, Backbone, nameShopcart_template) {
 
-var CreateShopcartView = Backbone.View.extend({
+var RenameShopcartView = Backbone.View.extend({
 	
 	events :{
 		
@@ -16,12 +16,11 @@ var CreateShopcartView = Backbone.View.extend({
 			}
 		},
 		
-		//the button clicked to submit the inquiry 
+		//the button clicked to submit the query 
 		'click #submit' : function(event){
 			event.preventDefault();
-			this.model.create({ "name" : $('#shopcartNameField').val(),
-								"userId" : "",
-								"isDefault" : false});
+			console.log("currentShopcartId = " + this.model.currentShopcartId);
+			this.model.getCurrentShopcartConfig().set({ "name" : $('#shopcartNameField').val()}).save();
 		}
 	},
 	
@@ -32,9 +31,9 @@ var CreateShopcartView = Backbone.View.extend({
 		this.$el.trigger('create');		
 		this.$el.find('#submit').button('disable');
 		return this;
-	}	
+	}
 });
 
-return CreateShopcartView;
+return RenameShopcartView;
 
 });
