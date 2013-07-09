@@ -1,5 +1,5 @@
 /**
- * This is the model components for Shopcarts Collection
+ * These are the model components for Shopcarts Collection handeling
  */
 define( ['jquery', 'backbone', 'configuration'], 
 			function($, Backbone, Configuration){
@@ -48,7 +48,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 		return response.shopcarts;
 	},
 	
-	/** get the shopcart config given the id of the shopcart */
+	/** get the shopcart config of the currently selected shopcart */
 	getCurrentShopcartConfig : function(){
 		
 		var shopcartConfig;		

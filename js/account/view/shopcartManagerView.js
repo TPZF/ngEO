@@ -1,5 +1,5 @@
-define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 'account/view/renameShopcartView','account/view/importShopcartView','account/widget/actionWidget', 'text!account/template/shopcartManagerContent.html'], 
-			function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, ImportShopcartView, ActionWidget, shopcartManagerContent_template) {
+define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 'account/view/renameShopcartView','account/view/importShopcartView', 'text!account/template/shopcartManagerContent.html'], 
+			function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, ImportShopcartView, shopcartManagerContent_template) {
 
 var ShopcartManagerView = Backbone.View.extend({
 
@@ -19,7 +19,6 @@ var ShopcartManagerView = Backbone.View.extend({
 			}
 		},
 		
-		
 		'click #new_shp' : function(event){
 
 			var parentElement = $('<div id="actionPopup">');
@@ -29,7 +28,8 @@ var ShopcartManagerView = Backbone.View.extend({
 			parentElement.ngeowidget({
 				title: "Create a new shopcart",
 				hide: function() {
-					//request.initialize();
+					//remove the root of the view to discart all listeners
+					element.remove();
 					parentElement.remove();
 				}
 			});
@@ -40,10 +40,8 @@ var ShopcartManagerView = Backbone.View.extend({
 			});
 			
 			createShopcartView.render();
-			
 			//Open the popup
 			parentElement.ngeowidget("show");
-
 		},
 		
 		'click #rename_shp' : function(event){
@@ -56,16 +54,16 @@ var ShopcartManagerView = Backbone.View.extend({
 			parentElement.ngeowidget({
 				title: "Rename the shopcart",
 				hide: function() {
-					//request.initialize();
+					element.remove();
 					parentElement.remove();
 				}
 			});
 			
-			var renameShopcartView = new RenameShopcartView({
+			var renameShopcartView = new RenameShopcartView
+			({
 				model : this.model,
 				el: element
 			});
-			
 			renameShopcartView.render();
 			
 			//Open the popup
@@ -82,7 +80,6 @@ var ShopcartManagerView = Backbone.View.extend({
 			parentElement.ngeowidget({
 				title: "Import a shopcart",
 				hide: function() {
-					//request.initialize();
 					parentElement.remove();
 				}
 			});
@@ -96,7 +93,19 @@ var ShopcartManagerView = Backbone.View.extend({
 			
 			//Open the popup
 			parentElement.ngeowidget("show");
-		}
+		}, 
+		
+		'click #delete_shp' : function(event){
+			var self = this;
+			this.model.getCurrentShopcartConfig().destroy()
+												.done(function (){
+													self.render();
+												})
+										
+												.fail(function(xhr, textStatus, errorThrown){
+													self.showMessage(errorThrown);
+												});
+		}	
 	},
 	
 	render : function(){
@@ -106,9 +115,28 @@ var ShopcartManagerView = Backbone.View.extend({
 		this.$el.trigger("create");
 		var defaultShopcartSelect = "#" + this.model.currentShopcartId; 
 		this.$el.find(defaultShopcartSelect).trigger("click");
-		this.$el.find("#delete_shp").button('disable');
-
+		//disable the delete button if for the deafult shopcart
+		if (this.model.currentShopcartId == this.model.defaultShopcartId){
+			this.$el.find("#delete_shp").button('disable');
+		}
 		return this;
+	},
+	
+	/** display the error message if any */
+	showMessage : function(message){
+		if ( this.timeOut ) {
+			clearTimeout( this.timeOut );
+		}
+		
+		$("#errorMessageDiv")
+			.empty()
+			.append(message)
+			.slideDown();
+			
+		// Hide status message after a given time
+		this.timeOut = setTimeout( function() {
+			$("#errorMessageDiv").slideUp();
+		}, Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
 	},
 	
 	/**
@@ -116,7 +144,6 @@ var ShopcartManagerView = Backbone.View.extend({
 	 * shopcart list retrieving. 
 	 */
 	error : function(){
-		this.$el.empty();
 		this.$el.append("<div class='ui-error-message'><p><b> Failure: Error when loading the shopcart list.</p></b>"+ 
 		"<p><b> Please check the interface with the server.</p></b></div>");
 	}
