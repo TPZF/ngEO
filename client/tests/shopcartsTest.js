@@ -1,4 +1,4 @@
-define(['jquery', 'configuration', 'account/model/shopcartCollection'], 
+define(['jquery', 'configuration', 'shopcart/model/shopcartCollection'], 
         function ($, Configuration, ShopcartCollection) {
 
 	    // Define the QUnit module and lifecycle.
@@ -27,6 +27,7 @@ define(['jquery', 'configuration', 'account/model/shopcartCollection'],
 				QUnit.ok(shopcarts[0].attributes.name ,"The default shopcart has a name attribute");
 				QUnit.ok(shopcarts[0].attributes.userId ,"The default shopcart has a user id attribute");
 				QUnit.ok(shopcarts.length==5 ,"There are 5 elts in the shopcart");
+			
 				QUnit.start();
 	    	});
 	    });

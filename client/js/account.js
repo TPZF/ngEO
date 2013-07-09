@@ -1,6 +1,6 @@
 
 define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
-        "dataAccess/model/downloadManagers", "account/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
+        "dataAccess/model/downloadManagers", "shopcart/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
         "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView",
         "text!../pages/account.html", "tabs"], 
 
