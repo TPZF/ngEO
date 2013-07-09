@@ -99,6 +99,8 @@ var ShopcartManagerView = Backbone.View.extend({
 			var self = this;
 			this.model.getCurrentShopcartConfig().destroy()
 												.done(function (){
+													//self.model.currentShopcartId = self.model.getPreviousShopcartId(); 
+													self.model.currentShopcartId = self.model.defaultShopcartId;
 													self.render();
 												})
 										
@@ -115,7 +117,7 @@ var ShopcartManagerView = Backbone.View.extend({
 		this.$el.trigger("create");
 		var defaultShopcartSelect = "#" + this.model.currentShopcartId; 
 		this.$el.find(defaultShopcartSelect).trigger("click");
-		//disable the delete button if for the deafult shopcart
+		//disable the delete button if for the default shopcart		
 		if (this.model.currentShopcartId == this.model.defaultShopcartId){
 			this.$el.find("#delete_shp").button('disable');
 		}

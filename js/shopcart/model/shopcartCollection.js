@@ -1,5 +1,5 @@
 /**
- * These are the model components for Shopcarts Collection handeling
+ * These are the model components for Shopcarts Collection handling
  */
 define( ['jquery', 'backbone', 'configuration'], 
 			function($, Backbone, Configuration){
@@ -53,13 +53,34 @@ var ShopcartCollection = Backbone.Collection.extend({
 		
 		var shopcartConfig;		
 		for (var i = 0; i<this.models.length; i++){
+			
 			if (this.models[i].id == this.currentShopcartId){
 				shopcartConfig = this.models[i];
 			}
 		}
 		 return shopcartConfig;
-	}
+	},
 	
+	/** get the id of the shopcart before the current one ! */
+	getPreviousShopcartId : function(){
+		
+		var shopcartId;		
+		
+		for(var i = 0; i<this.models.length; i++){
+			
+			if (this.models[i].id == this.currentShopcartId){
+				if (i==0){//should not happen
+					shopcartId = this.defaultShopcartId;
+				}else{
+					shopcartId = this.models[i-1].id;
+				}
+			}
+		}
+		console.log("this.currentShopcartId == " + this.currentShopcartId);
+		console.log("this.defaultShopcartId == " + this.defaultShopcartId);
+		console.log("shopcartId == " + shopcartId);
+		return shopcartId;
+	}
 	
 });
 

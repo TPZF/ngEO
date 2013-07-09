@@ -13,6 +13,22 @@
 						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
 					   ]
 	},
+		
+	// Parameters for shopcart table
+	"shopcartTable": {
+		"columnsDef" : [{"sTitle" : "id", "mData" : "id" },
+						{"sTitle" : "Mission", "mData" : "product.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
+						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "product.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
+						{"sTitle" : "Start", "mData" : "product.properties.EarthObservation.gml_beginPosition"}, 
+						{"sTitle" : "Stop", "mData" : "product.properties.EarthObservation.gml_endPosition"}, 
+						{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "product.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
+						{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "product.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
+						{"sTitle" : "Pass", "mData" : "product.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
+						{"sTitle" : "Product", "mData" : "product.id" }, 
+						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "product.properties.EarthObservation.EarthObservationMetaData.eop_productType"},
+						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "product.properties.EarthObservation.EarthObservationMetaData.eop_status"} 
+					   ]
+	},
 	
 	"searchResults": {
 		"countPerPage": 100
