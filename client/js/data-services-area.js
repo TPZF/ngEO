@@ -2,7 +2,7 @@
 define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
-		"shopcart/widget/shopcart", "map/widget/toolbarMap", "map/widget/mapPopup", 
+		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help"], 
 	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
@@ -82,7 +82,7 @@ return {
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget.create(element);
 		_$resultsTableWidget = ResultsTableWidget(element);
-		//ShopcartWidget(element);
+		ShopcartWidget(element);
 		ToolBarMap(element);
 		ContextHelp(element);
 		

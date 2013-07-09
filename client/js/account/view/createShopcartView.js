@@ -21,8 +21,7 @@ var CreateShopcartView = Backbone.View.extend({
 			var self = this;
 			$(event.currentTarget).keypress(function(event){
 				self.updateSubmitButtonStatus(event);
-				//if the ENTER keyboard is pressed submit the create 
-				//shopcart request
+				//if the ENTER keyboard is pressed submit the create shopcart request
 				if (event.which == 13){
 					self.submit(event);
 				}	
@@ -46,6 +45,9 @@ var CreateShopcartView = Backbone.View.extend({
 		if (!success){
 			this.error();
 		}
+//		else{
+//			this.model.currentShopcartId = this.model.models[this.model.models.length-1].id;
+//		}
 	},
 	
 	/** 
