@@ -41,6 +41,7 @@ module.exports = {
 	
 	get : function(req, res){
 	
+		//shopcart content consulting
 		if (req.params.id){	
 			res.sendfile('./shopcarts/shopcartContent.json');
 			
