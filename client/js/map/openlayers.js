@@ -113,11 +113,12 @@ OpenLayersMapEngine.prototype.computeResolutions = function(restrictedExtent) {
 /**
  * Add a style
  */
-OpenLayersMapEngine.prototype.addStyle = function(name,defaut,select) {
+OpenLayersMapEngine.prototype.addStyle = function(name,defaut,select,highlight) {
 	if (select) {
 		this._styles[name] = new OpenLayers.StyleMap({
 			'default' : new OpenLayers.Style(defaut),
-			'select' : new OpenLayers.Style(select)
+			'select' : new OpenLayers.Style(select),
+			'highlight': new OpenLayers.Style(highlight)
 		});
 	}
 	else {
