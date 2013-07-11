@@ -211,14 +211,18 @@ return {
 			browsesLayer.removeFeatures(features);
 		});
 		SearchResults.on('highlightFeature', function(feature,prevFeature,searchResults) {
-			if ( prevFeature && !searchResults.isSelected(prevFeature) ) {
-				footprintLayer.modifyFeaturesStyle([prevFeature], "default");
-				browsesLayer.removeFeatures(features);
+			if ( prevFeature ) {
+				if ( searchResults.isSelected(prevFeature) ) {
+					footprintLayer.modifyFeaturesStyle([prevFeature], "select" );
+				} else {
+					footprintLayer.modifyFeaturesStyle([prevFeature], "default" );
+					browsesLayer.removeFeatures([prevFeature]);
+				}
 			}
 			
-			if ( feature && !searchResults.isSelected(feature) ) {
-				mapEngine.modifyFeaturesStyle(resultFootprintLayer,[feature], "select");
-				browsesLayer.addFeatures(features);
+			if ( feature ) {
+				footprintLayer.modifyFeaturesStyle([feature], "highlight");
+				browsesLayer.addFeatures([feature]);
 			}
 		});	
 		
