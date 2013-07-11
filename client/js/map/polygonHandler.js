@@ -52,7 +52,7 @@ function onClick(event) {
 				coords[ coords.length-2 ] = point;
 				coords.splice( coords.length-1, 0, point );
 			}
-			Map.updateFeature(layer,feature);
+			layer.updateFeature(feature);
 		}
 	}
 };
@@ -62,7 +62,7 @@ function onMouseMove(event) {
 	if ( started && coords.length > 0 && event.button == 0 ) {							
 		var point = Map.getLonLatFromEvent( event );
 		coords[ coords.length-2 ] = point;
-		Map.updateFeature(layer,feature);
+		layer.updateFeature(feature);
 	}
 	
 };
@@ -91,14 +91,14 @@ return {
 					coordinates: [coords]
 				}
 			};
-			layer = {
+			var params = {
 					name: "Draw Area",
 					type: "GeoJSON",
 					visible: true,
 					style: "imported",
 					data: feature
 				};
-			Map.addLayer(layer);
+			layer = Map.addLayer(params);
 		}
 		
 		// No navigation when drawing a polygon

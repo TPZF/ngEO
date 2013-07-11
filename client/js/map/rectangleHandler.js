@@ -30,7 +30,7 @@ function updateFeature(pt1,pt2) {
 		[ minX, maxY ],
 		[ minX, minY ]
 	]];
-	Map.updateFeature(layer,feature);
+	layer.updateFeature(feature);
 };
 
 // Called when left mouse button is pressed : start drawing the rectangle
@@ -85,14 +85,14 @@ return {
 					coordinates: [coords]
 				}
 			};
-			layer = {
+			var params = {
 					name: "Draw Area",
 					type: "GeoJSON",
 					visible: true,
 					style: "imported",
 					data: feature
 				};
-			Map.addLayer(layer);
+			layer = Map.addLayer(params);
 		}
 		
 		// No navigation when drawing a rectangle

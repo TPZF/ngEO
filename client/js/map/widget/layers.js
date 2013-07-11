@@ -15,7 +15,7 @@ var container;
  */
 var layerCheckedCallback = function() {
 	var $this = $(this);
-	Map.setLayerVisible($this.data('layer'),$this.prop('checked'));
+	$this.data('layer').setVisible($this.prop('checked'));
 };
 
 /**
@@ -24,14 +24,14 @@ var layerCheckedCallback = function() {
 var buildHTML = function(layer) {
 
 	// Build the input
-	var input = $("<input data-theme='c' type='checkbox'" + (layer.visible ? "checked='checked'" : "") + ">")
+	var input = $("<input data-theme='c' type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
 		.data('layer',layer);
 	
 	// Callback called when the input is changed
 	input.change(layerCheckedCallback);
 	
 	// Build the label for input and add it to the group
-	$("<label data-mini='true'>" + layer.name + "</label>")
+	$("<label data-mini='true'>" + layer.params.name + "</label>")
 		.prepend(input)
 		.appendTo(container);
 };
