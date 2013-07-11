@@ -15,7 +15,7 @@ var BrowsesLayer = function(params,mapEngine) {
 	/**
 	 * Add a browse for the given feature
 	 */
-	var addBrowse = function(feature) {
+	var addBrowse = function(feature,vis) {
 	
 		if (!browseLayers.hasOwnProperty(feature.id)) {
 	
@@ -45,7 +45,7 @@ var BrowsesLayer = function(params,mapEngine) {
 				var config = {
 					name: feature.id,
 					type: type,
-					visible: true,
+					visible: vis,
 					baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
 					opacity: Configuration.data.map.browseDisplay.opacity,
 					params: params,
@@ -75,11 +75,11 @@ var BrowsesLayer = function(params,mapEngine) {
 	 * Change visibility of browse layers
 	 */
 	this.setVisible = function(vis) {
-		this.config.visible = vis;
+		this.params.visible = vis;
 		for ( var x in browseLayers ) {
 			if ( browseLayers.hasOwnProperty(x) ) {
 				browseLayers[x].params.visible = vis;
-				browseLayers[x].engineLayer.setVisible(vis);
+				mapEngine.setLayerVisible(browseLayers[x].engineLayer,vis);
 			}
 		}
 	};
@@ -93,7 +93,7 @@ var BrowsesLayer = function(params,mapEngine) {
 	};
 	this.addFeatures = function(features) {
 		for ( var i = 0; i < features.length; i++ ) {
-			addBrowse( features[i] );
+			addBrowse( features[i], this.params.visible );
 		}
 	};
 	this.removeFeatures = function(features,style)  {
