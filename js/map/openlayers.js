@@ -476,7 +476,11 @@ OpenLayersMapEngine.prototype.addFeature = function(layer,feature)
  */
 OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer,feature,style)
 {
-	layer.drawFeature( layer.getFeatureByFid(feature.id), style );
+	var olFeature = layer.getFeatureByFid(feature.id);
+	if ( olFeature ) {
+		olFeature.renderIntent = style;
+		layer.drawFeature( layer.getFeatureByFid(feature.id), style );
+	}
 }
 
 /**

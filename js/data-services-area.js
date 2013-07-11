@@ -183,20 +183,51 @@ return {
 			}
 			SearchResults.reset();
 		});				
+	
+		// Connect search results events with map
+		var footprintLayer = Map.addLayer({
+			name: "Result Footprints",
+			type: "Feature",
+			visible: true,
+			style: "footprint"
+		});
+		var browsesLayer = Map.addLayer({
+			name: "Result Browses",
+			type: "Browses",
+			visible: true
+		});
+		SearchResults.on('reset:features', function() {
+			footprintLayer.clear();
+			browsesLayer.clear();
+		});
+		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
+		SearchResults.on('zoomToFeature', Map.zoomToFeature);
+		SearchResults.on('selectFeatures', function(features) {
+			footprintLayer.modifyFeaturesStyle(features, "select");
+			browsesLayer.addFeatures(features);
+		});
+		SearchResults.on('unselectFeatures', function(features) {
+			footprintLayer.modifyFeaturesStyle(features, "default");
+			browsesLayer.removeFeatures(features);
+		});
+		SearchResults.on('highlightFeature', function(feature,prevFeature,searchResults) {
+			if ( prevFeature && !searchResults.isSelected(prevFeature) ) {
+				footprintLayer.modifyFeaturesStyle([prevFeature], "default");
+				browsesLayer.removeFeatures(features);
+			}
+			
+			if ( feature && !searchResults.isSelected(feature) ) {
+				mapEngine.modifyFeaturesStyle(resultFootprintLayer,[feature], "select");
+				browsesLayer.addFeatures(features);
+			}
+		});	
 		
 		// TODO : maybe find a better way for the default handler ?
-		SelectHandler.start();
+		SelectHandler.start(footprintLayer);
 
 		// Connect with map feature picking
 		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);
-	
-		// Connect search results events with map
-		SearchResults.on('reset:features', Map.clearResults);
-		SearchResults.on('add:features', Map.addResults);
-		SearchResults.on('zoomToFeature', Map.zoomToFeature);
-		SearchResults.on('selectFeatures', Map.selectFeatures);
-		SearchResults.on('unselectFeatures', Map.unselectFeatures);	
-		SearchResults.on('highlightFeature', Map.highlightFeature);	
+		
 		//display a pop-up message when the product search has failed
 		SearchResults.on('error:features', function(searchUrl){
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);

@@ -6,6 +6,8 @@ define(['jquery', 'map/map', 'searchResults/model/searchResults'], function($, M
  */
  // The current picked features
 var pickedFeatures = [];
+// The layer to pick
+var layer;
 // The index when using stack picking
 var stackPickingIndex = -1;
 // The map engine
@@ -50,10 +52,9 @@ var getFeaturesFromPoint = function(lonlat) {
 
 	var features = [];
 	
-	var featureCollection = Map.layers[0].data;
 	
-	for ( var i = 0; i < featureCollection.features.length; i++ ) {
-		var feature = featureCollection.features[i];
+	for ( var i = 0; i < layer.features.length; i++ ) {
+		var feature = layer.features[i];
 		var isMultiPolygon = feature.geometry.type == "MultiPolygon";
 		if ( pointInRing(lonlat,isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0]) ) {
 			features.push( feature );
@@ -90,7 +91,7 @@ var mapClickHandler = function(event)
 	}
 	
 	// Check there is data to select
-	if (!Map.layers[0].data)
+	if (!layer.features || layer.features.length == 0)
 		return;
 		
 	// Check that we are on a click
@@ -155,7 +156,9 @@ function clearStack() {
  * Public interface
  */
 return {
-	start: function() {
+	start: function(l) {
+		layer = l;
+		
 		mapEngine = Map.getMapEngine();
 		
 		// Click is not used because OpenLayers is messing up with click when navigation is active

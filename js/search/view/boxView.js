@@ -114,7 +114,7 @@ var BoxView = Backbone.View.extend({
 	deactivateUseExtent: function() {
 		Map.off("endNavigation", this.synchronizeWithMapExtent, this);
 		if (this.parentView.searchAreaLayer) {
-			Map.addLayer(this.parentView.searchAreaLayer);
+			this.parentView.searchAreaLayer = Map.addLayer(this.parentView.searchAreaLayer.params);
 		}
 		this.parentView.updateSearchAreaLayer();
 		this.$el.find("input").removeClass( "ui-disabled" );
