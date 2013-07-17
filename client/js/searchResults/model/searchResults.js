@@ -128,8 +128,12 @@ var SearchResults = {
 		var unselected = _.difference(this.selection, features);
 		var selected = _.difference(features, this.selection);
 		this.selection = features;
-		this.trigger( "unselectFeatures", unselected );
-		this.trigger( "selectFeatures", selected );
+		if (unselected.length != 0){
+			this.trigger( "unselectFeatures", unselected );
+		}
+		if (selected.length != 0){
+			this.trigger( "selectFeatures", selected );
+		}
 	},
 	
 	// Check if a feature is selected
@@ -157,6 +161,35 @@ var SearchResults = {
 		this.trigger( "unselectFeatures", [feature] );
 	},
 
+	/** select all the items of the table which are not selected */
+	selectAll : function(){
+		
+		var selected = _.difference(this.features, this.selection);
+		for ( var i = 0; i < selected.length; i++ ) {
+			this.selection.push( selected[i] );
+		}
+		
+		if (selected.length != 0){
+			this.trigger( "selectFeatures", selected );
+		}
+	},
+	
+	/** unselect all the already selected table items */
+	unselectAll: function() {
+		
+		//this.setSelection([]);
+		var oldSelection = [];
+		//copy the selected items
+		for ( var i = 0; i < this.selection.length; i++ ) {
+			oldSelection.push(this.selection[i])
+		}
+		this.selection = []	
+		if (oldSelection.length != 0){
+			this.trigger( "unselectFeatures", oldSelection );
+		}
+
+	},
+	
 	/** Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
 	 */

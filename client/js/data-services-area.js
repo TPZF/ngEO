@@ -66,10 +66,12 @@ return {
 			if ( event.data.hide ) {
 				$('#toolbar').hide();
 				$('#statusBar').hide();
+				$('#dateRangeSlider').hide();
 				$(this).buttonMarkup({ icon: 'plus' });
 			} else {
 				$('#toolbar').show();
 				$('#statusBar').show();
+				$('#dateRangeSlider').show();
 				$(this).buttonMarkup({ icon: 'minus' });
 			}
 			event.data.hide = !event.data.hide;			
