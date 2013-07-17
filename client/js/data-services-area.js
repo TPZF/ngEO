@@ -159,7 +159,7 @@ return {
 
 				//select the dataset id stored in the prefs
 				var datasetId = UserPrefs.get("Dataset");
-				if (datasetId != "None") {
+				if (datasetId && datasetId != "None") {
 					//set the selected dataset in the model
 					DatasetSearch.set("datasetId", datasetId);
 				}
