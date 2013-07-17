@@ -49,7 +49,7 @@ app.get('/ngeo/datasetPopulationMatrix', datasetPopulationMatrix);
 app.get('/ngeo/datasetSearchInfo/:id', datasetSearchInfo);
 
 //product search interface
-app.get('/ngeo/catalogueSearch/:datasetId', productSearch);
+app.get('/ngeo/catalogue/:datasetId/search', productSearch);
 
 //download managers and download manager status change interfaces 
 app.get(/\/ngeo\/downloadManagers.*/, downloadManagers);
