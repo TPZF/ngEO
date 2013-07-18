@@ -32,8 +32,6 @@ var SearchResultsTableView = Backbone.View.extend({
 		}, this);
 		this.model.on("selectFeatures", this.toggleSelection, this );
 		this.model.on("unselectFeatures", this.toggleSelection, this );
-		//uncheck the select all checkbox if any item has been unselected.
-		this.model.on("unselectFeatures", this.updateSelectAllChechBox, this );
 		
 	},
 
@@ -87,19 +85,13 @@ var SearchResultsTableView = Backbone.View.extend({
 			directDownloadWidget.open(event);
 		}, 
 		
-		// Called when the user clicks on the checkbox to select/unselect all the table elements
-		'click .dataTables-select-all' : function(event){
-	
-			var features = this.table.fnGetData();
-			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
-				$(event.currentTarget).removeClass('ui-icon-checkbox-off')
-									  .addClass('ui-icon-checkbox-on');	
-				this.model.selectAll();
-			} else {
-				$(event.currentTarget).removeClass('ui-icon-checkbox-on')
-									  .addClass('ui-icon-checkbox-off');	
-				this.model.unselectAll();
-			}
+		// Called when the user clicks on the select all button
+		'click #selectAll' : function(event){
+			this.model.selectAll();
+		 }, 
+		// Called when the user clicks on the select all button
+		'click #deselectAll' : function(event){
+			this.model.unselectAll();
 		 }, 
 	},
 	
@@ -113,19 +105,6 @@ var SearchResultsTableView = Backbone.View.extend({
 		} else {
 			return null;
 		}
-	},
-	
-	/** 
-	 * metod called if any one or many items have been unselected to update the 
-	 * seleclect all checkbox.
-	 */
-	updateSelectAllChechBox : function(features){
-		
-		var selectAllCheckBox = $(".dataTables-select-all");
-		if (this.model.features.length != 0 && selectAllCheckBox.hasClass('ui-icon-checkbox-on')){
-			selectAllCheckBox.removeClass('ui-icon-checkbox-on')
-							 .addClass('ui-icon-checkbox-off');
-		}	
 	},
 	
 	/**
@@ -217,12 +196,17 @@ var SearchResultsTableView = Backbone.View.extend({
 		});		
 	
 		// Build the bottom : add buttons
-		$(".bottom").addClass("ui-grid-a");
-		$("#datatable_filter").addClass("ui-block-a");
-		$("#datatable_filter input").attr("data-mini", "true");
-		var $selectAllContainer = $('<div><label>Select All : <span class="dataTables-select-all ui-icon ui-icon-checkbox-off"></span></label></div>').appendTo($('#datatable_filter'));
+		$(".bottom").addClass("ui-grid-b");
+		$("#datatable_filter")
+			.addClass("ui-block-a")
+			.find('input').attr("data-mini", "true");
+			
+		// Buttons for selection/deselection
+		var $selectContainer = $('<div class="ui-block-b"></div>').appendTo('.bottom');
+		$('<button id="selectAll" data-role="button" data-inline="true" data-mini="true">Select All</button>').appendTo($selectContainer);
+		$('<button id="deselectAll" data-role="button" data-inline="true" data-mini="true">Deselect All</button>').appendTo($selectContainer);
 	
-		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo('.bottom');
+		var $buttonContainer = $('<div class="ui-block-c dataTables_buttons"></div>').appendTo('.bottom');
 						
 		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
