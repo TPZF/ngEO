@@ -1,5 +1,8 @@
 <div id="data-services-area">
+	<!-- A button to show/hide the toolbar -->
 	<a id="showHideToolbar" data-role="button" data-mini="true" data-inline="true" data-icon="minus" data-iconpos="notext">Show/Hide</a>
+
+	<!-- The main toolbar in the data-services-area -->
 	<div id="toolbar">
 		<img id="dataset" src="images/dataset.png" name="Datasets" data-help="Select a dataset for searching products.<br> 
 			See <a target='_blank' href='help.html#chapter/dataAccessServices/datasetSelection'>here</a> for more details." /> 
@@ -17,5 +20,26 @@
 		<img id="switch" src="images/switch.png" name="2D/3D" data-help="Switch map mode between 2D and 3D"/>
 		<div class="tb-separator" />
 		<img id="help" src="images/help.png" name="Context Help" />
+	</div>
+	
+	<!-- The date range slide use for product search -->
+	<div id="dateRangeSlider">
+	</div>
+	
+	
+	<!-- The status bar to give information on the product search -->
+	<div id="statusBar" class="ui-grid-b" >
+		<div id="datasetMessage" class="ui-block-a">
+			Current dataset : None
+		</div>
+		<div id="paging" class="ui-block-b">
+			<a id="paging_first" data-role="button" data-mini="true" data-inline="true">First</a>
+			<a id="paging_prev" data-role="button" data-mini="true" data-inline="true">Previous</a>
+			<a id="paging_next" data-role="button" data-mini="true" data-inline="true">Next</a>
+			<a id="paging_last" data-role="button" data-mini="true" data-inline="true">Last</a>
+		</div>
+		<div id="resultsMessage" class="ui-block-c" style="display: none;">
+			No search done.
+		</div>
 	</div>
 </div>

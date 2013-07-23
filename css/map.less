@@ -49,39 +49,3 @@
 	bottom: 5px;
 	left: 5px;
 }
-
-@statusBar-height: 38px;
-
-#statusBar {
-	position: absolute;
-	z-index: 1005;
-	left: 0px;
-	bottom: 0px;
-	width: 100%;
-	height: @statusBar-height;
-	color: white;
-	text-shadow: 0 0 0;
-	background: @widget-background-color;
-}
-
-/** 
- * Styling for a message displaying the current dataset selected
- */
-#datasetMessage {
-	line-height: @statusBar-height; // To vertical align text
-}
-
-/**
- * Center paging buttons in the status bar
- */
-#paging {
-	text-align: center;
-}
-
-/** 
- * Styling for a message displaying the current dataset selected
- */
-#resultsMessage {
-	text-align: right;
-	line-height: @statusBar-height; // To vertical align text
-}

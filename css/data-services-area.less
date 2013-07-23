@@ -1,0 +1,74 @@
+
+/**
+ * The main toolbar
+ */
+#toolbar {
+	z-index: 1005;
+	position: absolute;
+	background-color: fade(@background-color, 50%); 
+    //margin:0px auto;
+	width: 960px;
+	left: 50%;
+	margin-left: -480px;
+    padding: 0;
+	text-align: center;
+}
+
+/**
+ * A button to show/hide the toolbar
+ */
+#showHideToolbar {
+	position: absolute;
+	z-index: 1006;
+}
+
+/**
+ * The date range slider
+ */
+#dateRangeSlider {
+	z-index: 1005;
+	bottom: @statusBar-height;
+	left: 0px;
+	background: @widget-background-color; 
+	position: absolute;
+	width: 100%;
+}
+
+@statusBar-height: 38px;
+
+/**
+ * The status bar
+ */
+#statusBar {
+	position: absolute;
+	z-index: 1005;
+	left: 0px;
+	bottom: 0px;
+	width: 100%;
+	height: @statusBar-height;
+	color: white;
+	text-shadow: 0 0 0;
+	background: @widget-background-color;
+}
+
+/** 
+ * Styling for a message displaying the current dataset selected
+ */
+#datasetMessage {
+	line-height: @statusBar-height; // To vertical align text
+}
+
+/**
+ * Center paging buttons in the status bar
+ */
+#paging {
+	text-align: center;
+}
+
+/** 
+ * Styling for a message displaying the current dataset selected
+ */
+#resultsMessage {
+	text-align: right;
+	line-height: @statusBar-height; // To vertical align text
+}
