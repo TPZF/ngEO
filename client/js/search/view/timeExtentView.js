@@ -90,7 +90,7 @@ var TimeExtentView = Backbone.View.extend({
 	
 	// Add the time slider to the map
 	addTimeSlider: function() {
-		var dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
+		var dateRangeSlider = $('#dateRangeSlider').show();
 		
 		// Compute the range for the full time slider scale
 		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
@@ -107,6 +107,12 @@ var TimeExtentView = Backbone.View.extend({
 		this.model.set( "start", start );
 
 		var self = this;
+		
+		// Clean-up previous
+		// TODO : a refresh method will be nice...
+		if ( dateRangeSlider.is(':ui-dateRangeSlider')) {
+			dateRangeSlider.dateRangeSlider('destroy');
+		}
 		dateRangeSlider.dateRangeSlider({
 			boundsMaxLength: Configuration.localConfig.timeSlider.boundsMaxLength,
 			boundsMinLength: Configuration.localConfig.timeSlider.boundsMinLength,
@@ -126,7 +132,7 @@ var TimeExtentView = Backbone.View.extend({
 	
 	// Remove the time slider
 	removeTimeSlider: function() {
-		$('#dateRangeSlider').remove();
+		$('#dateRangeSlider').hide();
 	},
 	
 	update: function() {

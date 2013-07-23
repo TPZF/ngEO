@@ -33,8 +33,8 @@ var addPageContent = function($link,$div) {
 	// Wrap the page co
 	if ( !$link.data('nowrap') ) {
 		$div.children().wrapAll('<div class="menuBarPageContent"></div>');
+		$div.addClass('menuBarPage');
 	}
-	$div.addClass('menuBarPage');
 	pageCache[ $link.attr('href') ] = $div;
 	$div.hide();
 	$('#mapContainer').prepend($div);

@@ -40,16 +40,12 @@ return {
 	 */
 	hide: function() {
 		_$resultsTableWidget.panel('hide');
-		$('#statusBar').hide();
-		$('#dateRangeSlider').hide();
 	},
 	
 	/**
 	 * Called when the module main page is shown
 	 */
 	show: function() {
-		$('#statusBar').show();
-		$('#dateRangeSlider').show();
 	},
 	
 	/**
