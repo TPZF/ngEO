@@ -3,7 +3,7 @@ define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
-		"text!../pages/data-services-area.html", "context-help"], 
+		"text!../pages/data-services-area.html", "context-help", "toolbar"], 
 	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
@@ -19,18 +19,7 @@ return {
 	buildElement: function() {
 	
 		var dsa = $(dataservicesarea);
-		var toolbar = dsa.find('#toolbar');
-		
-		// Wrap the image with a div to display both image and text below, and then add class for button styling
-		toolbar.find('img')
-			.wrap('<div class="tb-elt" />')
-			.addClass('tb-button');
-			
-		// Add text for each element
-		toolbar.find('img').each( function(index) {
-			$(this).after('<div class="tb-text">' + $(this).attr('name') + '</div>');
-		});
-	
+		dsa.find('#toolbar').toolbar({ onlyIcon: false });	
 	
 		return dsa;
 	},

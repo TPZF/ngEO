@@ -87,7 +87,7 @@ $.widget( "ngeo.ngeowidget", {
 		var toolbarBottom = $tb.position().top + $tb.outerHeight();
 		if ( this.activator ) {
 			// Recompute position for widget
-			var posActivator = this.activator.position();
+			var posActivator = this.activator.offset();
 			var widgetLeft = Math.max( 10, posActivator.left - (this.parentElement.outerWidth()/2) + (this.activator.outerWidth()/2) );
 			this.parentElement
 				.css( 'left', widgetLeft );
