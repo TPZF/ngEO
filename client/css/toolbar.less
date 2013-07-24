@@ -5,6 +5,12 @@
  *		layered above the map
  */
 
+ // Remove list-style
+menu[type=toolbar] {
+	list-style: none outside none;
+	margin-top: 0;
+	margin-bottom: 0;
+}
 
 .tb-elt {
 	display: inline-block;	
@@ -15,8 +21,10 @@
 
 .tb-button {
 	cursor: pointer;
+	margin: auto;
 	padding: 4px;
-	//margin: 1px;
+	width: 24px;
+	height: 24px;
 	.border-radius(0.5em);
 }
 
@@ -33,6 +41,12 @@
 
 .tb-text {
 	font-size: 0.8em; 
+}
+
+.tb-icon {
+	background-repeat: no-repeat;
+	width: 24px;
+	height: 24px;
 }
 
 .tb-separator {
