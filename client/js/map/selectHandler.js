@@ -95,10 +95,10 @@ var mapClickHandler = function(event)
 		return;
 		
 	// Check that we are on a click
-	var dx = event.pageX - prevX;
-	var dy = event.pageY - prevY;
+	var dx = Math.abs(event.pageX - prevX);
+	var dy = Math.abs(event.pageY - prevY);
 	var dt = Date.now() - prevTime;
-	if ( dx > 1 || dy > 1 || dt > 1000 ) {
+	if ( dx > 1 || dy > 1 || dt > 500 ) {
 		return;
 	}
 		

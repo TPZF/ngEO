@@ -169,7 +169,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	getOpenSearchURL : function(){
 
-		var url = Configuration.baseServerUrl + "/catalogueSearch/"+ this.getCoreURL() + "&format=json";
+		var url = Configuration.baseServerUrl + "/catalogue/"+ this.getCoreURL() + "&format=json";
 		
 		console.log("DatasetSearch module : getOpenSearchURL method : " + url);
 		
@@ -179,7 +179,7 @@ var DataSetSearch = Backbone.Model.extend({
 	/** get the url without base url with all search criteria */
 	getCoreURL : function(){
 		
-		var url =  this.get("datasetId") + "?";
+		var url =  this.get("datasetId") + "/search?";
 
 		//add area criteria if set
 		url = this.addGeoTemporalParams(url);
