@@ -143,9 +143,9 @@ var SearchResultsTableView = Backbone.View.extend({
 	 */
 	onShow: function() {
 		if ( this.featuresToAdd.length >  0 ) {
-			this.table.fnAddData( self.featuresToAdd, false );
+			this.table.fnAddData( this.featuresToAdd, false );
 			// adjust selection
-			this.toggleSelection(self.model.selection);
+			this.toggleSelection(this.model.selection);
 			this.featuresToAdd.length = 0;
 		}
 		this.table.fnAdjustColumnSizing( true );
@@ -203,8 +203,8 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.table = this.$el.find("#datatable").dataTable(parameters);
 	
 		// Build the bottom : add buttons
-		$(".bottom").addClass("ui-grid-b");
-		$("#datatable_filter")
+		this.$el.find(".bottom").addClass("ui-grid-b");
+		this.$el.find("#datatable_filter")
 			.addClass("ui-block-a")
 			.find('input').attr("data-mini", "true");
 			

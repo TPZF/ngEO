@@ -170,7 +170,7 @@ return {
 			if ( $(this).hasClass('toggle') ) {
 				
 				_hidePanel[position]();
-				content.trigger('panel:show');
+				content.trigger('panel:hide');
 
 			} else {
 				
