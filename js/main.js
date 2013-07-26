@@ -62,7 +62,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "menubar", "logger", "backbone", "jquery.mobile", "panel"] ,
+require( ["require", "jquery", "configuration", "menubar", "logger", "backbone", "jquery.mobile"] ,
 		function(require, $, Configuration, MenuBar, Logger, Backbone) {
 
 /** Use a defered object for document ready */
@@ -80,13 +80,7 @@ $.when(doc_ready, Configuration.load())
 
 		// Load the map module and initialize it
 		require(["map/map"], function(Map) {
-		
-			// Initialze the panel container
-			$("#mapContainer").panelManager({
-				center: "#map",
-				update: Map.updateViewportSize
-			});
-			
+					
 			// Initialize menu bar
 			MenuBar.initialize("header nav");
 			

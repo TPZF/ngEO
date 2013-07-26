@@ -3,10 +3,10 @@ define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
-		"text!../pages/data-services-area.html", "context-help", "toolbar"], 
+		"text!../pages/data-services-area.html", "context-help", "panelManager", "toolbar"], 
 	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
-			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp) {
+			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp, PanelManager) {
 
 // Private variable
 var _$resultsTableWidget;
@@ -28,13 +28,17 @@ return {
 	 * Called when the module main page is hidden
 	 */
 	hide: function() {
-		_$resultsTableWidget.panel('hide');
+		PanelManager.hideAll();
+		$('#statusBar').hide();
+		$('#dateRangeSlider').hide();
 	},
 	
 	/**
 	 * Called when the module main page is shown
 	 */
 	show: function() {
+		$('#statusBar').show();
+		$('#dateRangeSlider').show();
 	},
 	
 	/**
@@ -44,6 +48,14 @@ return {
 	 * @param element The root element of the module
 	 */
 	initialize: function(element) {
+	
+		PanelManager.initialize({
+			center: '#map', 
+			bottom: '#bottom-panel',
+			updateCenter: Map.updateViewportSize
+		});
+		$('#statusBar').appendTo('#map').trigger('create');
+		$('#dateRangeSlider').appendTo('#map');
 	
 		// Hide/show widgets
 		element.trigger('create');

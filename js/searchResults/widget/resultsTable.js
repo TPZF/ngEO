@@ -1,8 +1,8 @@
 /**
  * SearchWidget module
  */
-define( ["jquery", "backbone", "searchResults/model/searchResults", "searchResults/view/searchResultsTableView", 
-          "panel"], function($, Backbone, SearchResults, SearchResultsTableView) {
+define( ["searchResults/model/searchResults", "searchResults/view/searchResultsTableView", 
+          "panelManager"], function(SearchResults, SearchResultsTableView, PanelManager) {
 
 return function(root) {
 			
@@ -33,13 +33,19 @@ return function(root) {
 	/**
  	 * Add the results table as a bottom panel 
 	 */
-	// Append it to the panel manager (ie parent of the root)
-	root.parent().append(view.$el);
+	PanelManager.addPanelContent({
+		element: view.$el,
+		position: 'bottom',
+		activator: '#result',
+		show: $.proxy( view.onShow, view ),
+		hide: $.proxy( view.onHide, view )
+	});
 	
-	// Create the panel for the view
-	view.$el.panel({
-		panelManager: root.parent(),
-		activator: '#result'
+	// Manage panel size
+	view.$el.on('panel:show', $.proxy( view.onShow, view ) );
+	view.$el.on('panel:hide', $.proxy( view.onHide, view ) );
+	view.on("sizeChanged", function() {
+		PanelManager.updatePanelSize('bottom');
 	});
 	
 	view.render();
