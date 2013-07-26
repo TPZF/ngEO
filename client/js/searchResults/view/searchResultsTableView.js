@@ -19,13 +19,13 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.model.on("reset:features", function() {
 			this.table.fnClearTable();
 			this.featuresToAdd = [];
-			this.$el.panel('update');
+			this.trigger('sizeChanged');
 		}, this);
 		this.model.on("add:features", function(features) {
 			if ( this.visible ) {
 				this.table.fnAddData( features, false );
 				this.table.fnAdjustColumnSizing( true );
-				this.$el.panel('update');
+				this.trigger('sizeChanged');
 			} else {
 				this.featuresToAdd = this.featuresToAdd.concat( features );
 			}
@@ -158,6 +158,27 @@ var SearchResultsTableView = Backbone.View.extend({
 			this.downloadOptionsButton.button('enable');
 		}
 	},
+	
+	/**
+	 * Method to call when the table is shown
+	 */
+	onShow: function() {
+		if ( this.featuresToAdd.length >  0 ) {
+			this.table.fnAddData( self.featuresToAdd, false );
+			// adjust selection
+			this.toggleSelection(self.model.selection);
+			this.featuresToAdd.length = 0;
+		}
+		this.table.fnAdjustColumnSizing( true );
+		this.visible = true;
+	},
+	
+	/**
+	 * Method to call when the table is hidden
+	 */
+	onHide: function() {
+		this.visible = false;
+	},
 
 	/**
 	 * Render the table
@@ -201,20 +222,6 @@ var SearchResultsTableView = Backbone.View.extend({
 				
 		var self = this;
 		this.table = this.$el.find("#datatable").dataTable(parameters);
-	
-		this.$el.panel('option','show', function() {
-			if ( self.featuresToAdd.length >  0 ) {
-				self.table.fnAddData( self.featuresToAdd, false );
-				// adjust selection
-				self.toggleSelection(self.model.selection);
-				self.featuresToAdd.length = 0;
-			}
-			self.table.fnAdjustColumnSizing( true );
-			self.visible = true;
-		});
-		this.$el.panel('option','hide', function() {
-			self.visible = false;
-		});		
 	
 		// Build the bottom : add buttons
 		$(".bottom").addClass("ui-grid-a");
