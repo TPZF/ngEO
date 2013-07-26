@@ -83,12 +83,13 @@ var ShopcartItemView = Backbone.View.extend({
 		this.table = this.$el.find("#dataTable").dataTable(parameters);
 	
 		// Build the bottom : add buttons
-		$(".bottom").addClass("ui-grid-a");
-		$("#datatable_filter").addClass("ui-block-a");
-		$("#datatable_filter input").attr("data-mini", "true");
-		var $selectAllContainer = $('<div><label>Select All : <span class="dataTables-select-all ui-icon ui-icon-checkbox-off"></span></label></div>').appendTo($('#datatable_filter'));
+		this.$el.find(".bottom").addClass("ui-grid-a");
+		this.$el.find("#datatable_filter").addClass("ui-block-a");
+		this.$el.find("#datatable_filter input").attr("data-mini", "true");
+		var $selectAllContainer = $('<div><label>Select All : <span class="dataTables-select-all ui-icon ui-icon-checkbox-off"></span></label></div>')
+			.appendTo( this.$el.find("#datatable_filter") );
 	
-		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo('.bottom');
+		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo( this.$el.find(".bottom") );
 
 		//add button to the widget footer in order to download products
 //		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
