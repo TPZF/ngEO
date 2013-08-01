@@ -227,6 +227,20 @@ var SearchResults = {
 		return productUrls;
 	},
 	
+	/** return the non Planned features */
+	getNonPlannedItems : function(features){
+		
+		var nonPlannedFeatures = [];
+		var eoMeta;
+		
+		for ( var i = 0; i < features.length; i++ ) {
+			eoMeta = features[i].properties.EarthObservation.EarthObservationMetaData;
+			if ( eoMeta && eoMeta.eop_status && eoMeta.eop_status != "PLANNED") {
+				nonPlannedFeatures.push(features[i]);
+			} 	
+		}
+		return nonPlannedFeatures;
+	},
 	
 	/** After a download options selection change on results table, update the selected(checked) product urls 
 	 * with the new selected downloadOptions. The selectedDownloadOptions argument is a json object 

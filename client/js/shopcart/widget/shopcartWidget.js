@@ -2,8 +2,8 @@
  * ShopcartWidget module
  */
 define( ["jquery", "shopcart/model/shopcart", "shopcart/model/ShopcartCollection", 
-         "shopcart/view/shopcartItemView", "widget"], 
-		function($, Shopcart, ShopcartCollection, ShopcartItemView) {
+         "shopcart/view/shopcartItemView", "panelManager", "widget"], 
+		function($, Shopcart, ShopcartCollection, ShopcartItemView, PanelManager) {
 
 return function(element) {
 	
@@ -16,26 +16,34 @@ return function(element) {
 		success: function() {
 			
 			currentShopcart.initialize(ShopcartCollection.currentShopcartId);
-			
-			// Create the shopcart content view
-			var shopcartItemView = new ShopcartItemView({
-				model : currentShopcart 
-			});
-			
+
 			// load the content of the current shopcart
 			currentShopcart.fetch({
 				
-				success: function() {
+				success: function(model, response) {
+					
+					// Create the shopcart content view
+					var shopcartItemView = new ShopcartItemView({
+						model : model 
+					});
+					
+					//Add the shopcart table to the bottom panel 
+					PanelManager.addPanelContent({
+						element: shopcartItemView.$el,
+						position: 'bottom',
+						activator: '#shopcart',
+						show: $.proxy( shopcartItemView.onShow, shopcartItemView ),
+						hide: $.proxy( shopcartItemView.onHide, shopcartItemView )
+					});
+					
+					// Manage panel size
+					shopcartItemView.$el.on('panel:show', $.proxy( shopcartItemView.onShow, shopcartItemView ) );
+					shopcartItemView.$el.on('panel:hide', $.proxy( shopcartItemView.onHide, shopcartItemView ) );
+					shopcartItemView.on("sizeChanged", function() {
+						PanelManager.updatePanelSize('bottom');
+					});
 					
 					shopcartItemView.render();
-					
-					// Append it to the data services area
-					element.append(shopcartItemView.$el);
-					
-					// Create the widget for main search view
-					shopcartItemView.$el.ngeowidget({
-						activator: '#shopcart',
-					});
 					
 					return shopcartItemView.$el;
 					

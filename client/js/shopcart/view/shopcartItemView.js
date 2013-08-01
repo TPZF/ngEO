@@ -46,6 +46,22 @@ var ShopcartItemView = Backbone.View.extend({
 			return null;
 		}
 	},
+	
+	/**
+	 * Method to call when the table is shown
+	 */
+	onShow: function() {
+		
+		this.table.fnAdjustColumnSizing( true );
+		this.visible = true;
+	},
+	
+	/**
+	 * Method to call when the table is hidden
+	 */
+	onHide: function() {
+		this.visible = false;
+	},
 
 	/**
 	 * Render the table
@@ -53,7 +69,7 @@ var ShopcartItemView = Backbone.View.extend({
 	render : function() {
 
 		// Add the table
-		this.$el.append('<table cellpadding="0" cellspacing="0" border="0" id="dataTable"></table>');
+		this.$el.append('<table cellpadding="0" cellspacing="0" border="0" id="shopcartTable"></table>');
 
 		// Take column definitions from Configuration
 		// Add checkbox as first colum
@@ -80,33 +96,35 @@ var ShopcartItemView = Backbone.View.extend({
 		};
 				
 		var self = this;
-		this.table = this.$el.find("#dataTable").dataTable(parameters);
+		this.table = this.$el.find("#shopcartTable").dataTable(parameters);
 	
 		// Build the bottom : add buttons
 		this.$el.find(".bottom").addClass("ui-grid-a");
-		this.$el.find("#datatable_filter").addClass("ui-block-a");
-		this.$el.find("#datatable_filter input").attr("data-mini", "true");
-		var $selectAllContainer = $('<div><label>Select All : <span class="dataTables-select-all ui-icon ui-icon-checkbox-off"></span></label></div>')
-			.appendTo( this.$el.find("#datatable_filter") );
-	
+		this.$el.find("#shopcartTable_filter").addClass("ui-block-a");
+		this.$el.find("#shopcartTable_filter input").attr("data-mini", "true");
+		// Buttons for selection/deselection
+		//var $selectContainer = $('<div class="ui-block-b"></div>').appendTo(this.$el.find(".bottom"));
+		$('<button id="shopcartSelectAll" data-role="button" data-inline="true" data-mini="true">Select All</button>').appendTo("#shopcartTable_filter");
+		$('<button id="shopcartDeselectAll" data-role="button" data-inline="true" data-mini="true">Deselect All</button>').appendTo("#shopcartTable_filter");
+
 		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo( this.$el.find(".bottom") );
 
 		//add button to the widget footer in order to download products
-//		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
-//		this.downloadOptionsButton.button();
-//		this.downloadOptionsButton.button('disable');
-//		
+		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
+		this.downloadOptionsButton.button();
+		this.downloadOptionsButton.button('disable');
+		
 //		this.downloadOptionsButton.click(function() {
-//			
+//			//TODO
 //			var downloadOptionsWidget = new DownloadOptionsWidget();
 //			downloadOptionsWidget.open();
 //
 //		});
 //		
 //		//add button to the widget footer in order to download products		
-//		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true">Delete</button>').appendTo($buttonContainer);
-//		this.deleteButton.button();
-//		this.deleteButton.button('disable');
+		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true">Delete</button>').appendTo($buttonContainer);
+		this.deleteButton.button();
+		this.deleteButton.button('disable');
 //		
 //		this.deleteButton.click(function() {	
 //			//TODO

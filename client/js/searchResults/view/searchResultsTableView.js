@@ -1,9 +1,10 @@
 define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
-		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget', 'jquery.mobile', 'jquery.dataTables' ],
+		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 
+		  'shopcart/model/shopcart', 'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
+			DirectDownloadWidget, DownloadOptionsWidget, Shopcart, ShopcartCollection, ExportWidget) {
 
 		
 /**
@@ -92,7 +93,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		// Called when the user clicks on the select all button
 		'click #deselectAll' : function(event){
 			this.model.unselectAll();
-		 }, 
+		 }	 
 	},
 	
 	/**
@@ -132,9 +133,15 @@ var SearchResultsTableView = Backbone.View.extend({
 		if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
 			this.retrieveProduct.button('disable');
 			this.downloadOptionsButton.button('disable');
+			this.addToShopcart.button('disable');
 		} else {
 			this.retrieveProduct.button('enable');
 			this.downloadOptionsButton.button('enable');
+			if (this.model.getNonPlannedItems(this.model.selection) != 0){
+				this.addToShopcart.button('enable');
+			}else{
+				this.addToShopcart.button('disable');
+			}
 		}
 	},
 	
@@ -203,17 +210,17 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.table = this.$el.find("#datatable").dataTable(parameters);
 	
 		// Build the bottom : add buttons
-		this.$el.find(".bottom").addClass("ui-grid-b");
+		this.$el.find(".bottom").addClass("ui-grid-a");
 		this.$el.find("#datatable_filter")
 			.addClass("ui-block-a")
 			.find('input').attr("data-mini", "true");
 			
 		// Buttons for selection/deselection
-		var $selectContainer = $('<div class="ui-block-b"></div>').appendTo('.bottom');
-		$('<button id="selectAll" data-role="button" data-inline="true" data-mini="true">Select All</button>').appendTo($selectContainer);
-		$('<button id="deselectAll" data-role="button" data-inline="true" data-mini="true">Deselect All</button>').appendTo($selectContainer);
+		//var $selectContainer = $('<div class="ui-block-b"></div>').appendTo(this.$el.find(".bottom"));
+		$('<button id="selectAll" data-role="button" data-inline="true" data-mini="true">Select All</button>').appendTo("#datatable_filter");
+		$('<button id="deselectAll" data-role="button" data-inline="true" data-mini="true">Deselect All</button>').appendTo("#datatable_filter");
 	
-		var $buttonContainer = $('<div class="ui-block-c dataTables_buttons"></div>').appendTo('.bottom');
+		var $buttonContainer = $('<div class="ui-block-b dataTables_buttons"></div>').appendTo(this.$el.find(".bottom"));
 						
 		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
@@ -227,9 +234,42 @@ var SearchResultsTableView = Backbone.View.extend({
 			
 			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
 			downloadManagersWidget.open();
-
 		});
-		
+
+		//add selected items to the current or to a new shopcart
+		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true">Add to Shopcart</button>').appendTo($buttonContainer);
+		this.addToShopcart.button();
+		this.addToShopcart.button('disable');		
+		this.addToShopcart.click(function() {
+//			TODO UNCOMMENT TO USE ShopcartSelectionView FOR EITHER THE CURRENT SHOPCART OR A NEW ONE 	
+//			var parentElement = $('<div id="actionPopup">');
+//			var element = $('<div id="actionPopupContent"></div>'); 
+//			element.appendTo(parentElement);
+//			parentElement.appendTo('.ui-page-active');
+//			parentElement.ngeowidget({
+//				title: "Select a shopcart",
+//				hide: function() {
+//					//remove the root of the view to discart all listeners
+//					element.remove();
+//					parentElement.remove();
+//				}
+//			});
+//			
+//			var ShopcartSelectionView = new ShopcartSelectionView({
+//				model : this.model,
+//				el: element
+//			});
+//			
+//			ShopcartSelectionView.render();
+//			//Open the popup
+//			parentElement.ngeowidget("show");
+			
+			var currentShopcart = new Shopcart(ShopcartCollection.currentShopcartId);
+			currentShopcart.addItems(self.model.getProductUrls(self.model.getNonPlannedItems(self.model.selection)));
+			//TODO Add notification message when the items have been added
+			//currentShopcart.on("shopcart:itemsAdded");
+		});
+
 		//add button to the widget footer in order to download products
 		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
 		this.downloadOptionsButton.button();
