@@ -9,28 +9,33 @@
 var uuid = require('node-uuid');
 var fs = require('fs');
 
+var shopcartConfigs = [];
+var shopcartContents = [];
+
+
 fs.readFile('./shopcarts/shopcarts.json', 'utf8', function (err, data) {
-	shopcarts  = JSON.parse(data);
+	shopcartConfigs  = JSON.parse(data).shopcarts;
 });
 
 fs.readFile('./shopcarts/shopcartContent.json', 'utf8', function (err, data) {
-	shopcartItems  = JSON.parse(data);
+	shopcartContents  = JSON.parse(data).items;
 });
 
 var doesShopcartExist = function(id){
-	for (var i=0; i<shopcarts.length; i++){
-		if (shopcarts[i].id == id){
-			return true;
+	var found = false;
+	for (var i=0; i<shopcartConfigs.length; i++){
+		if (shopcartConfigs[i].id == id){
+			found = true;
 		}
 	}
-	return false;
+	return found;
 };
 
 /** delete the shopcart having the given id */
 deleteShopcart = function(id){
-	for (var i=0; i<shopcarts.length; i++){
-		if (shopcarts[i].id == id){
-			shopcarts.splice(i, 1);
+	for (var i=0; i<shopcartConfigs.length; i++){
+		if (shopcartConfigs[i].id == id){
+			shopcartConfigs.splice(i, 1);
 		}
 	}
 };
@@ -40,8 +45,13 @@ module.exports = {
 	get : function(req, res){
 	
 		//shopcart content consulting
-		if (req.params.id){	
-			res.sendfile('./shopcarts/shopcartContent.json');
+		if (req.params.id){
+
+			if (doesShopcartExist(req.params.id)){
+				res.sendfile('./shopcarts/' + req.params.id + '_shopcartContent.json');			
+			}else{
+				res.send(404);
+			}
 			
 		}else{
 			//IF-ngEO-UserShopCartsConfigData

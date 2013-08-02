@@ -1,8 +1,8 @@
 /**
  * These are the model components for Shopcarts Collection handling
  */
-define( ['jquery', 'backbone', 'configuration'], 
-			function($, Backbone, Configuration){
+define( ['jquery', 'backbone', 'configuration', 'shopcart/model/shopcart'], 
+			function($, Backbone, Configuration, Shopcart){
 
 /** This is the backbone Model of the Shopcart Collection element
  */
@@ -31,6 +31,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 		this.url = Configuration.baseServerUrl + '/shopcarts';
 		this.defaultShopcartId = "";
 		this.currentShopcartId = "";
+		this.currentShopcart = {};
 	},
 
 	/**
@@ -43,10 +44,20 @@ var ShopcartCollection = Backbone.Collection.extend({
 			if (response.shopcarts[i].isDefault){		
 				this.defaultShopcartId = response.shopcarts[i].id;
 				this.currentShopcartId = this.defaultShopcartId;
+				this.currentShopcart = new Shopcart(this.currentShopcartId);
+				
 			}
 		}	
 		return response.shopcarts;
 	},
+	
+	/** called when the current shopcart has been changed not after a fetch */
+	updateCurrentShopcartId : function(shopcartId){
+		this.model.currentShopcartId = shopcartId;
+		this.currentShopcart = new Shopcart(this.currentShopcartId);
+		this.trigger('updatedCurrentShopcart');
+	},
+	
 	
 	/** get the shopcart config of the currently selected shopcart */
 	getCurrentShopcartConfig : function(){

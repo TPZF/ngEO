@@ -1,7 +1,7 @@
 {
     "items": [
         {
-            "shopcartId": "shp",
+            "shopcartId": "TPZ_SHP_01",
             "id": "item1",
             "product": {
                 "type": "Feature",
@@ -111,7 +111,7 @@
             }
         },
         {
-            "shopcartId": "shp",
+            "shopcartId": "TPZ_SHP_01",
             "id": "item2",
             "product": {
                 "type": "Feature",
@@ -221,7 +221,7 @@
             }
         },
         {
-            "shopcartId": "shp",
+            "shopcartId": "TPZ_SHP_01",
             "id": "item3",
             "product": {
                 "type": "Feature",

@@ -1,10 +1,13 @@
 
-define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", "searchResults/model/searchResults", "search/model/datasetSearch",  
+define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", 
+        "searchResults/model/searchResults", "search/model/datasetSearch",  
+        "shopcart/model/shopcart",   "shopcart/model/shopcartCollection", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help", "panelManager", "toolbar"], 
-	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
+	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch,
+			Shopcart, ShopcartCollection, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp, PanelManager) {
 
@@ -73,13 +76,26 @@ return {
 			}
 			event.data.hide = !event.data.hide;			
 		});
-		
-			
+
 		// Create all widgets
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget.create(element);
 		_$resultsTableWidget = ResultsTableWidget(element);
-		ShopcartWidget(element);
+		
+		//load the shopcart collection to get the default shopcart id
+		ShopcartCollection.fetch({
+			
+			success: function(model, response) {
+				// Create the model for the current Shopcart
+				ShopcartWidget(element, ShopcartCollection.currentShopcart);
+			},
+
+			error: function(){
+				$("#shopcart").parent().addClass('ui-disabled');
+				Logger.error('Cannot retreive the list of shopcarts from the server');
+			}
+		});	
+		
 		ToolBarMap(element);
 		ContextHelp(element);
 		
@@ -193,6 +209,7 @@ return {
 			type: "Browses",
 			visible: true
 		});
+		
 		SearchResults.on('reset:features', function() {
 			footprintLayer.clear();
 			browsesLayer.clear();

@@ -74,10 +74,13 @@ app.get('/ngeo/shopcarts/:id?', shopcarts.get);
 app.post('/ngeo/shopcarts/:id?', shopcarts.post);
 
 //rename shopcart and update items interfaces
-app.put('/ngeo/shopcarts/:id/:items?', shopcarts.put);
+app.put('/ngeo/shopcarts/:id(/items)?', shopcarts.put);
 
 //delete shopcart and delete items of shopcart interfaces
 app.delete('/ngeo/shopcarts/:id', shopcarts.delete);
+
+//delete shopcart and delete items of shopcart interfaces
+app.delete('/ngeo/shopcarts/:id/items', shopcarts.delete);
 
 // user inquiry
 app.post('/ngeo/userInquiry', function(req,res) {
