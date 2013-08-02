@@ -10,15 +10,35 @@ var uuid = require('node-uuid');
 var fs = require('fs');
 
 var shopcartConfigs = [];
-var shopcartContents = [];
-
+var feature = {};
+var shopcartContents = {};
 
 fs.readFile('./shopcarts/shopcarts.json', 'utf8', function (err, data) {
 	shopcartConfigs  = JSON.parse(data).shopcarts;
 });
 
-fs.readFile('./shopcarts/shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents  = JSON.parse(data).items;
+fs.readFile('./shopcarts/feature.json', 'utf8', function (err, data) {
+	feature  = JSON.parse(data);
+});
+
+fs.readFile('./shopcarts/TPZ_SHP_01_shopcartContent.json', 'utf8', function (err, data) {
+	shopcartContents.TPZ_SHP_1  = JSON.parse(data);
+});
+
+fs.readFile('./shopcarts/TPZ_SHP_02_shopcartContent.json', 'utf8', function (err, data) {
+	shopcartContents["TPZ_SHP_02"]  = JSON.parse(data);
+});
+
+fs.readFile('./shopcarts/TPZ_SHP_03_shopcartContent.json', 'utf8', function (err, data) {
+	shopcartContents["TPZ_SHP_03"]  = JSON.parse(data);
+});
+
+fs.readFile('./shopcarts/TPZ_SHP_04_shopcartContent.json', 'utf8', function (err, data) {
+	shopcartContents["TPZ_SHP_04"]  = JSON.parse(data);
+});
+
+fs.readFile('./shopcarts/TPZ_SHP_05_shopcartContent.json', 'utf8', function (err, data) {
+	shopcartContents["TPZ_SHP_05"]  = JSON.parse(data);
 });
 
 var doesShopcartExist = function(id){
@@ -71,10 +91,17 @@ module.exports = {
 		//add shopcart items : post of shopcart items
 		if (req.params.id && req.body.items){
 			var response = [];
+			
+			var id;
 			//add an id to each shopcart item
 			for (var i=0; i<req.body.items.length; i++){
-				response.push({"id" : uuid.v4() , "shopcartId" : req.body.items[i].shopcartId, "product" : req.body.items[i].product});
+				id = uuid.v4();
+				response.push({"id" : id, "shopcartId" : req.body.items[i].shopcartId, "product" : req.body.items[i].product});
+				shopcartContents[req.params.id].items.push({"shopcartId" :  req.params.id, "id" : id, "product": feature});
 			}
+			
+			//save the new content of the shopcart 
+			fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
 			
 			res.send(response);
 		}	
