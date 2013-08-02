@@ -10,13 +10,13 @@ var ShopcartManagerView = Backbone.View.extend({
 	
 	events : {
 		'click label' : function(event){
-			this.model.currentShopcartId = event.currentTarget.id;
 			//the default shopcart cannot be deleted
-			if (this.model.defaultShopcartId != this.model.currentShopcartId){
+			if (this.model.defaultShopcartId != event.currentTarget.id){
 				this.$el.find("#delete_shp").button('enable');
 			}else{
 				this.$el.find("#delete_shp").button('disable');
 			}
+			this.model.updateCurrentShopcartId(event.currentTarget.id);
 		},
 		
 		'click #new_shp' : function(event){

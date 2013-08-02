@@ -4,58 +4,90 @@
 define( ['jquery', 'backbone', 'configuration'], 
 			function($, Backbone, Configuration){
 	
-
-	/** This is the backbone Model of the a shopcart list element */
-	var ShopcartItem = Backbone.Model.extend({
-		
-		defaults : {
-			shopcartId : "",
-			product : {} //geojson feature
-			//downloadOptions : {}
-		},
-	
-		initialize : function(shopcartId){
-			
-			// The base url to retreive the shopcarts list
-			this.urlRoot = Configuration.baseServerUrl + '/shopcarts/' + shopcartId;
-			
-		}
-	});
-	
-	/** This is the backbone Collection modeling a shopcart content
+	/** This is the model for a shopcart content
 	 */
-	var Shopcart = Backbone.Collection.extend({
+	var Shopcart = function(id){
 		
-		model : ShopcartItem,
-	
-		initialize : function(id){
-			
-			this.id = id;
-			
-			//this.name = name;
-			
-			//table of the selected Shopcart items 
-			this.selection = [];
-			
-			// The base url to retreive the shopcarts list
-			this.url = Configuration.baseServerUrl + '/shopcarts/' + id;
-		}, 
+		_.extend(this, Backbone.Events);
 		
-		/** get the items array to create the Backbone collection */ 
-		parse : function(response){
-			return response.items;
+		this.id = id,
+		
+		this.shopcartItems = [];
+
+		//table of the selected Shopcart items 
+		this.selection = [];
+
+		// The base url to retreive the shopcarts list
+		this.url = Configuration.baseServerUrl + '/shopcarts/' + id;
+		
+		var self = this;
+		
+		// fetch the shopcart content
+		this.fetch = function() {
+
+			$.ajax({
+				url: self.url,
+				type : 'GET',
+				dataType: 'json'
+					
+			}).done(function(data) {
+				for ( var i = 0; i < data.items.length; i++ ) {
+					self.shopcartItems.push( data.items[i] );
+				}
+				self.trigger("shopcart:loaded");
+				
+			}).fail(function(jqXHR, textStatus, errorThrown) {		
+				  console.log("ERROR when retrieving the shopcart Content :" + textStatus + ' ' + errorThrown);
+				  self.trigger('shopcart:errorLoad', self.url); 
+			});
+		};
+		
+		// Select a shopcart item
+		this.select = function(shopcartItem) {
+			this.selection.push(shopcartItem);
+			this.trigger( "selectShopcartItems", [shopcartItem] );
+		};
+		
+		// Unselect a feature
+		this.unselect = function(shopcartItem) {
+			this.selection.splice( this.selection.indexOf(shopcartItem), 1 );
+			this.trigger( "unselectShopcartItems", [shopcartItem] );
+		};
+
+		this.selectAll = function(){
+				
+			var selected = _.difference(this.shopcartItems, this.selection);
+			for ( var i = 0; i < selected.length; i++ ) {
+				this.selection.push( selected[i] );
+			}
+			
+			if (selected.length != 0){
+				this.trigger( "selectShopcartItems", selected );
+			}
+		};
+		
+		/** unselect all the already selected shopcart items */
+		this.unselectAll = function() {
+			
+			var oldSelection = [];
+			//copy the selected items
+			for ( var i = 0; i < this.selection.length; i++ ) {
+				oldSelection.push(this.selection[i])
+			}
+			this.selection = []	
+			if (oldSelection.length != 0){
+				this.trigger( "unselectShopcartItems", oldSelection );
+			}
 		},
-		
 
 		/** submit a POST request to the server in order to add the selected 
 		 * products from the search results table to the shopcart.
 		 * The product urls of the selected products are passed as arguments. 
 		 */ 
-		addItems : function(productUrls){
+		this.addItems = function(productUrls){
 			
 			var itemsToAdd = [];
-			var self = this;
-			
+
 			//var urls = SearchResults.getProductUrls(features);
 			for (var i=0; i<productUrls.length; i++){
 				itemsToAdd.push({'shopcartId' : self.id, 'product' : productUrls[i]}); 
@@ -80,16 +112,17 @@ define( ['jquery', 'backbone', 'configuration'],
 			  }
 			  
 			});
-		},
+		};
 		
 		/** submit a delete request to the server in order to delete the selected 
 		 * shopcart items.
 		 */ 
-		removeItems : function(){
+		this.deleteItems = function(){
 			
 			var itemsToRemove = [];
+
 			for (var i=0; i<this.selection.length; i++){
-				itemsToRemove.push({'shopcartId' : shopcartId, 'id' : shopcartItems[i].id}); 
+				itemsToRemove.push({'shopcartId' :  self.id, 'id' : this.selection[i].id}); 
 			}	
 
 			return $.ajax({
@@ -101,8 +134,29 @@ define( ['jquery', 'backbone', 'configuration'],
 				  data : JSON.stringify({'items' : itemsToRemove}),
 				
 				  success: function(data) {	 					
-					  var response = data.ids;
-					  self.trigger("shopcart:itemsRemoved", ids);
+
+					  var removedIndexes = [];
+					  
+					  for (var i=0; i<self.shopcartItems.length; i++){
+						  
+						  for (var j=0; j<data.ids.length; j++){
+							  if (self.shopcartItems[i].id == data.ids[j].id){
+								  removedIndexes.push(i);
+								  self.shopcartItems.splice( i, 1 );
+							  }
+						  }
+					  }
+					  //update the selection too!!
+					  for (var i=0; i<self.selection.length; i++){
+						  
+						  for (var j=0; j<data.ids.length; j++){
+							  if (self.selection[i].id == data.ids[j].id){
+								  self.selection.splice( i, 1 );
+							  }
+						  }
+					  }
+					  
+					  self.trigger("shopcart:itemsDeleted", removedIndexes);
 				  },
 				  
 				  error: function(jqXHR, textStatus, errorThrown) {
@@ -110,17 +164,17 @@ define( ['jquery', 'backbone', 'configuration'],
 				  }
 				  
 			});
-		},
+		};
 		
 		/** submit a PUT request to the server in order to update the selected 
 		 * shopcart items with the given download options
 		 */ 
-		updateItems : function(downloadOptions){
+		this.updateItems = function(downloadOptions){
 			
 			var itemsToUpdate = [];
 			for (var i=0; i<this.selection.length; i++){
-				itemsToRemove.push({'shopcartId' : shopcartId, 
-									'id' : shopcartItems[i].id , 
+				itemsToRemove.push({'shopcartId' :  self.id, 
+									'id' : this.selection[i].id , 
 									'downloadOptions' : downloadOptions}); 
 			}	
 
@@ -142,15 +196,12 @@ define( ['jquery', 'backbone', 'configuration'],
 					  self.trigger('shopcart:updateItemsError');  
 
 				  }
-				  
 			});
-		}
-	});
-
-	// Add events
-	_.extend(Shopcart, Backbone.Events);
+		};
+	};
 	
-	return Shopcart;
+
+return Shopcart;
 
 });
 
