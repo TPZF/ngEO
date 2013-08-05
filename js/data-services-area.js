@@ -1,7 +1,7 @@
 
 define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", 
         "searchResults/model/searchResults", "search/model/datasetSearch",  
-        "shopcart/model/shopcart",   "shopcart/model/shopcartCollection", 
+        "shopcart/model/shopcart",  "shopcart/model/shopcartCollection", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
@@ -13,7 +13,7 @@ define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", 
 
 // Private variable
 var _$resultsTableWidget;
-			
+
 return {
 
 	/**
@@ -80,14 +80,27 @@ return {
 		// Create all widgets
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget.create(element);
-		_$resultsTableWidget = ResultsTableWidget(element);
+		_$resultsTableWidget = ResultsTableWidget();
+		
+//		var shopcartLayer = Map.addLayer({
+//			name: "Shopcart Layer",
+//			type: "Feature",
+//			visible: true
+//		});
 		
 		//load the shopcart collection to get the default shopcart id
 		ShopcartCollection.fetch({
 			
 			success: function(model, response) {
-				// Create the model for the current Shopcart
-				ShopcartWidget(element, ShopcartCollection.currentShopcart);
+			
+				//create the shopcart widget
+				ShopcartWidget();
+				
+				ShopcartCollection.on("shopcart:errorLoad", function() {
+					//when the fetch fails display an error message and disable the shopcart button
+					// so the application is still usable and the user can still see the other menus.
+					$("#shopcart").parent().addClass('ui-disabled');
+				});
 			},
 
 			error: function(){
