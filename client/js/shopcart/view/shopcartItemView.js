@@ -11,11 +11,19 @@ var ShopcartItemView = Backbone.View.extend({
 
 	initialize : function() {
 		
-		//FIXME : update the shopcart content when the current shopcart selection  has changes
-		//ShopcartCollection.on("updatedCurrentShopcart", this.render, this);
-		
 		this.model.on("selectShopcartItems", this.toggleSelection, this );
 		this.model.on("unselectShopcartItems", this.toggleSelection, this );
+
+		this.model.on("shopcart:loaded", function(shopcartItems) {
+			if ( this.visible ) {
+				this.table.fnClearTable();
+				this.table.fnAddData( shopcartItems, false );
+				this.table.fnAdjustColumnSizing( true );
+				this.trigger('sizeChanged');
+			} else {
+				this.shopcartItemsToAdd = shopcartItems;
+			}
+		}, this);
 		
 		this.model.on("shopcart:itemsDeleted", function(removedIndexes) {
 			if ( this.visible ) {
@@ -53,19 +61,19 @@ var ShopcartItemView = Backbone.View.extend({
 			// retreive the position of the selected row
 			var shopcartItem = this.getShopcartItemFromRow( $(event.currentTarget).closest('tr').get(0) );
 			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
-				this.model.select( shopcartItem );
+				this.model.currentShopcart.select( shopcartItem );
 			} else {
-				this.model.unselect( shopcartItem );
+				this.model.currentShopcart.unselect( shopcartItem );
 			}
 		 }, 
 		 
 		// Called when the user clicks on the select all button
 		'click #shopcartSelectAll' : function(event){
-			this.model.selectAll();
+			this.model.currentShopcart.selectAll();
 		 }, 
 		// Called when the user clicks on the select all button
 		'click #shopcartDeselectAll' : function(event){
-			this.model.unselectAll();
+			this.model.currentShopcart.unselectAll();
 		 }	 
 	},
 
@@ -75,7 +83,7 @@ var ShopcartItemView = Backbone.View.extend({
 	getShopcartItemFromRow: function(row) {
 		var rowPos = this.table.fnGetPosition( row );
 		if (rowPos != null) {
-			return this.model.shopcartItems[rowPos];
+			return this.model.currentShopcart.shopcartItems[rowPos];
 		} else {
 			return null;
 		}
@@ -88,7 +96,7 @@ var ShopcartItemView = Backbone.View.extend({
 
 		var checkboxes = this.table.$(".dataTables_chekbox",{order: "original"});
 		for ( var i = 0; i < shopcartItems.length; i++ ) {
-			var index = this.model.shopcartItems.indexOf(shopcartItems[i]);
+			var index = this.model.currentShopcart.shopcartItems.indexOf(shopcartItems[i]);
 			checkboxes.eq(index)
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
@@ -101,7 +109,7 @@ var ShopcartItemView = Backbone.View.extend({
 	/** update the button statuses **/ 
 	updateButtonStatuses : function(){
 
-		if ( this.model.selection.length > 0 ) {
+		if ( this.model.currentShopcart.selection.length > 0 ) {
 			this.deleteButton.button('enable');
 			this.exportButton.button('enable');
 			this.downloadOptionsButton.button('enable');
@@ -117,6 +125,13 @@ var ShopcartItemView = Backbone.View.extend({
 	 */
 	onShow: function() {
 		
+		if ( this.shopcartItemsToAdd.length >  0 ) {
+			this.table.fnClearTable();
+			this.table.fnAddData( this.shopcartItemsToAdd, false );
+			// adjust selection
+			this.toggleSelection(this.model.currentShopcart.selection);
+			this.shopcartItemsToAdd.length = 0;
+		}
 		this.table.fnAdjustColumnSizing( true );
 		this.visible = true;
 	},
@@ -132,6 +147,9 @@ var ShopcartItemView = Backbone.View.extend({
 	 * Render the table
 	 */
 	render : function() {
+		
+		this.shopcartItemsToAdd = [];
+		
 		// Add the table
 		this.$el.append('<table cellpadding="0" cellspacing="0" border="0" id="shopcartTable"></table>');
 
@@ -148,7 +166,7 @@ var ShopcartItemView = Backbone.View.extend({
 
 		// Build parameters for dataTables
 		var parameters = {
-			"aaData" : this.model.shopcartItems,
+			"aaData" : this.model.currentShopcart.shopcartItems,
 			"aoColumns" : columnsDef, 
 			"bDestroy": true,
 			"bSort" : true,
@@ -191,7 +209,7 @@ var ShopcartItemView = Backbone.View.extend({
 		this.deleteButton.button('disable');
 		
 		this.deleteButton.click(function() {	
-			self.model.deleteItems();
+			self.model.currentShopcart.deleteItems();
 		});
 		
 		//add button to the widget footer in order to download products		

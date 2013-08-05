@@ -4,14 +4,13 @@
 define( ['jquery', 'backbone', 'configuration'], 
 			function($, Backbone, Configuration){
 	
-	/** This is the model for a shopcart content
-	 */
-	var Shopcart = function(id){
-		
-		_.extend(this, Backbone.Events);
+	/** This is the model for a shopcart content */
+	var Shopcart = function(parentModel, id){
 		
 		this.id = id,
 		
+		this.parentModel = parentModel;
+			
 		this.shopcartItems = [];
 
 		//table of the selected Shopcart items 
@@ -34,24 +33,24 @@ define( ['jquery', 'backbone', 'configuration'],
 				for ( var i = 0; i < data.items.length; i++ ) {
 					self.shopcartItems.push( data.items[i] );
 				}
-				self.trigger("shopcart:loaded");
+				self.parentModel.trigger("shopcart:loaded", self.shopcartItems);
 				
 			}).fail(function(jqXHR, textStatus, errorThrown) {		
 				  console.log("ERROR when retrieving the shopcart Content :" + textStatus + ' ' + errorThrown);
-				  self.trigger('shopcart:errorLoad', self.url); 
+				  self.parentModel.trigger('shopcart:errorLoad', self.url); 
 			});
 		};
 		
 		// Select a shopcart item
 		this.select = function(shopcartItem) {
 			this.selection.push(shopcartItem);
-			this.trigger( "selectShopcartItems", [shopcartItem] );
+			this.parentModel.trigger( "selectShopcartItems", [shopcartItem] );
 		};
 		
 		// Unselect a feature
 		this.unselect = function(shopcartItem) {
 			this.selection.splice( this.selection.indexOf(shopcartItem), 1 );
-			this.trigger( "unselectShopcartItems", [shopcartItem] );
+			this.parentModel.trigger( "unselectShopcartItems", [shopcartItem] );
 		};
 
 		this.selectAll = function(){
@@ -62,7 +61,7 @@ define( ['jquery', 'backbone', 'configuration'],
 			}
 			
 			if (selected.length != 0){
-				this.trigger( "selectShopcartItems", selected );
+				this.parentModel.trigger( "selectShopcartItems", selected );
 			}
 		};
 		
@@ -76,7 +75,7 @@ define( ['jquery', 'backbone', 'configuration'],
 			}
 			this.selection = []	
 			if (oldSelection.length != 0){
-				this.trigger( "unselectShopcartItems", oldSelection );
+				this.parentModel.trigger( "unselectShopcartItems", oldSelection );
 			}
 		},
 
@@ -87,7 +86,6 @@ define( ['jquery', 'backbone', 'configuration'],
 		this.addItems = function(productUrls){
 			
 			var itemsToAdd = [];
-
 			//var urls = SearchResults.getProductUrls(features);
 			for (var i=0; i<productUrls.length; i++){
 				itemsToAdd.push({'shopcartId' : self.id, 'product' : productUrls[i]}); 
@@ -103,12 +101,15 @@ define( ['jquery', 'backbone', 'configuration'],
 			
 			  success: function(data) {	 
 				
-				  var response = data.items;				  
-				  self.trigger("shopcart:itemsAdded", response);
+//				  var response = data.items;				  
+//				  self.parentModel.trigger("shopcart:itemsAdded", response);
+				  
+				  //FIXME IMPROVE THAT !!
+				  self.parentModel.loadCurrentShopcart();
 			  },
 			  
 			  error: function(jqXHR, textStatus, errorThrown) {
-				  self.trigger('shopcart:addItemsError');  
+				  self.parentModel.trigger('shopcart:addItemsError');  
 			  }
 			  
 			});
@@ -120,7 +121,7 @@ define( ['jquery', 'backbone', 'configuration'],
 		this.deleteItems = function(){
 			
 			var itemsToRemove = [];
-
+			
 			for (var i=0; i<this.selection.length; i++){
 				itemsToRemove.push({'shopcartId' :  self.id, 'id' : this.selection[i].id}); 
 			}	
@@ -156,11 +157,11 @@ define( ['jquery', 'backbone', 'configuration'],
 						  }
 					  }
 					  
-					  self.trigger("shopcart:itemsDeleted", removedIndexes);
+					  self.parentModel.trigger("shopcart:itemsDeleted", removedIndexes);
 				  },
 				  
 				  error: function(jqXHR, textStatus, errorThrown) {
-					  self.trigger('shopcart: deleteItemsError');  
+					  self.parentModel.trigger('shopcart: deleteItemsError');  
 				  }
 				  
 			});
@@ -170,7 +171,7 @@ define( ['jquery', 'backbone', 'configuration'],
 		 * shopcart items with the given download options
 		 */ 
 		this.updateItems = function(downloadOptions){
-			
+			var self = this;
 			var itemsToUpdate = [];
 			for (var i=0; i<this.selection.length; i++){
 				itemsToRemove.push({'shopcartId' :  self.id, 
@@ -189,11 +190,11 @@ define( ['jquery', 'backbone', 'configuration'],
 				  success: function(data) {	 
 					
 					  var response = data.items;
-					  self.trigger("shopcart:itemsUpdated", response);
+					  self.parentModel.trigger("shopcart:itemsUpdated", response);
 				  },
 				  
 				  error: function(jqXHR, textStatus, errorThrown) {
-					  self.trigger('shopcart:updateItemsError');  
+					  self.parentModel.trigger('shopcart:updateItemsError');  
 
 				  }
 			});

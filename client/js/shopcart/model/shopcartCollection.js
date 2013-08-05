@@ -27,6 +27,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 	model : ShopcartConfig,
 
 	initialize : function(){
+		_.extend(this, Backbone.Events);
 		// The base url to retreive the shopcarts list
 		this.url = Configuration.baseServerUrl + '/shopcarts';
 		this.defaultShopcartId = "";
@@ -44,18 +45,23 @@ var ShopcartCollection = Backbone.Collection.extend({
 			if (response.shopcarts[i].isDefault){		
 				this.defaultShopcartId = response.shopcarts[i].id;
 				this.currentShopcartId = this.defaultShopcartId;
-				this.currentShopcart = new Shopcart(this.currentShopcartId);
-				
+
 			}
 		}	
 		return response.shopcarts;
 	},
 	
+	/** load the current shopcart*/ 
+	loadCurrentShopcart : function(){
+		this.currentShopcart = new Shopcart(this, this.currentShopcartId);
+		this.currentShopcart.fetch();
+	},
+	
 	/** called when the current shopcart has been changed not after a fetch */
 	updateCurrentShopcartId : function(shopcartId){
-		this.model.currentShopcartId = shopcartId;
-		this.currentShopcart = new Shopcart(this.currentShopcartId);
-		this.trigger('updatedCurrentShopcart');
+		this.currentShopcartId = shopcartId;
+		this.loadCurrentShopcart();
+		//this.trigger('updatedCurrentShopcart');
 	},
 	
 	

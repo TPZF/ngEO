@@ -264,10 +264,7 @@ var SearchResultsTableView = Backbone.View.extend({
 //			//Open the popup
 //			parentElement.ngeowidget("show");
 			
-			var currentShopcart = new Shopcart(ShopcartCollection.currentShopcartId);
-			currentShopcart.addItems(self.model.getProductUrls(self.model.getNonPlannedItems(self.model.selection)));
-			//TODO Add notification message when the items have been added
-			//currentShopcart.on("shopcart:itemsAdded");
+			ShopcartCollection.currentShopcart.addItems(self.model.getProductUrls(self.model.getNonPlannedItems(self.model.selection)));
 		});
 
 		//add button to the widget footer in order to download products

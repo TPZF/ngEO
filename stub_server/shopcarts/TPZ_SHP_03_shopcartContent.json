@@ -40,7 +40,7 @@
                         "gml_endPosition": "2001-01-01T12:00:00.00Z",
                         "gml_timePosition": "2001-01-01T12:00:00.00Z",
                         "EarthObservationEquipment": {
-                            "eop_platformShortName": "SENTINEL-1",
+                            "eop_platformShortName": "SENTINEL-3",
                             "eop_platformSerialIdentifier": "1A",
                             "eop_instrumentShortName": "SAR",
                             "eop_sensorType": "RADAR",

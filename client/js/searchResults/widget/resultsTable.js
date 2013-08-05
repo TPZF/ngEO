@@ -4,7 +4,7 @@
 define( ["searchResults/model/searchResults", "searchResults/view/searchResultsTableView", 
           "panelManager"], function(SearchResults, SearchResultsTableView, PanelManager) {
 
-return function(root) {
+return function() {
 			
 	// Create the main search view
 	var view = new SearchResultsTableView({ 
