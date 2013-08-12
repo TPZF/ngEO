@@ -100,7 +100,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		if ( params.type == "Browses" ) {
 			return new BrowsesLayer(params,mapEngine);
 		} else if ( params.type == "Feature" ) {
-			params.type = "GeoJSON";
 			return new FeatureLayer(params,mapEngine.addLayer(params));
 		} else {
 			var engineLayer = mapEngine.addLayer(params);

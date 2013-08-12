@@ -154,6 +154,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		}
 		gwLayer = new GlobWeb.WMTSLayer(config);
 		break;
+	case "FEATURE":
 	case "JSON":
 	case "GEOJSON":
 		gwLayer = new GlobWeb.VectorLayer({ 
