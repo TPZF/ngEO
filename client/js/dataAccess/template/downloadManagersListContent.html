@@ -5,18 +5,13 @@
 	</div>
 	
 	<div id="downloadManagerStatusMessage"></div>
-	
-	
-	<fieldset id="downloadManagersList" data-role="controlgroup" data-mini="true">
-	
-		<% _.each(downloadmanagers, function(downloadManager) { %>		     
-			<input id="<%= downloadManager.downloadManagerId %>_input" type="radio" name="downloadManager" value="<%= downloadManager.downloadManagerId %>">
-			<label for="<%= downloadManager.downloadManagerId %>_input" id="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></label>
-		<% }); %>	         	
-	
-	</fieldset>
 
-</div>
+			<select id="downloadManagersList" data-mini="true" data-theme="a">
+			<% _.each(downloadmanagers, function(downloadManager) { %>	
+				<option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></option> 
+			<% }); %>
+			</select>
+	</div>
 
 <div id="downloadManagersFooter" class="popup-widget-footer">
 	

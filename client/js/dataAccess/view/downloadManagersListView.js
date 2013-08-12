@@ -29,18 +29,15 @@ var DownloadManagersListView = Backbone.View.extend({
 		
 			//disable the DMs list to avoid choosing a different DM once the
 			//validation request has been submitted
-			$('#downloadManagersList').addClass('ui-disabled');
+			$('#downloadManagersList').find("option").attr('disabled', 'disabled');
 			
 			// Submit the request
 			this.request.submit();
 		},
 		
-		'click label' : function(event){
-			var $target = $(event.currentTarget);
-			//look for class ui-radio-off because it is going to be changed to ui-radio-on at the end of the handler
-			if ($target.hasClass("ui-radio-off")){
-				this.selectedDownloadManager = event.currentTarget.id;
-			}
+		//NGEO 782 : the download managers are displayed with a select box
+		'change #downloadManagersList' : function(event){
+			this.selectedDownloadManager =  $("#downloadManagersList").val();
 		}
 	},
 	
@@ -48,7 +45,8 @@ var DownloadManagersListView = Backbone.View.extend({
 	onFailure : function(){
 		$("#validateRequest").button('disable');
 		// TODO : improve message according to the failure ?
-		$("#serverMessage").append("Invalid server response");
+		//NGEO 782 : fixed failure response message content
+		$("#serverMessage").empty().append("Invalid server response");
 	},
 	
 	/** change the button text to highlight the request stage "Confirmation" 
@@ -67,8 +65,8 @@ var DownloadManagersListView = Backbone.View.extend({
 				message += "<p>WARNING : The amount of data to download is huge.</p><p>Are you sure you want to confirm your request?</p>"; 
 			}
 		}
-
-		$("#serverMessage").append(message);
+		//NGEO 782 : fixed failure response message content
+		$("#serverMessage").empty().append(message);
 	},
 	
 	/**
@@ -78,7 +76,8 @@ var DownloadManagersListView = Backbone.View.extend({
 		// Disable the confirm button
 		$("#validateRequest").button('disable');
 		// Display the message
-		$("#serverMessage").append('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
+		//NGEO 782 : fixed failure response message content
+		$("#serverMessage").empty().append('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
 	},	
 	
 	render: function(){
@@ -105,9 +104,8 @@ var DownloadManagersListView = Backbone.View.extend({
 			
 			//set the first download manager to be selected by default
 			//console.log(this.$el.find('input[type="radio"]:eq(0)')[0]);
-			var firstDM = $(this.$el.find('input[type="radio"]:eq(0)')[0]);
-			//console.log(this.selectedDownloadManager);
-			firstDM.prop("checked", true);
+			//NGEO 782 : fixed failure response message content
+			var firstDM = $(this.$el.find('option:eq(0)')[0]);
 			this.selectedDownloadManager = firstDM.attr("value");
 			//console.log(this.selectedDownloadManager);
 		}

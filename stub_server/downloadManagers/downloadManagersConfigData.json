@@ -3,7 +3,7 @@
 
 	   {
 	        "downloadManagerId": "DM_01",
-	        "downloadManagerFriendlyName": "Magellium Limited Main DM",
+	        "downloadManagerFriendlyName": "Magellium Limited Main DM 1",
 	        "userId" : "esa_user1",
 	        "status": "ACTIVE",
 	        "ipAddress": "dmServer.magellium.fr",
@@ -12,7 +12,7 @@
 	    
 	    {
 	        "downloadManagerId": "DM_02",
-	        "downloadManagerFriendlyName": "TPZ Limited Main DM",
+	        "downloadManagerFriendlyName": "TPZ Limited Main DM 2",
 	        "userId" : "tpz_user1",
 	        "status" : "INACTIVE",
 	        "ipAddress": "dmServer.tpz.fr",
@@ -20,6 +20,30 @@
 	    },
 	    {
 	        "downloadManagerId": "DM_03",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 3",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_04",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 4",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_05",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 5",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_06",
 	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
@@ -27,168 +51,321 @@
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_07",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 7",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_08",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 8",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_09",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 9",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_10",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 10",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_11",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 11",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_12",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 12",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    
+	    {
+	        "downloadManagerId": "DM_13",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 13",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_14",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 14",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_15",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 15",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_16",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 16",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_17",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 17",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_17-1",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 17-1",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_18",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 18",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_19",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 19",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_20",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 20",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_21",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 21",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_22",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 22 ",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_23",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 23",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_24",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 24",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_25",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 25",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_26",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 26",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
 	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
 	    },
 	    {
-	        "downloadManagerId": "DM_03",
-	        "downloadManagerFriendlyName": "TPZ Test NGEO DM",
+	        "downloadManagerId": "DM_27",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 27 ",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_28",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 28",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_29",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 29",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_30",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 30",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_31",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 31",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_32",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 32",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_33",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 33",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_34",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 34",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_35",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 35",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_36",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 36",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_37",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 37",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_38",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 38",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_39",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 39",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_40",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 40",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_41",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 41",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_42",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 42",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_43",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 43",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_44",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 44",
+	        "userId" : "tpz_user2",
+	        "status" : "STOPPED",
+	        "ipAddress": "dmServer.tpz.ngeo.fr",
+	        "lastAccessDate" : "2012-12-22T09:30:47-05:00"
+	    },
+	    {
+	        "downloadManagerId": "DM_45",
+	        "downloadManagerFriendlyName": "TPZ Test NGEO DM 45",
 	        "userId" : "tpz_user2",
 	        "status" : "STOPPED",
 	        "ipAddress": "dmServer.tpz.ngeo.fr",
