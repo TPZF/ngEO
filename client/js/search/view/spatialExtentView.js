@@ -40,7 +40,7 @@ var SpatialExtentView = Backbone.View.extend({
 			// Create a layer for the search area
 			var searchAreaParams = {
 				name: "Search Area",
-				type: "GeoJSON",
+				type: "Feature",
 				visible: true,
 				style: "search-area",
 				data: this.model.searchArea.getFeature()

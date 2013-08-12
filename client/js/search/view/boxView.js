@@ -32,6 +32,7 @@ var BoxView = Backbone.View.extend({
 			var self = this;
 			RectangleHandler.start({
 				layer: this.parentView.searchAreaLayer,
+				feature: this.model.searchArea.getFeature(),
 				stop: function() {
 					$('#datasetSearchCriteria').ngeowidget('show');
 					var bbox = self.model.searchArea.getBBox();

@@ -79,7 +79,7 @@ return {
 		// Create the layer if not already created
 		if (options.layer) {
 			layer = options.layer;
-			feature = layer.data;
+			feature = options.feature;
 			coords = feature.geometry.coordinates[0];
 		} else if (!layer) {
 			coords = [];
@@ -93,7 +93,7 @@ return {
 			};
 			var params = {
 					name: "Draw Area",
-					type: "GeoJSON",
+					type: "Feature",
 					visible: true,
 					style: "imported",
 					data: feature

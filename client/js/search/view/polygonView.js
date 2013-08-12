@@ -24,6 +24,7 @@ var PolygonView = Backbone.View.extend({
 			var self = this;
 			PolygonHandler.start({
 				layer: this.parentView.searchAreaLayer,
+				feature: this.model.searchArea.getFeature(),
 				stop: function() {
 					$('#datasetSearchCriteria').ngeowidget('show');
 					$('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
