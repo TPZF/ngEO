@@ -46,7 +46,7 @@ var DownloadManagersListView = Backbone.View.extend({
 		$("#validateRequest").button('disable');
 		// TODO : improve message according to the failure ?
 		//NGEO 782 : fixed failure response message content
-		$("#serverMessage").empty().append("Invalid server response");
+		$("#serverMessage").html("Invalid server response");
 	},
 	
 	/** change the button text to highlight the request stage "Confirmation" 
@@ -66,7 +66,7 @@ var DownloadManagersListView = Backbone.View.extend({
 			}
 		}
 		//NGEO 782 : fixed failure response message content
-		$("#serverMessage").empty().append(message);
+		$("#serverMessage").html(message);
 	},
 	
 	/**
@@ -77,7 +77,7 @@ var DownloadManagersListView = Backbone.View.extend({
 		$("#validateRequest").button('disable');
 		// Display the message
 		//NGEO 782 : fixed failure response message content
-		$("#serverMessage").empty().append('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
+		$("#serverMessage").html('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
 	},	
 	
 	render: function(){
