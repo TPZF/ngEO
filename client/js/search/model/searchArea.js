@@ -122,30 +122,28 @@ var SearchArea = function() {
 		var coords = _feature.geometry.coordinates[0];
 		var text = "";
 		for ( var i = 0; i < coords.length; i++ ) {
-			text += toDMS(coords[i][1]) + " " + toDMS(coords[i][0]) + "\n";
+			text += toDMS(coords[i][1]) + "," + toDMS(coords[i][0]) + "\n";
 		}
 		return text;
 	};
 	
-	// Transform to WKT
+	//Transform to WKT
+	//NGEO-509 : removed POLYGON(( )) from the request and
+	//space before longitudes is replaced by commar.
 	this.toWKT = function() {
 		var coords = _feature.geometry.coordinates;
-		var param = "POLYGON(";
+		var param = "";
 		for ( var j = 0; j < coords.length; j++ ) {
 			if ( j != 0 ) {
 				param += ",";
 			}
-			param += "(";
 			for ( var i = 0; i < coords[j].length; i++ ) {
 				if ( i != 0 ) {
 					param += ",";
 				}
-				param += coords[j][i][0] + " " + coords[j][i][1];
+				param += coords[j][i][0] + "," + coords[j][i][1];
 			}
-			param += ")";
 		}
-		
-		param += ")";
 		
 		return param;
 	};
@@ -154,7 +152,6 @@ var SearchArea = function() {
 	this.getOpenSearchParameter = function() {
 		var param;
 		if (_mode == SearchArea.POLYGON) {
-		
 			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
 			param = "geom=" + this.toWKT(); 
 		
