@@ -38,16 +38,16 @@ var SpatialExtentView = Backbone.View.extend({
 		// Create the layer if not already done
 		if ( !this.searchAreaLayer ) {
 			// Create a layer for the search area
-			this.searchAreaLayer = {
+			var searchAreaParams = {
 				name: "Search Area",
 				type: "GeoJSON",
 				visible: true,
 				style: "search-area",
 				data: this.model.searchArea.getFeature()
 			};
-			Map.addLayer( this.searchAreaLayer );
+			this.searchAreaLayer = Map.addLayer( searchAreaParams  );
 		} else {
-			Map.updateFeature( this.searchAreaLayer, this.model.searchArea.getFeature()  );
+			this.searchAreaLayer.updateFeature( this.model.searchArea.getFeature()  );
 		}
 		
 		// TODO maybe a 'smart' zoomTo is needed?

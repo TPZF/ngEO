@@ -3,7 +3,8 @@
   */
 
 
-define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget" ], function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget) {
+define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", "map/utils" ], 
+	function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, Utils) {
 
 
 var MapPopup = function(container) {
@@ -130,12 +131,20 @@ var MapPopup = function(container) {
 		Compute the bounding box of the features, used to compute the pop-up position
 	 */
 	var computeBbox = function(features) {
+		if (!features[0].bbox)
+			Utils.computeExtent(features[0]);
+			
 		var bbox = [ features[0].bbox[0], features[0].bbox[1], features[0].bbox[2], features[0].bbox[3] ];
 		for ( var i = 1; i < features.length; i++ ) {
+			
+			if (!features[i].bbox)
+				Utils.computeExtent(features[i]);
+				
 			bbox[0] = Math.min( bbox[0], features[i].bbox[0] );
 			bbox[1] = Math.min( bbox[1], features[i].bbox[1] );
 			bbox[2] = Math.max( bbox[2], features[i].bbox[2] );
 			bbox[3] = Math.max( bbox[3], features[i].bbox[3] );
+			
 		}
 		return bbox;
 	};

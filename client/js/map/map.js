@@ -2,10 +2,74 @@
   * Map module
   */
 
-define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPrefs"], 
+define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPrefs", "map/browsesLayer", "map/utils"], 
 
 // The function to define the map module
-function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs ) {
+function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, Utils ) {
+
+	/**
+	 * Inner class
+	 */
+	 
+	/**
+	 * A basic static layer only for visualisation
+	 */
+	var Layer = function(params,engineLayer) {
+	
+		// The parameters of layer (name, visibility, type...)
+		this.params = params;
+		// The engine layer
+		this.engineLayer = engineLayer;
+		
+		this.setVisible = function(vis) {
+			this.params.visible = vis;
+			mapEngine.setLayerVisible(this.engineLayer,vis);
+		};
+		this.changeEngine = function(mapEngine) {
+			this.engineLayer = mapEngine.addLayer( this.params );
+		};
+	};
+	
+	/**
+	 * A feature layer to add dynamically new feature
+	 */
+	var FeatureLayer = function(params,engineLayer) {
+		Layer.prototype.constructor.call(this,params,engineLayer);
+		
+		// The features
+		this.features = [];	
+		
+		this.clear = function() {
+			mapEngine.removeAllFeatures(this.engineLayer);
+		};
+		this.addFeatures = function(features) {
+			for ( var i = 0; i < features.length; i++ ) {
+				mapEngine.addFeature( this.engineLayer, features[i] );
+				this.features.push(features[i]);
+			}
+		};
+		this.modifyFeaturesStyle = function(features,style) {
+			for ( var i = 0; i < features.length; i++ ) {
+				features[i].properties.styleHint = style;
+				mapEngine.modifyFeatureStyle( this.engineLayer, features[i], style );
+			}
+		};
+		this.updateFeature = function(feature) {
+			mapEngine.updateFeature( this.engineLayer, feature );
+		};
+		this.changeEngine = function(mapEngine) {
+			this.engineLayer = mapEngine.addLayer( this.params );
+			// Re-add the features to the engine
+			for ( var i = 0; i < this.features.length; i++ ) {
+				var f = this.features[i];
+				mapEngine.addFeature( this.engineLayer, f );
+				if ( f && f.properties.styleHint && f.properties.styleHint != 'default' ) {
+					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.styleHint );
+				}
+			}
+		};
+	};
+			
 	
 	/**
 	 * Private attributes
@@ -20,41 +84,30 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 	};
 	// The current map engine
 	var mapEngine = null;
-	// The engine layers
-	var engineLayers = [];
-	// The layer to store the results footprints
-	var resultFootprintLayer = null;
 	// The map DOM element
 	var element = null;
 	// The current background layer
 	var backgroundLayer = null;
 	// Max extent of the map
 	var maxExtent = [-180,-85,180,85];
-	// An object to store all  browse layers
-	// TODO : rename browse layers to selected layers ?
-	var browseLayers = {};
 	// To know if map is in geographic or not
 	var isGeo = false;
 
 	/**
-	 * Compute the extent of a feature
+	 * Build the layer from its parameter
 	 */
-	var computeExtent = function(feature)
-	{
-		var isMultiPolygon = feature.geometry.type == "MultiPolygon";
-		// Compute the extent from the coordinates
-		var coords = isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0];
-		var minX = coords[0][0];
-		var minY = coords[0][1];
-		var maxX =  coords[0][0];
-		var maxY =  coords[0][1];
-		for ( var i = 1;  i < coords.length; i++ )	{
-			minX = Math.min( minX, coords[i][0] );	
-			minY = Math.min( minY, coords[i][1] );	
-			maxX = Math.max( maxX, coords[i][0] );	
-			maxY = Math.max( maxY, coords[i][1] );	
+	var buildLayer = function(params) {
+		if ( params.type == "Browses" ) {
+			return new BrowsesLayer(params,mapEngine);
+		} else if ( params.type == "Feature" ) {
+			params.type = "GeoJSON";
+			return new FeatureLayer(params,mapEngine.addLayer(params));
+		} else {
+			var engineLayer = mapEngine.addLayer(params);
+			if ( engineLayer )	{
+				return new Layer(params,engineLayer);
+			}
 		}
-		feature.bbox = [ minX, minY, maxX, maxY ];
 	};
 	
 	/**
@@ -64,6 +117,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 	
 		mapEngine.setBackgroundLayer( backgroundLayer );
 		
+		// Add the style in conf to the engines
 		for ( var x in mapConf.styles ) {
 			if ( mapConf.styles.hasOwnProperty(x) ) {
 				var style = mapConf.styles[x];
@@ -75,13 +129,15 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			}
 		}
 		
+		// Change the layer engine
 		for ( var i = 0; i < self.layers.length; i++ ) {
-			engineLayers[i] = mapEngine.addLayer( self.layers[i] );
+			self.layers[i].changeEngine( mapEngine );
 		}
-		resultFootprintLayer = engineLayers[0];
 		
+		// Zoom to max extent
 		mapEngine.zoomToExtent( maxExtent );
 		
+		// Subscribe to event
 		mapEngine.subscribe("endNavigation", function() {
 			self.trigger("endNavigation",self);
 		});
@@ -90,67 +146,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		});
 	};
 	
-	/**
-	 * Show a browse layer for the given feature
-	 */
-	var showBrowseLayer = function(feature) {
-	
-		if (!browseLayers.hasOwnProperty(feature.id)) {
-	
-			var eo = feature.properties.EarthObservation;
-			if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return;
-			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
-			if (eoBrowse) {
-							
-				var params = {
-					time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
-					transparent: true
-				};
-				
-				var type = eoBrowse.eop_type;
-				if (!type) {
-					type = "wmts";
-				}
-				
-				if ( type == "wms" ) {
-					params.layers = eoBrowse.eop_layer;
-					params.styles = "ellipsoid";
-				} else if ( type == "wmts" ) {
-					params.layer = eoBrowse.eop_layer || "TEST_SAR";
-					params.matrixSet = "WGS84";
-				}
-				
-				var layerDesc = {
-					name: feature.id,
-					type: type,
-					visible: true,
-					baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
-					opacity: Configuration.data.map.browseDisplay.opacity,
-					params: params,
-					bbox: feature.bbox
-				};
-				
-				browseLayers[feature.id] = { 
-					desc: layerDesc,
-					engine: mapEngine.addLayer(layerDesc),
-					feature: feature
-				};
-				
-			}
-		}
-	};
-		
-	/**
-	 * Hide the browse layer of the given feature
-	 */
-	var hideBrowseLayer = function(feature) {	
-		// Create the WMS if it does not exists
-		if (browseLayers.hasOwnProperty(feature.id)) {
-			mapEngine.removeLayer( browseLayers[ feature.id ].engine );
-			delete browseLayers[ feature.id ];
-		}
-	};
-
 	/**
 	 * Check if layers are compatible
 	 */
@@ -220,15 +215,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			var confLayers = Configuration.data.map.layers;
 			for ( var i = 0; i < confLayers.length; i++ ) {
 				if ( isLayerCompatible( confLayers[i] ) ) {
-					self.layers.push( confLayers[i] );
+					self.layers.push( new Layer(confLayers[i],null) );
 				}
 			}
-			
-			self.layers[0].data = {
-				type: 'FeatureCollection',
-				features: []
-			};
-			
+					
 			//set the background layer from the preferences if it exists,
 			//unless set it to be the first one in the list of background layers.
 			var preferedBackgroundId = UserPrefs.get("Background");
@@ -271,66 +261,37 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		},
 		
 		/**
-		 * Change visibilty of a layer
-		 *
-		 * @param layer	The layer
-		 * @param vis The new visibility
-		 */
-		setLayerVisible: function(layer,vis) {
-			var i = self.layers.indexOf(layer);
-			if ( i >= 0 ) {
-				// Store visibilty in configuration data
-				self.layers[i].visible = vis;
-				// Modify engine layers
-				mapEngine.setLayerVisible(engineLayers[i],vis);
-			}
-		},
-		
-		/**
 		 * Dynamically add a layer to the map
 		 *
 		 * @param layerDesc	The layer description
 		 */
-		addLayer: function(layerDesc) {
-			engineLayers.push( mapEngine.addLayer(layerDesc) );
-			self.layers.push(layerDesc);
-			self.trigger('layerAdded',layerDesc);	
+		addLayer: function(params) {
+			var layer = buildLayer(params);			
+			if ( layer ) {
+				self.layers.push( layer );
+				self.trigger('layerAdded',layer);
+			}
+			
+			return layer;
 		},
-	
+		
 		/**
 		 * Dynamically remove a layer from the map
 		 *
-		 * @param layerDesc	The layer description
+		 * @param layer The layer (as returned by addLayer)
 		 */
-		removeLayer: function(layerDesc) {
-			var index = self.layers.indexOf(layerDesc);
+		removeLayer: function(layer) {
+			var index = self.layers.indexOf(layer);
 			if ( index >= 0 ) {
-				mapEngine.removeLayer( engineLayers[index] );
-				engineLayers.splice( index, 1 );
+				mapEngine.removeLayer(layer.engineLayer);
 				self.layers.splice( index, 1 );
-				self.trigger('layerRemoved',layerDesc);
+				self.trigger('layerRemoved',layer);
 				return true;
 			} else {
 				return false;
 			}
-		},
-
-		/**
-		 * Update a feature in a layer
-		 *
-		 * @param layerDesc	The layer description
-		 * @param feature	The feature
-		 */
-		updateFeature: function(layerDesc,feature) {
-			var index = self.layers.indexOf(layerDesc);
-			if ( index >= 0 ) {
-				mapEngine.updateFeature( engineLayers[index], feature );
-				return true;
-			} else {
-				return false;
-			}
-		},
-		
+		},	
+				
 		zoomIn: function() {
 			mapEngine.zoomIn();
 		},
@@ -346,7 +307,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		zoomToFeature: function(feature) {
 			// Zoom on the product in the carto
 			if (!feature.bbox) {
-				computeExtent(feature);
+				Utils.computeExtent(feature);
 			}
 			var extent = feature.bbox;
 			var width = extent[2] - extent[0];
@@ -385,75 +346,6 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		},
 				
 		/**
-		 * Clear results
-		 */
-		clearResults: function(results) {
-			// Remove browse browse layers
-			for ( var x in browseLayers ) {
-				if ( browseLayers.hasOwnProperty(x) ) {
-					mapEngine.removeLayer( browseLayers[x].engine );	
-				}
-			}
-			// Cleanup the browse layers
-			browseLayers = {};
-		
-			// Remove all features
-			mapEngine.removeAllFeatures( resultFootprintLayer );
-			
-			// Reset the results feature collection
-			self.layers[0].data.features.length = 0;
-		},
-		
-		/**
-		 * Add some results to the map
-		 */
-		addResults: function(features) {
-			// Process the feature collection
-			for ( var i = 0; i < features.length; i++ ) {
-				if (!features[i].bbox)
-					computeExtent(features[i]);
-				self.layers[0].data.features.push( features[i] );
-				mapEngine.addFeature( resultFootprintLayer, features[i] );
-			}
-		},
-		
-		/**
-		 * Highlight a feature in the map
-		 */
-		highlightFeature: function(feature, prevFeature, searchResults) {
-		
-			if ( prevFeature && !searchResults.isSelected(prevFeature) ) {
-				mapEngine.modifyFeatureStyle(resultFootprintLayer,prevFeature, "default");
-				hideBrowseLayer(prevFeature);
-			}
-			
-			if ( feature && !searchResults.isSelected(feature) ) {
-				mapEngine.modifyFeatureStyle(resultFootprintLayer,feature, "select");
-				showBrowseLayer(feature);
-			}
-		},
-		
-		/**
-		 * Select the features in the map
-		 */
-		selectFeatures: function(features) {
-			for ( var i=0; i < features.length; i++ ) {
-				mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i], "select");
-				showBrowseLayer(features[i]);
-			}
-		},
-		
-		/**
-		 * Unselect the features in the map
-		 */
-		unselectFeatures: function(features) {
-			for ( var i=0; i < features.length; i++ ) {
-				mapEngine.modifyFeatureStyle(resultFootprintLayer,features[i], "default");
-				hideBrowseLayer(features[i]);
-			}
-		},
-
-		/**
 		 * Switch the map engine
 		 */
 		switchMapEngine: function(id)
@@ -480,15 +372,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
-							
-				// Display browse
-				for ( var x in browseLayers ) {
-					if ( browseLayers.hasOwnProperty(x) ) {
-						mapEngine.modifyFeatureStyle( resultFootprintLayer, browseLayers[x].feature, "select" );
-						browseLayers[x].engine = mapEngine.addLayer( browseLayers[x].desc );
-					}
-				}
-					
+												
 			};
 						
 			// Create the new engine and catch any error

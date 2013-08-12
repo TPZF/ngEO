@@ -134,6 +134,11 @@
 					"strokeColor": "#0000ff",
 					"strokeWidth": 1,
 					"fill" : false
+				},
+				"highlight": {
+					"strokeColor": "#ffff00",
+					"strokeWidth": 1,
+					"fill" : false
 				}
 			},
 			"search-area": {
@@ -144,11 +149,6 @@
 		},
 		
 		"layers": [{
-			"name": "Result Footprints",
-			"type": "GeoJSON",
-			"visible": true,
-			"style": "footprint"
-		},{
 			"name": "Earthquake Feed (GeoRSS)",
 			"type": "GeoRSS",
 			"location": "data/eqs7day-M5.xml",
