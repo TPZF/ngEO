@@ -226,8 +226,12 @@ return {
 			}
 		});	
 		
-		// TODO : maybe find a better way for the default handler ?
-		SelectHandler.start(footprintLayer);
+		// Initialize the default handler
+		SelectHandler.initialize({
+			layer: footprintLayer
+		});
+		// Start it
+		SelectHandler.start();
 
 		// Connect with map feature picking
 		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);

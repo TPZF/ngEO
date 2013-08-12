@@ -178,9 +178,18 @@ function clearStack() {
  * Public interface
  */
 return {
-	start: function(l) {
-		layer = l;
-		
+
+	/**
+	 * Initialize the select handler
+	 */
+	initialize: function(options) {
+		layer = options.layer;
+	},
+	
+	/**
+	 * Start the handler
+	 */
+	start: function() {		
 		mapEngine = Map.getMapEngine();
 		
 		// Click is not used because OpenLayers is messing up with click when navigation is active
@@ -192,6 +201,9 @@ return {
 
 	},
 	
+	/**
+	 * Stop the handler
+	 */
 	stop: function() {
 		mapEngine.unsubscribe( 'mousedown', onMouseDown);
 		mapEngine.unsubscribe( 'mouseup', mapClickHandler);
