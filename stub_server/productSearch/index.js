@@ -29,6 +29,9 @@ fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, d
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ASA_WS__0P']  = JSON.parse(data);
 });
+fs.readFile('./productSearch/Sentinel2_response.json', 'utf8', function (err, data) {
+	featureCollections['Sentinel2']  = JSON.parse(data);
+});
 
 /**
  * Time filter
