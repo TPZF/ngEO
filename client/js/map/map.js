@@ -40,6 +40,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		this.features = [];	
 		
 		this.clear = function() {
+			this.features = [];
 			mapEngine.removeAllFeatures(this.engineLayer);
 		};
 		this.addFeatures = function(features) {
