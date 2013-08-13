@@ -28,7 +28,7 @@ var SearchResults = {
 	selection: [],
 	
 	// The hightlighted feature
-	_highlight: null,
+	_highlighted : null,
 	
 	// The URL for search results
 	url: "",
@@ -142,10 +142,13 @@ var SearchResults = {
 	},
 	
 	// Highlight a feature, only one can be highlight at a time
-	highlight: function(feature) {
-		if ( feature != this._highlight ) {
-			this.trigger( "highlightFeature", feature, this._highlight, this );
-			this._highlight = feature;
+	//TODO add support for multiple items highlighting
+	highlight: function(features) {
+	
+		if ( features[0] != this._highlighted ) {
+			
+			this.trigger( "highlightFeature", features[0], this._highlighted, this );
+			this._highlighted = features[0];
 		}
 	},
 	

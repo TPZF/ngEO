@@ -32,6 +32,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		}, this);
 		this.model.on("selectFeatures", this.toggleSelection, this );
 		this.model.on("unselectFeatures", this.toggleSelection, this );
+		this.model.on("highlightFeature", this.highlightFeatureCallBack, this );
 		
 	},
 
@@ -52,17 +53,10 @@ var SearchResultsTableView = Backbone.View.extend({
 			
 			var feature = this.getFeatureFromRow(event.currentTarget);
 			if (feature != null) {
-				this.model.highlight(feature);
 				$row.addClass('row_selected');
+				this.model.highlight([feature]);
 			}
 		},
-		
-		'dblclick tr' : function (event) {
-			var feature = this.getFeatureFromRow(event.currentTarget);
-			if (feature != null) {
-				this.model.trigger("zoomToFeature", feature);
-			}
-		 },
 		
 		// Called when the user clicks on the checkbox of the dataTables
 		'click .dataTables_chekbox' : function(event){
@@ -105,6 +99,20 @@ var SearchResultsTableView = Backbone.View.extend({
 		} else {
 			return null;
 		}
+	},
+	
+	/**
+	 * Highlight the features on the table when they have been highlighted on the map.
+	 */
+	highlightFeatureCallBack: function(feature, prevFeature) {
+		//console.log("the feauture to highlight == " + feature );
+		
+		var index = this.model.features.indexOf(feature);
+		//console.log("index of the feauture to highlight == " + index );
+		//FIXME THE NODE can be null
+		var node = this.table.fnGetNodes(index);
+		//console.log ("get table node == " + node);
+		if (node) $(node).addClass('row_selected');
 	},
 	
 	/**

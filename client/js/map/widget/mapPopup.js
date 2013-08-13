@@ -3,8 +3,9 @@
   */
 
 
-define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", "map/utils" ], 
-	function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, Utils) {
+define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
+          "searchResults/model/searchResults", "map/utils" ], 
+	function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils) {
 
 
 var MapPopup = function(container) {
@@ -50,6 +51,16 @@ var MapPopup = function(container) {
 			downloadManagersWidget.open();
 		});
 		
+	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
+		.appendTo( element.find('#buttons') )
+		.click( function() {
+			if (SearchResults.isSelected(products[0])){
+				SearchResults.unselect(products[0]);
+			}else{
+				SearchResults.select(products[0]);
+			}
+		});
+	
 	parentElement.appendTo(container);
 	parentElement.trigger("create");
 	
@@ -62,11 +73,11 @@ var MapPopup = function(container) {
 	parentElement.hide();
 
 	var self = this;
-	Map.on('pickedFeatures', function(selectedFeatures) {
-		if ( selectedFeatures.length == 0 ) {
+	Map.on('pickedFeatures', function(highlightedFeatures) {
+		if ( highlightedFeatures.length == 0 ) {
 			self.close();
 		} else {
-			self.open(selectedFeatures);
+			self.open(highlightedFeatures);
 		}
 	});
 	Map.on('startNavigation', function() {
@@ -153,16 +164,16 @@ var MapPopup = function(container) {
 	/**
 		Open the popup
 	 */
-	this.open = function(features) {
+	this.open = function(highlightedFeatures) {
 	
-		products = features;
+		products = highlightedFeatures;
 		
 		// Clean-up previou state
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
 		
 		buildContent(false);
 				
-		var bbox = computeBbox(features);
+		var bbox = computeBbox(highlightedFeatures);
 		var pos = Map.getPixelFromLonLat( bbox[2], (bbox[1] + bbox[3])*0.5);
 			
 		var toolbarTop = $("#toolbar").offset().top;

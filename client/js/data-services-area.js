@@ -207,7 +207,7 @@ return {
 			browsesLayer.addFeatures(features);
 		});
 		SearchResults.on('unselectFeatures', function(features) {
-			footprintLayer.modifyFeaturesStyle(features, "default");
+			footprintLayer.revertFeaturesStyle(features);
 			browsesLayer.removeFeatures(features);
 		});
 		SearchResults.on('highlightFeature', function(feature,prevFeature,searchResults) {
@@ -222,7 +222,6 @@ return {
 			
 			if ( feature ) {
 				footprintLayer.modifyFeaturesStyle([feature], "highlight");
-				browsesLayer.addFeatures([feature]);
 			}
 		});	
 		
@@ -234,7 +233,7 @@ return {
 		SelectHandler.start();
 
 		// Connect with map feature picking
-		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);
+		Map.on('pickedFeatures', SearchResults.highlight, SearchResults);
 		
 		//display a pop-up message when the product search has failed
 		SearchResults.on('error:features', function(searchUrl){

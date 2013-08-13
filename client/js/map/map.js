@@ -50,10 +50,22 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		};
 		this.modifyFeaturesStyle = function(features,style) {
 			for ( var i = 0; i < features.length; i++ ) {
-				features[i].properties.styleHint = style;
+				features[i].properties.prevStatus = features[i].properties.currentStatus;
+				features[i].properties.currentStatus = style;
 				mapEngine.modifyFeatureStyle( this.engineLayer, features[i], style );
 			}
 		};
+		//set back the feature status: used after features are unselected
+		this.revertFeaturesStyle = function(features) {
+			var temp;
+			for ( var i = 0; i < features.length; i++ ) {
+				temp = features[i].properties.currentStatus;
+				features[i].properties.currentStatus = features[i].properties.prevStatus;
+				features[i].properties.prevStatus = temp;
+				mapEngine.modifyFeatureStyle( this.engineLayer, features[i], features[i].properties.currentStatus);
+			}
+		};
+		
 		this.updateFeature = function(feature) {
 			mapEngine.updateFeature( this.engineLayer, feature );
 		};
@@ -63,8 +75,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			for ( var i = 0; i < this.features.length; i++ ) {
 				var f = this.features[i];
 				mapEngine.addFeature( this.engineLayer, f );
-				if ( f && f.properties.styleHint && f.properties.styleHint != 'default' ) {
-					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.styleHint );
+				if ( f && f.properties.currentStatus && f.properties.currentStatus != 'default' ) {
+					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.currentStatus );
 				}
 			}
 		};
@@ -120,8 +132,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		for ( var x in mapConf.styles ) {
 			if ( mapConf.styles.hasOwnProperty(x) ) {
 				var style = mapConf.styles[x];
-				if ( style['default'] &&  style['select'] ) {
-					mapEngine.addStyle( x, style['default'], style['select'] );
+				if ( style['default'] &&  style['select'] && style['highlight']) {
+					mapEngine.addStyle( x, style['default'], style['select'], style['highlight'] );
 				} else {
 					mapEngine.addStyle( x, style );
 				}
