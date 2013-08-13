@@ -202,6 +202,7 @@ return {
 		});
 		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
 		SearchResults.on('zoomToFeature', Map.zoomToFeature);
+		
 		SearchResults.on('selectFeatures', function(features) {
 			footprintLayer.modifyFeaturesStyle(features, "select");
 			browsesLayer.addFeatures(features);
