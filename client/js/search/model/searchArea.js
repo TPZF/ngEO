@@ -122,7 +122,7 @@ var SearchArea = function() {
 		var coords = _feature.geometry.coordinates[0];
 		var text = "";
 		for ( var i = 0; i < coords.length; i++ ) {
-			text += toDMS(coords[i][1]) + "," + toDMS(coords[i][0]) + "\n";
+			text += toDMS(coords[i][1]) + " " + toDMS(coords[i][0]) + "\n";
 		}
 		return text;
 	};
