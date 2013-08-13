@@ -200,19 +200,16 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	getSharedSearchURL : function(){
 
-		//var url = Configuration.baseServerUrl + "/" + viewId + "/"+ this.get("datasetId") + "?";
-		var url = "#data-services-area/search/" +  this.getCoreURL();
+		var url = "#data-services-area/search/" +  this.get("datasetId") + '?';
 		
-		// add use extent
-		// FL : for now never set useExtent can introduce bugs when dealing with polygon
-		// url +=  "&useExtent=" + this.get("useExtent");
+		//add area criteria if set
+		url = this.addGeoTemporalParams(url);
 		
+		//always add the advanced criteria values selected and already set to the model
+		url = this.addAdvancedCriteria(url);
+
 		//add the download options values selected and already set to the model
-		if (this.get("useDownloadOptions")){
-			url += "&useDownloadOptions=true";
-		}
-		
-		//console.log("DatasetSearch module : getSharedSearchURL method : " + url);
+		url = this.addDownloadOptions(url);
 		
 		return url;
 	},
