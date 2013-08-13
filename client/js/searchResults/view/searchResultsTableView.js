@@ -32,7 +32,7 @@ var SearchResultsTableView = Backbone.View.extend({
 		}, this);
 		this.model.on("selectFeatures", this.toggleSelection, this );
 		this.model.on("unselectFeatures", this.toggleSelection, this );
-		this.model.on("highlightFeature", this.highlightFeatureCallBack, this );
+		this.model.on("highlightFeatures", this.highlightFeatureCallBack, this );
 		
 	},
 
@@ -104,15 +104,17 @@ var SearchResultsTableView = Backbone.View.extend({
 	/**
 	 * Highlight the features on the table when they have been highlighted on the map.
 	 */
-	highlightFeatureCallBack: function(feature, prevFeature) {
-		//console.log("the feauture to highlight == " + feature );
+	highlightFeatureCallBack: function(features, prevFeatures) {
 		
-		var index = this.model.features.indexOf(feature);
-		//console.log("index of the feauture to highlight == " + index );
-		//FIXME THE NODE can be null
-		var node = this.table.fnGetNodes(index);
-		//console.log ("get table node == " + node);
-		if (node) $(node).addClass('row_selected');
+		// Remove previous highlighted rows
+		this.table.find('.row_selected').removeClass('row_selected');
+		
+		var rows = this.table.$("tr",{order: "original"});
+		
+		for ( var i = 0; i < features.length; i++ ) {
+			var index = this.model.features.indexOf(features[i]);
+			rows.eq(index).addClass('row_selected');
+		}
 	},
 	
 	/**

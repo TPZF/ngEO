@@ -142,13 +142,17 @@ var SearchResults = {
 	},
 	
 	// Highlight a feature, only one can be highlight at a time
-	//TODO add support for multiple items highlighting
 	highlight: function(features) {
 	
-		if ( features[0] != this._highlighted ) {
+		if ( features != this._highlighted ) {
 			
-			this.trigger( "highlightFeature", features[0], this._highlighted, this );
-			this._highlighted = features[0];
+			this.trigger( "highlightFeatures", features, this._highlighted, this );
+			
+			//keep highlighted items
+			this._highlighted = [];
+			for ( var i = 0; i < features.length; i++ ) {
+				this._highlighted.push( features[i] );
+			}
 		}
 	},
 	
