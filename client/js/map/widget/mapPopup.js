@@ -54,10 +54,13 @@ var MapPopup = function(container) {
 	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
 		.appendTo( element.find('#buttons') )
 		.click( function() {
-			if (SearchResults.isSelected(products[0])){
-				SearchResults.unselect(products[0]);
-			}else{
-				SearchResults.select(products[0]);
+			
+			for (var i=0;i<products.length;i++){
+				if (SearchResults.isSelected(products[i])){
+					SearchResults.unselect(products[i]);
+				}else{
+					SearchResults.select(products[i]);
+				}
 			}
 		});
 	
