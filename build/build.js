@@ -10,7 +10,7 @@
 		"jquery.dataTables" : "externs/jquery.dataTables",
  		"jquery.dateRangeSlider" : "externs/jQDateRangeSlider",
 		"jquery.rangeSlider" : "externs/jQRangeSlider",	
-        	"underscore": "externs/underscore-min",
+        "underscore": "externs/underscore-min",
 		"backbone": "externs/backbone-min",
 		"text": "externs/text"
 	},
