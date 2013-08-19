@@ -128,22 +128,25 @@ var SearchArea = function() {
 	};
 	
 	//Transform to WKT
-	//NGEO-509 : removed POLYGON(( )) from the request and
-	//space before longitudes is replaced by commar.
+	//NGEO 509 : it is requested to rollback the changes !
 	this.toWKT = function() {
 		var coords = _feature.geometry.coordinates;
-		var param = "";
+		var param = "POLYGON(";
 		for ( var j = 0; j < coords.length; j++ ) {
 			if ( j != 0 ) {
 				param += ",";
 			}
+			param += "(";
 			for ( var i = 0; i < coords[j].length; i++ ) {
 				if ( i != 0 ) {
 					param += ",";
 				}
-				param += coords[j][i][0] + "," + coords[j][i][1];
+				param += coords[j][i][0] + " " + coords[j][i][1];
 			}
+			param += ")";
 		}
+		
+		param += ")";
 		
 		return param;
 	};
