@@ -4,17 +4,14 @@
 define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartItemView", "panelManager", "widget"], 
 		function($, ShopcartCollection, ShopcartItemView, PanelManager) {
 
-	return function() {
-		
-//		// load the content of the current shopcart
-//		currentShopcart.fetch();
-//		
-//		currentShopcart.on("shopcart:loaded", function() {
-		
-			// Create the shopcart content view
-			var shopcartItemView = new ShopcartItemView({
-				model : ShopcartCollection  
-			});
+	// Create the shopcart content view
+	var shopcartItemView = new ShopcartItemView({
+		model : ShopcartCollection  
+	});
+	
+	return {
+
+		create : function(){
 			
 			//Add the shopcart table to the bottom panel 
 			PanelManager.addPanelContent({
@@ -35,14 +32,15 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 			shopcartItemView.render();
 			
 			return shopcartItemView.$el;
+		},
 		
-//		}, this);
-//		
-//		currentShopcart.on("shopcart:errorLoad", function() {
-//			//when the fetch fails display an error message and disable the shopcart button
-//			// so the application is still usable and the user can still see the other menus.
-//			$("#shopcart").parent().addClass('ui-disabled');
-//		}, this);
+		/**
+		 * Update the shopcart item view whene the share shopcart is triggered.
+		 * @returns
+		 */
+		updateView : function(){
+			shopcartItemView.onShow();
+		}
 
 	};
 

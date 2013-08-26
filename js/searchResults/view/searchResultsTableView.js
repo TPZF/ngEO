@@ -2,9 +2,9 @@ define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 
-		  'shopcart/model/shopcart', 'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'jquery.mobile', 'jquery.dataTables' ],
+		  'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-			DirectDownloadWidget, DownloadOptionsWidget, Shopcart, ShopcartCollection, ExportWidget) {
+			DirectDownloadWidget, DownloadOptionsWidget, ShopcartCollection, ExportWidget) {
 
 		
 /**
@@ -263,8 +263,10 @@ var SearchResultsTableView = Backbone.View.extend({
 //			ShopcartSelectionView.render();
 //			//Open the popup
 //			parentElement.ngeowidget("show");
-			
-			ShopcartCollection.currentShopcart.addItems(self.model.getProductUrls(self.model.getNonPlannedItems(self.model.selection)));
+			var features = self.model.getNonPlannedItems(self.model.selection);
+			//implemented like that in order to make the shopcart class independant from the SearchResults model
+			//since the getProductUrls is implemented in SearchResults
+			ShopcartCollection.currentShopcart.addItems(self.model.getProductUrls(features), features);
 		});
 
 		//add button to the widget footer in order to download products

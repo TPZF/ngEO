@@ -1,7 +1,8 @@
 define(
-		[ 'jquery', 'backbone', 'configuration', 'shopcart/model/shopcart', 'shopcart/model/shopcartCollection',
+		[ 'jquery', 'backbone', 'configuration', 'searchResults/widget/downloadOptionsWidget',
+		  'shopcart/widget/shopcartExportWidget',
 		 'jquery.mobile', 'jquery.dataTables' ],
-	function($, Backbone, Configuration, Shopcart, ShopcartCollection ) {
+	function($, Backbone, Configuration, DownloadOptionsWidget, ShopcartExportWidget) {
 
 		
 /**
@@ -14,27 +15,23 @@ var ShopcartItemView = Backbone.View.extend({
 		this.model.on("selectShopcartItems", this.toggleSelection, this );
 		this.model.on("unselectShopcartItems", this.toggleSelection, this );
 
-		this.model.on("shopcart:loaded", function(shopcartItems) {
-			if ( this.visible ) {
-				this.table.fnClearTable();
-				this.table.fnAddData( shopcartItems, false );
-				this.table.fnAdjustColumnSizing( true );
-				this.trigger('sizeChanged');
-			} else {
-				this.shopcartItemsToAdd = shopcartItems;
+		this.model.on("shopcart:loaded", function() {
+			this.shopcartItemsToAdd = [];
+			for (var i=0; i<this.model.currentShopcart.shopcartItems.length; i++){			  
+				this.shopcartItemsToAdd.push(this.model.currentShopcart.shopcartItems[i]);
 			}
+
 		}, this);
 		
 		this.model.on("shopcart:itemsDeleted", function(removedIndexes) {
-			if ( this.visible ) {
-				
-				for (var i=0; i<removedIndexes.length; i++){			  
-					this.table.fnDeleteRow(removedIndexes[i]);
-				}
-				this.updateButtonStatuses();
-				this.table.fnAdjustColumnSizing( true );
-				this.trigger('shopcart:sizeChanged');
-			} 
+			//in this case the shopcart widget should be visible
+			for (var i=0; i<removedIndexes.length; i++){			  
+				this.table.fnDeleteRow(removedIndexes[i]);
+			}
+			this.updateButtonStatuses();
+			this.table.fnAdjustColumnSizing( true );
+			this.trigger('shopcart:sizeChanged');
+
 		}, this);
 	},
 	
@@ -83,7 +80,9 @@ var ShopcartItemView = Backbone.View.extend({
 	getShopcartItemFromRow: function(row) {
 		var rowPos = this.table.fnGetPosition( row );
 		if (rowPos != null) {
-			return this.model.currentShopcart.shopcartItems[rowPos];
+			console.log("All data : " + JSON.stringify(this.table.fnGetData()));
+			console.log("data for postion " + rowPos + ":: " + JSON.stringify(this.table.fnGetData(rowPos)));
+			return this.table.fnGetData(rowPos);
 		} else {
 			return null;
 		}
@@ -96,7 +95,8 @@ var ShopcartItemView = Backbone.View.extend({
 
 		var checkboxes = this.table.$(".dataTables_chekbox",{order: "original"});
 		for ( var i = 0; i < shopcartItems.length; i++ ) {
-			var index = this.model.currentShopcart.shopcartItems.indexOf(shopcartItems[i]);
+			var index = this.model.currentShopcart.getShopcartItemIndex(shopcartItems[i]);
+			console.log("item index == " + index);
 			checkboxes.eq(index)
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
@@ -111,11 +111,9 @@ var ShopcartItemView = Backbone.View.extend({
 
 		if ( this.model.currentShopcart.selection.length > 0 ) {
 			this.deleteButton.button('enable');
-			this.exportButton.button('enable');
 			this.downloadOptionsButton.button('enable');
 		} else {
 			this.deleteButton.button('disable');
-			this.exportButton.button('disable');
 			this.downloadOptionsButton.button('disable');
 		}
 	},
@@ -124,13 +122,13 @@ var ShopcartItemView = Backbone.View.extend({
 	 * Method to call when the table is shown
 	 */
 	onShow: function() {
-		
+		//if there items to add that mean the current shopcart has been loaded
 		if ( this.shopcartItemsToAdd.length >  0 ) {
 			this.table.fnClearTable();
 			this.table.fnAddData( this.shopcartItemsToAdd, false );
 			// adjust selection
 			this.toggleSelection(this.model.currentShopcart.selection);
-			this.shopcartItemsToAdd.length = 0;
+			this.shopcartItemsToAdd = [];
 		}
 		this.table.fnAdjustColumnSizing( true );
 		this.visible = true;
@@ -147,6 +145,8 @@ var ShopcartItemView = Backbone.View.extend({
 	 * Render the table
 	 */
 	render : function() {
+		
+		this.visible = false;
 		
 		this.shopcartItemsToAdd = [];
 		
@@ -166,7 +166,7 @@ var ShopcartItemView = Backbone.View.extend({
 
 		// Build parameters for dataTables
 		var parameters = {
-			"aaData" : this.model.currentShopcart.shopcartItems,
+			"aaData" : [],
 			"aoColumns" : columnsDef, 
 			"bDestroy": true,
 			"bSort" : true,
@@ -196,14 +196,14 @@ var ShopcartItemView = Backbone.View.extend({
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable');
 		
-//		this.downloadOptionsButton.click(function() {
-//			//TODO
-//			var downloadOptionsWidget = new DownloadOptionsWidget();
-//			downloadOptionsWidget.open();
-//
-//		});
-//		
-//		//add button to the widget footer in order to download products		
+		this.downloadOptionsButton.click(function() {
+		
+			var downloadOptionsWidget = new DownloadOptionsWidget();
+			downloadOptionsWidget.open();
+
+		});
+		
+		//add button to the widget footer in order to download products		
 		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true">Delete</button>').appendTo($buttonContainer);
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
@@ -212,13 +212,14 @@ var ShopcartItemView = Backbone.View.extend({
 			self.model.currentShopcart.deleteItems();
 		});
 		
-		//add button to the widget footer in order to download products		
+		//add button to the widget footer in order to export a shopcart
 		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
-		this.exportButton.button('disable');
+		this.exportButton.button('enable');
 		
 		this.exportButton.click(function() {	
-			//TODO
+			var shopcartExportWidget = new ShopcartExportWidget();
+			shopcartExportWidget.open();
 		});
 
 		this.$el.trigger('create');

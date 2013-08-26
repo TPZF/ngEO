@@ -1,13 +1,13 @@
 
 define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", 
         "searchResults/model/searchResults", "search/model/datasetSearch",  
-        "shopcart/model/shopcart",  "shopcart/model/shopcartCollection", 
+        "shopcart/model/shopcartCollection", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help", "panelManager", "toolbar"], 
 	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch,
-			Shopcart, ShopcartCollection, StandingOrderDataAccessRequest, StandingOrderWidget,
+		    ShopcartCollection, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp, PanelManager) {
 
@@ -82,29 +82,25 @@ return {
 		var searchWidget = SearchCriteriaWidget.create(element);
 		_$resultsTableWidget = ResultsTableWidget();
 		
-//		var shopcartLayer = Map.addLayer({
-//			name: "Shopcart Layer",
-//			type: "Feature",
-//			visible: true
-//		});
-		
 		//load the shopcart collection to get the default shopcart id
 		ShopcartCollection.fetch({
 			
 			success: function(model, response) {
 			
-				//create the shopcart widget
-				ShopcartWidget();
+				//load the current shopcart
+				ShopcartCollection.loadCurrentShopcart();
+				
+				ShopcartWidget.create();
 				
 				ShopcartCollection.on("shopcart:errorLoad", function() {
 					//when the fetch fails display an error message and disable the shopcart button
 					// so the application is still usable and the user can still see the other menus.
-					$("#shopcart").parent().addClass('ui-disabled');
+					//ShopcartWidget.load();
 				});
 			},
 
 			error: function(){
-				$("#shopcart").parent().addClass('ui-disabled');
+				$("#shopcart").addClass('ui-disabled');
 				Logger.error('Cannot retreive the list of shopcarts from the server');
 			}
 		});	
@@ -125,11 +121,12 @@ return {
 			DatasetSearch.on("datasetLoaded", function(){
 				
 				DatasetSearch.populateModelfromURL(query);
-				
+
 				MenuBar.showPage("data-services-area");
 				
 				//refresh the search widget after the model has been update
 				SearchCriteriaWidget.refresh();
+				
 				searchWidget.ngeowidget("show");
 			});
 			
@@ -173,6 +170,79 @@ return {
 			DatasetSearch.set({"datasetId" : datasetId});
 			
 		});
+		
+		//FIXME Emna : does not work correctly : the first time the current shopcart is loaded
+		//when the shopcart id is chjanged on the shared url is works!
+		//Route for share shopcart
+		router.route(
+				"data-services-area/shopcart/:shopcartId", 
+				"shopcart", function(shopcartId) {		
+
+			MenuBar.showPage("data-services-area");
+			
+			ShopcartCollection.updateCurrentShopcart(shopcartId);
+
+			ShopcartCollection.on("shopcart:loaded", function(id) {
+
+					//ShopcartWidget.updateView();
+//					//set the shopcart button to be clicked
+					$("#shopcart").addClass('toggle');
+					//display the shopcart widget 
+					PanelManager.activate({
+						activatorId : "shopcart",
+						position : "bottom"
+					});
+			});
+		});
+			
+			
+//			$.when(ShopcartCollection.updateCurrentShopcart(shopcartId)).done( function() {
+//
+//				ShopcartCollection.on("shopcart:loaded", function(id) {
+//	
+//					if (id != shopcartId){
+//
+//						$.when(ShopcartCollection.loadCurrentShopcart(shopcartId)).done( function() {
+////
+////							//if (id == shopcartId){
+////							//ShopcartWidget.updateView();
+////							//set the shopcart button to be clicked
+//							$("#shopcart").addClass('toggle');
+//							//display the shopcart widget 
+//							PanelManager.activate({
+//								activatorId : "shopcart",
+//								position : "bottom"
+//							});
+//						});
+////						}
+//					}else{
+//						
+//						$("#shopcart").addClass('toggle');
+//						//display the shopcart widget 
+//						PanelManager.activate({
+//							activatorId : "shopcart",
+//							position : "bottom"
+//						});
+//					}
+//				});
+//			});
+						
+//						ShopcartCollection.on("shopcart:errorLoad", function() {
+//							//when the fetch fails display an error message and disable the shopcart button
+//							// so the application is still usable and the user can still see the other menus.
+//							MenuBar.showPage("data-services-area");
+//							$("#shopcart").parent().addClass('ui-disabled');
+//						});
+						
+//							
+//					},
+//
+//					error: function(){
+//						$("#shopcart").addClass('ui-disabled');
+//						Logger.error('Cannot retreive the list of shopcarts from the server');
+//					}
+//				});				
+//		});
 		
 		// Route default
 		router.route(
@@ -222,11 +292,46 @@ return {
 			type: "Browses",
 			visible: true
 		});
+				
+		var shopcartLayer = Map.addLayer({
+			name: "Shopcart Layer",
+			type: "Feature",
+			visible: true
+		});
 		
+//		ShopcartCollection.on('shopcart:loaded', function(shopcartItems){
+//			browsesLayer.clear();
+//			var features = [];
+//			for (var i=0; i<shopcartItems.length; i++){
+//				features.push(shopcartItems[i].product);
+//			}
+//			shopcartLayer.addFeatures(features);
+//			//browsesLayer.addFeatures(features);
+//		});
+//		
+//		ShopcartCollection.on("selectShopcartItems", function(shopcartItems) {
+//			var features = [];
+//			for (var i=0; i<shopcartItems.length; i++){
+//				features.push(shopcartItems[i].product);
+//			}
+//			shopcartLayer.modifyFeaturesStyle(features, "select");
+//			browsesLayer.addFeatures(features);
+//		});
+//		
+//		ShopcartCollection.on("unselectShopcartItems", function(shopcartItems) {
+//			var features = [];
+//			for (var i=0; i<shopcartItems.length; i++){
+//				features.push(shopcartItems[i].product);
+//			}
+//			shopcartLayer.modifyFeaturesStyle(features, "default");
+//			browsesLayer.removeFeatures(features);
+//		});
+//		
 		SearchResults.on('reset:features', function() {
 			footprintLayer.clear();
 			browsesLayer.clear();
 		});
+		
 		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
 		SearchResults.on('zoomToFeature', Map.zoomToFeature);
 		SearchResults.on('selectFeatures', function(features) {
