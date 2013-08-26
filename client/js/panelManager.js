@@ -38,6 +38,7 @@ var _buildPanel = function(opts,position) {
 	
 	//panel.hide();
 	
+	
 	// Build the 'toolbar'
 	panel
 		.find('.toolbar')
@@ -183,7 +184,26 @@ return {
 			}
 			$(this).toggleClass('toggle');
 		});
-	}
+	}, 
+	
+	/**
+	 * Activate the display of a panel with a simulation of the activator click
+	 * usefull for the share shopcart functionnality.
+	 */
+	activate : function(opts){
+		
+		//var index = activators[opts.position].index(opts.activator);
+		var index = -1;
+		activators[opts.position].each(function(i, elt){
+			if (elt.id == opts.activatorId){
+				index = i;
+			}
+		});
+		contents[opts.position].hide().trigger('panel:hide');
+		$(contents[opts.position].get(index)).show().trigger('panel:show');
+		
+		_showPanel[opts.position]();
+	} 
 };
 
 

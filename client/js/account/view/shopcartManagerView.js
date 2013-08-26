@@ -16,7 +16,7 @@ var ShopcartManagerView = Backbone.View.extend({
 			}else{
 				this.$el.find("#delete_shp").button('disable');
 			}
-			this.model.updateCurrentShopcartId(event.currentTarget.id);
+			this.model.updateCurrentShopcart(event.currentTarget.id);
 		},
 		
 		'click #new_shp' : function(event){
@@ -94,6 +94,14 @@ var ShopcartManagerView = Backbone.View.extend({
 			//Open the popup
 			parentElement.ngeowidget("show");
 		}, 
+		//called when the share button is clicked.
+		'click #share_shp' : function(event){
+
+			// Set the current shopcart shared url
+			$("#sharedShopcartUrl").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + this.model.getShopcartSharedURL() + '<b>');	
+			$('#sharedShopcartUrlPopup').popup("open");
+			$('#sharedShopcartUrlPopup').trigger('create');
+		},
 		
 		'click #delete_shp' : function(event){
 			var self = this;
