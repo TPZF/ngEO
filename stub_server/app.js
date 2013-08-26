@@ -17,6 +17,7 @@ var express = require('express')
   , downloadStatuses = require('./dataAccessRequestStatus')
   , downloadHelper = require('./downloadHelper')
   , shopcarts = require('./shopcarts')
+  , hostedProcesses = require('./hostedProcesses')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
@@ -68,7 +69,7 @@ app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
 app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
 
 //shopcarts list and shopcart content
-app.get('/ngeo/shopcarts/:id?', shopcarts.get);
+app.get('/ngeo/shopcarts/:id?/:format?', shopcarts.get);
 
 //create shopcart and add items interfaces
 app.post('/ngeo/shopcarts/:id?', shopcarts.post);
@@ -81,6 +82,9 @@ app.delete('/ngeo/shopcarts/:id', shopcarts.delete);
 
 //delete shopcart and delete items of shopcart interfaces
 app.delete('/ngeo/shopcarts/:id/items', shopcarts.delete);
+
+//Hosted processing list
+app.get('/ngeo/hostedProcesses', hostedProcesses);
 
 // user inquiry
 app.post('/ngeo/userInquiry', function(req,res) {

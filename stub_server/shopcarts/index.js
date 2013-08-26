@@ -6,8 +6,9 @@
  */
 
 //nodeJs dependency to generate randow ids for shopcarts.
-var uuid = require('node-uuid');
-var fs = require('fs');
+var uuid = require('node-uuid'),
+	fs = require('fs'),
+	path = require('path');
 
 var shopcartConfigs = [];
 var feature = {};
@@ -66,9 +67,56 @@ module.exports = {
 	
 		//shopcart content consulting
 		if (req.params.id){
-
+			
 			if (doesShopcartExist(req.params.id)){
-				res.sendfile('./shopcarts/' + req.params.id + '_shopcartContent.json');			
+			
+				if (!req.params.format){
+					
+					res.sendfile('./shopcarts/' + req.params.id + '_shopcartContent.json');		
+				
+				}else{
+					
+					var filePath, contentType, fileName;
+					
+					switch(req.params.format){
+						case "KML" : 
+							fileName = 'shopcart.kml';
+							filePath = path.join('./shopcarts/', fileName);
+							contentType = 'application/vnd.google-earth.kml+xml';
+							break;
+						case "ATOM" :
+							fileName = 'shopcart.atom';
+							filePath = path.join('./shopcarts/', fileName);
+							contentType = 'application/atom+xml';
+							break;
+						case "HTML" : 
+							fileName = 'shopcart.html';
+							filePath = path.join('./shopcarts/', fileName);
+							contentType = 'text/html';
+							break;
+						default: 
+							filePath = null;
+							break;
+						}
+					
+					if (filePath){
+					
+					    var stat = fs.statSync(filePath);
+	
+					    res.writeHead(200, {
+					        'Content-Type': contentType,
+					        'Content-Length': stat.size,
+					        'Content-Disposition' : "attachment; filename="+ fileName 
+					    });
+	
+					    var readStream = fs.createReadStream(filePath);
+					    readStream.pipe(res);
+					
+					}else{
+						res.send(404);
+					}
+				}
+			
 			}else{
 				res.send(404);
 			}

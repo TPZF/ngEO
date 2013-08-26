@@ -1,0 +1,121 @@
+{
+    "hostedProcesses": [
+        {
+            "hostedProcessId": "hostedProcess_1",
+            "name": "hostedProcess_1_name",
+            "displayName": "hostedProcess_1_name_to_display",
+            "URL": "http://server/app.fr",
+            "description": "this is the description text of hostedProcess_1",
+            "parameters": [
+                {
+                    "name": "parameter_1",
+                    "description": "description of parameter_1",
+                    "type": "String",
+                    "values": [
+                        {
+                            "value": "string1"
+                        },
+                        {
+                            "value": "string2"
+                        }
+                    ]
+                },
+                {
+                    "name": "parameter_2",
+                    "description": "description of parameter_2",
+                    "type": "EOProductURL"
+                },
+                {
+                    "name": "parameter_3",
+                    "description": "description of parameter_3",
+                    "type": "URL"
+                },
+                {
+                    "name": "parameter_4",
+                    "description": "description of parameter_4",
+                    "type": "Integer",
+                    "minValue": "0",
+                    "maxValue": "1000"
+                }
+            ],
+            "datasetIds": [
+                {
+                    "datasetId": "ND_SAR_1"
+                },
+                {
+                    "datasetId": "ND_OPT_1"
+                },
+                {
+                    "datasetId": "ND_S2_1"
+                }
+            ]
+        },
+        {
+            "hostedProcessId": "hostedProcess_2",
+            "name": "hostedProcess_2_name",
+            "displayName": "hostedProcess_2_name_to_display",
+            "URL": "http://server/app.fr",
+            "description": "this is the description text of hostedProcess_2",
+            "parameters": [
+                {
+                    "name": "Output Format",
+                    "description": "description of parameter_1",
+                    "type": "String",
+                    "values": [
+                        {
+                            "value": "geotiff"
+                        },
+                        {
+                            "value": "png"
+                        },
+                        {
+                            "value": "jpeg"
+                        }
+                    ]
+                },
+                {
+                    "name": "Level",
+                    "description": "description of Level",
+                    "type": "Float",
+                    "minValue": "1.0",
+                    "maxValue": "3.5"
+                }
+            ],
+            "datasetIds": [
+                {
+                    "datasetId": "ND_SAR_1"
+                },
+                {
+                    "datasetId": "ND_S2_1"
+                }
+            ]
+        },
+        {
+            "hostedProcessId": "hostedProcess_3",
+            "name": "hostedProcess_3_name",
+            "displayName": "hostedProcess_3_name_to_display",
+            "URL": "http://server/app.fr",
+            "description": "this is the description text of hostedProcess_3",
+            "parameters": [
+                {
+                    "name": "Output Format",
+                    "description": "description of parameter_1",
+                    "type": "EOProductURL"
+                },
+                {
+                    "name": "Level",
+                    "description": "description of Level",
+                    "type": "URL"
+                }
+            ],
+            "datasetIds": [
+                {
+                    "datasetId": "ND_SAR_1"
+                },
+                {
+                    "datasetId": "ND_S2_1"
+                }
+            ]
+        }
+    ]
+}

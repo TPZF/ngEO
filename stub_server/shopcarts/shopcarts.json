@@ -4,7 +4,7 @@
                     "id" : "TPZ_SHP_01",
                     "name" : "S1 product's shopcart",
                     "userId" : "TPZ_user_01",
-                    "isDefault" : false
+                    "isDefault" : true
                 },
                 {
                     "id" : "TPZ_SHP_02",
@@ -28,7 +28,7 @@
                     "id" : "TPZ_SHP_05",
                     "name" : "Optical product's shopcart",
                     "userId" : "TPZ_user_01",
-                    "isDefault" : true
+                    "isDefault" : false
                 }
         ]
 
