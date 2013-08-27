@@ -36,25 +36,27 @@ define(['jquery', 'configuration', 'searchResults/model/searchResults'],
 				});
 				
 				//QUnit.equal( feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename, "http://dummy?downloadMode=OnCompletion" );
-				QUnit.equal( feature.properties.productUrl, "http://dummy?downloadMode=OnCompletion" );
+				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:OnCompletion}" );
 				
 				SearchResults.updateProductUrls({
 					downloadMode: "Continously"
 				});
 				
-				QUnit.equal( feature.properties.productUrl, "http://dummy?downloadMode=Continously" );
+				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:Continously}" );
 			
 				SearchResults.updateProductUrls({
+					downloadMode: "Continously",
 					type: "PNG"
 				});
 				
-				QUnit.equal( feature.properties.productUrl, "http://dummy?downloadMode=Continously&type=PNG" );
+				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:PNG}" );
 		
 				SearchResults.updateProductUrls({
+					downloadMode: "Continously",
 					type: "JPEG"
 				});
 				
-				QUnit.equal( feature.properties.productUrl, "http://dummy?downloadMode=Continously&type=JPEG" );
+				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:JPEG}" );
 				
 				SearchResults.unselect( feature );
 				SearchResults.features = [];

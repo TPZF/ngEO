@@ -188,7 +188,7 @@ var DataSetSearch = Backbone.Model.extend({
 		url = this.addAdvancedCriteria(url);
 
 		//add the download options values selected and already set to the model
-		url = this.addDownloadOptions(url);
+		url = this.addDownloadOptionsWithProductURIConvention(url);
 		
 		//console.log("DatasetSearch module : getCoreURL method : " + url);
 		
@@ -340,7 +340,10 @@ var DataSetSearch = Backbone.Model.extend({
 		return url;
 	},
 	
-	//add download options to the given url
+	/**
+	 * add download options to the given url by appending "&param_1=value_1&...&param_n=value_n" to the url
+	 * returns the modified url
+	 */
 	addDownloadOptions : function(url){
 	
 		var self = this;
@@ -362,6 +365,58 @@ var DataSetSearch = Backbone.Model.extend({
 		}
 
 		//console.log("DatasetSearch module : addDownloadOptions : " + url);
+		return url;
+	},
+	
+	/**
+	 * In case there are selected download options : 
+	 * 		add download options to the given url by appending "&ngEO_DO={param_1:value_1,...,param_n:value_n} 
+	 * 		to the url and returns the modified url.
+	 * unless : do not append "&ngEO_DO={} to the url 
+	 */
+	addDownloadOptionsWithProductURIConvention : function(url){
+	
+		var self = this;
+		//add the selected download options to the opensearch url
+			
+		if (this.dataset.get('downloadOptions')) {
+			
+			var downloadOptionsStr = null;
+			var addedOption = false;
+			
+			_.each(this.dataset.get('downloadOptions'), function(option, index){
+				
+				if (_.has(self.attributes, option.argumentName)) {
+					
+					if (!addedOption){
+						downloadOptionsStr = "&ngEO_DO={";
+					}else{
+						downloadOptionsStr += ",";
+					}
+					
+					if ( !option.cropProductSearchArea ) {
+						
+						downloadOptionsStr += option.argumentName + ':' + self.attributes[option.argumentName];
+						
+					} else if (self.attributes[option.argumentName]) {
+						
+						url += option.argumentName + ':' + self.searchArea.toWKT(); 
+					}
+
+					if (!addedOption){
+						addedOption = true;
+					}
+				}
+			});
+			
+			if (downloadOptionsStr){
+				downloadOptionsStr += "}";
+				url += downloadOptionsStr;
+			}
+			
+		}
+
+		console.log("DatasetSearch module : addDownloadOptionsWithProductURIConvention : " + url);
 		return url;
 	},
 
