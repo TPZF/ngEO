@@ -15,6 +15,9 @@
 		themeDateHighAlt: 'e',
 		themeDate: 'd',
 		
+		startYear: (new Date()).getFullYear() - 10,
+		endYear: (new Date()).getFullYear(),
+		
 		calHighToday: true,
 		calHighPick: true,
 		
@@ -198,7 +201,7 @@
 				for ( i=0; i<=11; i++ ) {
 					cal.picker1.append($('<option value="'+i+'"'+((cal.thisMonth===i)?' selected="selected"':'')+'>'+w.__('monthsOfYear')[i]+'</option>'));
 				}
-				for ( i=(cal.thisYear-6); i<=cal.thisYear+6; i++ ) {
+				for ( i=o.startYear; i<=o.endYear; i++ ) {
 					cal.picker2.append($('<option value="'+i+'"'+((cal.thisYear===i)?' selected="selected"':'')+'>'+i+'</option>'));
 				}
 				
