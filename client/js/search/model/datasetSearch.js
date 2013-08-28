@@ -85,20 +85,19 @@ var DataSetSearch = Backbone.Model.extend({
 				
 				success: function(model, response, options) {
 					
-					var startDate = model.get('startDate');
-					var endDate = model.get('endDate');
-					
+					// Compute a search time range from the dataset extent
+					// The stop date is the dataset stop date
 					var start;
-					var stop;
-					if (!startDate || !endDate) {
-						stop = new Date(); // Set it to now
-						start = new Date( stop.getTime() - 31 * 24 * 3600 * 1000 ); // One month before today
-					} else {
-						//update dates/times from dataset dates/times
-						start = Date.fromISOString(startDate);
-						stop = Date.fromISOString(endDate);	
-					}
+					var stop = new Date( model.get('endDate').getTime() );
 					
+					// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
+					var diff = (model.get('endDate') - model.get('startDate'));
+					if ( diff > 24 * 30 * 3600 * 1000 ) {
+						start = new Date( stop.getTime() - 24 * 30 * 3600 * 1000 );
+					} else {
+						start = new Date(model.get('startDate').getTime() );
+					}
+										
 					// Reset start time
 					start.setUTCHours(0);
 					start.setUTCMinutes(0);

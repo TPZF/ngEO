@@ -84,6 +84,9 @@ $.widget( "ui.dateRangeSlider", {
 					}
 				});
 			});
+			
+		// Create a container for the scale bar, needed to manage scrolling
+		this.container = $('<div class="dateSlider-container"></div>').appendTo(this.element);
 		
 		// Create the scale bar
 		this._createScaleBar();
@@ -104,14 +107,9 @@ $.widget( "ui.dateRangeSlider", {
 			}
 		});
 					
-		// Compute the max days to limit the scale bar scrolling
-		this.maxDays = getDaysBetween( this.options.scaleBounds.max, this.minDate );
 		
 		// Initialize dragging
-		this.dragLeftDays = getDaysBetween( this.options.bounds.min, this.minDate );
-		this.dragRightDays = getDaysBetween( this.options.bounds.max, this.minDate );
-		this.dragBar.width(this.dragRightDays - this.dragLeftDays );
-		this._moveDrag( 0 );
+		this._updateDragBar();
 		
 		// Manage window resize
 		$(window).resize( function() {
@@ -131,13 +129,43 @@ $.widget( "ui.dateRangeSlider", {
 		}
 	},
 	
+	// Update the drag bar position
+	_updateDragBar: function() {
+		this.dragLeftDays = getDaysBetween( this.options.bounds.min, this.minDate );
+		this.dragRightDays = getDaysBetween( this.options.bounds.max, this.minDate );
+		
+		// Check if length is valid, otherwise modify it
+		var boundsLength = this.dragRightDays - this.dragLeftDays;
+		if ( boundsLength > this.options.boundsMaxLength ) {
+			this.dragLeftDays = this.dragRightDays - this.options.boundsMaxLength;
+			if ( this.options.change ) {
+				this.options.change( this._computeCurrentDate() ); 
+			}
+		} else if ( boundsLength < this.options.boundsMinLength ) {
+			this.dragLeftDays = this.dragRightDays - this.options.boundsMinLength;
+			if ( this.options.change ) {
+				this.options.change( this._computeCurrentDate() ); 
+			}
+		}
+				
+		this.dragBar.width( this.dragRightDays - this.dragLeftDays );
+		this._moveDrag( 0 );
+	},
+	
 	// Create the scale
 	_createScaleBar: function() {
+	
+		this.container.empty();
 				
 		var scale = $('<div class="dateSlider-scale"></div>');
 		
 		var startYear = parseInt( this.options.scaleBounds.min.getUTCFullYear() );
 		var endYear = parseInt( this.options.scaleBounds.max.getUTCFullYear() );
+		
+		// HACK : try to have the time slider big enough for the screen
+		if ( endYear - startYear < 6 ) {
+			startYear = endYear - 6;
+		}
 		
 		this.minDate = new Date();
 		this.minDate.setUTCFullYear(startYear);
@@ -153,6 +181,10 @@ $.widget( "ui.dateRangeSlider", {
 		maxDate.setUTCMonth(12);
 		maxDate.setUTCDate(31);
 		
+		// Compute the min/max days to limit the scale bar scrolling
+		this.maxDays = getDaysBetween( this.options.scaleBounds.max, this.minDate );
+		this.minDays = getDaysBetween( this.options.scaleBounds.min, this.minDate );
+		
 		var monthDay=["31","28","31","30","31","30","31","31","30","31","30","31"];
 		for ( var i = startYear; i <= endYear; i++ ) {
 			var isBissextile = ((i % 4) == 0) && ((i % 400) != 0);
@@ -166,8 +198,6 @@ $.widget( "ui.dateRangeSlider", {
 		scale.on('selectstart', function() { return false; });
 		
 		// Add it to the DOM
-		// Create a container for the scale bar, needed to manage scrolling
-		this.container = $('<div class="dateSlider-container"></div>').appendTo(this.element);
 		this.scaleBar = scale.appendTo(this.container);
 	},
 		
@@ -178,7 +208,11 @@ $.widget( "ui.dateRangeSlider", {
 		
 		if ( this.dragLeftDays < this.scalePosition ) {
 			this.dragLeftDays = this.scalePosition;
-		} else if (this.dragRightDays > this.dragLeftDays + this.options.boundsMaxLength) {
+		} else if ( this.dragLeftDays < this.minDays ) {
+			this.dragLeftDays = this.minDays;
+		} 
+		
+		if (this.dragRightDays > this.dragLeftDays + this.options.boundsMaxLength) {
 			this.dragLeftDays = this.dragRightDays - this.options.boundsMaxLength;
 		} else if ( this.dragLeftDays > this.dragRightDays - this.options.boundsMinLength ) {
 			this.dragLeftDays = this.dragRightDays - this.options.boundsMinLength;
@@ -257,9 +291,9 @@ $.widget( "ui.dateRangeSlider", {
 	
 	// Move the drag given the days number
 	_moveDrag: function(days) {
-		if ( this.dragLeftDays + days <= 0 ) {
-			this.dragRightDays -= this.dragLeftDays;
-			this.dragLeftDays = 0;
+		if ( this.dragLeftDays + days <= this.minDays ) {
+			this.dragRightDays += this.minDays - this.dragLeftDays;
+			this.dragLeftDays = this.minDays;
 			$('.dateSlider-leftArrow').addClass('ui-disabled');
 		} 
 		else if ( this.dragRightDays + days >= this.maxDays ) {
@@ -343,7 +377,21 @@ $.widget( "ui.dateRangeSlider", {
 
 	// _setOption is called for each individual option that is changing
 	_setOption: function( key, value ) {
-		// TODO : manage options?
+	
+		switch (key)
+		{
+			case 'bounds':
+				this.options.bounds = value;
+				this._updateDragBar();
+				break;
+				
+			case 'scaleBounds':
+				this.options.scaleBounds = value;
+				this._createScaleBar();
+				break;
+			
+		}
+		
 		// in 1.9 would use _super
 		$.Widget.prototype._setOption.call( this, key, value );
 		
