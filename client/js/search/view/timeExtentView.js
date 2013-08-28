@@ -10,6 +10,7 @@ define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResul
 var TimeExtentView = Backbone.View.extend({
 
 	initialize : function(options){
+			
 		// Refresh the dates and time slider checkbox when the values has been changed on the model 
 		//typically for shared parameters urls
 		this.listenTo( this.model, "change:start", this.update);
@@ -24,7 +25,15 @@ var TimeExtentView = Backbone.View.extend({
 			var useTimeSlider = this.model.get('useTimeSlider');
 			if ( useTimeSlider  ) {
 				this.addTimeSlider();
-			}		
+			}
+			
+			var dateRangeOptions = {
+				startYear: this.model.dataset.get("startDate").getFullYear(),
+				endYear: this.model.dataset.get("endDate").getFullYear()
+			};
+			this.$fromDateInput.datebox("option", dateRangeOptions );
+			this.$toDateInput.datebox("option", dateRangeOptions );
+
 		});
 		
 		/**
