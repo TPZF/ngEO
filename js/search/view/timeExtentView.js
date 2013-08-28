@@ -17,12 +17,10 @@ var TimeExtentView = Backbone.View.extend({
 		this.searchCriteriaView = options.searchCriteriaView;
 		
 		/** 
-		 * This handler is called after the user has chosen a dataset, 
-		 * activated the timeslider checkbox and then selected a new dataset.
+		 * This handler is called after the user has chosen a dataset, and the dataset has been loaded.
 		 * It is used to recreate time slider for the dataset.
 		 */
-		this.listenTo( this.model, "datasetLoaded", function(){
-			
+		this.listenTo( this.model, "datasetLoaded", function(){	
 			var useTimeSlider = this.model.get('useTimeSlider');
 			if ( useTimeSlider  ) {
 				this.addTimeSlider();
@@ -31,15 +29,15 @@ var TimeExtentView = Backbone.View.extend({
 		
 		/**
 		 * This handler is called when the dataset has been changed and the time slider is active.
-		 * Remove the time slider because the scale bounds needs to be changed
+		 * Remove the time slider because the scale bounds needs to be changed, and the user cannot do an automatic search
 		 */
 		this.listenTo( this.model, "change:datasetId", function(){
 			//if the selection has changed and a time slider exists remove it
-			if ($('#dateRangeSlider').length != 0){
+			if ( this.$dateRangeSlider.length != 0){
 				this.removeTimeSlider();
 			}
 		});
-		
+				
 	},
 	
 	events :{
@@ -67,8 +65,8 @@ var TimeExtentView = Backbone.View.extend({
 			// Display the time slider in the bottom of the window when 
 			if ( checked ) {
 				//disable the dates start and stop widgets if the time slider is enabled
-				$("#fromDateInput").datebox("disable");
-				$("#toDateInput").datebox("disable");
+				this.$fromDateInput.datebox("disable");
+				this.$toDateInput.datebox("disable");
 				//disable the submit search button
 				//this.searchCriteriaView.searchButton.button('disable');
 				//hide the search criteria widget when the time slider is enabled
@@ -79,8 +77,8 @@ var TimeExtentView = Backbone.View.extend({
 				this.removeTimeSlider();
 				
 				//enable the dates start and stop widgets if the time slider is disabled
-				$("#fromDateInput").datebox("enable");
-				$("#toDateInput").datebox("enable");
+				this.$fromDateInput.datebox("enable");
+				this.$toDateInput.datebox("enable");
 				//this.searchCriteriaView.searchButton.button('enable');
 			} 
 			
@@ -90,54 +88,55 @@ var TimeExtentView = Backbone.View.extend({
 	
 	// Add the time slider to the map
 	addTimeSlider: function() {
-		var dateRangeSlider = $('#dateRangeSlider').show();
 		
-		// Compute the range for the full time slider scale
-		var width = Configuration.localConfig.timeSlider.scaleYearsWidth; 
-		var scaleDate = new Date( this.model.get("stop").getTime() );
-		scaleDate.setUTCFullYear( scaleDate.getUTCFullYear() - width );
-		
-		// Compute the range for time slider to begin, max to 1 month before the stop date
-		// Reset the time to 0 to have the full day in the range
-		var start = new Date( this.model.get("stop").getTime() - Configuration.localConfig.timeSlider.startRangeWidthInDays * 24 * 3600 * 1000 );
-		start.setUTCHours(0);
-		start.setUTCMinutes(0);
-		start.setUTCSeconds(0);
-		start.setUTCMilliseconds(0);
-		this.model.set( "start", start );
-
-		var self = this;
-		
-		// Clean-up previous
-		// TODO : a refresh method will be nice...
-		if ( dateRangeSlider.is(':ui-dateRangeSlider')) {
-			dateRangeSlider.dateRangeSlider('destroy');
-		}
-		dateRangeSlider.dateRangeSlider({
+		this.$dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
+		this.$dateRangeSlider.dateRangeSlider({
 			boundsMaxLength: Configuration.localConfig.timeSlider.boundsMaxLength,
 			boundsMinLength: Configuration.localConfig.timeSlider.boundsMinLength,
 			bounds: { min : this.model.get("start"), 
 				max : this.model.get("stop")
 			},
-			scaleBounds: { min : scaleDate, 
-				max : this.model.get("stop")
+			scaleBounds: { min : this.model.dataset.get("startDate"), 
+				max : this.model.dataset.get("endDate")
 			},
-			change: function(bounds) {
-					self.model.set({ start: bounds.min,
-						stop: bounds.max });
-					SearchResults.launch( self.model.getOpenSearchURL() );
-				}
+			change: $.proxy( this.onTimeSliderChanged, this )
+		});
+		
+	},
+	
+	// Call when time slider has changed
+	onTimeSliderChanged: function(bounds) {
+		// Update the model
+		// Silent to avoid double update
+		this.model.set({ start: bounds.min,
+			stop: bounds.max }, {
+				silent: true
 			});
+		// Update the inputs
+		this.$fromDateInput.val( bounds.min.toISODateString() );
+		this.$toDateInput.val( bounds.max.toISODateString() );
+		
+		// Launch a new search
+		SearchResults.launch( this.model.getOpenSearchURL() );
 	},
 	
 	// Remove the time slider
 	removeTimeSlider: function() {
-		$('#dateRangeSlider').hide();
+		this.$dateRangeSlider.remove();
+		this.$dateRangeSlider = $();
 	},
 	
+	// Update the view when the model has changed
 	update: function() {
-		$('#fromDateInput').val( this.model.get("start").toISODateString() );
-		$('#toDateInput').val( this.model.get("stop").toISODateString() );
+		this.$fromDateInput.val( this.model.get("start").toISODateString() );
+		this.$toDateInput.val( this.model.get("stop").toISODateString() );
+		
+		if ( this.$dateRangeSlider.length > 0 ) {
+			this.$dateRangeSlider.dateRangeSlider('option','bounds', { 
+				min : this.model.get("start"), 
+				max : this.model.get("stop")
+			});
+		}
 		//Uncomment to use back times
 //		$('#fromTimeInput').val( this.model.get("startTime") );
 //		$('#toTimeInput').val( this.model.get("stopTime") );
@@ -147,13 +146,18 @@ var TimeExtentView = Backbone.View.extend({
 		var content = _.template(dateCriteria_template, this.model);
 		this.$el.append($(content));
 		
+		// Keep the DOM elements needed by the view
+		this.$fromDateInput = this.$el.find("#fromDateInput");
+		this.$toDateInput = this.$el.find("#toDateInput");
+		this.$dateRangeSlider = $();
+		
 		// Need to call create to disable the datebox when timeSlider is enabled by default
 		this.$el.trigger('create');
 
 		if ( this.model.get("useTimeSlider") ) {
 			//disable the dates start and stop widgets if the time slider is enabled
-			$("#fromDateInput").datebox("disable");
-			$("#toDateInput").datebox("disable");
+			this.$fromDateInput.datebox("disable");
+			this.$toDateInput.datebox("disable");
 		}
 
 		return this;
