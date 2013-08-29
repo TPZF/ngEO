@@ -22,11 +22,18 @@
             [ "S1", "OPT", "ice mapping", "LD_SENTINEL_1", "7"],
             
             [ "S2", "", "land mapping", "SENTINEL2_L1", "7"],
-            
+            [ "S2", "", "land mapping", "Sentinel2", "3"],
+           
             [ "S3", "", "land mapping", "SENTINEL3", "7"],
             [ "S3", "", "", "SENTINEL3_L1", "7"], 
-            [ "S3", "SAR", "land mapping", "SENTINEL3_L2","7"]
-         ]
+            [ "S3", "SAR", "land mapping", "SENTINEL3_L2","7"],
+             
+			[ "", "", "", "Line","1"],
+			
+			[ "", "", "", "Crossing","2"],
+			
+ 			[ "", "", "", "Invalid","0"]
+       ]
     }
         
 } 

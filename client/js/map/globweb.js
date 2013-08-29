@@ -77,10 +77,11 @@ GlobWebMapEngine = function( parentElement )
 /**
  * Add a style
  */
-GlobWebMapEngine.prototype.addStyle = function(name,defaut,select) {
+GlobWebMapEngine.prototype.addStyle = function(name, defaut, select, highlight) {
 	this.styles[name] = {
 		'default' : new GlobWeb.FeatureStyle(defaut),
-		'select' : new GlobWeb.FeatureStyle(select)
+		'select' : new GlobWeb.FeatureStyle(select),
+		'highlight' : new GlobWeb.FeatureStyle(highlight)
 	};
 	
 	// Convert color
@@ -89,6 +90,8 @@ GlobWebMapEngine.prototype.addStyle = function(name,defaut,select) {
 		this.styles[name]['default'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(defaut.strokeColor);
 	if (select && select.strokeColor)
 		this.styles[name]['select'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(select.strokeColor);
+	if (highlight && highlight.strokeColor)
+		this.styles[name]['highlight'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(highlight.strokeColor);
 };
 
 /**
@@ -154,6 +157,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		}
 		gwLayer = new GlobWeb.WMTSLayer(config);
 		break;
+	case "FEATURE":
 	case "JSON":
 	case "GEOJSON":
 		gwLayer = new GlobWeb.VectorLayer({ 

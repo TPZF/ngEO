@@ -29,6 +29,15 @@ fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, d
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ASA_WS__0P']  = JSON.parse(data);
 });
+fs.readFile('./productSearch/Sentinel2_response.json', 'utf8', function (err, data) {
+	featureCollections['Sentinel2']  = JSON.parse(data);
+});
+fs.readFile('./productSearch/Line_response.json', 'utf8', function (err, data) {
+	featureCollections['Line']  = JSON.parse(data);
+});
+fs.readFile('./productSearch/Crossing_response.json', 'utf8', function (err, data) {
+	featureCollections['Crossing']  = JSON.parse(data);
+});
 
 /**
  * Time filter
@@ -59,6 +68,9 @@ var sortBytTime = function(a,b) {
  * Geometry contains
  */
 var contains = function(g1,g2) {
+	if ( g2.type == "LineString" )
+		return true;
+		
 	var coords = g2.type == "MultiPolygon" ? g2.coordinates[0][0] : g2.coordinates[0];
 	for ( var i =0; i < coords.length; i++ ) {
 		if ( g1.contains( new terraformer.Point( coords[i] ) ) )

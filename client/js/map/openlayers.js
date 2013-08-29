@@ -281,6 +281,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			});
 		}
 		break;
+	case "FEATURE":
 	case "JSON":
 	case "GEOJSON":
 		olLayer = new OpenLayers.Layer.Vector(layer.name, {

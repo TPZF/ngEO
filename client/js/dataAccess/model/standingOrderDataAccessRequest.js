@@ -257,7 +257,7 @@ var StandingOrderDataAccessRequest = {
 	
 }
 
-//add DataAccessRequest methods to SimpleDataAccessRequest
+//add DataAccessRequest methods to StandingOrderDataAccessRequest
 _.extend(StandingOrderDataAccessRequest, DataAccessRequest);
 
 return StandingOrderDataAccessRequest;

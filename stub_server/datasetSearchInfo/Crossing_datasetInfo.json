@@ -1,0 +1,36 @@
+{
+	"datasetSearchInfo": {
+		"dataSetId": "Crossing",
+		"description":"",
+		"keywords": [{"keyword":""}],
+		"downloadOptions": {
+			"downloadOption": [{ 
+				"argumentName":"DownloadMode",
+				"description": "wait until completion or download continuously",
+				"value": [ {"name": "DLcontinuous",
+						"humanReadable":"Download continuously",
+						"sizeFactor":"1"
+						},{ "name":"DLcomplete",
+						    "humanReadable":"Download on completion",
+							"sizeFactor":"1"
+						}]
+					}]
+		},
+		"attributes": [{ 
+			"id":"start",
+			"type":"String",
+			"possibleValues":[]
+		}, {
+			"id":"stop",
+			"type":"String",
+			"possibleValues":[]
+		},{
+			"id":"bbox",
+			"type":"String",
+			"possibleValues":[]
+		}],
+		
+       "startDate": "01-01-2000T12:45:07:00.57Z",
+       "endDate": "31-07-2002T23:27:05:00.57Z"
+	}
+}
