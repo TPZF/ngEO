@@ -98,7 +98,7 @@ var TimeExtentView = Backbone.View.extend({
 	// Add the time slider to the map
 	addTimeSlider: function() {
 		
-		this.$dateRangeSlider = $('<div id="dateRangeSlider"></div>').appendTo('#map');
+		this.$dateRangeSlider = $('#dateRangeSlider');
 		this.$dateRangeSlider.dateRangeSlider({
 			boundsMaxLength: Configuration.localConfig.timeSlider.boundsMaxLength,
 			boundsMinLength: Configuration.localConfig.timeSlider.boundsMinLength,
@@ -131,7 +131,7 @@ var TimeExtentView = Backbone.View.extend({
 	
 	// Remove the time slider
 	removeTimeSlider: function() {
-		this.$dateRangeSlider.remove();
+		this.$dateRangeSlider.dateRangeSlider('destroy');
 		this.$dateRangeSlider = $();
 	},
 	
