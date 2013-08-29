@@ -129,7 +129,7 @@ var MapPopup = function(container) {
 				content += '<p>Date: ' + products[0].properties.EarthObservation.gml_beginPosition + '</p>';
 			}
 		} else {
-			content = products.length + " products selected.<br>Click again to cycle through the different products.";
+			content = products.length + " products highlighted.<br>Click again to cycle through the different products.";
 			if ( adv ) {
 				content += "<p>Products:</p>";
 				for ( var i = 0; i < products.length; i++ ) {
