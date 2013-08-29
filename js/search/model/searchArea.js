@@ -127,7 +127,8 @@ var SearchArea = function() {
 		return text;
 	};
 	
-	// Transform to WKT
+	//Transform to WKT
+	//NGEO 509 : it is requested to rollback the changes !
 	this.toWKT = function() {
 		var coords = _feature.geometry.coordinates;
 		var param = "POLYGON(";
@@ -154,7 +155,6 @@ var SearchArea = function() {
 	this.getOpenSearchParameter = function() {
 		var param;
 		if (_mode == SearchArea.POLYGON) {
-		
 			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
 			param = "geom=" + this.toWKT(); 
 		

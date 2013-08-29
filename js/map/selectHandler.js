@@ -43,7 +43,31 @@ var pointInRing = function ( point, ring )
 		}
 	}
 	return inPoly;
-}
+};
+
+
+
+/**
+ * Check if the point is inside the given geometry
+ */
+var pointInGeometry = function( point, geometry )
+{
+	switch (geometry.type)
+	{
+	case "MultiPolygon":
+		var inside = false;
+		for ( var i = 0; i < geometry.coordinates.length && !inside; i++ )
+		{
+			inside = pointInRing( point, geometry.coordinates[i][0] );
+		}
+		return inside;
+	case "Polygon":
+		return pointInRing( point, geometry.coordinates[0] );
+	default:
+		return false;
+	}
+};
+
 
 /**
  * Get the feature from a point : test if the point is inside the footprint
@@ -51,12 +75,10 @@ var pointInRing = function ( point, ring )
 var getFeaturesFromPoint = function(lonlat) {
 
 	var features = [];
-	
-	
+		
 	for ( var i = 0; i < layer.features.length; i++ ) {
 		var feature = layer.features[i];
-		var isMultiPolygon = feature.geometry.type == "MultiPolygon";
-		if ( pointInRing(lonlat,isMultiPolygon ? feature.geometry.coordinates[0][0] : feature.geometry.coordinates[0]) ) {
+		if ( pointInGeometry(lonlat,feature.geometry) ) {
 			features.push( feature );
 		}
 	}
@@ -156,9 +178,18 @@ function clearStack() {
  * Public interface
  */
 return {
-	start: function(l) {
-		layer = l;
-		
+
+	/**
+	 * Initialize the select handler
+	 */
+	initialize: function(options) {
+		layer = options.layer;
+	},
+	
+	/**
+	 * Start the handler
+	 */
+	start: function() {		
 		mapEngine = Map.getMapEngine();
 		
 		// Click is not used because OpenLayers is messing up with click when navigation is active
@@ -170,6 +201,9 @@ return {
 
 	},
 	
+	/**
+	 * Stop the handler
+	 */
 	stop: function() {
 		mapEngine.unsubscribe( 'mousedown', onMouseDown);
 		mapEngine.unsubscribe( 'mouseup', mapClickHandler);

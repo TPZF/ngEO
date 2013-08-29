@@ -334,35 +334,46 @@ return {
 		
 		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
 		SearchResults.on('zoomToFeature', Map.zoomToFeature);
+		
 		SearchResults.on('selectFeatures', function(features) {
 			footprintLayer.modifyFeaturesStyle(features, "select");
 			browsesLayer.addFeatures(features);
 		});
 		SearchResults.on('unselectFeatures', function(features) {
-			footprintLayer.modifyFeaturesStyle(features, "default");
+			footprintLayer.revertFeaturesStyle(features);
 			browsesLayer.removeFeatures(features);
 		});
-		SearchResults.on('highlightFeature', function(feature,prevFeature,searchResults) {
-			if ( prevFeature ) {
-				if ( searchResults.isSelected(prevFeature) ) {
-					footprintLayer.modifyFeaturesStyle([prevFeature], "select" );
-				} else {
-					footprintLayer.modifyFeaturesStyle([prevFeature], "default" );
-					browsesLayer.removeFeatures([prevFeature]);
+		SearchResults.on('highlightFeatures', function(features,prevFeatures,searchResults) {
+			
+			if ( prevFeatures ) {
+				
+				for ( var i = 0; i < prevFeatures.length; i++ ) {
+
+					if ( searchResults.isSelected(prevFeatures[i]) ) {
+						footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select" );
+					} else {
+						footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default" );
+						browsesLayer.removeFeatures([prevFeatures[i]]);
+					}
 				}
 			}
 			
-			if ( feature ) {
-				footprintLayer.modifyFeaturesStyle([feature], "highlight");
-				browsesLayer.addFeatures([feature]);
+			if ( features ) {
+				for ( var i = 0; i < features.length; i++ ) {
+					footprintLayer.modifyFeaturesStyle([features[i]], "highlight");
+				}
 			}
 		});	
 		
-		// TODO : maybe find a better way for the default handler ?
-		SelectHandler.start(footprintLayer);
+		// Initialize the default handler
+		SelectHandler.initialize({
+			layer: footprintLayer
+		});
+		// Start it
+		SelectHandler.start();
 
 		// Connect with map feature picking
-		Map.on('pickedFeatures', SearchResults.setSelection, SearchResults);
+		Map.on('pickedFeatures', SearchResults.highlight, SearchResults);
 		
 		//display a pop-up message when the product search has failed
 		SearchResults.on('error:features', function(searchUrl){

@@ -37,8 +37,18 @@ var Dataset = Backbone.Model.extend({
 				resp.keywords = response.datasetSearchInfo.keywords;
 			}
 			
-			resp.startDate = response.datasetSearchInfo.startDate;
-			resp.endDate = response.datasetSearchInfo.endDate;
+			// Set the start/end date for the dataset, ensure there is always a valid time extent
+			if ( response.datasetSearchInfo.endDate ) {
+				resp.endDate = Date.fromISOString( response.datasetSearchInfo.endDate );
+			} else {
+				resp.endDate =  new Date();
+			}
+			if (response.datasetSearchInfo.startDate) {
+				resp.startDate = Date.fromISOString( response.datasetSearchInfo.startDate );
+			} else {
+				resp.startDate = new Date( resp.endDate.getTime() );
+				resp.startDate.setUTCFullYear( resp.endDate.getUTCFullYear() - 10 );
+			}
 		}
 		return resp;
 	},
