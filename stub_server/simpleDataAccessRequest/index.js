@@ -12,7 +12,11 @@ module.exports = function(req, res){
 			var response = JSON.parse(data);
 			console.log(req.data);
 			response.dataAccessRequestStatus.dlManagerId = req.body.SimpleDataAccessRequest.downloadLocation.DownloadManagerId;
-			response.dataAccessRequestStatus.productStatuses.length = req.body.SimpleDataAccessRequest.productURLs.length;
+			
+			//add as many blocks to the response as the numbers of requested products
+			for (var i=0; i<req.body.SimpleDataAccessRequest.productURLs.length-1;i++){
+				response.dataAccessRequestStatus.productStatuses.push(response.dataAccessRequestStatus.productStatuses[0]);
+			}
 			res.send(response);
 		});
 		
