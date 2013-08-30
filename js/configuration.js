@@ -40,7 +40,7 @@ var _get = function(object,path,defaultValue) {
 var configuration = {
 
 	// The base url to retreive the configuration
-	url : '../conf/configuration.json',
+	url : 'conf/configuration.json',
 	
 	// The base server url
 	baseServerUrl : '/ngeo',
