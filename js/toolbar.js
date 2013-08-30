@@ -24,6 +24,18 @@ $.widget( "ngeo.toolbar", {
 			
 		// Add text for each element
 		this.element.find('command').append('<div class="tb-button"><div class="tb-icon"></div></div>');
+		
+		// Take care to set the data-help on the tb-icon (now the element to receive click)
+		this.element.find('command').each( function() {
+			var $this = $(this);
+			var contextHelp = $this.data('help');
+			if ( contextHelp ) {
+				// Add it to the lowest element
+				$this.find('.tb-icon').attr('data-help', contextHelp);
+				// Remove it from the container, not needed anymore
+				$this.removeAttr('data-help');
+			}
+		});
 	
 		if ( this.options.onlyIcon ) {
 			this.element.find('.tb-separator').css({ height: '24px' });
