@@ -167,12 +167,12 @@
 		"layers": [{
 			"name": "Earthquake Feed (GeoRSS)",
 			"type": "GeoRSS",
-			"location": "../data/eqs7day-M5.xml",
+			"location": "data/eqs7day-M5.xml",
 			"visible": false
 		}, {
 			"name": "USGS Real-time Earthquakes (KML)",
 			"type": "KML",
-			"location": "../data/earthquake.kml",
+			"location": "data/earthquake.kml",
 			"visible": false
 		}, {
 /*			"name": "States (WFS)",
