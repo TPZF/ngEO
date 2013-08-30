@@ -20,9 +20,7 @@ define( ['jquery', 'backbone', 'configuration',
 			//triggered when Share button is clicked
 			'click #shareSTORequest' : function(event){
 				$("#sharedSTOUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + this.request.getSharedURL() + '<b>');	
-				$('#sharedSTOUrlPopup').popup("open",  $( {} )
-					    .jqmData( "position-to", "window" )
-					    .jqmData( "transition", "slide" ));
+				$('#sharedSTOUrlPopup').popup('open');
 				$('#sharedSTOUrlPopup').trigger('create');
 			},
 			
