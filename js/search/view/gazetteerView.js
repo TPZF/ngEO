@@ -34,7 +34,14 @@ var GazetteerView = Backbone.View.extend({
 				Gazetteer.query({
 						query: queryTerm,
 						result: function(data) {
+							
 							$('#search-gazetteer').textinput('enable');
+							//if no results are found clear the the search area layer
+							if (data.length == 0){
+								self.model.searchArea.empty();
+								self.parentView.updateSearchAreaLayer();
+								return;
+							}
 							
 							// Build a list view for the results
 							var listView = $('<ul data-inset="true"></ul>');
