@@ -84,7 +84,7 @@
                 "eop_acquisitionType": "NOMINAL",
                 "eop_acquisitionSubType": "subtype",
                 "eop_productType": "S1_IW_GRDH_1S",
-                "eop_status": "PLANNED",
+                "eop_status": "ARCHIVED",
                 "eop_imageQualityDegradation": 10.5,
                 "eop_imageQualityStatus": "NOMINAL",
                 "eop_imageQualityDegradationTag": ["RADIOMETRY", "MISSING_LINES"],
@@ -705,7 +705,6 @@
 
       "properties":
       {
-     	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
      	
         "EarthObservation":
           {
@@ -899,7 +898,7 @@
 
       "properties":
       
-      { "productUrl": "http://localhost:3000/ngeo/files/product.zip",
+      { 
         
         "EarthObservation":
           {
@@ -996,7 +995,6 @@
 
       "properties":
       {
-       	"productUrl": "http://localhost:3000/ngeo/files/product.zip",
         
         "EarthObservation":
           {
