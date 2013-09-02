@@ -58,6 +58,7 @@
 	optimizeCss: "none",
 	optimize: "uglify",
 	modules: [
+		{ name: "home" },
 		{ name: "help" },
 		{ name: "main" },
 		{ name: "map/map", exclude: ["main"]},
