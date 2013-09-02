@@ -31,9 +31,19 @@ var DownloadOptionsView = Backbone.View.extend({
 		
 		// For input checkbox, ie cropProductSearhArea
 		'change input': function(event) {
-			var value = $(event.currentTarget).val();
-			this.model.set( event.currentTarget.id, value );
+			//check the status of the label wrapping the checkbox since
+			//this label stores the checkbox status (cf jqm)
+			var labelSelector  = "#" + event.currentTarget.id + "_label";
+			var $targetLabel = $(labelSelector);
+			var checked = $targetLabel.hasClass('ui-checkbox-on');			
+			if (!checked){
+				this.model.set( event.currentTarget.id, true );
+			}else{
+				this.model.unset( event.currentTarget.id );
+			}
+			
 		}
+		
 	},
 	
 	render: function(){
