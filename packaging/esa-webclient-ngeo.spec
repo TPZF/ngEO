@@ -1,6 +1,9 @@
+%define	version %(echo $WEBC_VERSION)
+%define	release %(echo $WEBC_RELEASE)
+
 Name:           esa-webclient-ngeo
-Version:        1.1
-Release:        SNAPSHOT20130429
+Version:        %version
+Release:        %release
 Summary:        The ngEO Web Client
 
 Group:       	NGEO   

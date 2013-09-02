@@ -1,3 +1,7 @@
+
+export WEBC_VERSION=1.6
+export WEBC_RELEASE=SNAPSHOT20130902
+
 # Build the WebClient first : minificaiton, combination
 cd ../build
 ./build.sh
@@ -25,3 +29,12 @@ mv esa-webclient-testserver-ngeo.tar.gz ~/rpmbuild/SOURCES
 rpmbuild -ba esa-webclient-testserver-ngeo.spec
 
 
+# build the dist
+cd ../
+rm -rf dist
+mkdir dist
+cp ~/rpmbuild/RPMS/noarch/esa-webclient-ngeo-$WEBC_VERSION-$WEBC_RELEASE.noarch.rpm dist/
+cp ~/rpmbuild/RPMS/noarch/esa-webclient-testserver-ngeo-$WEBC_VERSION-$WEBC_RELEASE.noarch.rpm dist/
+cp ./packaging/ngeo dist
+cp ./packaging/ngeo-install.sh dist
+sed -i "s/VERSION-RELEASE/$WEBC_VERSION-$WEBC_RELEASE/g" dist/ngeo-install.sh
