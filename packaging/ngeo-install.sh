@@ -58,8 +58,8 @@ ngeo_install() {
     echo "------------------------------------------------------------------------------" 
     echo "Step 3/4: NGEO Component Installation " 
     echo "------------------------------------------------------------------------------" 
-	yum install -y httpd
-	rpm -Uvh esa-webclient-ngeo-VERSION-RELEASE.noarch.rpm
+	sudo yum install -y httpd
+	sudo rpm -Uvh esa-webclient-ngeo-VERSION-RELEASE.noarch.rpm
 	
     # --------------------------------------------------------------------------
     # Step 4/4: NGEO Component Configuration as Service 
@@ -67,8 +67,8 @@ ngeo_install() {
     echo "------------------------------------------------------------------------------" 
     echo "Step 4/4: NGEO Component Configuration as Service " 
     echo "------------------------------------------------------------------------------" 
-    \cp ngeo /etc/init.d  
-    chkconfig --level 235 ngeo on 
+    sudo \cp ngeo /etc/init.d  
+    sudo chkconfig --level 235 ngeo on 
 
     echo "------------------------------------------------------------------------------" 
     echo "NGEO $SUBSYSTEM Installed. PLEASE REBOOT the machine to finish. " 
@@ -87,10 +87,10 @@ ngeo_uninstall() {
     echo "------------------------------------------------------------------------------" 
 	echo "Stop NGEO service"
 	if [ -f /etc/init.d/ngeo ] ; then
-		/etc/init.d/ngeo stop
+		sudo /etc/init.d/ngeo stop
 	
 		echo "Delete NGEO service"
-		rm -f /etc/init.d/ngeo
+		sudo rm -f /etc/init.d/ngeo
 	fi
 	
     # --------------------------------------------------------------------------
@@ -101,7 +101,7 @@ ngeo_uninstall() {
     echo "------------------------------------------------------------------------------" 
 
     echo "Delete client RPM"
-    rpm -e esa-webclient-ngeo
+    sudo rpm -e esa-webclient-ngeo
     
     # --------------------------------------------------------------------------
     # Step 3/4: Uninstall OSS/COTS
