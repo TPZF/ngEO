@@ -143,7 +143,7 @@ return {
 		
 		//Route standing order url
 		router.route(
-				"data-services-area/sto/:datasetId?:query", 
+				"data-services-area/sto/:datasetId/search?:query", 
 				"sto", function(datasetId, query) {		
 						
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
