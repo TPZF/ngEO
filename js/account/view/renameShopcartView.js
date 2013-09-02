@@ -1,6 +1,6 @@
 
 
-define( ['jquery', 'logger', 'backbone',  'account/view/CreateShopcartView'], 
+define( ['jquery', 'logger', 'backbone',  'account/view/createShopcartView'], 
 		function($, Logger, Backbone, CreateShopcartView) {
 
 	
