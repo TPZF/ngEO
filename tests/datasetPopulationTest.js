@@ -9,7 +9,7 @@ QUnit.asyncTest("Check Received datasets", 9, function () {
 	model.fetch().done( function() {
 			var matrix = model.get('matrix');
 			QUnit.ok($.isArray(matrix),"Matrix retrieved");
-			QUnit.ok(matrix.length == 16 ,"Datasets length 16");
+			QUnit.ok(matrix.length == 20 , "Datasets length 20");
 			
 			//check the criteria 
 			QUnit.ok(model.get('criterias').length == 3,"three criteria found");
@@ -26,7 +26,7 @@ QUnit.asyncTest("Check Received datasets", 9, function () {
 			QUnit.ok(datasets.length==3 , "Filtred 3 : mission:S3 datasets");
 			
 			datasets = model.filterDatasets([ '', '', 'land mapping' ]);
-			QUnit.ok(datasets.length==5 , "Filtred 5 : keyword:land mapping datasets");
+			QUnit.ok(datasets.length == 6 , "Filtred 6 : keyword:land mapping datasets");
 			
 			QUnit.start();
 		});
