@@ -399,7 +399,7 @@ var DataSetSearch = Backbone.Model.extend({
 						
 					} else if (self.attributes[option.argumentName]) {
 						
-						url += option.argumentName + ':' + self.searchArea.toWKT(); 
+						downloadOptionsStr += option.argumentName + ':' + self.searchArea.toWKT(); 
 					}
 
 					if (!addedOption){
