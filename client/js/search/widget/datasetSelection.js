@@ -33,7 +33,7 @@ return function(element) {
 		},//when the fetch fails display an error message and disable the datasets "button"
 		// so the application is still usable and the user can still see the other menus.
 		error: function(){
-			$("#dataset").parent().addClass('ui-disabled');
+			$("#dataset").addClass('ui-disabled');
 			Logger.error('Cannot retreive the DataSetPopulationMatrix from the server');
 		}
 	});

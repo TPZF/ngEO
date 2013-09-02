@@ -51,7 +51,7 @@ define(['jquery', 'configuration', 'dataAccess/model/downloadManagers', 'account
 						 
 						QUnit.ok($.isArray(filtredStatuses),"filtred Statuses with DM_01");
 						QUnit.ok(filtredStatuses.length == 1,"filtred Statuses length OK");
-						QUnit.ok(filtredStatuses[0].downloadManagerName == "Magellium Limited Main DM" ,"downloadManagerName DM_01 Ok");
+						QUnit.ok(filtredStatuses[0].downloadManagerName == "Magellium Limited Main DM 1" ,"downloadManagerName DM_01 Ok");
 						QUnit.ok(filtredStatuses[0].dlManagerId == 'DM_01' ,"dlManagerId DM_01 OK");
 						QUnit.ok(filtredStatuses[0].DARs.length == 3,"DARs length OK");
 					
@@ -60,7 +60,7 @@ define(['jquery', 'configuration', 'dataAccess/model/downloadManagers', 'account
 						 
 						QUnit.ok($.isArray(filtredStatuses),"filtred Statuses with DM_02");
 						QUnit.ok(filtredStatuses.length == 1,"filtred Statuses length OK");	
-						QUnit.ok(filtredStatuses[0].downloadManagerName == "TPZ Limited Main DM" ,"downloadManagerName DM_02 OK");
+						QUnit.ok(filtredStatuses[0].downloadManagerName == "TPZ Limited Main DM 2" ,"downloadManagerName DM_02 OK");
 						QUnit.ok(filtredStatuses[0].dlManagerId == 'DM_02',"dlManagerId DM_02 OK");
 						QUnit.ok(filtredStatuses[0].DARs.length == 4, "DARs for DM_02 length OK");
 					
