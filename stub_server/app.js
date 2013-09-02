@@ -75,7 +75,10 @@ app.get('/ngeo/shopcarts/:id?/:format?', shopcarts.get);
 app.post('/ngeo/shopcarts/:id?', shopcarts.post);
 
 //rename shopcart and update items interfaces
-app.put('/ngeo/shopcarts/:id(/items)?', shopcarts.put);
+app.put('/ngeo/shopcarts/:id', shopcarts.put);
+
+//commented shopcart items update
+//app.put('/ngeo/shopcarts/:id(/items)?', shopcarts.put)
 
 //delete shopcart and delete items of shopcart interfaces
 app.delete('/ngeo/shopcarts/:id', shopcarts.delete);

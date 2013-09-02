@@ -157,7 +157,7 @@ module.exports = {
 	
 	put : function(req, res){
 		//Rename shopcart 
-		if (req.body.id && req.body.name){	
+		if (req.params.id && req.body.name){	
 			var response = req.body;
 			res.send(response);
 		}
