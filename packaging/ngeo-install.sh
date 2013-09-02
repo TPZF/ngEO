@@ -21,10 +21,6 @@
 
 # Subsystem name
 SUBSYSTEM="WEBC"
-# Subsytem version
-XX="1.2"
-#Subsytem generation date
-YY="20130902"
 
 # ----------------------------------------------------------------------------
 # End of configuration section
@@ -40,12 +36,14 @@ ngeo_install() {
     echo "------------------------------------------------------------------------------"  
 
     # --------------------------------------------------------------------------
-    # Install Step 0: Uninstall previous version
+    # Install Step 0: Uninstall previous version if any
     # --------------------------------------------------------------------------
+    if rpm --quiet -q esa-webclient-ngeo; then
     echo "------------------------------------------------------------------------------" 
     echo "Step 0: Uninstall previous version " 
     echo "------------------------------------------------------------------------------" 
 	ngeo_uninstall
+    fi
 
     # --------------------------------------------------------------------------
     # Step 1/4: Software prerequisites                                           
@@ -61,7 +59,7 @@ ngeo_install() {
     echo "Step 3/4: NGEO Component Installation " 
     echo "------------------------------------------------------------------------------" 
 	yum install -y httpd
-	rpm –Uvh esa-webclient-ngeo-$XX-$YY.noarch.rpm
+	rpm -Uvh esa-webclient-ngeo-VERSION-RELEASE.noarch.rpm
 	
     # --------------------------------------------------------------------------
     # Step 4/4: NGEO Component Configuration as Service 
