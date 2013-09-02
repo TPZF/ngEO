@@ -1,5 +1,8 @@
-define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 'account/view/renameShopcartView','account/view/importShopcartView', 'text!account/template/shopcartManagerContent.html'], 
-			function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, ImportShopcartView, shopcartManagerContent_template) {
+define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 
+         'account/view/renameShopcartView', 'shopcart/widget/shopcartExportWidget', 
+         'account/view/importShopcartView', 'text!account/template/shopcartManagerContent.html'], 
+		function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, 
+				ShopcartExportWidget, ImportShopcartView, shopcartManagerContent_template) {
 
 var ShopcartManagerView = Backbone.View.extend({
 
@@ -115,7 +118,13 @@ var ShopcartManagerView = Backbone.View.extend({
 												.fail(function(xhr, textStatus, errorThrown){
 													self.showMessage(errorThrown);
 												});
-		}	
+		},
+		//added export as in the shopcart item view
+		'click #export_shp' : function(event){
+				
+			var shopcartExportWidget = new ShopcartExportWidget();
+			shopcartExportWidget.open();
+		}
 	},
 	
 	render : function(){
