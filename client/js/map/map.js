@@ -342,14 +342,21 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		},
 		
 		/**
-		 * Get the page (?) position from a lonlat
+		 * Get the pixel position (in the element) from a lonlat
 		 */
 		getPixelFromLonLat: function(lon,lat) {
 			return mapEngine.getPixelFromLonLat(lon,lat);
 		},
 		
 		/**
-		 * Get the page position from a lonlat
+		 * Get the lonlat from a pixel position (in the element) 
+		 */
+		getLonLatFromPixel: function(x,y) {
+			return mapEngine.getLonLatFromPixel(x,y);
+		},
+		
+		/**
+		 * Get the lonlat from an event
 		 */
 		getLonLatFromEvent: function(event) {
 			var rect = element.getBoundingClientRect();
