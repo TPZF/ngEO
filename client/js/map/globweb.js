@@ -227,10 +227,7 @@ GlobWebMapEngine.prototype.subscribe = function(name,callback)
 	case "init":
 		callback(this);
 		break;
-	case "startNavigation":
-		this.navigation.subscribe("modified",callback);
-		break;
-	case "endNavigation":
+	case "navigationModified":
 		this.navigation.subscribe("modified",callback);
 		break;
 	case "mousedown":

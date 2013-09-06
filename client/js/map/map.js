@@ -139,11 +139,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		mapEngine.zoomToExtent( maxExtent );
 		
 		// Subscribe to event
-		mapEngine.subscribe("endNavigation", function() {
-			self.trigger("endNavigation",self);
-		});
-		mapEngine.subscribe("startNavigation", function() {
-			self.trigger("startNavigation",self);
+		mapEngine.subscribe("navigationModified", function() {
+			self.trigger("extent:change",self);
 		});
 	};
 	

@@ -330,13 +330,9 @@ OpenLayersMapEngine.prototype.subscribe = function(name,callback)
 	case "init":
 		callback(this);
 		break;
-	case "startNavigation":
+	case "navigationModified":
 		// Attach events for navigation change
-		this._map.events.register("movestart", undefined, callback);
-		break;
-	case "endNavigation":
-		// Attach events for navigation change
-		this._map.events.register("moveend", undefined, callback);
+		this._map.events.register("move", undefined, callback);
 		break;
 	case "mousedown":
 	case "mouseup":
@@ -355,13 +351,9 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
 {
 	switch (name )
 	{
-	case "startNavigation":
+	case "navigationModified":
 		// Detach events for navigation change
-		this._map.events.unregister("movestart", undefined, callback);
-		break;
-	case "endNavigation":
-		// Detach events for navigation change
-		this._map.events.unregister("moveend", undefined, callback);
+		this._map.events.unregister("move", undefined, callback);
 		break;
 	case "mousedown":
 	case "mouseup":
