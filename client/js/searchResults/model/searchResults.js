@@ -141,6 +141,11 @@ var SearchResults = {
 		return this.selection.indexOf(feature) >= 0;
 	},
 	
+	// Check if a feature is highlighted
+	isHighlighted: function(feature) {
+		return this._highlighted.indexOf(feature) >= 0;
+	},
+	
 	// Highlight a feature, only one can be highlight at a time
 	highlight: function(features) {
 	
@@ -165,7 +170,7 @@ var SearchResults = {
 	// Unselect a feature
 	unselect: function(feature) {
 		this.selection.splice( this.selection.indexOf(feature), 1 );
-		this.trigger( "unselectFeatures", [feature] );
+		this.trigger( "unselectFeatures", [feature], this );
 	},
 
 	/** select all the items of the table which are not selected */
@@ -192,7 +197,7 @@ var SearchResults = {
 		}
 		this.selection = []	
 		if (oldSelection.length != 0){
-			this.trigger( "unselectFeatures", oldSelection );
+			this.trigger( "unselectFeatures", oldSelection, this );
 		}
 
 	},

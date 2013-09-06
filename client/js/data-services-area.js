@@ -207,9 +207,15 @@ return {
 			footprintLayer.modifyFeaturesStyle(features, "select");
 			browsesLayer.addFeatures(features);
 		});
-		SearchResults.on('unselectFeatures', function(features) {
-			footprintLayer.revertFeaturesStyle(features);
-			browsesLayer.removeFeatures(features);
+		SearchResults.on('unselectFeatures', function(features,searchResults) {
+			for ( var i = 0; i < features.length; i++ ) {
+				if ( searchResults.isHighlighted(features[i]) ) {
+					footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
+				} else {
+					footprintLayer.modifyFeaturesStyle([features[i]], "default" );
+					browsesLayer.removeFeatures([features[i]]);
+				}
+			}
 		});
 		SearchResults.on('highlightFeatures', function(features,prevFeatures,searchResults) {
 			
@@ -230,6 +236,7 @@ return {
 				for ( var i = 0; i < features.length; i++ ) {
 					footprintLayer.modifyFeaturesStyle([features[i]], "highlight");
 				}
+				browsesLayer.addFeatures(features);
 			}
 		});	
 		
