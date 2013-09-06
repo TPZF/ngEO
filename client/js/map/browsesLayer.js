@@ -6,18 +6,40 @@ define( ["configuration"],
 
 function( Configuration ) {
 
+var sortByTime = function(a,b) {
+			if ( a.time == b.time ) return 0;
+			if ( a.time < b.time ) return -1; else return 1;
+		};
+		
 var BrowsesLayer = function(params,mapEngine) {
 	this.params = params;
 	
-	// An object to store all internal layers
-	var browseLayers = {};
+	// A map between feature id and internal browse layer
+	var browseLayersMap = {};
+	// The array of browse layers
+	var browseLayers = [];
+	
+	
+	/**
+	 * Update the browser layers indices
+	 */
+	var updateBroweLayersIndex = function() {
+	
+		// First sort the browe layer
+		browseLayers.sort( sortByTime );
+		
+		// Then modify the browe layer indices
+		for ( var i = 0; i < browseLayers.length; i++ ) {
+			mapEngine.setLayerIndex( browseLayers[i].engineLayer, i+100 );
+		}
+	};
 	
 	/**
 	 * Add a browse for the given feature
 	 */
 	var addBrowse = function(feature,vis) {
 	
-		if (!browseLayers.hasOwnProperty(feature.id)) {
+		if (!browseLayersMap.hasOwnProperty(feature.id)) {
 	
 			var eo = feature.properties.EarthObservation;
 			if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return;
@@ -52,10 +74,16 @@ var BrowsesLayer = function(params,mapEngine) {
 					bbox: feature.bbox
 				};
 				
-				browseLayers[feature.id] = {
+				var browseLayerDesc = {
+					time:  eo.gml_endPosition,
 					params: config,
 					engineLayer: mapEngine.addLayer(config)
 				};
+				
+				browseLayersMap[feature.id] = browseLayerDesc;
+				browseLayers.push( browseLayerDesc );
+				
+				updateBroweLayersIndex();
 			}
 		}
 	};
@@ -65,9 +93,19 @@ var BrowsesLayer = function(params,mapEngine) {
 	 */
 	var removeBrowse = function(feature) {	
 		// Create the WMS if it does not exists
-		if (browseLayers.hasOwnProperty(feature.id)) {
-			mapEngine.removeLayer(browseLayers[ feature.id ].engineLayer);
-			delete browseLayers[ feature.id ];
+		if (browseLayersMap.hasOwnProperty(feature.id)) {
+		
+			// Get the browse layer structure from the map
+			var bl = browseLayersMap[ feature.id ];
+			
+			// Delete it
+			delete browseLayersMap[ feature.id ];
+			
+			// Remove browse layer from the current engine
+			mapEngine.removeLayer(bl.engineLayer);
+			
+			// Remove from array
+			browseLayers.splice( browseLayers.indexOf(bl), 1 );
 		}
 	};
 
@@ -76,37 +114,48 @@ var BrowsesLayer = function(params,mapEngine) {
 	 */
 	this.setVisible = function(vis) {
 		this.params.visible = vis;
-		for ( var x in browseLayers ) {
-			if ( browseLayers.hasOwnProperty(x) ) {
-				browseLayers[x].params.visible = vis;
-				mapEngine.setLayerVisible(browseLayers[x].engineLayer,vis);
-			}
+		for ( var i = 0; i < browseLayers.length; i++ ) {
+			browseLayers[i].params.visible = vis;
+			mapEngine.setLayerVisible(browseLayers[i].engineLayer,vis);
 		}
 	};
+	
+	/**
+	 * Clear the  browse layers
+	 */
 	this.clear = function() {
-		for ( var x in browseLayers ) {
-			if ( browseLayers.hasOwnProperty(x) ) {
-				mapEngine.removeLayer(browseLayers[x].engineLayer);
-			}
+		for ( var i = 0; i < browseLayers.length; i++ ) {
+			mapEngine.removeLayer(browseLayers[i].engineLayer);
 		}
-		browseLayers = {};
+		browseLayersMap = {};
+		browseLayers = [];
 	};
+	
+	/**
+	 * Add features to layer
+	 */
 	this.addFeatures = function(features) {
 		for ( var i = 0; i < features.length; i++ ) {
 			addBrowse( features[i], this.params.visible );
 		}
 	};
+
+	/**
+	 * Remove features form layer
+	 */
 	this.removeFeatures = function(features,style)  {
 		for ( var i = 0; i < features.length; i++ ) {
 			removeBrowse(features[i]);
 		}
 	};
+	
+	/**
+	 * Change engine
+	 */
 	this.changeEngine = function(me) {
 		mapEngine = me;
-		for ( var x in browseLayers ) {
-			if ( browseLayers.hasOwnProperty(x) ) {
-				browseLayers[x].engineLayer = mapEngine.addLayer( browseLayers[x].params );
-			}
+		for ( var i = 0; i < browseLayers.length; i++ ) {
+			browseLayers[i].engineLayer = mapEngine.addLayer( browseLayers[i].params );
 		}
 	};
 };

@@ -182,6 +182,13 @@ OpenLayersMapEngine.prototype.setLayerVisible = function(olLayer,vis) {
 }
 
 /**
+ * Set layer index
+ */
+OpenLayersMapEngine.prototype.setLayerIndex = function(olLayer,index) {
+	this._map.setLayerIndex(olLayer,index);
+}
+
+/**
  * Add a layer
  */
 OpenLayersMapEngine.prototype.addLayer = function(layer) {

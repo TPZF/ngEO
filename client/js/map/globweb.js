@@ -127,6 +127,13 @@ GlobWebMapEngine.prototype.setLayerVisible = function(gwLayer,vis) {
 }
 
 /**
+ * Set layer index
+ */
+GlobWebMapEngine.prototype.setLayerIndex = function(gwLayer,index) {
+	gwLayer.zIndex = index;
+}
+
+/**
  * Add a layer
  */
 GlobWebMapEngine.prototype.addLayer = function(layer) {
@@ -221,10 +228,10 @@ GlobWebMapEngine.prototype.subscribe = function(name,callback)
 		callback(this);
 		break;
 	case "startNavigation":
-		this.globe.subscribe("startNavigation",callback);
+		this.navigation.subscribe("modified",callback);
 		break;
 	case "endNavigation":
-		this.globe.subscribe("endNavigation",callback);
+		this.navigation.subscribe("modified",callback);
 		break;
 	case "mousedown":
 	case "mousemove":
