@@ -1,0 +1,117 @@
+
+/**
+ * Style for main table container
+ */
+ 
+// Table fill the parent space
+.table-view {
+	width: 100%;
+}
+
+// Scroll body with fixed header
+.table-content {
+	width: 100%;
+	height: 200px;
+	overflow-y: auto;
+	border-top: 1px solid @table-border-color;
+}
+
+@table-border-color: darken(white,40%);
+
+/**
+ * Style for header : some border and padding
+ */
+ 
+ // styling for header cell
+.table-view thead th {
+	padding: 4px 0px 4px 0px;
+	border-right: 1px solid @table-border-color;
+	
+	font-weight: bold;
+	cursor: pointer;
+	*cursor: hand;
+}
+
+// remove border from last cell
+.table-view thead th:last-child {
+	border-right: 0px solid @table-border-color;
+}
+
+// add border for bottom
+/*.table-header {
+	border-bottom: 1px solid @table-border-color;
+}*/
+
+/**
+ * Style for body
+ */
+ 
+.table-view td {
+    font-size: 12px;
+    text-align: center;
+	border-right: 1px solid @table-border-color;
+}
+
+.table-view td:last-child {
+	border-right: 0px solid @table-border-color;
+}
+
+
+// Color for Odd line
+.table-view tr.odd {
+	background-color: #E9E9E9;
+}
+
+// Color for Even line
+.table-view tr.even {
+	background-color: white;
+}
+
+// Color for Selected line 
+.table-view tr.row_selected {
+	background-color: #B0BED9;
+}
+
+
+// Used to display a lightweight checkbox in the dataTable
+.dataTables_chekbox {
+	display: inline-block;
+	border-radius: 3px;
+}
+
+// Add a nice background (taken from JQM) when checkbox is on
+.dataTables_chekbox.ui-icon-checkbox-on {
+	background-color: #4596CE;
+}
+
+
+/*
+ * Sorting
+ */
+.sorting_asc { background: url('../images/sort_asc.png') no-repeat center right; }
+.sorting_desc { background: url('../images/sort_desc.png') no-repeat center right; }
+
+/**
+ * Style for footer elements
+ */
+
+.table-filter { 
+
+	label {
+		font-size: 13px;
+		font-weight: bold;
+	}
+	
+	input {
+		display: inline;
+		width: auto;
+	}
+}
+
+.table-middleButtons  {
+	text-align: center;
+}
+
+.table-rightButtons  {
+	text-align: right;
+}
