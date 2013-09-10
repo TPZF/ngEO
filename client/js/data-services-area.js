@@ -203,8 +203,14 @@ return {
 		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
 		SearchResults.on('zoomToFeature', Map.zoomToFeature);
 		
-		SearchResults.on('selectFeatures', function(features) {
-			footprintLayer.modifyFeaturesStyle(features, "select");
+		SearchResults.on('selectFeatures', function(features,searchResults) {
+			for ( var i = 0; i < features.length; i++ ) {
+				if ( searchResults.isHighlighted(features[i]) ) {
+					footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
+				} else {
+					footprintLayer.modifyFeaturesStyle([features[i]], "select" );
+				}
+			}
 			browsesLayer.addFeatures(features);
 		});
 		SearchResults.on('unselectFeatures', function(features,searchResults) {
@@ -234,7 +240,11 @@ return {
 			
 			if ( features ) {
 				for ( var i = 0; i < features.length; i++ ) {
-					footprintLayer.modifyFeaturesStyle([features[i]], "highlight");
+					if ( searchResults.isSelected(features[i]) ) {
+						footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
+					} else {
+						footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
+					}
 				}
 				browsesLayer.addFeatures(features);
 			}

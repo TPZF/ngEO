@@ -121,12 +121,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		// Add the style in conf to the engines
 		for ( var x in mapConf.styles ) {
 			if ( mapConf.styles.hasOwnProperty(x) ) {
-				var style = mapConf.styles[x];
-				if ( style['default'] &&  style['select'] && style['highlight']) {
-					mapEngine.addStyle( x, style['default'], style['select'], style['highlight'] );
-				} else {
-					mapEngine.addStyle( x, style );
-				}
+				mapEngine.addStyle( x, mapConf.styles[x] );
 			}
 		}
 		

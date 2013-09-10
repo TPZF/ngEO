@@ -5,7 +5,7 @@ define(
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
-		
+
 /**
  * The model is the backbone model SearchResults 
  */
@@ -106,14 +106,28 @@ var SearchResultsTableView = Backbone.View.extend({
 	 */
 	highlightFeatureCallBack: function(features, prevFeatures) {
 		
+		if (!this.visible)
+			return;
+			
 		// Remove previous highlighted rows
 		this.table.find('.row_selected').removeClass('row_selected');
 		
-		var rows = this.table.$("tr",{order: "original"});
-		
-		for ( var i = 0; i < features.length; i++ ) {
-			var index = this.model.features.indexOf(features[i]);
-			rows.eq(index).addClass('row_selected');
+		if ( features.length > 0 ) {
+			var rows = this.table.$("tr",{order: "original"});
+			
+			var $scrollContainer = this.$el.find('.dataTables_scrollBody');
+			var highlightTop = 0;
+			for ( var i = 0; i < features.length; i++ ) {
+				var index = this.model.features.indexOf(features[i]);
+				var row = rows.eq(index);
+				row.addClass('row_selected');
+				highlightTop = row.offset().top - $scrollContainer.offset().top;
+			}
+			
+			if ( highlightTop < 0 || highlightTop > $scrollContainer.height() ) {
+				var currentScroll = $scrollContainer.scrollTop();
+				$scrollContainer.scrollTop( currentScroll + highlightTop );
+			}
 		}
 	},
 	
@@ -194,8 +208,9 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.$el.panel('option','show', function() {
 			if ( self.featuresToAdd.length >  0 ) {
 				self.table.fnAddData( self.featuresToAdd, false );
-				// adjust selection
+				// adjust selection and highlight
 				self.toggleSelection(self.model.selection);
+				self.highlightFeatureCallBack(self.model._highlighted);
 				self.featuresToAdd.length = 0;
 			}
 			self.table.fnAdjustColumnSizing( true );

@@ -126,17 +126,22 @@
 		"styles": {
 			"footprint" : {
 				"default" : {
-					"strokeColor": "#ff0000",
+					"strokeColor": "#FF7373",
 					"strokeWidth": 1,
 					"fill" : false
 				},
 				"select" : {
-					"strokeColor": "#0000ff",
+					"strokeColor": "#7373ff",
 					"strokeWidth": 1,
 					"fill" : false
 				},
 				"highlight": {
-					"strokeColor": "#31ff2e",
+					"strokeColor": "#ff0000",
+					"strokeWidth": 1,
+					"fill" : false
+				},
+				"highlight-select": {
+					"strokeColor": "#0000FF",
 					"strokeWidth": 1,
 					"fill" : false
 				}

@@ -28,7 +28,7 @@ var SearchResults = {
 	selection: [],
 	
 	// The hightlighted feature
-	_highlighted : null,
+	_highlighted : [],
 	
 	// The URL for search results
 	url: "",
@@ -129,10 +129,10 @@ var SearchResults = {
 		var selected = _.difference(features, this.selection);
 		this.selection = features;
 		if (unselected.length != 0){
-			this.trigger( "unselectFeatures", unselected );
+			this.trigger( "unselectFeatures", unselected, this );
 		}
 		if (selected.length != 0){
-			this.trigger( "selectFeatures", selected );
+			this.trigger( "selectFeatures", selected, this );
 		}
 	},
 	
@@ -164,7 +164,7 @@ var SearchResults = {
 	// Select a feature
 	select: function(feature) {
 		this.selection.push(feature);
-		this.trigger( "selectFeatures", [feature] );
+		this.trigger( "selectFeatures", [feature], this );
 	},
 	
 	// Unselect a feature
@@ -182,7 +182,7 @@ var SearchResults = {
 		}
 		
 		if (selected.length != 0){
-			this.trigger( "selectFeatures", selected );
+			this.trigger( "selectFeatures", selected, this );
 		}
 	},
 	
