@@ -6,7 +6,7 @@ define(
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ShopcartCollection, ExportWidget) {
 
-
+	
 /**
  * The model is the backbone model SearchResults 
  */
@@ -26,6 +26,9 @@ var SearchResultsTableView = Backbone.View.extend({
 			if ( this.visible ) {
 				this.table.fnAddData( features, false );
 				this.table.fnAdjustColumnSizing( true );
+				// adjust selection and highlight
+				this.toggleSelection(this.model.selection);
+				this.highlightFeatureCallBack(this.model._highlighted);
 				this.trigger('sizeChanged');
 			} else {
 				this.featuresToAdd = this.featuresToAdd.concat( features );
@@ -233,20 +236,6 @@ var SearchResultsTableView = Backbone.View.extend({
 		var self = this;
 		this.table = this.$el.find("#datatable").dataTable(parameters);
 	
-		this.$el.panel('option','show', function() {
-			if ( self.featuresToAdd.length >  0 ) {
-				self.table.fnAddData( self.featuresToAdd, false );
-				// adjust selection and highlight
-				self.toggleSelection(self.model.selection);
-				self.highlightFeatureCallBack(self.model._highlighted);
-				self.featuresToAdd.length = 0;
-			}
-			self.table.fnAdjustColumnSizing( true );
-			self.visible = true;
-		});
-		this.$el.panel('option','hide', function() {
-			self.visible = false;
-		});		
 	
 		// Build the bottom : add buttons
 		this.$el.find(".bottom").addClass("ui-grid-a");
