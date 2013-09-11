@@ -103,7 +103,7 @@ var BoxView = Backbone.View.extend({
 	},
 	
 	activateUseExtent: function() {
-		Map.on("endNavigation", this.synchronizeWithMapExtent, this);
+		Map.on("extent:change", this.synchronizeWithMapExtent, this);
 		this.synchronizeWithMapExtent();
 		// Remove the search area layer when using extent
 		if (this.parentView.searchAreaLayer) {

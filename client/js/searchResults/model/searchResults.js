@@ -28,7 +28,7 @@ var SearchResults = {
 	selection: [],
 	
 	// The hightlighted feature
-	_highlighted : null,
+	_highlighted : [],
 	
 	// The URL for search results
 	url: "",
@@ -129,16 +129,21 @@ var SearchResults = {
 		var selected = _.difference(features, this.selection);
 		this.selection = features;
 		if (unselected.length != 0){
-			this.trigger( "unselectFeatures", unselected );
+			this.trigger( "unselectFeatures", unselected, this );
 		}
 		if (selected.length != 0){
-			this.trigger( "selectFeatures", selected );
+			this.trigger( "selectFeatures", selected, this );
 		}
 	},
 	
 	// Check if a feature is selected
 	isSelected: function(feature) {
 		return this.selection.indexOf(feature) >= 0;
+	},
+	
+	// Check if a feature is highlighted
+	isHighlighted: function(feature) {
+		return this._highlighted.indexOf(feature) >= 0;
 	},
 	
 	// Highlight a feature, only one can be highlight at a time
@@ -159,13 +164,13 @@ var SearchResults = {
 	// Select a feature
 	select: function(feature) {
 		this.selection.push(feature);
-		this.trigger( "selectFeatures", [feature] );
+		this.trigger( "selectFeatures", [feature], this );
 	},
 	
 	// Unselect a feature
 	unselect: function(feature) {
 		this.selection.splice( this.selection.indexOf(feature), 1 );
-		this.trigger( "unselectFeatures", [feature] );
+		this.trigger( "unselectFeatures", [feature], this );
 	},
 
 	/** select all the items of the table which are not selected */
@@ -177,7 +182,7 @@ var SearchResults = {
 		}
 		
 		if (selected.length != 0){
-			this.trigger( "selectFeatures", selected );
+			this.trigger( "selectFeatures", selected, this );
 		}
 	},
 	
@@ -192,7 +197,7 @@ var SearchResults = {
 		}
 		this.selection = []	
 		if (oldSelection.length != 0){
-			this.trigger( "unselectFeatures", oldSelection );
+			this.trigger( "unselectFeatures", oldSelection, this );
 		}
 
 	},

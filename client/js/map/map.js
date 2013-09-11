@@ -52,22 +52,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		};
 		this.modifyFeaturesStyle = function(features,style) {
 			for ( var i = 0; i < features.length; i++ ) {
-				features[i].properties.prevStatus = features[i].properties.currentStatus;
-				features[i].properties.currentStatus = style;
+				features[i].properties.styleHint = style;
 				mapEngine.modifyFeatureStyle( this.engineLayer, features[i], style );
 			}
 		};
-		//set back the feature status: used after features are unselected
-		this.revertFeaturesStyle = function(features) {
-			var temp;
-			for ( var i = 0; i < features.length; i++ ) {
-				temp = features[i].properties.currentStatus;
-				features[i].properties.currentStatus = features[i].properties.prevStatus;
-				features[i].properties.prevStatus = temp;
-				mapEngine.modifyFeatureStyle( this.engineLayer, features[i], features[i].properties.currentStatus);
-			}
-		};
-		
 		this.updateFeature = function(feature) {
 			mapEngine.updateFeature( this.engineLayer, feature );
 		};
@@ -77,8 +65,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			for ( var i = 0; i < this.features.length; i++ ) {
 				var f = this.features[i];
 				mapEngine.addFeature( this.engineLayer, f );
-				if ( f && f.properties.currentStatus && f.properties.currentStatus != 'default' ) {
-					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.currentStatus );
+				if ( f && f.properties.styleHint && f.properties.styleHint != 'default' ) {
+					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.styleHint );
 				}
 			}
 		};
@@ -133,12 +121,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		// Add the style in conf to the engines
 		for ( var x in mapConf.styles ) {
 			if ( mapConf.styles.hasOwnProperty(x) ) {
-				var style = mapConf.styles[x];
-				if ( style['default'] &&  style['select'] && style['highlight']) {
-					mapEngine.addStyle( x, style['default'], style['select'], style['highlight'] );
-				} else {
-					mapEngine.addStyle( x, style );
-				}
+				mapEngine.addStyle( x, mapConf.styles[x] );
 			}
 		}
 		
@@ -151,11 +134,8 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		mapEngine.zoomToExtent( maxExtent );
 		
 		// Subscribe to event
-		mapEngine.subscribe("endNavigation", function() {
-			self.trigger("endNavigation",self);
-		});
-		mapEngine.subscribe("startNavigation", function() {
-			self.trigger("startNavigation",self);
+		mapEngine.subscribe("navigationModified", function() {
+			self.trigger("extent:change",self);
 		});
 	};
 	
@@ -342,14 +322,21 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		},
 		
 		/**
-		 * Get the page (?) position from a lonlat
+		 * Get the pixel position (in the element) from a lonlat
 		 */
 		getPixelFromLonLat: function(lon,lat) {
 			return mapEngine.getPixelFromLonLat(lon,lat);
 		},
 		
 		/**
-		 * Get the page position from a lonlat
+		 * Get the lonlat from a pixel position (in the element) 
+		 */
+		getLonLatFromPixel: function(x,y) {
+			return mapEngine.getLonLatFromPixel(x,y);
+		},
+		
+		/**
+		 * Get the lonlat from an event
 		 */
 		getLonLatFromEvent: function(event) {
 			var rect = element.getBoundingClientRect();
