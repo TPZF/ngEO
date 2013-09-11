@@ -113,19 +113,8 @@ OpenLayersMapEngine.prototype.computeResolutions = function(restrictedExtent) {
 /**
  * Add a style
  */
-OpenLayersMapEngine.prototype.addStyle = function(name,defaut,select,highlight) {
-	if (select) {
-		this._styles[name] = new OpenLayers.StyleMap({
-			'default' : new OpenLayers.Style(defaut),
-			'select' : new OpenLayers.Style(select),
-			'highlight': new OpenLayers.Style(highlight)
-		});
-	}
-	else {
-		this._styles[name] = new OpenLayers.StyleMap({
-			'default' : new OpenLayers.Style(defaut)
-		});
-	}
+OpenLayersMapEngine.prototype.addStyle = function(name,style) {
+	this._styles[name] = new OpenLayers.StyleMap(style);
 };
 
 /**
@@ -179,6 +168,13 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
  */
 OpenLayersMapEngine.prototype.setLayerVisible = function(olLayer,vis) {
 	olLayer.setVisibility(vis);
+}
+
+/**
+ * Set layer index
+ */
+OpenLayersMapEngine.prototype.setLayerIndex = function(olLayer,index) {
+	this._map.setLayerIndex(olLayer,index);
 }
 
 /**
@@ -323,13 +319,9 @@ OpenLayersMapEngine.prototype.subscribe = function(name,callback)
 	case "init":
 		callback(this);
 		break;
-	case "startNavigation":
+	case "navigationModified":
 		// Attach events for navigation change
-		this._map.events.register("movestart", undefined, callback);
-		break;
-	case "endNavigation":
-		// Attach events for navigation change
-		this._map.events.register("moveend", undefined, callback);
+		this._map.events.register("move", undefined, callback);
 		break;
 	case "mousedown":
 	case "mouseup":
@@ -348,13 +340,9 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
 {
 	switch (name )
 	{
-	case "startNavigation":
+	case "navigationModified":
 		// Detach events for navigation change
-		this._map.events.unregister("movestart", undefined, callback);
-		break;
-	case "endNavigation":
-		// Detach events for navigation change
-		this._map.events.unregister("moveend", undefined, callback);
+		this._map.events.unregister("move", undefined, callback);
 		break;
 	case "mousedown":
 	case "mouseup":

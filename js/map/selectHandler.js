@@ -16,6 +16,8 @@ var mapEngine;
 var prevX, prevY, prevTime;
 // Needed to clear stack when selection is changed from another way
 var inPicking = false;
+// The picking radius
+var radius = -1.0;
 
 /**
  * Private methods
@@ -45,7 +47,55 @@ var pointInRing = function ( point, ring )
 	return inPoly;
 };
 
+/**
+ * Compute line-circle intersection
+ */
+var lineCircleIntersection = function( p1, p2, center, radius )
+{
+	var dx = p2[0] - p1[0];
+	var dy = p2[1] - p1[1];
 
+	var lx = p1[0] - center[0];
+	var ly = p1[1] - center[1];
+		
+	var a = dx * dx + dy * dy ;
+	var b = 2* ( lx * dx + lx * dy );
+	var c = lx * lx + ly * ly - radius*radius ;
+
+	var discriminant = b*b-4*a*c;
+	if( discriminant <= 0 )
+	{
+	  return false;
+	}
+	discriminant = Math.sqrt( discriminant );
+	var t1 = (-b - discriminant)/(2*a);
+	var t2 = (-b + discriminant)/(2*a);
+	return ( (t1 >= 0 && t1 <= 1) || (t2 >= 0 && t2 <= 1) );
+};
+
+/**
+ * Check if a point is inside a line
+ */
+ var pointInLine = function( point, coords )
+{
+	// Compute radius
+	if ( radius < 0.0 )
+	{
+		var pixel = Map.getPixelFromLonLat(point[0],point[1]);
+		var ul = Map.getLonLatFromPixel(pixel.x+1,pixel.y+1);
+		radius = 1.5 * Math.sqrt( (ul[0] - point[0]) * (ul[0] - point[0]) + (ul[1] - point[1]) * (ul[1] - point[1]) );
+	}
+	
+	for ( var i = 0; i < coords.length-1; i++ )
+	{
+		if ( lineCircleIntersection( coords[i], coords[i+1], point, radius ) )
+		{
+			return true;
+		}
+	}
+	
+	return false;
+};
 
 /**
  * Check if the point is inside the given geometry
@@ -63,6 +113,8 @@ var pointInGeometry = function( point, geometry )
 		return inside;
 	case "Polygon":
 		return pointInRing( point, geometry.coordinates[0] );
+	case "LineString":
+		return pointInLine( point, geometry.coordinates );
 	default:
 		return false;
 	}
@@ -73,6 +125,8 @@ var pointInGeometry = function( point, geometry )
  * Get the feature from a point : test if the point is inside the footprint
  */
 var getFeaturesFromPoint = function(lonlat) {
+
+	radius = -1;
 
 	var features = [];
 		

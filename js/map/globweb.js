@@ -74,24 +74,34 @@ GlobWebMapEngine = function( parentElement )
 	}
 }
 
+var createGWStyle = function(style) {
+	var gwStyle = new GlobWeb.FeatureStyle( style );
+	
+	if ( style.strokeColor ) {
+		gwStyle.strokeColor = GlobWeb.FeatureStyle.fromStringToColor(style.strokeColor);
+	}
+	
+	return gwStyle;
+};
+
 /**
  * Add a style
  */
-GlobWebMapEngine.prototype.addStyle = function(name, defaut, select, highlight) {
-	this.styles[name] = {
-		'default' : new GlobWeb.FeatureStyle(defaut),
-		'select' : new GlobWeb.FeatureStyle(select),
-		'highlight' : new GlobWeb.FeatureStyle(highlight)
-	};
+GlobWebMapEngine.prototype.addStyle = function(name, style) {
 	
-	// Convert color
-	// TODO : do someting in GlobWeb maybe ?
-	if (defaut.strokeColor)
-		this.styles[name]['default'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(defaut.strokeColor);
-	if (select && select.strokeColor)
-		this.styles[name]['select'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(select.strokeColor);
-	if (highlight && highlight.strokeColor)
-		this.styles[name]['highlight'].strokeColor = GlobWeb.FeatureStyle.fromStringToColor(highlight.strokeColor);
+	var gwStyle = {};
+	
+	if ( style['default'] ) {
+		for ( var x in style ) {
+			if ( style.hasOwnProperty(x) ) {
+				gwStyle[x] = createGWStyle( style[x] );
+			}
+		}
+	} else {
+		gwStyle['default'] = createGWStyle( style ); 
+	}
+	
+	this.styles[name] = gwStyle;
 };
 
 /**
@@ -124,6 +134,13 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
  */
 GlobWebMapEngine.prototype.setLayerVisible = function(gwLayer,vis) {
 	gwLayer.visible(vis);
+}
+
+/**
+ * Set layer index
+ */
+GlobWebMapEngine.prototype.setLayerIndex = function(gwLayer,index) {
+	gwLayer.zIndex = index;
 }
 
 /**
@@ -220,11 +237,8 @@ GlobWebMapEngine.prototype.subscribe = function(name,callback)
 	case "init":
 		callback(this);
 		break;
-	case "startNavigation":
-		this.globe.subscribe("startNavigation",callback);
-		break;
-	case "endNavigation":
-		this.globe.subscribe("endNavigation",callback);
+	case "navigationModified":
+		this.navigation.subscribe("modified",callback);
 		break;
 	case "mousedown":
 	case "mousemove":

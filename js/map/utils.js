@@ -21,7 +21,7 @@ define( function() {
 				case "MultiPolygon":
 					coords = feature.geometry.coordinates[0][0];
 					break;
-				case "LineRing":
+				case "LineString":
 					coords = feature.geometry.coordinates;
 					break;
 			}

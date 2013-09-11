@@ -83,7 +83,7 @@ var MapPopup = function(container) {
 			self.open(highlightedFeatures);
 		}
 	});
-	Map.on('startNavigation', function() {
+	Map.on('extent:change', function() {
 		self.close();
 	});
 	
