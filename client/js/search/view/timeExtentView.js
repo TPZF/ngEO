@@ -153,7 +153,7 @@ var TimeExtentView = Backbone.View.extend({
 	
 	render: function(){
 		var content = _.template(dateCriteria_template, this.model);
-		this.$el.append($(content));
+		this.$el.append(content);
 		
 		// Keep the DOM elements needed by the view
 		this.$fromDateInput = this.$el.find("#fromDateInput");

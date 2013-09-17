@@ -36,9 +36,7 @@ return function() {
 	PanelManager.addPanelContent({
 		element: view.$el,
 		position: 'bottom',
-		activator: '#result',
-		show: $.proxy( view.onShow, view ),
-		hide: $.proxy( view.onHide, view )
+		activator: '#result'
 	});
 	
 	// Manage panel size
