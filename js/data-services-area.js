@@ -31,7 +31,7 @@ return {
 	 * Called when the module main page is hidden
 	 */
 	hide: function() {
-		PanelManager.hideAll();
+		PanelManager.hide();
 		$('#statusBar').hide();
 		$('#dateRangeSlider').hide();
 	},
@@ -40,6 +40,7 @@ return {
 	 * Called when the module main page is shown
 	 */
 	show: function() {
+		PanelManager.show();
 		$('#statusBar').show();
 		$('#dateRangeSlider').show();
 	},
@@ -55,6 +56,7 @@ return {
 		PanelManager.initialize({
 			center: '#map', 
 			bottom: '#bottom-panel',
+			left: '#left-panel',
 			updateCenter: Map.updateViewportSize
 		});
 		$('#statusBar').appendTo('#map').trigger('create');
@@ -188,8 +190,8 @@ return {
 //					//set the shopcart button to be clicked
 					$("#shopcart").addClass('toggle');
 					//display the shopcart widget 
-					PanelManager.activate({
-						activatorId : "shopcart",
+					PanelManager.showPanel({
+						activator: "#shopcart",
 						position : "bottom"
 					});
 			});
