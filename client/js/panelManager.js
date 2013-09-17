@@ -65,7 +65,7 @@ var _buildPanel = function(opts,position) {
 };
 
 // Hide the panel with animation, one function for each panel right now
-var _hidePanel = {
+var _hidePanelAnimated = {
 	left: function() {
 		_center.animate({
 			left: 0
@@ -88,7 +88,7 @@ var _hidePanel = {
 };
 
 //Show the panel with animation, one function for each panel right now
-var _showPanel = {
+var _showPanelAnimated = {
 		left: function() {
 			_center.animate({
 				left: _panels.left.outerWidth()
@@ -111,6 +111,68 @@ var _showPanel = {
 
 };
 
+// Hide the panel without animation, one function for each panel right now
+var _hidePanel = {
+	left: function() {
+		_center.css({
+			left: 0
+		});
+		_updateCenterCB();
+		_panels.left.css({
+			left: -_panels.left.outerWidth()
+		});
+	},
+	bottom: function() {
+		_center.css({
+			bottom: 0
+		}, _updateCenterCB);
+		_panels.bottom.css({
+			bottom: -_panels.bottom.outerHeight()
+		});	
+		_panels.left.css({
+			bottom: 0
+		});	
+	}		
+};
+
+//Show the panel with animation, one function for each panel right now
+var _showPanel = {
+		left: function() {
+			_center.css({
+				left: _panels.left.outerWidth()
+			});			
+			_panels.left.css({
+				left: 0
+			});
+			_updateCenterCB();
+		},
+		bottom: function() {
+			_center.css({
+				bottom: _panels.bottom.outerHeight()
+			});
+			_panels.bottom.css({
+				bottom: 0
+			});	
+			_panels.left.css({
+				bottom: _panels.bottom.outerHeight()
+			});
+			_updateCenterCB();
+		}		
+
+};
+
+// Restore panel
+var _restorePanel = function(self,pos) {
+	activators[pos].each(function(i, elt){
+		if ( $(this).hasClass('toggle') ){
+			self.showPanel({ 
+				position: pos, 
+				activator: this 
+			});
+		}
+	});
+};
+
 
 return {
 	
@@ -125,12 +187,20 @@ return {
 	},
 	
 	/**
-	 * Hide all the currently opened panel
+	 * Hide the panel manager : hide all panels
 	 */
-	hideAll: function() {
+	hide: function() {
 		_hidePanel.left();
 		_hidePanel.bottom();
 	},
+	
+	/**
+	 * Show the panel manager
+	 */
+	show: function() {
+		_restorePanel(this,'left');
+		_restorePanel(this,'bottom');
+	},	
 	
 	/**
 	 * Update the panel size
@@ -164,46 +234,43 @@ return {
 		content.addClass('ui-body-c panel-content-' + position);
 		content.trigger('create');
 		
+		var $activator = $(opts.activator);
 		contents[position] = contents[position].add(content);
-		activators[position] = activators[position].add( $(opts.activator) );
+		activators[position] = activators[position].add( $activator );
 	
-		$(opts.activator).click( function() {
-			if ( $(this).hasClass('toggle') ) {
-				
-				_hidePanel[position]();
-				content.trigger('panel:hide');
+		$activator
+			.data('content', content)
+			.click( function() {
+				if ( $(this).hasClass('toggle') ) {
+					
+					_hidePanelAnimated[position]();
+					content.trigger('panel:hide');
 
-			} else {
-				
-				activators[position].removeClass('toggle');
-				contents[position].hide().trigger('panel:hide');
-				content.show().trigger('panel:show');
-				
-				_showPanel[position]();
+				} else {
+					
+					activators[position].removeClass('toggle');
+					contents[position].hide().trigger('panel:hide');
+					content.show().trigger('panel:show');
+					
+					_showPanelAnimated[position]();
 
-			}
-			$(this).toggleClass('toggle');
+				}
+				$(this).toggleClass('toggle');
 		});
 	}, 
 	
 	/**
-	 * Activate the display of a panel with a simulation of the activator click
-	 * usefull for the share shopcart functionnality.
+	 * Show a panel.
+	 * Params : the position (left or bottom) and the content to display, given by its activator
 	 */
-	activate : function(opts){
-		
-		//var index = activators[opts.position].index(opts.activator);
-		var index = -1;
-		activators[opts.position].each(function(i, elt){
-			if (elt.id == opts.activatorId){
-				index = i;
-			}
-		});
+	showPanel: function(opts) {
 		contents[opts.position].hide().trigger('panel:hide');
-		$(contents[opts.position].get(index)).show().trigger('panel:show');
+		
+		var $content = $(opts.activator).data('content');
+		$content.show().trigger('panel:show');
 		
 		_showPanel[opts.position]();
-	} 
+	}
 };
 
 
