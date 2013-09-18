@@ -38,11 +38,11 @@ var Shopcart = Backbone.Model.extend({
 				
 		}).done(function(data) {
 			self.features = data.features;
-			self.trigger("shopcart:loaded", self.id);
+			self.trigger("loaded", data.features);
 			
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
 			  console.log("ERROR when retrieving the shopcart Content :" + textStatus + ' ' + errorThrown);
-			  self.trigger('shopcart:errorLoad', self.url); 
+			  self.trigger('errorLoad', self.url); 
 		});
 	},
 			
@@ -138,12 +138,12 @@ var Shopcart = Backbone.Model.extend({
 					}
 				}
 			  
-			  self.trigger("shopcart:itemsAdded", itemsAdded);
+			  self.trigger("itemsAdded", itemsAdded);
 
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
-			  self.trigger('shopcart:addItemsError');  
+			  self.trigger('addItemsError');  
 		  }
 		  
 		});
@@ -192,7 +192,7 @@ var Shopcart = Backbone.Model.extend({
 
 					// Check the response
 					if ( !data.shopCartItemRemoving  || !_.isArray(data.shopCartItemRemoving) ) {
-						self.trigger('shopcart:deleteItemsError');  
+						self.trigger('deleteItemsError');  
 						return;
 					}
 					
@@ -201,11 +201,11 @@ var Shopcart = Backbone.Model.extend({
 						removedItems.push( self._removeItem( data.shopCartItemRemoving[i].id ) );
 					}
 
-					self.trigger("shopcart:itemsDeleted", removedItems);
+					self.trigger("itemsDeleted", removedItems);
 			  },
 			  
 			  error: function(jqXHR, textStatus, errorThrown) {
-				  self.trigger('shopcart: deleteItemsError');  
+				  self.trigger('deleteItemsError');  
 			  }
 			  
 		});
@@ -234,11 +234,11 @@ var Shopcart = Backbone.Model.extend({
 			  success: function(data) {	 
 				
 				  var response = data.items;
-				  self.trigger("shopcart:itemsUpdated", response);
+				  self.trigger("itemsUpdated", response);
 			  },
 			  
 			  error: function(jqXHR, textStatus, errorThrown) {
-				  self.trigger('shopcart:updateItemsError');  
+				  self.trigger('updateItemsError');  
 
 			  }
 		});
