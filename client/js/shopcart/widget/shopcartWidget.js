@@ -24,7 +24,7 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 			// Manage panel size
 			shopcartItemView.$el.on('panel:show', $.proxy( shopcartItemView.onShow, shopcartItemView ) );
 			shopcartItemView.$el.on('panel:hide', $.proxy( shopcartItemView.onHide, shopcartItemView ) );
-			shopcartItemView.on("shopcart:sizeChanged", function() {
+			shopcartItemView.on("sizeChanged", function() {
 				PanelManager.updatePanelSize('bottom');
 			});
 			
