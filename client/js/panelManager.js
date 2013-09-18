@@ -257,19 +257,6 @@ return {
 				}
 				$(this).toggleClass('toggle');
 		});
-	}, 
-	
-	/**
-	 * Show a panel.
-	 * Params : the position (left or bottom) and the content to display, given by its activator
-	 */
-	showPanel: function(opts) {
-		contents[opts.position].hide().trigger('panel:hide');
-		
-		var $content = $(opts.activator).data('content');
-		$content.show().trigger('panel:show');
-		
-		_showPanel[opts.position]();
 	}
 };
 
