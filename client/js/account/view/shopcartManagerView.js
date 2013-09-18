@@ -13,13 +13,7 @@ var ShopcartManagerView = Backbone.View.extend({
 	
 	events : {
 		'click label' : function(event){
-			//the default shopcart cannot be deleted
-			if (this.model.defaultShopcartId != event.currentTarget.id){
-				this.$el.find("#delete_shp").button('enable');
-			}else{
-				this.$el.find("#delete_shp").button('disable');
-			}
-			this.model.updateCurrentShopcart(event.currentTarget.id);
+			this.model.setCurrent( this.model.get(event.currentTarget.id) );
 		},
 		
 		'click #new_shp' : function(event){
@@ -108,16 +102,14 @@ var ShopcartManagerView = Backbone.View.extend({
 		
 		'click #delete_shp' : function(event){
 			var self = this;
-			this.model.getCurrentShopcartConfig().destroy()
-												.done(function (){
-													//self.model.currentShopcartId = self.model.getPreviousShopcartId(); 
-													self.model.currentShopcartId = self.model.defaultShopcartId;
-													self.render();
-												})
-										
-												.fail(function(xhr, textStatus, errorThrown){
-													self.showMessage(errorThrown);
-												});
+			this.model.getCurrent().destroy()
+									.done(function (){
+										self.model.setCurrent( self.model.at(0) );
+										self.render();
+									})
+									.fail(function(xhr, textStatus, errorThrown){
+										self.showMessage(errorThrown);
+									});
 		},
 		//added export as in the shopcart item view
 		'click #export_shp' : function(event){
@@ -128,16 +120,15 @@ var ShopcartManagerView = Backbone.View.extend({
 	},
 	
 	render : function(){
-		this.$el.empty();
 		var mainContent = _.template(shopcartManagerContent_template, this.model);
-		this.$el.append(mainContent);
+		this.$el.html(mainContent);
+		
+		// Select the current one
+		var currentShopcartSelect = "#" + this.model.getCurrent().id + "_input"; 
+		this.$el.find(currentShopcartSelect).attr('checked',true);
+		
 		this.$el.trigger("create");
-		var defaultShopcartSelect = "#" + this.model.currentShopcartId; 
-		this.$el.find(defaultShopcartSelect).trigger("click");
-		//disable the delete button if for the default shopcart		
-		if (this.model.currentShopcartId == this.model.defaultShopcartId){
-			this.$el.find("#delete_shp").button('disable');
-		}
+
 		return this;
 	},
 	
@@ -148,8 +139,7 @@ var ShopcartManagerView = Backbone.View.extend({
 		}
 		
 		$("#errorMessageDiv")
-			.empty()
-			.append(message)
+			.html(message)
 			.slideDown();
 			
 		// Hide status message after a given time

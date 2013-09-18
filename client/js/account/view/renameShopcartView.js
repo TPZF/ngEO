@@ -12,7 +12,7 @@ var RenameShopcartView = CreateShopcartView.extend({
 	/** submit the rename query to the server */ 
 	submit : function(event){
 		event.preventDefault();
-		this.model.getCurrentShopcartConfig().set({ "name" : $('#shopcartNameField').val()}).save();
+		this.model.getCurrent().set({ "name" : $('#shopcartNameField').val()}).save();
 	}
 
 });

@@ -88,10 +88,7 @@ return {
 		ShopcartCollection.fetch({
 			
 			success: function(model, response) {
-			
-				//load the current shopcart
-				ShopcartCollection.loadCurrentShopcart();
-				
+						
 				ShopcartWidget.create();
 				
 				ShopcartCollection.on("shopcart:errorLoad", function() {

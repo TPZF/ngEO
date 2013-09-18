@@ -11,38 +11,9 @@ define(
 var ShopcartItemView = Backbone.View.extend({
 
 	initialize : function() {
-		
-		this.model.on("selectShopcartItems", this.toggleSelection, this );
-		this.model.on("unselectShopcartItems", this.toggleSelection, this );
-
-		this.model.on("shopcart:loaded", function() {
-			this.shopcartItemsToAdd = [];
-			for (var i=0; i<this.model.currentShopcart.features.length; i++){			  
-				this.shopcartItemsToAdd.push(this.model.currentShopcart.features[i]);
-			}
-
-		}, this);
-		
-		this.model.on("shopcart:itemsAdded", function(itemsAdded) {
-			this.table.fnAddData( itemsAdded, false );
-			this.updateButtonStatuses();
-			this.table.fnAdjustColumnSizing( true );
-			this.trigger('shopcart:sizeChanged');
-
-		}, this);	
-		
-		this.model.on("shopcart:itemsDeleted", function(removedItems) {
-			var rows = this.table.$("tr",{order: "original"});
-
-			for (var i=0; i<removedItems.length; i++){
-				var index = this.model.currentShopcart.features.indexOf(removedItems[i]);			
-				this.table.fnDeleteRow( rows.get(index) );
-			}
-			this.updateButtonStatuses();
-			this.table.fnAdjustColumnSizing( true );
-			this.trigger('shopcart:sizeChanged');
-
-		}, this);
+		var model = this.model;
+		this.model = null;
+		this.setModel( model );
 	},
 	
 	events : {
@@ -68,19 +39,19 @@ var ShopcartItemView = Backbone.View.extend({
 			// retreive the position of the selected row
 			var shopcartItem = this.getShopcartItemFromRow( $(event.currentTarget).closest('tr').get(0) );
 			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
-				this.model.currentShopcart.select( shopcartItem );
+				this.model.select( shopcartItem );
 			} else {
-				this.model.currentShopcart.unselect( shopcartItem );
+				this.model.unselect( shopcartItem );
 			}
 		 }, 
 		 
 		// Called when the user clicks on the select all button
 		'click #shopcartSelectAll' : function(event){
-			this.model.currentShopcart.selectAll();
+			this.model.selectAll();
 		 }, 
 		// Called when the user clicks on the select all button
 		'click #shopcartDeselectAll' : function(event){
-			this.model.currentShopcart.unselectAll();
+			this.model.unselectAll();
 		 }	 
 	},
 
@@ -90,7 +61,7 @@ var ShopcartItemView = Backbone.View.extend({
 	getShopcartItemFromRow: function(row) {
 		var rowPos = this.table.fnGetPosition( row );
 		if (rowPos != null) {
-			return this.model.currentShopcart.features[rowPos];
+			return this.model.features[rowPos];
 		} else {
 			return null;
 		}
@@ -103,7 +74,7 @@ var ShopcartItemView = Backbone.View.extend({
 
 		var checkboxes = this.table.$(".dataTables_chekbox",{order: "original"});
 		for ( var i = 0; i < shopcartItems.length; i++ ) {
-			var index = this.model.currentShopcart.features.indexOf(shopcartItems[i]);
+			var index = this.model.features.indexOf(shopcartItems[i]);
 			checkboxes.eq(index)
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
@@ -116,7 +87,7 @@ var ShopcartItemView = Backbone.View.extend({
 	/** update the button statuses **/ 
 	updateButtonStatuses : function(){
 
-		if ( this.model.currentShopcart.selection.length > 0 ) {
+		if ( this.model.selection.length > 0 ) {
 			this.deleteButton.button('enable');
 			this.downloadOptionsButton.button('enable');
 		} else {
@@ -134,7 +105,7 @@ var ShopcartItemView = Backbone.View.extend({
 			this.table.fnClearTable();
 			this.table.fnAddData( this.shopcartItemsToAdd, false );
 			// adjust selection
-			this.toggleSelection(this.model.currentShopcart.selection);
+			this.toggleSelection(this.model.selection);
 			this.shopcartItemsToAdd = [];
 		}
 		this.table.fnAdjustColumnSizing( true );
@@ -146,6 +117,52 @@ var ShopcartItemView = Backbone.View.extend({
 	 */
 	onHide: function() {
 		this.visible = false;
+	},
+	
+	/**
+	 * Set the model used by the view
+	 */
+	setModel: function(model) {
+	
+		if ( this.model ) {
+			this.stopListening(this.model);
+		}
+		
+		this.model = model;
+		
+		this.listenTo(model,"selectShopcartItems", this.toggleSelection );
+		this.listenTo(model,"unselectShopcartItems", this.toggleSelection );
+
+		this.listenTo(model,"shopcart:loaded", function() {
+			this.shopcartItemsToAdd = [];
+			for (var i=0; i<this.model.features.length; i++){			  
+				this.shopcartItemsToAdd.push(this.model.features[i]);
+			}
+
+		});
+		
+		this.listenTo(model,"shopcart:itemsAdded", function(itemsAdded) {
+			this.table.fnAddData( itemsAdded, false );
+			this.updateButtonStatuses();
+			this.table.fnAdjustColumnSizing( true );
+			this.trigger('shopcart:sizeChanged');
+
+		});	
+		
+		this.listenTo(model,"shopcart:itemsDeleted", function(removedItems) {
+			var rows = this.table.$("tr",{order: "original"});
+
+			for (var i=0; i<removedItems.length; i++){
+				var index = this.model.features.indexOf(removedItems[i]);			
+				this.table.fnDeleteRow( rows.get(index) );
+			}
+			this.updateButtonStatuses();
+			this.table.fnAdjustColumnSizing( true );
+			this.trigger('shopcart:sizeChanged');
+
+		});
+		
+		model.loadContent();
 	},
 
 	/**
@@ -216,7 +233,7 @@ var ShopcartItemView = Backbone.View.extend({
 		this.deleteButton.button('disable');
 		
 		this.deleteButton.click(function() {	
-			self.model.currentShopcart.deleteItems();
+			self.model.deleteSelection();
 		});
 		
 		//add button to the widget footer in order to export a shopcart
