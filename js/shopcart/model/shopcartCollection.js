@@ -12,9 +12,10 @@ define( ['jquery', 'backbone', 'configuration'],
 		
 		this.parentModel = parentModel;
 			
-		this.shopcartItems = [];
+		// The shopcart is a feature collection
+		this.features = [];
 
-		//table of the selected Shopcart items 
+		// The selection of the shopcart content
 		this.selection = [];
 
 		// The base url to retreive the shopcarts list
@@ -31,9 +32,7 @@ define( ['jquery', 'backbone', 'configuration'],
 				dataType: 'json'
 					
 			}).done(function(data) {
-				for ( var i = 0; i < data.items.length; i++ ) {
-					self.shopcartItems.push( data.items[i] );
-				}
+				self.features = data.features;
 				self.parentModel.trigger("shopcart:loaded", self.id);
 				
 			}).fail(function(jqXHR, textStatus, errorThrown) {		
@@ -41,34 +40,22 @@ define( ['jquery', 'backbone', 'configuration'],
 				  self.parentModel.trigger('shopcart:errorLoad', self.url); 
 			});
 		};
-		
-		this.getShopcartItemIndex = function(shopcartItem){
-			
-			var index = -1;
-			for (var i=0; i<self.shopcartItems.length; i++){
-				  
-			  if (self.shopcartItems[i].id == shopcartItem.id){
-				  index = i;
-			  }
-			}
-			return index;
-		};
-		
+				
 		// Select a shopcart item
-		this.select = function(shopcartItem) {
-			self.selection.push(shopcartItem);
-			self.parentModel.trigger( "selectShopcartItems", [shopcartItem] );
+		this.select = function(item) {
+			self.selection.push(item);
+			self.parentModel.trigger( "selectShopcartItems", [item] );
 		};
 		
 		// Unselect a feature
-		this.unselect = function(shopcartItem) {
-			self.selection.splice( self.selection.indexOf(shopcartItem), 1 );
-			self.parentModel.trigger( "unselectShopcartItems", [shopcartItem] );
+		this.unselect = function(item) {
+			self.selection.splice( self.selection.indexOf(item), 1 );
+			self.parentModel.trigger( "unselectShopcartItems", [item] );
 		};
 
 		this.selectAll = function(){
 				
-			var selected = _.difference(self.shopcartItems, self.selection);
+			var selected = _.difference(self.features, self.selection);
 			for ( var i = 0; i < selected.length; i++ ) {
 				self.selection.push( selected[i] );
 			}
@@ -98,12 +85,16 @@ define( ['jquery', 'backbone', 'configuration'],
 		 */ 
 		this.addItems = function(productUrls, features){
 			
+			// Build the request body
 			var itemsToAdd = [];
-			//var urls = SearchResults.getProductUrls(features);
 			for (var i=0; i<productUrls.length; i++){
-				itemsToAdd.push({'shopcartId' : self.id, 'product' : productUrls[i]}); 
+				itemsToAdd.push({
+					shopcartId : self.id, 
+					product : productUrls[i]
+				}); 
 			}	
 
+			// Send the request
 			return $.ajax({
 			 
 			  url: self.url,
@@ -127,10 +118,15 @@ define( ['jquery', 'backbone', 'configuration'],
 						  
 						var indexOfProductUrls = productUrls.indexOf( itemsAddedResponse[i].product );
 						if ( indexOfProductUrls >= 0 && indexOfProductUrls < features.length ) {
-							//create the shopcart item to add
-							itemsAdded.push({'shopcartId' : self.id, 
-											'id' : itemsAddedResponse[i].id ,
-											'product' : features[indexOfProductUrls]});
+						
+							// Clone the feature to be different from the selected one
+							var feature = _.clone(features[indexOfProductUrls]);
+							feature.properties = _.clone(feature.properties);
+							feature.properties.shopcartItemId = itemsAddedResponse[i].id;
+							
+							itemsAdded.push(feature);
+							self.features.push(feature);
+							
 						} else {
 							// TODO handle error
 						}
@@ -147,18 +143,21 @@ define( ['jquery', 'backbone', 'configuration'],
 			});
 		};
 		
+		/** 
+		 * Helper function toe remove one item from the shopcart
+		 */ 
 		this._removeItem = function(id) {
-			for ( var i = 0; i < this.shopcartItems.length; i++ ) {
-				var item = this.shopcartItems[i];
-				if ( item.id == id ) {
+			for ( var i = 0; i < this.features.length; i++ ) {
+				var feature = this.features[i];
+				if ( feature.properties.shopcartItemId == id ) {
 					// Remove it from items
-					this.shopcartItems.slice(i,1);
+					this.features.slice(i,1);
 					// Remove it from selection also
-					var is = this.selection.indexOf(item);
+					var is = this.selection.indexOf(feature);
 					if ( is >= 0 ) {
 						this.selection.slice(is,1);
 					}
-					return item;
+					return feature;
 				}
 			}
 		};
@@ -168,10 +167,10 @@ define( ['jquery', 'backbone', 'configuration'],
 		 */ 
 		this.deleteItems = function(){
 			
+			// Build the request body
 			var itemsToRemove = [];
-			
-			for (var i=0; i< self.selection.length; i++){
-				itemsToRemove.push({'shopcartId' :  self.id, 'id' : self.selection[i].id}); 
+			for (var i=0; i< this.selection.length; i++){
+				itemsToRemove.push({'shopcartId' :  this.id, 'id' : this.selection[i].properties.shopcartItemId}); 
 			}	
 
 			return $.ajax({
