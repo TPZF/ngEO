@@ -139,7 +139,7 @@
 	   }],
 	
 		"styles": {
-			"footprint" : {
+			"results-footprint" : {
 				"default" : {
 					"strokeColor": "#FF7373",
 					"strokeWidth": 1,
@@ -152,6 +152,28 @@
 				},
 				"highlight": {
 					"strokeColor": "#ff0000",
+					"strokeWidth": 1,
+					"fill" : false
+				},
+				"highlight-select": {
+					"strokeColor": "#0000FF",
+					"strokeWidth": 1,
+					"fill" : false
+				}
+			},
+			"shopcart-footprint" : {
+				"default" : {
+					"strokeColor": "#73FF73",
+					"strokeWidth": 1,
+					"fill" : false
+				},
+				"select" : {
+					"strokeColor": "#7373ff",
+					"strokeWidth": 1,
+					"fill" : false
+				},
+				"highlight": {
+					"strokeColor": "#00ff00",
 					"strokeWidth": 1,
 					"fill" : false
 				},

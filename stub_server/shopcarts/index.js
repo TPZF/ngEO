@@ -208,8 +208,9 @@ module.exports = {
 			
 			var removedItems = [];
 			
-			console.log( req.params.id );
-			console.log( req.body );
+			//console.log( req.params.id );
+			//console.log( req.body );
+			//console.log( shopcartContents[req.params.id] );
 						
 			//send back the list of shopcart item ids
 			for (var i=0; i<req.body.shopCartItemRemoving.length; i++){

@@ -413,6 +413,14 @@ GlobWebMapEngine.prototype.updateFeature = function(layer,feature)
 }
 
 /**
+ * Remove a feature
+ */
+GlobWebMapEngine.prototype.removeFeature = function(layer,feature)
+{
+	layer.removeFeature(feature);
+}
+
+/**
  *  Destroy the map engine
  */
 GlobWebMapEngine.prototype.destroy = function()

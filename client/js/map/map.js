@@ -50,6 +50,12 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				this.features.push(features[i]);
 			}
 		};
+		this.removeFeatures = function(features) {
+			for ( var i = 0; i < features.length; i++ ) {
+				mapEngine.removeFeature( this.engineLayer, features[i] );
+				this.features.slice( this.features.indexOf(features[i]), 1 );
+			}
+		};
 		this.modifyFeaturesStyle = function(features,style) {
 			for ( var i = 0; i < features.length; i++ ) {
 				features[i].properties.styleHint = style;

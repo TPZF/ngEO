@@ -215,7 +215,7 @@ return {
 			name: "Result Footprints",
 			type: "Feature",
 			visible: true,
-			style: "footprint"
+			style: "results-footprint"
 		});
 		var browsesLayer = Map.addLayer({
 			name: "Result Browses",
@@ -224,39 +224,26 @@ return {
 		});
 				
 		var shopcartLayer = Map.addLayer({
-			name: "Shopcart Layer",
+			name: "Shopcart Footprints",
 			type: "Feature",
-			visible: true
+			visible: true,
+			style: "shopcart-footprint"
 		});
 		
-//		ShopcartCollection.on('shopcart:loaded', function(shopcartItems){
-//			browsesLayer.clear();
-//			var features = [];
-//			for (var i=0; i<shopcartItems.length; i++){
-//				features.push(shopcartItems[i].product);
-//			}
-//			shopcartLayer.addFeatures(features);
-//			//browsesLayer.addFeatures(features);
-//		});
-//		
-//		ShopcartCollection.on("selectShopcartItems", function(shopcartItems) {
-//			var features = [];
-//			for (var i=0; i<shopcartItems.length; i++){
-//				features.push(shopcartItems[i].product);
-//			}
-//			shopcartLayer.modifyFeaturesStyle(features, "select");
-//			browsesLayer.addFeatures(features);
-//		});
-//		
-//		ShopcartCollection.on("unselectShopcartItems", function(shopcartItems) {
-//			var features = [];
-//			for (var i=0; i<shopcartItems.length; i++){
-//				features.push(shopcartItems[i].product);
-//			}
-//			shopcartLayer.modifyFeaturesStyle(features, "default");
-//			browsesLayer.removeFeatures(features);
-//		});
-//		
+		// Manage display of shopcart footprints
+		ShopcartCollection.on('change:current', function( current ) {
+			shopcartLayer.clear();
+			current.on('shopcart:loaded', function(){
+				shopcartLayer.addFeatures(current.features);
+			});
+			current.on('shopcart:itemsAdded', function(features){
+				shopcartLayer.addFeatures(features);
+			});
+			current.on('shopcart:itemsDeleted', function(features){
+				shopcartLayer.removeFeatures(features);
+			});
+		});
+			
 		SearchResults.on('reset:features', function() {
 			footprintLayer.clear();
 			browsesLayer.clear();
