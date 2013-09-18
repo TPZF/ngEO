@@ -1,334 +1,797 @@
 {
-    "items": [
-        {
-            "shopcartId": "TPZ_SHP_01",
-            "id": "item1",
-            "product": {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [
-                                100,
-                                0
-                            ],
-                            [
-                                101,
-                                0
-                            ],
-                            [
-                                101,
-                                1
-                            ],
-                            [
-                                100,
-                                1
-                            ],
-                            [
-                                100,
-                                0
-                            ]
-                        ]
-                    ]
-                },
-                "id": "S11A0001",
-                "properties": {
-                    "productUrl": "http://localhost:3000/ngeo/files/product.zip",
-                    "EarthObservation": {
-                        "gml_beginPosition": "2001-01-01T10:00:00.00Z",
-                        "gml_endPosition": "2001-01-01T12:00:00.00Z",
-                        "gml_timePosition": "2001-01-01T12:00:00.00Z",
-                        "EarthObservationEquipment": {
-                            "eop_platformShortName": "SENTINEL-1",
-                            "eop_platformSerialIdentifier": "1A",
-                            "eop_instrumentShortName": "SAR",
-                            "eop_sensorType": "RADAR",
-                            "eop_operationalMode": "SM",
-                            "eop_swathIdentifier": "I1",
-                            "Acquisition": {
-                                "eop_orbitNumber": 1000,
-                                "eop_orbitDirection": "ASCENDING",
-                                "eop_wrsLongitudeGrid": "150",
-                                "eop_wrsLatitudeGrid": "7200",
-                                "eop_startTimeFromAscendingNode": 1000000,
-                                "eop_completionTimeFromAscendingNode": 1200000,
-                                "eop_illuminationAzimuthAngle": 1.5,
-                                "eop_illuminationZenithAngle": 1.5,
-                                "eop_illuminationElevationAngle": 1.5,
-                                "atm_multiViewAngles": 1,
-                                "atm_centreViewAngles": 1,
-                                "sar_polarisationMode": "D",
-                                "sar_polarisationChannels": "HH",
-                                "sar_antennaLookDirection": "LEFT",
-                                "sar_minimumIncidenceAngle": 1,
-                                "sar_maximumIncidenceAngle": 1,
-                                "sar_incidenceAngleVariation": 1,
-                                "sar_dopplerFrequency": 1
-                            }
-                        },
-                        "om_observedProperty": "href",
-                        "EarthObservationResult": {
-                            "eop_ProductInformation": {
-                                "eop_filename": "",
-                                "eop_version": "",
-                                "eop_size": ""
-                            },
-                            "atm_cloudCoverPercentage": 10,
-                            "atm_snowCoverPercentage": 15,
-                            "opt_cloudCoverPercentage": 10,
-                            "opt_snowCoverPercentage": 15
-                        },
-                        "EarthObservationMetaData": {
-                            "eop_identifier": "S11A0001",
-                            "eop_parentIdentifier": "S1_IW_GRDH_1S",
-                            "eop_acquisitionType": "NOMINAL",
-                            "eop_acquisitionSubType": "subtype",
-                            "eop_productType": "S1_IW_GRDH_1S",
-                            "eop_status": "ARCHIVED",
-                            "eop_imageQualityDegradation": 10.5,
-                            "eop_imageQualityStatus": "NOMINAL",
-                            "eop_imageQualityDegradationTag": [
-                                "RADIOMETRY",
-                                "MISSING_LINES"
-                            ],
-                            "eop_imageQualityReportURL": "http://srv/quality/report.xml",
-                            "eop_processing": {
-                                "eop_processingMode": "level1"
-                            },
-                            "eop_productGroupId": "grp_1",
-                            "eop_localAttribute": [
-                                "pitch",
-                                "star_name"
-                            ],
-                            "eop_localValue": [
-                                "0.1",
-                                "aldebaran"
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        {
-            "shopcartId": "TPZ_SHP_01",
-            "id": "item2",
-            "product": {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [
-                                100,
-                                0
-                            ],
-                            [
-                                101,
-                                0
-                            ],
-                            [
-                                101,
-                                1
-                            ],
-                            [
-                                100,
-                                1
-                            ],
-                            [
-                                100,
-                                0
-                            ]
-                        ]
-                    ]
-                },
-                "id": "S11A0002",
-                "properties": {
-                    "productUrl": "http://localhost:3000/ngeo/files/product.zip",
-                    "EarthObservation": {
-                        "gml_beginPosition": "2001-01-01T10:00:00.00Z",
-                        "gml_endPosition": "2001-01-01T12:00:00.00Z",
-                        "gml_timePosition": "2001-01-01T12:00:00.00Z",
-                        "EarthObservationEquipment": {
-                            "eop_platformShortName": "SENTINEL-1",
-                            "eop_platformSerialIdentifier": "1A",
-                            "eop_instrumentShortName": "SAR",
-                            "eop_sensorType": "RADAR",
-                            "eop_operationalMode": "SM",
-                            "eop_swathIdentifier": "I1",
-                            "Acquisition": {
-                                "eop_orbitNumber": 1000,
-                                "eop_orbitDirection": "ASCENDING",
-                                "eop_wrsLongitudeGrid": "150",
-                                "eop_wrsLatitudeGrid": "7200",
-                                "eop_startTimeFromAscendingNode": 1000000,
-                                "eop_completionTimeFromAscendingNode": 1200000,
-                                "eop_illuminationAzimuthAngle": 1.5,
-                                "eop_illuminationZenithAngle": 1.5,
-                                "eop_illuminationElevationAngle": 1.5,
-                                "atm_multiViewAngles": 1,
-                                "atm_centreViewAngles": 1,
-                                "sar_polarisationMode": "D",
-                                "sar_polarisationChannels": "HH",
-                                "sar_antennaLookDirection": "LEFT",
-                                "sar_minimumIncidenceAngle": 1,
-                                "sar_maximumIncidenceAngle": 1,
-                                "sar_incidenceAngleVariation": 1,
-                                "sar_dopplerFrequency": 1
-                            }
-                        },
-                        "om_observedProperty": "href",
-                        "EarthObservationResult": {
-                            "eop_ProductInformation": {
-                                "eop_filename": "",
-                                "eop_version": "",
-                                "eop_size": ""
-                            },
-                            "atm_cloudCoverPercentage": 10,
-                            "atm_snowCoverPercentage": 15,
-                            "opt_cloudCoverPercentage": 10,
-                            "opt_snowCoverPercentage": 15
-                        },
-                        "EarthObservationMetaData": {
-                            "eop_identifier": "S11A0001",
-                            "eop_parentIdentifier": "S1_IW_GRDH_1S",
-                            "eop_acquisitionType": "NOMINAL",
-                            "eop_acquisitionSubType": "subtype",
-                            "eop_productType": "S1_IW_GRDH_1S",
-                            "eop_status": "ARCHIVED",
-                            "eop_imageQualityDegradation": 10.5,
-                            "eop_imageQualityStatus": "NOMINAL",
-                            "eop_imageQualityDegradationTag": [
-                                "RADIOMETRY",
-                                "MISSING_LINES"
-                            ],
-                            "eop_imageQualityReportURL": "http://srv/quality/report.xml",
-                            "eop_processing": {
-                                "eop_processingMode": "level1"
-                            },
-                            "eop_productGroupId": "grp_1",
-                            "eop_localAttribute": [
-                                "pitch",
-                                "star_name"
-                            ],
-                            "eop_localValue": [
-                                "0.1",
-                                "aldebaran"
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        {
-            "shopcartId": "TPZ_SHP_01",
-            "id": "item3",
-            "product": {
-                "type": "Feature",
-                "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                        [
-                            [
-                                100,
-                                0
-                            ],
-                            [
-                                101,
-                                0
-                            ],
-                            [
-                                101,
-                                1
-                            ],
-                            [
-                                100,
-                                1
-                            ],
-                            [
-                                100,
-                                0
-                            ]
-                        ]
-                    ]
-                },
-                "id": "S11A0003",
-                "properties": {
-                    "productUrl": "http://localhost:3000/ngeo/files/product.zip",
-                    "EarthObservation": {
-                        "gml_beginPosition": "2001-01-01T10:00:00.00Z",
-                        "gml_endPosition": "2001-01-01T12:00:00.00Z",
-                        "gml_timePosition": "2001-01-01T12:00:00.00Z",
-                        "EarthObservationEquipment": {
-                            "eop_platformShortName": "SENTINEL-1",
-                            "eop_platformSerialIdentifier": "1A",
-                            "eop_instrumentShortName": "SAR",
-                            "eop_sensorType": "RADAR",
-                            "eop_operationalMode": "SM",
-                            "eop_swathIdentifier": "I1",
-                            "Acquisition": {
-                                "eop_orbitNumber": 1000,
-                                "eop_orbitDirection": "ASCENDING",
-                                "eop_wrsLongitudeGrid": "150",
-                                "eop_wrsLatitudeGrid": "7200",
-                                "eop_startTimeFromAscendingNode": 1000000,
-                                "eop_completionTimeFromAscendingNode": 1200000,
-                                "eop_illuminationAzimuthAngle": 1.5,
-                                "eop_illuminationZenithAngle": 1.5,
-                                "eop_illuminationElevationAngle": 1.5,
-                                "atm_multiViewAngles": 1,
-                                "atm_centreViewAngles": 1,
-                                "sar_polarisationMode": "D",
-                                "sar_polarisationChannels": "HH",
-                                "sar_antennaLookDirection": "LEFT",
-                                "sar_minimumIncidenceAngle": 1,
-                                "sar_maximumIncidenceAngle": 1,
-                                "sar_incidenceAngleVariation": 1,
-                                "sar_dopplerFrequency": 1
-                            }
-                        },
-                        "om_observedProperty": "href",
-                        "EarthObservationResult": {
-                            "eop_ProductInformation": {
-                                "eop_filename": "",
-                                "eop_version": "",
-                                "eop_size": ""
-                            },
-                            "atm_cloudCoverPercentage": 10,
-                            "atm_snowCoverPercentage": 15,
-                            "opt_cloudCoverPercentage": 10,
-                            "opt_snowCoverPercentage": 15
-                        },
-                        "EarthObservationMetaData": {
-                            "eop_identifier": "S11A0001",
-                            "eop_parentIdentifier": "S1_IW_GRDH_1S",
-                            "eop_acquisitionType": "NOMINAL",
-                            "eop_acquisitionSubType": "subtype",
-                            "eop_productType": "S1_IW_GRDH_1S",
-                            "eop_status": "ARCHIVED",
-                            "eop_imageQualityDegradation": 10.5,
-                            "eop_imageQualityStatus": "NOMINAL",
-                            "eop_imageQualityDegradationTag": [
-                                "RADIOMETRY",
-                                "MISSING_LINES"
-                            ],
-                            "eop_imageQualityReportURL": "http://srv/quality/report.xml",
-                            "eop_processing": {
-                                "eop_processingMode": "level1"
-                            },
-                            "eop_productGroupId": "grp_1",
-                            "eop_localAttribute": [
-                                "pitch",
-                                "star_name"
-                            ],
-                            "eop_localValue": [
-                                "0.1",
-                                "aldebaran"
-                            ]
-                        }
-                    }
-                }
-            }
-        }
-    ]
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							142.19,
+							-37.41
+						],
+						[
+							143.39,
+							-37.67
+						],
+						[
+							142.74,
+							-39.53
+						],
+						[
+							141.5,
+							-39.26
+						],
+						[
+							142.19,
+							-37.41
+						]
+					]
+				]
+			},
+			"id": 365,
+			"properties": {
+				"productUrl": "http://localhost:3000/ngeo/catalogue/ND_OPT_1/search?id=365",
+				"EarthObservation": {
+					"gml_beginPosition": "2011-05-29T23:56:22.810Z",
+					"gml_endPosition": "2011-05-29T23:56:54.480Z",
+					"gml_timePosition": "2001-01-01T12:00:00.00Z",
+					"EarthObservationEquipment": {
+						"eop_platformShortName": "SENTINEL-1",
+						"eop_platformSerialIdentifier": "1A",
+						"eop_instrumentShortName": "SAR",
+						"eop_sensorType": "RADAR",
+						"eop_operationalMode": "SM",
+						"eop_swathIdentifier": "I3",
+						"Acquisition": {
+							"eop_orbitNumber": 30300,
+							"eop_orbitDirection": "DESCENDING",
+							"eop_wrsLongitudeGrid": "150",
+							"eop_wrsLatitudeGrid": "7200",
+							"eop_startTimeFromAscendingNode": 1000000,
+							"eop_completionTimeFromAscendingNode": 1200000,
+							"eop_illuminationAzimuthAngle": 1.5,
+							"eop_illuminationZenithAngle": 1.5,
+							"eop_illuminationElevationAngle": 1.5,
+							"atm_multiViewAngles": 1,
+							"atm_centreViewAngles": 1,
+							"sar_polarisationMode": "D",
+							"sar_polarisationChannels": "HH",
+							"sar_antennaLookDirection": "LEFT",
+							"sar_minimumIncidenceAngle": 1,
+							"sar_maximumIncidenceAngle": 1,
+							"sar_incidenceAngleVariation": 1,
+							"sar_dopplerFrequency": 1
+						}
+					},
+					"om_observedProperty": "href",
+					"EarthObservationResult": {
+						"eop_ProductInformation": {
+							"eop_filename": "http://localhost:3000/ngeo/files/product.zip",
+							"eop_version": "1.1",
+							"eop_size": 1450000
+						},
+						"atm_cloudCoverPercentage": 10,
+						"atm_snowCoverPercentage": 15,
+						"opt_cloudCoverPercentage": 10,
+						"opt_snowCoverPercentage": 15,
+						"eop_BrowseInformation": {
+							"eop_type": "wms",
+							"eop_layer": "urn:ogc:def:EOP:ESA:ESA.EECF.ENVISAT_ASA_IMx_xS",
+							"eop_url": "/wms2eos/servlets/wms"
+						}
+					},
+					"EarthObservationMetaData": {
+						"eop_identifier": "S11A0002",
+						"eop_parentIdentifier": "S1_IW_GRDH_1S",
+						"eop_acquisitionType": "NOMINAL",
+						"eop_acquisitionSubType": "subtype",
+						"eop_productType": "S1_IW_GRDH_1S",
+						"eop_status": "ARCHIVED",
+						"eop_imageQualityDegradation": 10.5,
+						"eop_imageQualityStatus": "NOMINAL",
+						"eop_imageQualityDegradationTag": [
+							"RADIOMETRY",
+							"MISSING_LINES"
+						],
+						"eop_imageQualityReportURL": "http://srv/quality/report.xml",
+						"eop_processing": {
+							"eop_processingMode": "level1"
+						},
+						"eop_productGroupId": "grp_1",
+						"eop_localAttribute": [
+							"pitch",
+							"star_name"
+						],
+						"eop_localValue": [
+							"0.1",
+							"aldebaran"
+						]
+					}
+				},
+				"shopcartItemId": "73d7a39a-e91d-42da-9125-dad74aa2212e"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							-44.67,
+							0.14
+						],
+						[
+							-44.02,
+							0
+						],
+						[
+							-44.77,
+							-3.39
+						],
+						[
+							-45.59,
+							-6.95
+						],
+						[
+							-46.44,
+							-10.5
+						],
+						[
+							-47.32,
+							-14.05
+						],
+						[
+							-48.24,
+							-17.6
+						],
+						[
+							-49.21,
+							-21.14
+						],
+						[
+							-50.23,
+							-24.67
+						],
+						[
+							-50.5,
+							-25.53
+						],
+						[
+							-51.21,
+							-25.35
+						],
+						[
+							-50.94,
+							-24.49
+						],
+						[
+							-49.9,
+							-20.97
+						],
+						[
+							-48.92,
+							-17.43
+						],
+						[
+							-47.99,
+							-13.89
+						],
+						[
+							-47.1,
+							-10.35
+						],
+						[
+							-46.24,
+							-6.8
+						],
+						[
+							-45.42,
+							-3.24
+						],
+						[
+							-44.67,
+							0.14
+						]
+					]
+				]
+			},
+			"id": 347,
+			"properties": {
+				"productUrl": "http://localhost:3000/ngeo/catalogue/ND_OPT_1/search?id=347",
+				"EarthObservation": {
+					"gml_beginPosition": "2011-05-28T12:41:05.200Z",
+					"gml_endPosition": "2011-05-28T12:48:16.950Z",
+					"gml_timePosition": "2001-01-01T12:00:00.00Z",
+					"EarthObservationEquipment": {
+						"eop_platformShortName": "SENTINEL-1",
+						"eop_platformSerialIdentifier": "1A",
+						"eop_instrumentShortName": "SAR",
+						"eop_sensorType": "RADAR",
+						"eop_operationalMode": "SM",
+						"eop_swathIdentifier": "I1",
+						"Acquisition": {
+							"eop_orbitNumber": 1000,
+							"eop_orbitDirection": "ASCENDING",
+							"eop_wrsLongitudeGrid": "150",
+							"eop_wrsLatitudeGrid": "7200",
+							"eop_startTimeFromAscendingNode": 1000000,
+							"eop_completionTimeFromAscendingNode": 1200000,
+							"eop_illuminationAzimuthAngle": 1.5,
+							"eop_illuminationZenithAngle": 1.5,
+							"eop_illuminationElevationAngle": 1.5,
+							"atm_multiViewAngles": 1,
+							"atm_centreViewAngles": 1,
+							"sar_polarisationMode": "D",
+							"sar_polarisationChannels": "HH",
+							"sar_antennaLookDirection": "LEFT",
+							"sar_minimumIncidenceAngle": 1,
+							"sar_maximumIncidenceAngle": 1,
+							"sar_incidenceAngleVariation": 1,
+							"sar_dopplerFrequency": 1
+						}
+					},
+					"om_observedProperty": "href",
+					"EarthObservationResult": {
+						"eop_ProductInformation": {
+							"eop_filename": "http://localhost:3000/ngeo/files/product.zip",
+							"eop_version": "",
+							"eop_size": ""
+						},
+						"atm_cloudCoverPercentage": 10,
+						"atm_snowCoverPercentage": 15,
+						"opt_cloudCoverPercentage": 10,
+						"opt_snowCoverPercentage": 15,
+						"eop_BrowseInformation": {
+							"eop_type": "wms",
+							"eop_layer": "urn:ogc:def:EOP:ESA:ESA.EECF.ENVISAT_ASA_IMx_xS",
+							"eop_url": "/wms2eos/servlets/wms"
+						}
+					},
+					"EarthObservationMetaData": {
+						"eop_identifier": "S11A0006",
+						"eop_parentIdentifier": "S1_IW_GRDH_1S",
+						"eop_acquisitionType": "NOMINAL",
+						"eop_acquisitionSubType": "subtype",
+						"eop_productType": "S1_IW_GRDH_1S",
+						"eop_status": "ACQUIRED",
+						"eop_imageQualityDegradation": 10.5,
+						"eop_imageQualityStatus": "NOMINAL",
+						"eop_imageQualityDegradationTag": [
+							"RADIOMETRY",
+							"MISSING_LINES"
+						],
+						"eop_imageQualityReportURL": "http://srv/quality/report.xml",
+						"eop_processing": {
+							"eop_processingMode": "level1"
+						},
+						"eop_productGroupId": "grp_1",
+						"eop_localAttribute": [
+							"pitch",
+							"star_name"
+						],
+						"eop_localValue": [
+							"0.1",
+							"aldebaran"
+						]
+					}
+				},
+				"shopcartItemId": "20c82889-18f0-4993-8753-2ebd552904da"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							14.69,
+							44.62
+						],
+						[
+							15.62,
+							44.5
+						],
+						[
+							14.83,
+							41.16
+						],
+						[
+							14.02,
+							37.61
+						],
+						[
+							13.24,
+							34.05
+						],
+						[
+							12.48,
+							30.49
+						],
+						[
+							11.73,
+							26.93
+						],
+						[
+							11.04,
+							23.61
+						],
+						[
+							10.32,
+							23.73
+						],
+						[
+							11,
+							27.05
+						],
+						[
+							11.72,
+							30.61
+						],
+						[
+							12.45,
+							34.17
+						],
+						[
+							13.19,
+							37.72
+						],
+						[
+							13.95,
+							41.27
+						],
+						[
+							14.69,
+							44.62
+						]
+					]
+				]
+			},
+			"id": 344,
+			"properties": {
+				"productUrl": "http://localhost:3000/ngeo/catalogue/ND_OPT_1/search?id=344",
+				"EarthObservation": {
+					"gml_beginPosition": "2011-05-28T09:08:07.660Z",
+					"gml_endPosition": "2011-05-28T09:14:00.180Z",
+					"gml_timePosition": "2001-01-01T12:00:00.00Z",
+					"EarthObservationEquipment": {
+						"eop_platformShortName": "SENTINEL-2",
+						"eop_platformSerialIdentifier": "1A",
+						"eop_instrumentShortName": "SAR",
+						"eop_sensorType": "RADAR",
+						"eop_operationalMode": "SM",
+						"eop_swathIdentifier": "I5",
+						"Acquisition": {
+							"eop_orbitNumber": 300,
+							"eop_orbitDirection": "ASCENDING",
+							"eop_wrsLongitudeGrid": "150",
+							"eop_wrsLatitudeGrid": "7200",
+							"eop_startTimeFromAscendingNode": 1000000,
+							"eop_completionTimeFromAscendingNode": 1200000,
+							"eop_illuminationAzimuthAngle": 1.5,
+							"eop_illuminationZenithAngle": 1.5,
+							"eop_illuminationElevationAngle": 1.5,
+							"atm_multiViewAngles": 1,
+							"atm_centreViewAngles": 1,
+							"sar_polarisationMode": "D",
+							"sar_polarisationChannels": "HH",
+							"sar_antennaLookDirection": "LEFT",
+							"sar_minimumIncidenceAngle": 1,
+							"sar_maximumIncidenceAngle": 1,
+							"sar_incidenceAngleVariation": 1,
+							"sar_dopplerFrequency": 1
+						}
+					},
+					"om_observedProperty": "href",
+					"EarthObservationResult": {
+						"eop_ProductInformation": {
+							"eop_filename": "",
+							"eop_version": "",
+							"eop_size": ""
+						},
+						"atm_cloudCoverPercentage": 10,
+						"atm_snowCoverPercentage": 15,
+						"opt_cloudCoverPercentage": 10,
+						"opt_snowCoverPercentage": 15,
+						"eop_BrowseInformation": {
+							"eop_type": "wms",
+							"eop_layer": "urn:ogc:def:EOP:ESA:ESA.EECF.ENVISAT_ASA_IMx_xS",
+							"eop_url": "/wms2eos/servlets/wms"
+						}
+					},
+					"EarthObservationMetaData": {
+						"eop_identifier": "S11A0003",
+						"eop_parentIdentifier": "S1_IW_GRDH_1S",
+						"eop_acquisitionType": "NOMINAL",
+						"eop_acquisitionSubType": "subtype",
+						"eop_productType": "S1_IW_GRDH_1S",
+						"eop_status": "ACQUIRED",
+						"eop_imageQualityDegradation": 10.5,
+						"eop_imageQualityStatus": "NOMINAL",
+						"eop_imageQualityDegradationTag": [
+							"RADIOMETRY",
+							"MISSING_LINES"
+						],
+						"eop_imageQualityReportURL": "http://srv/quality/report.xml",
+						"eop_processing": {
+							"eop_processingMode": "level1"
+						},
+						"eop_productGroupId": "grp_1",
+						"eop_localAttribute": [
+							"pitch",
+							"star_name"
+						],
+						"eop_localValue": [
+							"0.1",
+							"aldebaran"
+						]
+					}
+				},
+				"shopcartItemId": "5e08e0f3-f740-4037-a5a7-91d36f50e6b0"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							142.2,
+							36.93
+						],
+						[
+							141.38,
+							36.82
+						],
+						[
+							140.62,
+							40.24
+						],
+						[
+							139.86,
+							43.42
+						],
+						[
+							140.77,
+							43.54
+						],
+						[
+							141.48,
+							40.35
+						],
+						[
+							142.2,
+							36.93
+						]
+					]
+				]
+			},
+			"id": 333,
+			"properties": {
+				"productUrl": "http://localhost:3000/ngeo/catalogue/ND_OPT_1/search?id=333",
+				"EarthObservation": {
+					"gml_beginPosition": "2011-05-27T12:37:31.820Z",
+					"gml_endPosition": "2011-05-27T12:39:23.470Z",
+					"gml_timePosition": "2001-01-01T12:00:00.00Z",
+					"EarthObservationEquipment": {
+						"eop_platformShortName": "SENTINEL-2",
+						"eop_platformSerialIdentifier": "1A",
+						"eop_instrumentShortName": "SAR",
+						"eop_sensorType": "RADAR",
+						"eop_operationalMode": "SM",
+						"eop_swathIdentifier": "I5",
+						"Acquisition": {
+							"eop_orbitNumber": 300,
+							"eop_orbitDirection": "ASCENDING",
+							"eop_wrsLongitudeGrid": "150",
+							"eop_wrsLatitudeGrid": "7200",
+							"eop_startTimeFromAscendingNode": 1000000,
+							"eop_completionTimeFromAscendingNode": 1200000,
+							"eop_illuminationAzimuthAngle": 1.5,
+							"eop_illuminationZenithAngle": 1.5,
+							"eop_illuminationElevationAngle": 1.5,
+							"atm_multiViewAngles": 1,
+							"atm_centreViewAngles": 1,
+							"sar_polarisationMode": "D",
+							"sar_polarisationChannels": "HH",
+							"sar_antennaLookDirection": "LEFT",
+							"sar_minimumIncidenceAngle": 1,
+							"sar_maximumIncidenceAngle": 1,
+							"sar_incidenceAngleVariation": 1,
+							"sar_dopplerFrequency": 1
+						}
+					},
+					"om_observedProperty": "href",
+					"EarthObservationResult": {
+						"eop_ProductInformation": {
+							"eop_filename": "",
+							"eop_version": "",
+							"eop_size": ""
+						},
+						"atm_cloudCoverPercentage": 10,
+						"atm_snowCoverPercentage": 15,
+						"opt_cloudCoverPercentage": 10,
+						"opt_snowCoverPercentage": 15,
+						"eop_BrowseInformation": {
+							"eop_type": "wms",
+							"eop_layer": "urn:ogc:def:EOP:ESA:ESA.EECF.ENVISAT_ASA_IMx_xS",
+							"eop_url": "/wms2eos/servlets/wms"
+						}
+					},
+					"EarthObservationMetaData": {
+						"eop_identifier": "S11A0003",
+						"eop_parentIdentifier": "S1_IW_GRDH_1S",
+						"eop_acquisitionType": "NOMINAL",
+						"eop_acquisitionSubType": "subtype",
+						"eop_productType": "S1_IW_GRDH_1S",
+						"eop_status": "ACQUIRED",
+						"eop_imageQualityDegradation": 10.5,
+						"eop_imageQualityStatus": "NOMINAL",
+						"eop_imageQualityDegradationTag": [
+							"RADIOMETRY",
+							"MISSING_LINES"
+						],
+						"eop_imageQualityReportURL": "http://srv/quality/report.xml",
+						"eop_processing": {
+							"eop_processingMode": "level1"
+						},
+						"eop_productGroupId": "grp_1",
+						"eop_localAttribute": [
+							"pitch",
+							"star_name"
+						],
+						"eop_localValue": [
+							"0.1",
+							"aldebaran"
+						]
+					}
+				},
+				"shopcartItemId": "16da57c5-5098-413d-b831-60655e7ef78e"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							95.13,
+							38.11
+						],
+						[
+							95.96,
+							38
+						],
+						[
+							95.23,
+							34.64
+						],
+						[
+							94.46,
+							31.08
+						],
+						[
+							93.75,
+							27.71
+						],
+						[
+							93.01,
+							27.83
+						],
+						[
+							93.7,
+							31.2
+						],
+						[
+							94.43,
+							34.76
+						],
+						[
+							95.13,
+							38.11
+						]
+					]
+				]
+			},
+			"id": 311,
+			"properties": {
+				"productUrl": "http://localhost:3000/ngeo/catalogue/ND_OPT_1/search?id=311",
+				"EarthObservation": {
+					"gml_beginPosition": "2011-05-26T03:42:30.010Z",
+					"gml_endPosition": "2011-05-26T03:45:23.470Z",
+					"gml_timePosition": "2001-01-01T12:00:00.00Z",
+					"EarthObservationEquipment": {
+						"eop_platformShortName": "SENTINEL-2",
+						"eop_platformSerialIdentifier": "1A",
+						"eop_instrumentShortName": "SAR",
+						"eop_sensorType": "RADAR",
+						"eop_operationalMode": "SM",
+						"eop_swathIdentifier": "I5",
+						"Acquisition": {
+							"eop_orbitNumber": 300,
+							"eop_orbitDirection": "ASCENDING",
+							"eop_wrsLongitudeGrid": "150",
+							"eop_wrsLatitudeGrid": "7200",
+							"eop_startTimeFromAscendingNode": 1000000,
+							"eop_completionTimeFromAscendingNode": 1200000,
+							"eop_illuminationAzimuthAngle": 1.5,
+							"eop_illuminationZenithAngle": 1.5,
+							"eop_illuminationElevationAngle": 1.5,
+							"atm_multiViewAngles": 1,
+							"atm_centreViewAngles": 1,
+							"sar_polarisationMode": "D",
+							"sar_polarisationChannels": "HH",
+							"sar_antennaLookDirection": "LEFT",
+							"sar_minimumIncidenceAngle": 1,
+							"sar_maximumIncidenceAngle": 1,
+							"sar_incidenceAngleVariation": 1,
+							"sar_dopplerFrequency": 1
+						}
+					},
+					"om_observedProperty": "href",
+					"EarthObservationResult": {
+						"eop_ProductInformation": {
+							"eop_filename": "",
+							"eop_version": "",
+							"eop_size": ""
+						},
+						"atm_cloudCoverPercentage": 10,
+						"atm_snowCoverPercentage": 15,
+						"opt_cloudCoverPercentage": 10,
+						"opt_snowCoverPercentage": 15,
+						"eop_BrowseInformation": {
+							"eop_type": "wms",
+							"eop_layer": "urn:ogc:def:EOP:ESA:ESA.EECF.ENVISAT_ASA_IMx_xS",
+							"eop_url": "/wms2eos/servlets/wms"
+						}
+					},
+					"EarthObservationMetaData": {
+						"eop_identifier": "S11A0003",
+						"eop_parentIdentifier": "S1_IW_GRDH_1S",
+						"eop_acquisitionType": "NOMINAL",
+						"eop_acquisitionSubType": "subtype",
+						"eop_productType": "S1_IW_GRDH_1S",
+						"eop_status": "ACQUIRED",
+						"eop_imageQualityDegradation": 10.5,
+						"eop_imageQualityStatus": "NOMINAL",
+						"eop_imageQualityDegradationTag": [
+							"RADIOMETRY",
+							"MISSING_LINES"
+						],
+						"eop_imageQualityReportURL": "http://srv/quality/report.xml",
+						"eop_processing": {
+							"eop_processingMode": "level1"
+						},
+						"eop_productGroupId": "grp_1",
+						"eop_localAttribute": [
+							"pitch",
+							"star_name"
+						],
+						"eop_localValue": [
+							"0.1",
+							"aldebaran"
+						]
+					}
+				},
+				"shopcartItemId": "f26b8e3e-1332-4f75-bdb2-f2ba15462f4a"
+			}
+		},
+		{
+			"type": "Feature",
+			"geometry": {
+				"type": "Polygon",
+				"coordinates": [
+					[
+						[
+							123.22,
+							26.24
+						],
+						[
+							122.22,
+							26.05
+						],
+						[
+							121.78,
+							27.91
+						],
+						[
+							122.8,
+							28.1
+						],
+						[
+							123.22,
+							26.24
+						]
+					]
+				]
+			},
+			"id": 303,
+			"properties": {
+				"productUrl": "http://localhost:3000/ngeo/catalogue/ND_OPT_1/search?id=303",
+				"EarthObservation": {
+					"gml_beginPosition": "2011-05-25T13:48:07.820Z",
+					"gml_endPosition": "2011-05-25T13:48:38.980Z",
+					"gml_timePosition": "2001-01-01T12:00:00.00Z",
+					"EarthObservationEquipment": {
+						"eop_platformShortName": "SENTINEL-1",
+						"eop_platformSerialIdentifier": "1A",
+						"eop_instrumentShortName": "SAR",
+						"eop_sensorType": "RADAR",
+						"eop_operationalMode": "SM",
+						"eop_swathIdentifier": "I1",
+						"Acquisition": {
+							"eop_orbitNumber": 1000,
+							"eop_orbitDirection": "ASCENDING",
+							"eop_wrsLongitudeGrid": "150",
+							"eop_wrsLatitudeGrid": "7200",
+							"eop_startTimeFromAscendingNode": 1000000,
+							"eop_completionTimeFromAscendingNode": 1200000,
+							"eop_illuminationAzimuthAngle": 1.5,
+							"eop_illuminationZenithAngle": 1.5,
+							"eop_illuminationElevationAngle": 1.5,
+							"atm_multiViewAngles": 1,
+							"atm_centreViewAngles": 1,
+							"sar_polarisationMode": "D",
+							"sar_polarisationChannels": "HH",
+							"sar_antennaLookDirection": "LEFT",
+							"sar_minimumIncidenceAngle": 1,
+							"sar_maximumIncidenceAngle": 1,
+							"sar_incidenceAngleVariation": 1,
+							"sar_dopplerFrequency": 1
+						}
+					},
+					"om_observedProperty": "href",
+					"EarthObservationResult": {
+						"eop_ProductInformation": {
+							"eop_filename": "http://localhost:3000/ngeo/files/product.zip",
+							"eop_version": "",
+							"eop_size": ""
+						},
+						"atm_cloudCoverPercentage": 10,
+						"atm_snowCoverPercentage": 15,
+						"opt_cloudCoverPercentage": 10,
+						"opt_snowCoverPercentage": 15,
+						"eop_BrowseInformation": {
+							"eop_type": "wms",
+							"eop_layer": "urn:ogc:def:EOP:ESA:ESA.EECF.ENVISAT_ASA_IMx_xS",
+							"eop_url": "/wms2eos/servlets/wms"
+						}
+					},
+					"EarthObservationMetaData": {
+						"eop_identifier": "S11A0006",
+						"eop_parentIdentifier": "S1_IW_GRDH_1S",
+						"eop_acquisitionType": "NOMINAL",
+						"eop_acquisitionSubType": "subtype",
+						"eop_productType": "S1_IW_GRDH_1S",
+						"eop_status": "ACQUIRED",
+						"eop_imageQualityDegradation": 10.5,
+						"eop_imageQualityStatus": "NOMINAL",
+						"eop_imageQualityDegradationTag": [
+							"RADIOMETRY",
+							"MISSING_LINES"
+						],
+						"eop_imageQualityReportURL": "http://srv/quality/report.xml",
+						"eop_processing": {
+							"eop_processingMode": "level1"
+						},
+						"eop_productGroupId": "grp_1",
+						"eop_localAttribute": [
+							"pitch",
+							"star_name"
+						],
+						"eop_localValue": [
+							"0.1",
+							"aldebaran"
+						]
+					}
+				},
+				"shopcartItemId": "c510361d-b1a7-479a-bab6-bee34227ec24"
+			}
+		}
+	]
 }

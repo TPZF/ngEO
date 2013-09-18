@@ -59,9 +59,9 @@ var deleteShopcart = function(id){
 };
 
 var removeItem = function(shopcartContent,id) {
-	for (var i=0; i<shopcartContent.items.length; i++){
-		if (shopcartContent.items[i].id == id){
-			shopcartContent.items.splice(i, 1);
+	for (var i=0; i<shopcartContent.features.length; i++){
+		if (shopcartContent.features[i].properties.shopcartItemId == id){
+			shopcartContent.features.splice(i, 1);
 			return true;
 		}
 	}
@@ -159,13 +159,19 @@ module.exports = {
 						r.on('data', function (chunk) {
 							var feature = JSON.parse(chunk);
 							id = uuid.v4();
+							
+							//Set the shopcart item id on the feature
+							feature.properties.shopcartItemId = id;
+							shopcartContents[req.params.id].features.push(feature);
+							
+							// Add to the response
 							response.shopCartItemAdding.push({"id" : id, "shopcartId" : req.params.id, "product" : feature.properties.productUrl});
-							shopcartContents[req.params.id].items.push({"shopcartId" :  req.params.id, "id" : id, "product": feature});
-							console.log( req.params.id + ' : ' + shopcartContents[req.params.id].items.length );
+							
+							//console.log( req.params.id + ' : ' + shopcartContents[req.params.id].items.length );
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
 								//save the new content of the shopcart 
-								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
+								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id],null,'\t'), 'utf8');
 								res.send(response);	
 							}
 						});
@@ -173,7 +179,7 @@ module.exports = {
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
 								//save the new content of the shopcart 
-								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
+								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id],null,'\t'), 'utf8');
 								res.send(response);	
 							}
 					}
@@ -211,7 +217,7 @@ module.exports = {
 					removedItems.push({"id" : req.body.shopCartItemRemoving[i].id, "shopcartId": req.params.id});
 				}
 			}
-			fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
+			fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id],null,'\t'), 'utf8');
 			res.send({"shopCartItemRemoving" : removedItems});
 			
 		}
