@@ -117,6 +117,9 @@ var ShopcartItemView = Backbone.View.extend({
 		this.visible = false;
 	},
 	
+	/**
+	 * Add items in the view
+	 */
 	addItems: function(items) {
 		if ( this.visible ) {
 			this.table.fnAddData( items, false );
@@ -130,6 +133,33 @@ var ShopcartItemView = Backbone.View.extend({
 	},
 	
 	/**
+	 * Remove items from the view
+	 */
+	removeItems: function(items) {
+		// First get the indices in the table of the removed items
+		var datas = this.table.fnGetData();
+		var indicesToDelete = [];
+		for (var i=0; i < items.length; i++) {
+			for ( var n = 0; n < datas.length; n++ ) {
+				if ( datas[n].properties.shopcartItemId == items[i].properties.shopcartItemId ) {
+					indicesToDelete.push(n);
+				}
+			}
+			
+		}
+		
+		// Sort indices to remove highest index first
+		indicesToDelete.sort( function(a,b) { return b - a; } );
+		for (var i=0; i < indicesToDelete.length; i++) {
+			this.table.fnDeleteRow( indicesToDelete[i], null, false );
+		}
+		
+		this.updateButtonStatuses();
+		this.table.fnAdjustColumnSizing( true );
+		this.trigger('sizeChanged');
+	},
+	
+	/**
 	 * Set the model used by the view
 	 */
 	setModel: function(model) {
@@ -139,46 +169,21 @@ var ShopcartItemView = Backbone.View.extend({
 		}
 		
 		this.model = model;
+		
+		// Clean-up previous data
+		this.table.fnClearTable();
+		this.shopcartItemsToAdd = [];
+		if ( this.visible ) {
+			this.trigger('sizeChanged');
+		}
 				
+		// Listen to shopcart content modification
 		this.listenTo(model,"selectShopcartItems", this.toggleSelection );
 		this.listenTo(model,"unselectShopcartItems", this.toggleSelection );
 
-		this.listenTo(model,"loaded", function() {
-			this.table.fnClearTable();
-			this.shopcartItemsToAdd = [];
-			this.addItems( this.model.features );
-		});
-		
-		this.listenTo(model,"itemsAdded", function(itemsAdded) {
-			this.addItems(itemsAdded);
-		});	
-		
-		this.listenTo(model,"itemsDeleted", function(removedItems) {
-
-			// First get the indices in the table of the removed items
-			var datas = this.table.fnGetData();
-			var indicesToDelete = [];
-			for (var i=0; i < removedItems.length; i++) {
-				for ( var n = 0; n < datas.length; n++ ) {
-					if ( datas[n].properties.shopcartItemId == removedItems[i].properties.shopcartItemId ) {
-						indicesToDelete.push(n);
-					}
-				}
-				
-			}
-			
-			// Sort indices to remove highest index first
-			indicesToDelete.sort( function(a,b) { return b - a; } );
-			for (var i=0; i < indicesToDelete.length; i++) {
-				this.table.fnDeleteRow( indicesToDelete[i], null, false );
-			}
-			this.table.fnDraw();
-			
-			this.updateButtonStatuses();
-			this.table.fnAdjustColumnSizing( true );
-			this.trigger('sizeChanged');
-
-		});
+		this.listenTo(model,"loaded", this.addItems );
+		this.listenTo(model,"itemsAdded", this.addItems );
+		this.listenTo(model,"itemsDeleted", this.removeItems );
 		
 		model.loadContent();
 	},

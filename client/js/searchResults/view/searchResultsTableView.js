@@ -20,7 +20,9 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.model.on("reset:features", function() {
 			this.table.fnClearTable();
 			this.featuresToAdd = [];
-			this.trigger('sizeChanged');
+			if ( this.visible ) {
+				this.trigger('sizeChanged');
+			}
 		}, this);
 		this.model.on("add:features", function(features) {
 			if ( this.visible ) {
