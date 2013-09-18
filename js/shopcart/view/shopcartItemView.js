@@ -121,7 +121,7 @@ var ShopcartItemView = Backbone.View.extend({
 		if ( this.visible ) {
 			this.table.fnAddData( items, false );
 			this.table.fnAdjustColumnSizing( true );
-			// adjust selection and highlight
+			// adjust selection 
 			this.toggleSelection(this.model.selection);
 			this.trigger('sizeChanged');
 		} else {
@@ -154,15 +154,20 @@ var ShopcartItemView = Backbone.View.extend({
 		});	
 		
 		this.listenTo(model,"shopcart:itemsDeleted", function(removedItems) {
-			var rows = this.table.$("tr",{order: "original"});
 
-			for (var i=0; i<removedItems.length; i++){
-				var index = this.model.features.indexOf(removedItems[i]);			
-				this.table.fnDeleteRow( rows.get(index) );
+			var datas = this.table.fnGetData();
+			for (var i=0; i<removedItems.length; i++) {
+				var index = -1;
+				for ( var n = 0; n < datas.length && index < 0; n++ ) {
+					if ( datas[n].properties.shopcartItemId == removedItems[i].properties.shopcartItemId ) {
+						index = n;
+					}
+				}
+				this.table.fnDeleteRow( index );
 			}
 			this.updateButtonStatuses();
 			this.table.fnAdjustColumnSizing( true );
-			this.trigger('shopcart:sizeChanged');
+			this.trigger('sizeChanged');
 
 		});
 		

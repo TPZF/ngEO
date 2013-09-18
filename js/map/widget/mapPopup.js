@@ -4,8 +4,8 @@
 
 
 define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
-          "searchResults/model/searchResults", "map/utils" ], 
-	function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils) {
+          "searchResults/model/searchResults", "map/utils", "shopcart/model/shopcartCollection" ], 
+	function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils, ShopcartCollection) {
 
 
 var MapPopup = function(container) {
@@ -62,6 +62,12 @@ var MapPopup = function(container) {
 					SearchResults.select(products[i]);
 				}
 			}
+		});
+		
+	var btn = $("<button data-icon='shopcart' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
+		.appendTo( element.find('#buttons') )
+		.click( function() {
+			ShopcartCollection.getCurrent().addItems( SearchResults.getProductUrls(products), products );
 		});
 	
 	parentElement.appendTo(container);

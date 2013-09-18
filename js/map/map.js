@@ -53,7 +53,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		this.removeFeatures = function(features) {
 			for ( var i = 0; i < features.length; i++ ) {
 				mapEngine.removeFeature( this.engineLayer, features[i] );
-				this.features.slice( this.features.indexOf(features[i]), 1 );
+				this.features.splice( this.features.indexOf(features[i]), 1 );
 			}
 		};
 		this.modifyFeaturesStyle = function(features,style) {

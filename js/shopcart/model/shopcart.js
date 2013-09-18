@@ -157,11 +157,11 @@ var Shopcart = Backbone.Model.extend({
 			var feature = this.features[i];
 			if ( feature.properties.shopcartItemId == id ) {
 				// Remove it from items
-				this.features.slice(i,1);
+				this.features.splice(i,1);
 				// Remove it from selection also
 				var is = this.selection.indexOf(feature);
 				if ( is >= 0 ) {
-					this.selection.slice(is,1);
+					this.selection.splice(is,1);
 				}
 				return feature;
 			}
