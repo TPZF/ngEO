@@ -39,6 +39,10 @@ fs.readFile('./productSearch/Crossing_response.json', 'utf8', function (err, dat
 	featureCollections['Crossing']  = JSON.parse(data);
 });
 
+
+var initialized = false;
+
+
 /**
  * Time filter
  */
@@ -79,12 +83,44 @@ var contains = function(g1,g2) {
 	return false;
 }
 
+var findFeature = function(fc,id) {
+	for ( var i = 0; i < fc.features.length; i++ ) {
+		if ( fc.features[i].id == id )
+			return fc.features[i];
+	}
+};
+
+var initializeFeatureCollection = function(featureCollection,id) {
+	for ( var i = 0; i < featureCollection.features.length; i++ )  {
+		var feature = featureCollection.features[i];
+		feature.properties.productUrl = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + feature.id;
+	}
+};
+
 module.exports = function(req, res){
+
+	// Find the feature collection
 	var featureCollection;
 	if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ) {
 		featureCollection = featureCollections[req.param('datasetId')];
 	} else {
 		featureCollection = featureCollections['default'];
+	}
+
+	// Process feature collection to add productUrl
+	if (!initialized) {
+		for ( var x in featureCollections ) {
+			if ( featureCollections.hasOwnProperty(x) ) {
+				initializeFeatureCollection( featureCollections[x], x );
+			}
+		}
+		initialized = true;
+	}
+	
+	// Find with id or not
+	if ( req.query.id ) {
+		res.send( findFeature(featureCollection,req.query.id) );
+		return;
 	}
 	
 	var searchArea;

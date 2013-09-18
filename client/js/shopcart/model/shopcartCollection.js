@@ -110,29 +110,34 @@ define( ['jquery', 'backbone', 'configuration'],
 			  type : 'POST',
 			  dataType: 'json',
 			  contentType: 'application/json',
-			  data : JSON.stringify({'items' : itemsToAdd}),
+			  data : JSON.stringify({'shopCartItemAdding' : itemsToAdd}),
 			
-			  success: function(data) {	 
+			  success: function(data) {	
+			  
+					// Check the response
+					if ( !data.shopCartItemAdding  || !_.isArray(data.shopCartItemAdding) ) {
+						self.parentModel.trigger('shopcart:addItemsError');  
+						return;
+					}
 
-				  //add the shopcart items !!
-//				  var addedShopcartItems = [];
-//				  
-//				  for (var i=0; i<data.items.length; i++){
-//					  
-//					  for (var j=0; j<productUrls.length; j++){
-//						  if (productUrls[j] == data.items[i].product){
-//							  //create the shopcart item to add
-//							  addedShopcartItems.push({'shopcartId' : self.id, 
-//								  					'id' : data.items[i].id ,
-//								  					'product' : features[j]}});
-//						  }
-//					  }
-//				  }
-//				  
-//				  self.parentModel.trigger("shopcart:itemsAdded", addedShopcartItems);
+					// Process reponse to see which items have been successfully added
+					var itemsAdded = [];
+					var itemsAddedResponse = data.shopCartItemAdding;
+					for (var i=0; i < itemsAddedResponse.length; i++) {
+						  
+						var indexOfProductUrls = productUrls.indexOf( itemsAddedResponse[i].product );
+						if ( indexOfProductUrls >= 0 && indexOfProductUrls < features.length ) {
+							//create the shopcart item to add
+							itemsAdded.push({'shopcartId' : self.id, 
+											'id' : itemsAddedResponse[i].id ,
+											'product' : features[indexOfProductUrls]});
+						} else {
+							// TODO handle error
+						}
+					}
 				  
-				  //TODO EM : IMPROVE THAT : actually to be discussed vs perfomences or use the above code!!
-				  self.parentModel.loadCurrentShopcart();
+				  self.parentModel.trigger("shopcart:itemsAdded", itemsAdded);
+
 			  },
 			  
 			  error: function(jqXHR, textStatus, errorThrown) {
@@ -140,6 +145,22 @@ define( ['jquery', 'backbone', 'configuration'],
 			  }
 			  
 			});
+		};
+		
+		this._removeItem = function(id) {
+			for ( var i = 0; i < this.shopcartItems.length; i++ ) {
+				var item = this.shopcartItems[i];
+				if ( item.id == id ) {
+					// Remove it from items
+					this.shopcartItems.slice(i,1);
+					// Remove it from selection also
+					var is = this.selection.indexOf(item);
+					if ( is >= 0 ) {
+						this.selection.slice(is,1);
+					}
+					return item;
+				}
+			}
 		};
 		
 		/** submit a delete request to the server in order to delete the selected 
@@ -159,32 +180,22 @@ define( ['jquery', 'backbone', 'configuration'],
 				  type : 'DELETE',
 				  dataType: 'json',
 				  contentType: 'application/json',
-				  data : JSON.stringify({'items' : itemsToRemove}),
+				  data : JSON.stringify({'shopCartItemRemoving' : itemsToRemove}),
 				
 				  success: function(data) {	 					
 
-					  var removedIndexes = [];
-					  
-					  for (var i=0; i<self.shopcartItems.length; i++){
-						  
-						  for (var j=0; j<data.ids.length; j++){
-							  if (self.shopcartItems[i].id == data.ids[j].id){
-								  removedIndexes.push(i);
-								  self.shopcartItems.splice( i, 1 );
-							  }
-						  }
-					  }
-					  //update the selection too!!
-					  for (var i=0; i<self.selection.length; i++){
-						  
-						  for (var j=0; j<data.ids.length; j++){
-							  if (self.selection[i].id == data.ids[j].id){
-								  self.selection.splice( i, 1 );
-							  }
-						  }
-					  }
-					  
-					  self.parentModel.trigger("shopcart:itemsDeleted", removedIndexes);
+						// Check the response
+						if ( !data.shopCartItemRemoving  || !_.isArray(data.shopCartItemRemoving) ) {
+							self.parentModel.trigger('shopcart:deleteItemsError');  
+							return;
+						}
+						
+						var removedItems = [];
+						for (var i=0; i < data.shopCartItemRemoving.length; i++){
+							removedItems.push( self._removeItem( data.shopCartItemRemoving[i].id ) );
+						}
+
+					  	self.parentModel.trigger("shopcart:itemsDeleted", removedItems);
 				  },
 				  
 				  error: function(jqXHR, textStatus, errorThrown) {

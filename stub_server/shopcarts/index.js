@@ -8,22 +8,19 @@
 //nodeJs dependency to generate randow ids for shopcarts.
 var uuid = require('node-uuid'),
 	fs = require('fs'),
+	http = require('http'),
 	path = require('path');
 
 var shopcartConfigs = [];
-var feature = {};
 var shopcartContents = {};
 
 fs.readFile('./shopcarts/shopcarts.json', 'utf8', function (err, data) {
 	shopcartConfigs  = JSON.parse(data).shopcarts;
 });
 
-fs.readFile('./shopcarts/feature.json', 'utf8', function (err, data) {
-	feature  = JSON.parse(data);
-});
 
 fs.readFile('./shopcarts/TPZ_SHP_01_shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents.TPZ_SHP_1  = JSON.parse(data);
+	shopcartContents["TPZ_SHP_01"]  = JSON.parse(data);
 });
 
 fs.readFile('./shopcarts/TPZ_SHP_02_shopcartContent.json', 'utf8', function (err, data) {
@@ -53,12 +50,22 @@ var doesShopcartExist = function(id){
 };
 
 /** delete the shopcart having the given id */
-deleteShopcart = function(id){
+var deleteShopcart = function(id){
 	for (var i=0; i<shopcartConfigs.length; i++){
 		if (shopcartConfigs[i].id == id){
 			shopcartConfigs.splice(i, 1);
 		}
 	}
+};
+
+var removeItem = function(shopcartContent,id) {
+	for (var i=0; i<shopcartContent.items.length; i++){
+		if (shopcartContent.items[i].id == id){
+			shopcartContent.items.splice(i, 1);
+			return true;
+		}
+	}
+	return false;
 };
 
 module.exports = {
@@ -130,29 +137,52 @@ module.exports = {
 	post : function(req, res){
 		
 		//Create shopcart : post of a shopcart without id
-		if (!req.params.id && !req.body.id && req.body.name && req.body.name != ""){	
+		if (!req.params.id && !req.body.id && req.body.name && req.body.name != "") {	
 			var response = req.body;
 			response.id = uuid.v4();
 			res.send(response);
 		}
-		
 		//add shopcart items : post of shopcart items
-		if (req.params.id && req.body.items){
-			var response = [];
+		else if (req.params.id && req.body.shopCartItemAdding) {
+			var response = {
+				shopCartItemAdding: []
+			};
 			
+			var waitingRequests = req.body.shopCartItemAdding.length;
 			var id;
 			//add an id to each shopcart item
-			for (var i=0; i<req.body.items.length; i++){
-				id = uuid.v4();
-				response.push({"id" : id, "shopcartId" : req.body.items[i].shopcartId, "product" : req.body.items[i].product});
-				shopcartContents[req.params.id].items.push({"shopcartId" :  req.params.id, "id" : id, "product": feature});
+			for (var i=0; i<req.body.shopCartItemAdding.length; i++){		
+				
+				http.get(req.body.shopCartItemAdding[i].product, function(r) {
+					
+					if ( r.statusCode == 200 ) {
+						r.on('data', function (chunk) {
+							var feature = JSON.parse(chunk);
+							id = uuid.v4();
+							response.shopCartItemAdding.push({"id" : id, "shopcartId" : req.params.id, "product" : feature.properties.productUrl});
+							shopcartContents[req.params.id].items.push({"shopcartId" :  req.params.id, "id" : id, "product": feature});
+							console.log( req.params.id + ' : ' + shopcartContents[req.params.id].items.length );
+							waitingRequests--;
+							if ( waitingRequests == 0 ) {
+								//save the new content of the shopcart 
+								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
+								res.send(response);	
+							}
+						});
+					} else  {
+							waitingRequests--;
+							if ( waitingRequests == 0 ) {
+								//save the new content of the shopcart 
+								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
+								res.send(response);	
+							}
+					}
+
+				});	
 			}
-			
-			//save the new content of the shopcart 
-			fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
-			
-			res.send(response);
-		}	
+		} else {
+			res.send(400 );
+		}
 	},
 	
 	put : function(req, res){
@@ -165,22 +195,28 @@ module.exports = {
 	
 	delete : function(req, res){
 		//delete shopcart 
-		if (req.params.id && !req.body.items){	
+		if (req.params.id && !req.body.shopCartItemRemoving){	
 			res.send({"id" : req.params.id});
-			//uncomment to SIMULATE an ERROR
-			//res.send(400);
 		}
-		
-		if (req.params.id && req.body.items){	
+		else if (req.params.id && req.body.shopCartItemRemoving){	
 			
-			var ids = [];
+			var removedItems = [];
+			
+			console.log( req.params.id );
+			console.log( req.body );
+						
 			//send back the list of shopcart item ids
-			for (var i=0; i<req.body.items.length; i++){
-				ids.push({"id" : req.body.items[i].id});
+			for (var i=0; i<req.body.shopCartItemRemoving.length; i++){
+				if (removeItem( shopcartContents[req.params.id], req.body.shopCartItemRemoving[i].id )) {
+					removedItems.push({"id" : req.body.shopCartItemRemoving[i].id, "shopcartId": req.params.id});
+				}
 			}
+			fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id]), 'utf8');
+			res.send({"shopCartItemRemoving" : removedItems});
 			
-			res.send({"ids" : ids});
-			
+		}
+		else {
+			res.send(400);
 		}
 	}
 };
