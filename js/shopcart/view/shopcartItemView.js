@@ -23,10 +23,19 @@ var ShopcartItemView = Backbone.View.extend({
 
 		}, this);
 		
-		this.model.on("shopcart:itemsDeleted", function(removedIndexes) {
+		this.model.on("shopcart:itemsAdded", function(itemsAdded) {
+			this.table.fnAddData( itemsAdded, false );
+			this.updateButtonStatuses();
+			this.table.fnAdjustColumnSizing( true );
+			this.trigger('shopcart:sizeChanged');
+
+		}, this);	
+		
+		this.model.on("shopcart:itemsDeleted", function(removedItems) {
 			//in this case the shopcart widget should be visible
-			for (var i=0; i<removedIndexes.length; i++){			  
-				this.table.fnDeleteRow(removedIndexes[i]);
+			for (var i=0; i<removedItems.length; i++){
+				var index = this.model.currentShopcart.getShopcartItemIndex(removedItems[i]);			
+				this.table.fnDeleteRow(index);
 			}
 			this.updateButtonStatuses();
 			this.table.fnAdjustColumnSizing( true );
@@ -80,9 +89,7 @@ var ShopcartItemView = Backbone.View.extend({
 	getShopcartItemFromRow: function(row) {
 		var rowPos = this.table.fnGetPosition( row );
 		if (rowPos != null) {
-			console.log("All data : " + JSON.stringify(this.table.fnGetData()));
-			console.log("data for postion " + rowPos + ":: " + JSON.stringify(this.table.fnGetData(rowPos)));
-			return this.table.fnGetData(rowPos);
+			return this.model.currentShopcart.shopcartItems[rowPos];
 		} else {
 			return null;
 		}
@@ -95,8 +102,7 @@ var ShopcartItemView = Backbone.View.extend({
 
 		var checkboxes = this.table.$(".dataTables_chekbox",{order: "original"});
 		for ( var i = 0; i < shopcartItems.length; i++ ) {
-			var index = this.model.currentShopcart.getShopcartItemIndex(shopcartItems[i]);
-			console.log("item index == " + index);
+			var index = this.model.currentShopcart.shopcartItems.indexOf(shopcartItems[i]);
 			checkboxes.eq(index)
 				.toggleClass('ui-icon-checkbox-off')
 				.toggleClass('ui-icon-checkbox-on');	
