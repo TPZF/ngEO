@@ -166,7 +166,7 @@ return {
 			//shareShopcart.loadContent();
 			
 			// Show the GUI once loaded
-			shareShopcart.on("shopcart:loaded", function(id) {
+			shareShopcart.on("loaded", function(id) {
 				// Toggle the shopcart button to be clicked
 				$("#shopcart").trigger('click');
 			});
@@ -231,17 +231,16 @@ return {
 		});
 		
 		// Manage display of shopcart footprints
-		ShopcartCollection.on('change:current', function( current ) {
+		ShopcartCollection.on('change:current', function( current, prevCurrent ) {
+			if ( prevCurrent ) {
+				prevCurrent.off('loaded', shopcartLayer.addFeatures, shopcartLayer );
+				prevCurrent.off('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
+				prevCurrent.off('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
+			}
 			shopcartLayer.clear();
-			current.on('shopcart:loaded', function(){
-				shopcartLayer.addFeatures(current.features);
-			});
-			current.on('shopcart:itemsAdded', function(features){
-				shopcartLayer.addFeatures(features);
-			});
-			current.on('shopcart:itemsDeleted', function(features){
-				shopcartLayer.removeFeatures(features);
-			});
+			current.on('loaded', shopcartLayer.addFeatures, shopcartLayer );
+			current.on('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
+			current.on('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
 		});
 			
 		SearchResults.on('reset:features', function() {

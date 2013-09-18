@@ -10,16 +10,18 @@ var ShopcartCollection = Backbone.Collection.extend({
 	
 	model : Shopcart,
 
-	initialize : function(){
-		_.extend(this, Backbone.Events);
+	/**
+	 * Initialize the collection
+	 */
+	initialize : function() {
 		// The base url to retreive the shopcarts list
 		this.url = Configuration.baseServerUrl + '/shopcarts';
-		// No current shopcart
+		// The current shopcart
 		this._current = null;
 		
 		// Synchronize the current shopcart when the collection has been fetched from the server
 		this.on('sync', function() {
-			
+					
 			// Do not change the current if it is a shared one
 			if ( this._current && this._current.get("isShared") ) {
 				return;
@@ -36,6 +38,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 			
 		}, this );
 	},
+	
 
 	/**
 	 * Needed because the server response is not what is expected from Backbone
@@ -45,15 +48,22 @@ var ShopcartCollection = Backbone.Collection.extend({
 		return response.shopcarts;
 	},
 	
-	/** get the current shopcart */
+	/** 
+	 *	Get the current shopcart 
+	 */
 	getCurrent: function() {
 		return this._current;
 	},
 	
-	// Set the current shopcart
+	/** 
+	 *	Set the current shopcart 
+	 */
 	setCurrent: function(current) {
-		this._current = current;
-		this.trigger('change:current',this._current);
+		if ( current != this._current ) {
+			var prevCurrent = this._current;
+			this._current = current;
+			this.trigger('change:current',this._current, prevCurrent);
+		}
 	},
 	
 	/**
