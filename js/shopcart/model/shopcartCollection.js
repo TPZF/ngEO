@@ -1,250 +1,9 @@
 /**
  * These are the model components for Shopcarts Collection handling
  */
-define( ['jquery', 'backbone', 'configuration'], 
-			function($, Backbone, Configuration){
-	
-	//////////////////////////////////////////////////////////////////////////////////////////////////
-/** This is the backbone Model of the Shopcart element
- */
-var Shopcart = Backbone.Model.extend({
-	
-	defaults : {
-		name : "",
-		isDefault : false
-	},
-
-	initialize : function(){
-		// The base url to retreive the shopcarts list
-		this.urlRoot = Configuration.baseServerUrl + '/shopcarts';
+define( ['jquery', 'backbone', 'configuration', 'shopcart/model/shopcart'], 
+			function($, Backbone, Configuration, Shopcart){
 		
-		// The shopcart content is a feature collection
-		this.feature = [];
-		
-		// The selection of the shopcart content
-		this.selection = [];
-	},
-	
-					
-	// Load the shopcart content
-	loadContent: function() {
-
-		var self = this;
-		$.ajax({
-			url: this.url(),
-			type : 'GET',
-			dataType: 'json'
-				
-		}).done(function(data) {
-			self.features = data.features;
-			self.trigger("shopcart:loaded", self.id);
-			
-		}).fail(function(jqXHR, textStatus, errorThrown) {		
-			  console.log("ERROR when retrieving the shopcart Content :" + textStatus + ' ' + errorThrown);
-			  self.trigger('shopcart:errorLoad', self.url); 
-		});
-	},
-			
-	// Select a shopcart item
-	select: function(item) {
-		this.selection.push(item);
-		this.trigger( "selectShopcartItems", [item] );
-	},
-	
-	// Unselect a feature
-	unselect: function(item) {
-		this.selection.splice( this.selection.indexOf(item), 1 );
-		this.trigger( "unselectShopcartItems", [item] );
-	},
-
-	selectAll: function(){
-			
-		var selected = _.difference(this.features, this.selection);
-		for ( var i = 0; i < selected.length; i++ ) {
-			this.selection.push( selected[i] );
-		}
-		
-		if (selected.length != 0){
-			this.trigger( "selectShopcartItems", selected );
-		}
-	},
-	
-	/** unselect all the already selected shopcart items */
-	unselectAll: function() {
-		
-		var oldSelection = [];
-		//copy the selected items
-		for ( var i = 0; i < this.selection.length; i++ ) {
-			oldSelection.push(this.selection[i])
-		}
-		this.selection = []	
-		if (oldSelection.length != 0){
-			this.trigger( "unselectShopcartItems", oldSelection );
-		}
-	},
-
-	/** submit a POST request to the server in order to add the selected 
-	 * products from the search results table to the shopcart.
-	 * The product urls of the selected products are passed as arguments. 
-	 */ 
-	addItems: function(productUrls, features) {
-		
-		// Build the request body
-		var itemsToAdd = [];
-		for (var i=0; i < productUrls.length; i++){
-			itemsToAdd.push({
-				shopcartId : self.id, 
-				product : productUrls[i]
-			}); 
-		}	
-
-		// Send the request
-		var self = this;
-		return $.ajax({
-		 
-		  url: self.url,
-		  type : 'POST',
-		  dataType: 'json',
-		  contentType: 'application/json',
-		  data : JSON.stringify({'shopCartItemAdding' : itemsToAdd}),
-		
-		  success: function(data) {	
-		  
-				// Check the response
-				if ( !data.shopCartItemAdding  || !_.isArray(data.shopCartItemAdding) ) {
-					self.trigger('shopcart:addItemsError');  
-					return;
-				}
-
-				// Process reponse to see which items have been successfully added
-				var itemsAdded = [];
-				var itemsAddedResponse = data.shopCartItemAdding;
-				for (var i=0; i < itemsAddedResponse.length; i++) {
-					  
-					var indexOfProductUrls = productUrls.indexOf( itemsAddedResponse[i].product );
-					if ( indexOfProductUrls >= 0 && indexOfProductUrls < features.length ) {
-					
-						// Clone the feature to be different from the selected one
-						var feature = _.clone(features[indexOfProductUrls]);
-						feature.properties = _.clone(feature.properties);
-						feature.properties.shopcartItemId = itemsAddedResponse[i].id;
-						
-						itemsAdded.push(feature);
-						self.features.push(feature);
-						
-					} else {
-						// TODO handle error
-					}
-				}
-			  
-			  self.trigger("shopcart:itemsAdded", itemsAdded);
-
-		  },
-		  
-		  error: function(jqXHR, textStatus, errorThrown) {
-			  self.trigger('shopcart:addItemsError');  
-		  }
-		  
-		});
-	},
-	
-	/** 
-	 * Helper function toe remove one item from the shopcart
-	 */ 
-	_removeItem: function(id) {
-		for ( var i = 0; i < this.features.length; i++ ) {
-			var feature = this.features[i];
-			if ( feature.properties.shopcartItemId == id ) {
-				// Remove it from items
-				this.features.slice(i,1);
-				// Remove it from selection also
-				var is = this.selection.indexOf(feature);
-				if ( is >= 0 ) {
-					this.selection.slice(is,1);
-				}
-				return feature;
-			}
-		}
-	},
-	
-	/** submit a delete request to the server in order to delete the selected 
-	 * shopcart items.
-	 */ 
-	deleteSelection: function(){
-		
-		// Build the request body
-		var itemsToRemove = [];
-		for (var i=0; i< this.selection.length; i++){
-			itemsToRemove.push({'shopcartId' :  this.id, 'id' : this.selection[i].properties.shopcartItemId}); 
-		}	
-
-		var self = this;
-		return $.ajax({
-			 
-			  url: this.url() + '/items',
-			  type : 'DELETE',
-			  dataType: 'json',
-			  contentType: 'application/json',
-			  data : JSON.stringify({'shopCartItemRemoving' : itemsToRemove}),
-			
-			  success: function(data) {	 					
-
-					// Check the response
-					if ( !data.shopCartItemRemoving  || !_.isArray(data.shopCartItemRemoving) ) {
-						self.trigger('shopcart:deleteItemsError');  
-						return;
-					}
-					
-					var removedItems = [];
-					for (var i=0; i < data.shopCartItemRemoving.length; i++){
-						removedItems.push( self._removeItem( data.shopCartItemRemoving[i].id ) );
-					}
-
-					self.trigger("shopcart:itemsDeleted", removedItems);
-			  },
-			  
-			  error: function(jqXHR, textStatus, errorThrown) {
-				  self.trigger('shopcart: deleteItemsError');  
-			  }
-			  
-		});
-	},
-	
-	/** submit a PUT request to the server in order to update the selected 
-	 * shopcart items with the given download options
-	 */ 
-	updateSelection: function(downloadOptions){
-		var itemsToUpdate = [];
-		for (var i=0; i < this.selection.length; i++){
-			itemsToRemove.push({'shopcartId' :  this.id, 
-								'id' : this.selection[i].id , 
-								'downloadOptions' : downloadOptions}); 
-		}	
-
-		var self = this;
-		return $.ajax({
-			 
-			  url: self.url() + '/items',
-			  type : 'PUT',
-			  dataType: 'json',
-			  contentType: 'application/json',
-			  data : JSON.stringify({'items' : itemsToUpdate}),
-			
-			  success: function(data) {	 
-				
-				  var response = data.items;
-				  self.trigger("shopcart:itemsUpdated", response);
-			  },
-			  
-			  error: function(jqXHR, textStatus, errorThrown) {
-				  self.trigger('shopcart:updateItemsError');  
-
-			  }
-		});
-	}
-});
-	
-	
 /** This is the backbone Collection modeling the shopcart list
  */
 var ShopcartCollection = Backbone.Collection.extend({
@@ -257,6 +16,25 @@ var ShopcartCollection = Backbone.Collection.extend({
 		this.url = Configuration.baseServerUrl + '/shopcarts';
 		// No current shopcart
 		this._current = null;
+		
+		// Synchronize the current shopcart when the collection has been fetched from the server
+		this.on('sync', function() {
+			
+			// Do not change the current if it is a shared one
+			if ( this._current && this._current.get("isShared") ) {
+				return;
+			}
+			
+			// Find the current : the default one or the first one if none defined
+			var current = this.findWhere({ isDefault: true });
+			if (!current) {
+				current = this.at(0);
+			}
+			
+			// Set the new current 
+			this.setCurrent( current );
+			
+		}, this );
 	},
 
 	/**
@@ -269,10 +47,6 @@ var ShopcartCollection = Backbone.Collection.extend({
 	
 	/** get the current shopcart */
 	getCurrent: function() {
-		// TODO : Should be done once the shopcart has been loaded
-		if (!this._current) {
-			this._current = this.findWhere({ isDefault: true });
-		}
 		return this._current;
 	},
 	

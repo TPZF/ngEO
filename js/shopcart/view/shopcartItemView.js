@@ -11,9 +11,7 @@ define(
 var ShopcartItemView = Backbone.View.extend({
 
 	initialize : function() {
-		var model = this.model;
-		this.model = null;
-		this.setModel( model );
+		this.shopcartItemsToAdd = [];
 	},
 	
 	events : {
@@ -119,6 +117,18 @@ var ShopcartItemView = Backbone.View.extend({
 		this.visible = false;
 	},
 	
+	addItems: function(items) {
+		if ( this.visible ) {
+			this.table.fnAddData( items, false );
+			this.table.fnAdjustColumnSizing( true );
+			// adjust selection and highlight
+			this.toggleSelection(this.model.selection);
+			this.trigger('sizeChanged');
+		} else {
+			this.shopcartItemsToAdd = this.shopcartItemsToAdd.concat( items );
+		}
+	},
+	
 	/**
 	 * Set the model used by the view
 	 */
@@ -129,24 +139,18 @@ var ShopcartItemView = Backbone.View.extend({
 		}
 		
 		this.model = model;
-		
+				
 		this.listenTo(model,"selectShopcartItems", this.toggleSelection );
 		this.listenTo(model,"unselectShopcartItems", this.toggleSelection );
 
 		this.listenTo(model,"shopcart:loaded", function() {
+			this.table.fnClearTable();
 			this.shopcartItemsToAdd = [];
-			for (var i=0; i<this.model.features.length; i++){			  
-				this.shopcartItemsToAdd.push(this.model.features[i]);
-			}
-
+			this.addItems( this.model.features );
 		});
 		
 		this.listenTo(model,"shopcart:itemsAdded", function(itemsAdded) {
-			this.table.fnAddData( itemsAdded, false );
-			this.updateButtonStatuses();
-			this.table.fnAdjustColumnSizing( true );
-			this.trigger('shopcart:sizeChanged');
-
+			this.addItems(itemsAdded);
 		});	
 		
 		this.listenTo(model,"shopcart:itemsDeleted", function(removedItems) {

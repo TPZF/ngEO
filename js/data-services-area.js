@@ -1,13 +1,13 @@
 
 define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", 
         "searchResults/model/searchResults", "search/model/datasetSearch",  
-        "shopcart/model/shopcartCollection", 
+        "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
 		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
 		"text!../pages/data-services-area.html", "context-help", "panelManager", "toolbar"], 
 	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch,
-		    ShopcartCollection, StandingOrderDataAccessRequest, StandingOrderWidget,
+		    ShopcartCollection, Shopcart, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
 			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp, PanelManager) {
 
@@ -82,31 +82,12 @@ return {
 		// Create all widgets
 		DataSetSelectionWidget(element);
 		var searchWidget = SearchCriteriaWidget.create(element);
-		_$resultsTableWidget = ResultsTableWidget();
-		
-		//load the shopcart collection to get the default shopcart id
-		ShopcartCollection.fetch({
-			
-			success: function(model, response) {
-						
-				ShopcartWidget.create();
-				
-				ShopcartCollection.on("shopcart:errorLoad", function() {
-					//when the fetch fails display an error message and disable the shopcart button
-					// so the application is still usable and the user can still see the other menus.
-					//ShopcartWidget.load();
-				});
-			},
-
-			error: function(){
-				$("#shopcart").addClass('ui-disabled');
-				Logger.error('Cannot retreive the list of shopcarts from the server');
-			}
-		});	
-		
+		_$resultsTableWidget = ResultsTableWidget();		
 		ToolBarMap(element);
 		ContextHelp(element);
+		ShopcartWidget.create();
 		
+
 		// Setup the router for shared URL support
 		var router = new Backbone.Router();
 		var self = this;
@@ -170,8 +151,6 @@ return {
 			
 		});
 		
-		//FIXME Emna : does not work correctly : the first time the current shopcart is loaded
-		//when the shopcart id is chjanged on the shared url is works!
 		//Route for share shopcart
 		router.route(
 				"data-services-area/shopcart/:shopcartId", 
@@ -179,69 +158,19 @@ return {
 
 			MenuBar.showPage("data-services-area");
 			
-			ShopcartCollection.updateCurrentShopcart(shopcartId);
-
-			ShopcartCollection.on("shopcart:loaded", function(id) {
-
-					//ShopcartWidget.updateView();
-//					//set the shopcart button to be clicked
-					$("#shopcart").addClass('toggle');
-					//display the shopcart widget 
-					PanelManager.showPanel({
-						activator: "#shopcart",
-						position : "bottom"
-					});
+			// Create a shared shopcart and load its content to be displayed
+			var shareShopcart = new Shopcart({ id: shopcartId, name: "Share Shopcart", isShared: true });
+			ShopcartCollection.setCurrent( shareShopcart );
+			
+			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
+			//shareShopcart.loadContent();
+			
+			// Show the GUI once loaded
+			shareShopcart.on("shopcart:loaded", function(id) {
+				// Toggle the shopcart button to be clicked
+				$("#shopcart").trigger('click');
 			});
 		});
-			
-			
-//			$.when(ShopcartCollection.updateCurrentShopcart(shopcartId)).done( function() {
-//
-//				ShopcartCollection.on("shopcart:loaded", function(id) {
-//	
-//					if (id != shopcartId){
-//
-//						$.when(ShopcartCollection.loadCurrentShopcart(shopcartId)).done( function() {
-////
-////							//if (id == shopcartId){
-////							//ShopcartWidget.updateView();
-////							//set the shopcart button to be clicked
-//							$("#shopcart").addClass('toggle');
-//							//display the shopcart widget 
-//							PanelManager.activate({
-//								activatorId : "shopcart",
-//								position : "bottom"
-//							});
-//						});
-////						}
-//					}else{
-//						
-//						$("#shopcart").addClass('toggle');
-//						//display the shopcart widget 
-//						PanelManager.activate({
-//							activatorId : "shopcart",
-//							position : "bottom"
-//						});
-//					}
-//				});
-//			});
-						
-//						ShopcartCollection.on("shopcart:errorLoad", function() {
-//							//when the fetch fails display an error message and disable the shopcart button
-//							// so the application is still usable and the user can still see the other menus.
-//							MenuBar.showPage("data-services-area");
-//							$("#shopcart").parent().addClass('ui-disabled');
-//						});
-						
-//							
-//					},
-//
-//					error: function(){
-//						$("#shopcart").addClass('ui-disabled');
-//						Logger.error('Cannot retreive the list of shopcarts from the server');
-//					}
-//				});				
-//		});
 		
 		// Route default
 		router.route(
@@ -258,8 +187,10 @@ return {
 					//set the selected dataset in the model
 					DatasetSearch.set("datasetId", datasetId);
 				}
+				
 				// Show the page
-				MenuBar.showPage("data-services-area");
+				MenuBar.showPage("data-services-area");			
+						
 		});
 		
 		// Create the popup for the map

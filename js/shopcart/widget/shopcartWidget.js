@@ -8,13 +8,11 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 	return {
 
 		create : function(){
-		
+
 			// Create the shopcart content view
-			var shopcartItemView = new ShopcartItemView({
-				model : ShopcartCollection.getCurrent()  
-			});
+			var shopcartItemView = new ShopcartItemView();
 			
-			//Add the shopcart table to the bottom panel 
+			// Add the shopcart table to the bottom panel 
 			PanelManager.addPanelContent({
 				element: shopcartItemView.$el,
 				position: 'bottom',
@@ -33,6 +31,9 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 			shopcartItemView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setModel);
 			
 			shopcartItemView.render();
+		
+			// load the shopcart collection to display the current shopcart in the data services area
+			ShopcartCollection.fetch();
 			
 			return shopcartItemView.$el;
 		},
