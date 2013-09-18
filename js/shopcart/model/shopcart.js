@@ -94,7 +94,7 @@ var Shopcart = Backbone.Model.extend({
 		var itemsToAdd = [];
 		for (var i=0; i < productUrls.length; i++){
 			itemsToAdd.push({
-				shopcartId : self.id, 
+				shopcartId : this.id, 
 				product : productUrls[i]
 			}); 
 		}	
@@ -103,7 +103,7 @@ var Shopcart = Backbone.Model.extend({
 		var self = this;
 		return $.ajax({
 		 
-		  url: self.url,
+		  url: this.url(),
 		  type : 'POST',
 		  dataType: 'json',
 		  contentType: 'application/json',

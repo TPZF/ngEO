@@ -496,6 +496,15 @@ OpenLayersMapEngine.prototype.updateFeature = function(layer,feature)
 }
 
 /**
+ * Remove a feature
+ */
+OpenLayersMapEngine.prototype.removeFeature = function(layer,feature)
+{
+	var olFeature = layer.getFeatureByFid(feature.id);
+	layer.removeFeatures( olFeature );
+}
+
+/**
  * Destroy the map
  */
 OpenLayersMapEngine.prototype.destroy = function()

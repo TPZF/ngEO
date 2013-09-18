@@ -294,7 +294,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			var features = self.model.getNonPlannedItems(self.model.selection);
 			//implemented like that in order to make the shopcart class independant from the SearchResults model
 			//since the getProductUrls is implemented in SearchResults
-			ShopcartCollection.currentShopcart.addItems(self.model.getProductUrls(features), features);
+			ShopcartCollection.getCurrent().addItems(self.model.getProductUrls(features), features);
 		});
 
 		//add button to the widget footer in order to download products
