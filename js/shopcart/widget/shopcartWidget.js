@@ -4,14 +4,15 @@
 define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartItemView", "panelManager", "widget"], 
 		function($, ShopcartCollection, ShopcartItemView, PanelManager) {
 
-	// Create the shopcart content view
-	var shopcartItemView = new ShopcartItemView({
-		model : ShopcartCollection  
-	});
 	
 	return {
 
 		create : function(){
+		
+			// Create the shopcart content view
+			var shopcartItemView = new ShopcartItemView({
+				model : ShopcartCollection.getCurrent()  
+			});
 			
 			//Add the shopcart table to the bottom panel 
 			PanelManager.addPanelContent({
@@ -28,6 +29,8 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 			shopcartItemView.on("shopcart:sizeChanged", function() {
 				PanelManager.updatePanelSize('bottom');
 			});
+			
+			shopcartItemView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setModel);
 			
 			shopcartItemView.render();
 			

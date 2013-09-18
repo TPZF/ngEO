@@ -3,9 +3,9 @@
 	<div id="shopcartListDiv">
 		<fieldset id="shopcartList" data-role=controlgroup data-inset="true">	
 		
-			<% _.each(models, function(shopcartConfig) { %>
+			<% _.each(models, function(shopcart) { %>
 				
-				<label id="<%= shopcartConfig.id %>"><input id="<%= shopcartConfig.id %>_input" type="radio" name="shopcart" data-theme="c" data-mini="true"/>  <%= shopcartConfig.attributes.name %> </label> 
+				<label id="<%= shopcart.id %>"><input id="<%= shopcart.id %>_input" type="radio" name="shopcart" data-theme="c" data-mini="true"/>  <%= shopcart.get('name') %> </label> 
 			
 			<% }); %>
 				
