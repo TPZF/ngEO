@@ -20,7 +20,7 @@ var Shopcart = Backbone.Model.extend({
 		this.urlRoot = Configuration.baseServerUrl + '/shopcarts';
 		
 		// The shopcart content is a feature collection
-		this.feature = [];
+		this.features = [];
 		
 		// The selection of the shopcart content
 		this.selection = [];
