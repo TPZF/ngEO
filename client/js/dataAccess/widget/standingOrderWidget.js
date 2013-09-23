@@ -13,32 +13,34 @@ define(
 
 		
 		var StandingOrderWidget = function() {
-
+				
 			var parentElement = $('<div id="standingOrderPopup">');
 			var element = $('<div id="standingOrderPopupContent"></div>');
 			element.appendTo(parentElement);
 			parentElement.appendTo('.ui-page-active');
+			
+			var standingOrderView;
+			
 			parentElement.ngeowidget({
 				title: "Standing Order",
-				// Reinit the standing order when the widget is closed (FL: is it really needed?)
 				hide: function() {
-					//StandingOrderDataAccessRequest.initialize();
+					standingOrderView.remove();
 					parentElement.remove();
 				}
 			});
 
 			var self = this;
 			
+			standingOrderView = new StandingOrderView({
+				el : element,
+				request : StandingOrderDataAccessRequest,
+				parentWidget : self
+			});
+				
 			/**
 			 * Build the content of the popup with the standing orders view
 			 */
 			var buildContent = function() {
-
-				var standingOrderView = new StandingOrderView({
-					el : element,
-					request : StandingOrderDataAccessRequest,
-					parentWidget : self
-				});
 
 				standingOrderView.render();
 

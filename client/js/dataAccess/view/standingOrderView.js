@@ -21,7 +21,6 @@ define( ['jquery', 'backbone', 'configuration',
 			'click #shareSTORequest' : function(event){
 				$("#sharedSTOUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + this.request.getSharedURL() + '<b>');	
 				$('#sharedSTOUrlPopup').popup('open');
-				$('#sharedSTOUrlPopup').trigger('create');
 			},
 			
 			'change #startDateSTO' : function(event){
@@ -42,7 +41,7 @@ define( ['jquery', 'backbone', 'configuration',
 				
 				//the ui-radio-on state will be set at the end of the handler
 				//that's why make the test according to ui-radio-off
-				var isChecked = ($(event.currentTarget).hasClass('ui-radio-off'));
+				var isChecked = $(event.currentTarget).hasClass('ui-radio-off');
 			
 				//case where the user clicks on the already selected radio
 				if (isChecked == false){
@@ -99,24 +98,27 @@ define( ['jquery', 'backbone', 'configuration',
 			
 		},
 		
+		/**
+		 * Render the view
+		 */
 		render: function(){
 			//get the default values from the model
-			var content = _.template(standingOrderView_template, {startDate : this.request.startDate, 
-																	startTime : this.request.startTime, 
-																	endDate : this.request.endDate,
-																	endTime : this.request.endTime,
-																	timeDriven : this.request.timeDriven,
-																	repeatPeriod  : this.request.repeatPeriod,
-																	slideAcquisitionTime : this.request.slideAcquisitionTime,
-																	OpenSearchURL : this.request.OpenSearchURL});
+			var content = _.template(standingOrderView_template, this.request);
 			this.$el.append(content);
 			this.$el.find("#standingOrderSpecificMessage").append(this.request.getSpecificMessage());
 			if (!this.request.timeDriven){
 				this.$el.find("#timeDrivenParams").hide();
 			}
-			this.delegateEvents();
 
 			return this;
+		},
+		
+		/**
+		 * Override remove, to remove the pop-up
+		 */
+		remove: function() {
+			$('#sharedSTOUrlPopup').remove();
+			Backbone.View.prototype.remove.apply(this, arguments);
 		}
 		
 	});
