@@ -145,6 +145,11 @@ $.widget( "ngeo.ngeowidget", {
 	// events bound via _bind are removed automatically
 	// revert other modifications here
 	_destroy: function() {
+		// Remove from widgets array
+		var index = _widgets.indexOf(this);
+		if ( index >= 0 ) {
+			_widgets.splice( _widgets.indexOf(this), 1 );
+		}
 		// Cleanup parent element
 		this.parentElement.children().not(this.element).remove();
 		// Remove parent element

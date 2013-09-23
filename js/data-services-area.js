@@ -91,14 +91,22 @@ return {
 		// Setup the router for shared URL support
 		var router = new Backbone.Router();
 		var self = this;
-		
+			
 		router.route(
 				"data-services-area/search/:datasetId?:query", 
-				"search", function(datasetId, query) {		
+				"search", function(datasetId, query) {
+				
+				
+			var datasetNotLoaded = function(datasetId){
+				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
+				MenuBar.showPage("data-services-area");
+			};
 				
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
-			DatasetSearch.on("datasetLoaded", function(){
+			DatasetSearch.once("datasetLoaded", function(){
+			
+				DatasetSearch.off("datasetNotLoadError", datasetNotLoaded);
 				
 				DatasetSearch.populateModelfromURL(query);
 
@@ -111,10 +119,7 @@ return {
 			});
 			
 			//when the dataset selected is not loaded display an error message
-			DatasetSearch.on("datasetNotLoadError", function(datasetId){
-				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
-				MenuBar.showPage("data-services-area");
-			});
+			DatasetSearch.once("datasetNotLoadError", datasetNotLoaded);
 
 			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
 			DatasetSearch.set({"datasetId" : datasetId});
@@ -123,12 +128,19 @@ return {
 		
 		//Route standing order url
 		router.route(
-				"data-services-area/sto/:datasetId/search?:query", 
+				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
 						
+			var datasetNotLoaded = function(datasetId){
+				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
+				MenuBar.showPage("data-services-area");
+			};
+			
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
-			DatasetSearch.on("datasetLoaded", function(){
+			DatasetSearch.once("datasetLoaded", function(){
+				
+				DatasetSearch.off("datasetNotLoadError", datasetNotLoaded);
 				
 				DatasetSearch.populateModelfromURL(query);
 				StandingOrderDataAccessRequest.populateModelfromURL(query);
@@ -141,10 +153,7 @@ return {
 			});
 			
 			//when the dataset selected is not loaded display an error message
-			DatasetSearch.on("datasetNotLoadError", function(datasetId){
-				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
-				MenuBar.showPage("data-services-area");
-			});
+			DatasetSearch.once("datasetNotLoadError", datasetNotLoaded);
 
 			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
 			DatasetSearch.set({"datasetId" : datasetId});
