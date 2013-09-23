@@ -29,19 +29,24 @@
 
 						 <div data-role="fieldcontain">
 							
-							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
+							<fieldset data-role="controlgroup">
 								
 								<legend><%= criterion.id %>:</legend>
     	
     							<% _.each(criterion.possibleValues, function(possibleValue) { %>
+								
+									<label>
 									
-									<label id="<%=criterion.id%>_<%=possibleValue.possibleValue%>_label" for="<%=criterion.id%>_<%=possibleValue.possibleValue%>_input"><%=possibleValue.possibleValue%></label>
-<!-- 									select the check box if its set is the model and its value is different from the default one  -->
-									<% if (_.has(attributes, criterion.id) && (attributes[criterion.id].indexOf(possibleValue.possibleValue) != -1 && attributes[criterion.id] != dataset.getDefaultCriterionValue(criterion.id))) {  %>
-										<input type="checkbox" name="<%= criterion.id %>" id="<%=criterion.id%>_<%=possibleValue.possibleValue%>_input" data-mini="true" checked/>		
+									<!-- select the check box if its set is the model  -->
+									<% if ( attributes[criterion.id] && (attributes[criterion.id].indexOf(possibleValue.possibleValue) != -1)) {  %>
+										<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true" checked="checked" />		
 									<% } else { %>	 
-   						 				<input type="checkbox" name="<%= criterion.id %>" id="<%=criterion.id%>_<%=possibleValue.possibleValue%>_input" data-mini="true"/>		
-  						 			<% } %>	 				 
+   						 				<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true"/>		
+  						 			<% } %>	
+
+									<%=possibleValue.possibleValue%>
+									</label>
+									
    						 		<% }); %>
        							
     						</fieldset>
@@ -53,23 +58,23 @@
 
 					<div data-role="fieldcontain">
 							
-							<fieldset id="<%= criterion.id %>" data-role="controlgroup">
+							<fieldset data-role="controlgroup">
 								
 								<legend><%= criterion.id %>:</legend>
 
 								<% if (_.has(attributes, criterion.id)){ %>
 									<label for="<%= criterion.id %>_from">from:</label>
-									<input type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" value="<%= attributes[criterion.id].substring(1, attributes[criterion.id].indexOf(',')) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+									<input type="range" id="<%= criterion.id %>_from" value="<%= attributes[criterion.id].substring(1, attributes[criterion.id].indexOf(',')) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
 									 
 									<label for="<%= criterion.id %>_to">to:</label>
-									<input type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" value="<%= attributes[criterion.id].substring(attributes[criterion.id].indexOf(',')+1,attributes[criterion.id].length-1) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+									<input type="range" id="<%= criterion.id %>_to" value="<%= attributes[criterion.id].substring(attributes[criterion.id].indexOf(',')+1,attributes[criterion.id].length-1) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
 								
 								<% } else { %>	
 								 	<label for="<%= criterion.id %>_from">from:</label>
-								 	<input type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+								 	<input type="range" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
 									
 									<label for="<%= criterion.id %>_to">to:</label>
-									<input type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+									<input type="range" id="<%= criterion.id %>_to"  value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
 								
 								<% } %>
     						</fieldset>
