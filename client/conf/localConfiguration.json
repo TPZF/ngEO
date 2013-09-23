@@ -1,16 +1,4 @@
-{
-			"inputLabelSuffix" : "label",
-			
-			"fieldIdSuffixSepartor" : "_",
-				
-			"rangeStartSuffix" : "from",
-			
-			"rangeStopSuffix" : "to",
-				
-			"inputSuffix" : "input",
-			
-			"widgetSuffix" : "widget",
-			
+{	
 			"downloadManager" : {
 				
 		        "activeStatus": {

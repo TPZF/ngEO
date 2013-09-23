@@ -14,11 +14,11 @@ var StandingOrderDataAccessRequest = {
 	
 	startDate : "", //TODO keep or remove according to clarification ngeo-314
 	
-	startTime : "", //TODO keep or remove according to clarification ngeo-314
+//	startTime : "", //TODO keep or remove according to clarification ngeo-314
 	
 	endDate : "",
 	
-	endTime : "",
+//	endTime : "",
 	
 	timeDriven : false,
 	
@@ -77,18 +77,24 @@ var StandingOrderDataAccessRequest = {
 	/** the shared standing order url contains :
 	 * 	1- all the search parameters as for as for a shared  search url. 
 	 *  2- scheduling options parameters relative to a standing order request
-	 *  NOTE that the download options parameters are already included in the getCoreURL. 
-	 *  and the openSearch URL can be retrieved from the DatasetSearch model.
 	 */
 	getSharedURL : function(){
-		//get the scheduling object either the STO is TimeDriven or Data-Driven
-		var options = _.values(this.getSchedulingOptions())[0];
-		//TODO EM :update $.param(options)!
-		var url = "#data-services-area/sto/" + DatasetSearch.getCoreURL() + "&" + $.param(options);
+
+		var url = "#data-services-area/sto/" +  DatasetSearch.get("datasetId") + '?';
+		
+		//add area criteria 
+		url += DatasetSearch.searchArea.getOpenSearchParameter();
+
+		//always add the advanced criteria values selected and already set to the model
+		url = DatasetSearch.addAdvancedCriteria(url);
+
 		//add the download options values selected and already set to the model
-		if (DatasetSearch.get("useDownloadOptions")){
-			url += "&useDownloadOptions=true";
-		}
+		url = DatasetSearch.addDownloadOptions(url);
+		
+		//get the scheduling object either the STO is TimeDriven or Data-Driven
+		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;
+		url += "&" + $.param(options);
+		
 		return url;
 	},
 	
@@ -110,7 +116,7 @@ var StandingOrderDataAccessRequest = {
 			case "startDate": 
 //				this.startDate = pair[1].substring(0, pair[1].indexOf('T'));
 				this.startDate = pair[1];
-				console.log(this.startDate);
+				//console.log(this.startDate);
 				break;
 //			UNCOMMENT TO REUSE THE TIME	
 //			case "startTime" : 
@@ -122,7 +128,7 @@ var StandingOrderDataAccessRequest = {
 			case "endDate" : 
 //				this.endDate = pair[1].substring(0, pair[1].indexOf('T'));
 				this.endDate = pair[1];
-				console.log(this.endDate);
+				//console.log(this.endDate);
 				break;
 			case "repeatPeriod": 
 				this.repeatPeriod = pair[1];
@@ -139,8 +145,8 @@ var StandingOrderDataAccessRequest = {
 	    }
 	    
 		//set open search url
-	    console.log("DatasetSearch.getOpenSearchURL()");
-	    console.log(DatasetSearch.getOpenSearchURL());
+	    //console.log("DatasetSearch.getOpenSearchURL()");
+	   // console.log(DatasetSearch.getOpenSearchURL());
 	    this.OpenSearchURL = DatasetSearch.getOpenSearchURL();
 		//set selected download options
 	    this.DownloadOptions = DatasetSearch.getSelectedDownloadOptions();

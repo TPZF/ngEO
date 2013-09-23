@@ -19,7 +19,7 @@ define(
 					//console.log($('#'+ event.currentTarget.id));
 					//the stop and pause buttons ids follow expressions stop_id and pause_id 
 					//where is is the related dar id
-					var darId = buttonId.substring(buttonId.indexOf(Configuration.localConfig.fieldIdSuffixSepartor)+1, buttonId.length);
+					var darId = buttonId.substring(buttonId.indexOf('_')+1, buttonId.length);
 					var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
 					
 					if (buttonId.indexOf(Configuration.localConfig.dataAccessRequestStatuses.stopButtonSuffix) == 0){//stop button is clicked
