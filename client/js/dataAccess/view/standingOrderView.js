@@ -1,6 +1,6 @@
 define( ['jquery', 'backbone', 'configuration',
          'text!dataAccess/template/standingOrderViewContent.html', 
-         "jqm-datebox-calbox", "jqm-datebox-datebox"], 
+         "jqm-datebox-calbox"], 
 		function($, Backbone, Configuration, standingOrderView_template) {
 
 	/**
