@@ -217,7 +217,7 @@ var Shopcart = Backbone.Model.extend({
 	updateSelection: function(downloadOptions){
 		var itemsToUpdate = [];
 		for (var i=0; i < this.selection.length; i++){
-			itemsToRemove.push({'shopcartId' :  this.id, 
+			itemsToUpdate.push({'shopcartId' :  this.id, 
 								'id' : this.selection[i].id , 
 								'downloadOptions' : downloadOptions}); 
 		}	

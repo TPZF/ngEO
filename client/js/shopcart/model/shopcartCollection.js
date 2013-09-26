@@ -39,6 +39,11 @@ var ShopcartCollection = Backbone.Collection.extend({
 		}, this );
 	},
 	
+	/*fetch: function() {
+		console.log('fetch');
+		Backbone.Collection.prototype.fetch(this, arguments);
+	},*/
+	
 
 	/**
 	 * Needed because the server response is not what is expected from Backbone

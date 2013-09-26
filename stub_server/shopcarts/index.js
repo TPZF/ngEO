@@ -131,6 +131,7 @@ module.exports = {
 		}else{
 			//IF-ngEO-UserShopCartsConfigData
 			res.sendfile('./shopcarts/shopcarts.json');
+			//res.send(500);
 		}
 	},
 	
