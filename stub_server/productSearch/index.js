@@ -38,6 +38,9 @@ fs.readFile('./productSearch/Line_response.json', 'utf8', function (err, data) {
 fs.readFile('./productSearch/Crossing_response.json', 'utf8', function (err, data) {
 	featureCollections['Crossing']  = JSON.parse(data);
 });
+fs.readFile('./productSearch/Global_response.json', 'utf8', function (err, data) {
+	featureCollections['Global']  = JSON.parse(data);
+});
 
 /**
  * Time filter
@@ -87,6 +90,7 @@ module.exports = function(req, res){
 		featureCollection = featureCollections['default'];
 	}
 	
+	// Build the search area
 	var searchArea;
 	if ( req.query.bbox ) {
 		var bbox = req.query.bbox.split(',');
@@ -104,9 +108,13 @@ module.exports = function(req, res){
 	}
 	
 	var inside = function(feature) {
-		var geom = new terraformer.Primitive( feature.geometry );
-		return ( searchArea.intersects(geom) ||  contains(searchArea,geom) )
-		 && timeInsideFeature(feature,req.query.start,req.query.stop);
+		if (feature.geometry) {
+			var geom = new terraformer.Primitive( feature.geometry );
+			return ( searchArea.intersects(geom) ||  contains(searchArea,geom) )
+			&& timeInsideFeature(feature,req.query.start,req.query.stop);
+		} else {
+			return timeInsideFeature(feature,req.query.start,req.query.stop);
+		}
 	};
 	
 	var filterFeatures = [];
