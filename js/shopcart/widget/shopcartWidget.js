@@ -31,6 +31,16 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 			shopcartItemView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setModel);
 			
 			shopcartItemView.render();
+			
+			// Manage error on shopcart collection fetch
+			// Desactive the shopcart widget : cannot access to shopcart !
+			$('#shopcart').addClass('ui-disabled');
+			ShopcartCollection.on('error', function() {
+				$('#shopcart').addClass('ui-disabled');
+			});
+			ShopcartCollection.on('sync', function() {
+				$('#shopcart').removeClass('ui-disabled');
+			});
 		
 			// load the shopcart collection to display the current shopcart in the data services area
 			ShopcartCollection.fetch();

@@ -81,9 +81,6 @@ return {
 			
 		// Fetch DAR : maybe not needed right now
 		DataAccessRequestStatuses.fetch();
-		
-		//fetch for shopcarts
-		ShopcartCollection.fetch();
 	}
 		
 };

@@ -153,7 +153,7 @@ var ShopcartManagerView = Backbone.View.extend({
 	 * shopcart list retrieving. 
 	 */
 	error : function(){
-		this.$el.append("<div class='ui-error-message'><p><b> Failure: Error when loading the shopcart list.</p></b>"+ 
+		this.$el.html("<div class='ui-error-message'><p><b> Failure: Error when loading the shopcart list.</p></b>"+ 
 		"<p><b> Please check the interface with the server.</p></b></div>");
 	}
 	
