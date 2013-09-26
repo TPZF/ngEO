@@ -16,7 +16,7 @@
 		themeDate: 'd',
 		
 		startYear: (new Date()).getFullYear() - 10,
-		endYear: (new Date()).getFullYear(),
+		endYear: (new Date()).getFullYear() + 10,
 		
 		calHighToday: true,
 		calHighPick: true,

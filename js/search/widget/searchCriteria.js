@@ -4,8 +4,6 @@
 define( ["jquery", "backbone", "search/model/datasetSearch", "search/view/searchCriteriaView", 
           "widget"], function($, Backbone, DatasetSearch, SearchCriteriaView) {
 
-	DatasetSearch.initialize();
-	
 	// Create the view and append it to the root element
 	var view = new SearchCriteriaView({
 		model : DatasetSearch,
@@ -41,7 +39,7 @@ define( ["jquery", "backbone", "search/model/datasetSearch", "search/view/search
 		
 		//refresh the view
 		refresh : function(){
-			view.displayDatasetRelatedViews();
+			view.displayDatasetRelatedViews( DatasetSearch.dataset );
 		}
 	};
 
