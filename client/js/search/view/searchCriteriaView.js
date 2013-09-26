@@ -121,7 +121,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Open the searchURL popup when the user click on the button
 		$footer.find('#searchUrl').click( function() {
 			// Set the openSearch url
-			var url = Configuration.serverHostName + self.model.getOpenSearchURL();
+			var url = self.model.getOpenSearchURL();
 			$("#popupText").val( url );	
 			$('#openSearchUrlPopup').popup("open");
 		});	
@@ -174,7 +174,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Must be called after this.$el.trigger('create'); to have the popup created.
 		$('#openSearchUrlPopup').bind("popupafterclose", function(event, ui) {
 			var newUrl = $("#popupText").val();
-			var prevUrl = Configuration.serverHostName + self.model.getOpenSearchURL();
+			var prevUrl = self.model.getOpenSearchURL();
 			if ( newUrl != prevUrl ) {
 				self.applyOpenSearchUrl(newUrl);
 			}
