@@ -23,34 +23,63 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Connect to model change and dataset loaded events
 	 */
 	initialize : function() {
-		this.model.on("change:datasetId", this.onDataSetChanged, this);
-		this.model.on("datasetLoaded", this.displayDatasetRelatedViews, this);
-		this.model.on("datasetNotLoadError", this.displayErrorMessages, this);
+		// Listen to change on dataset to rebuild the advanced and download option views
+		this.model.on("change:dataset", this.displayDatasetRelatedViews, this);
 	},
 	
-	/**
-	 * Update the view when the datasetId have been changed
-	 */
-	onDataSetChanged: function() {
-		//if the dataset is defined load it from the server unless it is set to undefined
-		this.model.updateDatasetModel();		
-	},
 	/**
 	 * Callback method to display the advanced search criteria and the download options
 	 * for the selected dataset once they are loaded
 	 */
-	displayDatasetRelatedViews : function(){
+	displayDatasetRelatedViews : function(dataset){
 		this.$el.find("#searchCriteria").empty();
-		this.advancedCriteriaView.render();
 		this.$el.find("#downloadOptions").empty();
-		this.downloadOptionsView.render();
+		if ( dataset ) {
+			this.advancedCriteriaView.render();
+			this.downloadOptionsView.render();
+		} else {
+			this.$el.find("#searchCriteria").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No criteria available.</b></p></div>");
+			this.$el.find("#downloadOptions").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No download options available.</b></p></div>");
+		}
 	},
 	
-	displayErrorMessages: function(){
-		this.$el.find("#searchCriteria").empty();
-		this.$el.find("#searchCriteria").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No criteria available.</b></p></div>");
-		this.$el.find("#downloadOptions").empty();
-		this.$el.find("#downloadOptions").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No download options available.</b></p></div>");
+	/**
+	 * Apply a new OpenSearch URL to the view
+	 */
+	applyOpenSearchUrl: function(newUrl) {
+	
+		try {
+			// Check if url is ok
+			var re = new RegExp('^'  + Configuration.serverHostName + Configuration.baseServerUrl + '/catalogue/([^/]+)/search\\?(.+)');
+			var m  = re.exec(newUrl);
+			if ( m ) {
+				// Url is ok, check if we need to change the dataset
+				var datasetId = m[1];
+				var currentDatasetId = this.model.get("datasetId");
+				
+				if ( datasetId == currentDatasetId ) {
+					// Directly populate the DatasetSearch with the URL parameters
+					this.model.populateModelfromURL( m[2] );
+				} else {
+					// First wait for the new dataset to be loaded, otherwise fallback to previous dataset, and do not update the parameters
+					this.model.once('change:dataset', function(dataset) {
+						if ( dataset ) {
+							this.model.populateModelfromURL( m[2] );
+						} else {
+							Logger.error("Invalid OpenSearch URL : cannot load the dataset " + datasetId + ".");
+							this.model.set('datasetId', currentDatasetId);
+						}
+					}, this);
+					this.model.set('datasetId', datasetId);
+				}
+			} else {
+				Logger.error("Invalid OpenSearch URL.");
+			}
+			
+		} catch (err) {
+			Logger.error("Invalid OpenSearch URL : " + err);
+		}
+		
 	},
 		
 	/**
@@ -144,17 +173,12 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Bind the popupafterclose event on the SearchURL popup
 		// Must be called after this.$el.trigger('create'); to have the popup created.
 		$('#openSearchUrlPopup').bind("popupafterclose", function(event, ui) {
-				var newUrl = $("#popupText").val();
-				var prevUrl = Configuration.serverHostName + self.model.getOpenSearchURL();
-				if ( newUrl != prevUrl ) {
-					try {
-						self.model.populateModelfromURL( newUrl );
-					} catch (err) {
-						Logger.error(err);
-					}
-				}
+			var newUrl = $("#popupText").val();
+			var prevUrl = Configuration.serverHostName + self.model.getOpenSearchURL();
+			if ( newUrl != prevUrl ) {
+				self.applyOpenSearchUrl(newUrl);
 			}
-		);
+		});
 		
 		return this;
 	}

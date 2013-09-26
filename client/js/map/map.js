@@ -45,9 +45,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		};
 		this.addFeatures = function(features) {
 			for ( var i = 0; i < features.length; i++ ) {
-				Utils.fixFeature( features[i] );
-				mapEngine.addFeature( this.engineLayer, features[i] );
-				this.features.push(features[i]);
+				if ( features[i].geometry ) {
+					Utils.fixFeature( features[i] );
+					mapEngine.addFeature( this.engineLayer, features[i] );
+					this.features.push(features[i]);
+				}
 			}
 		};
 		this.removeFeatures = function(features) {

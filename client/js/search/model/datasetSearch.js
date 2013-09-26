@@ -67,21 +67,24 @@ var DataSetSearch = Backbone.Model.extend({
 		this.dataset = undefined;
 		// The search area
 		this.searchArea = new SearchArea();
+		
+		// Automatically load the dataset when the datasetId is changed
+		this.on('change:datasetId', this.loadDataset, this );
 	},
 	
 	/** load the information for the selected dataset from the server 
 	 * unless if no dataset is selected set the dataset to undefined */
-	updateDatasetModel : function(){
+	loadDataset : function(){
 
 		//reset all the selected attributes and download options from the old dataset if any
 		this.clearSelectedAttributesAndOptions();
 		
 		//Retrieve the dataset information from the server
-		if (this.get("datasetId")){
+		if ( this.get("datasetId")) {
 			
-			this.dataset = new Dataset({datasetId : this.get("datasetId")});			
+			var dataset = new Dataset({datasetId : this.get("datasetId")});			
 			var self = this;
-			this.dataset.fetch({
+			dataset.fetch({
 				
 				success: function(model, response, options) {
 					
@@ -113,23 +116,21 @@ var DataSetSearch = Backbone.Model.extend({
 					self.set({ start: start,
 							stop: stop
 						}); 
-					
-					self.trigger('datasetLoaded');
+						
+					self.dataset = dataset;
+					self.trigger('change:dataset',self.dataset);
 					
 				},
 				
 				error: function(model, xhr, options) {
-					//console.log(model);
-					//fire datasetNotLoadError event with the datasetId to notify the failure when loading the dataset
-					self.trigger('datasetNotLoadError', self.get("datasetId"));
-					
-					self.dataset = undefined;
-					self.set('datasetId','');
+					// Invalid dataset, reset datasetIds
+					self.set('datasetId','');					
 				}
 			});
 	
 		} else {
 			this.dataset = undefined;
+			this.trigger('change:dataset',this.dataset);
 		}
 	},
 	 
@@ -217,16 +218,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 * Populate the model with the parameters retrieved from the Shared URL
 	 */
 	populateModelfromURL : function(query){
-		
-		// Check if url is complete
-		if ( query.match(/^http/) ) {
-			var sep = query.indexOf('?');
-			var datasetId = query.slice( query.lastIndexOf('/')+1, sep );
-			// TODO : check the datasetId ?
-			this.set('datasetId',datasetId);
-			query = query.substr( sep+1 );
-		}
-	
+			
 		var vars = query.split("&");
 		
 		// Force useExtent to false to avoid bug when setting the geometry

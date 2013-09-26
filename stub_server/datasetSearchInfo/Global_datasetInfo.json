@@ -1,0 +1,24 @@
+{
+	"datasetSearchInfo": {
+		"dataSetId": "Global",
+		"description":"",
+		"keywords": [{"keyword":""}],
+		"downloadOptions": {},
+		"attributes": [{ 
+			"id":"start",
+			"type":"String",
+			"possibleValues":[]
+		}, {
+			"id":"stop",
+			"type":"String",
+			"possibleValues":[]
+		},{
+			"id":"bbox",
+			"type":"String",
+			"possibleValues":[]
+		}],
+		
+       "startDate": "01-01-2000T12:45:07:00.57Z",
+       "endDate": "31-07-2002T13:27:05:00.57Z"
+	}
+}
