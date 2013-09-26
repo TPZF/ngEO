@@ -3,29 +3,17 @@ require.config({
      paths: {
         "jquery": "externs/jquery-1.8.3",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+        //"jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min",
+		//"jquery.mobile": "http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
 		"jquery.dataTables" : "externs/jquery.dataTables",
-		"jquery.dateRangeSlider" : "externs/jQDateRangeSlider",
-		"jquery.rangeSlider" : "externs/jQRangeSlider",	
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"
    },
 	shim: {
-		'jquery': {
-            deps: [],
-            exports: 'jQuery'
-        },
-		'jqm-config': {
-            deps: ['jquery']
-        },
-        
- 		'jquery.mobile': {
-            deps: ['jquery','jqm-config'],
-            exports: 'jQuery'
-        },
         
         'jqm-datebox-core' : {
         	 deps: ['jquery', 'jquery.mobile'],
@@ -40,21 +28,8 @@ require.config({
         'jqm-datebox-datebox': {
             deps: ['jqm-datebox-core'],
             exports: 'jQuery'
-        },
-        
-        'jquery.dataTables' : {
-        	 deps: ['jquery'],
-             exports: 'jQuery'
-        },
+        }
                 
-		'underscore': {
-            deps: [],
-            exports: '_'
-		},
-		'backbone': {
-            deps: ['underscore','jquery'],
-            exports: 'Backbone'
-		}
 	}
 		
   });
@@ -64,7 +39,14 @@ require.config({
  */
 require( ["require", "jquery", "configuration", "menubar", "logger", "backbone", "jquery.mobile", "panel"] ,
 		function(require, $, Configuration, MenuBar, Logger, Backbone) {
-
+		
+// Configure jQuery Mobile
+$.mobile.ignoreContentEnabled = true;
+$.mobile.ajaxEnabled = false;
+$.mobile.linkBindingEnabled = false;
+$.mobile.hashListeningEnabled = false;
+$.mobile.pushStateEnabled = false;
+	
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
 
