@@ -94,30 +94,29 @@ return {
 				"data-services-area/search/:datasetId?:query", 
 				"search", function(datasetId, query) {
 				
-				
-			var datasetNotLoaded = function(datasetId){
-				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
-				MenuBar.showPage("data-services-area");
-			};
-				
+						
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
-			DatasetSearch.once("datasetLoaded", function(){
+			DatasetSearch.once("change:dataset", function(dataset) {
 			
-				DatasetSearch.off("datasetNotLoadError", datasetNotLoaded);
+				if ( dataset ) {
 				
-				DatasetSearch.populateModelfromURL(query);
+					DatasetSearch.populateModelfromURL(query);
+					
+					MenuBar.showPage("data-services-area");
+					
+					//refresh the search widget after the model has been update
+					SearchCriteriaWidget.refresh();
+					searchWidget.ngeowidget("show");
+					
+				} else {
 				
-				MenuBar.showPage("data-services-area");
-				
-				//refresh the search widget after the model has been update
-				SearchCriteriaWidget.refresh();
-				searchWidget.ngeowidget("show");
+					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
+					MenuBar.showPage("data-services-area");
+					
+				}
 			});
 			
-			//when the dataset selected is not loaded display an error message
-			DatasetSearch.once("datasetNotLoadError", datasetNotLoaded);
-
 			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
 			DatasetSearch.set({"datasetId" : datasetId});
 
@@ -127,31 +126,30 @@ return {
 		router.route(
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
-						
-			var datasetNotLoaded = function(datasetId){
-				Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
-				MenuBar.showPage("data-services-area");
-			};
-			
+									
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
-			DatasetSearch.once("datasetLoaded", function(){
+			DatasetSearch.once("change:dataset", function(dataset) {
 				
-				DatasetSearch.off("datasetNotLoadError", datasetNotLoaded);
+				if ( dataset ) {
+
+					DatasetSearch.populateModelfromURL(query);
+					StandingOrderDataAccessRequest.populateModelfromURL(query);
 				
-				DatasetSearch.populateModelfromURL(query);
-				StandingOrderDataAccessRequest.populateModelfromURL(query);
+					//Display the STO widget
+					MenuBar.showPage("data-services-area");
+									
+					var standingOrderWidget = new StandingOrderWidget();
+					standingOrderWidget.open();			
+					
+				} else {
 				
-				//Display the STO widget
-				MenuBar.showPage("data-services-area");
-				
-				var standingOrderWidget = new StandingOrderWidget();
-				standingOrderWidget.open();			
+					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
+					MenuBar.showPage("data-services-area");
+					
+				}
 			});
 			
-			//when the dataset selected is not loaded display an error message
-			DatasetSearch.once("datasetNotLoadError", datasetNotLoaded);
-
 			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
 			DatasetSearch.set({"datasetId" : datasetId});
 			
@@ -160,18 +158,22 @@ return {
 		// Route default
 		router.route(
 			"data-services-area", "dsa", function() {
-			
-				//when the dataset selected is not loaded display an error message
-				DatasetSearch.on("datasetNotLoadError", function(datasetId){
-					Logger.error('Cannot load the dataset :' + datasetId + '.');
-				});
 
 				//select the dataset id stored in the prefs
 				var datasetId = UserPrefs.get("Dataset");
 				if (datasetId && datasetId != "None") {
+							
+					//when the dataset selected cannot be loaded, display an error message
+					DatasetSearch.once("change:dataset", function(dataset){
+						if (!dataset) {
+							Logger.error('Cannot load the dataset :' + datasetId + ' from user preferences.');
+						}
+					});
+
 					//set the selected dataset in the model
 					DatasetSearch.set("datasetId", datasetId);
 				}
+				
 				// Show the page
 				MenuBar.showPage("data-services-area");
 		});

@@ -21,7 +21,12 @@ var TimeExtentView = Backbone.View.extend({
 		 * This handler is called after the user has chosen a dataset, and the dataset has been loaded.
 		 * It is used to recreate time slider for the dataset.
 		 */
-		this.listenTo( this.model, "datasetLoaded", function(){	
+		this.listenTo( this.model, "change:dataset", function(dataset) {
+			
+			// The dataset has not been loaded : do nothing, because the timeslider has already been removed when the datasetId has been changed, see below.
+			if (!dataset)
+				return;
+				
 			var useTimeSlider = this.model.get('useTimeSlider');
 			if ( useTimeSlider  ) {
 				this.addTimeSlider();
