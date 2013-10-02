@@ -50,7 +50,7 @@
 		
 		// OpenLayers configuration
 		"openlayers": {
-			"restrictedExtent": [-180,-90,180,90],
+			"restrictedExtent": [-360,-100,360,100],
 			"transitionEffect": "resize"
 		},
 		
