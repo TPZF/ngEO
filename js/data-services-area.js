@@ -1,18 +1,10 @@
 
-define(["jquery", "configuration", "logger", "userPrefs", "menubar", "map/map", "map/selectHandler", 
-        "searchResults/model/searchResults", "search/model/datasetSearch",  
-        "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
-        "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
-		"search/widget/searchCriteria", "searchResults/widget/resultsTable", 
-		"shopcart/widget/shopcartWidget", "map/widget/toolbarMap", "map/widget/mapPopup", 
+define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa", "shopcart/dsa",
+		"map/widget/toolbarMap",
 		"text!../pages/data-services-area.html", "context-help", "panelManager", "toolbar"], 
-	function($, Configuration, Logger, UserPrefs, MenuBar, Map, SelectHandler, SearchResults, DatasetSearch,
-		    ShopcartCollection, Shopcart, StandingOrderDataAccessRequest, StandingOrderWidget,
-			DataSetSelectionWidget, SearchCriteriaWidget, ResultsTableWidget,
-			ShopcartWidget, ToolBarMap, MapPopup, dataservicesarea, ContextHelp, PanelManager) {
+	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA, ShopcartDSA,
+			ToolBarMap, dataservicesarea, ContextHelp, PanelManager) {
 
-// Private variable
-var _$resultsTableWidget;
 
 return {
 
@@ -53,6 +45,7 @@ return {
 	 */
 	initialize: function(element) {
 	
+		// Initialize the panel manager on the map
 		PanelManager.initialize({
 			center: '#map', 
 			bottom: '#bottom-panel',
@@ -78,322 +71,18 @@ return {
 			}
 			event.data.hide = !event.data.hide;			
 		});
+		
+		// Create the router
+		var router = new Backbone.Router();
 
-		// Create all widgets
-		DataSetSelectionWidget(element);
-		var searchWidget = SearchCriteriaWidget.create(element);
-		_$resultsTableWidget = ResultsTableWidget();		
+		// Create all widgets for diferent modules
+		SearchDSA.initialize( element, router );
+		SearchResultsDSA.initialize( element, router );
+		ShopcartDSA.initialize( element, router );
+		
+		// Initialize toolbar and context help
 		ToolBarMap(element);
 		ContextHelp(element);
-		ShopcartWidget.create();
-		
-
-		// Setup the router for shared URL support
-		var router = new Backbone.Router();
-		var self = this;
-			
-		router.route(
-				"data-services-area/search/:datasetId?:query", 
-				"search", function(datasetId, query) {
-				
-						
-			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
-			//and not overwrite the start/stop dates 
-			DatasetSearch.once("change:dataset", function(dataset) {
-			
-				if ( dataset ) {
-				
-					DatasetSearch.populateModelfromURL(query);
-					
-					MenuBar.showPage("data-services-area");
-					
-					//refresh the search widget after the model has been update
-					SearchCriteriaWidget.refresh();
-					searchWidget.ngeowidget("show");
-					
-				} else {
-
-					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
-					MenuBar.showPage("data-services-area");
-					
-				}
-			});
-			
-			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
-			DatasetSearch.set({"datasetId" : datasetId});
-
-		});
-		
-		//Route standing order url
-		router.route(
-				"data-services-area/sto/:datasetId?:query", 
-				"sto", function(datasetId, query) {		
-									
-			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
-			//and not overwrite the start/stop dates 
-			DatasetSearch.once("change:dataset", function(dataset) {
-				
-				if ( dataset ) {
-
-					DatasetSearch.populateModelfromURL(query);
-					StandingOrderDataAccessRequest.populateModelfromURL(query);
-				
-					//Display the STO widget
-					MenuBar.showPage("data-services-area");
-									
-					var standingOrderWidget = new StandingOrderWidget();
-					standingOrderWidget.open();			
-					
-				} else {
-				
-					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
-					MenuBar.showPage("data-services-area");
-					
-				}
-			});
-			
-			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
-			DatasetSearch.set({"datasetId" : datasetId});
-			
-		});
-		
-		//Route for share shopcart
-		router.route(
-				"data-services-area/shopcart/:shopcartId", 
-				"shopcart", function(shopcartId) {		
-
-			MenuBar.showPage("data-services-area");
-			
-			// Create a shared shopcart and load its content to be displayed
-			var shareShopcart = new Shopcart({ id: shopcartId, name: "Share Shopcart", isShared: true });
-			ShopcartCollection.setCurrent( shareShopcart );
-			
-			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
-			//shareShopcart.loadContent();
-			
-			// Show the GUI once loaded
-			shareShopcart.on("loaded", function(id) {
-				// Toggle the shopcart button to be clicked
-				$("#shopcart").trigger('click');
-			});
-		});
-		
-		// Route default
-		router.route(
-			"data-services-area", "dsa", function() {
-
-				//select the dataset id stored in the prefs
-				var datasetId = UserPrefs.get("Dataset");
-				if (datasetId && datasetId != "None") {
-							
-					//when the dataset selected cannot be loaded, display an error message
-					DatasetSearch.once("change:dataset", function(dataset){
-						if (!dataset) {
-							Logger.error('Cannot load the dataset :' + datasetId + ' from user preferences.');
-						}
-					});
-
-					//set the selected dataset in the model
-					DatasetSearch.set("datasetId", datasetId);
-				}
-				
-				// Show the page
-				MenuBar.showPage("data-services-area");			
-						
-		});
-		
-		// Create the popup for the map
-		var mapPopup = new MapPopup('.ui-page-active');
-		mapPopup.close();
-	
-		// Display a message about dataset in the map, and save user preferences
-		DatasetSearch.on('change:datasetId', function(model) {
-			var datasetId = model.get('datasetId');
-			if ( datasetId ) {
-				$('#datasetMessage').html( "Current dataset : " + model.get('datasetId') );
-				UserPrefs.save("Dataset", datasetId);
-			} else {
-				$('#datasetMessage').html( "Current dataset : None" );
-				UserPrefs.save("Dataset", "None");
-			}
-			SearchResults.reset();
-		});				
-	
-		// Connect search results events with map
-		var footprintLayer = Map.addLayer({
-			name: "Result Footprints",
-			type: "Feature",
-			visible: true,
-			style: "results-footprint"
-		});
-		var browsesLayer = Map.addLayer({
-			name: "Result Browses",
-			type: "Browses",
-			visible: true
-		});
-				
-		var shopcartLayer = Map.addLayer({
-			name: "Shopcart Footprints",
-			type: "Feature",
-			visible: true,
-			style: "shopcart-footprint"
-		});
-		
-		// Manage display of shopcart footprints
-		ShopcartCollection.on('change:current', function( current, prevCurrent ) {
-			if ( prevCurrent ) {
-				prevCurrent.off('loaded', shopcartLayer.addFeatures, shopcartLayer );
-				prevCurrent.off('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
-				prevCurrent.off('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
-			}
-			shopcartLayer.clear();
-			current.on('loaded', shopcartLayer.addFeatures, shopcartLayer );
-			current.on('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
-			current.on('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
-		});
-			
-		SearchResults.on('reset:features', function() {
-			footprintLayer.clear();
-			browsesLayer.clear();
-		});
-		
-		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
-		SearchResults.on('zoomToFeature', Map.zoomToFeature);
-		
-		SearchResults.on('selectFeatures', function(features,searchResults) {
-			for ( var i = 0; i < features.length; i++ ) {
-				if ( searchResults.isHighlighted(features[i]) ) {
-					footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
-				} else {
-					footprintLayer.modifyFeaturesStyle([features[i]], "select" );
-				}
-			}
-			browsesLayer.addFeatures(features);
-		});
-		SearchResults.on('unselectFeatures', function(features,searchResults) {
-			for ( var i = 0; i < features.length; i++ ) {
-				if ( searchResults.isHighlighted(features[i]) ) {
-					footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
-				} else {
-					footprintLayer.modifyFeaturesStyle([features[i]], "default" );
-					browsesLayer.removeFeatures([features[i]]);
-				}
-			}
-		});
-		SearchResults.on('highlightFeatures', function(features,prevFeatures,searchResults) {
-			
-			if ( prevFeatures ) {
-				
-				for ( var i = 0; i < prevFeatures.length; i++ ) {
-
-					if ( searchResults.isSelected(prevFeatures[i]) ) {
-						footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select" );
-					} else {
-						footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default" );
-						browsesLayer.removeFeatures([prevFeatures[i]]);
-					}
-				}
-			}
-			
-			if ( features ) {
-				for ( var i = 0; i < features.length; i++ ) {
-					if ( searchResults.isSelected(features[i]) ) {
-						footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
-					} else {
-						footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
-					}
-				}
-				browsesLayer.addFeatures(features);
-			}
-		});	
-		
-		// Initialize the default handler
-		SelectHandler.initialize({
-			layer: footprintLayer
-		});
-		// Start it
-		SelectHandler.start();
-
-		// Connect with map feature picking
-		Map.on('pickedFeatures', SearchResults.highlight, SearchResults);
-		
-		//display a pop-up message when the product search has failed
-		SearchResults.on('error:features', function(searchUrl){
-			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
-		});
-		SearchResults.on('startLoading', function() {
-		
-			$('#paging a').addClass('ui-disabled');
-
-			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.html( "Searching..." );
-			
-			// Pulsate animation when searching
-			var fadeOutOptions = {
-				duration: 300,
-				easing: "linear",
-				complete: function() {
-					$(this).animate({opacity:1.0},fadeInOptions);
-				}
-			};
-			var fadeInOptions = {
-				duration: 300,
-				easing: "linear",
-				complete: function() {
-					$(this).animate({opacity:0.2},fadeOutOptions);
-				}
-			};
-			$resultsMessage.animate({opacity:0.2},fadeOutOptions);
-			$resultsMessage.show();
-		});
-		
-		SearchResults.on('reset:features', function() {
-			$('#paging a').addClass('ui-disabled');
-			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.hide();
-		});
-		
-		SearchResults.on('add:features', function(features) {
-			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.stop(true);
-			$resultsMessage.css('opacity',1.0);
-			$resultsMessage.show();
-			
-			if ( SearchResults.totalResults != 0 ) {
-				var startIndex = 1 + (SearchResults.currentPage-1) * SearchResults.countPerPage;
-				$resultsMessage.html( 'Showing ' + startIndex + ' to ' + (startIndex + features.length - 1) + " of " + SearchResults.totalResults + " products." );
-				
-				// Updage paging button according to the current page
-				$('#paging a').removeClass('ui-disabled');
-				if ( SearchResults.currentPage == 1 ) {
-					$('#paging_prev').addClass('ui-disabled');
-					$('#paging_first').addClass('ui-disabled');
-				} 
-				if ( SearchResults.currentPage == SearchResults.lastPage ) {
-					$('#paging_next').addClass('ui-disabled');
-					$('#paging_last').addClass('ui-disabled');
-				}
-			} else {
-				$resultsMessage.html( 'No product found.' );
-			}
-		});
-		
-		// To start paging is disable
-		$('#paging a').addClass('ui-disabled');
-
-		// Manage paging through buttons
-		$('#paging_first').click( function() {
-			SearchResults.changePage(1);
-		});
-		$('#paging_last').click( function() {
-			SearchResults.changePage( SearchResults.lastPage );
-		});
-		$('#paging_next').click( function() {
-			SearchResults.changePage( SearchResults.currentPage + 1 );
-		});
-		$('#paging_prev').click( function() {
-			SearchResults.changePage( SearchResults.currentPage - 1 );
-		});
 		
 	},
 };
