@@ -126,12 +126,14 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 	switch (layer.type.toUpperCase()) {
 	case "OSM":
 		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png", {
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
+			wrapDateLine: true
 		});
 		break;
 	case "WMS":
 		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params, {
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
+			wrapDateLine: true
 		});
 		break;
 	case "BING":
@@ -139,7 +141,8 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			name: layer.name, 
 			key: layer.key, 
 			type: layer.imageSet,
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
+			wrapDateLine: true
 		});
 		break;
 	case "WMTS":
@@ -152,7 +155,8 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			style: layer.params.style,
 			isBaseLayer: true,
 			projection: layer.projection,
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
+			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
+			wrapDateLine: true
 		});
 		break;
 	}
