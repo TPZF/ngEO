@@ -82,11 +82,11 @@ var MapPopup = function(container) {
 	parentElement.hide();
 
 	var self = this;
-	Map.on('pickedFeatures', function(highlightedFeatures) {
+	Map.on('pickedFeatures', function(highlightedFeatures,event) {
 		if ( highlightedFeatures.length == 0 ) {
 			self.close();
 		} else {
-			self.open(highlightedFeatures);
+			self.open(highlightedFeatures,event);
 		}
 	});
 	Map.on('extent:change', function() {
@@ -173,7 +173,7 @@ var MapPopup = function(container) {
 	/**
 		Open the popup
 	 */
-	this.open = function(highlightedFeatures) {
+	this.open = function(highlightedFeatures,event) {
 	
 		products = highlightedFeatures;
 		
@@ -181,40 +181,39 @@ var MapPopup = function(container) {
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
 		
 		buildContent(false);
-				
+		
+		// Compute the bbox of the picking		
 		var bbox = computeBbox(highlightedFeatures);
 		var pos = Map.getPixelFromLonLat( bbox[2], (bbox[1] + bbox[3])*0.5);
+		
+		var posY = event.pageY;
 			
-		var toolbarTop = $("#toolbar").offset().top;
-		pos.y += toolbarTop;
-		var toolbarBottom = toolbarTop + $("#toolbar").outerHeight();
+		var mapOffset = $("#map").offset();
 		
 		// Compute top position for popup, limit it to the toolbar bottom
 		var poh = parentElement.outerHeight();
-		var top = pos.y - parentElement.outerHeight() / 2;
-		if ( top < toolbarBottom ) {
-			top = toolbarBottom + 5;
+		var top = posY - parentElement.outerHeight() / 2;
+		if ( top < mapOffset.top ) {
+			top = mapOffset.top + 5;
 		}		
 		parentElement.css('top', top );
+		arrow.css('top', top + parentElement.outerHeight() * 0.5 - 0.5 * arrow.outerHeight());
 		
 		// Compute left position for popup, if too close to window right edge, "invert" its position
 		var left = pos.x + arrow.outerWidth();
 		if ( left + parentElement.outerWidth() >  window.innerWidth ) {
 			pos = Map.getPixelFromLonLat( bbox[0], (bbox[1] + bbox[3])*0.5);
-			pos.y += toolbarTop;
+			pos.x += mapOffset.left;
 			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() );
-		
-			arrow.css('top',pos.y - 0.5 * arrow.outerHeight());
-			arrow.css('left',pos.x - arrow.outerWidth());
+			arrow.css('left', pos.x - arrow.outerWidth());
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
 		} else {
+			pos.x += mapOffset.left;
 			parentElement.css('left', left);
-			
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');
 			arrow.addClass('mapPopup-arrow-left');
-			arrow.css('top', pos.y - 0.5 * arrow.outerHeight() );
 			arrow.css('left', pos.x);
 		}
 		
