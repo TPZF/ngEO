@@ -182,14 +182,13 @@ var MapPopup = function(container) {
 		
 		var posY = event.pageY;
 			
-		var toolbarTop = $("#toolbar").offset().top;
-		var toolbarBottom = toolbarTop + $("#toolbar").outerHeight();
+		var mapOffset = $("#map").offset();
 		
 		// Compute top position for popup, limit it to the toolbar bottom
 		var poh = parentElement.outerHeight();
 		var top = posY - parentElement.outerHeight() / 2;
-		if ( top < toolbarBottom ) {
-			top = toolbarBottom + 5;
+		if ( top < mapOffset.top ) {
+			top = mapOffset.top + 5;
 		}		
 		parentElement.css('top', top );
 		arrow.css('top', top + parentElement.outerHeight() * 0.5 - 0.5 * arrow.outerHeight());
@@ -198,11 +197,13 @@ var MapPopup = function(container) {
 		var left = pos.x + arrow.outerWidth();
 		if ( left + parentElement.outerWidth() >  window.innerWidth ) {
 			pos = Map.getPixelFromLonLat( bbox[0], (bbox[1] + bbox[3])*0.5);
+			pos.x += mapOffset.left;
 			parentElement.css( 'left', pos.x - arrow.outerWidth() - parentElement.outerWidth() );
-			arrow.css('left',pos.x - arrow.outerWidth());
+			arrow.css('left', pos.x - arrow.outerWidth());
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
 		} else {
+			pos.x += mapOffset.left;
 			parentElement.css('left', left);
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');
