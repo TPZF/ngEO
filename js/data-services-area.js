@@ -14,7 +14,7 @@ return {
 	buildElement: function() {
 	
 		var dsa = $(dataservicesarea);
-		dsa.find('#toolbar').toolbar({ onlyIcon: false });	
+		dsa.find('menu[type=toolbar]').toolbar({ onlyIcon: false });	
 	
 		return dsa;
 	},
@@ -26,6 +26,8 @@ return {
 		PanelManager.hide();
 		$('#statusBar').hide();
 		$('#dateRangeSlider').hide();
+		$('#searchToolbar').hide();
+		$('#mapToolbar').hide();
 	},
 	
 	/**
@@ -35,6 +37,8 @@ return {
 		PanelManager.show();
 		$('#statusBar').show();
 		$('#dateRangeSlider').show();
+		$('#searchToolbar').show();
+		$('#mapToolbar').show();
 	},
 	
 	/**
@@ -50,28 +54,20 @@ return {
 			center: '#map', 
 			bottom: '#bottom-panel',
 			left: '#left-panel',
-			updateCenter: Map.updateViewportSize
+			updateCenter: function() {
+				Map.updateViewportSize();
+				// TODO : improve that
+				var $dateRangeSlider = $('#dateRangeSlider');
+				if ( $dateRangeSlider.is(':ui-dateRangeSlider') ) {
+					$dateRangeSlider.dateRangeSlider('refresh');
+				}
+			}
 		});
 		$('#statusBar').appendTo('#map').trigger('create');
 		$('#dateRangeSlider').appendTo('#map');
-	
-		// Hide/show widgets
-		element.trigger('create');
-		$('#showHideToolbar').click( { hide: true }, function(event) {
-			if ( event.data.hide ) {
-				$('#toolbar').hide();
-				$('#statusBar').hide();
-				$('#dateRangeSlider').hide();
-				$(this).buttonMarkup({ icon: 'plus' });
-			} else {
-				$('#toolbar').show();
-				$('#statusBar').show();
-				$('#dateRangeSlider').show();
-				$(this).buttonMarkup({ icon: 'minus' });
-			}
-			event.data.hide = !event.data.hide;			
-		});
-		
+		$('#searchToolbar').appendTo('#map');
+		$('#mapToolbar').appendTo('#map');
+
 		// Create the router
 		var router = new Backbone.Router();
 

@@ -200,6 +200,7 @@ var MapPopup = function(container) {
 		arrow.css('top', top + parentElement.outerHeight() * 0.5 - 0.5 * arrow.outerHeight());
 		
 		// Compute left position for popup, if too close to window right edge, "invert" its position
+		pos.x += mapOffset.left;
 		var left = pos.x + arrow.outerWidth();
 		if ( left + parentElement.outerWidth() >  window.innerWidth ) {
 			pos = Map.getPixelFromLonLat( bbox[0], (bbox[1] + bbox[3])*0.5);
@@ -209,7 +210,6 @@ var MapPopup = function(container) {
 			arrow.removeClass('mapPopup-arrow-left');
 			arrow.addClass('mapPopup-arrow-right');
 		} else {
-			pos.x += mapOffset.left;
 			parentElement.css('left', left);
 			// position the arrow
 			arrow.removeClass('mapPopup-arrow-right');

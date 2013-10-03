@@ -1,30 +1,35 @@
 <div id="data-services-area">
 	<!-- A button to show/hide the toolbar -->
-	<a id="showHideToolbar" data-role="button" data-mini="true" data-inline="true" data-icon="minus" data-iconpos="notext">Show/Hide</a>
+	<!-- <a id="showHideToolbar" data-role="button" data-mini="true" data-inline="true" data-icon="minus" data-iconpos="notext">Show/Hide</a> -->
 
 	<!-- The main toolbar in the data-services-area -->
-	<menu id="toolbar" type="toolbar">
+	<menu id="searchToolbar" type="toolbar" direction="vertical">
 		<command id="dataset" label="Datasets" data-help="Select a dataset for searching products.<br>
 			See <a target='_blank' href='help.html#chapter/dataAccessServices/datasetSelection'>here</a> for more details."></command>
 		<command id="search" label="Search" data-help="Submit a search for the selected dataset.<br>
 			See <a target='_blank' href='help.html#chapter/dataAccessServices/searchCriteria'>here</a> for more details."></command>
-		<command id="result" label="Table View" data-help="Display search results in a table.<br>
-			See <a target='_blank' href='help.html#chapter/dataAccessServices/resultsTable'>here</a> for more details."></command>
-		<command id="shopcart" label="Shopcart" data-help="Display the current shopcart.<br>
-			See <a target='_blank' href='help.html#chapter/dataAccessServices/shopcart'>here</a> for more details."></command>
-		<div class="tb-separator" />
+	</menu>
+	
+	
+	<menu id="mapToolbar" type="toolbar">
 		<command id="home" label="Start View" data-help="Return to map start view"/>
 		<command id="zoomOut" label="Zoom Out" data-help="Zoom out on the map"/>
 		<command id="zoomIn" label="Zoom In" data-help="Zoom in on the map"/>
 		<command id="background" label="Background" data-help="Change the background layer used by the map"/>
 		<command id="layers" label="Layers" data-help="Configure layers on the map"/>
 		<command id="switch" label="2D/3D" data-help="Switch map mode between 2D and 3D"/>
-		<div class="tb-separator" />
+	</menu>
+	
+	<menu id="helpToolbar" type="toolbar">
 		<command id="help" label="Context Help"/>
 	</menu>
 	
 	<!-- bottom panel -->
 	<div id="bottom-panel" class="panel ui-body-c">
+	</div>
+	
+	<!-- left panel -->
+	<div id="left-panel" class="panel ui-body-c">
 	</div>
 	
 	<!-- The date range slide use for product search -->
@@ -42,8 +47,12 @@
 			<a id="paging_next" data-role="button" data-mini="true" data-inline="true">Next</a>
 			<a id="paging_last" data-role="button" data-mini="true" data-inline="true">Last</a>
 		</div>
-		<div id="resultsMessage" class="ui-block-c" style="display: none;">
-			No search done.
+		<div id="resultsBlock" class="ui-block-c">
+			<span id="resultsMessage">No search done.</span>
+			<fieldset id="resultCG" data-role="controlgroup" data-mini="true" data-type="horizontal">
+			   <input type="checkbox" name="tableCB" id="tableCB" />
+			   <label for="tableCB">Table</label>
+			</fieldset>
 		</div>
 	</div>
 </div>

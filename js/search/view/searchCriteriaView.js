@@ -17,6 +17,29 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Id for view div container
 	 */
 	id: "datasetSearchCriteria",
+
+	events: {
+		// Update the search criteria from the OpenSearch URL
+		"blur #osUrlText": function(event) {
+			var newUrl = $(event.currentTarget).val();
+			var prevUrl = Configuration.serverHostName + this.model.getOpenSearchURL();
+			if ( newUrl != prevUrl ) {
+				this.applyOpenSearchUrl(newUrl);
+			}
+		}
+	},
+	
+	/**
+	 * Update the opensearch URL
+	 */
+	updateOpenSearchURL: function() {
+		if ( this.model.dataset ) {
+			var url = Configuration.serverHostName + this.model.getOpenSearchURL();
+			this.$el.find("#osUrlText").val( url );	
+		} else {
+			this.$el.find("#osUrlText").val( '' );	
+		}
+	},
 	
 	/**
 	 * Constructor
@@ -91,11 +114,9 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.$el.append(content);
 		
-		// Move footer to parent widget
-		var $footer = this.$el.find('#sc-footer')
-			.insertAfter(this.$el)
-			.trigger('create');
-					
+		// Build footer
+		var $footer = this.$el.find('#sc-footer');
+				
 		var self = this;
 			
 		// Launch a search when the user clicks on the button
@@ -118,14 +139,7 @@ var SearchCriteriaView = Backbone.View.extend({
 			standingOrderWidget.open();
 		});
 				
-		// Open the searchURL popup when the user click on the button
-		$footer.find('#searchUrl').click( function() {
-			// Set the openSearch url
-			var url = Configuration.serverHostName + self.model.getOpenSearchURL();
-			$("#popupText").val( url );	
-			$('#openSearchUrlPopup').popup("open");
-		});	
-			
+					
 		// To share a search
 		$footer.find('#shareSearch').click( function() {
 			// Set the opensearch url
@@ -167,19 +181,20 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		this.$el.trigger('create');
 		
+		// Refresh the OpenSearch URL when the textarea is visible
+		this.$el.find('#osUrl')
+			.bind('collapse', function() {
+					self.stopListening( self.model, 'change', self.updateOpenSearchURL );
+				})
+			.bind('expand', function() {
+					self.updateOpenSearchURL();
+					self.listenTo( self.model, 'change', self.updateOpenSearchURL );
+				});
+
+		
 		// Remove class added by jQM
 		$tabs.find("a").removeClass('ui-link');
-		
-		// Bind the popupafterclose event on the SearchURL popup
-		// Must be called after this.$el.trigger('create'); to have the popup created.
-		$('#openSearchUrlPopup').bind("popupafterclose", function(event, ui) {
-			var newUrl = $("#popupText").val();
-			var prevUrl = Configuration.serverHostName + self.model.getOpenSearchURL();
-			if ( newUrl != prevUrl ) {
-				self.applyOpenSearchUrl(newUrl);
-			}
-		});
-		
+			
 		return this;
 	}
 	

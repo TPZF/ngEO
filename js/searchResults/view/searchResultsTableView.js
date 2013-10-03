@@ -2,9 +2,9 @@ define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 
-		  'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'jquery.mobile', 'jquery.dataTables' ],
+		  'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'map/map', 'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-			DirectDownloadWidget, DownloadOptionsWidget, ShopcartCollection, ExportWidget) {
+			DirectDownloadWidget, DownloadOptionsWidget, ShopcartCollection, ExportWidget, Map) {
 
 	
 /**
@@ -61,6 +61,14 @@ var SearchResultsTableView = Backbone.View.extend({
 			if (feature != null) {
 				$row.addClass('row_selected');
 				this.model.highlight([feature]);
+			}
+		},
+		
+		'dblclick tr': function (event) {
+					
+			var feature = this.getFeatureFromRow(event.currentTarget);
+			if (feature) {
+				Map.zoomToFeature( feature );
 			}
 		},
 		

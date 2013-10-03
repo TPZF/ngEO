@@ -83,7 +83,7 @@ $.widget( "ngeo.ngeowidget", {
 	},
 	
 	update: function() {
-		var $tb = $('#toolbar');
+		var $tb = $('#mapToolbar');
 		var toolbarBottom = $tb.position().top + $tb.outerHeight();
 		if ( this.activator ) {
 			// Recompute position for widget

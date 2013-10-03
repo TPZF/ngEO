@@ -1,5 +1,6 @@
 
 <!-- The different tabs for each different search options -->
+<!--
 <div id="sc-tabs">
 	<ul>
 		<li><a href="#date">Date</a></li>
@@ -12,25 +13,49 @@
 	<div id="searchCriteria"></div>
 	<div id="downloadOptions"></div>
 </div>
+-->
+		
+
+	<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">
+		<h3>Date</h3>
+		<div id="date">	</div>
+	</div>
+	
+	<div data-role="collapsible" data-inset="false" data-mini="true">
+		<h3>Area</h3>
+		<div id="area">	</div>
+	</div>
+	
+	<div data-role="collapsible" data-inset="false" data-mini="true">
+		<h3>Advanced</h3>
+		<div id="searchCriteria">	</div>
+	</div>
+	
+	<div data-role="collapsible" data-inset="false" data-mini="true">
+		<h3>Download Options</h3>
+		<div id="downloadOptions">	</div>
+	</div>
+
+	<div id="osUrl" data-role="collapsible" data-inset="false" data-mini="true">
+		<h3>OpenSearch URL</h3>
+		<div >
+			<textarea data-role="none" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" id="osUrlText" cols="80" rows="3"></textarea>
+		</div>
+	</div>	
+<!--
+<div data-role="collapsible-set" data-inset="false" data-mini="true">
+</div>
+-->	
 
 <!-- The footer for buttons -->
 <div id="sc-footer" class="widget-footer">
 	<div class="widget-footer-right">
 		<button data-role='button' data-inline='true' data-mini='true' id="searchRequest" >Apply</button>
 	</div>
-	<button data-role='button' data-inline='true' data-mini='true' id="searchUrl">Search URL</button>
 	<button data-role='button' data-inline='true' data-mini='true' id="standingOrder">Standing Order</button>
 	<button data-role='button' data-inline='true' data-mini='true' id="shareSearch">Share</button>
 </div>
 
-<div id="openSearchUrlPopup" data-role=popup data-theme="c" 
-								data-overlay-theme="a" 
-								class="ui-content">
-		<a href="#" id="closePopup" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-		
-		<!-- Avoid jQM enhancement on the text area because autogrowth is broken with long URLs -->
-		<textarea data-role="none" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" id="popupText" cols="80" rows="3"></textarea>
-</div> 
 
 <div id="sharedUrlPopup" data-role=popup data-theme="c" 
 								data-overlay-theme="a" 

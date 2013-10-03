@@ -27,14 +27,12 @@ var BoxView = Backbone.View.extend({
 	
 	events :{		
 		'click #drawbbox': function(event) {
-			$('#datasetSearchCriteria').ngeowidget('hide');
 			this.model.set('useExtent',false);
 			var self = this;
 			RectangleHandler.start({
 				layer: this.parentView.searchAreaLayer,
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
-					$('#datasetSearchCriteria').ngeowidget('show');
 					var bbox = self.model.searchArea.getBBox();
 					$("#west").val( bbox.west );
 					$("#south").val( bbox.south );

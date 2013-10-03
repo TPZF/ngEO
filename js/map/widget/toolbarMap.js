@@ -8,11 +8,11 @@ return function (dsa) {
 	LayersWidget(dsa);
 	BackgroundWidget(dsa);
 	
-	dsa.find("#zoomIn").click( function() { Map.zoomIn(); } );
-	dsa.find("#zoomOut").click( function() { Map.zoomOut(); } );
-	dsa.find("#home").click( function() { Map.zoomToMaxExtent(); } );
+	$("#zoomIn").click( function() { Map.zoomIn(); } );
+	$("#zoomOut").click( function() { Map.zoomOut(); } );
+	$("#home").click( function() { Map.zoomToMaxExtent(); } );
 	
-	dsa.find("#switch").click( function() {
+	$("#switch").click( function() {
 		mode2D = !mode2D;
 		if (!Map.switchMapEngine(mode2D ? '2d' : '3d')) {
 			// Create a pop-up to warn the user
