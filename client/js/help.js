@@ -1,36 +1,15 @@
 
 require.config({
      paths: {
-        "jquery": "externs/jquery-1.8.3.min",
+        "jquery": "externs/jquery-1.8.3",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+        //"jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min",
+		//"jquery.mobile": "http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone"
-  },
-	shim: {
-		'jquery': {
-            deps: [],
-            exports: 'jQuery'
-        },
-		'jqm-config': {
-            deps: ['jquery']
-        },
- 		'jquery.mobile': {
-            deps: ['jquery','jqm-config'],
-            exports: '$'
-        },
-		'underscore': {
-            deps: [],
-            exports: '_'
-		},
-		'backbone': {
-            deps: ['underscore','jquery'],
-            exports: 'Backbone'
-		},
-		'externs/jquery.imagesloaded': {
-            deps: ['jquery']
-		}
-	}
-  });
+  }
+  
+});
 
 /**
  * Main ngEO module
@@ -38,6 +17,13 @@ require.config({
 require( ["jquery.mobile", "backbone", "externs/jquery.imagesloaded"] ,
 		function() {
 		
+// Configure jQuery Mobile
+$.mobile.ignoreContentEnabled = true;
+$.mobile.ajaxEnabled = false;
+$.mobile.linkBindingEnabled = false;
+$.mobile.hashListeningEnabled = false;
+$.mobile.pushStateEnabled = false;	
+	
 /** 
 	Load a page from help
  */

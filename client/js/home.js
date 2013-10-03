@@ -3,19 +3,6 @@ require.config({
      paths: {
         "jquery": "externs/jquery-1.8.3.min",
 		"jquery.mobile": "externs/jquery.mobile-1.2.0"
-	},
-	shim: {
-		'jquery': {
-            deps: [],
-            exports: 'jQuery'
-        },
-		'jqm-config': {
-            deps: ['jquery']
-        },
- 		'jquery.mobile': {
-            deps: ['jquery','jqm-config'],
-            exports: '$'
-        }
 	}
   });
 
@@ -24,7 +11,14 @@ require.config({
  */
 require( ["jquery.mobile"] ,
 		function() {
-	
+		
+// Configure jQuery Mobile
+$.mobile.ignoreContentEnabled = true;
+$.mobile.ajaxEnabled = false;
+$.mobile.linkBindingEnabled = false;
+$.mobile.hashListeningEnabled = false;
+$.mobile.pushStateEnabled = false;	
+		
 
 /** When the document is ready, clean-up styling */
 $(document).ready( function() {
