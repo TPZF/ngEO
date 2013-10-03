@@ -2,7 +2,7 @@
  * DatasetSelection Widget module
  */
 define( ["jquery", "backbone", "logger", 'search/model/dataSetPopulation', "search/view/datasetSelectionView", 
-          "widget"], function($, Backbone, Logger, DataSetPopulation, DataSetSelectionView) {
+          "panelManager"], function($, Backbone, Logger, DataSetPopulation, DataSetSelectionView, PanelManager) {
 
 return function(element) {
 		
@@ -20,12 +20,21 @@ return function(element) {
 		success: function() {
 			
 			view.render();
-			// Append it to the data services area
+/*			// Append it to the data services area
 			element.append(view.$el);
 			
 			// Create the widget for main search view
 			view.$el.ngeowidget({
 				activator: '#dataset',
+			});*/
+			
+			/**
+			 * Add the search widget as left panel
+			 */
+			PanelManager.addPanelContent({
+				element: view.$el,
+				position: 'left',
+				activator: '#dataset'
 			});
 			
 			return view.$el;

@@ -36,7 +36,7 @@ return function() {
 	PanelManager.addPanelContent({
 		element: view.$el,
 		position: 'bottom',
-		activator: '#result'
+		activator: '#tableCB'
 	});
 	
 	// Manage panel size
