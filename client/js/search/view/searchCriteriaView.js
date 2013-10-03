@@ -34,7 +34,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	 */
 	updateOpenSearchURL: function() {
 		if ( this.model.dataset ) {
-			var url = Configuration.serverHostName + this.model.getOpenSearchURL();
+			var url = this.model.getOpenSearchURL();
 			this.$el.find("#osUrlText").val( url );	
 		} else {
 			this.$el.find("#osUrlText").val( '' );	
