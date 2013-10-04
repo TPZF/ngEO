@@ -1,5 +1,5 @@
 
-define(["jquery", "logger", "userPrefs", "menubar", "search/model/datasetSearch", 
+define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
 		"search/widget/searchCriteria"], 
 	function($, Logger, UserPrefs, MenuBar, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,

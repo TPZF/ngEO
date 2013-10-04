@@ -1,7 +1,7 @@
 
 define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa", "shopcart/dsa",
 		"map/widget/toolbarMap",
-		"text!../pages/data-services-area.html", "context-help", "panelManager", "toolbar"], 
+		"text!../pages/data-services-area.html", "ui/context-help", "panelManager", "ui/toolbar"], 
 	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA, ShopcartDSA,
 			ToolBarMap, dataservicesarea, ContextHelp, PanelManager) {
 
