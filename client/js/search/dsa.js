@@ -17,7 +17,7 @@ return {
 	
 		// Create widgets
 		DataSetSelectionWidget(element);
-		var searchWidget = SearchCriteriaWidget.create(element);		
+		SearchCriteriaWidget.create(element);		
 			
 		router.route(
 				"data-services-area/search/:datasetId?:query", 
@@ -36,7 +36,9 @@ return {
 					
 					//refresh the search widget after the model has been update
 					SearchCriteriaWidget.refresh();
-					searchWidget.ngeowidget("show");
+					
+					// Show search panel
+					$('#search').click();
 					
 				} else {
 
