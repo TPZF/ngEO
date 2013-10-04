@@ -2,7 +2,7 @@
   * Background widget module
   */
 
-define( [ "map/map", "userPrefs", "widget" ], function(Map, UserPrefs) {
+define( [ "map/map", "userPrefs", "ui/widget" ], function(Map, UserPrefs) {
 
 /**
  * The background widget

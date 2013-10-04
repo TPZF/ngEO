@@ -2,7 +2,7 @@
 define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "shopcart/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
         "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView",
-        "text!../pages/account.html", "tabs"], 
+        "text!../pages/account.html", "ui/tabs"], 
 
         function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
         		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_html) {

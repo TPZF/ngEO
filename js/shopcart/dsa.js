@@ -1,5 +1,5 @@
 
-define(["jquery", "logger", "menubar", "map/map", 
+define(["jquery", "logger", "ui/menubar", "map/map", 
         "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
  		"shopcart/widget/shopcartWidget"], 
 	function($, Logger, MenuBar, Map, ShopcartCollection, Shopcart, ShopcartWidget) {

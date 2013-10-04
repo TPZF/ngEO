@@ -3,7 +3,7 @@
   */
 
 
-define( [ "map/map", "widget" ], function(Map) {
+define( [ "map/map", "ui/widget" ], function(Map) {
 
 /**
  * The HTML element that contains the layer list
