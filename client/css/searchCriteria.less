@@ -5,9 +5,17 @@
 	word-wrap: break-word
 }
 
+// set a margin for collapsible, otherwise the collapsible header has a negative margin!
 #datasetSearchCriteria  .ui-collapsible {
 	margin: 0 1em;
 }
+
+// the content can be overflown
+#sc-content {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
 /*
 #datasetSearchCriteria .ui-collapsible-set {
 	margin: 0 1em;
@@ -39,7 +47,7 @@
 	font-weight : bold;
 }
 
-#dropZone{
+#dropZone {
 	.dropZoneStyle;
 }
 

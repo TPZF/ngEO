@@ -32,7 +32,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	/**
 	 * Update the opensearch URL
 	 */
-	updateOpenSearchURL: function() {
+	displayOpenSearchURL: function() {
 		if ( this.model.dataset ) {
 			var url = this.model.getOpenSearchURL();
 			this.$el.find("#osUrlText").val( url );	
@@ -104,6 +104,11 @@ var SearchCriteriaView = Backbone.View.extend({
 		}
 		
 	},
+	
+	
+	updateContentHeight: function() {
+		this.$el.find('#sc-content').css('height', this.$el.height() - this.$el.find('#sc-footer').outerHeight() );
+	},
 		
 	/**
 	 * Render the view
@@ -122,7 +127,6 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Launch a search when the user clicks on the button
 		$footer.find('#searchRequest').click( function() {
 			SearchResults.launch( self.model.getOpenSearchURL() );
-			self.$el.ngeowidget('hide');
 		});		
 				
 			
@@ -184,16 +188,19 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Refresh the OpenSearch URL when the textarea is visible
 		this.$el.find('#osUrl')
 			.bind('collapse', function() {
-					self.stopListening( self.model, 'change', self.updateOpenSearchURL );
+					self.stopListening( self.model, 'change', self.displayOpenSearchURL );
 				})
 			.bind('expand', function() {
-					self.updateOpenSearchURL();
-					self.listenTo( self.model, 'change', self.updateOpenSearchURL );
+					self.displayOpenSearchURL();
+					self.listenTo( self.model, 'change', self.displayOpenSearchURL );
 				});
-
+				
 		
 		// Remove class added by jQM
 		$tabs.find("a").removeClass('ui-link');
+		
+		// Take care of content height : needed to position exactly the footer
+		$(window).resize( $.proxy(this.updateContentHeight,this) );
 			
 		return this;
 	}
