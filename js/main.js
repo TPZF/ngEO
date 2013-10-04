@@ -40,13 +40,6 @@ require.config({
 require( ["require", "jquery", "configuration", "menubar", "logger", "backbone", "jquery.mobile"] ,
 		function(require, $, Configuration, MenuBar, Logger, Backbone) {
 		
-// Configure jQuery Mobile
-$.mobile.ignoreContentEnabled = true;
-$.mobile.ajaxEnabled = false;
-$.mobile.linkBindingEnabled = false;
-$.mobile.hashListeningEnabled = false;
-$.mobile.pushStateEnabled = false;
-	
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
 

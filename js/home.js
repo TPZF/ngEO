@@ -12,13 +12,6 @@ require.config({
 require( ["jquery.mobile"] ,
 		function() {
 		
-// Configure jQuery Mobile
-$.mobile.ignoreContentEnabled = true;
-$.mobile.ajaxEnabled = false;
-$.mobile.linkBindingEnabled = false;
-$.mobile.hashListeningEnabled = false;
-$.mobile.pushStateEnabled = false;	
-		
 
 /** When the document is ready, clean-up styling */
 $(document).ready( function() {

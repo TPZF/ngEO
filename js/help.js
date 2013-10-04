@@ -16,13 +16,6 @@ require.config({
  */
 require( ["jquery.mobile", "backbone", "externs/jquery.imagesloaded"] ,
 		function() {
-		
-// Configure jQuery Mobile
-$.mobile.ignoreContentEnabled = true;
-$.mobile.ajaxEnabled = false;
-$.mobile.linkBindingEnabled = false;
-$.mobile.hashListeningEnabled = false;
-$.mobile.pushStateEnabled = false;	
 	
 /** 
 	Load a page from help
