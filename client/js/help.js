@@ -2,7 +2,7 @@
 require.config({
      paths: {
         "jquery": "externs/jquery-1.8.3",
-		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+		//"jquery.mobile": "externs/jquery.mobile-1.2.0",
         //"jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min",
 		//"jquery.mobile": "http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min",
         "underscore": "externs/underscore",
@@ -14,7 +14,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["jquery.mobile", "backbone", "externs/jquery.imagesloaded"] ,
+require( ["jquery", "backbone", "externs/jquery.imagesloaded"] ,
 		function() {
 	
 /** 
