@@ -2,10 +2,10 @@
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
-         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
-         'text!search/template/searchCriteriaContent_template.html', "tabs"], 
+         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 'ui/sharePopup',
+         'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget,
+				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget, SharePopup,
 				 searchCriteria_template) {
 
 /**
@@ -146,10 +146,10 @@ var SearchCriteriaView = Backbone.View.extend({
 					
 		// To share a search
 		$footer.find('#shareSearch').click( function() {
-			// Set the opensearch url
-			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL() + '<b>');	
-			$('#sharedUrlPopup').popup("open");
-			$('#sharedUrlPopup').trigger('create');
+			SharePopup.open({
+				url: Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL(),
+				positionTo: '#shareSearch'
+			});
 		});
 	
 		
