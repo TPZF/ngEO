@@ -105,7 +105,9 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 	},
 	
-	
+	/**
+	 * Call to set the height of content when the view size is changed
+	 */
 	updateContentHeight: function() {
 		this.$el.find('#sc-content').css('height', this.$el.height() - this.$el.find('#sc-footer').outerHeight() );
 	},
@@ -151,11 +153,7 @@ var SearchCriteriaView = Backbone.View.extend({
 				positionTo: '#shareSearch'
 			});
 		});
-	
-		
-		// Create the tabs
-		var $tabs = this.$el.find("#sc-tabs").tabs();
-		
+			
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
@@ -194,14 +192,7 @@ var SearchCriteriaView = Backbone.View.extend({
 					self.displayOpenSearchURL();
 					self.listenTo( self.model, 'change', self.displayOpenSearchURL );
 				});
-				
-		
-		// Remove class added by jQM
-		$tabs.find("a").removeClass('ui-link');
-		
-		// Take care of content height : needed to position exactly the footer
-		$(window).resize( $.proxy(this.updateContentHeight,this) );
-			
+									
 		return this;
 	}
 	

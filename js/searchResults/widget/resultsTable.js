@@ -42,6 +42,7 @@ return function() {
 	// Manage panel size
 	view.$el.on('panel:show', $.proxy( view.onShow, view ) );
 	view.$el.on('panel:hide', $.proxy( view.onHide, view ) );
+	view.$el.on('panel:sizeChanged', $.proxy( view.onSizeChanged, view ) );
 	view.on("sizeChanged", function() {
 		PanelManager.updatePanelSize('bottom');
 	});
