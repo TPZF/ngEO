@@ -202,6 +202,12 @@ var SearchResultsTableView = Backbone.View.extend({
 	onHide: function() {
 		this.visible = false;
 	},
+	
+	onSizeChanged: function() {
+		if (this.visible) {
+			this.table.fnAdjustColumnSizing( true );
+		}
+	},
 
 	/**
 	 * Render the table

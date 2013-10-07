@@ -13,6 +13,8 @@ var _center;
 // A callback to call when the center has been updated, i.e. some panels has been shown/hidden
 var _updateCenterCB;
 
+var _bottomFix = true;
+
 // the panel
 var _panels = {
 	left: $(),
@@ -64,99 +66,73 @@ var _buildPanel = function(opts,position) {
 		.find('.toolbar').addClass('panel-toolbar-' + position).appendTo(_center);
 };
 
+var _leftSizeChanged = function() {
+	contents.left.trigger('panel:sizeChanged');
+};
+
+var _bottomSizeChanged = function() {
+	contents.bottom.trigger('panel:sizeChanged');
+};
+
 // Hide the panel with animation, one function for each panel right now
-var _hidePanelAnimated = {
-	left: function() {
+var _hidePanel = {
+	left: function(duration) {
+		var d = duration || 0;
 		_center.animate({
 			left: 0
-		}, _updateCenterCB);
+		}, d, _updateCenterCB);
 		_panels.left.animate({
 			left: -_panels.left.outerWidth()
-		});
+		}, d);
+		if (!_bottomFix) {
+			_panels.bottom.animate({
+				left: 0
+			}, d, _bottomSizeChanged);
+		}
 	},
-	bottom: function() {
+	bottom: function(duration) {
+		var d = duration || 0;
 		_center.animate({
 			bottom: 0
-		}, _updateCenterCB);
+		}, d, _updateCenterCB);
 		_panels.bottom.animate({
 			bottom: -_panels.bottom.outerHeight()
-		});	
-		_panels.left.animate({
-			bottom: 0
-		});	
-	}		
-};
-
-//Show the panel with animation, one function for each panel right now
-var _showPanelAnimated = {
-		left: function() {
-			_center.animate({
-				left: _panels.left.outerWidth()
-			}, _updateCenterCB);			
+		}, d);	
+		if (_bottomFix) {
 			_panels.left.animate({
-				left: 0
-			});
-		},
-		bottom: function() {
-			_center.animate({
-				bottom: _panels.bottom.outerHeight()
-			}, _updateCenterCB);
-			_panels.bottom.animate({
 				bottom: 0
-			});	
-			_panels.left.animate({
-				bottom: _panels.bottom.outerHeight()
-			});	
-		}		
-
-};
-
-// Hide the panel without animation, one function for each panel right now
-var _hidePanel = {
-	left: function() {
-		_center.css({
-			left: 0
-		});
-		_updateCenterCB();
-		_panels.left.css({
-			left: -_panels.left.outerWidth()
-		});
-	},
-	bottom: function() {
-		_center.css({
-			bottom: 0
-		}, _updateCenterCB);
-		_panels.bottom.css({
-			bottom: -_panels.bottom.outerHeight()
-		});	
-		_panels.left.css({
-			bottom: 0
-		});	
+			}, d, _leftSizeChanged);
+		}
 	}		
 };
 
 //Show the panel with animation, one function for each panel right now
 var _showPanel = {
-		left: function() {
-			_center.css({
+		left: function(d) {
+			_center.animate({
 				left: _panels.left.outerWidth()
-			});			
-			_panels.left.css({
+			}, d, _updateCenterCB);			
+			_panels.left.animate({
 				left: 0
-			});
-			_updateCenterCB();
+			}, d);
+			if (!_bottomFix) {
+				_panels.bottom.animate({
+					left: _panels.left.outerWidth()
+				}, d, _bottomSizeChanged);
+			}
 		},
-		bottom: function() {
-			_center.css({
+		bottom: function(d) {
+			_center.animate({
 				bottom: _panels.bottom.outerHeight()
-			});
-			_panels.bottom.css({
-				bottom: 0
-			});	
-			_panels.left.css({
-				bottom: _panels.bottom.outerHeight()
-			});
-			_updateCenterCB();
+			}, d, _updateCenterCB);
+			_panels.bottom.animate({
+				bottom: 0,
+			}, d);
+			if (_bottomFix) {
+				_panels.left.animate({
+					bottom: _panels.bottom.outerHeight()
+				}, d, _leftSizeChanged);
+			}
 		}		
 
 };
@@ -184,14 +160,17 @@ return {
 		_updateCenterCB = opts.updateCenter;
 		_buildPanel(opts,'left');
 		_buildPanel(opts,'bottom');
+		
+		$(window).resize(_leftSizeChanged);
+		$(window).resize(_bottomSizeChanged);
 	},
 	
 	/**
 	 * Hide the panel manager : hide all panels
 	 */
 	hide: function() {
-		_hidePanel.left();
-		_hidePanel.bottom();
+		_hidePanel.left(0);
+		_hidePanel.bottom(0);
 	},
 	
 	/**
@@ -212,9 +191,11 @@ return {
 			_center.css({
 				bottom: _panels.bottom.outerHeight()
 			}, _updateCenterCB);
-			_panels.left.css({
-				bottom: _panels.bottom.outerHeight()
-			});
+			if ( _bottomFix ) {
+				_panels.left.css({
+					bottom: _panels.bottom.outerHeight()
+				});
+			}
 			break;
 		}
 	},
@@ -243,7 +224,7 @@ return {
 			.click( function() {
 				if ( $(this).hasClass('toggle') ) {
 					
-					_hidePanelAnimated[position]();
+					_hidePanel[position](300);
 					content.trigger('panel:hide');
 
 				} else {
@@ -252,7 +233,7 @@ return {
 					contents[position].hide().trigger('panel:hide');
 					content.show().trigger('panel:show');
 					
-					_showPanelAnimated[position]();
+					_showPanel[position](300);
 
 				}
 				$(this).toggleClass('toggle');
@@ -269,7 +250,7 @@ return {
 		var $content = $(opts.activator).data('content');
 		$content.show().trigger('panel:show');
 		
-		_showPanel[opts.position]();
+		_showPanel[opts.position](0);
 	}
 };
 

@@ -63,10 +63,13 @@ return {
 				}
 			}
 		});
-		$('#statusBar').appendTo('#map').trigger('create');
-		$('#dateRangeSlider').appendTo('#map');
-		$('#searchToolbar').appendTo('#map');
-		$('#mapToolbar').appendTo('#map');
+		
+		// Need to add some elements to map to have good positionning.
+		// Not very pretty..
+		$('#statusBar').appendTo('#map').hide().trigger('create');
+		$('#dateRangeSlider').appendTo('#map').hide();
+		$('#searchToolbar').appendTo('#map').hide();
+		$('#mapToolbar').appendTo('#map').hide();
 
 		// Create the router
 		var router = new Backbone.Router();

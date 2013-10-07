@@ -30,6 +30,7 @@ define( ["jquery", "backbone", "search/model/datasetSearch", "search/view/search
 			});
 
 			view.$el.on('panel:show', $.proxy( view.updateContentHeight, view ) );
+			view.$el.on('panel:sizeChanged', $.proxy( view.updateContentHeight, view ) );
 			
 			// Disable search criteria and result buttons if there is no dataset selected
 			if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
