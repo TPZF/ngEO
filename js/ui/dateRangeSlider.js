@@ -111,16 +111,20 @@ $.widget( "ui.dateRangeSlider", {
 		// Initialize dragging
 		this._updateDragBar();
 		
-		// Manage window resize
-		$(window).resize( $.proxy( this.refresh, this ) );
+		// Cache the container width
+		this.containerWidth = this.container.width();
 	},
 	
 	refresh: function() {
-		// Recompute the scale position
-		this.scalePosition = this.dragRightDays - this.container.width();
-		this.container.scrollLeft( this.scalePosition );
-		// Update the drag bar
-		this._moveDrag( 0 );
+		var cw = this.container.width();
+		if ( cw != this.containerWidth ) {
+			// Recompute the scale position
+			this.scalePosition = this.dragRightDays - cw;
+			this.container.scrollLeft( this.scalePosition );
+			// Update the drag bar
+			this._moveDrag( 0 );
+			this.containerWidth = cw;
+		}
 	},
 	
 	// Call when mouse up on an arrow

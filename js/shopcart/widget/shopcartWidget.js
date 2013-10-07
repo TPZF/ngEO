@@ -1,7 +1,7 @@
 /**
  * ShopcartWidget module
  */
-define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartItemView", "panelManager", "ui/widget"], 
+define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartItemView", "ui/panelManager", "ui/widget"], 
 		function($, ShopcartCollection, ShopcartItemView, PanelManager) {
 
 	
