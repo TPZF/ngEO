@@ -1,10 +1,11 @@
 
 define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa", "shopcart/dsa",
 		"map/widget/toolbarMap",
-		"text!../pages/data-services-area.html", "ui/context-help", "panelManager", "ui/toolbar"], 
+		"text!../pages/data-services-area.html", "ui/context-help", "ui/panelManager", "ui/stackPanel", "ui/toolbar"], 
 	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA, ShopcartDSA,
-			ToolBarMap, dataservicesarea, ContextHelp, PanelManager) {
+			ToolBarMap, dataservicesarea, ContextHelp, PanelManager, StackPanel) {
 
+var panelManager;
 
 return {
 
@@ -23,7 +24,7 @@ return {
 	 * Called when the module main page is hidden
 	 */
 	hide: function() {
-		PanelManager.hide();
+		panelManager.save();
 		$('#statusBar').hide();
 		$('#dateRangeSlider').hide();
 		$('#searchToolbar').hide();
@@ -34,7 +35,7 @@ return {
 	 * Called when the module main page is shown
 	 */
 	show: function() {
-		PanelManager.show();
+		panelManager.restore();
 		$('#statusBar').show();
 		$('#dateRangeSlider').show();
 		$('#searchToolbar').show();
@@ -49,20 +50,33 @@ return {
 	 */
 	initialize: function(element) {
 	
-		// Initialize the panel manager on the map
-		PanelManager.initialize({
-			center: '#map', 
-			bottom: '#bottom-panel',
-			left: '#left-panel',
-			updateCenter: function() {
-				Map.updateViewportSize();
-				// TODO : improve that
-				var $dateRangeSlider = $('#dateRangeSlider');
-				if ( $dateRangeSlider.is(':ui-dateRangeSlider') ) {
-					$dateRangeSlider.dateRangeSlider('refresh');
-				}
+		// Create the panel manager and the panel used for the different view : search, result, table...
+		panelManager = new PanelManager({
+			el: '#mapContainer',
+			center: '#map'
+		});
+		
+		// Add left panel (use for search )
+		panelManager.add( 'left', new StackPanel({
+			el: '#left-panel',
+			classes: 'ui-body-c panel-content-left'
+		}) ); 
+		
+		// Add bottom panel (use for results )
+		panelManager.add( 'bottom', new StackPanel({
+			el: '#bottom-panel',
+			classes: 'ui-body-c panel-content-bottom'
+		}) ); 
+		
+		panelManager.on('centerResized', function() {
+			Map.updateViewportSize();
+			// TODO : improve that
+			var $dateRangeSlider = $('#dateRangeSlider');
+			if ( $dateRangeSlider.is(':ui-dateRangeSlider') ) {
+				$dateRangeSlider.dateRangeSlider('refresh');
 			}
 		});
+
 		
 		// Need to add some elements to map to have good positionning.
 		// Not very pretty..
@@ -75,9 +89,9 @@ return {
 		var router = new Backbone.Router();
 
 		// Create all widgets for diferent modules
-		SearchDSA.initialize( element, router );
-		SearchResultsDSA.initialize( element, router );
-		ShopcartDSA.initialize( element, router );
+		SearchDSA.initialize( element, router, panelManager );
+		SearchResultsDSA.initialize( element, router, panelManager );
+		//ShopcartDSA.initialize( element, router );
 		
 		// Initialize toolbar and context help
 		ToolBarMap(element);

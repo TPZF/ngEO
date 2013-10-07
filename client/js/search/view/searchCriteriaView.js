@@ -106,6 +106,13 @@ var SearchCriteriaView = Backbone.View.extend({
 	},
 	
 	/**
+	 * Call when the view is shown
+	 */
+	onShow: function() {
+		this.updateContentHeight();
+	},
+	
+	/**
 	 * Call to set the height of content when the view size is changed
 	 */
 	updateContentHeight: function() {

@@ -1,8 +1,8 @@
 
 define(["jquery", "map/map", "map/selectHandler", 
         "searchResults/model/searchResults",
-        "searchResults/widget/resultsTable", "map/widget/mapPopup"], 
-	function($, Map, SelectHandler, SearchResults, ResultsTableWidget,
+        "searchResults/view/searchResultsTableView", "map/widget/mapPopup"], 
+	function($, Map, SelectHandler, SearchResults, SearchResultsTableView,
 			MapPopup) {
 
 // Private variable
@@ -16,10 +16,14 @@ return {
 	 * @param element 	The root element of the data-services-area
 	 * @param router 	The data-services-area router
 	 */
-	 initialize: function(element, router) {
+	 initialize: function(element, router, panelManager) {
 	
-		// Create all widgets
-		_$resultsTableWidget = ResultsTableWidget();				
+		// Create the results table view
+		var tableView = new SearchResultsTableView({ 
+			model : SearchResults 
+		});
+		panelManager.bottom.add( tableView, '#tableCB' );
+		tableView.render();
 		
 		// Connect search results events with map
 		var footprintLayer = Map.addLayer({
