@@ -26,6 +26,32 @@ var SearchCriteriaView = Backbone.View.extend({
 			if ( newUrl != prevUrl ) {
 				this.applyOpenSearchUrl(newUrl);
 			}
+		},
+		
+		// Click on search
+		"click #scSearch": function(event) {
+			SearchResults.launch( this.model.getOpenSearchURL() );
+		},
+				
+		 // To create a standing order
+		"click #standingOrder":  function(event) {
+			
+			StandingOrderDataAccessRequest.initialize();
+			//set open search url
+			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
+			//set selected download options
+			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
+			
+			var standingOrderWidget = new StandingOrderWidget();
+			standingOrderWidget.open();
+		},
+					
+		// To share a search
+		"click #shareSearch" : function() {
+			SharePopup.open({
+				url: Configuration.serverHostName + (window.location.pathname) + this.model.getSharedSearchURL(),
+				positionTo: '#shareSearch'
+			});
 		}
 	},
 	
@@ -125,42 +151,8 @@ var SearchCriteriaView = Backbone.View.extend({
 	render: function(){
 	
 		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
-		
-		this.$el.append(content);
-		
-		// Build footer
-		var $footer = this.$el.find('#sc-footer');
-				
-		var self = this;
-			
-		// Launch a search when the user clicks on the button
-		$footer.find('#searchRequest').click( function() {
-			SearchResults.launch( self.model.getOpenSearchURL() );
-		});		
-				
-			
-		 // To create a standing order
-		$footer.find('#standingOrder').click( function() {
-			
-			StandingOrderDataAccessRequest.initialize();
-			//set open search url
-			StandingOrderDataAccessRequest.OpenSearchURL = self.model.getOpenSearchURL();
-			//set selected download options
-			StandingOrderDataAccessRequest.DownloadOptions = self.model.getSelectedDownloadOptions();
-			
-			var standingOrderWidget = new StandingOrderWidget();
-			standingOrderWidget.open();
-		});
-				
-					
-		// To share a search
-		$footer.find('#shareSearch').click( function() {
-			SharePopup.open({
-				url: Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL(),
-				positionTo: '#shareSearch'
-			});
-		});
-			
+		this.$el.append(content);			
+	
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
@@ -191,6 +183,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.$el.trigger('create');
 		
 		// Refresh the OpenSearch URL when the textarea is visible
+		var self = this;
 		this.$el.find('#osUrl')
 			.bind('collapse', function() {
 					self.stopListening( self.model, 'change', self.displayOpenSearchURL );

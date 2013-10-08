@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch',
+define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch', 'searchResults/model/searchResults',
          'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
-		function($, Backbone, Logger, DatasetSearch, datasetsSelection_template, datasetsList_template) {
+		function($, Backbone, Logger, DatasetSearch, SearchResults, datasetsSelection_template, datasetsList_template) {
 
 /**
  * The related model is DatasetsPopulationModel
@@ -34,6 +34,11 @@ var DatasetSelectionView = Backbone.View.extend({
 				this.selectedDatasetId = event.currentTarget.id;
 				DatasetSearch.set("datasetId", this.selectedDatasetId);
 			}
+		},
+		
+		// Click on search
+		"click #dsSearch": function(event) {
+			SearchResults.launch( DatasetSearch.getOpenSearchURL() );
 		}
 	},
 	
@@ -48,6 +53,20 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * The template used to build the dataset list
 	 */
 	datasetsListTemplate : _.template(datasetsList_template),
+	
+	/**
+	 * Call when the view is shown
+	 */
+	onShow: function() {
+		this.updateContentHeight();
+	},
+	
+	/**
+	 * Call to set the height of content when the view size is changed
+	 */
+	updateContentHeight: function() {
+		this.$el.find('#ds-content').css('height', this.$el.height() - this.$el.find('#ds-footer').outerHeight() );
+	},
 	
 	/**
 	 * Render the view
