@@ -24,7 +24,7 @@ $.widget( "ui.dateRangeSlider", {
 		wheelTimeout : 1000,
 		
 		// events
-		change: null
+		change: $.noop
 	},
 
 	// the constructor
@@ -62,26 +62,22 @@ $.widget( "ui.dateRangeSlider", {
 			});
 			
 		// Create the labels of the start and end date
-		this.startLabel = $('<div class="dateSlider-label">20-May-2017</div>')
+		this.startLabel = $('<div class="dateSlider-label"></div>')
 			.appendTo(this.element)
 			.mousedown( function(event) {
 				$(document).on('mousemove', { lastX: event.pageX }, $.proxy(self._moveLeftDrag,self) );
 				$(document).one('mouseup', function() {
 					$(document).off('mousemove', $.proxy(self._moveLeftDrag,self) );
-					if ( self.options.change ) {
-						self.options.change( self._computeCurrentDate() ); 
-					}
+					self.options.change( self._computeCurrentDate() ); 
 				});
 			});
-		this.endLabel = $('<div class="dateSlider-label">20-May-2017</div>')
+		this.endLabel = $('<div class="dateSlider-label"></div>')
 			.appendTo(this.element)
 			.mousedown( function(event) {
 				$(document).on('mousemove', { lastX: event.pageX }, $.proxy(self._moveRightDrag,self) );
 				$(document).one('mouseup', function() {
 					$(document).off('mousemove', $.proxy(self._moveRightDrag,self) );
-					if ( self.options.change ) {
-						self.options.change( self._computeCurrentDate() ); 
-					}
+					self.options.change( self._computeCurrentDate() ); 
 				});
 			});
 			
@@ -115,6 +111,7 @@ $.widget( "ui.dateRangeSlider", {
 		
 	},
 	
+	// Refresh the date range slider when container width have changed
 	refresh: function() {
 		var cw = this.container.width();
 		if ( cw != this.containerWidth ) {
@@ -129,9 +126,7 @@ $.widget( "ui.dateRangeSlider", {
 	// Call when mouse up on an arrow
 	_onArrowMouseUp: function() {
 		this.autoScaleDirection = 0;
-		if ( this.options.change ) {
-			this.options.change( this._computeCurrentDate() ); 
-		}
+		this.options.change( this._computeCurrentDate() ); 
 	},
 	
 	// Update the drag bar position
@@ -143,14 +138,10 @@ $.widget( "ui.dateRangeSlider", {
 		var boundsLength = this.dragRightDays - this.dragLeftDays;
 		if ( boundsLength > this.options.boundsMaxLength ) {
 			this.dragLeftDays = this.dragRightDays - this.options.boundsMaxLength;
-			if ( this.options.change ) {
-				this.options.change( this._computeCurrentDate() ); 
-			}
+			this.options.change( this._computeCurrentDate() ); 
 		} else if ( boundsLength < this.options.boundsMinLength ) {
 			this.dragLeftDays = this.dragRightDays - this.options.boundsMinLength;
-			if ( this.options.change ) {
-				this.options.change( this._computeCurrentDate() ); 
-			}
+			this.options.change( this._computeCurrentDate() ); 
 		}
 				
 		this.dragBar.width( this.dragRightDays - this.dragLeftDays );
@@ -362,9 +353,7 @@ $.widget( "ui.dateRangeSlider", {
 		$(document).off( 'mousemove', $.proxy(this._onDragBar,this) );
 		$(document).off( 'mouseup', $.proxy(this._onDragBarStop,this) );
 		
-		if ( this.options.change ) {
-			this.options.change( this._computeCurrentDate() ); 
-		}
+		this.options.change( this._computeCurrentDate() ); 
 	},
 	
 	// revert other modifications here
