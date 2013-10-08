@@ -107,23 +107,22 @@ $.widget( "ui.dateRangeSlider", {
 			}
 		});
 					
+		// Cache the container width
+		this.containerWidth = this.container.width();
 		
 		// Initialize dragging
 		this._updateDragBar();
 		
-		// Cache the container width
-		this.containerWidth = this.container.width();
 	},
 	
 	refresh: function() {
 		var cw = this.container.width();
 		if ( cw != this.containerWidth ) {
+			this.containerWidth = cw;
 			// Recompute the scale position
-			this.scalePosition = this.dragRightDays - cw;
-			this.container.scrollLeft( this.scalePosition );
+			this.scalePosition = this.container.scrollLeft();
 			// Update the drag bar
 			this._moveDrag( 0 );
-			this.containerWidth = cw;
 		}
 	},
 	
@@ -240,8 +239,8 @@ $.widget( "ui.dateRangeSlider", {
 		var days = event.pageX - event.data.lastX;
 		this.dragRightDays += days;
 		
-		if ( this.dragRightDays > this.scalePosition + this.container.width() ) {
-			this.dragRightDays = this.scalePosition + this.container.width();
+		if ( this.dragRightDays > this.scalePosition + this.containerWidth ) {
+			this.dragRightDays = this.scalePosition + this.containerWidth;
 		} else if (this.dragRightDays > this.dragLeftDays + this.options.boundsMaxLength) {
 			this.dragRightDays = this.dragLeftDays + this.options.boundsMaxLength;
 		} else if ( this.dragRightDays < this.dragLeftDays + this.options.boundsMinLength ) {
@@ -314,8 +313,8 @@ $.widget( "ui.dateRangeSlider", {
 		}
 			
 		var scaleDelta = 0.0;
-		if (this.dragRightDays > this.scalePosition + this.container.width() ) {
-			scaleDelta = this.dragRightDays - (this.scalePosition + this.container.width());
+		if (this.dragRightDays > this.scalePosition + this.containerWidth ) {
+			scaleDelta = this.dragRightDays - (this.scalePosition + this.containerWidth);
 		} else if ( this.dragLeftDays < this.scalePosition ) {
 			scaleDelta = this.dragLeftDays - this.scalePosition;
 		}
@@ -342,7 +341,7 @@ $.widget( "ui.dateRangeSlider", {
 	
 	// Called when dragging the bar
 	_onDragBar: function(event) {	
-		var rightBlock = (this.dragRightDays == this.scalePosition + this.container.width())
+		var rightBlock = (this.dragRightDays == this.scalePosition + this.containerWidth)
 			&& event.pageX > event.data.lastX;
 		var leftBlock = (this.dragLeftDays == this.scalePosition)
 			&& event.pageX < event.data.lastX;
