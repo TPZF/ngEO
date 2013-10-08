@@ -35,11 +35,11 @@ return {
 	 * Called when the module main page is shown
 	 */
 	show: function() {
-		panelManager.restore();
 		$('#statusBar').show();
 		$('#dateRangeSlider').show();
 		$('#searchToolbar').show();
 		$('#mapToolbar').show();
+		panelManager.restore();
 	},
 	
 	/**
