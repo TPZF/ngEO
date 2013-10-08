@@ -101,7 +101,7 @@ return {
 		SelectHandler.start();
 		
 		// Create the popup for the map
-		var mapPopup = new MapPopup('.ui-page-active');
+		var mapPopup = new MapPopup('#mapContainer');
 		mapPopup.close();		
 
 		// Connect with map feature picking
