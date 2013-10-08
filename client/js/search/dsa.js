@@ -28,6 +28,7 @@ return {
 		datasetPopulation.fetch({
 			success: function() {
 								
+				panelManager.on('leftResized', datasetView.updateContentHeight, datasetView );
 				panelManager.left.add( datasetView, '#dataset' );
 				datasetView.render();
 				
@@ -51,20 +52,19 @@ return {
 		router.route(
 				"data-services-area/search/:datasetId?:query", 
 				"search", function(datasetId, query) {
-				
+			
+			// Show the page first
+			MenuBar.showPage("data-services-area");
 						
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.once("change:dataset", function(dataset) {
 			
 				if ( dataset ) {
-				
+													
 					DatasetSearch.populateModelfromURL(query);
 					
-					MenuBar.showPage("data-services-area");
-					
-					//refresh the search widget after the model has been update
-					SearchCriteriaWidget.refresh();
+					searchView.displayDatasetRelatedViews( DatasetSearch.dataset );
 					
 					// Show search panel
 					$('#search').click();
@@ -87,6 +87,9 @@ return {
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
 									
+			// Show the page first
+			MenuBar.showPage("data-services-area");
+			
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.once("change:dataset", function(dataset) {
@@ -97,8 +100,6 @@ return {
 					StandingOrderDataAccessRequest.populateModelfromURL(query);
 				
 					//Display the STO widget
-					MenuBar.showPage("data-services-area");
-									
 					var standingOrderWidget = new StandingOrderWidget();
 					standingOrderWidget.open();			
 					

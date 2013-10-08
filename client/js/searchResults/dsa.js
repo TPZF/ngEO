@@ -1,8 +1,8 @@
 
 define(["jquery", "map/map", "map/selectHandler", 
-        "searchResults/model/searchResults",
+        "search/model/datasetSearch", "searchResults/model/searchResults",
         "searchResults/view/searchResultsTableView", "map/widget/mapPopup"], 
-	function($, Map, SelectHandler, SearchResults, SearchResultsTableView,
+	function($, Map, SelectHandler, DatasetSearch, SearchResults, SearchResultsTableView,
 			MapPopup) {
 
 // Private variable
@@ -18,6 +18,11 @@ return {
 	 */
 	 initialize: function(element, router, panelManager) {
 	
+		// When the a dataset is changed, reset the search results
+		DatasetSearch.on('change:datasetId', function() {
+			SearchResults.reset();
+		});
+		
 		// Create the results table view
 		var tableView = new SearchResultsTableView({ 
 			model : SearchResults 

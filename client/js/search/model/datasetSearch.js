@@ -39,6 +39,8 @@ Date.prototype.toISODateString = function() {
 	return this.getUTCFullYear() + "-" + pad(this.getUTCMonth()+1,2) + "-" + pad(this.getUTCDate(),2);
 };
 
+// A constant
+var ONE_MONTH = 24 * 30 * 3600 * 1000;
 
 	/**
 	 * This backbone model holds in its attributes :
@@ -56,8 +58,8 @@ var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
 		datasetId : "",
-		start : new Date(), //name of the opensearch request parameter
-		stop: new Date(), //name of the opensearch request parameter
+		stop: new Date(),
+		start : new Date( new Date().getTime() - ONE_MONTH ),
 		useExtent : true,
 		useTimeSlider : true //flag for displaying time slider or not
 	},
@@ -90,33 +92,38 @@ var DataSetSearch = Backbone.Model.extend({
 					
 					// Compute a search time range from the dataset extent
 					// The stop date is the dataset stop date
-					var start;
-					var stop = new Date( model.get('endDate').getTime() );
+					var start = self.get('start');
+					var stop = self.get('stop'); 
+					var datasetStart = model.get('startDate');
+					var datasetStop = model.get('endDate');
 					
-					// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
-					var diff = (model.get('endDate') - model.get('startDate'));
-					if ( diff > 24 * 30 * 3600 * 1000 ) {
-						start = new Date( stop.getTime() - 24 * 30 * 3600 * 1000 );
-					} else {
-						start = new Date(model.get('startDate').getTime() );
-					}
-										
-					// Reset start time
-					start.setUTCHours(0);
-					start.setUTCMinutes(0);
-					start.setUTCSeconds(0);
-					start.setUTCMilliseconds(0);
-					
-					// Reset stop time
-					stop.setUTCHours(23);
-					stop.setUTCMinutes(59);
-					stop.setUTCSeconds(59);
-					stop.setUTCMilliseconds(999);
-					
-					self.set({ start: start,
-							stop: stop
-						}); 
+					if ( stop > datasetStop || start < datasetStart ) {
+						stop = new Date( datasetStop.getTime() );
+						// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
+						var diff = (datasetStop - datasetStart);
+						if ( diff > ONE_MONTH ) {
+							start = new Date( stop.getTime() - ONE_MONTH );
+						} else {
+							start = new Date(datasetStart.getTime() );
+						}
+											
+						// Reset start time
+						start.setUTCHours(0);
+						start.setUTCMinutes(0);
+						start.setUTCSeconds(0);
+						start.setUTCMilliseconds(0);
 						
+						// Reset stop time
+						stop.setUTCHours(23);
+						stop.setUTCMinutes(59);
+						stop.setUTCSeconds(59);
+						stop.setUTCMilliseconds(999);
+						
+						self.set({ start: start,
+								stop: stop
+							}); 
+					} 
+					
 					self.dataset = dataset;
 					self.trigger('change:dataset',self.dataset);
 					
@@ -142,12 +149,14 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		var self = this;
 		
-		if (this.dataset){
+		if (this.dataset) {
+		
+			var protectedAttributes = [ "start", "stop" ];
 			
 			//remove selected search criteria
 			if (this.dataset.get('attributes')){			
 				_.each(this.dataset.get('attributes'), function(attribute){
-					if (_.has(self.attributes, attribute.id)){
+					if (!_.contains(protectedAttributes, attribute.id) && _.has(self.attributes, attribute.id)){
 						self.unset(attribute.id, {silent: true});
 					}				
 				});
@@ -156,7 +165,7 @@ var DataSetSearch = Backbone.Model.extend({
 			if (this.dataset.get('downloadOptions')){			
 				
 				_.each(this.dataset.get('downloadOptions'), function(option){
-					if (_.has(self.attributes, option.argumentName)){
+					if (!_.contains(protectedAttributes, option.argumentName) && _.has(self.attributes, option.argumentName)){
 						self.unset(option.argumentName, {silent: true});
 					}				
 				});
