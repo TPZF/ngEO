@@ -22,10 +22,12 @@ var PanelManager = Backbone.View.extend({
 			self.trigger('leftResized');
 		};
 		
-		$(window).resize( function() {
+		var lazyResize = _.debounce( function() {
 			self.trigger('centerResized');
 			self.trigger('leftResized');
-		});
+		}, 300 );
+		
+		$(window).resize( lazyResize );
 		
 		this._centerState = null;
 	},
