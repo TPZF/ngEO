@@ -81,6 +81,10 @@ var PanelManager = Backbone.View.extend({
 			props[region] = currentSize;
 			this.$center.css( props );
 			this.trigger('centerResized');
+			if (region == 'bottom') {
+				this.left.$el.css(props);
+				this.trigger('leftResized');
+			}
 		}
 	},
 	
