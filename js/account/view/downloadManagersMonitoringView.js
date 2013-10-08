@@ -150,6 +150,19 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 	},
 	
 	/**
+	 * Refresh the view size
+	 * Update download manager list to have a good max height
+	 */
+	refreshSize: function() {
+		var parentOffset = this.$el.offset();
+		var $content = this.$el.find('#downloadManagersMonitoringContent');
+		
+		var height = $(window).height() - (parentOffset.top + this.$el.outerHeight()) + $content.height();
+	
+		$content.css('max-height',height);
+	},
+	
+	/**
 	 * Call to build the view when the download managers are synced
 	 */
 	render: function(){
@@ -173,6 +186,8 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		$("#stop_dm").button('disable');
 		$("#stop_immediately_dm").button('disable');
 		
+		this.refreshSize();
+				
 		return this;
 	},	
 });

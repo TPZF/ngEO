@@ -166,7 +166,20 @@ define(
 							"<p><b> Please check the interface with the server.</p></b></div>");
 				}
 			},
+	
+			/**
+			 * Refresh the view size
+			 * Update dar list to have a good max height
+			 */
+			refreshSize: function() {
+				var parentOffset = this.$el.offset();
+				var $content = this.$el.find('#darsDiv');
+				
+				var height = $(window).height() - (parentOffset.top + this.$el.outerHeight()) + $content.height();
 			
+				$content.css('max-height',height);
+			},
+	
 			/** Display the list of DMs assigned to Data Access Requests in the left side and the list of 
 			 * Data access request in the right side.
 			 * By default all the DARS are displayed.  */
@@ -185,6 +198,7 @@ define(
 				$("#darsDiv").append(darsContent);
 				this.$el.trigger('create');			
 				this.setUpStatusIcons();
+				this.refreshSize();
 				return this;
 			},
 			
