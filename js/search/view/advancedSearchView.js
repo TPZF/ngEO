@@ -10,19 +10,10 @@ var AdvancedSearchView = Backbone.View.extend({
 	 */
 	
 	initialize : function(){
-		this.model.on("change", this.updateView, this);
 	}, 
 	
 	events : {
-		
-		//for every criteria modified by a select element, set in the DatasetSearch the criterion 
-		//with the selected value (the select is used for single-valued criteria)
-/*		'change select' : function(event){
-			var criterion = {};
-			criterion[event.currentTarget.id] = $(event.currentTarget).val();
-			this.model.set(criterion, {silent:true});			
-		},*/
-		
+				
 		//catch the criterion range changes once the slider moving is finished
 		'slidestop input' : function(event) {
 			this.setInputCriterionValues(event);
@@ -56,7 +47,7 @@ var AdvancedSearchView = Backbone.View.extend({
 				}
 				
 				//set the new value
-				this.model.set(name, newValue, {silent:true});	
+				this.model.set(name, newValue);	
 
 			} else if ( $target.hasClass('ui-checkbox-on') ) {
 			
@@ -65,9 +56,9 @@ var AdvancedSearchView = Backbone.View.extend({
 				
 				//set the new value or remove if empty
 				if ( currentValues.length == 0 ) {
-					this.model.unset(name, {silent:true});	
+					this.model.unset(name);	
 				} else {
-					this.model.set(name, currentValues.join(','), {silent:true});	
+					this.model.set(name, currentValues.join(','));	
 				}
 			}
 		}		
@@ -86,10 +77,10 @@ var AdvancedSearchView = Backbone.View.extend({
 		
 		if ( from == $from.attr('min') 
 			 && to == $to.attr('max') ) {
-			 this.model.unset(name, {silent:true});	
+			 this.model.unset(name);	
 		} else {
 			var value = '[' + from + ',' + to  + ']';
-			this.model.set(name, value, {silent:true});	
+			this.model.set(name, value);	
 		}
 	},
 	
@@ -105,7 +96,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			this.updateRange(name);
 		} else {
 			var value = $(event.currentTarget).val();
-			this.model.set(name, value, {silent:true});	
+			this.model.set(name, value);	
 		}
 		
 	},
