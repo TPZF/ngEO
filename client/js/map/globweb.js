@@ -52,7 +52,7 @@ GlobWebMapEngine = function( parentElement )
 		}
 		
 		// Create the loading element
-		this.$loading = $('<img src="css/images/ajax-loader.gif" id="loading"></img>')
+		this.$loading = $('<img src="../css/images/ajax-loader.gif" id="loading"></img>')
 			.appendTo(parentElement);
 			
 		globe.subscribe("baseLayersReady", function() {
@@ -194,7 +194,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		gwLayer = new GlobWeb.VectorLayer({
 			name: layer.name,
 			visible: layer.visible,
-			style: new GlobWeb.FeatureStyle({ iconUrl: 'images/hotspot.png', pointMaxSize: 40000 })
+			style: new GlobWeb.FeatureStyle({ iconUrl: '../images/point.png', pointMaxSize: 40000 })
 		});
 		GeojsonConverter.load( layer, $.proxy(gwLayer.addFeatureCollection, gwLayer) );
 		break;
@@ -357,7 +357,7 @@ GlobWebMapEngine.prototype.zoomToExtent = function(extent)
 	d = Math.min( d, R * 2 );
 	
 	var geoPos = [ lon, lat ];
-	this.navigation.zoomTo( geoPos, d, 5 );
+	this.navigation.zoomTo( geoPos, d, Configuration.get('map.globweb.zoomDuration',500) );
 }
 
 

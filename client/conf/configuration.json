@@ -79,7 +79,8 @@
 			},
 			"tileErrorTreshold": 2,
 			"displayStats": false,
-			"continuousRendering": false
+			"continuousRendering": false,
+			"zoomDuration": 500
 		},
 		
 		"backgroundLayers": [{
