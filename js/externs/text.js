@@ -130,7 +130,9 @@ define(['module'], function (module) {
 
         finishLoad: function (name, strip, content, onLoad) {
             content = strip ? text.strip(content) : content;
-            if (masterConfig.isBuild) {
+			content = content.replace(/\s+/g,' ');
+ 			content = content.replace(/<!--[\s\S]*?-->/g,'');
+           if (masterConfig.isBuild) {
                 buildMap[name] = content;
             }
             onLoad(content);
