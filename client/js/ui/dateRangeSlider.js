@@ -116,8 +116,12 @@ $.widget( "ui.dateRangeSlider", {
 		var cw = this.container.width();
 		if ( cw != this.containerWidth ) {
 			this.containerWidth = cw;
-			// Recompute the scale position
+			// Get the scale position
 			this.scalePosition = this.container.scrollLeft();
+			if ( this.scalePosition + cw > this.maxDays ) {
+				this.scalePosition = this.maxDays - cw;
+				this.container.scrollLeft( this.scalePosition );
+			}
 			// Update the drag bar
 			this._moveDrag( 0 );
 		}
