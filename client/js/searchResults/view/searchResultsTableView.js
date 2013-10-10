@@ -202,6 +202,12 @@ var SearchResultsTableView = Backbone.View.extend({
 	onHide: function() {
 		this.visible = false;
 	},
+	
+	onSizeChanged: function() {
+		if (this.visible) {
+			this.table.fnAdjustColumnSizing( true );
+		}
+	},
 
 	/**
 	 * Render the table
@@ -234,7 +240,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			"sDom" : 't<"bottom"f>',
 			"sScrollY": "200px",
 			"bPaginate": false,
-			"bScrollCollapse": true,
+			/*"bScrollCollapse": true,*/
 			"fnCreatedRow": function( nRow, aData, iDataIndex ) {
 				var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
 				if (self.model.isBrowserSupportedUrl( self.model.features[iDataIndex])){

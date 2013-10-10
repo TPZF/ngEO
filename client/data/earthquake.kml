@@ -35,7 +35,7 @@
       <Style id="CCB">
           <IconStyle>
             <Icon>
-              <href>data/images/Plates_CCB.png</href>
+              <href>../data/images/Plates_CCB.png</href>
             </Icon>
           </IconStyle>
           <LineStyle id="CCB_Line">
@@ -5361,7 +5361,7 @@
             <color>FF0000FF</color>
             <scale>1</scale>
             <Icon>
-              <href>data/images/Plates_Icon_Clear.png</href>
+              <href>../data/images/Plates_Icon_Clear.png</href>
             </Icon>
           </IconStyle>
           <LabelStyle>

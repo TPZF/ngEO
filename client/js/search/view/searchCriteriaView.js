@@ -2,10 +2,10 @@
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
-         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 
-         'text!search/template/searchCriteriaContent_template.html', "tabs"], 
+         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 'ui/sharePopup',
+         'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget,
+				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget, SharePopup,
 				 searchCriteria_template) {
 
 /**
@@ -26,13 +26,39 @@ var SearchCriteriaView = Backbone.View.extend({
 			if ( newUrl != prevUrl ) {
 				this.applyOpenSearchUrl(newUrl);
 			}
+		},
+		
+		// Click on search
+		"click #scSearch": function(event) {
+			SearchResults.launch( this.model.getOpenSearchURL() );
+		},
+				
+		 // To create a standing order
+		"click #standingOrder":  function(event) {
+			
+			StandingOrderDataAccessRequest.initialize();
+			//set open search url
+			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
+			//set selected download options
+			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
+			
+			var standingOrderWidget = new StandingOrderWidget();
+			standingOrderWidget.open();
+		},
+					
+		// To share a search
+		"click #shareSearch" : function() {
+			SharePopup.open({
+				url: Configuration.serverHostName + (window.location.pathname) + this.model.getSharedSearchURL(),
+				positionTo: '#shareSearch'
+			});
 		}
 	},
 	
 	/**
 	 * Update the opensearch URL
 	 */
-	updateOpenSearchURL: function() {
+	displayOpenSearchURL: function() {
 		if ( this.model.dataset ) {
 			var url = this.model.getOpenSearchURL();
 			this.$el.find("#osUrlText").val( url );	
@@ -104,6 +130,20 @@ var SearchCriteriaView = Backbone.View.extend({
 		}
 		
 	},
+	
+	/**
+	 * Call when the view is shown
+	 */
+	onShow: function() {
+		this.updateContentHeight();
+	},
+	
+	/**
+	 * Call to set the height of content when the view size is changed
+	 */
+	updateContentHeight: function() {
+		this.$el.find('#sc-content').css('height', this.$el.height() - this.$el.find('#sc-footer').outerHeight() );
+	},
 		
 	/**
 	 * Render the view
@@ -111,47 +151,8 @@ var SearchCriteriaView = Backbone.View.extend({
 	render: function(){
 	
 		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
-		
-		this.$el.append(content);
-		
-		// Build footer
-		var $footer = this.$el.find('#sc-footer');
-				
-		var self = this;
-			
-		// Launch a search when the user clicks on the button
-		$footer.find('#searchRequest').click( function() {
-			SearchResults.launch( self.model.getOpenSearchURL() );
-			self.$el.ngeowidget('hide');
-		});		
-				
-			
-		 // To create a standing order
-		$footer.find('#standingOrder').click( function() {
-			
-			StandingOrderDataAccessRequest.initialize();
-			//set open search url
-			StandingOrderDataAccessRequest.OpenSearchURL = self.model.getOpenSearchURL();
-			//set selected download options
-			StandingOrderDataAccessRequest.DownloadOptions = self.model.getSelectedDownloadOptions();
-			
-			var standingOrderWidget = new StandingOrderWidget();
-			standingOrderWidget.open();
-		});
-				
-					
-		// To share a search
-		$footer.find('#shareSearch').click( function() {
-			// Set the opensearch url
-			$("#sharedUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + self.model.getSharedSearchURL() + '<b>');	
-			$('#sharedUrlPopup').popup("open");
-			$('#sharedUrlPopup').trigger('create');
-		});
+		this.$el.append(content);			
 	
-		
-		// Create the tabs
-		var $tabs = this.$el.find("#sc-tabs").tabs();
-		
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
@@ -182,19 +183,16 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.$el.trigger('create');
 		
 		// Refresh the OpenSearch URL when the textarea is visible
+		var self = this;
 		this.$el.find('#osUrl')
 			.bind('collapse', function() {
-					self.stopListening( self.model, 'change', self.updateOpenSearchURL );
+					self.stopListening( self.model, 'change', self.displayOpenSearchURL );
 				})
 			.bind('expand', function() {
-					self.updateOpenSearchURL();
-					self.listenTo( self.model, 'change', self.updateOpenSearchURL );
+					self.displayOpenSearchURL();
+					self.listenTo( self.model, 'change', self.displayOpenSearchURL );
 				});
-
-		
-		// Remove class added by jQM
-		$tabs.find("a").removeClass('ui-link');
-			
+									
 		return this;
 	}
 	

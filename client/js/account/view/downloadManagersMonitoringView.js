@@ -1,37 +1,22 @@
 
 
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 'text!account/template/accountDownloadManagersContent.html',
-	 'text!dataAccess/template/downloadManagerInstallContent.html'], 
+	 'text!dataAccess/template/downloadManagerInstallContent.html', 'ui/widget'], 
 		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_template, downloadManagerInstall_template) {
 
 var DownloadManagersMonitoringView = Backbone.View.extend({
 
 	initialize : function(){
-		this.model.on("DownloadManagerStatusChanged" , this.updateDownloadManagerStatusView, this);
 		this.model.on("sync" , this.render, this);
+		this.model.on("status:change" , this.render, this);
 		this.model.on("error" , this.error, this);
 	},
 	
 	events :{
-		
-		'click :button' : function(event){
-			 
-			 var node = $('tr.dm_selected');
-			 //console.log(node);
-			 var rowId =  $('tr.dm_selected').attr('id');
-			 //console.log(rowId);
-			 var dmID = rowId.substring(rowId.indexOf('_')+1, rowId.length);
-			 //console.log(dmID);
-			 
-			 if (event.currentTarget.id == "stop_dm"){	
-				 this.model.requestChangeStatus(dmID, Configuration.localConfig.downloadManager.stopCommand.value);
-			 
-			 }else if (event.currentTarget.id == "stop_immediately_dm"){
-				 this.model.requestChangeStatus(dmID, Configuration.localConfig.downloadManager.stopImmediatelyCommand.value);
-			 
-			 }else{
-				 //NOT SUPPORTED CASE
-			 }
+	
+		// Call when user clicks on a a button
+		'click #stop_dm' : function(event){			 	
+			this.$stopDialog.ngeowidget('show');
 		},
 
 		'click tbody tr' : function(event){
@@ -39,98 +24,13 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			$("tr").removeClass('dm_selected');
 			$(event.currentTarget).toggleClass('dm_selected');
 			// each row id follows this expression: row_id where id is the related download manager id
-			var rowId = event.currentTarget.id;
-			var dmID = rowId.substring(rowId.indexOf('_')+1, rowId.length);
+			var dmID = $(event.currentTarget).attr('data-dmId');
 			var status = this.model.getDownloadManagerStatus(dmID);
-			var recentCommand = this.model.getRecentCommand(dmID);
 			
-			switch (recentCommand) {
-			
-			   case Configuration.localConfig.downloadManager.stopCommand.value : 
-			   case Configuration.localConfig.downloadManager.stopImmediatelyCommand.value : 
-					$("#stop_dm").button('disable');
-					$("#stop_immediately_dm").button('disable');
-					this.showMessage("Cannot change status : The download manager has just been stopped ");
-					break;
-					
-			   case undefined://no command has been submitted to the server so take into account DM status
-					
-					switch(status) {
-				
-						case Configuration.localConfig.downloadManager.activeStatus.value :
-							$("#stop_dm").button('enable');
-							$("#stop_immediately_dm").button('enable');
-							break;
-						
-						case Configuration.localConfig.downloadManager.inactiveStatus.value :
-							$("#stop_dm").button('enable');
-							$("#stop_immediately_dm").button('enable');
-							break;
-							
-						case Configuration.localConfig.downloadManager.stoppedStatus.value :
-							$("#stop_dm").button('disable');
-							$("#stop_immediately_dm").button('disable');
-							break;
-		
-						//for Stopped or Unknown Status disable sending commands
-						default :
-							$("#stop_dm").button('disable');
-							$("#stop_immediately_dm").button('disable');
-					  		break;
-						}
-					break;
-
-				//Unknown Status
-				default :
-					$("#stop_dm").button('disable');
-					$("#stop_immediately_dm").button('disable');
-					this.showMessage("Cannot change status : Error Unknown Recent command ");
-			  		break;
-			}
-		}
-	},
-	/** display a notification message */
-	showMessage : function(message){
-		if ( this.timeOut ) {
-			clearTimeout( this.timeOut );
-		}
-		$("#dm_server_response")
-			.empty()
-			.append(message)
-			.slideDown();
-			
-		// Hide status message after a given time
-		this.timeOut = setTimeout( function() {
-			$("#dm_server_response").slideUp();
-		}, Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
-	},
-	
-	/**call back function when a server has send back a response for a download manager
-	 * status change request. the argument is an array ['SUCCESS'|'ERROR', dmI', command, 'message']
-	 * In all cases display the message and only in case of a successful status change
-	 * update the download manager view according to the command send.
-	 */ 
-	updateDownloadManagerStatusView : function(args){
-		
-		//display notification message
-		this.showMessage(args[3])
-		
-		if (args[0] == 'SUCCESS'){
-			
-			switch (args[2]) {
-				
-			    //Forbid the STOP_IMMEDIATELY command after a STOP command
-				case Configuration.localConfig.downloadManager.stopCommand.value :
-				case Configuration.localConfig.downloadManager.stopImmediatelyCommand.value :
-					$("#stop_dm").button('disable');
-					$("#stop_immediately_dm").button('disable');
-					break;
-					
-				//after Unknown command disable sending commands : should not happen
-				default :				
-					$("#stop_dm").button('disable');
-					$("#stop_immediately_dm").button('disable');
-			  		break;
+			if ( status == "ACTIVE" || status == "INACTIVE" ) {
+				$("#stop_dm").button('enable');
+			} else {
+				$("#stop_dm").button('disable');
 			}
 		}
 	},
@@ -147,6 +47,19 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 			this.$el.append("<div class='ui-error-message'><p><b> Failure: Error when loading the download managers.</p></b>"+ 
 												"<p><b> Please check the interface with the server.</p></b></div>");
 		}
+	},
+	
+	/**
+	 * Refresh the view size
+	 * Update download manager list to have a good max height
+	 */
+	refreshSize: function() {
+		var parentOffset = this.$el.offset();
+		var $content = this.$el.find('#downloadManagersMonitoringContent');
+		
+		var height = $(window).height() - (parentOffset.top + this.$el.outerHeight()) + $content.height() - 50;
+	
+		$content.css('max-height',height);
 	},
 	
 	/**
@@ -169,10 +82,27 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		}
 		this.$el.trigger('create');		
 
-		$("#dm_server_response").hide();
-		$("#stop_dm").button('disable');
-		$("#stop_immediately_dm").button('disable');
+		$("#stop_dm").button('disable');		
+	
+		this.$stopDialog = this.$el.find('#stopDMDialog')
+			.appendTo('.ui-page-active')
+			.ngeowidget({
+				title: "Stop Immediately?",
+				closable: false
+			});
+		this.$stopDialog.ngeowidget('hide');
 		
+		var self = this;
+		this.$stopDialog.find('button').click( function(event) {
+				var dmID = $('tr.dm_selected').attr('data-dmId');
+				self.$stopDialog.ngeowidget('hide');
+				var command = $(this).attr('name');
+				self.model.requestChangeStatus(dmID, command);
+				$("#stop_dm").button('disable');
+			});
+		
+		this.refreshSize();
+				
 		return this;
 	},	
 });

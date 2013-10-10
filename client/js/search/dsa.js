@@ -1,9 +1,9 @@
 
-define(["jquery", "logger", "userPrefs", "menubar", "search/model/datasetSearch", 
-        "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/widget/datasetSelection",
-		"search/widget/searchCriteria"], 
-	function($, Logger, UserPrefs, MenuBar, DatasetSearch, StandingOrderDataAccessRequest, StandingOrderWidget,
-			DataSetSelectionWidget, SearchCriteriaWidget) {
+define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", "search/model/dataSetPopulation", "searchResults/model/searchResults", 
+        "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/view/datasetSelectionView",
+		"search/view/searchCriteriaView"], 
+	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, SearchResults, StandingOrderDataAccessRequest, StandingOrderWidget,
+			DataSetSelectionView, SearchCriteriaView) {
 
 return {
 	
@@ -13,30 +13,64 @@ return {
 	 * @param element 	The root element of the data-services-area
 	 * @param router 	The data-services-area router
 	 */
-	initialize: function(element, router) {
+	initialize: function(element, router, panelManager) {
 	
-		// Create widgets
-		DataSetSelectionWidget(element);
-		var searchWidget = SearchCriteriaWidget.create(element);		
+		// Create the model for DataSetPopulation
+		var datasetPopulation = new DataSetPopulation();
+		
+		// Create the main search view
+		var datasetView = new DataSetSelectionView({
+			model : datasetPopulation 
+		});
+		
+		// The dataset population is fetch only at the beginning for the moment
+		// It was called every time the search widget was shown before, but it can trigger a bug!
+		datasetPopulation.fetch({
+			success: function() {
+								
+				panelManager.on('leftResized', datasetView.updateContentHeight, datasetView );
+				panelManager.left.add( datasetView, '#dataset' );
+				datasetView.render();
+				
+			},//when the fetch fails display an error message and disable the datasets "button"
+			// so the application is still usable and the user can still see the other menus.
+			error: function(){
+				$("#dataset").addClass('ui-disabled');
+				Logger.error('Cannot retreive the DataSetPopulationMatrix from the server');
+			}
+		});	
+		
+		// Create the view and append it to the panel manager
+		var searchView = new SearchCriteriaView({
+			model : DatasetSearch,
+		});
+		panelManager.on('leftResized', searchView.updateContentHeight, searchView );
+		panelManager.left.add( searchView, '#search' );
+		searchView.render();	
+		
 			
 		router.route(
 				"data-services-area/search/:datasetId?:query", 
 				"search", function(datasetId, query) {
-				
+			
+			// Show the page first
+			MenuBar.showPage("data-services-area");
 						
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.once("change:dataset", function(dataset) {
 			
 				if ( dataset ) {
-				
+													
 					DatasetSearch.populateModelfromURL(query);
 					
-					MenuBar.showPage("data-services-area");
+					searchView.displayDatasetRelatedViews( DatasetSearch.dataset );
 					
-					//refresh the search widget after the model has been update
-					SearchCriteriaWidget.refresh();
-					searchWidget.ngeowidget("show");
+					// Show search panel
+					$('#search').click();
+					
+					// And launch the search!
+					SearchResults.launch( DatasetSearch.getOpenSearchURL() );
 					
 				} else {
 
@@ -56,6 +90,9 @@ return {
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
 									
+			// Show the page first
+			MenuBar.showPage("data-services-area");
+			
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.once("change:dataset", function(dataset) {
@@ -66,8 +103,6 @@ return {
 					StandingOrderDataAccessRequest.populateModelfromURL(query);
 				
 					//Display the STO widget
-					MenuBar.showPage("data-services-area");
-									
 					var standingOrderWidget = new StandingOrderWidget();
 					standingOrderWidget.open();			
 					
@@ -107,17 +142,29 @@ return {
 				MenuBar.showPage("data-services-area");			
 						
 		});
+		
+		// Disable search criteria and result buttons if there is no dataset selected
+		if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
+			$('#search').addClass('ui-disabled');
+		}		
 			
 		// Display a message about dataset in the map, and save user preferences
 		DatasetSearch.on('change:datasetId', function(model) {
 			var datasetId = model.get('datasetId');
 			if ( datasetId ) {
-				$('#datasetMessage').html( "Current dataset : " + model.get('datasetId') );
+				$('#datasetMessage').html( "Current dataset : " + datasetId );
 				UserPrefs.save("Dataset", datasetId);
 			} else {
 				$('#datasetMessage').html( "Current dataset : None" );
 				UserPrefs.save("Dataset", "None");
 			}
+			
+			// Activate search button or not if datasetsearch is ok
+			if ( !datasetId || datasetId == '' ) {
+				$('#search').addClass('ui-disabled');
+			} else {
+				$('#search').removeClass('ui-disabled');
+			}			
 		});				
 	
 

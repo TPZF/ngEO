@@ -1,7 +1,7 @@
-define( ['jquery', 'backbone', 'configuration',
+define( ['jquery', 'backbone', 'configuration', 'ui/sharePopup',
          'text!dataAccess/template/standingOrderViewContent.html', 
          "jqm-datebox-calbox"], 
-		function($, Backbone, Configuration, standingOrderView_template) {
+		function($, Backbone, Configuration, SharePopup, standingOrderView_template) {
 
 	/**
 	 * This view handles the displaying of standing orders request parameters.
@@ -19,8 +19,10 @@ define( ['jquery', 'backbone', 'configuration',
 		events : {
 			//triggered when Share button is clicked
 			'click #shareSTORequest' : function(event){
-				$("#sharedSTOUrlText").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + this.request.getSharedURL() + '<b>');	
-				$('#sharedSTOUrlPopup').popup('open');
+				SharePopup.open({
+					url: Configuration.serverHostName + (window.location.pathname) + this.request.getSharedURL(),
+					positionTo: '#shareSTORequest'
+				});
 			},
 			
 			'change #startDateSTO' : function(event){
@@ -111,14 +113,6 @@ define( ['jquery', 'backbone', 'configuration',
 			}
 
 			return this;
-		},
-		
-		/**
-		 * Override remove, to remove the pop-up
-		 */
-		remove: function() {
-			$('#sharedSTOUrlPopup').remove();
-			Backbone.View.prototype.remove.apply(this, arguments);
 		}
 		
 	});

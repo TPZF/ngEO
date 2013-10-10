@@ -35,7 +35,8 @@ border-radius: @radius;
 background-clip: padding-box;
 }
 
-.border-radiuses (@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
+
+.border-radiuses (@topleft: 0, @topright: 0, @bottomright: 0, @bottomleft: 0) {
 -webkit-border-top-right-radius: @topright;
 -webkit-border-bottom-right-radius: @bottomright;
 -webkit-border-bottom-left-radius: @bottomleft;
@@ -46,10 +47,7 @@ background-clip: padding-box;
 -moz-border-radius-bottomleft: @bottomleft;
 -moz-border-radius-topleft: @topleft;
 
-border-top-right-radius: @topright;
-border-bottom-right-radius: @bottomright;
-border-bottom-left-radius: @bottomleft;
-border-top-left-radius: @topleft;
+border-radius: @topleft @topright @bottomright @bottomleft;
 
 -moz-background-clip: padding;
 -webkit-background-clip: padding-box;

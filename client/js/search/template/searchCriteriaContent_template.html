@@ -1,21 +1,5 @@
-
-<!-- The different tabs for each different search options -->
-<!--
-<div id="sc-tabs">
-	<ul>
-		<li><a href="#date">Date</a></li>
-		<li><a href="#area">Area</a></li>
-		<li><a href="#searchCriteria">Advanced</a></li>
-		<li><a href="#downloadOptions">Download Options</a></li>
-	</ul>
-	<div id="date">	</div>
-	<div id="area"> </div>
-	<div id="searchCriteria"></div>
-	<div id="downloadOptions"></div>
-</div>
--->
-		
-
+	
+<div id="sc-content">
 	<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">
 		<h3>Date</h3>
 		<div id="date">	</div>
@@ -41,26 +25,19 @@
 		<div >
 			<textarea data-role="none" class="ui-input-text ui-body-c ui-corner-all ui-shadow-inset" id="osUrlText" cols="80" rows="3"></textarea>
 		</div>
-	</div>	
+	</div>
+</div>
 <!--
 <div data-role="collapsible-set" data-inset="false" data-mini="true">
 </div>
 -->	
 
 <!-- The footer for buttons -->
-<div id="sc-footer" class="widget-footer">
+<div id="sc-footer">
 	<div class="widget-footer-right">
-		<button data-role='button' data-inline='true' data-mini='true' id="searchRequest" >Apply</button>
+		<button data-role='button' data-inline='true' data-mini='true' id="scSearch" >Search</button>
 	</div>
 	<button data-role='button' data-inline='true' data-mini='true' id="standingOrder">Standing Order</button>
 	<button data-role='button' data-inline='true' data-mini='true' id="shareSearch">Share</button>
-</div>
-
-
-<div id="sharedUrlPopup" data-role=popup data-theme="c" 
-								data-overlay-theme="a" 
-								class="ui-content">
-		<a href="#" id="closeSharedUrlPopup" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
-		<p id="sharedUrlText"></p>
 </div>
 

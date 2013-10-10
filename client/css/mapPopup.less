@@ -1,32 +1,29 @@
-@mapPopup-arrow-size: 10px;
 
-.mapPopup-arrow-left {
+/**
+ * Map popup is an overlay on the right of the map
+ */
+#mapPopup {
 	position: absolute;
-	z-index: 1005;
-	width: 0; 
-	height: 0; 
-	margin: auto;
-	border-top: @mapPopup-arrow-size solid transparent;
-	border-bottom: @mapPopup-arrow-size solid transparent;
-	border-right: @mapPopup-arrow-size solid @widget-background-color;
+	right: 0;
+	top: 35%;
+	// Customize widget : no border on right, and no radius on right
+	border-right: 0 solid black;
+   .border-radiuses(8px, 0, 0, 8px);
 }
 
-.mapPopup-arrow-right {
-	position: absolute;
-	z-index: 1005;
-	width: 0; 
-	height: 0; 
-	margin: auto;
-	border-top: @mapPopup-arrow-size solid transparent;
-	border-bottom: @mapPopup-arrow-size solid transparent;
-	border-left: @mapPopup-arrow-size solid @widget-background-color;
+
+// Customize widget-content for map popup : no radius on right
+#mapPopup .widget-content {
+    .border-radiuses(8px, 0, 0, 8px);
 }
 
+// Setup good margin/padding for map popup
 .mapPopup p {
 	margin: 3px;
 	padding: 0;
 }
 
+// Icon for download
 .ui-icon-save {
 	background-image: url("../images/save.png");
 }

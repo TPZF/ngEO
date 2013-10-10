@@ -1,25 +1,5 @@
 {	
-			"downloadManager" : {
-				
-		        "activeStatus": {
-		            "value": "ACTIVE"
-		        },
-		        "inactiveStatus": {
-		            "value": "INACTIVE"
-		        },
-		        "stoppedStatus": {
-		            "value": "STOPPED"
-		        },
-		        "stopCommand": {
-		            "value": "STOP",
-		            "message": "The server has received a STOP command"
-		        },
-		        "stopImmediatelyCommand": {
-		            "value": "STOP_IMMEDIATELY",
-		            "message": "The server has received a STOP_IMMEDIATELY command"
-		        }
-			},
-	
+
 			"directDownload" : {
 				"productColumnIndex" : 8
 			},
