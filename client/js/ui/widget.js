@@ -26,6 +26,7 @@ $.widget( "ngeo.ngeowidget", {
 		activator: null,
 		effectDuration: 1000,
 		modal: true,
+		closable: true,
 		
 		// callbacks
 		show: null,
@@ -61,7 +62,7 @@ $.widget( "ngeo.ngeowidget", {
 					self.show();
 				}
 			});
-		} else {
+		} else if ( this.options.closable ) {
 			$('<a class="ui-btn-right" data-iconpos="notext" data-icon="delete" data-theme="a"\
 				data-role="button" data-corners="true" data-shadow="true"\
 				data-iconshadow="true" data-wrapperels="span" title="Close">')

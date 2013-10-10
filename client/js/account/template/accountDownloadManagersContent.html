@@ -13,7 +13,7 @@
 		<tbody>
 		<% _.each(downloadmanagers, function(downloadManager, i) { %>
 		
-			<tr id="row_<%= downloadManager.downloadManagerId %>">
+			<tr data-dmId="<%= downloadManager.downloadManagerId %>">
 				<% if (downloadManager.status == 'ACTIVE'){ %>
 					<td><span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span></td>
 				<% } else if (downloadManager.status == 'INACTIVE') { %>
@@ -37,12 +37,14 @@
 
 <div class="popup-widget-footer">
 
-	<div id="dm_server_response"></div>
-	<button id="stop_dm" data-role="button" data-mini="true"
-		data-inline="true" data-theme="a">Stop</button>
-	<button id="stop_immediately_dm" data-mini="true" data-inline="true"
-		data-theme="a">Stop Immediately</button>
-<!-- 	<button id="stop_dm" data-mini="true" data-inline="true" -->
-<!-- 		data-theme="a">Stop</button> -->
+	<button id="stop_dm" data-mini="true" data-inline="true" data-theme="a">Stop</button>
+
+	<div id="stopDMDialog">
+		Do you want to stop the download manager immediately, without waiting for current downloads to finish?
+		<div id="stopDMDialogButtons">
+			<button name="STOP_IMMEDIATELY" data-mini="true" data-inline="true" data-theme="a">Yes</button>
+			<button name="STOP" data-mini="true" data-inline="true" data-theme="a">No</button>
+		</div>
+	</div>
 </div>
 
