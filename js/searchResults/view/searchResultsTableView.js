@@ -240,7 +240,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			"sDom" : 't<"bottom"f>',
 			"sScrollY": "200px",
 			"bPaginate": false,
-			"bScrollCollapse": true,
+			/*"bScrollCollapse": true,*/
 			"fnCreatedRow": function( nRow, aData, iDataIndex ) {
 				var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
 				if (self.model.isBrowserSupportedUrl( self.model.features[iDataIndex])){
