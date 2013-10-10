@@ -1,8 +1,8 @@
 
 define(["jquery", "logger", "ui/menubar", "map/map", 
         "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
- 		"shopcart/widget/shopcartWidget"], 
-	function($, Logger, MenuBar, Map, ShopcartCollection, Shopcart, ShopcartWidget) {
+ 		 "shopcart/view/shopcartItemView"], 
+	function($, Logger, MenuBar, Map, ShopcartCollection, Shopcart, ShopcartTableView) {
 
 
 return {
@@ -13,11 +13,17 @@ return {
 	 * @param element 	The root element of the data-services-area
 	 * @param router 	The data-services-area router
 	 */
-	initialize: function(element, router) {
+	initialize: function(element, router, panelManager) {
 
-		// Create the shopcart widget
-		ShopcartWidget.create();
+		// Create the shopcart table view
+		var tableView = new ShopcartTableView();
+		panelManager.bottom.add( tableView, '#shopcartCB' );
 		
+		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setModel);
+		tableView.render();
+		
+		// load the shopcart collection to display the current shopcart in the data services area
+		ShopcartCollection.fetch();
 	
 		//Route for share shopcart
 		router.route(

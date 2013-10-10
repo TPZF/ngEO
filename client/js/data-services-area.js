@@ -91,7 +91,7 @@ return {
 		// Create all widgets for diferent modules
 		SearchDSA.initialize( element, router, panelManager );
 		SearchResultsDSA.initialize( element, router, panelManager );
-		//ShopcartDSA.initialize( element, router );
+		ShopcartDSA.initialize( element, router, panelManager );
 		
 		// Initialize toolbar and context help
 		ToolBarMap(element);
