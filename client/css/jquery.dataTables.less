@@ -1,17 +1,30 @@
 
 /**
- * DataTables Toolbar configuration
+ * DataTables configuration
  */
+
+ @table-border-color: darken(white,40%);
 
 /**
  * Style for header : some border and padding
  */
 .dataTable thead th {
-	padding: 3px 18px 3px 10px;
-	border-bottom: 1px solid black;
+	padding: 4px 0px 4px 0px;
+	border-right: 1px solid @table-border-color;
+	
 	font-weight: bold;
 	cursor: pointer;
 	*cursor: hand;
+
+}
+
+.dataTables_scrollBody {
+	border-top: 1px solid @table-border-color;
+}
+
+// remove border from last cell
+.dataTable thead th:last-child {
+	border-right: 0px solid @table-border-color;
 }
 
 
@@ -86,12 +99,17 @@
 
 /** Align the text when table is empty */
 .dataTables_empty {
-	text-align: center;
+    height: 200px;
+   vertical-align: middle;
 }
 
 .dataTables_wrapper td {
 	text-align: center;
 	font-size: 12px;
+	border-right: 1px solid @table-border-color;
+}
+.dataTables_wrapper td:last-child {
+	border-right: 0px solid @table-border-color;
 }
 
 /** Color for Odd line */
