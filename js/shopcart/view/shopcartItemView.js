@@ -220,8 +220,8 @@ var ShopcartItemView = Backbone.View.extend({
 			"autoWidth": true,
 			"sDom" : 't<"bottom"f>',
 			"sScrollY": "200px",
-			"bPaginate": false,
-			"bScrollCollapse": true
+			"bPaginate": false/*,
+			"bScrollCollapse": true*/
 		};
 				
 		var self = this;
