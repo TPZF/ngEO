@@ -22,12 +22,12 @@ QUnit.test("Check fromISOString", function () {
 // Check from URL with bbox
 QUnit.test("Check dataset search from URL with bbox", function () {
 
-	var url = "http://localhost:3000/ngeo/catalogueSearch/ND_S2_1?start=2012-12-27T00:00:00.000Z&stop=2019-07-31T00:00:00.000Z&bbox=-147.65625,-78.75,147.65625,78.75"
+	var url = /*"http://localhost:3000/ngeo/catalogueSearch/ND_S2_1?*/"start=2012-12-27T00:00:00.000Z&stop=2019-07-31T00:00:00.000Z&bbox=-147.65625,-78.75,147.65625,78.75"
 	
 	DatasetSearch.populateModelfromURL(url);
 	QUnit.equal( DatasetSearch.get("start").toISOString(), "2012-12-27T00:00:00.000Z", "start date equal" );
 	QUnit.equal( DatasetSearch.get("stop").toISOString(), "2019-07-31T00:00:00.000Z", "stop date equal" );
-	QUnit.equal( DatasetSearch.get("datasetId"), "ND_S2_1", "datasetId equal" );
+	//QUnit.equal( DatasetSearch.get("datasetId"), "ND_S2_1", "datasetId equal" );
 	
 	var bbox = DatasetSearch.searchArea.getBBox();
 	QUnit.ok( DatasetSearch.searchArea.getMode() == 0, "is bbox"  );
@@ -40,12 +40,12 @@ QUnit.test("Check dataset search from URL with bbox", function () {
 // Check from URL with polygon
 QUnit.test("Check dataset search from URL with polygon", function () {
 
-	var url = "http://localhost:3000/ngeo/catalogueSearch/ND_S2_1?start=2012-12-27T00:00:00.000Z&stop=2019-07-31T00:00:00.000Z&geom=POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125))";
+	var url = /*"http://localhost:3000/ngeo/catalogueSearch/ND_S2_1?*/"start=2012-12-27T00:00:00.000Z&stop=2019-07-31T00:00:00.000Z&geom=POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125))";
 	
 	DatasetSearch.populateModelfromURL(url);
 	QUnit.equal( DatasetSearch.get("start").toISOString(), "2012-12-27T00:00:00.000Z", "start date equal" );
 	QUnit.equal( DatasetSearch.get("stop").toISOString(), "2019-07-31T00:00:00.000Z", "stop date equal" );
-	QUnit.equal( DatasetSearch.get("datasetId"), "ND_S2_1", "datasetId equal" );
+	//QUnit.equal( DatasetSearch.get("datasetId"), "ND_S2_1", "datasetId equal" );
 	
 	QUnit.ok( DatasetSearch.searchArea.getMode() == 1, "is polygon"  );
 	var coordinates = DatasetSearch.searchArea.getFeature().geometry.coordinates[0];
