@@ -1,8 +1,8 @@
 
-define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa", "shopcart/dsa",
+define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa",
 		"map/widget/toolbarMap",
 		"text!../pages/data-services-area.html", "ui/context-help", "ui/panelManager", "ui/stackPanel", "ui/toolbar"], 
-	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA, ShopcartDSA,
+	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA,
 			ToolBarMap, dataservicesarea, ContextHelp, PanelManager, StackPanel) {
 
 var panelManager;
@@ -91,7 +91,6 @@ return {
 		// Create all widgets for diferent modules
 		SearchDSA.initialize( element, router, panelManager );
 		SearchResultsDSA.initialize( element, router, panelManager );
-		//ShopcartDSA.initialize( element, router );
 		
 		// Initialize toolbar and context help
 		ToolBarMap(element);

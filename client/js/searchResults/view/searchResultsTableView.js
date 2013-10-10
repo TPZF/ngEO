@@ -2,9 +2,9 @@ define(
 		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 
-		  'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'map/map', 'jquery.mobile', 'jquery.dataTables' ],
+		  'searchResults/widget/exportWidget', 'map/map', 'jquery.mobile', 'jquery.dataTables' ],
 	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
-			DirectDownloadWidget, DownloadOptionsWidget, ShopcartCollection, ExportWidget, Map) {
+			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget, Map) {
 
 	
 /**
@@ -170,15 +170,9 @@ var SearchResultsTableView = Backbone.View.extend({
 		if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
 			this.retrieveProduct.button('disable');
 			this.downloadOptionsButton.button('disable');
-			this.addToShopcart.button('disable');
 		} else {
 			this.retrieveProduct.button('enable');
 			this.downloadOptionsButton.button('enable');
-			if (this.model.getNonPlannedItems(this.model.selection) != 0){
-				this.addToShopcart.button('enable');
-			}else{
-				this.addToShopcart.button('disable');
-			}
 		}
 	},
 	
@@ -278,39 +272,6 @@ var SearchResultsTableView = Backbone.View.extend({
 			
 			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
 			downloadManagersWidget.open();
-		});
-
-		//add selected items to the current or to a new shopcart
-		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true">Add to Shopcart</button>').appendTo($buttonContainer);
-		this.addToShopcart.button();
-		this.addToShopcart.button('disable');		
-		this.addToShopcart.click(function() {
-//			TODO UNCOMMENT TO USE ShopcartSelectionView FOR EITHER THE CURRENT SHOPCART OR A NEW ONE 	
-//			var parentElement = $('<div id="actionPopup">');
-//			var element = $('<div id="actionPopupContent"></div>'); 
-//			element.appendTo(parentElement);
-//			parentElement.appendTo('.ui-page-active');
-//			parentElement.ngeowidget({
-//				title: "Select a shopcart",
-//				hide: function() {
-//					//remove the root of the view to discart all listeners
-//					element.remove();
-//					parentElement.remove();
-//				}
-//			});
-//			
-//			var ShopcartSelectionView = new ShopcartSelectionView({
-//				model : this.model,
-//				el: element
-//			});
-//			
-//			ShopcartSelectionView.render();
-//			//Open the popup
-//			parentElement.ngeowidget("show");
-			var features = self.model.getNonPlannedItems(self.model.selection);
-			//implemented like that in order to make the shopcart class independant from the SearchResults model
-			//since the getProductUrls is implemented in SearchResults
-			ShopcartCollection.getCurrent().addItems(self.model.getProductUrls(features), features);
 		});
 
 		//add button to the widget footer in order to download products

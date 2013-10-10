@@ -1,18 +1,17 @@
 
 define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
-        "dataAccess/model/downloadManagers", "shopcart/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
-        "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView",
+        "dataAccess/model/downloadManagers", "account/view/dataAccessRequestMonitoringView", 
+        "account/view/downloadManagersMonitoringView", "account/view/inquiriesView", "account/view/userPrefsView",
         "text!../pages/account.html", "ui/tabs"], 
 
-        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
-        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_html) {
+        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers,
+        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, InquiriesView, UserPrefsView, account_html) {
 	
 // Private variable : the different view of My Account page	
 var dmView;
 var darView;
 var inquiriesView;
 var userPrefsView;
-var shopcartManagerView;
 
 var activeView;
 
@@ -30,9 +29,6 @@ var onTabActivated = function($link) {
 		activeView = userPrefsView;
 	} else if ( $link.attr('href') == "#inquiries" ) {
 		activeView = inquiriesView;
-	} else if ( $link.attr('href') == "#shopcarts" ) {
-		ShopcartCollection.fetch();
-		activeView = shopcartManagerView;
 	}
 	
 	if (activeView.refreshSize) activeView.refreshSize();
@@ -80,13 +76,7 @@ return {
 							model : DataAccessRequestStatuses,
 							el : "#DARMonitoring"
 						});
-		
-		//Create the shopcart manager view 
-		shopcartManagerView = new ShopcartManagerView({
-			model : ShopcartCollection,
-			el : "#shopcarts"
-		});
-		
+				
 		//Create the inquiries View
 		inquiriesView = new InquiriesView({
 			//model : inquiery,
