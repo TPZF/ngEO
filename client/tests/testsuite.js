@@ -24,7 +24,7 @@
 		"datasetSearchInfoTest.js",
 		"datasetSearchTest.js",
 		"downloadOptionsTest.js",
-		"shopcartsTest.js"
+		"shopcartsTest.js" 
 	];
 	
     // Resolve all testModules and then start the Test Runner.

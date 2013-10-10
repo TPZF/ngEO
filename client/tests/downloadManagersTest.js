@@ -4,7 +4,7 @@ define(['jquery', 'configuration', 'dataAccess/model/downloadManagers'], functio
 	QUnit.module("DownloadManagers");
 	
 	//load the datasets 
-	QUnit.asyncTest("Check & Monitor DownloadManagers", 14, function () {
+	QUnit.asyncTest("Check & Monitor DownloadManagers", 11, function () {
 		
 		Configuration.url = "../conf/configuration.json";
 		Configuration.load().done( function() {
@@ -13,7 +13,6 @@ define(['jquery', 'configuration', 'dataAccess/model/downloadManagers'], functio
 			DownloadManagers.fetch().done( function() {
 				
 				var downloadmanagers = DownloadManagers.attributes.downloadmanagers;
-				var commands = DownloadManagers.attributes.commands;
 				QUnit.ok($.isArray(downloadmanagers),"Download Managers list retrieved");
 				
 				//check the criteria 
@@ -30,16 +29,8 @@ define(['jquery', 'configuration', 'dataAccess/model/downloadManagers'], functio
 				
 				//test DM change request status 
 				DownloadManagers.requestChangeStatus(downloadmanagers[0].downloadManagerId, 'STOP').done(function(){
-					QUnit.ok(downloadmanagers[0].status == 'ACTIVE', "Status not changed immediately after a stop command");
-					QUnit.ok(commands[0] == 'STOP', "submitted stop command");
-					
-					//test DM change request status 
-					DownloadManagers.requestChangeStatus(downloadmanagers[1].downloadManagerId, 'STOP_IMMEDIALETY').done(function(){
-						QUnit.ok(downloadmanagers[1].status == 'INACTIVE', "submitted STOP_IMMEDIALETY command");
-						QUnit.ok(commands[1] == 'STOP_IMMEDIALETY', "submitted stop immediately command");
-						QUnit.start();
-					});
-					
+					QUnit.ok(downloadmanagers[0].status == 'STOPPED', "Status stopped");
+					QUnit.start();
 				});
 			
 				
