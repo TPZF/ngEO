@@ -12,7 +12,7 @@ define(['jquery', 'configuration', 'shopcart/model/shopcartCollection'],
 	    	}
 	    });
     
-	    QUnit.asyncTest("Check Received Shopcart List ", 8, function () {
+	    QUnit.asyncTest("Check Received Shopcart List ", 7, function () {
 
 	    	ShopcartCollection.fetch().done( function() {
 	    				
@@ -21,7 +21,6 @@ define(['jquery', 'configuration', 'shopcart/model/shopcartCollection'],
 				
 				//check the criteria 
 				QUnit.ok(shopcarts[0].attributes.isDefault ,"Found default shopcart");
-				QUnit.equal(ShopcartCollection.currentShopcartId, "TPZ_SHP_01" ,"default shopcart is the current shopcart");
 				QUnit.ok(shopcarts[0].id ,"The default shopcart has an id attribute");
 				QUnit.equal(shopcarts[0].id, "TPZ_SHP_01", "the first shopcart id is ok");
 				QUnit.ok(shopcarts[0].attributes.name ,"The default shopcart has a name attribute");

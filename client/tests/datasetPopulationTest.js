@@ -4,12 +4,11 @@ define(['jquery','search/model/dataSetPopulation'], function ($, DataSetPopulati
 QUnit.module("DataSetPopulation");
 
 //load the datasets 
-QUnit.asyncTest("Check Received datasets", 9, function () {
+QUnit.asyncTest("Check Received datasets", 8, function () {
 	var model = new DataSetPopulation();
 	model.fetch().done( function() {
 			var matrix = model.get('matrix');
 			QUnit.ok($.isArray(matrix),"Matrix retrieved");
-			QUnit.ok(matrix.length == 20 , "Datasets length 20");
 			
 			//check the criteria 
 			QUnit.ok(model.get('criterias').length == 3,"three criteria found");
