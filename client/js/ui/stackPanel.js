@@ -49,7 +49,7 @@ var StackPanel = Backbone.View.extend({
 				this.activeView.$el.hide();
 				this.activeView.$activator.removeClass('toggle');
 				// Ugly hack!
-				if ( this.activeView.$activator.is(':checkbox') ) this.activeView.$activator.removeAttr('checked').checkboxradio("refresh");;
+				if ( this.activeView.$activator.is(':checkbox') ) this.activeView.$activator.removeAttr('checked').checkboxradio("refresh");
 				if (this.activeView.onHide) this.activeView.onHide();
 			}
 			

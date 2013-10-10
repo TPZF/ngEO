@@ -1,8 +1,8 @@
 define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 
          'account/view/renameShopcartView', 'shopcart/widget/shopcartExportWidget', 
-         'account/view/importShopcartView', 'text!account/template/shopcartManagerContent.html'], 
+         'account/view/importShopcartView', 'ui/sharePopup', 'text!account/template/shopcartManagerContent.html'], 
 		function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, 
-				ShopcartExportWidget, ImportShopcartView, shopcartManagerContent_template) {
+				ShopcartExportWidget, ImportShopcartView, SharePopup, shopcartManagerContent_template) {
 
 var ShopcartManagerView = Backbone.View.extend({
 
@@ -94,10 +94,11 @@ var ShopcartManagerView = Backbone.View.extend({
 		//called when the share button is clicked.
 		'click #share_shp' : function(event){
 
-			// Set the current shopcart shared url
-			$("#sharedShopcartUrl").html( '<b>' + Configuration.serverHostName + (window.location.pathname) + this.model.getShopcartSharedURL() + '<b>');	
-			$('#sharedShopcartUrlPopup').popup("open");
-			$('#sharedShopcartUrlPopup').trigger('create');
+			SharePopup.open({
+				url: Configuration.serverHostName + (window.location.pathname) + this.model.getShopcartSharedURL() ,
+				positionTo: '#share_shp'
+			});
+
 		},
 		
 		'click #delete_shp' : function(event){

@@ -42,7 +42,7 @@ return {
 			// Show the GUI once loaded
 			shareShopcart.on("loaded", function(id) {
 				// Toggle the shopcart button to be clicked
-				$("#shopcart").trigger('click');
+				$("#shopcartCB").trigger('click').checkboxradio("refresh");
 			});
 		});
 		
