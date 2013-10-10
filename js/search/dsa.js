@@ -1,8 +1,8 @@
 
-define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", "search/model/dataSetPopulation", 
+define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", "search/model/dataSetPopulation", "searchResults/model/searchResults", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/view/datasetSelectionView",
 		"search/view/searchCriteriaView"], 
-	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, StandingOrderDataAccessRequest, StandingOrderWidget,
+	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, SearchResults, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionView, SearchCriteriaView) {
 
 return {
@@ -68,6 +68,9 @@ return {
 					
 					// Show search panel
 					$('#search').click();
+					
+					// And launch the search!
+					SearchResults.launch( DatasetSearch.getOpenSearchURL() );
 					
 				} else {
 
