@@ -1,7 +1,7 @@
 
 
   
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/datasetAuthorizations'], function($, Backbone, Configuration, DataSetAuthorizations) {
 
 /**
  * Function to match a row from the matrix with the given filter
@@ -127,11 +127,15 @@ var DataSetPopulation = Backbone.Model.extend({
 			if ( matchRow(criteriaFilter, row) ) {
 				
 				if ( !treatedDatasets.hasOwnProperty(datasetId) ) {
-					filteredDatasets.push({
-						datasetId : datasetId,
-						name : name_index < row.length ? row[name_index] : datasetId,
-						itemsCount : row[count_index]
-					});
+				
+					// Check authorization
+					if ( DataSetAuthorizations.hasSearchAccess(datasetId) ) {
+						filteredDatasets.push({
+							datasetId : datasetId,
+							name : name_index < row.length ? row[name_index] : datasetId,
+							itemsCount : row[count_index]
+						});
+					}
 					
 					treatedDatasets[ datasetId ] = true;
 				}
@@ -144,6 +148,6 @@ var DataSetPopulation = Backbone.Model.extend({
 
 });
 
-return DataSetPopulation;
+return new DataSetPopulation();
 
 });

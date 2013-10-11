@@ -1,0 +1,31 @@
+{
+        "datasetAuthorizationInfo": [ {
+                "datasetId": "SENTINEL2_L1",
+                "searchAccessPolicy": "PRIVATE",
+                "searchAccessGranted": "YES",
+                "downloadAccessPolicy": "PRIVATE",
+                "downloadAccessGranted": "YES",
+                "browseLayerAuthorization": {
+                        "browseLayerId": "Sentinel 2 HR browse",
+                        "viewAccessGranted": "YES", 
+                        "viewAccessPolicy": "RESTRICTED"
+                },
+                "browseLayerAuthorization": {
+                        "browseLayerId": "Europe Land Cover HR browse",
+                        "viewAccessGranted": "YES", 
+                        "viewAccessPolicy": "RESTRICTED"
+                }		
+        }, {
+                "datasetId": "SENTINEL3_L2",
+                "searchAccessPolicy": "PRIVATE",
+                "searchAccessGranted": "NO",
+                "downloadAccessPolicy": "PRIVATE",
+                "downloadAccessGranted": "NO",
+                "browseLayerAuthorization": {
+                        "browseLayerId": "Global SLSTR IR browse",
+                        "viewAccessGranted": "NO", 
+                        "viewAccessPolicy": "PRIVATE" 
+                }		
+ 		}]
+}
+

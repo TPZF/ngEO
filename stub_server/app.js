@@ -17,6 +17,7 @@ var express = require('express')
   , downloadStatuses = require('./dataAccessRequestStatus')
   , downloadHelper = require('./downloadHelper')
   , shopcarts = require('./shopcarts')
+  , datasetAuthorization = require('./datasetAuthorization')
   , hostedProcesses = require('./hostedProcesses')
   , http = require('http')
   , path = require('path')
@@ -85,6 +86,9 @@ app.delete('/ngeo/shopcarts/:id', shopcarts.delete);
 
 //delete shopcart and delete items of shopcart interfaces
 app.delete('/ngeo/shopcarts/:id/items', shopcarts.delete);
+
+// get authorization
+app.get('/ngeo/datasetAuthorization', datasetAuthorization);
 
 //Hosted processing list
 app.get('/ngeo/hostedProcesses', hostedProcesses);

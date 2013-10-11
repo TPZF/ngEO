@@ -1,8 +1,8 @@
 
-define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", "search/model/dataSetPopulation", "searchResults/model/searchResults", 
+define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", "search/model/dataSetPopulation", "search/model/datasetAuthorizations", "searchResults/model/searchResults", 
         "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/view/datasetSelectionView",
 		"search/view/searchCriteriaView"], 
-	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, SearchResults, StandingOrderDataAccessRequest, StandingOrderWidget,
+	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, DataSetAuthorizations, SearchResults, StandingOrderDataAccessRequest, StandingOrderWidget,
 			DataSetSelectionView, SearchCriteriaView) {
 
 return {
@@ -14,31 +14,36 @@ return {
 	 * @param router 	The data-services-area router
 	 */
 	initialize: function(element, router, panelManager) {
-	
-		// Create the model for DataSetPopulation
-		var datasetPopulation = new DataSetPopulation();
-		
+			
 		// Create the main search view
 		var datasetView = new DataSetSelectionView({
-			model : datasetPopulation 
+			model : DataSetPopulation 
 		});
 		
-		// The dataset population is fetch only at the beginning for the moment
-		// It was called every time the search widget was shown before, but it can trigger a bug!
-		datasetPopulation.fetch({
-			success: function() {
-								
-				panelManager.on('leftResized', datasetView.updateContentHeight, datasetView );
-				panelManager.left.add( datasetView, '#dataset' );
-				datasetView.render();
-				
-			},//when the fetch fails display an error message and disable the datasets "button"
-			// so the application is still usable and the user can still see the other menus.
-			error: function(){
-				$("#dataset").addClass('ui-disabled');
-				Logger.error('Cannot retreive the DataSetPopulationMatrix from the server');
+		var onDatasetPopulationLoaded = function() {
+			panelManager.on('leftResized', datasetView.updateContentHeight, datasetView );
+			panelManager.left.add( datasetView, '#dataset' );
+			datasetView.render();
+		};
+		
+		// Fetch population and authorization from the server
+		var dspXHR = DataSetPopulation.fetch();
+		var dsaXHR = DataSetAuthorizations.fetch();
+		
+		$.when( dspXHR, dsaXHR ).then(
+			// Success
+			onDatasetPopulationLoaded,
+			// Error
+			function() {
+				if ( dsaXHR.state() == "rejected"  ) {
+					Logger.error('Cannot retreive the DataSet Authorizations from the server');
+					dspXHR.done( onDatasetPopulationLoaded );
+				} else {
+					$("#dataset").addClass('ui-disabled');
+					Logger.error('Cannot retreive the DataSetPopulationMatrix and/or DataSet Authorizations from the server');
+				}
 			}
-		});	
+		);
 		
 		// Create the view and append it to the panel manager
 		var searchView = new SearchCriteriaView({
