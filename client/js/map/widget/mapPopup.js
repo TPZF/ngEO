@@ -77,7 +77,7 @@ var MapPopup = function(container) {
 			self.open(highlightedFeatures,event);
 		}
 	});
-	
+		
 	/*Map.on('extent:change', function() {
 		self.close();
 	});*/
@@ -166,6 +166,9 @@ var MapPopup = function(container) {
 		}
 		
 	};
+	
+	SearchResults.on('reset:features', this.close, this );
+	
 };
 
 return MapPopup;
