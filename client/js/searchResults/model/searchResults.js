@@ -97,6 +97,9 @@ var SearchResults = {
 		this.totalResults = 0;
 		// reset the features
 		this.features.length = 0;
+		// reset highlight/select
+		this._highlighted = [];
+		this.selection = [];
 		this.trigger('reset:features');
 	},
 	
@@ -149,15 +152,11 @@ var SearchResults = {
 	// Highlight a feature, only one can be highlight at a time
 	highlight: function(features) {
 	
-		if ( features != this._highlighted ) {
-			
+		if ( features.length != 0 || this._highlighted.length != 0 ) {
+			// Event for highlight
 			this.trigger( "highlightFeatures", features, this._highlighted, this );
-			
-			//keep highlighted items
-			this._highlighted = [];
-			for ( var i = 0; i < features.length; i++ ) {
-				this._highlighted.push( features[i] );
-			}
+			// Copy highlighted items
+			this._highlighted = features.slice(0);
 		}
 	},
 	
