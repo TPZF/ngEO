@@ -185,7 +185,8 @@ var SearchResultsTableView = Backbone.View.extend({
 	/**
 	 * Method to call when the table is shown
 	 */
-	onShow: function() {
+	show: function() {
+		this.$el.show();
 		if ( this.featuresToAdd.length >  0 ) {
 			this.table.fnAddData( this.featuresToAdd, false );
 			// adjust selection
@@ -199,7 +200,8 @@ var SearchResultsTableView = Backbone.View.extend({
 	/**
 	 * Method to call when the table is hidden
 	 */
-	onHide: function() {
+	hide: function() {
+		this.$el.hide();
 		this.visible = false;
 	},
 	

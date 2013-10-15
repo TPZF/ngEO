@@ -27,7 +27,20 @@ return {
 		var tableView = new SearchResultsTableView({ 
 			model : SearchResults 
 		});
-		panelManager.bottom.add( tableView, '#tableCB' );
+		panelManager.bottom.addStatus({
+			activator: '#result',
+			show: function() {
+				$('#datasetMessage').show();
+				$('#paging a').show();
+				$('#resultsMessage').show();
+			},
+			hide: function() {
+				$('#datasetMessage').hide();
+				$('#paging a').hide();
+				$('#resultsMessage').hide();
+			},
+			tableView: tableView
+		});
 		tableView.render();
 		
 		// Connect search results events with map

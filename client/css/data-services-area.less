@@ -6,7 +6,7 @@
 menu[type=toolbar] {
 	z-index: 1005;
 	position: absolute;
-	background-color: fade(@background-color, 50%); 
+	background-color: @widget-background-color; 
     padding: 0;
 	text-align: center;
 }
@@ -26,6 +26,11 @@ menu[type=toolbar] {
 // Search toolbar
 #searchToolbar {
 	top: 0;
+}
+
+// Search toolbar
+#bottomToolbar {
+	bottom: @statusBar-height;
 }
 
 /**
@@ -71,10 +76,11 @@ menu[type=toolbar] {
 #dateRangeSlider {
 	z-index: 1005;
 	bottom: @statusBar-height;
-	left: 0px;
+	left: 100px;
+	right: 0;
 	background: @widget-background-color; 
 	position: absolute;
-	width: 100%;
+	//width: 100%;
 }
 
 @statusBar-height: 38px;
@@ -97,17 +103,18 @@ menu[type=toolbar] {
 /** 
  * Styling for a message displaying the current dataset selected
  */
-#datasetMessage {
+.status-message {
 	line-height: @statusBar-height; // To vertical align text
 }
+
 
 /**
  * The result status bar
  */
-#resultsBlock {
+.status-block {
 	text-align: right;
 }
-#resultCG {
+#tableCG {
 	display: inline-block;
 	margin: 0 0 0 0.5em;
 }

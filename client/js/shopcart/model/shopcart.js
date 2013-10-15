@@ -38,7 +38,7 @@ var Shopcart = Backbone.Model.extend({
 				
 		}).done(function(data) {
 			self.features = data.features;
-			self.trigger("loaded", data.features);
+			self.trigger("itemsAdded", data.features);
 			
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
 			  console.log("ERROR when retrieving the shopcart Content :" + textStatus + ' ' + errorThrown);

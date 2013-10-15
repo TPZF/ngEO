@@ -97,10 +97,10 @@ var ShopcartItemView = Backbone.View.extend({
 	/**
 	 * Method to call when the table is shown
 	 */
-	onShow: function() {
+	show: function() {
+		this.$el.show();
 		//if there items to add that mean the current shopcart has been loaded
 		if ( this.shopcartItemsToAdd.length >  0 ) {
-			this.table.fnClearTable();
 			this.table.fnAddData( this.shopcartItemsToAdd, false );
 			// adjust selection
 			this.toggleSelection(this.model.selection);
@@ -113,7 +113,8 @@ var ShopcartItemView = Backbone.View.extend({
 	/**
 	 * Method to call when the table is hidden
 	 */
-	onHide: function() {
+	hide: function() {
+		this.$el.hide();
 		this.visible = false;
 	},
 	
@@ -181,7 +182,6 @@ var ShopcartItemView = Backbone.View.extend({
 		this.listenTo(model,"selectShopcartItems", this.toggleSelection );
 		this.listenTo(model,"unselectShopcartItems", this.toggleSelection );
 
-		this.listenTo(model,"loaded", this.addItems );
 		this.listenTo(model,"itemsAdded", this.addItems );
 		this.listenTo(model,"itemsDeleted", this.removeItems );
 		

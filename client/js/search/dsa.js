@@ -157,10 +157,10 @@ return {
 		DatasetSearch.on('change:datasetId', function(model) {
 			var datasetId = model.get('datasetId');
 			if ( datasetId ) {
-				$('#datasetMessage').html( "Current dataset : " + datasetId );
+				$('#datasetMessage').html( "Dataset : " + datasetId );
 				UserPrefs.save("Dataset", datasetId);
 			} else {
-				$('#datasetMessage').html( "Current dataset : None" );
+				$('#datasetMessage').html( "Dataset : None" );
 				UserPrefs.save("Dataset", "None");
 			}
 			
