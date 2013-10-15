@@ -17,8 +17,16 @@ return {
 
 		// Create the shopcart table view
 		var tableView = new ShopcartTableView();
-		panelManager.bottom.add( tableView, '#shopcartCB' );
-		
+		panelManager.bottom.addStatus({
+			activator: '#shopcart',
+			show: function() {
+				$('#shopcartMessage').show();
+			},
+			hide: function() {
+				$('#shopcartMessage').hide();
+			},
+			tableView: tableView
+		});		
 		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setModel);
 		tableView.render();
 		
@@ -55,17 +63,25 @@ return {
 			style: "shopcart-footprint"
 		});
 		
+		var updateNumberOfItems = function() {
+			var numItems = ShopcartCollection.getCurrent().features.length;
+			$('#shopcartMessage').html( ShopcartCollection.getCurrent().get('name') + ' : ' + numItems + ' items' );
+		};
+		
 		// Manage display of shopcart footprints
 		ShopcartCollection.on('change:current', function( current, prevCurrent ) {
 			if ( prevCurrent ) {
-				prevCurrent.off('loaded', shopcartLayer.addFeatures, shopcartLayer );
 				prevCurrent.off('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
 				prevCurrent.off('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
+				prevCurrent.off('itemsAdded', updateNumberOfItems );
+				prevCurrent.off('itemsDeleted', updateNumberOfItems );
 			}
+			updateNumberOfItems();
 			shopcartLayer.clear();
-			current.on('loaded', shopcartLayer.addFeatures, shopcartLayer );
 			current.on('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
 			current.on('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
+			current.on('itemsAdded', updateNumberOfItems );
+			current.on('itemsDeleted',updateNumberOfItems );
 		});
 		
 	},

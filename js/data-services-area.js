@@ -1,9 +1,9 @@
 
 define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa", "shopcart/dsa",
 		"map/widget/toolbarMap",
-		"text!../pages/data-services-area.html", "ui/context-help", "ui/panelManager", "ui/stackPanel", "ui/toolbar"], 
+		"text!../pages/data-services-area.html", "ui/context-help", "ui/panelManager", "ui/stackPanel", "ui/statusPanel", "ui/toolbar"], 
 	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA, ShopcartDSA,
-			ToolBarMap, dataservicesarea, ContextHelp, PanelManager, StackPanel) {
+			ToolBarMap, dataservicesarea, ContextHelp, PanelManager, StackPanel, StatusPanel ) {
 
 var panelManager;
 
@@ -29,6 +29,7 @@ return {
 		$('#dateRangeSlider').hide();
 		$('#searchToolbar').hide();
 		$('#mapToolbar').hide();
+		$('#bottomToolbar').hide();
 	},
 	
 	/**
@@ -39,6 +40,7 @@ return {
 		$('#dateRangeSlider').show();
 		$('#searchToolbar').show();
 		$('#mapToolbar').show();
+		$('#bottomToolbar').show();
 		panelManager.restore();
 	},
 	
@@ -62,10 +64,10 @@ return {
 			classes: 'ui-body-c panel-content-left'
 		}) ); 
 		
-		// Add bottom panel (use for results )
-		panelManager.add( 'bottom', new StackPanel({
+		// Add bottom panel (use for results and shopcart)
+		panelManager.add( 'bottom', new StatusPanel({
 			el: '#bottom-panel',
-			classes: 'ui-body-c panel-content-bottom'
+			classes: 'ui-body-c panel-content-bottom' 
 		}) ); 
 		
 		panelManager.on('centerResized', function() {
@@ -84,6 +86,7 @@ return {
 		$('#dateRangeSlider').appendTo('#map').hide();
 		$('#searchToolbar').appendTo('#map').hide();
 		$('#mapToolbar').appendTo('#map').hide();
+		$('#bottomToolbar').appendTo('#map').hide();
 
 		// Create the router
 		var router = new Backbone.Router();

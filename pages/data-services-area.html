@@ -24,6 +24,11 @@
 		<command id="help" label="Context Help"/>
 	</menu>
 	
+	<menu id="bottomToolbar" type="toolbar">
+		<command id="result" label="Results"/>
+		<command id="shopcart" label="Shopcart"/>
+	</menu>
+	
 	<!-- bottom panel -->
 	<div id="bottom-panel" class="panel ui-body-c">
 	</div>
@@ -38,8 +43,8 @@
 	
 	<!-- The status bar to give information on the search results -->
 	<div id="statusBar" class="ui-grid-b" >
-		<div id="datasetMessage" class="ui-block-a">
-			Current dataset : None
+		<div class="status-message ui-block-a">
+			<span id="datasetMessage">Dataset : None</span><span id="shopcartMessage">No shopcart</span>
 		</div>
 		<div id="paging" class="ui-block-b">
 			<a id="paging_first" data-role="button" data-mini="true" data-inline="true">First</a>
@@ -47,13 +52,11 @@
 			<a id="paging_next" data-role="button" data-mini="true" data-inline="true">Next</a>
 			<a id="paging_last" data-role="button" data-mini="true" data-inline="true">Last</a>
 		</div>
-		<div id="resultsBlock" class="ui-block-c">
+		<div class="status-block ui-block-c">
 			<span id="resultsMessage">No search done.</span>
-			<fieldset id="resultCG" data-role="controlgroup" data-mini="true" data-type="horizontal">
+			<fieldset id="tableCG" data-role="controlgroup" data-mini="true" data-type="horizontal">
 			   <input type="checkbox" name="tableCB" id="tableCB" />
 			   <label for="tableCB">Table</label>
-			   <input type="checkbox" name="shopcartCB" id="shopcartCB" />
-			   <label for="shopcartCB">Shopcart</label>
 		   </fieldset>
 		</div>
 	</div>
