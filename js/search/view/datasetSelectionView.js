@@ -148,7 +148,11 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Update only the list of datasets in the view 
 	 */
 	updateDatasetsList : function() {
+	
+		// Retrieve the datasets according to the current filteria
 		var datasets = this.model.filterDatasets(this.criteriaFilter);
+		
+		// Build the dataset list
 		var $dslListContainer = this.$el.find("#datasetListContainer")
 		var listContent = this.datasetsListTemplate({
 			datasets: datasets
@@ -156,14 +160,15 @@ var DatasetSelectionView = Backbone.View.extend({
 		$dslListContainer.html(listContent);	
 		$dslListContainer.trigger('create');
 		
-		// Apply authorization after
+		// Apply authorization
+		// Warning : need to be done after jQuery Mobile has "enhanced" the markup otherwise images are not correctly placed
 		for ( var i = 0; i < datasets.length; i++ ) {
-			if ( !DatasetAuthorizations.hasViewAccess( datasets[i].datasetId ) ) {
-				$('#' + datasets[i].datasetId).append( '<img src="../images/noview.png" />' );
-			} 
 			if ( !DatasetAuthorizations.hasDownloadAccess( datasets[i].datasetId ) ) {
 				$('#' + datasets[i].datasetId).append( '<img src="../images/nodownload.png" />' );
 			}
+			if ( !DatasetAuthorizations.hasViewAccess( datasets[i].datasetId ) ) {
+				$('#' + datasets[i].datasetId).append( '<img src="../images/noview.png" />' );
+			} 
 		}
 	
 		// Check if the current dataset is still in the list
