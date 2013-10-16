@@ -17,6 +17,9 @@ return {
 
 		// Create the shopcart table view
 		var tableView = new ShopcartTableView();
+		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setModel);
+		
+		// Add it to status panel
 		panelManager.bottom.addStatus({
 			activator: '#shopcart',
 			show: function() {
@@ -27,7 +30,7 @@ return {
 			},
 			tableView: tableView
 		});		
-		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setModel);
+		
 		tableView.render();
 		
 		// load the shopcart collection to display the current shopcart in the data services area
@@ -41,16 +44,17 @@ return {
 			MenuBar.showPage("data-services-area");
 			
 			// Create a shared shopcart and load its content to be displayed
-			var shareShopcart = new Shopcart({ id: shopcartId, name: "Share Shopcart", isShared: true });
+			var shareShopcart = new Shopcart({ id: shopcartId, name: "Share Shopcart " + shopcartId, isShared: true });
 			ShopcartCollection.setCurrent( shareShopcart );
 			
 			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
 			//shareShopcart.loadContent();
 			
 			// Show the GUI once loaded
-			shareShopcart.on("loaded", function(id) {
+			shareShopcart.on("itemsAdded", function(id) {
 				// Toggle the shopcart button to be clicked
-				$("#shopcartCB").trigger('click').checkboxradio("refresh");
+				$("#shopcart").trigger('click');
+				panelManager.bottom.showTable();
 			});
 		});
 		

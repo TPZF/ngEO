@@ -30,6 +30,13 @@ var StatusPanel = Backbone.View.extend({
 		
 	},
 	
+	// Only used by shared shopcart. Should be removed later?
+	showTable: function() {
+		this.activeStatus.tableView.show();
+		this.regionManager.show(this.region,400);
+		$('#tableCB').attr('checked',true).checkboxradio('refresh');
+	},
+	
 	/**
 	 *
 	 */
