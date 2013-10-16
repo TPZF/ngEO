@@ -1,9 +1,9 @@
 define(
-		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 
+		[ 'jquery', 'backbone', 'logger', 'configuration', 'search/model/datasetSearch', 
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 
 		  'shopcart/model/shopcartCollection', 'searchResults/widget/exportWidget', 'map/map', 'jquery.mobile', 'jquery.dataTables' ],
-	function($, Backbone, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
+	function($, Backbone, Logger, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ShopcartCollection, ExportWidget, Map) {
 
 	
@@ -85,12 +85,16 @@ var SearchResultsTableView = Backbone.View.extend({
 		
 		//Called when the user clicks on the product id of an item
 		'click .ui-direct-download' : function(event){
-			var feature = this.getFeatureFromRow( $(event.currentTarget).closest('tr').get(0) );
-			var featureArray = [];
-			featureArray.push(feature);
-			//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
-			var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrls(featureArray)[0]);
-			directDownloadWidget.open(event);
+			if ( DatasetSearch.get("downloadAccess") ) {
+				var feature = this.getFeatureFromRow( $(event.currentTarget).closest('tr').get(0) );
+				var featureArray = [];
+				featureArray.push(feature);
+				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
+				var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrls(featureArray)[0]);
+				directDownloadWidget.open(event);
+			} else {
+				Logger.inform("Cannot download the product : missing permissions.");
+			}
 		}, 
 		
 		// Called when the user clicks on the select all button
@@ -275,11 +279,20 @@ var SearchResultsTableView = Backbone.View.extend({
 		//create a simpleDataAccessRequest and assign a download manager
 		this.retrieveProduct.click(function() {
 
-			SimpleDataAccessRequest.initialize();
-			SimpleDataAccessRequest.setProducts( self.model.selection );
+			if ( DatasetSearch.get("downloadAccess") ) {
+
+				SimpleDataAccessRequest.initialize();
+				SimpleDataAccessRequest.setProducts( self.model.selection );
+				
+				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+				downloadManagersWidget.open();
 			
-			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-			downloadManagersWidget.open();
+			} else {
+			
+				Logger.inform("Cannot download the product : missing permissions.");
+				
+			}
+			
 		});
 
 		//add selected items to the current or to a new shopcart

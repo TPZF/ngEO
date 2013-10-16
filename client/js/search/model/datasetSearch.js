@@ -1,6 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/searchArea'], 
-		function($, Backbone, Configuration, Dataset, SearchArea) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/searchArea', 'search/model/datasetAuthorizations'], 
+		function($, Backbone, Configuration, Dataset, SearchArea, DatasetAuthorizations) {
 
 function pad(num, size) {
     var s = num+"";
@@ -61,7 +61,9 @@ var DataSetSearch = Backbone.Model.extend({
 		stop: new Date(),
 		start : new Date( new Date().getTime() - ONE_MONTH ),
 		useExtent : true,
-		useTimeSlider : true //flag for displaying time slider or not
+		useTimeSlider : true, //flag for displaying time slider or not
+		viewAccess : true,
+		downloadAccess : true
 	},
 	
 	initialize : function() {
@@ -125,6 +127,11 @@ var DataSetSearch = Backbone.Model.extend({
 					} 
 					
 					self.dataset = dataset;
+				
+					// Store authorizations
+					self.set("downloadAccess", DatasetAuthorizations.hasDownloadAccess( self.get("datasetId") ) );
+					self.set("viewAccess", DatasetAuthorizations.hasViewAccess( self.get("datasetId") ) );
+					
 					self.trigger('change:dataset',self.dataset);
 					
 				},
