@@ -35,15 +35,24 @@ var SearchCriteriaView = Backbone.View.extend({
 				
 		 // To create a standing order
 		"click #standingOrder":  function(event) {
+		
+			// Check if the user can request a standing order, otherwise inform him.
+			if ( this.model.get("downloadAccess") ) {
+
+				StandingOrderDataAccessRequest.initialize();
+				//set open search url
+				StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
+				//set selected download options
+				StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
+				
+				var standingOrderWidget = new StandingOrderWidget();
+				standingOrderWidget.open();
+				
+			} else {
 			
-			StandingOrderDataAccessRequest.initialize();
-			//set open search url
-			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
-			//set selected download options
-			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
-			
-			var standingOrderWidget = new StandingOrderWidget();
-			standingOrderWidget.open();
+				Logger.inform("Cannot request a standing order : you do not have permission to download on this dataset");
+				
+			}
 		},
 					
 		// To share a search

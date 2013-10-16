@@ -1,8 +1,8 @@
 
-define(["jquery", "map/map", "map/selectHandler", 
+define(["jquery", "logger", "map/map", "map/selectHandler", 
         "search/model/datasetSearch", "searchResults/model/searchResults",
         "searchResults/view/searchResultsTableView", "map/widget/mapPopup"], 
-	function($, Map, SelectHandler, DatasetSearch, SearchResults, SearchResultsTableView,
+	function($, Logger, Map, SelectHandler, DatasetSearch, SearchResults, SearchResultsTableView,
 			MapPopup) {
 
 // Private variable
@@ -55,10 +55,12 @@ return {
 			type: "Browses",
 			visible: true
 		});
-			
+		
+		var viewAccessInformation = false;
 		SearchResults.on('reset:features', function() {
 			footprintLayer.clear();
 			browsesLayer.clear();
+			viewAccessInformation = false;
 		});
 		
 		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
@@ -72,7 +74,13 @@ return {
 					footprintLayer.modifyFeaturesStyle([features[i]], "select" );
 				}
 			}
-			browsesLayer.addFeatures(features);
+			// Only display browse if the user has view access
+			if ( DatasetSearch.get("viewAccess") ) {
+				browsesLayer.addFeatures(features);
+			} else if (!viewAccessInformation) {
+				Logger.inform("You do not have enough permission to view the product.");
+				viewAccessInformation = true;
+			}
 		});
 		SearchResults.on('unselectFeatures', function(features,searchResults) {
 			for ( var i = 0; i < features.length; i++ ) {
@@ -107,7 +115,13 @@ return {
 						footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
 					}
 				}
-				browsesLayer.addFeatures(features);
+				// Only display browse if the user has view access
+				if ( DatasetSearch.get("viewAccess") ) {
+					browsesLayer.addFeatures(features);
+				} else if (!viewAccessInformation) {
+					Logger.inform("You do not have enough permission to view the product.");
+					viewAccessInformation = true;
+				}
 			}
 		});	
 		
