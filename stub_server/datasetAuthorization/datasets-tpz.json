@@ -18,7 +18,7 @@
         }, {
                 "datasetId": "SENTINEL3_L2",
                 "searchAccessPolicy": "PRIVATE",
-                "searchAccessGranted": "NO",
+                "searchAccessGranted": "YES",
                 "downloadAccessPolicy": "PRIVATE",
                 "downloadAccessGranted": "NO",
                 "browseLayerAuthorization": {

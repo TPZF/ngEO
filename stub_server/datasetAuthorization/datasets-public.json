@@ -1,0 +1,56 @@
+{
+        "datasetAuthorizationInfo": [ {
+                "datasetId": "SENTINEL2_L1",
+                "searchAccessPolicy": "PRIVATE",
+                "searchAccessGranted": "YES",
+                "downloadAccessPolicy": "PRIVATE",
+                "downloadAccessGranted": "NO",
+                "browseLayerAuthorizations": [{
+                        "browseLayerId": "Sentinel 2 HR browse",
+                        "viewAccessGranted": "YES", 
+                        "viewAccessPolicy": "RESTRICTED"
+                }, {
+                        "browseLayerId": "Europe Land Cover HR browse",
+                        "viewAccessGranted": "YES", 
+                        "viewAccessPolicy": "RESTRICTED"
+                }]	
+        }, {
+                "datasetId": "SENTINEL3_L2",
+                "searchAccessPolicy": "PRIVATE",
+                "searchAccessGranted": "NO",
+                "downloadAccessPolicy": "PRIVATE",
+                "downloadAccessGranted": "NO",
+                "browseLayerAuthorizations": [{
+                        "browseLayerId": "Global SLSTR IR browse",
+                        "viewAccessGranted": "NO", 
+                        "viewAccessPolicy": "PRIVATE" 
+                }]
+ 		}, {
+                "datasetId": "SENTINEL3",
+                "searchAccessPolicy": "PRIVATE",
+                "searchAccessGranted": "YES",
+                "downloadAccessPolicy": "PRIVATE",
+                "downloadAccessGranted": "YES",
+                "browseLayerAuthorizations": [{
+                        "browseLayerId": "Sentinel 3 HR browse",
+                        "viewAccessGranted": "NO", 
+                        "viewAccessPolicy": "RESTRICTED"
+                }, {
+                        "browseLayerId": "Other",
+                        "viewAccessGranted": "YES", 
+                        "viewAccessPolicy": "RESTRICTED"
+                }]	
+        }, {
+                "datasetId": "SENTINEL3_L1",
+                "searchAccessPolicy": "PRIVATE",
+                "searchAccessGranted": "YES",
+                "downloadAccessPolicy": "PRIVATE",
+                "downloadAccessGranted": "NO",
+                "browseLayerAuthorizations": [{
+                        "browseLayerId": "Sentinel 3 HR browse",
+                        "viewAccessGranted": "NO", 
+                        "viewAccessPolicy": "RESTRICTED"
+                }]	
+        }]
+}
+

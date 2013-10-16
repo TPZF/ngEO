@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch', 'searchResults/model/searchResults',
+define( ['jquery', 'backbone', 'logger', 'search/model/datasetSearch', 'search/model/datasetAuthorizations', 'searchResults/model/searchResults',
          'text!search/template/datasetsSelectionContent_template.html', 'text!search/template/datasetsListContent_template.html'], 
-		function($, Backbone, Logger, DatasetSearch, SearchResults, datasetsSelection_template, datasetsList_template) {
+		function($, Backbone, Logger, DatasetSearch, DatasetAuthorizations, SearchResults, datasetsSelection_template, datasetsList_template) {
 
 /**
  * The related model is DatasetsPopulationModel
@@ -155,7 +155,18 @@ var DatasetSelectionView = Backbone.View.extend({
 		});
 		$dslListContainer.html(listContent);	
 		$dslListContainer.trigger('create');
+		
+		// Apply authorization after
+		for ( var i = 0; i < datasets.length; i++ ) {
+			if ( !DatasetAuthorizations.hasViewAccess( datasets[i].datasetId ) ) {
+				$('#' + datasets[i].datasetId).append( '<img src="../images/noview.png" />' );
+			} 
+			if ( !DatasetAuthorizations.hasDownloadAccess( datasets[i].datasetId ) ) {
+				$('#' + datasets[i].datasetId).append( '<img src="../images/nodownload.png" />' );
+			}
+		}
 	
+		// Check if the current dataset is still in the list
 		var selectedDatasetId = DatasetSearch.get("datasetId");
 		if ( selectedDatasetId && selectedDatasetId != "" ) {
 			var $elt = $dslListContainer.find('#' + selectedDatasetId);

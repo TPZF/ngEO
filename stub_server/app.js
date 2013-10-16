@@ -19,6 +19,7 @@ var express = require('express')
   , shopcarts = require('./shopcarts')
   , datasetAuthorization = require('./datasetAuthorization')
   , hostedProcesses = require('./hostedProcesses')
+  , user = require('./user')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
@@ -92,6 +93,9 @@ app.get('/ngeo/datasetAuthorization', datasetAuthorization);
 
 //Hosted processing list
 app.get('/ngeo/hostedProcesses', hostedProcesses);
+
+// Basic user management
+app.get('/ngeo/user/:id', user.change);
 
 // user inquiry
 app.post('/ngeo/userInquiry', function(req,res) {
