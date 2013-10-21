@@ -39,8 +39,12 @@ var StackPanel = Backbone.View.extend({
 	
 		if ( view == this.activeView ) {
 		
-			this.activeView = null;
-			this.regionManager.hide(this.region,400);
+			var self = this;
+			this.regionManager.hide(this.region,400, function() {
+				self.activeView.$el.hide();
+				if (self.activeView.onHide) self.activeView.onHide();
+				self.activeView = null;
+			});
 			view.$activator.removeClass('toggle');
 			
 		} else {
