@@ -121,7 +121,7 @@ var PanelManager = Backbone.View.extend({
 	/**
 		Hide a panel
 	*/
-	hide: function(region, duration) {
+	hide: function(region, duration, callback) {
 		var props = {};
 		props[region] = 0;
 		this.$center.animate( props, duration, this.centerResizedCallback );
@@ -131,7 +131,7 @@ var PanelManager = Backbone.View.extend({
 		}
 		
 		props[region] = -this.getSize( region );
-		this[region].$el.animate( props, duration );
+		this[region].$el.animate( props, duration, callback );
 		
 		this.stopListening(this[region], 'sizeChanged');
 	}
