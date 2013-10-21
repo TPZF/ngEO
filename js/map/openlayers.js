@@ -310,7 +310,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
  */
 OpenLayersMapEngine.prototype.removeLayer = function(olLayer)
 {
-	this._map.removeLayer(olLayer);
+	olLayer.destroy();
 }
 
 /**
