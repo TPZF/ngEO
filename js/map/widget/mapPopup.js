@@ -3,9 +3,9 @@
   */
 
 
-define( [ "jquery", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
+define( [ "jquery", "logger", "configuration", "map/map", "search/model/datasetSearch", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
           "searchResults/model/searchResults", "map/utils", "shopcart/model/shopcartCollection" ], 
-	function($,Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils, ShopcartCollection) {
+	function($, Logger, Configuration, Map, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils, ShopcartCollection) {
 
 
 var MapPopup = function(container) {
@@ -44,11 +44,17 @@ var MapPopup = function(container) {
 	var btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo( element.find('#mpButtons') )
 		.click( function() {
-			SimpleDataAccessRequest.initialize();
-			SimpleDataAccessRequest.setProducts( products );
+						
+			if ( DatasetSearch.get("downloadAccess") ) {
+				SimpleDataAccessRequest.initialize();
+				SimpleDataAccessRequest.setProducts( products );
 			
-			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-			downloadManagersWidget.open();
+				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+				downloadManagersWidget.open();
+			} else {
+				Logger.inform("Cannot download the product : missing permissions.");
+			}
+			
 		});
 		
 	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
