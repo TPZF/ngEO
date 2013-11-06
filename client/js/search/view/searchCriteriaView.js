@@ -2,10 +2,10 @@
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
          'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
-         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/widget/standingOrderWidget', 'ui/sharePopup',
+         'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, StandingOrderDataAccessRequest, StandingOrderWidget, SharePopup,
+				 AdvancedSearchView, DownloadOptionsView, SharePopup,
 				 searchCriteria_template) {
 
 /**
@@ -29,28 +29,15 @@ var SearchCriteriaView = Backbone.View.extend({
 		},
 		
 		// Click on search
-		"click #scSearch": function(event) {
+		"click .scSubmit": function(event) {
 			SearchResults.launch( this.model.getOpenSearchURL() );
-		},
-				
-		 // To create a standing order
-		"click #standingOrder":  function(event) {
-			
-			StandingOrderDataAccessRequest.initialize();
-			//set open search url
-			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
-			//set selected download options
-			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
-			
-			var standingOrderWidget = new StandingOrderWidget();
-			standingOrderWidget.open();
 		},
 					
 		// To share a search
-		"click #shareSearch" : function() {
+		"click #share" : function() {
 			SharePopup.open({
 				url: Configuration.serverHostName + (window.location.pathname) + this.model.getSharedSearchURL(),
-				positionTo: '#shareSearch'
+				positionTo: this.$el.find('#share')[0]
 			});
 		}
 	},
@@ -150,9 +137,16 @@ var SearchCriteriaView = Backbone.View.extend({
 	 */
 	render: function(){
 	
-		var content = _.template(searchCriteria_template, {datasetId : this.model.get("datasetId")});
+		var content = _.template(searchCriteria_template, {submitText: "Search"});
 		this.$el.append(content);			
-	
+		
+		// Append time extent container
+		this.$el.find('#sc-content').prepend('\
+			<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">\
+				<h3>Date</h3>\
+				<div id="date">	</div>\
+			</div>');
+
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
@@ -160,6 +154,9 @@ var SearchCriteriaView = Backbone.View.extend({
 			model : this.model
 			});
 		this.dateCriteriaView.render();
+
+		// Append time slider
+		this.$el.find('#date').append('<label class="useTimeSliderLabel">Use Time Slider<input type="checkbox" '+ (this.model.get('useTimeSlider') ? "checked" : "") +' class="useTimeSliderCheckBox" data-mini="true" data-theme="c"></label>');
 			
 		this.areaCriteriaView = new SpatialExtentView({
 			el : this.$el.find("#area"), 

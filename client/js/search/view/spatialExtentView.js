@@ -58,10 +58,10 @@ var SpatialExtentView = Backbone.View.extend({
 	onModelChanged: function() {
 		if ( this.model.searchArea.getMode() == 0 ) {
 			this.tools['bbox'].updateFromModel();
-			$('#radio-bbox-label').trigger('click'); 
+			this.$el.find('#radio-bbox-label').trigger('click');
 		} else if ( this.model.searchArea.getMode() == 1 ) {
 			this.tools['polygon'].updateFromModel();
-			$('#radio-polygon-label').trigger('click'); 
+			this.$el.find('#radio-polygon-label').trigger('click'); 
 		}
 	},
 		
@@ -75,22 +75,22 @@ var SpatialExtentView = Backbone.View.extend({
 			'bbox': new BoxView({
 				model: this.model,
 				parentView: this,
-				el: $('#bbox').get(0)
+				el: this.$el.find('#bbox').get(0)
 			}),
 			'polygon': new PolygonView({
 				model: this.model,
 				parentView: this,
-				el: $('#polygon').get(0)
+				el: this.$el.find('#polygon').get(0)
 			}),
 			'gazetteer': new GazetteerView({
 				model: this.model,
 				parentView: this,
-				el: $('#gazetteer').get(0)
+				el: this.$el.find('#gazetteer').get(0)
 			}),
 			'import': new ImportView({
 				model: this.model,
 				parentView: this,
-				el: $('#import').get(0)
+				el: this.$el.find('#import').get(0)
 			})
 		};
 		

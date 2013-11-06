@@ -326,7 +326,7 @@ var DataSetSearch = Backbone.Model.extend({
 				// Check if the avanced attribute has a value in the DatasetSearch
 				if ( _.has(self.attributes, attribute.id) ) {
 					// Remove defaults attribute from advanced
-					if ( _.has(DataSetSearch.prototype.defaults, attribute.id) ) {
+					if ( _.has(self.defaults, attribute.id) ) {
 						console.log("Advanced criteria warning : " + attribute.id + " is a base attribute.");
 					} else {
 						url += '&' + attribute.id + '=' + self.attributes[attribute.id];
@@ -372,7 +372,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 * In case there are selected download options : 
 	 * 		add download options to the given url by appending "&ngEO_DO={param_1:value_1,...,param_n:value_n} 
 	 * 		to the url and returns the modified url.
-	 * unless : do not append "&ngEO_DO={} to the url 
+	 * otherwise : do not append "&ngEO_DO={} to the url 
 	 */
 	addDownloadOptionsWithProductURIConvention : function(url){
 	
@@ -423,7 +423,7 @@ var DataSetSearch = Backbone.Model.extend({
 	
 	/** Get the selected download options as a json object.
 	 * If the download options have been changed by the user, their are set as an attribute to the DatasetSearch
-	 * unless the default value is got from the dataset.
+	 * otherwise the default value is got from the dataset.
 	 */
 	getSelectedDownloadOptions : function(){
 		

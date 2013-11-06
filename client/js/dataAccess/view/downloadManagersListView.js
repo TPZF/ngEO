@@ -97,7 +97,7 @@ var DownloadManagersListView = Backbone.View.extend({
 			//empty the status to cover the case where a user has registered a download manager after it has no one installed
 			this.$el.find("#downloadManagerStatusMessage")
 				.empty()
-				.append("<h4>Select a Download Manager : <h4>")
+				// .append("<h4>Select a Download Manager : <h4>")
 				.show()
 			this.$el.find("#downloadManagersList").show();
 			this.$el.find("#downloadManagersFooter").show();
