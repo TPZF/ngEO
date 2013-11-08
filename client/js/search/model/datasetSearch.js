@@ -64,6 +64,8 @@ var DataSetSearch = Backbone.Model.extend({
 		useTimeSlider : true //flag for displaying time slider or not
 	},
 	
+	name: "Search",
+	
 	initialize : function() {
 		//no dataset is selected
 		this.dataset = undefined;

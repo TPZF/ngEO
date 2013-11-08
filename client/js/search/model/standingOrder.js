@@ -26,6 +26,8 @@ var StandingOrder = Backbone.Model.extend({
 		useTimeSlider : false //flag for displaying time slider or not
 	},
 	
+	name: "Subscribe",
+	
 	initialize : function() {
 		//no dataset is selected
 		this.dataset = undefined;

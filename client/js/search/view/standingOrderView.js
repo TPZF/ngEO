@@ -198,8 +198,8 @@ var StandingOrderView = Backbone.View.extend({
 		this.downloadOptionsView.render();
 
 		// Append scheduling content
-		this.$el.find('#sc-content').append('<div data-role="collapsible" data-inset="false" data-mini="true">\
-												<h3>Standing order</h3>\
+		this.$el.find('#sc-content').prepend('<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">\
+												<h3>Scheduling Options</h3>\
 												<div id="schedulingOptions"></div>\
 											</div>');
 
