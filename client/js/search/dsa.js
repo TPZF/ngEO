@@ -155,6 +155,7 @@ return {
 		// Disable search criteria and result buttons if there is no dataset selected
 		if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
 			$('#search').addClass('ui-disabled');
+			$('#subscribe').addClass('ui-disabled');
 		}		
 			
 		// Display a message about dataset in the map, and save user preferences
@@ -170,8 +171,10 @@ return {
 			
 			// Activate search button or not if datasetsearch is ok
 			if ( !datasetId || datasetId == '' ) {
+				$('#subscribe').addClass('ui-disabled');
 				$('#search').addClass('ui-disabled');
 			} else {
+				$('#subscribe').removeClass('ui-disabled');
 				$('#search').removeClass('ui-disabled');
 			}			
 		});				
