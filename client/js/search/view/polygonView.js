@@ -25,7 +25,7 @@ var PolygonView = Backbone.View.extend({
 				layer: this.parentView.searchAreaLayer,
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
-					$('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
+					self.$el.find('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
 				}
 			});
 		},
@@ -43,7 +43,7 @@ var PolygonView = Backbone.View.extend({
 	
 	// Update from the model
 	updateFromModel: function() {
-		$('#polygontext').val( this.model.searchArea.getPolygonText() ).keyup();
+		this.$el.find('#polygontext').val( this.model.searchArea.getPolygonText() ).keyup();
 	},
 	
 	// Open the view : show it and update the model

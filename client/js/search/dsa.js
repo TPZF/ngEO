@@ -1,10 +1,10 @@
 
 define(["jquery", "logger", "userPrefs", "ui/menubar", "search/model/datasetSearch", "search/model/dataSetPopulation", "search/model/datasetAuthorizations", "searchResults/model/searchResults", 
-        "dataAccess/model/standingOrderDataAccessRequest", "dataAccess/widget/standingOrderWidget", "search/view/datasetSelectionView",
-		"search/view/searchCriteriaView"], 
-	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, DataSetAuthorizations, SearchResults, StandingOrderDataAccessRequest, StandingOrderWidget,
-			DataSetSelectionView, SearchCriteriaView) {
-
+        "dataAccess/model/standingOrderDataAccessRequest", "search/view/datasetSelectionView",
+		"search/view/searchCriteriaView", "search/model/standingOrder", "search/view/standingOrderView"], 
+	function($, Logger, UserPrefs, MenuBar, DatasetSearch, DataSetPopulation, DataSetAuthorizations, SearchResults, StandingOrderDataAccessRequest,
+			DataSetSelectionView, SearchCriteriaView, StandingOrder, StandingOrderView) {
+			
 return {
 	
 	/**
@@ -49,10 +49,20 @@ return {
 		var searchView = new SearchCriteriaView({
 			model : DatasetSearch,
 		});
+			
+		// Create the model for standing order		
+		var standingOrder = new StandingOrder();
+
+		// Create the standing order view and append it to the panel manager
+		var standingOrderView = new StandingOrderView({
+			model: standingOrder
+		});
+
 		panelManager.on('leftResized', searchView.updateContentHeight, searchView );
 		panelManager.left.add( searchView, '#search' );
-		searchView.render();	
-		
+		panelManager.left.add( standingOrderView, '#subscribe' );
+		searchView.render();
+		standingOrderView.render();
 			
 		router.route(
 				"data-services-area/search/:datasetId?:query", 
@@ -98,24 +108,23 @@ return {
 			// Show the page first
 			MenuBar.showPage("data-services-area");
 			
-			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
-			//and not overwrite the start/stop dates 
-			DatasetSearch.once("change:dataset", function(dataset) {
+			// Once DatasetSearch has been loaded, populate standing order's model
+			standingOrder.once("change:dataset", function(dataset) {
 				
 				if ( dataset ) {
+					
+					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
+					standingOrder.populateModelfromURL(query);
+					standingOrderView.displayDatasetRelatedViews( standingOrder );
 
-					DatasetSearch.populateModelfromURL(query);
-					StandingOrderDataAccessRequest.populateModelfromURL(query);
-				
-					//Display the STO widget
-					var standingOrderWidget = new StandingOrderWidget();
-					standingOrderWidget.open();			
+					// Show standing order panel
+					$('#subscribe').click();
 					
 				} else {
 				
 					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
 					MenuBar.showPage("data-services-area");
-					
+
 				}
 			});
 			
@@ -151,6 +160,7 @@ return {
 		// Disable search criteria and result buttons if there is no dataset selected
 		if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
 			$('#search').addClass('ui-disabled');
+			$('#subscribe').addClass('ui-disabled');
 		}		
 			
 		// Display a message about dataset in the map, and save user preferences
@@ -166,8 +176,10 @@ return {
 			
 			// Activate search button or not if datasetsearch is ok
 			if ( !datasetId || datasetId == '' ) {
+				$('#subscribe').addClass('ui-disabled');
 				$('#search').addClass('ui-disabled');
 			} else {
+				$('#subscribe').removeClass('ui-disabled');
 				$('#search').removeClass('ui-disabled');
 			}			
 		});				
