@@ -17,7 +17,7 @@ var BoxView = Backbone.View.extend({
 		
 		// Listen when useExtent is changed to update the view
 		this.model.on("change:useExtent",  function() {
-			var $cb = this.$el.find('#mapExtentCheckBoxLabel');
+			var $cb = this.$el.find('.mapExtentCheckBoxLabel');
 			var useExtent = $cb.hasClass('ui-checkbox-on');
 			if ( useExtent != this.model.get('useExtent') ) {
 				$cb.trigger('click');
@@ -34,10 +34,10 @@ var BoxView = Backbone.View.extend({
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
 					var bbox = self.model.searchArea.getBBox();
-					$("#west").val( bbox.west );
-					$("#south").val( bbox.south );
-					$("#east").val( bbox.east );
-					$("#north").val( bbox.north );
+					self.$el.find("#west").val( bbox.west );
+					self.$el.find("#south").val( bbox.south );
+					self.$el.find("#east").val( bbox.east );
+					self.$el.find("#north").val( bbox.north );
 				}
 			});
 		},
@@ -47,10 +47,10 @@ var BoxView = Backbone.View.extend({
 		'blur input' : function(event){
 			
 			var bbox = {
-					west : $("#west").val(),
-					south: $("#south").val(),
-					east: $("#east").val(),
-					north: $("#north").val()
+					west : self.$el.find("#west").val(),
+					south: self.$el.find("#south").val(),
+					east: self.$el.find("#east").val(),
+					north: self.$el.find("#north").val()
 				};
 			
 			if (this.model.searchArea.isValidBBox(bbox)){
@@ -58,17 +58,17 @@ var BoxView = Backbone.View.extend({
 			
 			}else{
 				bbox = this.model.searchArea.getBBox();
-				$("#west").val( bbox.west );
-				$("#south").val( bbox.south );
-				$("#east").val( bbox.east );
-				$("#north").val( bbox.north );
+				self.$el.find("#west").val( bbox.west );
+				self.$el.find("#south").val( bbox.south );
+				self.$el.find("#east").val( bbox.east );
+				self.$el.find("#north").val( bbox.north );
 			}
 			
 			this.parentView.updateSearchAreaLayer();
 
 		},
 			
-		'click #mapExtentCheckBoxLabel' : function(event){
+		'click .mapExtentCheckBoxLabel' : function(event){
 			var $target = $(event.currentTarget);
 			var useExtent = !($(event.currentTarget).hasClass('ui-checkbox-on'));
 			this.model.set({"useExtent" : useExtent}, { silent: true });
@@ -85,15 +85,15 @@ var BoxView = Backbone.View.extend({
 	// Update from the model
 	updateFromModel: function() {
 		var bbox = this.model.searchArea.getBBox();
-		$("#west").val( bbox.west );
-		$("#south").val( bbox.south );
-		$("#east").val( bbox.east );
-		$("#north").val( bbox.north );
+		this.$el.find("#west").val( bbox.west );
+		this.$el.find("#south").val( bbox.south );
+		this.$el.find("#east").val( bbox.east );
+		this.$el.find("#north").val( bbox.north );
 	},
 	
 	// Change the use extent
 	onUseExtentChanged: function() {
-		var $cb = this.$el.find('#mapExtentCheckBoxLabel');
+		var $cb = this.$el.find('.mapExtentCheckBoxLabel');
 		var useExtent = $cb.hasClass('ui-checkbox-on');
 		if ( useExtent != this.model.get('useExtent') ) {
 			$cb.trigger('click');
@@ -125,10 +125,10 @@ var BoxView = Backbone.View.extend({
 			this.activateUseExtent();
 		} else {
 			this.model.searchArea.setBBox({
-				west : $("#west").val(),
-				south: $("#south").val(),
-				east: $("#east").val(),
-				north: $("#north").val()
+				west : this.$el.find("#west").val(),
+				south: this.$el.find("#south").val(),
+				east: this.$el.find("#east").val(),
+				north: this.$el.find("#north").val()
 			});
 			this.parentView.updateSearchAreaLayer();
 		}
@@ -153,10 +153,10 @@ var BoxView = Backbone.View.extend({
 			north : mapExtent[3]
 		});
 		
-		$("#west").val(mapExtent[0]);
-		$("#south").val(mapExtent[1]);
-		$("#east").val(mapExtent[2]);
-		$("#north").val(mapExtent[3]);
+		this.$el.find("#west").val(mapExtent[0]);
+		this.$el.find("#south").val(mapExtent[1]);
+		this.$el.find("#east").val(mapExtent[2]);
+		this.$el.find("#north").val(mapExtent[3]);
     }
 	
 });

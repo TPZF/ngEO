@@ -1,12 +1,8 @@
 
-<div data-role="fieldcontain">
-
-	<label id="fromDateLabel" for="fromDateInput">Start Date : </label>
-	
-	<input name="From" id="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.start.toISODateString()) %>"
+	<label>Start Date : <br/>
+	<input name="From" class="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.start.toISODateString()) %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.start.toISODateString()) %>", 
-		  "useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  >
-</div>
+		  "useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  /></label>
 
 <!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
 <!-- <div data-role="fieldcontain"> -->
@@ -16,20 +12,11 @@
 <!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
 <!-- </div> -->
 
-<div data-role="fieldcontain">
-
-	<label id="toDateLabel" for="toDateInput">End Date : </label>
-	
-	<input name="toDate" id="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.stop.toISODateString()) %>"
+	<label>End Date : <br/>
+	<input name="toDate" class="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.stop.toISODateString()) %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.stop.toISODateString()) %>", 
-	   	"useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
+	   	"useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'></label>
 
-</div>
-
-<div data-role="fieldcontain">
-		<label id="useTimeSliderLabel" for="useTimeSliderCheckBox">Use Time Slider</label>
-		<input type="checkbox" <% print( attributes.useTimeSlider ? "checked='checked'" : "") %>  id="useTimeSliderCheckBox" data-mini="true" data-theme="c"> 
-</div>
 
 <!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
 <!-- <div data-role="fieldcontain"> -->

@@ -78,18 +78,18 @@ var StandingOrderDataAccessRequest = {
 	 * 	1- all the search parameters as for as for a shared  search url. 
 	 *  2- scheduling options parameters relative to a standing order request
 	 */
-	getSharedURL : function(){
+	getSharedURL : function(dataset){
 
-		var url = "#data-services-area/sto/" +  DatasetSearch.get("datasetId") + '?';
+		var url = "#data-services-area/sto/" +  dataset.get("datasetId") + '?';
 		
 		//add area criteria 
-		url += DatasetSearch.searchArea.getOpenSearchParameter();
+		url += dataset.searchArea.getOpenSearchParameter();
 
 		//always add the advanced criteria values selected and already set to the model
-		url = DatasetSearch.addAdvancedCriteria(url);
+		url = dataset.addAdvancedCriteria(url);
 
 		//add the download options values selected and already set to the model
-		url = DatasetSearch.addDownloadOptions(url);
+		url = dataset.addDownloadOptions(url);
 		
 		//get the scheduling object either the STO is TimeDriven or Data-Driven
 		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;
@@ -101,7 +101,7 @@ var StandingOrderDataAccessRequest = {
 	/** Method used in the case of a shared standing order url.
 	 * It fill in the STO request with the given values.
 	 */
-	populateModelfromURL : function(query){
+	populateModelfromURL : function(query, dataset){
 		
 		this.initialize();
 		
@@ -147,9 +147,9 @@ var StandingOrderDataAccessRequest = {
 		//set open search url
 	    //console.log("DatasetSearch.getOpenSearchURL()");
 	   // console.log(DatasetSearch.getOpenSearchURL());
-	    this.OpenSearchURL = DatasetSearch.getOpenSearchURL();
+	    this.OpenSearchURL = dataset.getOpenSearchURL();
 		//set selected download options
-	    this.DownloadOptions = DatasetSearch.getSelectedDownloadOptions();
+	    this.DownloadOptions = dataset.getSelectedDownloadOptions();
 	},
 	
 	/** build the Scheduling option property depending on the STO type */

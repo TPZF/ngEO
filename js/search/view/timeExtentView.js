@@ -56,10 +56,10 @@ var TimeExtentView = Backbone.View.extend({
 	
 	events :{
 		//The 2 next handlers listen to start and stop date changes
-		'change #fromDateInput' : function(event){
+		'change .fromDateInput' : function(event){
 			this.model.set({"start" : Date.fromISOString($(event.currentTarget).val()+"T00:00:00.000Z")});
 		},
-		'change #toDateInput' : function(event){
+		'change .toDateInput' : function(event){
 			this.model.set({"stop" : Date.fromISOString($(event.currentTarget).val()+"T23:59:59.999Z")});
 		},
 /*		//the 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
@@ -71,7 +71,7 @@ var TimeExtentView = Backbone.View.extend({
 		},
 */		
 		//check box changes to display or not the time slider widget
-		'click #useTimeSliderLabel' : function(event){
+		'click .useTimeSliderLabel' : function(event){
 			var $target = $(event.currentTarget);	
 			var checked = $target.hasClass('ui-checkbox-off');
 			this.model.set({"useTimeSlider" : checked});
@@ -161,8 +161,8 @@ var TimeExtentView = Backbone.View.extend({
 		this.$el.append(content);
 		
 		// Keep the DOM elements needed by the view
-		this.$fromDateInput = this.$el.find("#fromDateInput");
-		this.$toDateInput = this.$el.find("#toDateInput");
+		this.$fromDateInput = this.$el.find(".fromDateInput");
+		this.$toDateInput = this.$el.find(".toDateInput");
 		this.$dateRangeSlider = $();
 		
 		// Need to call create to disable the datebox when timeSlider is enabled by default
