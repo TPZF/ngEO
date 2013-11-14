@@ -145,6 +145,7 @@ return {
 			
 			SelectHandler.addFeatureCollection(fc);
 			
+			// Activate the new result
 			$('#result' + fc.id).click();
 			
 		});
@@ -171,6 +172,9 @@ return {
 			Map.removeLayer( fc._browsesLayer );
 			
 			SelectHandler.removeFeatureCollection(fc);
+			
+			// Activate the last
+			$('#bottomToolbar command:last-child').click();
 		});
 /*		
 		
