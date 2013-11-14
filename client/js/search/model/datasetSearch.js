@@ -1,6 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/searchArea', 'search/model/datasetAuthorizations'], 
-		function($, Backbone, Configuration, Dataset, SearchArea, DatasetAuthorizations) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation', 'search/model/searchArea', 'search/model/datasetAuthorizations'], 
+		function($, Backbone, Configuration, DatasetPopulation, SearchArea, DatasetAuthorizations) {
 
 function pad(num, size) {
     var s = num+"";
@@ -57,7 +57,6 @@ var ONE_MONTH = 24 * 30 * 3600 * 1000;
 var DataSetSearch = Backbone.Model.extend({
 	
 	defaults:{
-		datasetId : "",
 		stop: new Date(),
 		start : new Date( new Date().getTime() - ONE_MONTH ),
 		useExtent : true,
@@ -75,79 +74,64 @@ var DataSetSearch = Backbone.Model.extend({
 		this.searchArea = new SearchArea();
 		
 		// Automatically load the dataset when the datasetId is changed
-		this.on('change:datasetId', this.loadDataset, this );
+		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelected );
+		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetUnselected );
 	},
 	
-	/** load the information for the selected dataset from the server 
-	 * unless if no dataset is selected set the dataset to undefined */
-	loadDataset : function(){
+	/** Call when the dataset is selected */
+	onDatasetSelected : function(dataset) {
 
+		this.dataset = dataset;
+		
 		//reset all the selected attributes and download options from the old dataset if any
 		this.clearSelectedAttributesAndOptions();
+							
+		// Compute a search time range from the dataset extent
+		// The stop date is the dataset stop date
+		var start = this.get('start');
+		var stop = this.get('stop'); 
+		var datasetStart = dataset.get('startDate');
+		var datasetStop = dataset.get('endDate');
 		
-		//Retrieve the dataset information from the server
-		if ( this.get("datasetId")) {
+		if ( stop > datasetStop || start < datasetStart ) {
+			stop = new Date( datasetStop.getTime() );
+			// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
+			var diff = (datasetStop - datasetStart);
+			if ( diff > ONE_MONTH ) {
+				start = new Date( stop.getTime() - ONE_MONTH );
+			} else {
+				start = new Date(datasetStart.getTime() );
+			}
+								
+			// Reset start time
+			start.setUTCHours(0);
+			start.setUTCMinutes(0);
+			start.setUTCSeconds(0);
+			start.setUTCMilliseconds(0);
 			
-			var dataset = new Dataset({datasetId : this.get("datasetId")});			
-			var self = this;
-			dataset.fetch({
-				
-				success: function(model, response, options) {
-					
-					// Compute a search time range from the dataset extent
-					// The stop date is the dataset stop date
-					var start = self.get('start');
-					var stop = self.get('stop'); 
-					var datasetStart = model.get('startDate');
-					var datasetStop = model.get('endDate');
-					
-					if ( stop > datasetStop || start < datasetStart ) {
-						stop = new Date( datasetStop.getTime() );
-						// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
-						var diff = (datasetStop - datasetStart);
-						if ( diff > ONE_MONTH ) {
-							start = new Date( stop.getTime() - ONE_MONTH );
-						} else {
-							start = new Date(datasetStart.getTime() );
-						}
-											
-						// Reset start time
-						start.setUTCHours(0);
-						start.setUTCMinutes(0);
-						start.setUTCSeconds(0);
-						start.setUTCMilliseconds(0);
-						
-						// Reset stop time
-						stop.setUTCHours(23);
-						stop.setUTCMinutes(59);
-						stop.setUTCSeconds(59);
-						stop.setUTCMilliseconds(999);
-						
-						self.set({ start: start,
-								stop: stop
-							}); 
-					} 
-					
-					self.dataset = dataset;
-				
-					// Store authorizations
-					self.set("downloadAccess", DatasetAuthorizations.hasDownloadAccess( self.get("datasetId") ) );
-					self.set("viewAccess", DatasetAuthorizations.hasViewAccess( self.get("datasetId") ) );
-					
-					self.trigger('change:dataset',self.dataset);
-					
-				},
-				
-				error: function(model, xhr, options) {
-					// Invalid dataset, reset datasetIds
-					self.set('datasetId','');					
-				}
-			});
+			// Reset stop time
+			stop.setUTCHours(23);
+			stop.setUTCMinutes(59);
+			stop.setUTCSeconds(59);
+			stop.setUTCMilliseconds(999);
+			
+			this.set({ start: start,
+					stop: stop
+				}); 
+		} 
 	
-		} else {
-			this.dataset = undefined;
-			this.trigger('change:dataset',this.dataset);
-		}
+		// Store authorizations
+		this.set("downloadAccess", DatasetAuthorizations.hasDownloadAccess( dataset.get("datasetId") ) );
+		this.set("viewAccess", DatasetAuthorizations.hasViewAccess( dataset.get("datasetId") ) );
+		
+		this.trigger('change:dataset',this.dataset);
+	},
+	
+	/** Call when the dataset is unselected */
+	onDatasetUnselected : function(dataset) {
+		this.clearSelectedAttributesAndOptions();
+		this.dataset = undefined;
+		this.trigger('change:dataset',this.dataset);
 	},
 	 
 	/** 
@@ -197,7 +181,7 @@ var DataSetSearch = Backbone.Model.extend({
 	/** get the url without base url with all search criteria */
 	getCoreURL : function(){
 		
-		var url =  this.get("datasetId") + "/search?";
+		var url =  this.dataset.get("datasetId") + "/search?";
 
 		//add area criteria if set
 		url = this.addGeoTemporalParams(url);
@@ -218,7 +202,7 @@ var DataSetSearch = Backbone.Model.extend({
 	 */
 	getSharedSearchURL : function(){
 
-		var url = "#data-services-area/search/" +  this.get("datasetId") + '?';
+		var url = "#data-services-area/search/" +  this.dataset.get("datasetId") + '?';
 		
 		//add area criteria if set
 		url = this.addGeoTemporalParams(url);

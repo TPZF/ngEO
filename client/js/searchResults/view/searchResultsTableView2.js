@@ -55,7 +55,7 @@ var SearchResultsTableView = TableView.extend({
 		
 		//Disable the retrieve Product and download options button if no product item is selected 
 		//and/or if the products checked do not have a product url
-		if ( this.model.getProductUrls(this.model.selection).length == 0 ) {
+		if ( this.model.getSelectedProductUrls().length == 0 ) {
 			this.retrieveProduct.button('disable');
 			this.downloadOptionsButton.button('disable');
 		} else {

@@ -96,7 +96,7 @@ return {
 			});
 			
 			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
-			DatasetSearch.set({"datasetId" : datasetId});
+			DataSetPopulation.select(datasetId);
 
 		});
 		
@@ -129,7 +129,7 @@ return {
 			});
 			
 			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
-			DatasetSearch.set({"datasetId" : datasetId});
+			DataSetPopulation.select(datasetId);
 			
 		});
 		
@@ -149,7 +149,7 @@ return {
 					});
 
 					//set the selected dataset in the model
-					DatasetSearch.set("datasetId", datasetId);
+					DataSetPopulation.select(datasetId);
 				}
 				
 				// Show the page
@@ -157,33 +157,28 @@ return {
 						
 		});
 		
-		// Disable search criteria and result buttons if there is no dataset selected
-		if ( !DatasetSearch.get('datasetId') || DatasetSearch.get('datasetId') == '' ) {
-			$('#search').addClass('ui-disabled');
-			$('#subscribe').addClass('ui-disabled');
-		}		
+		// At init time, search and subscribe are disabled
+		$('#search').addClass('ui-disabled');
+		$('#subscribe').addClass('ui-disabled');
 			
-		// Display a message about dataset in the map, and save user preferences
-		DatasetSearch.on('change:datasetId', function(model) {
-			var datasetId = model.get('datasetId');
-			if ( datasetId ) {
-				$('#datasetMessage').html( "Dataset : " + datasetId );
-				UserPrefs.save("Dataset", datasetId);
-			} else {
-				$('#datasetMessage').html( "Dataset : None" );
-				UserPrefs.save("Dataset", "None");
-			}
-			
+		// Call when selection is changed
+		DataSetPopulation.on('select', function(dataset) {
+			UserPrefs.save( "Dataset", dataset.get('datasetId') );
+				
 			// Activate search button or not if datasetsearch is ok
-			if ( !datasetId || datasetId == '' ) {
+			$('#subscribe').removeClass('ui-disabled');
+			$('#search').removeClass('ui-disabled');		
+		});			
+		DataSetPopulation.on('unselect', function(dataset) {
+			if ( _.size(DataSetPopulation.selection) == 0 ) {
+			
+				UserPrefs.save("Dataset", "None");
+
+				// Activate search button or not if datasetsearch is ok
 				$('#subscribe').addClass('ui-disabled');
 				$('#search').addClass('ui-disabled');
-			} else {
-				$('#subscribe').removeClass('ui-disabled');
-				$('#search').removeClass('ui-disabled');
-			}			
-		});				
-	
+			}
+		});		
 
 	},
 };

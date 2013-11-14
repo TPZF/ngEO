@@ -21,24 +21,19 @@ var DatasetSelectionView = Backbone.View.extend({
 			
 			var $target = $(event.currentTarget);
 			
-			// Manage single selection of dataset
-			// TODO : need to manage multi-selection later
 			if ( $target.hasClass('ui-btn-active') ) {
 				$target.removeClass('ui-btn-active');
-				this.selectedDatasetId = undefined;
-				DatasetSearch.set("datasetId",undefined);
+				this.model.unselect(event.currentTarget.id);
 				
 			} else {
-				this.$el.find('.ui-btn-active').removeClass('ui-btn-active');
 				$target.addClass('ui-btn-active');
-				this.selectedDatasetId = event.currentTarget.id;
-				DatasetSearch.set("datasetId", this.selectedDatasetId);
+				this.model.select(event.currentTarget.id);
 			}
 		},
 		
 		// Click on search
 		"click #dsSearch": function(event) {
-			SearchResults.launch( DatasetSearch.getOpenSearchURL() );
+			SearchResults.launch( DatasetSearch );
 		}
 	},
 	
@@ -171,16 +166,15 @@ var DatasetSelectionView = Backbone.View.extend({
 			} 
 		}
 	
-		// Check if the current dataset is still in the list
-		var selectedDatasetId = DatasetSearch.get("datasetId");
-		if ( selectedDatasetId && selectedDatasetId != "" ) {
-			var $elt = $dslListContainer.find('#' + selectedDatasetId);
-			if ( $elt.length == 0 ) {
-				 DatasetSearch.set("datasetId",undefined)
-			} else {
-				$elt.addClass('ui-btn-active');
-			}
-		}
+		// Synchronize the selection with dataset list
+		_.each( this.model.selection, function(dataset) {
+				var $elt = $dslListContainer.find('#' + dataset.get('datasetId') );
+				if ( $elt.length == 0 ) {
+					 this.model.unselect( dataset.get('datasetId') )
+				} else {
+					$elt.addClass('ui-btn-active');
+				}
+		}, this );
 	}
 		
 });

@@ -131,7 +131,7 @@ var TimeExtentView = Backbone.View.extend({
 		this.$toDateInput.val( bounds.max.toISODateString() );
 		
 		// Launch a new search
-		SearchResults.launch( this.model.getOpenSearchURL() );
+		SearchResults.launch( this.model );
 	},
 	
 	// Remove the time slider

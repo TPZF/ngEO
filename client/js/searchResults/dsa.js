@@ -1,12 +1,80 @@
 
 define(["jquery", "logger", "map/map", "map/selectHandler", 
-        "search/model/datasetSearch", "searchResults/model/searchResults",
+        "searchResults/model/searchResults", "searchResults/view/searchResultsView",
         "searchResults/view/searchResultsTableView2", "map/widget/mapPopup"], 
-	function($, Logger, Map, SelectHandler, DatasetSearch, SearchResults, SearchResultsTableView,
+	function($, Logger, Map, SelectHandler, SearchResults, SearchResultsView, SearchResultsTableView,
 			MapPopup) {
 
 // Private variable
-var _$resultsTableWidget;
+var _views = {};
+
+var _onSelectFeatures = function(features,fc) {
+	for ( var i = 0; i < features.length; i++ ) {
+		if ( fc.isHighlighted(features[i]) ) {
+			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
+		} else {
+			fc._footprintLayer.modifyFeaturesStyle([features[i]], "select" );
+		}
+	}
+	
+	fc._browsesLayer.addFeatures(features);
+	
+	// Only display browse if the user has view access
+/*	if ( DatasetSearch.get("viewAccess") ) {
+		browsesLayer.addFeatures(features);
+	} else if (!viewAccessInformation) {
+		Logger.inform("You do not have enough permission to view the product.");
+		viewAccessInformation = true;
+	}*/
+};
+
+var _onUnselectFeatures = function(features,fc) {
+	for ( var i = 0; i < features.length; i++ ) {
+		if ( fc.isHighlighted(features[i]) ) {
+			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
+		} else {
+			fc._footprintLayer.modifyFeaturesStyle([features[i]], "default" );
+			fc._browsesLayer.removeFeatures([features[i]]);
+		}
+	}
+};
+
+var _onHighlightFeatures = function(features,prevFeatures,fc) {
+	
+	if ( prevFeatures ) {
+		
+		for ( var i = 0; i < prevFeatures.length; i++ ) {
+
+			if ( fc.isSelected(prevFeatures[i]) ) {
+				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select" );
+			} else {
+				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default" );
+				fc._browsesLayer.removeFeatures([prevFeatures[i]]);
+			}
+		}
+	}
+	
+	if ( features ) {
+		for ( var i = 0; i < features.length; i++ ) {
+			if ( fc.isSelected(features[i]) ) {
+				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
+			} else {
+				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
+			}
+		}
+		
+		fc._browsesLayer.addFeatures(features);
+
+		// Only display browse if the user has view access
+/*		if ( DatasetSearch.get("viewAccess") ) {
+			browsesLayer.addFeatures(features);
+		} else if (!viewAccessInformation) {
+			Logger.inform("You do not have enough permission to view the product.");
+			viewAccessInformation = true;
+		}*/
+	}
+};	
+
 
 return {
 	
@@ -17,31 +85,94 @@ return {
 	 * @param router 	The data-services-area router
 	 */
 	 initialize: function(element, router, panelManager) {
-	
-		// When the a dataset is changed, reset the search results
-		DatasetSearch.on('change:datasetId', function() {
-			SearchResults.reset();
+			
+		// Call when a new feature collection is available
+		SearchResults.on('add:featureCollection', function(fc) {
+						
+			// Create the search results view
+			var searchResultsView = new SearchResultsView({ 
+				model : fc 
+			});
+			_views[ fc.id ] = searchResultsView;
+			$('#statusBar').append( searchResultsView.$el );
+			searchResultsView.render();
+			
+			// Create the results table view
+			var tableView = new SearchResultsTableView({ 
+				model : fc 
+			});
+			
+			// update the toolbar
+			$('#bottomToolbar')
+				.append('<command id="result' + fc.id + '" label="' + fc.id + '" class="result" />')
+				.toolbar('refresh');
+			$('#dateRangeSlider').css('left', $('#bottomToolbar').outerWidth() );
+			var slider = $("#dateRangeSlider").data("dateRangeSlider");
+			if (slider) slider.refresh();
+			
+			panelManager.bottom.addStatus({
+				activator: '#result' + fc.id,
+				show: function() {					
+					searchResultsView.$el.show();
+				},
+				hide: function() {
+					searchResultsView.$el.hide();
+				},
+				tableView: tableView,
+				$tableCB: searchResultsView.$el.find('#tableCB')
+			});
+			tableView.render();
+			
+			var footprintLayer = Map.addLayer({
+				name: fc.id + " Result Footprints",
+				type: "Feature",
+				visible: true,
+				style: "results-footprint"
+			});
+			var browsesLayer = Map.addLayer({
+				name: fc.id + " Result Browses",
+				type: "Browses",
+				visible: true
+			});
+			fc._footprintLayer = footprintLayer;
+			fc._browsesLayer = browsesLayer;
+			fc.on('add:features', footprintLayer.addFeatures, footprintLayer);
+			fc.on('reset:features', footprintLayer.clear, footprintLayer);
+			fc.on('reset:features', browsesLayer.clear, browsesLayer);
+			fc.on('selectFeatures', _onSelectFeatures );
+			fc.on('unselectFeatures', _onUnselectFeatures );
+			fc.on('highlightFeatures', _onHighlightFeatures );
+			
+			SelectHandler.addFeatureCollection(fc);
+			
+			$('#result' + fc.id).click();
+			
 		});
 		
-		// Create the results table view
-		var tableView = new SearchResultsTableView({ 
-			model : SearchResults 
+		// Call when a feature collection is removed
+		SearchResults.on('remove:featureCollection', function(fc) {
+			// update the toolbar
+			$('#result' + fc.id)
+				.remove();
+			$('#dateRangeSlider').css('left', $('#bottomToolbar').outerWidth() );
+			var slider = $("#dateRangeSlider").data("dateRangeSlider");
+			if (slider) slider.refresh();
+			
+			_views[ fc.id ].remove();
+			delete _views[ fc.id ];
+			
+			fc.off('add:features', fc._footprintLayer.addFeatures, fc._footprintLayer);
+			fc.off('reset:features', fc._footprintLayer.resetFeatures, fc._footprintLayer);
+			fc.off('reset:features', fc._browsesLayer.clear, fc._browsesLayer);
+			fc.off('selectFeatures', _onSelectFeatures );
+			fc.off('unselectFeatures', _onUnselectFeatures );
+			fc.off('highlightFeatures', _onHighlightFeatures );
+			Map.removeLayer( fc._footprintLayer );
+			Map.removeLayer( fc._browsesLayer );
+			
+			SelectHandler.removeFeatureCollection(fc);
 		});
-		panelManager.bottom.addStatus({
-			activator: '#result',
-			show: function() {
-				$('#datasetMessage').show();
-				$('#paging a').show();
-				$('#resultsMessage').show();
-			},
-			hide: function() {
-				$('#datasetMessage').hide();
-				$('#paging a').hide();
-				$('#resultsMessage').hide();
-			},
-			tableView: tableView
-		});
-		tableView.render();
+/*		
 		
 		// Connect search results events with map
 		var footprintLayer = Map.addLayer({
@@ -123,12 +254,10 @@ return {
 					viewAccessInformation = true;
 				}
 			}
-		});	
+		});	*/
 		
 		// Initialize the default handler
-		SelectHandler.initialize({
-			layer: footprintLayer
-		});
+		SelectHandler.initialize();
 		// Start it
 		SelectHandler.start();
 		
@@ -137,86 +266,22 @@ return {
 		mapPopup.close();		
 
 		// Connect with map feature picking
-		Map.on('pickedFeatures', SearchResults.highlight, SearchResults);
-		
-		//display a pop-up message when the product search has failed
-		SearchResults.on('error:features', function(searchUrl){
-			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
-		});
-		SearchResults.on('startLoading', function() {
-		
-			$('#paging a').addClass('ui-disabled');
-
-			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.html( "Searching..." );
+		Map.on('pickedFeatures', function(features) {
+			var highlights = {};
+			for ( var x in SearchResults.featureCollection ) {
+				highlights[x] = [];
+			}
 			
-			// Pulsate animation when searching
-			var fadeOutOptions = {
-				duration: 300,
-				easing: "linear",
-				complete: function() {
-					$(this).animate({opacity:1.0},fadeInOptions);
-				}
-			};
-			var fadeInOptions = {
-				duration: 300,
-				easing: "linear",
-				complete: function() {
-					$(this).animate({opacity:0.2},fadeOutOptions);
-				}
-			};
-			$resultsMessage.animate({opacity:0.2},fadeOutOptions);
-			$resultsMessage.show();
-		});
-		
-		SearchResults.on('reset:features', function() {
-			$('#paging a').addClass('ui-disabled');
-			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.hide();
-		});
-		
-		SearchResults.on('add:features', function(features) {
-			var $resultsMessage = $('#resultsMessage');
-			$resultsMessage.stop(true);
-			$resultsMessage.css('opacity',1.0);
-			$resultsMessage.show();
+			for ( var i = 0; i < features.length; i++ ) {
+				var fc = features[i]._featureCollection;
+				highlights[fc.id].push( features[i] );
+			}
 			
-			if ( SearchResults.totalResults != 0 ) {
-				var startIndex = 1 + (SearchResults.currentPage-1) * SearchResults.countPerPage;
-				$resultsMessage.html( 'Showing ' + startIndex + ' to ' + (startIndex + features.length - 1) + " of " + SearchResults.totalResults + " products." );
-				
-				// Updage paging button according to the current page
-				$('#paging a').removeClass('ui-disabled');
-				if ( SearchResults.currentPage == 1 ) {
-					$('#paging_prev').addClass('ui-disabled');
-					$('#paging_first').addClass('ui-disabled');
-				} 
-				if ( SearchResults.currentPage == SearchResults.lastPage ) {
-					$('#paging_next').addClass('ui-disabled');
-					$('#paging_last').addClass('ui-disabled');
-				}
-			} else {
-				$resultsMessage.html( 'No product found.' );
+			for ( var x in SearchResults.featureCollection ) {
+				SearchResults.featureCollection[x].highlight( highlights[x] );
 			}
 		});
-		
-		// To start paging is disable
-		$('#paging a').addClass('ui-disabled');
 
-		// Manage paging through buttons
-		$('#paging_first').click( function() {
-			SearchResults.changePage(1);
-		});
-		$('#paging_last').click( function() {
-			SearchResults.changePage( SearchResults.lastPage );
-		});
-		$('#paging_next').click( function() {
-			SearchResults.changePage( SearchResults.currentPage + 1 );
-		});
-		$('#paging_prev').click( function() {
-			SearchResults.changePage( SearchResults.currentPage - 1 );
-		});
-		
 	},
 };
 

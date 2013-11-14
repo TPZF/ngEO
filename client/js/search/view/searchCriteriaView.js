@@ -30,7 +30,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		// Click on search
 		"click .scSubmit": function(event) {
-			SearchResults.launch( this.model.getOpenSearchURL() );
+			SearchResults.launch( this.model );
 		},
 					
 		// To share a search
