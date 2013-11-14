@@ -21,10 +21,10 @@ var TimeExtentView = Backbone.View.extend({
 		 * This handler is called after the user has chosen a dataset, and the dataset has been loaded.
 		 * It is used to recreate time slider for the dataset.
 		 */
-		this.listenTo( this.model, "change:dataset", function(dataset) {
+		this.listenTo( this.model, "change:dateRange", function(model,dateRange) {
 			
 			// The dataset has not been loaded : do nothing, because the timeslider has already been removed when the datasetId has been changed, see below.
-			if (!dataset)
+			if (!dateRange)
 				return;
 				
 			var useTimeSlider = this.model.get('useTimeSlider');
@@ -33,25 +33,14 @@ var TimeExtentView = Backbone.View.extend({
 			}
 			
 			var dateRangeOptions = {
-				startYear: this.model.dataset.get("startDate").getFullYear(),
-				endYear: this.model.dataset.get("endDate").getFullYear()
+				startYear: dateRange.start.getFullYear(),
+				endYear: dateRange.stop.getFullYear()
 			};
 			this.$fromDateInput.datebox("option", dateRangeOptions );
 			this.$toDateInput.datebox("option", dateRangeOptions );
 
 		});
-		
-		/**
-		 * This handler is called when the dataset has been changed and the time slider is active.
-		 * Remove the time slider because the scale bounds needs to be changed, and the user cannot do an automatic search
-		 */
-		this.listenTo( this.model, "change:datasetId", function(){
-			//if the selection has changed and a time slider exists remove it
-			if ( this.$dateRangeSlider.length != 0){
-				this.removeTimeSlider();
-			}
-		});
-				
+						
 	},
 	
 	events :{
@@ -110,8 +99,8 @@ var TimeExtentView = Backbone.View.extend({
 			bounds: { min : this.model.get("start"), 
 				max : this.model.get("stop")
 			},
-			scaleBounds: { min : this.model.dataset.get("startDate"), 
-				max : this.model.dataset.get("endDate")
+			scaleBounds: { min : this.model.get("dateRange").start, 
+				max : this.model.get("dateRange").stop
 			},
 			change: $.proxy( this.onTimeSliderChanged, this )
 		});

@@ -9,6 +9,10 @@ var DownloadOptionsView = Backbone.View.extend({
 	/* the dataset property of DatasetSearch is the Dataset backbone model containing the download options
 	 */
 	
+	initialize : function() {
+		this.listenTo( this.model, 'change:downloadOptions', this.render );
+	}, 
+	
 	events : {
 		
 		//for every option modified by a select element, set in the DatasetSearch the option
@@ -48,8 +52,8 @@ var DownloadOptionsView = Backbone.View.extend({
 	
 	render: function(){
 
-		var content = _.template(downloadOptions_template, this.model);
-		this.$el.append(content);
+		var content = _.template(downloadOptions_template, this.model, { variable: 'model' });
+		this.$el.html(content);
 		this.$el.trigger('create');
 		return this;
 	}
