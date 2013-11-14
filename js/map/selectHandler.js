@@ -7,7 +7,7 @@ define(['jquery', 'map/map', 'searchResults/model/searchResults'], function($, M
  // The current picked features
 var pickedFeatures = [];
 // The layer to pick
-var layer;
+var featureCollections = [];
 // The index when using stack picking
 var stackPickingIndex = -1;
 // The map engine
@@ -130,10 +130,13 @@ var getFeaturesFromPoint = function(lonlat) {
 
 	var features = [];
 		
-	for ( var i = 0; i < layer.features.length; i++ ) {
-		var feature = layer.features[i];
-		if ( pointInGeometry(lonlat,feature.geometry) ) {
-			features.push( feature );
+	for ( var j = 0; j < featureCollections.length; j++ ) {
+		for ( var i = 0; i < featureCollections[j].features.length; i++ ) {
+			var feature = featureCollections[j].features[i];
+			if ( pointInGeometry(lonlat,feature.geometry) ) {
+				feature._featureCollection = featureCollections[j];
+				features.push( feature );
+			}
 		}
 	}
 			
@@ -167,7 +170,7 @@ var mapClickHandler = function(event)
 	}
 	
 	// Check there is data to select
-	if (!layer.features || layer.features.length == 0)
+	if (featureCollections.length == 0)
 		return;
 		
 	// Check that we are on a click
@@ -237,7 +240,24 @@ return {
 	 * Initialize the select handler
 	 */
 	initialize: function(options) {
-		layer = options.layer;
+	//	layer = options.layer;
+	},
+	
+	/**
+	 * Add a feature collection to the selectHandler
+	 */
+	addFeatureCollection: function(fc) {
+		featureCollections.push(fc);
+	},
+	
+	/**
+	 * Remove a feature collection from the selectHandler
+	 */
+	removeFeatureCollection: function(fc) {
+		var i = featureCollections.indexOf(fc);
+		if ( i >= 0 ) {
+			featureCollections.splice(i,0);
+		}
 	},
 	
 	/**

@@ -18,15 +18,27 @@ $.widget( "ngeo.toolbar", {
 	// the constructor
 	_create: function() {
 	
+		this._build( this.element.find('command') );
+		
+		if ( this.options.onlyIcon ) {
+			this.element.find('.tb-separator').css({ height: '24px' });
+		}
+	
+	},
+	
+	// build some elements
+	_build: function(elements) {
+	
 		// Wrap the image with a div to display both image and text below, and then add class for button styling
-		this.element.find('command')
+				// Wrap the image with a div to display both image and text below, and then add class for button styling
+		elements
 			.addClass('tb-elt');
 			
 		// Add text for each element
-		this.element.find('command').append('<div class="tb-button"><div class="tb-icon"></div></div>');
+		elements.append('<div class="tb-button"><div class="tb-icon"></div></div>');
 		
 		// Take care to set the data-help on the tb-icon (now the element to receive click)
-		this.element.find('command').each( function() {
+		elements.each( function() {
 			var $this = $(this);
 			var contextHelp = $this.data('help');
 			if ( contextHelp ) {
@@ -38,15 +50,19 @@ $.widget( "ngeo.toolbar", {
 		});
 	
 		if ( this.options.onlyIcon ) {
-			this.element.find('.tb-separator').css({ height: '24px' });
-			this.element.find('command').attr( 'title', function() { return $(this).attr('label'); } );
+			elements.attr( 'title', function() { return $(this).attr('label'); } );
 		} else {
-			this.element.find('command').append( function() { return '<div class="tb-text">' + $(this).attr('label') + '</div>'; } );
+			elements.append( function() { return '<div class="tb-text">' + $(this).attr('label') + '</div>'; } );
 		}
-
 	},
 	
-		
+	// refresh the toolbar
+	refresh: function() {
+	
+		this._build( this.element.find('command:not(.tb-elt)') );
+	
+	},
+	
 	// events bound via _bind are removed automatically
 	// revert other modifications here
 	_destroy: function() {

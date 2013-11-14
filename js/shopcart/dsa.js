@@ -1,8 +1,8 @@
 
-define(["jquery", "logger", "ui/menubar", "map/map", 
+define(["jquery", "ui/menubar", "map/map", 
         "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
  		 "shopcart/view/shopcartItemView"], 
-	function($, Logger, MenuBar, Map, ShopcartCollection, Shopcart, ShopcartTableView) {
+	function($, MenuBar, Map, ShopcartCollection, Shopcart, ShopcartTableView) {
 
 
 return {
@@ -23,12 +23,13 @@ return {
 		panelManager.bottom.addStatus({
 			activator: '#shopcart',
 			show: function() {
-				$('#shopcartMessage').show();
+				$('#shopcartStatus').show();
 			},
 			hide: function() {
-				$('#shopcartMessage').hide();
+				$('#shopcartStatus').hide();
 			},
-			tableView: tableView
+			tableView: tableView,
+			$tableCB: $('#tableCB')
 		});		
 		
 		tableView.render();

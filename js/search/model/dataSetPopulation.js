@@ -1,7 +1,7 @@
 
 
   
-define( ['jquery', 'backbone', 'configuration', 'search/model/datasetAuthorizations'], function($, Backbone, Configuration, DataSetAuthorizations) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/datasetAuthorizations'], function($, Backbone, Configuration, DataSet, DataSetAuthorizations) {
 
 /**
  * Function to match a row from the matrix with the given filter
@@ -38,15 +38,46 @@ var DataSetPopulation = Backbone.Model.extend({
 	
 	defaults:{
 		criterias : null,
-		matrix: null,
+		matrix: null
 	},
 	
 	// Constructor : initialize the url from the configuration
 	initialize : function () {
 		// The base url to retreive the datasets population matrix
 		this.url = Configuration.baseServerUrl + '/datasetPopulationMatrix';
+		this.selection = {};
 	},
-
+	
+	/**
+	 * Select a dataset
+	 */
+	select : function(datasetId) {
+		if (!this.selection.hasOwnProperty(datasetId)) {
+			var dataset = new DataSet({datasetId : datasetId});		
+			var self = this;
+			dataset.fetch({
+				success: function(model, response, options) {
+					self.trigger('select',dataset);
+				},
+				error: function(model, xhr, options) {
+					// TODO
+				}
+			});
+			this.selection[datasetId] = dataset;
+		}
+	},
+	
+	/**
+	 * Unselect a dataset
+	 */
+	unselect : function(datasetId) {
+		if (this.selection.hasOwnProperty(datasetId)) {
+			var dataset = this.selection[datasetId];
+			delete this.selection[datasetId];
+			this.trigger('unselect',dataset);
+		}
+	},
+	
 	parse: function(response){
 				
 		var matrix = response.datasetpopulationmatrix.datasetPopulationValues;
