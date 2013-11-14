@@ -24,21 +24,24 @@ var TimeExtentView = Backbone.View.extend({
 		this.listenTo( this.model, "change:dateRange", function(model,dateRange) {
 			
 			// The dataset has not been loaded : do nothing, because the timeslider has already been removed when the datasetId has been changed, see below.
-			if (!dateRange)
-				return;
+			if (dateRange)
+			{
+				var useTimeSlider = this.model.get('useTimeSlider');
+				if ( useTimeSlider  ) {
+					this.addTimeSlider();
+				}
 				
-			var useTimeSlider = this.model.get('useTimeSlider');
-			if ( useTimeSlider  ) {
-				this.addTimeSlider();
+				var dateRangeOptions = {
+					startYear: dateRange.start.getFullYear(),
+					endYear: dateRange.stop.getFullYear()
+				};
+				this.$fromDateInput.datebox("option", dateRangeOptions );
+				this.$toDateInput.datebox("option", dateRangeOptions );
 			}
-			
-			var dateRangeOptions = {
-				startYear: dateRange.start.getFullYear(),
-				endYear: dateRange.stop.getFullYear()
-			};
-			this.$fromDateInput.datebox("option", dateRangeOptions );
-			this.$toDateInput.datebox("option", dateRangeOptions );
-
+			else
+			{
+				this.removeTimeSlider();
+			}
 		});
 						
 	},

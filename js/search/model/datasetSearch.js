@@ -161,6 +161,8 @@ var DataSetSearch = Backbone.Model.extend({
 		// Recompute download options
 		this.set('downloadOptions', _mergeAttributes( DatasetPopulation.selection, 'downloadOptions', 'argumentName' ) );
 	
+		if (!this.get('dateRange'))
+			return;
 							
 		// Compute a search time range from the dataset extent
 		// The stop date is the dataset stop date
