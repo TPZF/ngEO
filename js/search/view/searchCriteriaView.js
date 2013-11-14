@@ -39,7 +39,27 @@ var SearchCriteriaView = Backbone.View.extend({
 				url: Configuration.serverHostName + (window.location.pathname) + this.model.getSharedSearchURL(),
 				positionTo: this.$el.find('#share')[0]
 			});
-		}
+		},
+		
+		// To change the mode between simple, correlation and interferometry
+		"change #sc-mode": function() {
+			var value = this.$el.find('#sc-mode').val();
+			
+			// Remove previous accordion if any
+			this.$el.find('#sc-corrinf-container').remove();
+			
+			// Add the accordion for correlation/inteferometry
+			if ( value != "Simple" ) {
+				 this.$el.find('#sc-advanced-container').after(
+					'<div id="sc-corrinf-container" data-role="collapsible" data-inset="false" data-mini="true">\
+						<h3>' + value + '</h3>\
+						<div id="sc-corrinf">	</div>\
+					</div>'				 
+				);
+			}			
+			this.$el.find('#sc-content').trigger('create');
+
+		},
 	},
 	
 	/**
@@ -54,7 +74,37 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Constructor
 	 */
 	initialize : function() {
-		// Nothing to do
+		this.listenTo( this.model, 'change:numDatasets', this.updateSelectMode );
+	},
+	
+	/**
+	 * Update the Select to choose the search mode (Simple, Correlation or Interferometry)
+	 */
+	updateSelectMode: function() {
+	
+		this.$el.find('#sc-corrinf-container').remove();
+		this.$el.find('#sc-mode-containter').remove();
+		
+		if ( this.model.numDatasets > 1 && this.model.numDatasets <= 4 ) {
+		
+			var $mode = $('<div id="sc-mode-containter" data-role="fieldcontain">\
+				<label for="sc-mode">Mode: </label>\
+				<select id="sc-mode" data-mini="true">\
+					<option value="Simple">Simple</option>\
+					<option value="Correlation">Correlation</option>\
+				</select>\
+			</div>');
+			
+			// Check correlation and interferometry
+			if ( this.model.numDatasets == 2 ) {
+				$mode.find('#sc-mode').append('<option value="Interferometry">Interferometry</option>');
+			}
+			
+			this.$el.find('#sc-content')
+				.prepend($mode)
+				.trigger('create');
+		}
+
 	},
 		
 	/**
@@ -115,16 +165,9 @@ var SearchCriteriaView = Backbone.View.extend({
 	 */
 	render: function(){
 	
-		var content = _.template(searchCriteria_template, {submitText: "Search"});
+		var content = _.template(searchCriteria_template, { submitText: "Search", useDate: true});
 		this.$el.append(content);			
 		
-		// Append time extent container
-		this.$el.find('#sc-content').prepend('\
-			<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">\
-				<h3>Date</h3>\
-				<div id="date">	</div>\
-			</div>');
-
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
@@ -146,8 +189,6 @@ var SearchCriteriaView = Backbone.View.extend({
 			el : this.$el.find("#searchCriteria"), 
 			model : this.model});
 		this.advancedCriteriaView.render();
-		
-		this.$el.trigger('create');
 		
 		//add download options view as a tab
 		this.downloadOptionsView = new DownloadOptionsView({

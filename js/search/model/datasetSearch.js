@@ -107,6 +107,12 @@ var DataSetSearch = Backbone.Model.extend({
 	name: "Search",
 	
 	initialize : function() {
+		// A string representing the datasets selected
+		this.datasets = "";
+		
+		// The number of selected datasets
+		this.numDatasets = 0;
+		
 		// The search area
 		this.searchArea = new SearchArea();
 		
@@ -142,12 +148,16 @@ var DataSetSearch = Backbone.Model.extend({
 	onDatasetSelectionChanged : function() {
 	
 		this.datasets = "";
+		this.numDatasets = 0;
 		for ( var x in DatasetPopulation.selection ) {
 			if ( this.datasets.length > 0 ) {
 				this.datasets += ',';
 			}
 			this.datasets += x;
+			this.numDatasets++;
 		}
+		
+		this.trigger('change:numDatasets');
 		
 		//reset all the selected attributes and download options from the old selection
 		this.clearSelectedAttributesAndOptions();

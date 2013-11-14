@@ -1,12 +1,19 @@
-	
+
 <div id="sc-content">
+	
+	<% if ( useDate ) { %>
+	<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">
+		<h3>Date</h3>
+		<div id="date">	</div>
+	</div>
+	<% } %>
 	
 	<div data-role="collapsible" data-inset="false" data-mini="true">
 		<h3>Area</h3>
 		<div id="area">	</div>
 	</div>
 	
-	<div data-role="collapsible" data-inset="false" data-mini="true">
+	<div id="sc-advanced-container" data-role="collapsible" data-inset="false" data-mini="true">
 		<h3>Advanced</h3>
 		<div id="searchCriteria">	</div>
 	</div>

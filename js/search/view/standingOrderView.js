@@ -174,7 +174,7 @@ var StandingOrderView = Backbone.View.extend({
 		
 		StandingOrderDataAccessRequest.initialize();
 
-		var content = _.template(searchCriteria_template, {submitText: "Order"});
+		var content = _.template(searchCriteria_template, { submitText: "Order", useDate: false});
 		this.$el.append(content);			
 				
 		this.areaCriteriaView = new SpatialExtentView({
