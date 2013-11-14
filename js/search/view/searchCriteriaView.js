@@ -46,39 +46,17 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Update the opensearch URL
 	 */
 	displayOpenSearchURL: function() {
-		if ( this.model.dataset ) {
-			var url = this.model.getOpenSearchURL();
-			this.$el.find("#osUrlText").val( url );	
-		} else {
-			this.$el.find("#osUrlText").val( '' );	
-		}
+		var url = this.model.getOpenSearchURL();
+		this.$el.find("#osUrlText").val( url );	
 	},
 	
 	/**
 	 * Constructor
-	 * Connect to model change and dataset loaded events
 	 */
 	initialize : function() {
-		// Listen to change on dataset to rebuild the advanced and download option views
-		this.model.on("change:dataset", this.displayDatasetRelatedViews, this);
+		// Nothing to do
 	},
-	
-	/**
-	 * Callback method to display the advanced search criteria and the download options
-	 * for the selected dataset once they are loaded
-	 */
-	displayDatasetRelatedViews : function(dataset){
-		this.$el.find("#searchCriteria").empty();
-		this.$el.find("#downloadOptions").empty();
-		if ( dataset ) {
-			this.advancedCriteriaView.render();
-			this.downloadOptionsView.render();
-		} else {
-			this.$el.find("#searchCriteria").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No criteria available.</b></p></div>");
-			this.$el.find("#downloadOptions").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No download options available.</b></p></div>");
-		}
-	},
-	
+		
 	/**
 	 * Apply a new OpenSearch URL to the view
 	 */

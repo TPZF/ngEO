@@ -9,7 +9,8 @@ var AdvancedSearchView = Backbone.View.extend({
 	/* the dataset property of DatasetSearch is the Dataset backbone model containing the advanced criteria 
 	 */
 	
-	initialize : function(){
+	initialize : function() {
+		this.listenTo( this.model, 'change:advancedAttributes', this.render );
 	}, 
 	
 	events : {
@@ -102,9 +103,8 @@ var AdvancedSearchView = Backbone.View.extend({
 	},
 	
 	render: function(){
-
-		var content = _.template(advancedCriteria_template, this.model);
-		this.$el.append(content);
+		var content = _.template(advancedCriteria_template, this.model, { variable: 'model' });
+		this.$el.html(content);
 		this.$el.trigger('create');
 		return this;
 	}

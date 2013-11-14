@@ -39,6 +39,42 @@ Date.prototype.toISODateString = function() {
 	return this.getUTCFullYear() + "-" + pad(this.getUTCMonth()+1,2) + "-" + pad(this.getUTCDate(),2);
 };
 
+// Helper function
+var _mergeAttributes = function( datasets, attrName, id ) {
+	var mergedAttributes = {};
+	var isFirst = true;
+	
+	_.each( datasets, function(dataset) {
+	
+		var attrs = dataset.get(attrName);
+		var attrMap = {};
+		if (attrs) {
+			for ( var i = 0; i < attrs.length; i++ ) {
+				attrMap[ attrs[i][id] ] = attrs[i];
+			}
+		}
+		
+		if ( isFirst ) {
+			mergedAttributes = attrMap;
+			isFirst = false;
+		} else {
+		
+			// Exclude attribute not in the map
+			for ( var x in mergedAttributes ) {
+				if ( !attrMap[x] ) {
+					delete mergedAttributes[x];
+				} else if ( !_.isEqual( attrMap[x], mergedAttributes[x] ) ) {
+					delete mergedAttributes[x];
+				}
+			}
+	
+		}
+				
+	});
+	
+	return mergedAttributes;
+};
+
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
 
@@ -61,46 +97,86 @@ var DataSetSearch = Backbone.Model.extend({
 		start : new Date( new Date().getTime() - ONE_MONTH ),
 		useExtent : true,
 		useTimeSlider : true, //flag for displaying time slider or not
-		viewAccess : true,
-		downloadAccess : true
+		dateRange: null,
+		advancedAttributes: {},
+		downloadOptions: {}
+		//viewAccess : true,
+		//downloadAccess : true
 	},
 	
 	name: "Search",
 	
 	initialize : function() {
-		//no dataset is selected
-		this.dataset = undefined;
 		// The search area
 		this.searchArea = new SearchArea();
 		
 		// Automatically load the dataset when the datasetId is changed
-		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelected );
-		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetUnselected );
+		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged );
+		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged );
 	},
 	
-	/** Call when the dataset is selected */
-	onDatasetSelected : function(dataset) {
-
-		this.dataset = dataset;
+	/** Compute the available date range from the selected datasets */
+	computeDateRange: function() {
+		var dateRange = null;
+		_.each( DatasetPopulation.selection, function(dataset) {
+			if (!dateRange) {
+				dateRange = {
+					start: dataset.get('startDate'),
+					stop: dataset.get('endDate'),
+				};
+			} else {
+				if ( dataset.get('startDate') < dateRange.start ) {
+					dateRange.start = dataset.get('startDate');
+				}
+				if ( dataset.get('endDate') > dateRange.stop ) {
+					dateRange.stop = dataset.get('endDate');
+				}
+			}
+		});
 		
-		//reset all the selected attributes and download options from the old dataset if any
+		this.set('dateRange', dateRange);
+	},
+	
+	
+	/** Call when the dataset selection is changed */
+	onDatasetSelectionChanged : function() {
+	
+		this.datasets = "";
+		for ( var x in DatasetPopulation.selection ) {
+			if ( this.datasets.length > 0 ) {
+				this.datasets += ',';
+			}
+			this.datasets += x;
+		}
+		
+		//reset all the selected attributes and download options from the old selection
 		this.clearSelectedAttributesAndOptions();
+	
+		// Recompute the date range
+		this.computeDateRange();
+		
+		// Recompute advanced attributes
+		this.set('advancedAttributes', _mergeAttributes( DatasetPopulation.selection, 'attributes', 'id' ) );
+		
+		// Recompute download options
+		this.set('downloadOptions', _mergeAttributes( DatasetPopulation.selection, 'downloadOptions', 'argumentName' ) );
+	
 							
 		// Compute a search time range from the dataset extent
 		// The stop date is the dataset stop date
 		var start = this.get('start');
-		var stop = this.get('stop'); 
-		var datasetStart = dataset.get('startDate');
-		var datasetStop = dataset.get('endDate');
+		var stop = this.get('stop');
+		var rangeStart = this.get('dateRange').start;
+		var rangeStop = this.get('dateRange').stop;
 		
-		if ( stop > datasetStop || start < datasetStart ) {
-			stop = new Date( datasetStop.getTime() );
+		if ( stop > rangeStop || start < rangeStart ) {
+			stop = new Date( rangeStop.getTime() );
 			// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
-			var diff = (datasetStop - datasetStart);
+			var diff = (rangeStop - rangeStart);
 			if ( diff > ONE_MONTH ) {
 				start = new Date( stop.getTime() - ONE_MONTH );
 			} else {
-				start = new Date(datasetStart.getTime() );
+				start = new Date(rangeStart.getTime() );
 			}
 								
 			// Reset start time
@@ -120,50 +196,30 @@ var DataSetSearch = Backbone.Model.extend({
 				}); 
 		} 
 	
-		// Store authorizations
-		this.set("downloadAccess", DatasetAuthorizations.hasDownloadAccess( dataset.get("datasetId") ) );
-		this.set("viewAccess", DatasetAuthorizations.hasViewAccess( dataset.get("datasetId") ) );
-		
-		this.trigger('change:dataset',this.dataset);
 	},
-	
-	/** Call when the dataset is unselected */
-	onDatasetUnselected : function(dataset) {
-		this.clearSelectedAttributesAndOptions();
-		this.dataset = undefined;
-		this.trigger('change:dataset',this.dataset);
-	},
-	 
+		 
 	/** 
 	 * Remove all the selected criteria and  selected download options of the old selected dataset 
 	 * The option silent is set to true to avoid firing unused events.
 	 */ 
 	clearSelectedAttributesAndOptions : function(){
 		
-		var self = this;
+		var self = this;			
+		var protectedAttributes = [ "start", "stop" ];
 		
-		if (this.dataset) {
-		
-			var protectedAttributes = [ "start", "stop" ];
+		//remove selected search criteria
+		_.each(this.get('advancedAttributes'), function(attribute){
+			if ( _.has(self.attributes, attribute.id)) {
+				self.unset(attribute.id, {silent: true});
+			}
+		});			
+
+		_.each(this.get('downloadOptions'), function(option){
+			if (_.has(self.attributes, option.argumentName)){
+				self.unset(option.argumentName, {silent: true});
+			}				
+		});
 			
-			//remove selected search criteria
-			if (this.dataset.get('attributes')){			
-				_.each(this.dataset.get('attributes'), function(attribute){
-					if (!_.contains(protectedAttributes, attribute.id) && _.has(self.attributes, attribute.id)){
-						self.unset(attribute.id, {silent: true});
-					}				
-				});
-			}
-			//remove selected download options
-			if (this.dataset.get('downloadOptions')){			
-				
-				_.each(this.dataset.get('downloadOptions'), function(option){
-					if (!_.contains(protectedAttributes, option.argumentName) && _.has(self.attributes, option.argumentName)){
-						self.unset(option.argumentName, {silent: true});
-					}				
-				});
-			}
-		}
 	},
 	
 	/** Create the openSearch url. 
@@ -179,12 +235,12 @@ var DataSetSearch = Backbone.Model.extend({
 	},
 	
 	/** get the url without base url with all search criteria */
-	getCoreURL : function(){
+	getCoreURL : function() {
 		
-		var url =  this.dataset.get("datasetId") + "/search?";
+		var url =  this.datasets + "/search?";
 
 		//add area criteria if set
-		url = this.addGeoTemporalParams(url);
+		url += this.addGeoTemporalParams();
 		
 		//always add the advanced criteria values selected and already set to the model
 		url = this.addAdvancedCriteria(url);
@@ -196,16 +252,33 @@ var DataSetSearch = Backbone.Model.extend({
 		
 		return url;
 	},
+		
+	/** get the url without base url with all search criteria */
+	getOpenSearchParameters : function(){
+		
+		//add area criteria if set
+		var params = this.addGeoTemporalParams();
+		
+		//always add the advanced criteria values selected and already set to the model
+		params = this.addAdvancedCriteria(params);
+
+		//add the download options values selected and already set to the model
+		params = this.addDownloadOptionsWithProductURIConvention(params);
+		
+		//console.log("DatasetSearch module : getCoreURL method : " + url);
+		
+		return params;
+	},
 	
 	/**
 	 * Get the shared search URL
 	 */
 	getSharedSearchURL : function(){
 
-		var url = "#data-services-area/search/" +  this.dataset.get("datasetId") + '?';
+		var url = "#data-services-area/search/" +  this.datasets + '?';
 		
 		//add area criteria if set
-		url = this.addGeoTemporalParams(url);
+		url += this.addGeoTemporalParams();
 		
 		//always add the advanced criteria values selected and already set to the model
 		url = this.addAdvancedCriteria(url);
@@ -266,19 +339,12 @@ var DataSetSearch = Backbone.Model.extend({
 					} else {
 						//set the parameters if there are advanced attributes, download options or attributes of the model
 						//skip any other parameter
-						_.each(this.dataset.get('attributes'), function(criterion){
-							if (criterion.id == pair[0]){
-								//console.log("set criterion " + criterion.id + "====" + pair[1]);
-								attributes[pair[0]] = pair[1];
-							}
-						});
-					
-						_.each(this.dataset.get('downloadOptions'), function(option){
-							if (option.argumentName == pair[0]){
-								//console.log("set option " + option.argumentName + "====" + pair[1]);
-								attributes[pair[0]] = option.cropProductSearchArea ? true : pair[1];
-							}
-						});
+						if ( this.get('advancedAttributes').hasOwnProperty(pair[0]) ) {
+							attributes[pair[0]] = pair[1];
+						}
+						else if ( this.get('downloadOptions').hasOwnProperty(pair[0]) ) {
+							attributes[pair[0]] = this.get('downloadOptions')[pair[0]].cropProductSearchArea ? true : pair[1];
+						}
 					}
 					break;
 			}
@@ -293,25 +359,25 @@ var DataSetSearch = Backbone.Model.extend({
 	},
 
 	//add date WITHOUT cf ngeo 368 time and area parameters
-	addGeoTemporalParams : function (url){
+	addGeoTemporalParams : function () {
 	
-		url = url + "start=" + this.get("start").toISOString()  + "&" + 
+		var params = "start=" + this.get("start").toISOString()  + "&" + 
 		"stop=" + this.get("stop").toISOString();
 		
-		url += "&" + this.searchArea.getOpenSearchParameter();
+		params += "&" + this.searchArea.getOpenSearchParameter();
 		
 		//console.log("DatasetSearch module : addGeoTemporalParams : " + url);
-		return url;
+		return params;
 	},
 	
 	//add advanced criteria to the given url
-	addAdvancedCriteria : function(url){
+	addAdvancedCriteria : function(url) {
 		
 		var self = this;
 		
 		//add the advanced criteria not set in the model ie not changed by the user
 		//with their default values from the dataset 
-		var advancedAttributes = this.dataset.get('attributes');
+		var advancedAttributes = this.get('advancedAttributes');
 		if (advancedAttributes) {
 					
 			_.each(advancedAttributes, function(attribute){
@@ -337,25 +403,21 @@ var DataSetSearch = Backbone.Model.extend({
 	 * add download options to the given url by appending "&param_1=value_1&...&param_n=value_n" to the url
 	 * returns the modified url
 	 */
-	addDownloadOptions : function(url){
+	addDownloadOptions : function(url) {
 	
 		var self = this;
-		//add the selected download options to the opensearch url
+		//add the selected download options to the opensearch url					
+		_.each(this.get('downloadOptions'), function(option){
 			
-		if (this.dataset.get('downloadOptions')) {
-			
-			_.each(this.dataset.get('downloadOptions'), function(option){
-				
-				if (_.has(self.attributes, option.argumentName)) {
-					if ( !option.cropProductSearchArea ) {
-						url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
-					} else if (self.attributes[option.argumentName]) {
-						url += '&' + option.argumentName + '=' + self.searchArea.toWKT(); 
-					}
-					
+			if (_.has(self.attributes, option.argumentName)) {
+				if ( !option.cropProductSearchArea ) {
+					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
+				} else if (self.attributes[option.argumentName]) {
+					url += '&' + option.argumentName + '=' + self.searchArea.toWKT(); 
 				}
-			});
-		}
+				
+			}
+		});
 
 		//console.log("DatasetSearch module : addDownloadOptions : " + url);
 		return url;
@@ -370,46 +432,43 @@ var DataSetSearch = Backbone.Model.extend({
 	addDownloadOptionsWithProductURIConvention : function(url){
 	
 		var self = this;
-		//add the selected download options to the opensearch url
-			
-		if (this.dataset.get('downloadOptions')) {
-			
-			var downloadOptionsStr = null;
-			var addedOption = false;
-			
-			_.each(this.dataset.get('downloadOptions'), function(option, index){
+		//add the selected download options to the opensearch url		
 				
-				if (_.has(self.attributes, option.argumentName)) {
-					
-					if (!addedOption){
-						downloadOptionsStr = "&ngEO_DO={";
-					}else{
-						downloadOptionsStr += ",";
-					}
-					
-					if ( !option.cropProductSearchArea ) {
-						
-						downloadOptionsStr += option.argumentName + ':' + self.attributes[option.argumentName];
-						
-					} else if (self.attributes[option.argumentName]) {
-						
-						downloadOptionsStr += option.argumentName + ':' + self.searchArea.toWKT(); 
-					}
-
-					if (!addedOption){
-						addedOption = true;
-					}
+		var downloadOptionsStr = null;
+		var addedOption = false;
+		
+		_.each(this.get('downloadOptions'), function(option, index){
+			
+			if (_.has(self.attributes, option.argumentName)) {
+				
+				if (!addedOption){
+					downloadOptionsStr = "&ngEO_DO={";
+				}else{
+					downloadOptionsStr += ",";
 				}
-			});
-			
-			if (downloadOptionsStr){
-				downloadOptionsStr += "}";
-				url += downloadOptionsStr;
-			}
-			
-		}
+				
+				if ( !option.cropProductSearchArea ) {
+					
+					downloadOptionsStr += option.argumentName + ':' + self.attributes[option.argumentName];
+					
+				} else if (self.attributes[option.argumentName]) {
+					
+					downloadOptionsStr += option.argumentName + ':' + self.searchArea.toWKT(); 
+				}
 
-		console.log("DatasetSearch module : addDownloadOptionsWithProductURIConvention : " + url);
+				if (!addedOption){
+					addedOption = true;
+				}
+			}
+		});
+		
+		if (downloadOptionsStr) {
+			downloadOptionsStr += "}";
+			url += downloadOptionsStr;
+		}
+			
+
+		//console.log("DatasetSearch module : addDownloadOptionsWithProductURIConvention : " + url);
 		return url;
 	},
 
@@ -418,22 +477,19 @@ var DataSetSearch = Backbone.Model.extend({
 	 * If the download options have been changed by the user, their are set as an attribute to the DatasetSearch
 	 * otherwise the default value is got from the dataset.
 	 */
-	getSelectedDownloadOptions : function(){
+	getSelectedDownloadOptions : function() {
 		
 		var selectedOptions = {};
 		var self = this;
 		
 		//add the options set to the model ie changed by the user with the selected value
 		//add options not set in the model ie not changed by the user with their default values from the dataset 
-		if ( this.dataset.get('downloadOptions') ){
+		_.each( this.get('downloadOptions'), function(option){
 			
-			_.each( this.dataset.get('downloadOptions'), function(option){
-				
-				if (_.has(self.attributes, option.argumentName)){
-					selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;
-				}
+			if (_.has(self.attributes, option.argumentName)){
+				selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;
+			}
 			});
-		}
 		//console.log("Selected download options of dataset : " + this.dataset.attributes.datasetId + " : ");
 		//console.log(selectedOptions);
 		

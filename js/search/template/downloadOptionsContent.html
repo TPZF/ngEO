@@ -1,57 +1,42 @@
-<% if (!dataset) { %> 
+	
+<!-- if the selected dataset has no download options display an information message to the user -->
 
-    <!-- if no dataset has been selected display an information message to the user -->
-	<div id="downloadOptionsMessage" class="widget-content ui-body-c">
-		<p><b>No dataset has been selected.</b></p>
-		<p><b>Please select a dataset first to see its download options</b></p>
-	</div>
+<% if ( _.size(model.get("downloadOptions")) == 0 ) { %>
+	<div id="downloadOptionsMessage" class="widget-content ui-body-c ui-error-message">
+		<p><b>No download options available.</b></p>
+	</div>	
+<% } else { %>	 		
 
-<% } else { %>	
-	
-	<!-- if the selected dataset has no download options display an information message to the user -->
-	
-	<% if (!dataset.get("downloadOptions")) { %>
-		<div id="downloadOptionsMessage" class="widget-content ui-body-c">
-			<p><b>The selected dataset : <%=dataset.get("datasetId") %> has invalid download options.</b></p>
-		</div>
-	<% } else if (dataset.get("downloadOptions").length == 0 ) { %>
-		<div id="downloadOptionsMessage" class="widget-content ui-body-c">
-			<p><b>The selected dataset : <%=dataset.get("datasetId") %> does not have download options.</b></p>
-		</div>
-	
-	<% } else { %>	 		
-	
-		<!-- 	display  download options -->
-		<form>			
-			<% _.each(dataset.get("downloadOptions"), function(option, i) { %>		
-				<% if (!option.cropProductSearchArea) { %>
-					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.argumentName %> : </label>
-						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
-						<option value="None">None</option>
-						<% _.each(option.values, function(value) { %>
-							<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName] == value.name)) {  %>						
-								<option value="<%= value.name%>" selected><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
-							<% } else { %>	 
-			 					<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>		
-							<% } %>	 
-						<% }); %>
-					</select>	
-				<% } %>
-			<% }); %>
-			
-			<% _.each(dataset.get("downloadOptions"), function(option, i) { %>		
-				<% if (option.cropProductSearchArea) { %>
-					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.description %></label>
-					<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName])) {  %>						
-						<input type="checkbox" id="<%= option.argumentName %>" checked="checked" data-mini="true"/>
-					<% } else { %>	 
-						<input type="checkbox" id="<%= option.argumentName %>" data-mini="true"/>		
-					<% } %>	 					
-				<% } %>			
-			<% }); %>
-			
-		</form>
-	
-	<% } %>
+	<!-- 	display  download options -->
+	<form>			
+		<% _.each(model.get("downloadOptions"), function(option) { %>		
+			<% if (!option.cropProductSearchArea) { %>
+				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.argumentName %> : </label>
+					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+					<option value="None">None</option>
+					<% _.each(option.values, function(value) { %>
+						<% if ( model.get(option.argumentName) && (model.get(option.argumentName) == value.name) ) {  %>						
+							<option value="<%= value.name%>" selected><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+						<% } else { %>	 
+							<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>		
+						<% } %>	 
+					<% }); %>
+				</select>	
+			<% } %>
+		<% }); %>
+		
+		<% _.each(model.get("downloadOptions"), function(option) { %>		
+			<% if (option.cropProductSearchArea) { %>
+				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.description %></label>
+				<% if ( model.get(option.argumentName) ) {  %>						
+					<input type="checkbox" id="<%= option.argumentName %>" checked="checked" data-mini="true"/>
+				<% } else { %>	 
+					<input type="checkbox" id="<%= option.argumentName %>" data-mini="true"/>		
+				<% } %>	 					
+			<% } %>			
+		<% }); %>
+		
+	</form>
 
 <% } %>
+

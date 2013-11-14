@@ -73,19 +73,21 @@ return {
 						
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
-			DatasetSearch.once("change:dataset", function(dataset) {
+			DataSetPopulation.once("select", function(dataset) {
 			
 				if ( dataset ) {
 													
 					DatasetSearch.populateModelfromURL(query);
 					
-					searchView.displayDatasetRelatedViews( DatasetSearch.dataset );
+					// Resfreh the advanced and download options view
+					searchView.advancedCriteriaView.render();
+					searchView.downloadOptionsView.render();
 					
 					// Show search panel
 					$('#search').click();
 					
 					// And launch the search!
-					SearchResults.launch( DatasetSearch.getOpenSearchURL() );
+					SearchResults.launch( DatasetSearch );
 					
 				} else {
 

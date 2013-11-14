@@ -91,17 +91,12 @@ var FeatureCollection = function() {
 	// launch a search
 	this.launch = function(searchCriteria) {
 	
+		// build base url
 		_url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/" + this.id + "/search?";
 
-		//add area criteria if set
-		_url = searchCriteria.addGeoTemporalParams(_url);
+		// add parameters from search criteria
+		_url += searchCriteria.getOpenSearchParameters();
 		
-		//always add the advanced criteria values selected and already set to the model
-		_url = searchCriteria.addAdvancedCriteria(_url);
-
-		//add the download options values selected and already set to the model
-		_url = searchCriteria.addDownloadOptionsWithProductURIConvention(_url);
-
 		_url += "&count=" + this.countPerPage;
 		
 		// reset the cache
