@@ -1,5 +1,5 @@
 
-	<label>Start Date : <br/>
+	<label>Start Date :
 	<input name="From" class="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.start.toISODateString()) %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.start.toISODateString()) %>", 
 		  "useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'  /></label>
@@ -12,7 +12,7 @@
 <!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
 <!-- </div> -->
 
-	<label>End Date : <br/>
+	<label>End Date :
 	<input name="toDate" class="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(attributes.stop.toISODateString()) %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(attributes.stop.toISODateString()) %>", 
 	   	"useTodayButton": true, "themeDate":"c", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'></label>
