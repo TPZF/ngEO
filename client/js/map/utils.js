@@ -24,6 +24,9 @@ define( function() {
 				case "LineString":
 					coords = feature.geometry.coordinates;
 					break;
+				case "MultiLineString":
+					coords = feature.geometry.coordinates[0];
+					break;
 			}
 
 			
@@ -59,6 +62,10 @@ define( function() {
 						feature.geometry = this.fixDateLine( feature.geometry );
 						this.computeExtent(feature);
 						break;
+					case "MultiLineString":
+						feature.geometry = this.fixDateLine2( feature.geometry );
+						this.computeExtent(feature);
+						break;
 				}
 				
 			}
@@ -73,6 +80,14 @@ define( function() {
 				case "MultiPolygon":
 					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
 						geometry.coordinates[i][0] = this.tesselateGreatCircleCoordinates( geometry.coordinates[i][0] );
+					}
+					break;
+				case "LineString":
+					geometry.coordinates = this.tesselateGreatCircleCoordinates( geometry.coordinates );
+					break;
+				case "MultiLineString":
+					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+						geometry.coordinates[i] = this.tesselateGreatCircleCoordinates( geometry.coordinates[i] );
 					}
 					break;
 			}
@@ -100,6 +115,25 @@ define( function() {
 				coordinates: [ [coords], [negc] ]
 			};
 		},
+		fixDateLine2: function(geometry) {
+		
+			var coords = geometry.coordinates[0];
+			
+			for ( var n = 0; n < coords.length; n++) {
+				if ( coords[n][0] < 0 ) {
+					coords[n][0] += 360;
+				}
+            }
+			var negc = [];
+			for ( var n = 0; n < coords.length; n++) {
+                negc.push( [ coords[n][0] - 360, coords[n][1] ] );
+            }
+
+			return {
+				type: "MultiLineString",
+				coordinates: [ /*coords,*/ negc ]
+			};
+		},
 		
 		/**
 		 * Tesselate coordinates to follow great circle
@@ -112,7 +146,7 @@ define( function() {
 				this.tesselateGreatCircleLine( coords[i], coords[i+1], output );
 			}
 			
-			output.push( coords[0] );
+			output.push( coords[ coords.length - 1 ] );
 			
 			return output;
 		},

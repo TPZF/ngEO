@@ -115,6 +115,13 @@ var pointInGeometry = function( point, geometry )
 		return pointInRing( point, geometry.coordinates[0] );
 	case "LineString":
 		return pointInLine( point, geometry.coordinates );
+	case "MultiLineString":
+		var inside = false;
+		for ( var i = 0; i < geometry.coordinates.length && !inside; i++ )
+		{
+			inside = pointInLine( point, geometry.coordinates[i] );
+		}
+		return inside;
 	default:
 		return false;
 	}
