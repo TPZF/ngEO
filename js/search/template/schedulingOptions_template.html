@@ -1,60 +1,57 @@
-<div id="standingOrderSpecificMessage" data-role="collapsible"
-	data-theme="a" data-mini="true" data-collapsed-icon="info"
-	data-iconpos="right">
+
+<label data-mini="true">Start Date:
+<input name="startDateSTO" id="startDateSTO"
+	type="text" data-role="datebox" data-mini="true" data-theme="c"
+	value="<%= startDate %>"
+	data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= startDate %>", 
+   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' />
+</label> 
+
+<label data-mini="true">End Date:
+<input name="endDateSTO" id="endDateSTO"
+	type="text" data-role="datebox" data-mini="true" data-theme="c"
+	value="<%= endDate %>"
+	data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= endDate %>", 
+   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' />
+</label> 
+
+<div id="type" class="ui-grid-a">
+
+<div class="ui-block-a"> 
+	<% if (timeDriven == false) {  %>
+		<input id="data-driven-input" type="radio" name="STOType" data-mini="true" checked>		
+	<% } else { %>	 
+		<input id="data-driven-input" type="radio" name="STOType" data-mini="true">
+	<% } %>	 
+	<label for="data-driven-input" id="data-driven-label" data-mini="true" data-corners="false">Data-Driven Order</label>         	
 </div>
 
-<form id="form">
+  <div class="ui-block-b"> 
+	<% if (timeDriven == true) {  %>
+		<input id="time-driven-input" type="radio" name="STOType" data-mini="true" checked>		
+	<% } else { %>	 
+		<input id="time-driven-input" type="radio" name="STOType" data-mini="true">	
+	<% } %>	 
+	
+	<label for="time-driven-input" id="time-driven-label" data-mini="true" data-corners="false">Time-Driven Order</label>         	
+</div>
 
-		<label id="startDateLabel" for="startDateSTO" data-mini="true">Start Date:</label> <input name="startDateSTO" id="startDateSTO"
-			type="text" data-role="datebox" data-mini="true" data-theme="c"
-			value="<%= startDate %>"
-			data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= startDate %>", 
- 		   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
-	
-		<label id="endDateLabel" for="endDateSTO" data-mini="true">End Date:</label> <input name="endDateSTO" id="endDateSTO"
-			type="text" data-role="datebox" data-mini="true" data-theme="c"
-			value="<%= endDate %>"
-			data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= endDate %>", 
-  		   "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}'>
-		
-	<div id="type" class="ui-grid-a">
-	    
-	    <div class="ui-block-a"> 
-			<% if (timeDriven == false) {  %>
-				<input id="data-driven-input" type="radio" name="STOType" data-mini="true" checked>		
-			<% } else { %>	 
-			 	<input id="data-driven-input" type="radio" name="STOType" data-mini="true">
-		 	<% } %>	 
-			<label for="data-driven-input" id="data-driven-label" data-mini="true" data-corners="false">Data-Driven Order</label>         	
-		</div>
-		
-		  <div class="ui-block-b"> 
-			<% if (timeDriven == true) {  %>
-				<input id="time-driven-input" type="radio" name="STOType" data-mini="true" checked>		
-			<% } else { %>	 
-			 	<input id="time-driven-input" type="radio" name="STOType" data-mini="true">	
-		 	<% } %>	 
-			
-			<label for="time-driven-input" id="time-driven-label" data-mini="true" data-corners="false">Time-Driven Order</label>         	
-		</div>
-	
-	</div>
-	
-	<div id="timeDrivenParams" class="widget-content">
+</div>
 
-		<div data-role="fieldcontain">
-			<label id="repeatPeriodLabel" for="repeatPeriod" data-mini="true">Shifting Period (in days) : </label>
-			<input type="number" name="repeatPeriod" id="repeatPeriodInput" data-mini="true" value="<%= repeatPeriod %>">
-		</div>
-		
-		<div data-role="fieldcontain">
-			<label id="applyShitfLabel" for="applyShitfCheckBox" data-mini="true">Apply shifting to search filter time period</label>
-			<% if (slideAcquisitionTime == true) {  %>
-				<input type="checkbox" name="applyShitfCheckBox" id="applyShitfCheckBox" data-mini="true" checked>		
-			<% } else { %>
-			 	<input type="checkbox" name="applyShitfCheckBox" id="applyShitfCheckBox" data-mini="true">	
-		 	<% } %>
-			
-		</div>
-	</div>
-</form>
+<div id="timeDrivenParams" class="widget-content">
+
+<div data-role="fieldcontain">
+	<label id="repeatPeriodLabel" for="repeatPeriod" data-mini="true">Shifting Period (in days) : </label>
+	<input type="number" name="repeatPeriod" id="repeatPeriodInput" data-mini="true" value="<%= repeatPeriod %>">
+</div>
+
+<div data-role="fieldcontain">
+	<label id="applyShitfLabel" for="applyShitfCheckBox" data-mini="true">Apply shifting to search filter time period</label>
+	<% if (slideAcquisitionTime == true) {  %>
+		<input type="checkbox" name="applyShitfCheckBox" id="applyShitfCheckBox" data-mini="true" checked>		
+	<% } else { %>
+		<input type="checkbox" name="applyShitfCheckBox" id="applyShitfCheckBox" data-mini="true">	
+	<% } %>
+	
+</div>
+</div>
