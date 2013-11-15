@@ -1,11 +1,11 @@
 
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
-         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView',
+         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/corrInterView',
          'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, SharePopup,
+				 AdvancedSearchView, DownloadOptionsView, CorrInterView, SharePopup,
 				 searchCriteria_template) {
 
 /**
@@ -45,8 +45,14 @@ var SearchCriteriaView = Backbone.View.extend({
 		"change #sc-mode": function() {
 			var value = this.$el.find('#sc-mode').val();
 			
-			// Remove previous accordion if any
+			// Remove previous accordion and view if any
 			this.$el.find('#sc-corrinf-container').remove();
+			if ( this.corrInterView ) {
+				this.corrInterView.remove();
+				this.corrInterView = null;
+			}
+			
+			this.model.set("mode",value);
 			
 			// Add the accordion for correlation/inteferometry
 			if ( value != "Simple" ) {
@@ -56,6 +62,12 @@ var SearchCriteriaView = Backbone.View.extend({
 						<div id="sc-corrinf">	</div>\
 					</div>'				 
 				);
+				
+				this.corrInterView = new CorrInterView({
+					el : this.$el.find("#sc-corrinf"), 
+						model : this.model });
+				this.corrInterView.render();
+
 			}			
 			this.$el.find('#sc-content').trigger('create');
 
