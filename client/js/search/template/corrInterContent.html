@@ -1,0 +1,14 @@
+
+<label for="sOverP">Spatial Overlap Percentage : </label>
+<input type="number" id="sOverP" data-mini="true" value="<%= model.get('sOverP') %>"/>
+
+<label for="dDiff">Date difference (in days) : </label>
+<input type="number" id="dDiff" data-mini="true" value="<%= model.get('dDiff') %>" />
+
+<% if ( model.get('mode') == "Interferometry" ) { %>
+	<label for="nBase">Normal Baseline difference : </label>
+	<input type="number" id="nBase" data-mini="true" value="<%= model.get('nBase') %>" />
+	
+	<label for="bSync">Burst synchronization difference : </label>
+	<input type="number" id="bSync" data-mini="true" value="<%= model.get('bSync') %>" />
+<% } %>
