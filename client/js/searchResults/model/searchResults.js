@@ -1,8 +1,8 @@
 /**
  * results table model as received from the server
  */
-define( ['jquery', 'backbone', 'configuration', 'searchResults/model/featureCollection', 'search/model/dataSetPopulation'],
-	function($, Backbone, Configuration, FeatureCollection, DataSetPopulation) {
+define( ['jquery', 'backbone', 'configuration', 'searchResults/model/featureCollection', 'search/model/dataSetPopulation', 'search/model/datasetSearch'],
+	function($, Backbone, Configuration, FeatureCollection, DataSetPopulation, DatasetSearch) {
 
 
 var SearchResults = {
@@ -10,6 +10,7 @@ var SearchResults = {
 	featureCollection : {
 	},
 	
+	/** launch a search */
 	launch : function(searchCriteria) {
 		for ( var x in this.featureCollection ) {
 			this.featureCollection[x].launch(searchCriteria);
@@ -158,6 +159,7 @@ var SearchResults = {
 // Add events
 _.extend(SearchResults, Backbone.Events);
 
+// Listen to selected dataset to create the feature collection used to store the results
 DataSetPopulation.on('select', function(dataset) {
 	var datasetId = dataset.get('datasetId');
 	if (!SearchResults.featureCollection.hasOwnProperty(datasetId)) {
@@ -168,11 +170,40 @@ DataSetPopulation.on('select', function(dataset) {
 	}
 });
 
+// Listen to unselected dataset to remove the feature collection used to store the results
 DataSetPopulation.on('unselect', function(dataset) {
 	var datasetId = dataset.get('datasetId');
 	if (SearchResults.featureCollection.hasOwnProperty(datasetId)) {
 		SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[datasetId] );
 		delete SearchResults.featureCollection[datasetId];
+	}
+});
+
+// Listen to search mode to take into acount correlation, interferometry search
+DatasetSearch.on('change:mode', function(model,mode) {
+
+	// Remove previous feature collection
+	for ( var datasetId in SearchResults.featureCollection ) {
+		SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[datasetId] );
+		delete SearchResults.featureCollection[datasetId];
+	}
+		
+	switch (mode) {
+	case "Simple":
+		for ( var datasetId in DataSetPopulation.selection ) {
+			var fc = new FeatureCollection();
+			fc.id = datasetId;
+			SearchResults.featureCollection[datasetId] = fc;
+			SearchResults.trigger('add:featureCollection',fc);
+		}
+		break;
+	case "Correlation":
+	case "Interferometry":
+		var fc = new FeatureCollection();
+		fc.id = mode;
+		SearchResults.featureCollection[fc.id] = fc;
+		SearchResults.trigger('add:featureCollection',fc);
+		break;
 	}
 });
 

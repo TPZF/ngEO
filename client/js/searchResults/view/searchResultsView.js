@@ -1,7 +1,7 @@
 define(
-		[ 'jquery', 'logger', 'backbone', 
+		[ 'jquery', 'logger', 'backbone', 'search/model/datasetSearch',
           'text!searchResults/template/searchResultsViewContent.html' ],
-	function($, Logger, Backbone, searchResultsViewContent ) {
+	function($, Logger, Backbone, DatasetSearch, searchResultsViewContent ) {
 
 	
 /**
@@ -125,7 +125,12 @@ var SearchResultsView = Backbone.View.extend({
 		this.$el.trigger('create');
 		
 		// Set the dataset
-		this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id );
+		if ( DatasetSearch.get('mode') == "Simple" ) {
+			this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id );
+		} else {
+			// TODO : show master and slave
+			this.$el.find('#datasetMessage').html('Datasets : ' + DatasetSearch.datasets );
+		}
 
 		// To start paging is disable
 		this.$el.find('#paging a').addClass('ui-disabled');

@@ -99,7 +99,13 @@ var DataSetSearch = Backbone.Model.extend({
 		useTimeSlider : true, //flag for displaying time slider or not
 		dateRange: null,
 		advancedAttributes: {},
-		downloadOptions: {}
+		downloadOptions: {},
+		mode: "Simple",
+		// Correlation/Interferometry parameters
+		dDiff: 10,
+		sOverP: 25,
+		nBase: 5,
+		bSync: 5
 		//viewAccess : true,
 		//downloadAccess : true
 	},
