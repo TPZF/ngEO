@@ -41,7 +41,9 @@ fs.readFile('./productSearch/Crossing_response.json', 'utf8', function (err, dat
 fs.readFile('./productSearch/Global_response.json', 'utf8', function (err, data) {
 	featureCollections['Global']  = JSON.parse(data);
 });
-
+fs.readFile('./productSearch/Correlation_response.json', 'utf8', function (err, data) {
+	featureCollections['Correlation']  = JSON.parse(data);
+});
 
 var initialized = false;
 
