@@ -166,7 +166,7 @@ var DataSetSearch = Backbone.Model.extend({
 		this.trigger('change:numDatasets');
 		
 		//reset all the selected attributes and download options from the old selection
-		this.clearSelectedAttributesAndOptions();
+		this.clearAdvancedAttributesAndDownloadOptions();
 	
 		// Recompute the date range
 		this.computeDateRange();
@@ -217,23 +217,22 @@ var DataSetSearch = Backbone.Model.extend({
 	},
 		 
 	/** 
-	 * Remove all the selected criteria and  selected download options of the old selected dataset 
+	 * Remove all advanced attributes and download options
 	 * The option silent is set to true to avoid firing unused events.
 	 */ 
-	clearSelectedAttributesAndOptions : function(){
+	clearAdvancedAttributesAndDownloadOptions : function(){
 		
 		var self = this;			
-		var protectedAttributes = [ "start", "stop" ];
-		
+	
 		//remove selected search criteria
 		_.each(this.get('advancedAttributes'), function(attribute){
-			if ( _.has(self.attributes, attribute.id)) {
+			if (self.has(attribute.id)) {
 				self.unset(attribute.id, {silent: true});
 			}
 		});			
 
 		_.each(this.get('downloadOptions'), function(option){
-			if (_.has(self.attributes, option.argumentName)){
+			if (self.has(option.argumentName)){
 				self.unset(option.argumentName, {silent: true});
 			}				
 		});
@@ -351,9 +350,8 @@ var DataSetSearch = Backbone.Model.extend({
 					
 				default :
 					
-					if (_.has(this.attributes, pair[0])){
+					if ( _.has(pair[0]) ) {
 						attributes[pair[0]] = pair[1];
-					
 					} else {
 						//set the parameters if there are advanced attributes, download options or attributes of the model
 						//skip any other parameter
@@ -401,13 +399,8 @@ var DataSetSearch = Backbone.Model.extend({
 			_.each(advancedAttributes, function(attribute){
 
 				// Check if the avanced attribute has a value in the DatasetSearch
-				if ( _.has(self.attributes, attribute.id) ) {
-					// Remove defaults attribute from advanced
-					if ( _.has(self.defaults, attribute.id) ) {
-						console.log("Advanced criteria warning : " + attribute.id + " is a base attribute.");
-					} else {
-						url += '&' + attribute.id + '=' + self.attributes[attribute.id];
-					}
+				if ( self.has(attribute.id) ) {
+					url += '&' + attribute.id + '=' + self.get(attribute.id);
 				}
 				
 			});
@@ -427,10 +420,10 @@ var DataSetSearch = Backbone.Model.extend({
 		//add the selected download options to the opensearch url					
 		_.each(this.get('downloadOptions'), function(option){
 			
-			if (_.has(self.attributes, option.argumentName)) {
+			if ( self.has(option.argumentName) ) {
 				if ( !option.cropProductSearchArea ) {
-					url += '&' + option.argumentName + '=' + self.attributes[option.argumentName];
-				} else if (self.attributes[option.argumentName]) {
+					url += '&' + option.argumentName + '=' + self.get(option.argumentName);
+				} else if ( self.get(option.argumentName) ) {
 					url += '&' + option.argumentName + '=' + self.searchArea.toWKT(); 
 				}
 				
