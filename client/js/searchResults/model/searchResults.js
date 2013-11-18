@@ -16,6 +16,18 @@ var SearchResults = {
 			this.featureCollection[x].launch(searchCriteria);
 		}
 	},
+	
+	/** Get the product urls of the features */
+	getProductUrls : function(features) {
+		var productUrls = [];		
+		for ( var i = 0; i < features.length; i++ ) {			
+			var f = features[i];
+			if ( f.properties && f.properties.productUrl ) {
+				productUrls.push( f.properties.productUrl );
+			}
+		}
+		return productUrls;
+	},
 
 	
 	/** the direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */

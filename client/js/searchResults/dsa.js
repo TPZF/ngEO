@@ -101,6 +101,7 @@ return {
 			var tableView = new SearchResultsTableView({ 
 				model : fc 
 			});
+			tableView.hasGroup = fc.id == "Correlation";
 			
 			// update the toolbar
 			$('#bottomToolbar')
