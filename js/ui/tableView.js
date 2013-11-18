@@ -42,6 +42,8 @@ var TableView = Backbone.View.extend({
 			this.columnDefs = options.columnDefs;
 		}
 		
+		this.hasGroup = false;
+		
 		this.rowsData = [];
 		this.visibleRowsData = [];
 		this.feature2row = {};
@@ -52,10 +54,12 @@ var TableView = Backbone.View.extend({
 	 */
 	events : {
 	
+		// Call when the user enter text in the filter input
 		'keyup input' : function (event) {
 			this.filterData( $(event.currentTarget).val() );
 		},
 			
+		// Call when a row is clicked
 		'click tr' : function (event) {
 		
 			var $row = $(event.currentTarget);
@@ -64,13 +68,14 @@ var TableView = Backbone.View.extend({
 			}
 			
 			if ( this.model.highlight ) {
-				var feature = $row.data('feature'); 
+				var feature = $row.data('internal').feature; 
 				if (feature != null) {
 					this.model.highlight([feature]);
 				}
 			}
 		},
 		
+		// Call when the header is clicked : sort
 		'click th' : function (event) {
 		
 			var $cell = $(event.currentTarget);
@@ -88,11 +93,41 @@ var TableView = Backbone.View.extend({
 			}
 		},
 		
+		// Call when the expand icon is clicked
+		'click .table-view-expand' : function(event){
+				var $row = $(event.currentTarget).closest('tr');
+				$(event.currentTarget)
+					.toggleClass('ui-icon-minus')
+					.toggleClass('ui-icon-plus');
+					
+				var rowData = $row.data('internal');
+				rowData.isExpand = !rowData.isExpand;
+				if ( rowData.isExpand ) {
+					// Build the row for expand
+					var $lastRow = $row;
+					for ( var i = 0; i < rowData.children.length; i++ ) {
+						var childRow = '<tr><td></td>'
+						childRow += '<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>';
+						for ( var j = 0; j < rowData.children[i].cellData.length; j++ ) {
+							childRow += '<td>' +  rowData.children[i].cellData[j] + '</td>';
+						}
+						childRow += '</tr>';
+						$lastRow = $(childRow).insertAfter( $lastRow ).data('internal', rowData.children[i]);
+						this.feature2row[ rowData.children[i].feature.id ] = $lastRow;
+					}
+					
+				} else {
+					for ( var i = 0; i < rowData.children.length; i++ ) {
+						$row.next().remove();
+					}
+				}
+			},
+		
 		// Called when the user clicks on the checkbox of the dataTables
 		'click .table-view-chekbox' : function(event){
 			// retreive the position of the selected row
 			var $row = $(event.currentTarget).closest('tr');
-			var feature = $row.data('feature');
+			var feature = $row.data('internal').feature;
 			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
 				this.model.select( feature );
 			} else {
@@ -158,11 +193,30 @@ var TableView = Backbone.View.extend({
 	 */
 	addData : function(features) {
 	
+		var roots = [];
+	
 		var columns = this.columnDefs;
 		for ( var i=0; i < features.length; i++ ) {	
-			this.rowsData.push( [ features[i] ] );
+			var rowData = {
+				feature: features[i],
+				cellData: [],
+				isExpand: false,
+				children: []
+			};
 			for ( var j=0; j < columns.length; j++ ) {
-				this.rowsData[i].push( getData(features[i],columns[j].mData) );
+				rowData.cellData.push( getData(features[i],columns[j].mData) );
+			}
+			
+			if ( this.hasGroup )  {
+				var groupId = features[i].properties.EarthObservation.EarthObservationMetaData.eop_productGroupId;
+				var masterId = groupId.split('_')[0];
+				var slaveId = groupId.split('_')[1];
+				if ( slaveId == 0 ) {
+					roots[ masterId ] = rowData;
+					this.rowsData.push( rowData );
+				} else {
+					roots[ masterId ].children.push(rowData);
+				}
 			}
 		}
 		
@@ -185,7 +239,7 @@ var TableView = Backbone.View.extend({
 				$row.remove();
 				
 				for ( var n = 0; n < this.visibleRowsData.length; n++ ) {
-					if ( this.visibleRowsData[n][0] == features[i] ) {
+					if ( this.visibleRowsData[n].feature == features[i] ) {
 						this.visibleRowsData.splice(n,1);
 						break;
 					}
@@ -193,7 +247,7 @@ var TableView = Backbone.View.extend({
 			}
 			
 			for ( var n = 0; n < this.rowsData.length; n++ ) {
-				if ( this.rowsData[n][0] == features[i] ) {
+				if ( this.rowsData[n].feature == features[i] ) {
 					this.rowsData.splice(n,1);
 					break;
 				}
@@ -210,8 +264,8 @@ var TableView = Backbone.View.extend({
 		for ( var i=0; i < this.rowsData.length; i++ ) {
 			
 			var match = false;
-			for ( var j=1; !match && j < this.rowsData[i].length; j++ ) {
-				match = String(this.rowsData[i][j]).search( val ) >= 0;
+			for ( var j=0; !match && j < this.rowsData.cellData.length; j++ ) {
+				match = String(this.rowsData[i].cellData[j]).search( val ) >= 0;
 			}
 			if (match) {
 				this.visibleRowsData.push( this.rowsData[i] );
@@ -233,9 +287,9 @@ var TableView = Backbone.View.extend({
 			this.visibleRowsData = this.rowsData.slice(0);
 		} else {
 			this.visibleRowsData.sort( function(row1,row2) {
-				if ( row1[columnIndex] == row2[columnIndex] ) {
+				if ( row1.cellData[columnIndex] == row2.cellData[columnIndex] ) {
 					return 0;
-				} else if ( row1[columnIndex] < row2[columnIndex] ) {
+				} else if ( row1.cellData[columnIndex] < row2.cellData[columnIndex] ) {
 					return (order =="asc")? -1 : 1;
 				} else {
 					return (order == "asc") ? 1 : -1;
@@ -260,17 +314,19 @@ var TableView = Backbone.View.extend({
 		for ( var i=0; i < this.visibleRowsData.length; i++ ) {
 			
 			var $row = $('<tr></tr>');
-			//$row.addClass( i % 2 == 0 ? "odd" : "even" );
 			
+			if ( this.hasGroup ) {
+				$row.append('<td><span class="table-view-expand ui-icon ui-icon-plus "></span></td>');
+			}
 			$row.append('<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>');
-			for ( var j=1; j < this.visibleRowsData[i].length; j++ ) {
-				$row.append( '<td>' +  this.visibleRowsData[i][j] + '</td>');
+			for ( var j = 0; j < this.visibleRowsData[i].cellData.length; j++ ) {
+				$row.append( '<td>' +  this.visibleRowsData[i].cellData[j] + '</td>');
 			}
 			
-			$row.data('feature', this.visibleRowsData[i][0]);
+			$row.data('internal', this.visibleRowsData[i]);
 			
 			$row = $row.appendTo($body);
-			this.feature2row[ this.visibleRowsData[i][0].id ] = $row;
+			this.feature2row[ this.visibleRowsData[i].feature.id ] = $row;
 		}
 	},
 	
@@ -330,7 +386,7 @@ var TableView = Backbone.View.extend({
 	 * Render the table
 	 */
 	render : function() {
-	
+			
 		this.visible = false;
 		this.featuresToAdd = [];
 		$(window).resize( $.proxy( this.updateFixedHeader, this ) );
@@ -340,6 +396,9 @@ var TableView = Backbone.View.extend({
 		var $thead = $table.find('thead');
 		var $row = $('<tr></tr>').appendTo($thead);
 		var columns = this.columnDefs;
+		if ( this.hasGroup ) {
+			$row.append('<th></th>');
+		}
 		$row.append('<th></th>');
 		for ( var j=0; j < columns.length; j++ ) {
 			$row.append( '<th>' + columns[j].sTitle + '</th>');
