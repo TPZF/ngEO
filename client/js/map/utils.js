@@ -15,6 +15,13 @@ define( function() {
 			// Get the coordinates
 			var coords;
 			switch (feature.geometry.type) {
+				case "Point":
+					coords = feature.geometry.coordinates;
+					feature.bbox = [ coords[0], coords[1], coords[0], coords[1] ];
+					return;
+				case "MultiPoint":
+					coords = feature.geometry.coordinates;
+					break;
 				case "Polygon":
 					coords = feature.geometry.coordinates[0];
 					break;
@@ -24,7 +31,13 @@ define( function() {
 				case "LineString":
 					coords = feature.geometry.coordinates;
 					break;
+				case "MultiLineString":
+					coords = feature.geometry.coordinates[0];
+					break;
 			}
+			
+			if (!coords)
+				return;
 
 			
 			var minX = coords[0][0];
@@ -51,18 +64,6 @@ define( function() {
 		
 			this.computeExtent(feature);
 			
-			// Fix dateline if needed
-			if ( (feature.bbox[2] - feature.bbox[0]) > 180 ) {
-			
-				switch (feature.geometry.type) {
-					case "Polygon":
-						feature.geometry = this.fixDateLine( feature.geometry );
-						this.computeExtent(feature);
-						break;
-				}
-				
-			}
-			
 			// Tesselate polygon to follow great circle
 			// TODO : holes are not managed
 			var geometry = feature.geometry;
@@ -75,16 +76,67 @@ define( function() {
 						geometry.coordinates[i][0] = this.tesselateGreatCircleCoordinates( geometry.coordinates[i][0] );
 					}
 					break;
+				case "LineString":
+					geometry.coordinates = this.tesselateGreatCircleCoordinates( geometry.coordinates );
+					break;
+				case "MultiLineString":
+					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+						geometry.coordinates[i] = this.tesselateGreatCircleCoordinates( geometry.coordinates[i] );
+					}
+					break;
 			}
+			
+			
+			// Fix dateline if needed
+			if ( (feature.bbox[2] - feature.bbox[0]) > 180 ) {
+			
+				switch (feature.geometry.type) {
+					case "Polygon":
+						var out = this.fixDateLine( feature.geometry.coordinates[0] );
+						feature.geometry = {
+							type: "MultiPolygon",
+							coordinates: [ [out[0]], [out[1]] ]
+						};
+						break;
+					case "MultiPolygon":
+						var dateLineCoords = [];
+						for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+							var out = this.fixDateLine( feature.geometry.coordinates[i][0] );
+							dateLineCoords.push( [out[0]], [out[1]] );
+						}
+						feature.geometry = {
+							type: "MultiPolygon",
+							coordinates: dateLineCoords
+						};
+						break;
+					case "LineString":
+						feature.geometry = {
+							type: "MultiLineString",
+							coordinates: this.fixDateLine( feature.geometry.coordinates )
+						};
+						break;
+					case "MultiLineString":
+						var dateLineCoords = [];
+						for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+							var out = this.fixDateLine( feature.geometry.coordinates[i] );
+							dateLineCoords.push( out[0], out[1] );
+						}
+						feature.geometry = {
+							type: "MultiLineString",
+							coordinates: dateLineCoords
+						};
+						break;
+				}
+				
+			}
+			
 		},
 		
 		/**
-		 * Fix date line on a polygon
+		 * Fix date line on coordinates
 		 */
-		fixDateLine: function(geometry) {
-		
-			var coords = geometry.coordinates[0];
-			
+		fixDateLine: function(coords, output) {
+					
 			for ( var n = 0; n < coords.length; n++) {
 				if ( coords[n][0] < 0 ) {
 					coords[n][0] += 360;
@@ -94,11 +146,8 @@ define( function() {
 			for ( var n = 0; n < coords.length; n++) {
                 negc.push( [ coords[n][0] - 360, coords[n][1] ] );
             }
-
-			return {
-				type: "MultiPolygon",
-				coordinates: [ [coords], [negc] ]
-			};
+			
+			return [ coords, negc ];
 		},
 		
 		/**
@@ -112,7 +161,7 @@ define( function() {
 				this.tesselateGreatCircleLine( coords[i], coords[i+1], output );
 			}
 			
-			output.push( coords[0] );
+			output.push( coords[ coords.length - 1 ] );
 			
 			return output;
 		},

@@ -9,7 +9,7 @@
     "express": "3.0.5",
 	"http-proxy": ">= 0.8.0",
 	"xmldom": "",
-	"terraformer": "",
+	"terraformer": "0.2.0",
 	"terraformer-wkt-parser": "",
 	"node-uuid" : ""
   }

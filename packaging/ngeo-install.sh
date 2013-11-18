@@ -22,6 +22,12 @@
 # Subsystem name
 SUBSYSTEM="WEBC"
 
+# WEBC configuration file
+WEBC_CONF="/usr/local/ngeo/webclient/conf/configuration.json"
+
+# Browse Server IP address
+BROW_IP="5.9.173.39"
+
 # ----------------------------------------------------------------------------
 # End of configuration section
 # ----------------------------------------------------------------------------
@@ -62,13 +68,12 @@ ngeo_install() {
 	sudo rpm -Uvh esa-webclient-ngeo-VERSION-RELEASE.noarch.rpm
 	
     # --------------------------------------------------------------------------
-    # Step 4/4: NGEO Component Configuration as Service 
+    # Step 4/4: NGEO Component Configuration
     # --------------------------------------------------------------------------
     echo "------------------------------------------------------------------------------" 
-    echo "Step 4/4: NGEO Component Configuration as Service " 
+    echo "Step 4/4: NGEO Component Configuration " 
     echo "------------------------------------------------------------------------------" 
-    sudo \cp ngeo /etc/init.d  
-    sudo chkconfig --level 235 ngeo on 
+    sed -e "s/ngeo\.eox\.at/$BROW_IP/g" -i ${WEBC_CONF}
 
     echo "------------------------------------------------------------------------------" 
     echo "NGEO $SUBSYSTEM Installed. PLEASE REBOOT the machine to finish. " 
@@ -86,12 +91,12 @@ ngeo_uninstall() {
     echo "Step 1/4: Uninstall NGEO Component Configuration as Service. " 
     echo "------------------------------------------------------------------------------" 
 	echo "Stop NGEO service"
-	if [ -f /etc/init.d/ngeo ] ; then
-		sudo /etc/init.d/ngeo stop
+	#if [ -f /etc/init.d/ngeo ] ; then
+	#	sudo /etc/init.d/ngeo stop
 	
-		echo "Delete NGEO service"
-		sudo rm -f /etc/init.d/ngeo
-	fi
+	#	echo "Delete NGEO service"
+	#	sudo rm -f /etc/init.d/ngeo
+	#fi
 	
     # --------------------------------------------------------------------------
     # Step 2/4: Uninstall NGEO Component

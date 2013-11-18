@@ -59,7 +59,7 @@ var lineCircleIntersection = function( p1, p2, center, radius )
 	var ly = p1[1] - center[1];
 		
 	var a = dx * dx + dy * dy ;
-	var b = 2* ( lx * dx + lx * dy );
+	var b = 2* ( lx * dx + ly * dy );
 	var c = lx * lx + ly * ly - radius*radius ;
 
 	var discriminant = b*b-4*a*c;
@@ -115,6 +115,13 @@ var pointInGeometry = function( point, geometry )
 		return pointInRing( point, geometry.coordinates[0] );
 	case "LineString":
 		return pointInLine( point, geometry.coordinates );
+	case "MultiLineString":
+		var inside = false;
+		for ( var i = 0; i < geometry.coordinates.length && !inside; i++ )
+		{
+			inside = pointInLine( point, geometry.coordinates[i] );
+		}
+		return inside;
 	default:
 		return false;
 	}
