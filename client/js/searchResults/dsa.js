@@ -1,8 +1,8 @@
 
-define(["jquery", "map/map", "map/selectHandler", 
+define(["jquery", "logger", "map/map", "map/selectHandler", 
         "search/model/datasetSearch", "searchResults/model/searchResults",
         "searchResults/view/searchResultsTableView", "map/widget/mapPopup"], 
-	function($, Map, SelectHandler, DatasetSearch, SearchResults, SearchResultsTableView,
+	function($, Logger, Map, SelectHandler, DatasetSearch, SearchResults, SearchResultsTableView,
 			MapPopup) {
 
 // Private variable
