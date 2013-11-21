@@ -1,6 +1,6 @@
 
-define( [ "jquery", "configuration", "dataAccess/model/downloadManagers", "dataAccess/view/directDownloadView"], 
-		function($, Configuration, DownloadManagers, DirectDownloadView  ) {
+define( [ "jquery", "backbone", "configuration", "dataAccess/model/downloadManagers", "text!dataAccess/template/directDownloadWidgetContent.html"], 
+		function($, Backbone, Configuration, DownloadManagers, directDownload_Content  ) {
 
 
 var DirectDownloadWidget = function(url) {
@@ -19,23 +19,22 @@ var DirectDownloadWidget = function(url) {
 				parentElement.remove();
 			}
 		});
+				
+		// Create the content
+		if (DownloadManagers.get('downloadmanagers').length >= 1){
+			parentElement.append(_.template(directDownload_Content, {url : url, downloadHelperUrl : Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')}));
+		}else{
+			parentElement.append(_.template(directDownload_Content, {url : url, downloadHelperUrl : false}));
+		}
 		
-		DownloadManagers.fetch().done(function() {
-			
-			var directDownloadView = new DirectDownloadView({
-				el : parentElement,
-				url : url});
-			
-			directDownloadView.render();
+		parentElement.trigger('create');
 
-			parentElement.popup();
-			parentElement.popup("open", {
-				x: event.pageX,
-				y: event.pageY,
-				positionTo: "origin"
-			}); 
-		});
-		
+		parentElement.popup();
+		parentElement.popup("open", {
+			x: event.pageX,
+			y: event.pageY,
+			positionTo: "origin"
+		}); 
 		
 	};
 
