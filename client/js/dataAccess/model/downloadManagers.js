@@ -4,7 +4,7 @@
   * assignment and monitoring 
   */
 
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'configuration', 'logger'], function($, Backbone, Configuration, Logger) {
 
 var DownloadManagers = Backbone.Model.extend({
 	
