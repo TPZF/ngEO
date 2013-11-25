@@ -20,13 +20,13 @@ define( ['jquery', 'backbone', 'configuration',
 
 			'change #startDateSTO' : function(event){
 				var date = $(event.currentTarget).val();
-				this.request.startDate = date;
+				this.request.startDate = Date.fromISOString(date+"T00:00:00.000Z");
 				this.model.set({"start" : Date.fromISOString(date+"T00:00:00.000Z")});
 			},
 			
 			'change #endDateSTO' : function(event){
 				var date = $(event.currentTarget).val();
-				this.request.endDate = date;
+				this.request.endDate = Date.fromISOString(date+"T23:59:59.999Z");
 				this.model.set({"stop" : Date.fromISOString(date+"T23:59:59.999Z")});
 			},
 

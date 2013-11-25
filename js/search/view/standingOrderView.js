@@ -30,6 +30,9 @@ var StandingOrderView = Backbone.View.extend({
 		
 		// Click on search
 		"click .scSubmit": function(event) {
+		
+			// reset request
+			StandingOrderDataAccessRequest.initialize();
 
 			//set open search url
 			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
@@ -91,29 +94,8 @@ var StandingOrderView = Backbone.View.extend({
 	 * Connect to model change and dataset loaded events
 	 */
 	initialize : function() {
-		// Listen to change on dataset to rebuild the advanced and download option views
-		this.model.on("change:dataset", this.displayDatasetRelatedViews, this);
 	},
-	
-	/**
-	 * Callback method to display the advanced search criteria and the download options
-	 * for the selected dataset once they are loaded
-	 */
-	displayDatasetRelatedViews : function(dataset){
-		this.$el.find("#searchCriteria").empty();
-		this.$el.find("#downloadOptions").empty();
-		this.$el.find('#schedulingOptions').empty();
-		if ( dataset ) {
-			this.advancedCriteriaView.render();
-			this.downloadOptionsView.render();
-			this.schedulingOptionsView.render();
-		} else {
-			this.$el.find("#searchCriteria").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No criteria available.</b></p></div>");
-			this.$el.find("#downloadOptions").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No download options available.</b></p></div>");
-			this.$el.find("#schedulingOptions").append("<div class='ui-error-message'><p><b>Failure: The dataset has not been loaded. No scheduling options available.</b></p></div>");
-		}
-	},
-	
+		
 	/**
 	 * Apply a new OpenSearch URL to the view
 	 */
