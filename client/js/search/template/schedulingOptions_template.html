@@ -2,16 +2,16 @@
 <label data-mini="true">Start Date:
 <input name="startDateSTO" id="startDateSTO"
 	type="text" data-role="datebox" data-mini="true" data-theme="c"
-	value="<%= startDate %>"
-	data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= startDate %>", 
+	value="<%= startDate.toISODateString() %>"
+	data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= startDate.toISODateString() %>", 
    "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' />
 </label> 
 
 <label data-mini="true">End Date:
 <input name="endDateSTO" id="endDateSTO"
 	type="text" data-role="datebox" data-mini="true" data-theme="c"
-	value="<%= endDate %>"
-	data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= endDate %>", 
+	value="<%= endDate.toISODateString() %>"
+	data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<%= endDate.toISODateString() %>", 
    "useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' />
 </label> 
 

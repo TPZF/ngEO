@@ -2,6 +2,9 @@
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest', 'search/model/datasetSearch'], 
 		function($, Backbone, Configuration, DataAccessRequest, DatasetSearch) {
 
+// A constant
+var ONE_MONTH = 24 * 30 * 3600 * 1000;
+
 /**
  * This module deals with the creation and submission of a Standing order data access request
  * It extends DataAccessRequest module.
@@ -12,13 +15,9 @@ var StandingOrderDataAccessRequest = {
 
 	OpenSearchURL : "",
 	
-	startDate : "", //TODO keep or remove according to clarification ngeo-314
+	startDate : new Date(), 
 	
-//	startTime : "", //TODO keep or remove according to clarification ngeo-314
-	
-	endDate : "",
-	
-//	endTime : "",
+	endDate : new Date( new Date().getTime() + ONE_MONTH ),
 	
 	timeDriven : false,
 	
@@ -35,20 +34,7 @@ var StandingOrderDataAccessRequest = {
 		this.OpenSearchURL = "";
 		this.DownloadOptions = {};
 		this.SchedulingOptions = {};
-		this.timeDriven = false;
-		this.repeatPeriod = 0;
-		this.slideAcquisitionTime = false;
 		
-		//set date to the current date
-		var today = (new Date()).toISOString();
-		var dateOnly = today.substring(0, today.indexOf('T'));
-		var timeOnly = today.substring(today.indexOf('T')+1, today.lastIndexOf(':'));
-		
-		this.startDate = dateOnly;
-		this.endDate = dateOnly;
-//		UNCOMMENT TO REUSE THE TIME	
-//		this.startTime = timeOnly;
-//		this.endTime = timeOnly;
 	},
 	
 	/** build the request to submit */
@@ -78,18 +64,18 @@ var StandingOrderDataAccessRequest = {
 	 * 	1- all the search parameters as for as for a shared  search url. 
 	 *  2- scheduling options parameters relative to a standing order request
 	 */
-	getSharedURL : function(dataset){
+	getSharedURL : function(searchCriteria){
 
-		var url = "#data-services-area/sto/" +  dataset.get("datasetId") + '?';
+		var url = "#data-services-area/sto/" +  searchCriteria.dataset.get("datasetId") + '?';
 		
 		//add area criteria 
-		url += dataset.searchArea.getOpenSearchParameter();
+		url += searchCriteria.searchArea.getOpenSearchParameter();
 
 		//always add the advanced criteria values selected and already set to the model
-		url = dataset.addAdvancedCriteria(url);
+		url = searchCriteria.addAdvancedCriteria(url);
 
 		//add the download options values selected and already set to the model
-		url = dataset.addDownloadOptions(url);
+		url = searchCriteria.addDownloadOptions(url);
 		
 		//get the scheduling object either the STO is TimeDriven or Data-Driven
 		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;
@@ -114,21 +100,10 @@ var StandingOrderDataAccessRequest = {
 			switch (pair[0]) {
 				
 			case "startDate": 
-//				this.startDate = pair[1].substring(0, pair[1].indexOf('T'));
-				this.startDate = pair[1];
-				//console.log(this.startDate);
+				this.startDate = Date.fromISOString(pair[1]);
 				break;
-//			UNCOMMENT TO REUSE THE TIME	
-//			case "startTime" : 
-//				this.startTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
-//				break;
-//			case "endTime": 
-//				this.endTime = pair[1].substring(pair[1].indexOf('T')+1, pair[1].lastIndexOf(':'));
-//				break;
 			case "endDate" : 
-//				this.endDate = pair[1].substring(0, pair[1].indexOf('T'));
-				this.endDate = pair[1];
-				//console.log(this.endDate);
+				this.endDate = Date.fromISOString(pair[1]);
 				break;
 			case "repeatPeriod": 
 				this.repeatPeriod = pair[1];
@@ -145,8 +120,6 @@ var StandingOrderDataAccessRequest = {
 	    }
 	    
 		//set open search url
-	    //console.log("DatasetSearch.getOpenSearchURL()");
-	   // console.log(DatasetSearch.getOpenSearchURL());
 	    this.OpenSearchURL = dataset.getOpenSearchURL();
 		//set selected download options
 	    this.DownloadOptions = dataset.getSelectedDownloadOptions();
@@ -158,11 +131,8 @@ var StandingOrderDataAccessRequest = {
 		if (this.timeDriven){
 			
 			return { TimeDriven : { 
-//				UNCOMMENT TO REUSE THE TIME				
-//				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
-//				endDate : DatasetSearch.formatDate(this.endDate, this.endTime),
-				startDate : this.startDate,
-				endDate : this.endDate,
+				startDate : this.startDate.toISODateString(),
+				endDate : this.endDate.toISODateString(),
 				repeatPeriod : this.repeatPeriod, 
 				slideAcquisitionTime : this.slideAcquisitionTime 
 				} 
@@ -170,11 +140,8 @@ var StandingOrderDataAccessRequest = {
 
 		}else{
 			return { DataDriven : { 
-//				UNCOMMENT TO REUSE THE TIME	
-//				startDate : DatasetSearch.formatDate(this.startDate, this.startTime),
-//				endDate : DatasetSearch.formatDate(this.endDate, this.endTime)			
-				startDate : this.startDate,
-				endDate : this.endDate
+				startDate : this.startDate.toISODateString(),
+				endDate : this.endDate.toISODateString()
 			} };
 		}
 	},
