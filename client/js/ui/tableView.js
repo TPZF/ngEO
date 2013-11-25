@@ -31,11 +31,11 @@ var TableView = Backbone.View.extend({
 	initialize : function( options ) {
 	
 		if ( this.model ) {
-			this.model.on("reset:features", this.clear, this);
-			this.model.on("add:features", this.addData, this);
-			this.model.on("selectFeatures", this.toggleSelection, this );
-			this.model.on("unselectFeatures", this.toggleSelection, this );
-			this.model.on("highlightFeatures", this.highlightFeatureCallBack, this );
+			this.listenTo(this.model,"reset:features", this.clear);
+			this.listenTo(this.model,"add:features", this.addData);
+			this.listenTo(this.model,"selectFeatures", this.toggleSelection );
+			this.listenTo(this.model,"unselectFeatures", this.toggleSelection );
+			this.listenTo(this.model,"highlightFeatures", this.highlightFeatureCallBack );
 		}
 		
 		if ( options ) {
@@ -217,6 +217,8 @@ var TableView = Backbone.View.extend({
 				} else {
 					roots[ masterId ].children.push(rowData);
 				}
+			} else {
+				this.rowsData.push( rowData );
 			}
 		}
 		
