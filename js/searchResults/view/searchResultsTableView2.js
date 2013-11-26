@@ -74,6 +74,7 @@ var SearchResultsTableView = TableView.extend({
 		this.retrieveProduct.button('disable');
 		
 		//create a simpleDataAccessRequest and assign a download manager
+		var self = this;
 		this.retrieveProduct.click(function() {
 
 			SimpleDataAccessRequest.initialize();

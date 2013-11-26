@@ -3,9 +3,9 @@
   */
 
 
-define( [ "jquery", "logger", "configuration", "map/map", "search/model/datasetSearch", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
+define( [ "jquery", "logger", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
           "searchResults/model/searchResults", "map/utils", "shopcart/model/shopcartCollection" ], 
-	function($, Logger, Configuration, Map, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils, ShopcartCollection) {
+	function($, Logger, Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils, ShopcartCollection) {
 
 
 var MapPopup = function(container) {
@@ -45,15 +45,11 @@ var MapPopup = function(container) {
 		.appendTo( element.find('#mpButtons') )
 		.click( function() {
 						
-			if ( DatasetSearch.get("downloadAccess") ) {
-				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts( products );
-			
-				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-				downloadManagersWidget.open();
-			} else {
-				Logger.inform("Cannot download the product : missing permissions.");
-			}
+			SimpleDataAccessRequest.initialize();
+			SimpleDataAccessRequest.setProducts( products );
+		
+			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+			downloadManagersWidget.open();
 			
 		});
 		
@@ -62,10 +58,11 @@ var MapPopup = function(container) {
 		.click( function() {
 			
 			for (var i=0;i<products.length;i++){
-				if (SearchResults.isSelected(products[i])){
-					SearchResults.unselect(products[i]);
+				var p = products[i];
+				if (p._featureCollection.isSelected(p)){
+					p._featureCollection.unselect(p);
 				}else{
-					SearchResults.select(products[i]);
+					p._featureCollection.select(p);
 				}
 			}
 		});

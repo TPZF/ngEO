@@ -263,7 +263,7 @@ return {
 	removeFeatureCollection: function(fc) {
 		var i = featureCollections.indexOf(fc);
 		if ( i >= 0 ) {
-			featureCollections.splice(i,0);
+			featureCollections.splice(i,1);
 		}
 	},
 	
