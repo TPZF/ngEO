@@ -111,13 +111,12 @@ return {
 			MenuBar.showPage("data-services-area");
 			
 			// Once DatasetSearch has been loaded, populate standing order's model
-			standingOrder.once("change:dataset", function(dataset) {
+			DataSetPopulation.once("select", function(dataset) {
 				
 				if ( dataset ) {
 					
 					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 					standingOrder.populateModelfromURL(query);
-					standingOrderView.displayDatasetRelatedViews( standingOrder );
 
 					// Show standing order panel
 					$('#subscribe').click();
