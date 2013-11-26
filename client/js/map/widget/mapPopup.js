@@ -39,6 +39,21 @@ var MapPopup = function(container) {
 				$(this).parent().addClass('ui-btn-active');
 			}
 		});
+		
+	// Select
+	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
+		.appendTo( element.find('#mpButtons') )
+		.click( function() {
+			
+			for (var i=0;i<products.length;i++){
+				var p = products[i];
+				if (p._featureCollection.isSelected(p)){
+					p._featureCollection.unselect(p);
+				}else{
+					p._featureCollection.select(p);
+				}
+			}
+		});
 
 	// DAR
 	var btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
@@ -53,21 +68,8 @@ var MapPopup = function(container) {
 			
 		});
 		
-	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
-		.appendTo( element.find('#mpButtons') )
-		.click( function() {
-			
-			for (var i=0;i<products.length;i++){
-				var p = products[i];
-				if (p._featureCollection.isSelected(p)){
-					p._featureCollection.unselect(p);
-				}else{
-					p._featureCollection.select(p);
-				}
-			}
-		});
-		
-	var btn = $("<button data-icon='shopcart' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
+	// Shopcart
+	var btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
 		.appendTo( element.find('#mpButtons') )
 		.click( function() {
 			ShopcartCollection.getCurrent().addItems( SearchResults.getProductUrls(products), products );
