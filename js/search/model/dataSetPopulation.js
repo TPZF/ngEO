@@ -57,13 +57,14 @@ var DataSetPopulation = Backbone.Model.extend({
 			var self = this;
 			dataset.fetch({
 				success: function(model, response, options) {
+					self.selection[datasetId] = dataset;
 					self.trigger('select',dataset);
+					self.trigger('datasetFetch',dataset,"SUCCESS");
 				},
 				error: function(model, xhr, options) {
-					// TODO
+					self.trigger('datasetFetch',datasetId,"ERROR");
 				}
 			});
-			this.selection[datasetId] = dataset;
 		}
 	},
 	
@@ -78,6 +79,9 @@ var DataSetPopulation = Backbone.Model.extend({
 		}
 	},
 	
+	/** 
+	 * Parse the response from the server
+	 */
 	parse: function(response){
 				
 		var matrix = response.datasetpopulationmatrix.datasetPopulationValues;

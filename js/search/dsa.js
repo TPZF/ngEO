@@ -73,9 +73,9 @@ return {
 						
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
-			DataSetPopulation.once("select", function(dataset) {
+			DataSetPopulation.once("datasetFetch", function(dataset,status) {
 			
-				if ( dataset ) {
+				if ( status == "SUCCESS" ) {
 													
 					DatasetSearch.populateModelfromURL(query);
 					
@@ -91,7 +91,7 @@ return {
 					
 				} else {
 
-					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
+					Logger.error('Cannot load the dataset ' + dataset + '.<br> The search cannot be shared.');
 					MenuBar.showPage("data-services-area");
 					
 				}
@@ -110,20 +110,25 @@ return {
 			// Show the page first
 			MenuBar.showPage("data-services-area");
 			
-			// Once DatasetSearch has been loaded, populate standing order's model
-			DataSetPopulation.once("select", function(dataset) {
+			// Once dataset has been loaded, populate standing order's model
+			DataSetPopulation.once("datasetFetch", function(dataset,status) {
 				
-				if ( dataset ) {
+				if ( status == "SUCCESS" ) {
 					
 					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 					standingOrder.populateModelfromURL(query);
+					
+					// Resfreh the advanced and download options view
+					standingOrderView.advancedCriteriaView.render();
+					standingOrderView.downloadOptionsView.render();
+		
 
 					// Show standing order panel
 					$('#subscribe').click();
 					
 				} else {
 				
-					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The standing order cannot be shared.');
+					Logger.error('Cannot load the dataset ' + dataset + '.<br> The standing order cannot be shared.');
 					MenuBar.showPage("data-services-area");
 
 				}
@@ -138,20 +143,22 @@ return {
 		router.route(
 			"data-services-area", "dsa", function() {
 
-				//select the dataset id stored in the prefs
-				var datasetId = UserPrefs.get("Dataset");
-				if (datasetId && datasetId != "None") {
+				// Select the dataset id stored in the prefs
+				var prefsDS = UserPrefs.get("Dataset");
+				if ( prefsDS && prefsDS != "None" && _.isString(prefsDS) ) {
 							
-					//when the dataset selected cannot be loaded, display an error message
-					DatasetSearch.once("change:dataset", function(dataset){
-						if (!dataset) {
-							Logger.error('Cannot load the dataset :' + datasetId + ' from user preferences.');
-						}
-					});
-
-					//set the selected dataset in the model
-					DataSetPopulation.select(datasetId);
+					var datasets = prefsDS.split(',');
+					for ( var i = 0; i < datasets.length; i++ ) {
+						DataSetPopulation.select(datasets[i]);
+					}
 				}
+
+				// When the dataset cannot be fetched from the server return an error to warn user
+				DataSetPopulation.on("datasetFetch", function(datasetId,status) {
+					if ( status == "ERROR" ) {
+						Logger.error('Cannot load the dataset ' + datasetId + '.');
+					}
+				});
 				
 				// Show the page
 				MenuBar.showPage("data-services-area");			
@@ -161,26 +168,31 @@ return {
 		// At init time, search and subscribe are disabled
 		$('#search').addClass('ui-disabled');
 		$('#subscribe').addClass('ui-disabled');
-			
-		// Call when selection is changed
-		DataSetPopulation.on('select', function(dataset) {
-			UserPrefs.save( "Dataset", dataset.get('datasetId') );
-				
-			// Activate search button or not if datasetsearch is ok
-			$('#subscribe').removeClass('ui-disabled');
-			$('#search').removeClass('ui-disabled');		
-		});			
-		DataSetPopulation.on('unselect', function(dataset) {
-			if ( _.size(DataSetPopulation.selection) == 0 ) {
-			
+		
+		// Update interface when dataset selection has changed
+		var onDatasetSelectionChanged = function(dataset) {
+			var numDatasets = _.size(DataSetPopulation.selection);
+			if ( numDatasets == 0 ) {
 				UserPrefs.save("Dataset", "None");
 
-				// Activate search button or not if datasetsearch is ok
 				$('#subscribe').addClass('ui-disabled');
 				$('#search').addClass('ui-disabled');
 			}
-		});		
-
+			else if ( numDatasets == 1 ) {
+				UserPrefs.save( "Dataset", dataset.get('datasetId') );
+					
+				$('#subscribe').removeClass('ui-disabled');
+				$('#search').removeClass('ui-disabled');				
+			}
+			else {
+				UserPrefs.save( "Dataset", DatasetSearch.getDatasetPath() );
+				$('#subscribe').addClass('ui-disabled');
+			}
+		};
+		
+		DataSetPopulation.on("select", onDatasetSelectionChanged );
+		DataSetPopulation.on("unselect", onDatasetSelectionChanged );
+	
 	},
 };
 
