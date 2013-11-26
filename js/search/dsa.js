@@ -59,6 +59,7 @@ return {
 		});
 
 		panelManager.on('leftResized', searchView.updateContentHeight, searchView );
+		panelManager.on('leftResized', standingOrderView.updateContentHeight, standingOrderView );
 		panelManager.left.add( searchView, '#search' );
 		panelManager.left.add( standingOrderView, '#subscribe' );
 		searchView.render();
