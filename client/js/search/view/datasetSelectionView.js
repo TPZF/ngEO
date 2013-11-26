@@ -42,6 +42,32 @@ var DatasetSelectionView = Backbone.View.extend({
 	 */
 	initialize: function() {
 		this.criteriaFilter = [];
+		
+		this.listenTo(this.model,"select",this.onSelect);
+		this.listenTo(this.model,"unselect",this.onUnselect);
+		
+		this.listenTo(this.model,"datasetFetch", function(datasetId,status) {
+			if ( status == "ERROR" ) {
+				var $elt = this.$el.find('#' + datasetId );
+				$elt.removeClass('ui-btn-active');
+			}
+		});
+	},
+	
+	/**
+	 * Call when a dataset is selected
+	 */
+	onSelect: function(dataset) {
+		var $elt = this.$el.find('#' + dataset.get('datasetId') );
+		$elt.addClass('ui-btn-active');
+	},
+	
+	/**
+	 * Call when a dataset is unselected
+	 */
+	onUnselect: function(dataset) {
+		var $elt = this.$el.find('#' + dataset.get('datasetId') );
+		$elt.removeClass('ui-btn-active');
 	},
 	
 	/**

@@ -1,6 +1,6 @@
   
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation', 'search/model/searchCriteria', 'search/model/datasetAuthorizations'], 
-		function($, Backbone, Configuration, DatasetPopulation, SearchCriteria, DatasetAuthorizations) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation', 'search/model/searchCriteria'], 
+		function($, Backbone, Configuration, DatasetPopulation, SearchCriteria) {
 
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
@@ -60,8 +60,6 @@ var DataSetSearch = SearchCriteria.extend({
 		sOverP: 25,
 		nBase: 5,
 		bSync: 5
-		//viewAccess : true,
-		//downloadAccess : true
 	},
 	
 	name: "Search",
