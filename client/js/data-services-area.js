@@ -25,6 +25,7 @@ return {
 	 */
 	hide: function() {
 		panelManager.save();
+		$('.mapPopup').hide();
 		$('#statusBar').hide();
 		$('#dateRangeSlider').hide();
 		$('#searchToolbar').hide();
@@ -35,6 +36,7 @@ return {
 	 * Called when the module main page is shown
 	 */
 	show: function() {
+		$('.mapPopup').show();
 		$('#statusBar').show();
 		$('#dateRangeSlider').show();
 		$('#searchToolbar').show();
