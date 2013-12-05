@@ -153,12 +153,14 @@ var BoxView = Backbone.View.extend({
 		if (this.model.get("useExtent")) {
 			this.activateUseExtent();
 		} else {
-			this.model.searchArea.setBBox({
-				west : $("#west").val(),
-				south: $("#south").val(),
-				east: $("#east").val(),
-				north: $("#north").val()
-			});
+	
+			var bbox = {
+				west : parseFloat($("#west").val()),
+				south: parseFloat($("#south").val()),
+				east: parseFloat($("#east").val()),
+				north: parseFloat($("#north").val())
+			};
+			this.model.searchArea.setBBox(bbox);
 			this.parentView.updateSearchAreaLayer();
 		}
 		this.$el.show();

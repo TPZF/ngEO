@@ -46,7 +46,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		this.addFeatures = function(features) {
 			for ( var i = 0; i < features.length; i++ ) {
 				if ( features[i].geometry ) {
-					Utils.fixFeature( features[i] );
+					Utils.computeExtent( features[i] );
+					if (params.greatCircle) {
+						Utils.tesselateGreatCircle( features[i] );
+					}
+					Utils.fixDateLine( features[i] );
 					mapEngine.addFeature( this.engineLayer, features[i] );
 					this.features.push(features[i]);
 				}
@@ -65,7 +69,13 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			}
 		};
 		this.updateFeature = function(feature) {
+			// Hack : keep the original geometry, because fixDateLine modify the geomeetry
+			var originalGeometry = feature.geometry;
+			Utils.computeExtent( feature );
+			Utils.fixDateLine( feature );
 			mapEngine.updateFeature( this.engineLayer, feature );
+			// Restore geometry
+			feature.geometry = originalGeometry;
 		};
 		this.changeEngine = function(mapEngine) {
 			this.engineLayer = mapEngine.addLayer( this.params );
