@@ -5,6 +5,18 @@
 define( function() {
 
 	return {
+	
+		/**
+		 * Normalize longitude to always be betwwen -180 and 180
+		 */
+		normalizeLon: function(lon) {
+			while (lon > 180)
+				lon -= 360;
+			while (lon < -180)
+				lon += 360;
+			return lon;
+		},
+				
 		/**
 		 * Compute the bbox of a feature
 		 */
@@ -58,12 +70,9 @@ define( function() {
 		},
 		
 		/**
-		 * Fix a feature : manage geometry that crosses the dateline, and manage great circle for polygon edge
+		 * Tesselate the feature to follow great-circle
 		 */
-		fixFeature: function(feature) {
-		
-			this.computeExtent(feature);
-			
+		tesselateGreatCircle: function(feature) {
 			// Tesselate polygon to follow great circle
 			// TODO : holes are not managed
 			var geometry = feature.geometry;
@@ -85,14 +94,20 @@ define( function() {
 					}
 					break;
 			}
-			
+		},
+		
+		/**
+		 * Fix dateline
+		 */
+		fixDateLine: function(feature) {
 			
 			// Fix dateline if needed
 			if ( (feature.bbox[2] - feature.bbox[0]) > 180 ) {
 			
-				switch (feature.geometry.type) {
+				var geometry = feature.geometry;
+				switch (geometry.type) {
 					case "Polygon":
-						var out = this.fixDateLine( feature.geometry.coordinates[0] );
+						var out = this.fixDateLineCoords( geometry.coordinates[0] );
 						feature.geometry = {
 							type: "MultiPolygon",
 							coordinates: [ [out[0]], [out[1]] ]
@@ -101,7 +116,7 @@ define( function() {
 					case "MultiPolygon":
 						var dateLineCoords = [];
 						for ( var i = 0; i < geometry.coordinates.length; i++ ) {
-							var out = this.fixDateLine( feature.geometry.coordinates[i][0] );
+							var out = this.fixDateLineCoords( geometry.coordinates[i][0] );
 							dateLineCoords.push( [out[0]], [out[1]] );
 						}
 						feature.geometry = {
@@ -112,13 +127,13 @@ define( function() {
 					case "LineString":
 						feature.geometry = {
 							type: "MultiLineString",
-							coordinates: this.fixDateLine( feature.geometry.coordinates )
+							coordinates: this.fixDateLineCoords( geometry.coordinates )
 						};
 						break;
 					case "MultiLineString":
 						var dateLineCoords = [];
 						for ( var i = 0; i < geometry.coordinates.length; i++ ) {
-							var out = this.fixDateLine( feature.geometry.coordinates[i] );
+							var out = this.fixDateLineCoords( geometry.coordinates[i] );
 							dateLineCoords.push( out[0], out[1] );
 						}
 						feature.geometry = {
@@ -128,6 +143,9 @@ define( function() {
 						break;
 				}
 				
+				this.computeExtent( feature );
+				feature.bbox[0] = this.normalizeLon( feature.bbox[0] ); 
+				feature.bbox[2] = this.normalizeLon( feature.bbox[2] ); 
 			}
 			
 		},
@@ -135,19 +153,20 @@ define( function() {
 		/**
 		 * Fix date line on coordinates
 		 */
-		fixDateLine: function(coords, output) {
+		fixDateLineCoords: function(coords, output) {
 					
-			for ( var n = 0; n < coords.length; n++) {
-				if ( coords[n][0] < 0 ) {
-					coords[n][0] += 360;
-				}
-            }
+			var posc = [];		
 			var negc = [];
 			for ( var n = 0; n < coords.length; n++) {
-                negc.push( [ coords[n][0] - 360, coords[n][1] ] );
-            }
+				var coord = [ coords[n][0], coords[n][1] ];
+				if ( coord[0] < 0 ) {
+					coord[0] += 360;
+				}
+				posc.push( coord );
+                negc.push( [ coord[0] - 360, coord[1] ] );
+           }
 			
-			return [ coords, negc ];
+			return [ posc, negc ];
 		},
 		
 		/**

@@ -3,6 +3,34 @@
 define( ['jquery', 'backbone', 'map/map', 'map/rectangleHandler'], 
 		function($, Backbone, Map, RectangleHandler) {
 
+function isValidLon(lon) {
+	if (isNaN(lon))
+		return false;
+	
+	return lon > -180 && lon < 180;
+}
+function isValidLat(lat) {
+	if (isNaN(lat))
+		return false;
+	
+	return lat > -90 && lat < 90;
+}
+
+function clipLon(lon) {
+	while (lon > 180)
+		lon -= 360;
+	while (lon < -180)
+		lon += 360;
+	return lon;
+}
+function clipLat(lat) {
+	while (lat > 90)
+		lat -= 180;
+	while (lat < -90)
+		lat += 180;
+	return lat;
+}
+
 /**
  * The BoxView manages the view to define the search area as a box.
  * Embedded in the SpatialExtentView.
@@ -47,16 +75,17 @@ var BoxView = Backbone.View.extend({
 		'blur input' : function(event){
 			
 			var bbox = {
-					west : self.$el.find("#west").val(),
-					south: self.$el.find("#south").val(),
-					east: self.$el.find("#east").val(),
-					north: self.$el.find("#north").val()
+					west : parseFloat(self.$el.find("#west").val()),
+					south: parseFloat(self.$el.find("#south").val()),
+					east: parseFloat(self.$el.find("#east").val()),
+					north: parseFloat(self.$el.find("#north").val())
 				};
+				
 			
-			if (this.model.searchArea.isValidBBox(bbox)){
+			if (isValidLon(bbox.west) && isValidLon(bbox.east) &&
+				isValidLat(bbox.south) && isValidLat(bbox.north) ) {
 				this.model.searchArea.setBBox(bbox);
-			
-			}else{
+			} else {
 				bbox = this.model.searchArea.getBBox();
 				self.$el.find("#west").val( bbox.west );
 				self.$el.find("#south").val( bbox.south );
@@ -124,12 +153,14 @@ var BoxView = Backbone.View.extend({
 		if (this.model.get("useExtent")) {
 			this.activateUseExtent();
 		} else {
-			this.model.searchArea.setBBox({
-				west : this.$el.find("#west").val(),
-				south: this.$el.find("#south").val(),
-				east: this.$el.find("#east").val(),
-				north: this.$el.find("#north").val()
-			});
+	
+			var bbox = {
+				west : parseFloat( this.$el.find("#west").val()),
+				south: parseFloat( this.$el.find("#south").val()),
+				east: parseFloat( this.$el.find("#east").val()),
+				north: parseFloat( this.$el.find("#north").val())
+			};
+			this.model.searchArea.setBBox(bbox);
 			this.parentView.updateSearchAreaLayer();
 		}
 		this.$el.show();
@@ -147,16 +178,18 @@ var BoxView = Backbone.View.extend({
 	// Synchronize map extent
     synchronizeWithMapExtent : function(){
     	var mapExtent = Map.getViewportExtent();
-		this.model.searchArea.setBBox({west : mapExtent[0],
-			south : mapExtent[1],
-			east : mapExtent[2],
-			north : mapExtent[3]
-		});
 		
-		this.$el.find("#west").val(mapExtent[0]);
-		this.$el.find("#south").val(mapExtent[1]);
-		this.$el.find("#east").val(mapExtent[2]);
-		this.$el.find("#north").val(mapExtent[3]);
+		var bbox = { west : clipLon(mapExtent[0]),
+			south : clipLat(mapExtent[1]),
+			east : clipLon(mapExtent[2]),
+			north : clipLat(mapExtent[3])
+		};
+		this.model.searchArea.setBBox(bbox);
+		
+		this.$el.find("#west").val(bbox.west);
+		this.$el.find("#south").val(bbox.south);
+		this.$el.find("#east").val(bbox.east);
+		this.$el.find("#north").val(bbox.north);
     }
 	
 });
