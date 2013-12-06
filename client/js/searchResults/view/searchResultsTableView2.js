@@ -1,10 +1,11 @@
 define(
-		[ 'jquery', 'ui/tableView', 'configuration', 'search/model/datasetSearch', 
+		[ 'jquery', 'logger', 'ui/tableView', 'configuration', 'searchResults/model/searchResults',
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget' ],
-	function($, TableView, Configuration, DatasetSearch, SimpleDataAccessRequest, DownloadManagersWidget,
+	function($, Logger, TableView, Configuration, SearchResults, SimpleDataAccessRequest, DownloadManagersWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
+			
 /**
  * The model is the backbone model SearchResults 
  */
@@ -21,7 +22,15 @@ var SearchResultsTableView = TableView.extend({
 		this.model.on("selectFeatures", this.onSelectionChanged, this );
 		this.model.on("unselectFeatures", this.onSelectionChanged, this );
 		
-		this.columnDefs = Configuration.data.resultsTable.columnsDef
+		this.columnDefs = Configuration.data.resultsTable.columnsDef;
+		
+		// Set specific class for direct download of product
+		var ddIndex = Configuration.localConfig.directDownload.productColumnIndex;
+		if ( ddIndex >= 0 && ddIndex < this.columnDefs.length ) {
+			this.columnDefs[  ddIndex ].getClasses = function(feature) {
+				return SearchResults.isBrowserSupportedUrl(feature) ? "ui-direct-download" : "";
+			};
+		}
 	},
 
 	/**
@@ -31,12 +40,14 @@ var SearchResultsTableView = TableView.extend({
 		
 		//Called when the user clicks on the product id of an item
 		'click .ui-direct-download' : function(event){
-			var feature = this.getFeatureFromRow( $(event.currentTarget).closest('tr').get(0) );
-			var featureArray = [];
-			featureArray.push(feature);
-			//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
-			var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrls(featureArray)[0]);
-			directDownloadWidget.open(event);
+			if ( this.model.downloadAccess ) {
+				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
+				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
+				var directDownloadWidget = new DirectDownloadWidget(  SearchResults.getDirectDownloadProductUrl(feature) );
+				directDownloadWidget.open(event);
+			} else {
+				Logger.inform("Cannot download the product : missing permissions.");
+			}
 		}
 	},
 	
@@ -77,11 +88,15 @@ var SearchResultsTableView = TableView.extend({
 		var self = this;
 		this.retrieveProduct.click(function() {
 
-			SimpleDataAccessRequest.initialize();
-			SimpleDataAccessRequest.setProducts( self.model.selection );
-			
-			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-			downloadManagersWidget.open();
+			if ( self.model.downloadAccess ) {
+				SimpleDataAccessRequest.initialize();
+				SimpleDataAccessRequest.setProducts( self.model.selection );
+				
+				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+				downloadManagersWidget.open();
+			} else {
+				Logger.inform("Cannot download the product : missing permissions.");
+			}
 
 		});
 		

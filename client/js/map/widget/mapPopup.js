@@ -59,12 +59,23 @@ var MapPopup = function(container) {
 	var btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo( element.find('#mpButtons') )
 		.click( function() {
-						
-			SimpleDataAccessRequest.initialize();
-			SimpleDataAccessRequest.setProducts( products );
 		
-			var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-			downloadManagersWidget.open();
+			var allowedProducts = [];
+			for ( var i = 0; i < products.length; i++ ) {
+				if ( products[i]._featureCollection.downloadAccess ) {
+					allowedProducts.push( products[i] );
+				}
+			}
+						
+			if ( allowedProducts.length > 0 ) {
+				SimpleDataAccessRequest.initialize();
+				SimpleDataAccessRequest.setProducts( allowedProducts );
+			
+				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
+				downloadManagersWidget.open();
+			} else {
+				Logger.inform("Cannot download product : missing permissions.");
+			}
 			
 		});
 		

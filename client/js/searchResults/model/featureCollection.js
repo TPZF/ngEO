@@ -34,6 +34,12 @@ var FeatureCollection = function() {
 	// The hightlighted features
 	this.highlights = [];
 	
+	// View access
+	this.viewAccess = true;
+	
+	// Download access
+	this.downloadAccess = true;
+	
 	// The id of the feature collection
 	this.id = "";
 	
