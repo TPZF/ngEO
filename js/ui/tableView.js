@@ -1,7 +1,8 @@
 define(
-		[ 'jquery', 'backbone' ],
-	function($, Backbone ) {
+		[ 'jquery', 'backbone'],
+	function($, Backbone) {
 
+	
 /**
 	Get data from a path
  */
@@ -41,7 +42,7 @@ var TableView = Backbone.View.extend({
 		if ( options ) {
 			this.columnDefs = options.columnDefs;
 		}
-		
+
 		this.hasGroup = false;
 		
 		this.rowsData = [];
@@ -303,7 +304,7 @@ var TableView = Backbone.View.extend({
 		this.toggleSelection( this.model.selection );
 		this.highlightFeatureCallBack(this.model._highlighted,[]);
 	},
-	
+
 	/**
 	 * Build table content from data
 	 */
@@ -322,9 +323,20 @@ var TableView = Backbone.View.extend({
 			}
 			$row.append('<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>');
 			for ( var j = 0; j < this.visibleRowsData[i].cellData.length; j++ ) {
-				$row.append( '<td>' +  this.visibleRowsData[i].cellData[j] + '</td>');
-			}
 			
+				// Check if column has some specific classes
+				var classes;
+				if ( this.columnDefs[j].getClasses ) {
+					classes = this.columnDefs[j].getClasses( this.visibleRowsData[i].feature );
+				}
+				
+				if ( classes ) {
+					$row.append( '<td class="' + classes + '">' +  this.visibleRowsData[i].cellData[j] + '</td>');
+				} else {
+					$row.append( '<td>' +  this.visibleRowsData[i].cellData[j] + '</td>');
+				}
+			}
+					
 			$row.data('internal', this.visibleRowsData[i]);
 			
 			$row = $row.appendTo($body);

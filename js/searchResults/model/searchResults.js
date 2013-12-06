@@ -1,8 +1,8 @@
 /**
  * results table model as received from the server
  */
-define( ['jquery', 'backbone', 'configuration', 'searchResults/model/featureCollection', 'search/model/dataSetPopulation', 'search/model/datasetSearch'],
-	function($, Backbone, Configuration, FeatureCollection, DataSetPopulation, DatasetSearch) {
+define( ['jquery', 'backbone', 'configuration', 'searchResults/model/featureCollection', 'search/model/dataSetPopulation', 'search/model/datasetSearch', 'search/model/datasetAuthorizations'],
+	function($, Backbone, Configuration, FeatureCollection, DataSetPopulation, DatasetSearch, DatasetAuthorizations) {
 
 
 var SearchResults = {
@@ -29,22 +29,6 @@ var SearchResults = {
 		return productUrls;
 	},
 
-	
-	/** the direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */
-	getDirectDownloadProductUrls : function(features) {
-		
-		var productUrls = [];
-		var eor;
-		
-		for ( var i = 0; i < features.length; i++ ) {
-			eor = features[i].properties.EarthObservation.EarthObservationResult;
-			if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" ) {
-				productUrls.push(eor.eop_ProductInformation.eop_filename);
-			} 
-			
-		}
-		return productUrls;
-	},
 	
 	/** return the non Planned features */
 	getNonPlannedItems : function(features) {
@@ -154,13 +138,21 @@ var SearchResults = {
 		});
 	},
 	
+	/** the direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */
+	getDirectDownloadProductUrl : function(feature) {
+		
+		var eor = feature.properties.EarthObservation.EarthObservationResult;
+		if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" ) {
+			return eor.eop_ProductInformation.eop_filename;
+		}
+		return "";
+	},
+	
 	/**  Check whether the given feature has a direct download url supported by a browser */
 	isBrowserSupportedUrl : function(feature) {
 
-		var eor = feature.properties.EarthObservation.EarthObservationResult;
-		if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" &&
-				(eor.eop_ProductInformation.eop_filename.indexOf("http") != -1 ||
-						eor.eop_ProductInformation.eop_filename.indexOf("https") != -1)) {
+		var downloadUrl = this.getDirectDownloadProductUrl(feature);
+		if ( downloadUrl.indexOf("http") != -1 || downloadUrl.indexOf("https") != -1 ) {
 			return true;
 		}	
 		return false;
@@ -177,6 +169,8 @@ DataSetPopulation.on('select', function(dataset) {
 	if (!SearchResults.featureCollection.hasOwnProperty(datasetId)) {
 		var fc = new FeatureCollection();
 		fc.id = datasetId;
+		fc.viewAccess = DatasetAuthorizations.hasViewAccess(datasetId);
+		fc.downloadAccess = DatasetAuthorizations.hasDownloadAccess(datasetId);
 		SearchResults.featureCollection[datasetId] = fc;
 		SearchResults.trigger('add:featureCollection',fc);
 	}

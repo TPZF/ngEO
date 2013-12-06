@@ -17,15 +17,13 @@ var _onSelectFeatures = function(features,fc) {
 		}
 	}
 	
-	fc._browsesLayer.addFeatures(features);
-	
 	// Only display browse if the user has view access
-/*	if ( DatasetSearch.get("viewAccess") ) {
-		browsesLayer.addFeatures(features);
-	} else if (!viewAccessInformation) {
+	if ( fc.viewAccess ) {
+		fc._browsesLayer.addFeatures(features);
+	} else if (!fc._viewAccessInformation) {
 		Logger.inform("You do not have enough permission to view the product.");
-		viewAccessInformation = true;
-	}*/
+		fc._viewAccessInformation = true;
+	}
 };
 
 var _onUnselectFeatures = function(features,fc) {
@@ -66,12 +64,12 @@ var _onHighlightFeatures = function(features,prevFeatures,fc) {
 		fc._browsesLayer.addFeatures(features);
 
 		// Only display browse if the user has view access
-/*		if ( DatasetSearch.get("viewAccess") ) {
-			browsesLayer.addFeatures(features);
-		} else if (!viewAccessInformation) {
+		if ( fc.viewAccess ) {
+			fc._browsesLayer.addFeatures(features);
+		} else if (!fc._viewAccessInformation) {
 			Logger.inform("You do not have enough permission to view the product.");
-			viewAccessInformation = true;
-		}*/
+			fc._viewAccessInformation = true;
+		}
 	}
 };	
 
@@ -178,90 +176,6 @@ return {
 			// Activate the last
 			$('#bottomToolbar command:last-child').click();
 		});
-/*		
-		
-		// Connect search results events with map
-		var footprintLayer = Map.addLayer({
-			name: "Result Footprints",
-			type: "Feature",
-			visible: true,
-			style: "results-footprint",
-			greatCircle: true
-		});
-		var browsesLayer = Map.addLayer({
-			name: "Result Browses",
-			type: "Browses",
-			visible: true
-		});
-		
-		var viewAccessInformation = false;
-		SearchResults.on('reset:features', function() {
-			footprintLayer.clear();
-			browsesLayer.clear();
-			viewAccessInformation = false;
-		});
-		
-		SearchResults.on('add:features', footprintLayer.addFeatures, footprintLayer);
-		SearchResults.on('zoomToFeature', Map.zoomToFeature);
-		
-		SearchResults.on('selectFeatures', function(features,searchResults) {
-			for ( var i = 0; i < features.length; i++ ) {
-				if ( searchResults.isHighlighted(features[i]) ) {
-					footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
-				} else {
-					footprintLayer.modifyFeaturesStyle([features[i]], "select" );
-				}
-			}
-			// Only display browse if the user has view access
-			if ( DatasetSearch.get("viewAccess") ) {
-				browsesLayer.addFeatures(features);
-			} else if (!viewAccessInformation) {
-				Logger.inform("You do not have enough permission to view the product.");
-				viewAccessInformation = true;
-			}
-		});
-		SearchResults.on('unselectFeatures', function(features,searchResults) {
-			for ( var i = 0; i < features.length; i++ ) {
-				if ( searchResults.isHighlighted(features[i]) ) {
-					footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
-				} else {
-					footprintLayer.modifyFeaturesStyle([features[i]], "default" );
-					browsesLayer.removeFeatures([features[i]]);
-				}
-			}
-		});
-		SearchResults.on('highlightFeatures', function(features,prevFeatures,searchResults) {
-			
-			if ( prevFeatures ) {
-				
-				for ( var i = 0; i < prevFeatures.length; i++ ) {
-
-					if ( searchResults.isSelected(prevFeatures[i]) ) {
-						footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select" );
-					} else {
-						footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default" );
-						browsesLayer.removeFeatures([prevFeatures[i]]);
-					}
-				}
-			}
-			
-			if ( features ) {
-				for ( var i = 0; i < features.length; i++ ) {
-					if ( searchResults.isSelected(features[i]) ) {
-						footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
-					} else {
-						footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
-					}
-				}
-				// Only display browse if the user has view access
-				if ( DatasetSearch.get("viewAccess") ) {
-					browsesLayer.addFeatures(features);
-				} else if (!viewAccessInformation) {
-					Logger.inform("You do not have enough permission to view the product.");
-					viewAccessInformation = true;
-				}
-			}
-		});	*/
 		
 		// Initialize the default handler
 		SelectHandler.initialize();
