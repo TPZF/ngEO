@@ -78,6 +78,9 @@ var DownloadManagersListView = Backbone.View.extend({
 		// Display the message
 		//NGEO 782 : fixed failure response message content
 		$("#serverMessage").html('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
+		
+		// NGEO-900 : close widget when finished
+		this.$el.parent().ngeowidget('hide');
 	},	
 	
 	render: function(){

@@ -21,6 +21,7 @@ return {
 		});
 		
 		var onDatasetPopulationLoaded = function() {
+			$("#dataset").removeClass('ui-disabled');
 			panelManager.on('leftResized', datasetView.updateContentHeight, datasetView );
 			panelManager.left.add( datasetView, '#dataset' );
 			datasetView.render();
@@ -165,11 +166,7 @@ return {
 				MenuBar.showPage("data-services-area");			
 						
 		});
-		
-		// At init time, search and subscribe are disabled
-		$('#search').addClass('ui-disabled');
-		$('#subscribe').addClass('ui-disabled');
-		
+				
 		// Update interface when dataset selection has changed
 		var onDatasetSelectionChanged = function(dataset) {
 			var numDatasets = _.size(DataSetPopulation.selection);
