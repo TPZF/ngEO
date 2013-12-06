@@ -28,6 +28,7 @@ return {
 		datasetPopulation.fetch({
 			success: function() {
 								
+				$("#dataset").removeClass('ui-disabled');
 				panelManager.on('leftResized', datasetView.updateContentHeight, datasetView );
 				panelManager.left.add( datasetView, '#dataset' );
 				datasetView.render();
@@ -35,7 +36,6 @@ return {
 			},//when the fetch fails display an error message and disable the datasets "button"
 			// so the application is still usable and the user can still see the other menus.
 			error: function(){
-				$("#dataset").addClass('ui-disabled');
 				Logger.error('Cannot retreive the DataSetPopulationMatrix from the server');
 			}
 		});	
