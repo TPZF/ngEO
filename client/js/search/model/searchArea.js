@@ -174,42 +174,9 @@ var SearchArea = function() {
 		_updateFeature();
 	};
 	
-	//checks that all the inputs are valid coordinates 
-	this.isValidBBox = function(bbox) {
-
-		return (this.isValidLongitude(bbox.west) && this.isValidLongitude(bbox.east) 
-				&& this.isValidLatitude(bbox.south) && this.isValidLatitude(bbox.north));
-	};
-	
-	/** Return a true if the input longitude is a valid longitude unless return false */ 
-	this.isValidLongitude = function(longitude){
-		//regexp for longitude
-	 	var longitudeRegExp = /\s*(\-)?(180|1[0-7]\d|\d\d|\d)(\.\d+)?/g;
-	 	//Validate longitudes		
-	 	var match = longitudeRegExp.exec(longitude);
-	 	//if the entered value does not match or does partially match the requested format
-	 	if (!match || (match && match.indexOf(longitude) == - 1)){
-	 		return false;
-	 	}
-	 	return true;
-	};
-	
-	/** Return a true if the input latitude is a valid latitude unless return false */ 
-	this.isValidLatitude = function(latitude){
-		//regexp for latitudes
-		var latitudeRegExp = /\s*(\-)?(90|[0-8]\d|\d)(\.\d+)?/g;
-	 	//Validate latitudes		
-	 	var match = latitudeRegExp.exec(latitude);
-	 	//if the entered value does not match or does partially match the requested format
-	 	if (!match || (match && match.indexOf(latitude) == - 1)){
-	 		return false;
-	 	}
-	 	return true;
-	};
-	
 	// Set the BBox
 	this.setBBox = function(bbox) {
-	 	_feature.bbox = [ parseFloat(bbox.west), parseFloat(bbox.south), parseFloat(bbox.east), parseFloat(bbox.north) ];
+	 	_feature.bbox = [ bbox.west, bbox.south, bbox.east, bbox.north ];
 		_mode = SearchArea.BBOX;
 		_updateFeature();
 	};

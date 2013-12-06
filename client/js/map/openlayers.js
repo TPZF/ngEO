@@ -295,7 +295,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 	}
 	
 	if (olLayer) {
-		if (layer.style) {
+		if (layer.style && this._styles[layer.style]) {
 			olLayer.styleMap = this._styles[layer.style];
 		}
 		olLayer.setVisibility(layer.visible);

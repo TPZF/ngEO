@@ -128,7 +128,8 @@ return {
 				name: fc.id + " Result Footprints",
 				type: "Feature",
 				visible: true,
-				style: "results-footprint"
+				style: "results-footprint",
+				greatCircle: true
 			});
 			var browsesLayer = Map.addLayer({
 				name: fc.id + " Result Browses",
@@ -184,7 +185,8 @@ return {
 			name: "Result Footprints",
 			type: "Feature",
 			visible: true,
-			style: "results-footprint"
+			style: "results-footprint",
+			greatCircle: true
 		});
 		var browsesLayer = Map.addLayer({
 			name: "Result Browses",
