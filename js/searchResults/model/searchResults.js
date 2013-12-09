@@ -178,10 +178,16 @@ DataSetPopulation.on('select', function(dataset) {
 
 // Listen to unselected dataset to remove the feature collection used to store the results
 DataSetPopulation.on('unselect', function(dataset) {
-	var datasetId = dataset.get('datasetId');
-	if (SearchResults.featureCollection.hasOwnProperty(datasetId)) {
-		SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[datasetId] );
-		delete SearchResults.featureCollection[datasetId];
+	// If mode is correlation/interferometry, switch back to Simple
+	if ( DatasetSearch.get('mode') != "Simple" ) {
+		DatasetSearch.set('mode',"Simple");
+	} else {
+		// Otherwise remove the dataset
+		var datasetId = dataset.get('datasetId');
+		if (SearchResults.featureCollection.hasOwnProperty(datasetId)) {
+			SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[datasetId] );
+			delete SearchResults.featureCollection[datasetId];
+		}
 	}
 });
 
@@ -189,9 +195,9 @@ DataSetPopulation.on('unselect', function(dataset) {
 DatasetSearch.on('change:mode', function(model,mode) {
 
 	// Remove previous feature collection
-	for ( var datasetId in SearchResults.featureCollection ) {
-		SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[datasetId] );
-		delete SearchResults.featureCollection[datasetId];
+	for ( var id in SearchResults.featureCollection ) {
+		SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[id] );
+		delete SearchResults.featureCollection[id];
 	}
 		
 	switch (mode) {
