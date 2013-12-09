@@ -1,11 +1,11 @@
 
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
-         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/corrInterView',
+         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/corrInterView', 'search/view/openSearchURLView',
          'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, CorrInterView, SharePopup,
+				 AdvancedSearchView, DownloadOptionsView, CorrInterView, OpenSearchURLView, SharePopup,
 				 searchCriteria_template) {
 
 /**
@@ -18,16 +18,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	 */
 	id: "datasetSearchCriteria",
 
-	events: {
-		// Update the search criteria from the OpenSearch URL
-		"blur #osUrlText": function(event) {
-			var newUrl = $(event.currentTarget).val();
-			var prevUrl = Configuration.serverHostName + this.model.getOpenSearchURL();
-			if ( newUrl != prevUrl ) {
-				this.applyOpenSearchUrl(newUrl);
-			}
-		},
-		
+	events: {		
 		// Click on search
 		"click .scSubmit": function(event) {
 			SearchResults.launch( this.model );
@@ -74,13 +65,6 @@ var SearchCriteriaView = Backbone.View.extend({
 		},
 	},
 	
-	/**
-	 * Update the opensearch URL
-	 */
-	displayOpenSearchURL: function() {
-		var url = this.model.getOpenSearchURL();
-		this.$el.find("#osUrlText").val( url );	
-	},
 	
 	/**
 	 * Constructor
@@ -118,46 +102,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		}
 
 	},
-		
-	/**
-	 * Apply a new OpenSearch URL to the view
-	 */
-	applyOpenSearchUrl: function(newUrl) {
-	
-		try {
-			// Check if url is ok
-			var re = new RegExp('^'  + Configuration.serverHostName + Configuration.baseServerUrl + '/catalogue/([^/]+)/search\\?(.+)');
-			var m  = re.exec(newUrl);
-			if ( m ) {
-				// Url is ok, check if we need to change the dataset
-				var datasetId = m[1];
-				var currentDatasetId = this.model.get("datasetId");
-				
-				if ( datasetId == currentDatasetId ) {
-					// Directly populate the DatasetSearch with the URL parameters
-					this.model.populateModelfromURL( m[2] );
-				} else {
-					// First wait for the new dataset to be loaded, otherwise fallback to previous dataset, and do not update the parameters
-					this.model.once('change:dataset', function(dataset) {
-						if ( dataset ) {
-							this.model.populateModelfromURL( m[2] );
-						} else {
-							Logger.error("Invalid OpenSearch URL : cannot load the dataset " + datasetId + ".");
-							this.model.set('datasetId', currentDatasetId);
-						}
-					}, this);
-					this.model.set('datasetId', datasetId);
-				}
-			} else {
-				Logger.error("Invalid OpenSearch URL.");
-			}
-			
-		} catch (err) {
-			Logger.error("Invalid OpenSearch URL : " + err);
-		}
-		
-	},
-	
+
 	/**
 	 * Call when the view is shown
 	 */
@@ -216,18 +161,13 @@ var SearchCriteriaView = Backbone.View.extend({
 			model : this.model});
 		this.downloadOptionsView.render();
 		
-		this.$el.trigger('create');
+		// OpenSearch URL view
+		this.openSearchURLView = new OpenSearchURLView({
+			el: this.$el.find("#osUrl"), 
+			model : this.model });
+		this.openSearchURLView.render();
 		
-		// Refresh the OpenSearch URL when the textarea is visible
-		var self = this;
-		this.$el.find('#osUrl')
-			.bind('collapse', function() {
-					self.stopListening( self.model, 'change', self.displayOpenSearchURL );
-				})
-			.bind('expand', function() {
-					self.displayOpenSearchURL();
-					self.listenTo( self.model, 'change', self.displayOpenSearchURL );
-				});
+		this.$el.trigger('create');
 									
 		return this;
 	}

@@ -69,6 +69,18 @@ var DataSetPopulation = Backbone.Model.extend({
 	},
 	
 	/**
+	 * Select exclusively a dataset
+	 */
+	selectExclusive : function(datasetId) {
+		var prevSelection = this.selection;
+		this.selection = {};
+		for ( var x in prevSelection ) {
+			this.trigger('unselect',prevSelection[x]);
+		}
+		this.select( datasetId );
+	},	
+	
+	/**
 	 * Unselect a dataset
 	 */
 	unselect : function(datasetId) {

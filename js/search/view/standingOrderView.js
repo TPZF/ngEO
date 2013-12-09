@@ -1,11 +1,11 @@
 
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/spatialExtentView',
-         'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/schedulingOptionsView',
+         'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/schedulingOptionsView', 'search/view/openSearchURLView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/model/downloadManagers', 'dataAccess/view/downloadManagersListView', 'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SpatialExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, SchedulingOptionsView, StandingOrderDataAccessRequest, DownloadManagers, DownloadManagersListView, SharePopup,
+				 AdvancedSearchView, DownloadOptionsView, SchedulingOptionsView, OpenSearchURLView, StandingOrderDataAccessRequest, DownloadManagers, DownloadManagersListView, SharePopup,
 				 searchCriteria_template) {
 
 /**
@@ -18,16 +18,7 @@ var StandingOrderView = Backbone.View.extend({
 	 */
 	id: "standingOrderView",
 
-	events: {
-		// Update the search criteria from the OpenSearch URL
-		"blur #osUrlText": function(event) {
-			var newUrl = $(event.currentTarget).val();
-			var prevUrl = Configuration.serverHostName + this.model.getOpenSearchURL();
-			if ( newUrl != prevUrl ) {
-				this.applyOpenSearchUrl(newUrl);
-			}
-		},
-		
+	events: {		
 		// Click on search
 		"click .scSubmit": function(event) {
 		
@@ -76,65 +67,7 @@ var StandingOrderView = Backbone.View.extend({
 			});
 		}
 	},
-	
-	/**
-	 * Update the opensearch URL
-	 */
-	displayOpenSearchURL: function() {
-		if ( this.model.dataset ) {
-			var url = this.model.getOpenSearchURL();
-			this.$el.find("#osUrlText").val( url );	
-		} else {
-			this.$el.find("#osUrlText").val( '' );	
-		}
-	},
-	
-	/**
-	 * Constructor
-	 * Connect to model change and dataset loaded events
-	 */
-	initialize : function() {
-	},
 		
-	/**
-	 * Apply a new OpenSearch URL to the view
-	 */
-	applyOpenSearchUrl: function(newUrl) {
-	
-		try {
-			// Check if url is ok
-			var re = new RegExp('^'  + Configuration.serverHostName + Configuration.baseServerUrl + '/catalogue/([^/]+)/search\\?(.+)');
-			var m  = re.exec(newUrl);
-			if ( m ) {
-				// Url is ok, check if we need to change the dataset
-				var datasetId = m[1];
-				var currentDatasetId = this.model.get("datasetId");
-				
-				if ( datasetId == currentDatasetId ) {
-					// Directly populate the DatasetSearch with the URL parameters
-					this.model.populateModelfromURL( m[2] );
-				} else {
-					// First wait for the new dataset to be loaded, otherwise fallback to previous dataset, and do not update the parameters
-					this.model.once('change:dataset', function(dataset) {
-						if ( dataset ) {
-							this.model.populateModelfromURL( m[2] );
-						} else {
-							Logger.error("Invalid OpenSearch URL : cannot load the dataset " + datasetId + ".");
-							this.model.set('datasetId', currentDatasetId);
-						}
-					}, this);
-					this.model.set('datasetId', datasetId);
-				}
-			} else {
-				Logger.error("Invalid OpenSearch URL.");
-			}
-			
-		} catch (err) {
-			Logger.error("Invalid OpenSearch URL : " + err);
-		}
-		
-	},
-	
 	/**
 	 * Call when the view is shown
 	 */
@@ -201,18 +134,14 @@ var StandingOrderView = Backbone.View.extend({
 		});
 		this.schedulingOptionsView.render();
 		
+		// OpenSearch URL view
+		this.openSearchURLView = new OpenSearchURLView({
+			el: this.$el.find("#osUrl"), 
+			model : this.model });
+		this.openSearchURLView.render();
+
 		this.$el.trigger('create');
 		
-		// Refresh the OpenSearch URL when the textarea is visible
-		var self = this;
-		this.$el.find('#osUrl')
-			.bind('collapse', function() {
-					self.stopListening( self.model, 'change', self.displayOpenSearchURL );
-				})
-			.bind('expand', function() {
-					self.displayOpenSearchURL();
-					self.listenTo( self.model, 'change', self.displayOpenSearchURL );
-				});
 									
 		return this;
 	}
