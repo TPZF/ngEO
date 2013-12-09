@@ -7,13 +7,13 @@ function isValidLon(lon) {
 	if (isNaN(lon))
 		return false;
 	
-	return lon > -180 && lon < 180;
+	return lon >= -180 && lon <= 180;
 }
 function isValidLat(lat) {
 	if (isNaN(lat))
 		return false;
 	
-	return lat > -90 && lat < 90;
+	return lat >= -90 && lat <= 90;
 }
 
 function clipLon(lon) {
