@@ -128,11 +128,12 @@ return {
 				if (datasetId && datasetId != "None") {
 							
 					//when the dataset selected cannot be loaded, display an error message
-					DatasetSearch.once("change:dataset", function(dataset){
+					// See NGEO-727 : error should be removed
+					/*DatasetSearch.once("change:dataset", function(dataset){
 						if (!dataset) {
 							Logger.error('Cannot load the dataset :' + datasetId + ' from user preferences.');
 						}
-					});
+					});*/
 
 					//set the selected dataset in the model
 					DatasetSearch.set("datasetId", datasetId);
