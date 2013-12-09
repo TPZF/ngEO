@@ -90,7 +90,7 @@ define( ['jquery', 'backbone', 'configuration',
 		render: function(){
 			//get the default values from the model
 			var content = _.template(schedulingOptions_template, this.request);
-			this.$el.append(content);
+			this.$el.html(content);
 			this.$el.find("#standingOrderSpecificMessage").append(this.request.getSpecificMessage());
 			if (!this.request.timeDriven){
 				this.$el.find("#timeDrivenParams").hide();

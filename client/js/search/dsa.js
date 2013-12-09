@@ -81,9 +81,8 @@ return {
 													
 					DatasetSearch.populateModelfromURL(query);
 					
-					// Resfreh the advanced and download options view
-					searchView.advancedCriteriaView.render();
-					searchView.downloadOptionsView.render();
+					// Resfreh the view
+					searchView.refresh();
 					
 					// Show search panel
 					$('#search').click();
@@ -120,10 +119,8 @@ return {
 					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 					standingOrder.populateModelfromURL(query);
 					
-					// Resfreh the advanced and download options view
-					standingOrderView.advancedCriteriaView.render();
-					standingOrderView.downloadOptionsView.render();
-		
+					// Resfreh the  view
+					standingOrderView.refresh();
 
 					// Show standing order panel
 					$('#subscribe').click();
