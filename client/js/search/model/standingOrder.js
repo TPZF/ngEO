@@ -39,7 +39,7 @@ var StandingOrder = SearchCriteria.extend({
 	 * Get the dataset path to build URLs
 	 */
 	getDatasetPath: function() {
-		return this.dataset.get('datasetId');
+		return this.dataset ? this.dataset.get('datasetId') : "";
 	},
 	
 	/** load the information for the selected dataset from the server 
