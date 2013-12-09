@@ -171,7 +171,15 @@ var SearchCriteriaView = Backbone.View.extend({
 	updateContentHeight: function() {
 		this.$el.find('#sc-content').css('height', this.$el.height() - this.$el.find('#sc-footer').outerHeight() );
 	},
-		
+	
+	/**
+	 * Refresh the view : only for views that does not listen to model changes (for performance reasons)
+	 */
+	refresh: function() {
+		this.advancedCriteriaView.render();
+		this.downloadOptionsView.render();
+	},
+	
 	/**
 	 * Render the view
 	 */
