@@ -75,10 +75,10 @@ var BoxView = Backbone.View.extend({
 		'blur input' : function(event){
 			
 			var bbox = {
-					west : parseFloat(self.$el.find("#west").val()),
-					south: parseFloat(self.$el.find("#south").val()),
-					east: parseFloat(self.$el.find("#east").val()),
-					north: parseFloat(self.$el.find("#north").val())
+					west : parseFloat(this.$el.find("#west").val()),
+					south: parseFloat(this.$el.find("#south").val()),
+					east: parseFloat(this.$el.find("#east").val()),
+					north: parseFloat(this.$el.find("#north").val())
 				};
 				
 			
@@ -87,10 +87,10 @@ var BoxView = Backbone.View.extend({
 				this.model.searchArea.setBBox(bbox);
 			} else {
 				bbox = this.model.searchArea.getBBox();
-				self.$el.find("#west").val( bbox.west );
-				self.$el.find("#south").val( bbox.south );
-				self.$el.find("#east").val( bbox.east );
-				self.$el.find("#north").val( bbox.north );
+				this.$el.find("#west").val( bbox.west );
+				this.$el.find("#south").val( bbox.south );
+				this.$el.find("#east").val( bbox.east );
+				this.$el.find("#north").val( bbox.north );
 			}
 			
 			this.parentView.updateSearchAreaLayer();
