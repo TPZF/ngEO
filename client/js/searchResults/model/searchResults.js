@@ -15,6 +15,8 @@ var SearchResults = {
 		for ( var x in this.featureCollection ) {
 			this.featureCollection[x].launch(searchCriteria);
 		}
+		
+		this.trigger('launch');
 	},
 	
 	/** Get the product urls of the features */
