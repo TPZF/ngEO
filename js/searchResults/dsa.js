@@ -8,6 +8,7 @@ define(["jquery", "logger", "map/map", "map/selectHandler",
 // Private variable
 var _views = {};
 
+// Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features,fc) {
 	for ( var i = 0; i < features.length; i++ ) {
 		if ( fc.isHighlighted(features[i]) ) {
@@ -26,6 +27,7 @@ var _onSelectFeatures = function(features,fc) {
 	}
 };
 
+// Call when a feature is unselected to synchronize the map
 var _onUnselectFeatures = function(features,fc) {
 	for ( var i = 0; i < features.length; i++ ) {
 		if ( fc.isHighlighted(features[i]) ) {
@@ -37,6 +39,7 @@ var _onUnselectFeatures = function(features,fc) {
 	}
 };
 
+// Call when a feature is highlighted to synchronize the map
 var _onHighlightFeatures = function(features,prevFeatures,fc) {
 	
 	if ( prevFeatures ) {
@@ -152,13 +155,16 @@ return {
 		
 		// Call when a feature collection is removed
 		SearchResults.on('remove:featureCollection', function(fc) {
-			// update the toolbar
+			// Update the toolbar
 			$('#result' + fc.id)
 				.remove();
+				
+			// Update the daterange slider
 			$('#dateRangeSlider').css('left', $('#bottomToolbar').outerWidth() );
 			var slider = $("#dateRangeSlider").data("dateRangeSlider");
 			if (slider) slider.refresh();
 			
+			// Remove the view
 			_views[ fc.id ].remove();
 			delete _views[ fc.id ];
 			
@@ -200,6 +206,13 @@ return {
 			
 			for ( var x in SearchResults.featureCollection ) {
 				SearchResults.featureCollection[x].highlight( highlights[x] );
+			}
+		});
+		
+		// Do not stay on shopcart when a search is launched
+		SearchResults.on('launch', function() {
+			if ( $('#shopcart').hasClass('toggle') ) {
+				$('#shopcart').next().click();
 			}
 		});
 
