@@ -43,11 +43,12 @@ var SearchCriteriaView = Backbone.View.extend({
 				this.corrInterView = null;
 			}
 			
-			this.model.set("mode",value);
+			//this.model.set("mode",value);
+			this.model.setMode(value);
 			
 			// Add the accordion for correlation/inteferometry
 			if ( value != "Simple" ) {
-				 this.$el.find('#sc-advanced-container').after(
+				 this.$el.find('#sc-area-container').after(
 					'<div id="sc-corrinf-container" data-role="collapsible" data-inset="false" data-mini="true">\
 						<h3>' + value + '</h3>\
 						<div id="sc-corrinf">	</div>\
@@ -70,7 +71,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Constructor
 	 */
 	initialize : function() {
-		this.listenTo( this.model, 'change:numDatasets', this.updateSelectMode );
+		//this.listenTo( this.model, 'change:numDatasets', this.updateSelectMode );
 	},
 	
 	/**
@@ -81,20 +82,22 @@ var SearchCriteriaView = Backbone.View.extend({
 		this.$el.find('#sc-corrinf-container').remove();
 		this.$el.find('#sc-mode-containter').remove();
 		
-		if ( this.model.numDatasets > 1 && this.model.numDatasets <= 4 ) {
+		// Only interferometry supported for Task4
+		//if ( this.model.datasetIds.length > 1 && this.model.datasetIds.length <= 4 ) {
+		if ( this.model.datasetIds.length == 2 ) {
 		
 			var $mode = $('<div id="sc-mode-containter" data-role="fieldcontain">\
 				<label for="sc-mode">Mode: </label>\
 				<select id="sc-mode" data-mini="true">\
 					<option value="Simple">Simple</option>\
-					<option value="Correlation">Correlation</option>\
+					<option value="Interferometry">Interferometry</option>\
 				</select>\
 			</div>');
 			
-			// Check correlation and interferometry
-			if ( this.model.numDatasets == 2 ) {
+			/*// Check correlation and interferometry
+			if ( this.model.datasetIds.length == 2 ) {
 				$mode.find('#sc-mode').append('<option value="Interferometry">Interferometry</option>');
-			}
+			}*/
 			
 			this.$el.find('#sc-content')
 				.prepend($mode)
@@ -107,6 +110,7 @@ var SearchCriteriaView = Backbone.View.extend({
 	 * Call when the view is shown
 	 */
 	onShow: function() {
+		this.updateSelectMode();
 		this.updateContentHeight();
 	},
 	

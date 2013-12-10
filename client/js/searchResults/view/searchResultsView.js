@@ -128,8 +128,12 @@ var SearchResultsView = Backbone.View.extend({
 		if ( DatasetSearch.get('mode') == "Simple" ) {
 			this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id );
 		} else {
-			// TODO : show master and slave
-			this.$el.find('#datasetMessage').html('Datasets : ' + DatasetSearch.datasets );
+ 			this.$el.find('#datasetMessage').html('Dataset : ' + DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(','));
+			
+			// Update message when master has changed
+			DatasetSearch.on('change:master', function() {
+				this.$el.find('#datasetMessage').html('Dataset : ' + DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(','));
+			}, this);
 		}
 
 		// To start paging is disable
