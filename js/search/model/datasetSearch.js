@@ -41,10 +41,10 @@ var _mergeAttributes = function( datasets, attrName, id ) {
 	return mergedAttributes;
 };
 
-	/**
-	 * This class manages the criteria for search
-	 *
-	 */
+/**
+ * This class manages the criteria for search
+ *
+ */
 var DataSetSearch = SearchCriteria.extend({
 	
 	defaults:{
@@ -93,11 +93,13 @@ var DataSetSearch = SearchCriteria.extend({
 		var baseUrl = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
 		
 		var url = baseUrl;
-		url += this.get('master') + "/search?";
+		url += this.getDatasetPath() + "/search?";
 		url += this.getOpenSearchParameters();
 		
 		// Correlation/Interferometry
 		if ( this.get('mode') != "Simple" ) {
+		
+			// Add interferometry specific parameters
 			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
 			
 			// Interferometry : only one dataset
@@ -105,7 +107,7 @@ var DataSetSearch = SearchCriteria.extend({
 			slaveUrl += this.slaves + "/search?";
 			slaveUrl += this.getOpenSearchParameters();
 			url += "&with=" + encodeURIComponent(slaveUrl);
-		}
+		} 
 		
 		url += "&format=json";
 		
@@ -116,7 +118,7 @@ var DataSetSearch = SearchCriteria.extend({
 	 * Get the dataset path to build URLs
 	 */
 	getDatasetPath: function() {
-		return this.datasetIds.join(',');
+		return this.get('mode') == "Simple" ? this.datasetIds.join(',') : this.get('master');
 	},
 	
 	/** Compute the available date range from the selected datasets */
@@ -168,8 +170,6 @@ var DataSetSearch = SearchCriteria.extend({
 		for ( var x in DatasetPopulation.selection ) {
 			this.datasetIds.push(x);
 		}
-		
-		this.trigger('change:numDatasets');
 		
 		//reset all the selected attributes and download options from the old selection
 		this.clearAdvancedAttributesAndDownloadOptions();
