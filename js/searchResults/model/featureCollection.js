@@ -98,10 +98,7 @@ var FeatureCollection = function() {
 	this.launch = function(searchCriteria) {
 	
 		// build base url
-		_url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/" + this.id + "/search?";
-
-		// add parameters from search criteria
-		_url += searchCriteria.getOpenSearchParameters();
+		_url = searchCriteria.getOpenSearchURL();
 		
 		_url += "&count=" + this.countPerPage;
 		

@@ -12,7 +12,7 @@ var OpenSearchURLView = Backbone.View.extend({
 		// Update the search criteria from the OpenSearch URL
 		"blur #osUrlText": function(event) {
 			var newUrl = $(event.currentTarget).val();
-			var prevUrl = Configuration.serverHostName + this.model.getOpenSearchURL();
+			var prevUrl = this.model.getOpenSearchURL();
 			if ( newUrl != prevUrl ) {
 				this.applyOpenSearchUrl(newUrl);
 			}

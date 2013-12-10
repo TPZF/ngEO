@@ -84,29 +84,14 @@ var SearchCriteria = Backbone.Model.extend({
 	 */
 	getOpenSearchURL : function(){
 
-		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/"+ this.getCoreURL() + "&format=json";
+		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
+		url += this.getDatasetPath() + "/search?";
+		url += this.getOpenSearchParameters();
+		url += "&format=json";
 		
 		return url;
 	},
-	
-	/** get the url without base url with all search criteria */
-	getCoreURL : function() {
-		
-		var url =  this.getDatasetPath()  + "/search?";
 
-		//add area criteria if set
-		url += this.addGeoTemporalParams();
-		
-		//always add the advanced criteria values selected and already set to the model
-		url = this.addAdvancedCriteria(url);
-
-		//add the download options values selected and already set to the model
-		url = this.addDownloadOptionsWithProductURIConvention(url);
-		
-		//console.log("DatasetSearch module : getCoreURL method : " + url);
-		
-		return url;
-	},
 		
 	/** get the url without base url with all search criteria */
 	getOpenSearchParameters : function(){
