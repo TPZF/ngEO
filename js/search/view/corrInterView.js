@@ -9,14 +9,19 @@ define( ['jquery', 'backbone', 'text!search/template/corrInterContent.html',
  */
 var CorrInterView = Backbone.View.extend({
 
-	initialize : function(){
-									
+	// Events
+	events: {		
+		"change #masterD": function(event) {
+			this.model.setMaster( $(event.currentTarget).val() );
+		},
+		
+		"blur input": function(event) {
+			this.model.set( event.currentTarget.id, $(event.currentTarget).val() );
+		}
 	},
 	
-	events :{		
-	},
-	
-	render: function(){
+	// Render the corr/infer view
+	render: function() {
 		var content = _.template(corrInterContent_template, this.model, { variable: 'model' });
 		this.$el.html(content);
 

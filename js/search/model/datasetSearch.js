@@ -59,7 +59,8 @@ var DataSetSearch = SearchCriteria.extend({
 		dDiff: 10,
 		sOverP: 25,
 		nBase: 5,
-		bSync: 5
+		bSync: 5,
+		master: ""
 	},
 	
 	name: "Search",
@@ -70,8 +71,11 @@ var DataSetSearch = SearchCriteria.extend({
 	initialize : function() {
 		SearchCriteria.prototype.initialize.apply(this, arguments);
 		
-		// A string representing the datasets selected
-		this.datasets = "";
+		// The array of selected dataset Ids
+		this.datasetIds = [];
+		
+		// The array of slaves
+		this.slaves = [];
 		
 		// The number of selected datasets
 		this.numDatasets = 0;
@@ -85,7 +89,11 @@ var DataSetSearch = SearchCriteria.extend({
 	 * Get the dataset path to build URLs
 	 */
 	getDatasetPath: function() {
-		return this.datasets;
+		if ( this.get('mode') == "Simple" ) {
+			return this.datasetIds.join(',');
+		} else  {
+			return this.get('master');
+		}
 	},
 	
 	/** Compute the available date range from the selected datasets */
@@ -110,18 +118,32 @@ var DataSetSearch = SearchCriteria.extend({
 		this.set('dateRange', dateRange);
 	},
 	
+	/** Set the master dataset for correlation/interferoemtry */
+	setMaster: function(val) {
+		var i = this.datasetIds.indexOf(val);
+		if ( i >= 0 ) {
+			this.slaves = this.datasetIds.slice(0);
+			this.slaves.splice(i,1);
+			this.set('master', val );
+		}
+	},
+	
+	
+	/** Set the mode for search : Simple, Correlation, Interferometry */
+	setMode: function(val) {
+		this.slaves = this.datasetIds.slice(0);
+		var master = this.slaves.shift();
+		this.set('master',master);
+		
+		this.set('mode',val);
+	},
 	
 	/** Call when the dataset selection is changed */
 	onDatasetSelectionChanged : function() {
 	
-		this.datasets = "";
-		this.numDatasets = 0;
+		this.datasetIds = [];
 		for ( var x in DatasetPopulation.selection ) {
-			if ( this.datasets.length > 0 ) {
-				this.datasets += ',';
-			}
-			this.datasets += x;
-			this.numDatasets++;
+			this.datasetIds.push(x);
 		}
 		
 		this.trigger('change:numDatasets');

@@ -166,7 +166,7 @@ return {
 				
 		// Update interface when dataset selection has changed
 		var onDatasetSelectionChanged = function(dataset) {
-			var numDatasets = _.size(DataSetPopulation.selection);
+			var numDatasets = DatasetSearch.datasetIds.length;
 			if ( numDatasets == 0 ) {
 				UserPrefs.save("Dataset", "None");
 

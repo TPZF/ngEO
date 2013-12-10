@@ -1,4 +1,11 @@
 
+<label for="masterD">Master : </label>
+<select id="masterD" data-mini="true">
+<% _.each( model.datasetIds, function(datasetId) { %>
+<option value="<%= datasetId %>"><%= datasetId %></option>
+<% }); %>
+</select>
+
 <label for="sOverP">Spatial Overlap Percentage : </label>
 <input type="number" id="sOverP" data-mini="true" value="<%= model.get('sOverP') %>"/>
 
