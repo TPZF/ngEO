@@ -325,7 +325,7 @@ var TableView = Backbone.View.extend({
 			for ( var j = 0; j < this.visibleRowsData[i].cellData.length; j++ ) {
 			
 				// Check if column has some specific classes
-				var classes;
+				var classes = null;
 				if ( this.columnDefs[j].getClasses ) {
 					classes = this.columnDefs[j].getClasses( this.visibleRowsData[i].feature );
 				}
