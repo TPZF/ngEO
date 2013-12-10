@@ -65,15 +65,7 @@ var SearchCriteriaView = Backbone.View.extend({
 
 		},
 	},
-	
-	
-	/**
-	 * Constructor
-	 */
-	initialize : function() {
-		//this.listenTo( this.model, 'change:numDatasets', this.updateSelectMode );
-	},
-	
+		
 	/**
 	 * Update the Select to choose the search mode (Simple, Correlation or Interferometry)
 	 */
