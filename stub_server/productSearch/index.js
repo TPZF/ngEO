@@ -108,12 +108,14 @@ var initializeFeatureCollection = function(featureCollection,id) {
 module.exports = function(req, res){
 
 	// Find the feature collection
-	var featureCollection;
-	if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ) {
-		featureCollection = featureCollections[req.param('datasetId')];
-	} else {
-		featureCollection = featureCollections['default'];
+	var fcId = 'default';
+	if ( req.param('with') ) {
+		fcId = 'Correlation';
+	} else if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ){
+		fcId = req.param('datasetId');
 	}
+	
+	var featureCollection = featureCollections[fcId];
 
 	// Process feature collection to add productUrl
 	if (!initialized) {

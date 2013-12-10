@@ -85,15 +85,38 @@ var DataSetSearch = SearchCriteria.extend({
 		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged );
 	},
 	
+	/** Create the openSearch url. 
+	 * The url contains spatial, temporal and search criteria parameters.
+	 */
+	getOpenSearchURL : function(){
+
+		var baseUrl = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
+		
+		var url = baseUrl;
+		url += this.get('master') + "/search?";
+		url += this.getOpenSearchParameters();
+		
+		// Correlation/Interferometry
+		if ( this.get('mode') != "Simple" ) {
+			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
+			
+			// Interferometry : only one dataset
+			var slaveUrl = baseUrl;
+			slaveUrl += this.slaves + "/search?";
+			slaveUrl += this.getOpenSearchParameters();
+			url += "&with=" + encodeURIComponent(slaveUrl);
+		}
+		
+		url += "&format=json";
+		
+		return url;
+	},	
+	
 	/**	
 	 * Get the dataset path to build URLs
 	 */
 	getDatasetPath: function() {
-		if ( this.get('mode') == "Simple" ) {
-			return this.datasetIds.join(',');
-		} else  {
-			return this.get('master');
-		}
+		return this.datasetIds.join(',');
 	},
 	
 	/** Compute the available date range from the selected datasets */

@@ -102,7 +102,7 @@ return {
 			var tableView = new SearchResultsTableView({ 
 				model : fc 
 			});
-			tableView.hasGroup = fc.id == "Correlation";
+			tableView.hasGroup = fc.id == "Correlation" || fc.id == "Interferometry";
 			
 			// update the toolbar
 			$('#bottomToolbar')
