@@ -13,6 +13,7 @@ var express = require('express')
   , productSearch = require('./productSearch')
   , downloadManagers = require('./downloadManagers')
   , simpleDataAccessRequest = require('./simpleDataAccessRequest')
+  , hostedProcessDataAccessRequest = require('./hostedProcessDataAccessRequest')
   , standingOrderDataAccessRequest = require('./standingOrderDataAccessRequest')
   , downloadStatuses = require('./dataAccessRequestStatus')
   , downloadHelper = require('./downloadHelper')
@@ -63,6 +64,9 @@ app.post('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
 
 //standing order DAR interface
 app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
+
+//hostedProcess DAR interface
+app.post('/ngeo/hostedProcessDataAccessRequest/request', hostedProcessDataAccessRequest);
 
 //data access statuses interface
 app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);

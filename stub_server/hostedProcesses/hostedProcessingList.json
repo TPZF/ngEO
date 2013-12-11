@@ -1,24 +1,17 @@
 {
     "hostedProcesses": [
         {
-            "hostedProcessId": "hostedProcess_1",
-            "name": "hostedProcess_1_name",
-            "displayName": "hostedProcess_1_name_to_display",
+            "hostedProcessId": "Basic_SLC_geocoder",
+            "name": "Basic_SLC_geocoder",
+            "displayName": "Basic SLC geocoder",
             "URL": "http://server/app.fr",
-            "description": "this is the description text of hostedProcess_1",
+            "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
             "parameters": [
                 {
                     "name": "parameter_1",
                     "description": "description of parameter_1",
-                    "type": "String",
-                    "values": [
-                        {
-                            "value": "string1"
-                        },
-                        {
-                            "value": "string2"
-                        }
-                    ]
+                    "type": "enumeration",
+                    "values": [ "string1", "string2" ]
                 },
                 {
                     "name": "parameter_2",
@@ -34,68 +27,45 @@
                     "name": "parameter_4",
                     "description": "description of parameter_4",
                     "type": "Integer",
-                    "minValue": "0",
-                    "maxValue": "1000"
+                    "rangeMinValue": "0",
+                    "rangeMaxValue": "1000"
                 }
             ],
-            "datasetIds": [
-                {
-                    "datasetId": "ND_SAR_1"
-                },
-                {
-                    "datasetId": "ND_OPT_1"
-                },
-                {
-                    "datasetId": "ND_S2_1"
-                }
-            ]
+            "datasetIds": [ "ND_SAR_1", "ND_OPT_1", "ND_S2_1" ]
         },
         {
-            "hostedProcessId": "hostedProcess_2",
-            "name": "hostedProcess_2_name",
-            "displayName": "hostedProcess_2_name_to_display",
+            "hostedProcessId": "SPOT",
+            "name": "SPOT",
+            "displayName": "SPOT Image Reconditioning",
             "URL": "http://server/app.fr",
-            "description": "this is the description text of hostedProcess_2",
+            "description": "Brief description text of hostedProcess_2",
             "parameters": [
                 {
                     "name": "Output Format",
                     "description": "description of parameter_1",
-                    "type": "String",
-                    "values": [
-                        {
-                            "value": "geotiff"
-                        },
-                        {
-                            "value": "png"
-                        },
-                        {
-                            "value": "jpeg"
-                        }
-                    ]
+                    "type": "enumeration",
+                    "values": [ "geotiff", "png", "jpeg" ]
                 },
                 {
-                    "name": "Level",
-                    "description": "description of Level",
-                    "type": "Float",
-                    "minValue": "1.0",
-                    "maxValue": "3.5"
+                    "name": "Resolution(m)",
+                    "description": "Description of resolution",
+                    "type": "String"
+                },
+                {
+                    "name": "Projection",
+                    "description": "Description of projection",
+                    "type": "enumeration",
+                    "values": [ "UTM", "Lambert" ]
                 }
             ],
-            "datasetIds": [
-                {
-                    "datasetId": "ND_SAR_1"
-                },
-                {
-                    "datasetId": "ND_S2_1"
-                }
-            ]
+            "datasetIds": [ "ND_SAR_1", "ND_S2_1" ]
         },
         {
-            "hostedProcessId": "hostedProcess_3",
-            "name": "hostedProcess_3_name",
-            "displayName": "hostedProcess_3_name_to_display",
+            "hostedProcessId": "Calibration_of_user_image",
+            "name": "Calibration_of_user_image",
+            "displayName": "Calibration of user image",
             "URL": "http://server/app.fr",
-            "description": "this is the description text of hostedProcess_3",
+            "description": "Brief description text of hostedProcess_3",
             "parameters": [
                 {
                     "name": "Output Format",
@@ -103,19 +73,17 @@
                     "type": "EOProductURL"
                 },
                 {
-                    "name": "Level",
-                    "description": "description of Level",
-                    "type": "URL"
-                }
-            ],
-            "datasetIds": [
-                {
-                    "datasetId": "ND_SAR_1"
+                    "name": "Date",
+                    "description": "Date",
+                    "type": "DateTime"
                 },
                 {
-                    "datasetId": "ND_S2_1"
+                    "name": "Products url",
+                    "description": "Description of products url",
+                    "type": "String"
                 }
-            ]
+            ],
+            "datasetIds": [ "ND_SAR_1", "ND_S2_1" ]
         }
     ]
 }
