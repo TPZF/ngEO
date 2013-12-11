@@ -153,11 +153,12 @@ return {
 				}
 
 				// When the dataset cannot be fetched from the server return an error to warn user
+				/* NGEO-727 : no error when the dataset cannot be retrieved
 				DataSetPopulation.on("datasetFetch", function(datasetId,status) {
 					if ( status == "ERROR" ) {
 						Logger.error('Cannot load the dataset ' + datasetId + '.');
 					}
-				});
+				});*/
 				
 				// Show the page
 				MenuBar.showPage("data-services-area");			
