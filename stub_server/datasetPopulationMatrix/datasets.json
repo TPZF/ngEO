@@ -27,7 +27,9 @@
             [ "S3", "", "land mapping", "SENTINEL3", "7"],
             [ "S3", "", "", "SENTINEL3_L1", "7"], 
             [ "S3", "SAR", "land mapping", "SENTINEL3_L2","7"],
-             
+			
+			[ "", "", "", "landsat","100"],
+            
 			[ "", "", "", "Global","1"],
 			
 			[ "", "", "", "Line","1"],

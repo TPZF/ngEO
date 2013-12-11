@@ -1,0 +1,24 @@
+{
+	"datasetSearchInfo": {
+		"dataSetId": "landsat",
+		"description":"",
+		"keywords": [{"keyword":""}],
+		"downloadOptions": {
+			"downloadOption": [{ 
+				"argumentName":"DownloadMode",
+				"description": "wait until completion or download continuously",
+				"value": [ {"name": "DLcontinuous",
+						"humanReadable":"Download continuously",
+						"sizeFactor":"1"
+						},{ "name":"DLcomplete",
+						    "humanReadable":"Download on completion",
+							"sizeFactor":"1"
+						}]
+					}]
+		},
+		"attributes": [],
+		
+       "startDate": "1984-04-01T12:45:07:00.57Z",
+       "endDate": "1984-05-01T23:27:05:00.57Z"
+	}
+}
