@@ -1,7 +1,7 @@
 
 define(["jquery", "logger", "map/map", "map/selectHandler", 
         "searchResults/model/searchResults", "searchResults/view/searchResultsView",
-        "searchResults/view/searchResultsTableView2", "map/widget/mapPopup"], 
+        "searchResults/view/searchResultsTableView", "map/widget/mapPopup"], 
 	function($, Logger, Map, SelectHandler, SearchResults, SearchResultsView, SearchResultsTableView,
 			MapPopup) {
 
