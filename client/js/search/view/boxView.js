@@ -16,20 +16,6 @@ function isValidLat(lat) {
 	return lat >= -90 && lat <= 90;
 }
 
-function clipLon(lon) {
-	while (lon > 180)
-		lon -= 360;
-	while (lon < -180)
-		lon += 360;
-	return lon;
-}
-function clipLat(lat) {
-	while (lat > 90)
-		lat -= 180;
-	while (lat < -90)
-		lat += 180;
-	return lat;
-}
 
 /**
  * The BoxView manages the view to define the search area as a box.
@@ -179,10 +165,10 @@ var BoxView = Backbone.View.extend({
     synchronizeWithMapExtent : function(){
     	var mapExtent = Map.getViewportExtent();
 		
-		var bbox = { west : clipLon(mapExtent[0]),
-			south : clipLat(mapExtent[1]),
-			east : clipLon(mapExtent[2]),
-			north : clipLat(mapExtent[3])
+		var bbox = { west : mapExtent[0],
+			south : mapExtent[1],
+			east : mapExtent[2],
+			north : mapExtent[3]
 		};
 		this.model.searchArea.setBBox(bbox);
 		
