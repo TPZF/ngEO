@@ -22,31 +22,59 @@ var SimpleDataAccessRequest = {
 		
 		this.rejectedProductsNB = 0;
 		this.productURLs = [];
+		this.hostedProcessId = null;
 	},
 	
 	/** get the current request to submit */
 	getRequest : function() {
 
 		// The JSON to send to the server
-		var request = {
-				SimpleDataAccessRequest : {
-					requestStage :  this.requestStage,
-					downloadLocation : this.downloadLocation, 
-					productURLs : []
-				}
-			};
-		
-		// Add create bulk order if needed
-		if (this.createBulkOrder){
-			request.SimpleDataAccessRequest.createBulkOrder =  true;
+		if ( this.hostedProcessId )
+		{
+			this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequest/request";
+			var request = {
+					enhancedDataAccessRequest : {
+						hostedProcessId : this.hostedProcessId,
+						downloadLocation : this.downloadLocation,
+						parameters : []
+					}
+			}
+
+			// Add hosted processing parameters
+			for ( var i = 0; i < this.productURLs.length; i++ ) {
+				request.enhancedDataAccessRequest.parameters.push({
+					"name" : "productURL",
+					"value" : this.productURLs[i]
+				});
+			}
+			request.enhancedDataAccessRequest.parameters = request.enhancedDataAccessRequest.parameters.concat( this.parameters );
+
 		}
-		
-		// Transform product URLs
-		for ( var i = 0; i < this.productURLs.length; i++ ) {
-			request.SimpleDataAccessRequest.productURLs.push({
-				productURL: this.productURLs[i]
-			});
+		else
+		{
+			this.url = Configuration.baseServerUrl + "/simpleDataAccessRequest";
+
+			var request = {
+					SimpleDataAccessRequest : {
+						requestStage :  this.requestStage,
+						downloadLocation : this.downloadLocation, 
+						productURLs : []
+					}
+				};
+			// Add create bulk order if needed
+			if (this.createBulkOrder){
+				request.SimpleDataAccessRequest.createBulkOrder =  true;
+			}
+			
+			// Transform product URLs
+			for ( var i = 0; i < this.productURLs.length; i++ ) {
+				request.SimpleDataAccessRequest.productURLs.push({
+					productURL: this.productURLs[i]
+				});
+			}
 		}
+
+		console.log(request);
 		
 		return request;	
 	},

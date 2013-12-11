@@ -1,8 +1,8 @@
 define(
 		[ 'jquery', 'logger', 'ui/tableView', 'configuration', 'searchResults/model/searchResults',
-		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/downloadManagersWidget',
+		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/dataAccessWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget' ],
-	function($, Logger, TableView, Configuration, SearchResults, SimpleDataAccessRequest, DownloadManagersWidget,
+	function($, Logger, TableView, Configuration, SearchResults, SimpleDataAccessRequest, DataAccessWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
 			
@@ -92,8 +92,7 @@ var SearchResultsTableView = TableView.extend({
 				SimpleDataAccessRequest.initialize();
 				SimpleDataAccessRequest.setProducts( self.model.selection );
 				
-				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-				downloadManagersWidget.open();
+				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
 				Logger.inform("Cannot download the product : missing permissions.");
 			}

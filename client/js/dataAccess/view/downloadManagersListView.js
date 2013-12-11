@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'configuration', 'text!dataAccess/template/downloadManagersListContent.html',
+define( ['jquery', 'backbone', 'configuration', "hostedProcesses/model/hostedProcessList", "hostedProcesses/view/selectHostedProcessesView", 'text!dataAccess/template/downloadManagersListContent.html',
 	 'text!dataAccess/template/downloadManagerInstallContent.html'], 
-		function($, Backbone, Configuration, downloadManagersList_template, downloadManagerInstall_template) {
+		function($, Backbone, Configuration, HostedProcessList, SelectHostedProcessView, downloadManagersList_template, downloadManagerInstall_template) {
 
 	/**
 	 * This view handles the displaying of download managers and the assignment 
@@ -113,11 +113,37 @@ var DownloadManagersListView = Backbone.View.extend({
 			//console.log(this.selectedDownloadManager);
 		}
 
+		// Create hosted process list
+		// Make it singleton ?
+		var hostedProcessList = new HostedProcessList();
+
+		var self = this;
+		hostedProcessList.fetch().done(function() {
+			var selectHostedProcessView = new SelectHostedProcessView({
+				model: hostedProcessList,
+				el: self.$el.find("#hostedProcesses"),
+				request: self.request
+			});
+
+			selectHostedProcessView.render();
+			self.$el.find("#hostedProcesses").trigger('create');
+		});
+
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
 		//Trigger JQM styling
 		this.$el.trigger('create');
 		
 		return this;
+	},
+
+	/**
+	 *	Override Backbone remove method which doesn't remove HTML element
+	 */
+	remove: function() {
+	    this.undelegateEvents();
+	    this.$el.empty();
+	    this.stopListening();
+    	return this;
 	}
 	
 });

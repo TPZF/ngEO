@@ -3,9 +3,9 @@
   */
 
 
-define( [ "jquery", "logger", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/downloadManagersWidget", 
+define( [ "jquery", "logger", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/dataAccessWidget", 
           "searchResults/model/searchResults", "map/utils", "shopcart/model/shopcartCollection" ], 
-	function($, Logger, Configuration, Map, SimpleDataAccessRequest, DownloadManagersWidget, SearchResults, Utils, ShopcartCollection) {
+	function($, Logger, Configuration, Map, SimpleDataAccessRequest, DataAccessWidget, SearchResults, Utils, ShopcartCollection) {
 
 
 var MapPopup = function(container) {
@@ -71,8 +71,7 @@ var MapPopup = function(container) {
 				SimpleDataAccessRequest.initialize();
 				SimpleDataAccessRequest.setProducts( allowedProducts );
 			
-				var downloadManagersWidget = new DownloadManagersWidget(SimpleDataAccessRequest);
-				downloadManagersWidget.open();
+				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
 				Logger.inform("Cannot download product : missing permissions.");
 			}
