@@ -1,10 +1,10 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/spatialExtentView',
+define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/spatialExtentView', 'dataAccess/widget/dataAccessWidget',
          'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/schedulingOptionsView', 'search/view/openSearchURLView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/model/downloadManagers', 'dataAccess/view/downloadManagersListView', 'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
-		function($, Backbone, Configuration, Logger, SpatialExtentView, 
+		function($, Backbone, Configuration, Logger, SpatialExtentView, DataAccessWidget,
 				 AdvancedSearchView, DownloadOptionsView, SchedulingOptionsView, OpenSearchURLView, StandingOrderDataAccessRequest, DownloadManagers, DownloadManagersListView, SharePopup,
 				 searchCriteria_template) {
 
@@ -31,30 +31,7 @@ var StandingOrderView = Backbone.View.extend({
 			//set selected download options
 			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
 
-			var element = $('<div id="standingOrderPopup">');
-			element.appendTo('.ui-page-active');
-
-			element.ngeowidget({
-				title: "Select download manager",
-				hide: function() {
-					element.remove();
-				}
-			});
-
-			DownloadManagers.fetch().done(function() {
-					
-				var downloadManagersListView = new DownloadManagersListView({
-					model : DownloadManagers,
-					el: element,
-					selectedDownloadManager : "",
-					request : StandingOrderDataAccessRequest
-				});
-				
-				downloadManagersListView.render();
-				element.trigger('create');
-				element.ngeowidget("show");
-				
-			});
+			DataAccessWidget.open( StandingOrderDataAccessRequest );
 
 		},
 					

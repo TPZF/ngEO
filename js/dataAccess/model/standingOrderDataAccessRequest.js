@@ -34,6 +34,7 @@ var StandingOrderDataAccessRequest = {
 		this.OpenSearchURL = "";
 		this.DownloadOptions = {};
 		this.SchedulingOptions = {};
+		this.hostedProcessId = null;
 		
 	},
 	
@@ -46,18 +47,25 @@ var StandingOrderDataAccessRequest = {
 					OpenSearchURL : this.OpenSearchURL,
 					DownloadOptions : this.DownloadOptions,
 					SchedulingOptions : this.getSchedulingOptions(),
-					downloadLocation : this.downloadLocation 
+					downloadLocation : this.downloadLocation,
 				}
 			};
-			
+		
+		// Add hosted processing parameters if defined
+		if ( this.hostedProcessId )
+		{
+			request.StandingOrderDataAccessRequest.hostedProcessId = this.hostedProcessId;
+			request.StandingOrderDataAccessRequest.parameters = this.parameters;
+		}
+
 		//if createBulkOrder is set to true after a validation request
 		//take into account the createBulkOrder for the confirmation request
 		if (self.createBulkOrder){
 			request.StandingOrderDataAccessRequest.createBulkOrder = true;
 		}
 		
+		console.log(request);
 		return  request;
-		
 	},
 	
 	/** the shared standing order url contains :

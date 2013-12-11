@@ -6,12 +6,25 @@
 	
 	<div id="downloadManagerStatusMessage"></div>
 
-			<select id="downloadManagersList" data-mini="true" data-theme="c">
-			<% _.each(downloadmanagers, function(downloadManager) { %>	
+	<div data-role="collapsible-set">
+		<div data-role="collapsible" data-content-theme="c" data-collapsed="false">
+
+			<h3>Download manager</h3>
+				<select id="downloadManagersList" data-mini="true" data-theme="c">
+				<% _.each(downloadmanagers, function(downloadManager) { %>	
 				<option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></option> 
-			<% }); %>
-			</select>
+				<% }); %>
+				</select>
+		</div>
+			
+		<div data-role="collapsible" data-content-theme="c">
+			<h3>Product processing</h3>
+			<div id="hostedProcesses"></div>
+		</div>
+		
 	</div>
+
+</div>
 
 <div id="downloadManagersFooter" class="popup-widget-footer">
 	

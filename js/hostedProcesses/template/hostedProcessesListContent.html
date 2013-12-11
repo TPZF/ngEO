@@ -1,0 +1,16 @@
+<div id="hostedProcessesContent" class="widget-content ui-body-c">
+
+	<div style="max-height: 150px; overflow: auto;">
+	<% for ( var i=0; i<hostedProcesses.length; i++ )
+	{ %>
+		<div data-value="<%= i %>" class="hostedProcess">
+			<span style="font-weight: bold;"><%= hostedProcesses[i].displayName %>:</span><span> <%= hostedProcesses[i].description %></span><br/>
+		</div>
+	<% } %>
+	</div>
+
+	<div style="text-align: center;">
+		<button id="configureHostedProcess" data-role="button" data-mini="true" data-inline="true" data-theme="a" disabled="disabled" >Configure</button>
+	</div>
+
+</div>

@@ -46,11 +46,11 @@ var DataAccessRequest = {
 		var self = this;
 		
 		return $.ajax({
+		  data : JSON.stringify(self.getRequest()),
 		  url: self.url,
 		  type : 'POST',
 		  dataType: 'json',
 		  contentType: 'application/json',
-		  data : JSON.stringify(self.getRequest()),
 		  success: function(data) {
 			  
 			  console.log(" SUCCESS : Received Validation Response from the server :");
