@@ -7,6 +7,8 @@ define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPre
 // The function to define the map module
 function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, Utils ) {
 
+
+
 	/**
 	 * Inner class
 	 */
@@ -336,7 +338,12 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		 * @return an array of 4 number : [west,south,east,north]
 		 */
 		getViewportExtent: function() {
-			return mapEngine.getViewportExtent();
+			var extent =  mapEngine.getViewportExtent();
+			extent[0] = Utils.normalizeLon( extent[0] );
+			extent[1] = Math.max( -90.0, extent[1] );
+			extent[2] = Utils.normalizeLon( extent[2] );
+			extent[3] = Math.min( 90.0, extent[3] );
+			return extent;
 		},
 		
 		/**
