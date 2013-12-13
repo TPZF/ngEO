@@ -116,16 +116,7 @@ var SearchCriteria = Backbone.Model.extend({
 	getSharedSearchURL : function(){
 
 		var url = "#data-services-area/search/" +  this.getDatasetPath() + '?';
-		
-		//add area criteria if set
-		url += this.addGeoTemporalParams();
-		
-		//always add the advanced criteria values selected and already set to the model
-		url = this.addAdvancedCriteria(url);
-
-		//add the download options values selected and already set to the model
-		url = this.addDownloadOptions(url);
-		
+		url += this.getOpenSearchParameters();
 		return url;
 	},
 	
@@ -173,7 +164,7 @@ var SearchCriteria = Backbone.Model.extend({
 					
 				default :
 					
-					if ( _.has(pair[0]) ) {
+					if ( this.has(pair[0]) ) {
 						attributes[pair[0]] = pair[1];
 					} else {
 						//set the parameters if there are advanced attributes, download options or attributes of the model
