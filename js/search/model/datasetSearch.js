@@ -112,7 +112,24 @@ var DataSetSearch = SearchCriteria.extend({
 		url += "&format=json";
 		
 		return url;
-	},	
+	},
+	
+	/**
+	 * Get the shared search URL
+	 */
+	getSharedSearchURL : function(){
+
+		var url = "#data-services-area/search/" +  this.datasetIds.join(',') + '?';
+		url += this.getOpenSearchParameters();
+		// Correlation/Interferometry
+		if ( this.get('mode') != "Simple" ) {
+		
+			// Add interferometry specific parameters
+			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
+			url += "&mode=" + this.get('mode');
+		} 
+		return url;
+	},
 	
 	/**	
 	 * Get the dataset path to build URLs
