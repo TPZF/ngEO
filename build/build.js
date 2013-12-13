@@ -9,7 +9,7 @@
 		{ name: "help" },
 		{ name: "main" },
 		{ name: "map/map", exclude: ["main"]},
-		{ name: "data-services-area", exclude: ["main", "map/map","jquery.dataTables"]},
+		{ name: "data-services-area", exclude: ["main", "map/map"]},
 		{ name: "account", exclude: ["main","map/map"]},
 	],
 	dir: "output",
