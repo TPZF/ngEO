@@ -285,6 +285,8 @@ var TableView = Backbone.View.extend({
 	 * Sort data
 	 */
 	sortData: function(columnIndex,order) {
+	
+		columnIndex -= this.hasGroup ? 2 : 1;
 
 		if ( order == "original" ) {
 			this.visibleRowsData = this.rowsData.slice(0);
