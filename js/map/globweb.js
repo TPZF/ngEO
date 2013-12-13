@@ -151,13 +151,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	var gwLayer;
 	switch (layer.type.toUpperCase()) {
 	case "WMS":
-		gwLayer = new GlobWeb.WMSLayer({
-			name: layer.name,
-			baseUrl: layer.baseUrl,
-			styles: layer.params.styles,
-			layers: layer.params.layers,
-			format: layer.params.format
-		});
+		gwLayer = new GlobWeb.WMSLayer($.extend({ name: layer.name, baseUrl: layer.baseUrl}, layer.params));
 		break;
 	case "WMTS":
 		var config = {

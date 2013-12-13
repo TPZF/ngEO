@@ -22,9 +22,15 @@ var DirectDownloadWidget = function(url) {
 				
 		// Create the content
 		if (DownloadManagers.get('downloadmanagers').length >= 1){
-			parentElement.append(_.template(directDownload_Content, {url : url, downloadHelperUrl : Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')}));
-		}else{
-			parentElement.append(_.template(directDownload_Content, {url : url, downloadHelperUrl : false}));
+			parentElement.html(_.template(directDownload_Content, {url : url, downloadHelperUrl : Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')}));
+		} else {
+			parentElement.html(_.template(directDownload_Content, {url : url, downloadHelperUrl : false}));
+			
+			// Try to fetch again  the download manages to display the special link
+			DownloadManagers.fetch().done(function() { 
+				parentElement.html(_.template(directDownload_Content, {url : url, downloadHelperUrl : Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')}));
+				parentElement.trigger('create');				
+			});
 		}
 		
 		parentElement.trigger('create');
