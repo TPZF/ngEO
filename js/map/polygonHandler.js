@@ -18,6 +18,8 @@ var self = null;
 
 // Called when a double click is detected
 function finishHandler() {
+	// Remove duplicated point (used for mouse move drawing)
+	coords.splice( coords.length-2, 1 );
 	self.stop();
 }
 
@@ -49,7 +51,9 @@ function onClick(event) {
 			if ( coords.length == 0 ) {
 				coords.push( point, point, point );
 			} else {
+				// Update the last point
 				coords[ coords.length-2 ] = point;
+				// Duplicate the last point for mouse move update
 				coords.splice( coords.length-1, 0, point );
 			}
 			layer.updateFeature(feature);
