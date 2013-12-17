@@ -82,7 +82,7 @@ var SimpleDataAccessRequest = {
 	/** get message the display when a simple DAT creation is triggered */
 	getSpecificMessage : function(){
 		
-		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
+/*		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
 		
 		if (this.rejectedProductsNB == 0){
 			collapsibleContent += "<p>All the selected items have been included in the request.<p>";
@@ -90,7 +90,13 @@ var SimpleDataAccessRequest = {
 			collapsibleContent += "<p> " + this.rejectedProductsNB + " products are not included in the request since they do not have a url.";
 		}
 		
-		return collapsibleContent; 
+		return collapsibleContent; */
+		
+		if ( this.productURLs.length == 1 ) {
+			return "<p>One product is included in the request.</p>";
+		} else {
+			return "<p>" + this.productURLs.length + " products are included in the request.</p>";
+		}
 	},
 	
 	
