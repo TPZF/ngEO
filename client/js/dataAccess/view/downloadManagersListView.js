@@ -118,7 +118,8 @@ var DownloadManagersListView = Backbone.View.extend({
 		var hostedProcessList = new HostedProcessList();
 
 		var self = this;
-		hostedProcessList.fetch().done(function() {
+		hostedProcessList.fetch()
+		.done(function() {
 			var selectHostedProcessView = new SelectHostedProcessView({
 				model: hostedProcessList,
 				el: self.$el.find("#hostedProcesses"),
@@ -127,6 +128,9 @@ var DownloadManagersListView = Backbone.View.extend({
 
 			selectHostedProcessView.render();
 			self.$el.find("#hostedProcesses").trigger('create');
+		})
+		.fail(function() {
+			self.$el.find("#hostedProcesses").html('No product processing available.');
 		});
 
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
