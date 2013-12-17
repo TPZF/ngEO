@@ -110,9 +110,13 @@ module.exports = function(req, res){
 
 	// Find the feature collection
 	var fcId = 'default';
-	if ( req.param('with') ) {
+/*	if ( req.param('with') ) {
 		fcId = 'Correlation';
 	} else if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ){
+		fcId = req.param('datasetId');
+	}*/
+	
+	if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ){
 		fcId = req.param('datasetId');
 	}
 	
@@ -178,6 +182,7 @@ module.exports = function(req, res){
 			&& eop.EarthObservationResult.eop_ProductInformation.eop_filename ) {
 			eop.EarthObservationResult.eop_ProductInformation.eop_filename = eop.EarthObservationResult.eop_ProductInformation.eop_filename.replace('localhost:3000',req.headers.host);
 		}
+		feature.properties.rel = req.param('with');
 	}
 	
 	var count = req.query.count || 10;
