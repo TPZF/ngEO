@@ -66,7 +66,7 @@ app.post('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
 app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //hostedProcess DAR interface
-app.post('/ngeo/hostedProcessDataAccessRequest/request', hostedProcessDataAccessRequest);
+app.post('/ngeo/hostedProcessDataAccessRequest', hostedProcessDataAccessRequest);
 
 //data access statuses interface
 app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);

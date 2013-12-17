@@ -66,7 +66,7 @@ var SelectHostedProcessView = Backbone.View.extend({
 			hostedProcesses: this.model.get('hostedProcesses')
 		});
 
-		this.$el.append(content);
+		this.$el.html(content);
 
 	}
 });
