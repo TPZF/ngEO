@@ -8,7 +8,7 @@ define( [ "jquery", "configuration", 'searchResults/view/exportView', 'search/mo
 		function($, Configuration, ExportView, DataSetSearch) {
 
 
-var ExportWidget = function() {
+var ExportWidget = function(featureCollection) {
 
 	var parentElement = $('<div id="exportPopup">');
 	var element = $('<div id="exportPopupContent"></div>');
@@ -24,7 +24,7 @@ var ExportWidget = function() {
 	});
 
 	var exportView = new ExportView({
-		model : DataSetSearch,
+		model : featureCollection,
 		el: element
 	});
 		

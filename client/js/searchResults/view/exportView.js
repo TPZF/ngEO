@@ -1,8 +1,8 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'map/geojsonconverter',
+define( ['jquery', 'backbone', 'configuration', 'map/geojsonconverter',
           'text!searchResults/template/exportViewContent.html'], 
-		function($, Backbone, Configuration, SearchResults, GeoJsonConverter, exportViewContent) {
+		function($, Backbone, Configuration, GeoJsonConverter, exportViewContent) {
 
 	/** TODO TO BE IMPLEMENTED */ 
 var ExportView = Backbone.View.extend({
@@ -28,7 +28,7 @@ var ExportView = Backbone.View.extend({
 			} else {
 				var format = $select.val().toLowerCase(); 
 				$download.removeClass('ui-disabled');
-				var blob = new Blob( [ GeoJsonConverter.convert(SearchResults.selection, format) ], { "type" : this.mediaTypes[format] });
+				var blob = new Blob( [ GeoJsonConverter.convert(this.model.selection, format) ], { "type" : this.mediaTypes[format] });
 				$download.attr('download', 'export.' + format);
 				$download.attr('href', URL.createObjectURL(blob) );
 			}		
