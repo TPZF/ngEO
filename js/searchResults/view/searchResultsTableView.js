@@ -122,7 +122,7 @@ var SearchResultsTableView = TableView.extend({
 		//for the moment all product belong to the unique selected dataset 
 		this.exportButton.click(function() {
 			
-			var exportWidget = new ExportWidget();
+			var exportWidget = new ExportWidget(self.model);
 			exportWidget.open();
 		});
 	}
