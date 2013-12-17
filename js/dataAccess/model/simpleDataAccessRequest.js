@@ -31,9 +31,10 @@ var SimpleDataAccessRequest = {
 		// The JSON to send to the server
 		if ( this.hostedProcessId )
 		{
-			this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequest/request";
+			this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequest";
 			var request = {
-					enhancedDataAccessRequest : {
+					EnhancedDataAccessRequest : {
+						requestStage :  this.requestStage,
 						hostedProcessId : this.hostedProcessId,
 						downloadLocation : this.downloadLocation,
 						parameters : []
@@ -42,12 +43,12 @@ var SimpleDataAccessRequest = {
 
 			// Add hosted processing parameters
 			for ( var i = 0; i < this.productURLs.length; i++ ) {
-				request.enhancedDataAccessRequest.parameters.push({
+				request.EnhancedDataAccessRequest.parameters.push({
 					"name" : "productURL",
 					"value" : this.productURLs[i]
 				});
 			}
-			request.enhancedDataAccessRequest.parameters = request.enhancedDataAccessRequest.parameters.concat( this.parameters );
+			request.EnhancedDataAccessRequest.parameters = request.EnhancedDataAccessRequest.parameters.concat( this.parameters );
 
 		}
 		else
