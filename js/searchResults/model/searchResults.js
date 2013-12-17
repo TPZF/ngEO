@@ -216,6 +216,7 @@ DatasetSearch.on('change:mode', function(model,mode) {
 		var fc = new FeatureCollection();
 		fc.id = mode;
 		SearchResults.featureCollection[fc.id] = fc;
+		fc.countPerPage = 5;
 		SearchResults.trigger('add:featureCollection',fc);
 		break;
 	}

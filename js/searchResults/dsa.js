@@ -140,6 +140,7 @@ return {
 			fc._footprintLayer = footprintLayer;
 			fc._browsesLayer = browsesLayer;
 			fc.on('add:features', footprintLayer.addFeatures, footprintLayer);
+			fc.on('remove:features', footprintLayer.removeFeatures, footprintLayer);
 			fc.on('reset:features', footprintLayer.clear, footprintLayer);
 			fc.on('reset:features', browsesLayer.clear, browsesLayer);
 			fc.on('selectFeatures', _onSelectFeatures );
@@ -169,6 +170,7 @@ return {
 			delete _views[ fc.id ];
 			
 			fc.off('add:features', fc._footprintLayer.addFeatures, fc._footprintLayer);
+			fc.off('remove:features', fc._footprintLayer.removeFeatures, fc._footprintLayer);
 			fc.off('reset:features', fc._footprintLayer.resetFeatures, fc._footprintLayer);
 			fc.off('reset:features', fc._browsesLayer.clear, fc._browsesLayer);
 			fc.off('selectFeatures', _onSelectFeatures );

@@ -1,6 +1,6 @@
 define(
-		[ 'jquery', 'backbone'],
-	function($, Backbone) {
+		[ 'jquery', 'backbone', 'map/map'],
+	function($, Backbone, Map) {
 
 	
 /**
@@ -59,6 +59,13 @@ var TableView = Backbone.View.extend({
 		'keyup input' : function (event) {
 			this.filterData( $(event.currentTarget).val() );
 		},
+		
+		'dblclick tr': function (event) {
+			var data = $(event.currentTarget).data('internal');
+			if (data) {
+				Map.zoomToFeature( data.feature );
+			}
+		},
 			
 		// Call when a row is clicked
 		'click tr' : function (event) {
@@ -101,25 +108,49 @@ var TableView = Backbone.View.extend({
 					.toggleClass('ui-icon-minus')
 					.toggleClass('ui-icon-plus');
 					
+				// TODO !!! : improve that !!
 				var rowData = $row.data('internal');
 				rowData.isExpand = !rowData.isExpand;
 				if ( rowData.isExpand ) {
-					// Build the row for expand
-					var $lastRow = $row;
-					for ( var i = 0; i < rowData.children.length; i++ ) {
-						var childRow = '<tr><td></td>'
-						childRow += '<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>';
-						for ( var j = 0; j < rowData.children[i].cellData.length; j++ ) {
-							childRow += '<td>' +  rowData.children[i].cellData[j] + '</td>';
-						}
-						childRow += '</tr>';
-						$lastRow = $(childRow).insertAfter( $lastRow ).data('internal', rowData.children[i]);
-						this.feature2row[ rowData.children[i].feature.id ] = $lastRow;
-					}
 					
+					$( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Loading...</td></tr>' ).insertAfter( $row )
+					rowData.isLoading = true;
+					
+					var self = this;
+					$.ajax({
+						url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
+						dataType: 'json'
+							
+					}).done(function(data) {
+						if ( data.features.length == 0 ) {
+						  $row.next().remove();
+						  $( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
+						} else {
+							rowData.totalNumChildren = data.properties.totalResults;
+							self.model.trigger('add:features',data.features,self.model,rowData);
+							rowData.isLoading = false;
+						}
+					}).fail(function(jqXHR, textStatus, errorThrown) {		
+						  $row.next().remove();
+						  $( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Error while loading</td></tr>' ).insertAfter( $row )
+					});
+								
 				} else {
-					for ( var i = 0; i < rowData.children.length; i++ ) {
+					if ( rowData.isLoading ) {
 						$row.next().remove();
+					} else {
+						var features = [];
+						for ( var i = 0; i < rowData.children.length; i++ ) {
+							features.push( rowData.children[i].feature );
+						}
+						var newSelection = _.difference(this.model.selection, features);
+						this.model.setSelection(newSelection);
+						this.model.trigger('remove:features',features,this.model);
+						rowData.children.length = 0;
+						this.buildTableContent();
+						this.updateFixedHeader();
+						this.toggleSelection( this.model.selection );
+						this.highlightFeatureCallBack(this.model.highlights,[]);
 					}
 				}
 			},
@@ -192,23 +223,33 @@ var TableView = Backbone.View.extend({
 	/**
 	 * Add data 
 	 */
-	addData : function(features) {
+	addData : function(features,model,parentRowData) {
 	
-		var roots = [];
+		//var roots = [];
+		var prevNumRows = this.visibleRowsData.length;
 	
 		var columns = this.columnDefs;
 		for ( var i=0; i < features.length; i++ ) {	
 			var rowData = {
 				feature: features[i],
 				cellData: [],
+				isExpandable: this.hasGroup ? !parentRowData : false,
 				isExpand: false,
-				children: []
+				children: [],
+				isLoading : false,
+				totalNumChildren: 0
 			};
 			for ( var j=0; j < columns.length; j++ ) {
 				rowData.cellData.push( getData(features[i],columns[j].mData) );
 			}
 			
-			if ( this.hasGroup )  {
+			if ( parentRowData ) {
+				parentRowData.children.push( rowData );
+			} else {
+				this.rowsData.push( rowData );
+			}
+			
+			/*if ( this.hasGroup )  {
 				var groupId = features[i].properties.EarthObservation.EarthObservationMetaData.eop_productGroupId;
 				var masterId = groupId.split('_')[0];
 				var slaveId = groupId.split('_')[1];
@@ -220,13 +261,17 @@ var TableView = Backbone.View.extend({
 				}
 			} else {
 				this.rowsData.push( rowData );
-			}
+			}*/
 		}
 		
 		this.visibleRowsData = this.rowsData.slice(0);
 		
 		this.buildTableContent();
 		this.updateFixedHeader();
+		if ( prevNumRows != 0 ) {
+			this.toggleSelection( this.model.selection );
+			this.highlightFeatureCallBack(this.model.highlights,[]);
+		}
 	},
 	
 	/**
@@ -278,7 +323,7 @@ var TableView = Backbone.View.extend({
 		this.buildTableContent();
 		this.updateFixedHeader();
 		this.toggleSelection( this.model.selection );
-		this.highlightFeatureCallBack(this.model._highlighted,[]);
+		this.highlightFeatureCallBack(this.model.highlights,[]);
 	},
 	
 	/**
@@ -304,9 +349,45 @@ var TableView = Backbone.View.extend({
 
 		this.buildTableContent();
 		this.toggleSelection( this.model.selection );
-		this.highlightFeatureCallBack(this.model._highlighted,[]);
+		this.highlightFeatureCallBack(this.model.highlights,[]);
 	},
 
+	_createRow: function(rowData,$body) {
+		var $row = $('<tr></tr>');
+		
+		if ( this.hasGroup ) {
+		
+			if ( rowData.isExpandable ) {
+				if ( rowData.isExpand ) {
+					$row.append('<td><span class="table-view-expand ui-icon ui-icon-minus "></span></td>');
+				} else {
+					$row.append('<td><span class="table-view-expand ui-icon ui-icon-plus "></span></td>');
+				}
+			} else {
+				$row.append('<td></td>');
+			}
+		}
+		$row.append('<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>');
+		for ( var j = 0; j < rowData.cellData.length; j++ ) {
+		
+			// Check if column has some specific classes
+			var classes = null;
+			if ( this.columnDefs[j].getClasses ) {
+				classes = this.columnDefs[j].getClasses( rowData.feature );
+			}
+			
+			if ( classes ) {
+				$row.append( '<td class="' + classes + '">' +  rowData.cellData[j] + '</td>');
+			} else {
+				$row.append( '<td>' +  rowData.cellData[j] + '</td>');
+			}
+		}
+		
+		$row = $row.appendTo($body);		
+		$row.data('internal', rowData);
+		this.feature2row[ rowData.feature.id ] = $row;
+	},
+	
 	/**
 	 * Build table content from data
 	 */
@@ -318,31 +399,16 @@ var TableView = Backbone.View.extend({
 		
 		for ( var i=0; i < this.visibleRowsData.length; i++ ) {
 			
-			var $row = $('<tr></tr>');
+			this._createRow( this.visibleRowsData[i], $body );
 			
-			if ( this.hasGroup ) {
-				$row.append('<td><span class="table-view-expand ui-icon ui-icon-plus "></span></td>');
-			}
-			$row.append('<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>');
-			for ( var j = 0; j < this.visibleRowsData[i].cellData.length; j++ ) {
+			if ( this.visibleRowsData[i].isExpand ) {
 			
-				// Check if column has some specific classes
-				var classes = null;
-				if ( this.columnDefs[j].getClasses ) {
-					classes = this.columnDefs[j].getClasses( this.visibleRowsData[i].feature );
+				for ( var n=0; n < this.visibleRowsData[i].children.length; n++ ) {
+					this._createRow( this.visibleRowsData[i].children[n], $body );
 				}
-				
-				if ( classes ) {
-					$row.append( '<td class="' + classes + '">' +  this.visibleRowsData[i].cellData[j] + '</td>');
-				} else {
-					$row.append( '<td>' +  this.visibleRowsData[i].cellData[j] + '</td>');
-				}
-			}
-					
-			$row.data('internal', this.visibleRowsData[i]);
 			
-			$row = $row.appendTo($body);
-			this.feature2row[ this.visibleRowsData[i].feature.id ] = $row;
+			}
+			
 		}
 	},
 	
