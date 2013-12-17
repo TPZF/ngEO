@@ -60,7 +60,11 @@ GlobWebMapEngine = function( parentElement )
 		});
 				
 		// Add mouse navigation
-		var navigation = new GlobWeb.Navigation(globe);
+		var navigation = new GlobWeb.Navigation(globe, {
+			mouse: {
+				zoomOnDblClick: true
+			}
+		});
 			
 		this.globe = globe;
 		this.navigation = navigation;
