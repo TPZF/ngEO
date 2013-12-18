@@ -132,13 +132,13 @@ var SearchCriteriaView = Backbone.View.extend({
 		// Create the views for each criteria : time, spatial, advanced and for download options
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
-			searchCriteriaView : this,
+			hasTimeSlider : true,
 			model : this.model
 			});
 		this.dateCriteriaView.render();
-
-		// Append time slider
-		this.$el.find('#date').append('<label class="useTimeSliderLabel">Use Time Slider<input type="checkbox" '+ (this.model.get('useTimeSlider') ? "checked" : "") +' class="useTimeSliderCheckBox" data-mini="true" data-theme="c"></label>');
+		
+		// Update the date view when the dateRange is changed
+		this.dateCriteriaView.listenTo( this.model, "change:dateRange", this.dateCriteriaView.updateDateRange);						
 			
 		this.areaCriteriaView = new SpatialExtentView({
 			el : this.$el.find("#area"), 

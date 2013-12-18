@@ -9,41 +9,14 @@ define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResul
 	 */
 var TimeExtentView = Backbone.View.extend({
 
-	initialize : function(options){
+	initialize : function(options) {
 			
+		this.hasTimeSlider = options.hasTimeSlider;
+		
 		// Refresh the dates and time slider checkbox when the values has been changed on the model 
 		//typically for shared parameters urls
 		this.listenTo( this.model, "change:start", this.update);
-		this.listenTo( this.model, "change:stop", this.update);
-		this.searchCriteriaView = options.searchCriteriaView;
-		
-		/** 
-		 * This handler is called after the user has chosen a dataset, and the dataset has been loaded.
-		 * It is used to recreate time slider for the dataset.
-		 */
-		this.listenTo( this.model, "change:dateRange", function(model,dateRange) {
-			
-			// The dataset has not been loaded : do nothing, because the timeslider has already been removed when the datasetId has been changed, see below.
-			if (dateRange)
-			{
-				var useTimeSlider = this.model.get('useTimeSlider');
-				if ( useTimeSlider  ) {
-					this.addTimeSlider();
-				}
-				
-				var dateRangeOptions = {
-					startYear: dateRange.start.getFullYear(),
-					endYear: dateRange.stop.getFullYear()
-				};
-				this.$fromDateInput.datebox("option", dateRangeOptions );
-				this.$toDateInput.datebox("option", dateRangeOptions );
-			}
-			else
-			{
-				this.removeTimeSlider();
-			}
-		});
-						
+		this.listenTo( this.model, "change:stop", this.update);						
 	},
 	
 	events :{
@@ -73,23 +46,39 @@ var TimeExtentView = Backbone.View.extend({
 				//disable the dates start and stop widgets if the time slider is enabled
 				this.$fromDateInput.datebox("disable");
 				this.$toDateInput.datebox("disable");
-				//disable the submit search button
-				//this.searchCriteriaView.searchButton.button('disable');
-				//hide the search criteria widget when the time slider is enabled
-				//this is to keep the map visible 
-				//this.searchCriteriaView.$el.ngeowidget('hide');
 				this.addTimeSlider();
 			} else {
 				this.removeTimeSlider();
-				
 				//enable the dates start and stop widgets if the time slider is disabled
 				this.$fromDateInput.datebox("enable");
 				this.$toDateInput.datebox("enable");
-				//this.searchCriteriaView.searchButton.button('enable');
 			} 
 			
 		}
 		
+	},
+	
+	// Call to update the date range
+	updateDateRange: function(model,dateRange) {
+		// The dataset has not been loaded : do nothing, because the timeslider has already been removed when the datasetId has been changed, see below.
+		var useTimeSlider = this.model.get('useTimeSlider');
+		if (dateRange)
+		{
+			if ( useTimeSlider  ) {
+				this.addTimeSlider();
+			}
+			
+			var dateRangeOptions = {
+				startYear: dateRange.start.getFullYear(),
+				endYear: dateRange.stop.getFullYear()
+			};
+			this.$fromDateInput.datebox("option", dateRangeOptions );
+			this.$toDateInput.datebox("option", dateRangeOptions );
+		}
+		else if ( useTimeSlider )
+		{
+			this.removeTimeSlider();
+		}
 	},
 	
 	// Add the time slider to the map
@@ -159,11 +148,17 @@ var TimeExtentView = Backbone.View.extend({
 		
 		// Need to call create to disable the datebox when timeSlider is enabled by default
 		this.$el.trigger('create');
+		
+		
+		// Append time slider
+		if ( this.hasTimeSlider ) {
+			this.$el.append('<label class="useTimeSliderLabel">Use Time Slider<input type="checkbox" '+ (this.model.get('useTimeSlider') ? "checked" : "") +' class="useTimeSliderCheckBox" data-mini="true" data-theme="c"></label>');
 
-		if ( this.model.get("useTimeSlider") ) {
-			//disable the dates start and stop widgets if the time slider is enabled
-			this.$fromDateInput.datebox("disable");
-			this.$toDateInput.datebox("disable");
+			if ( this.model.get("useTimeSlider") ) {
+				//disable the dates start and stop widgets if the time slider is enabled
+				this.$fromDateInput.datebox("disable");
+				this.$toDateInput.datebox("disable");
+			}
 		}
 
 		return this;
