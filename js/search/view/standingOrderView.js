@@ -1,10 +1,10 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/spatialExtentView', 'dataAccess/widget/dataAccessWidget',
+define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/spatialExtentView', 'dataAccess/widget/dataAccessWidget', 'search/view/timeExtentView',
          'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/schedulingOptionsView', 'search/view/openSearchURLView',
          'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/model/downloadManagers', 'dataAccess/view/downloadManagersListView', 'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
-		function($, Backbone, Configuration, Logger, SpatialExtentView, DataAccessWidget,
+		function($, Backbone, Configuration, Logger, SpatialExtentView, DataAccessWidget, TimeExtentView,
 				 AdvancedSearchView, DownloadOptionsView, SchedulingOptionsView, OpenSearchURLView, StandingOrderDataAccessRequest, DownloadManagers, DownloadManagersListView, SharePopup,
 				 searchCriteria_template) {
 
@@ -75,8 +75,16 @@ var StandingOrderView = Backbone.View.extend({
 		
 		StandingOrderDataAccessRequest.initialize();
 
-		var content = _.template(searchCriteria_template, { submitText: "Order", useDate: false});
-		this.$el.append(content);			
+		var content = _.template(searchCriteria_template, { submitText: "Order"});
+		this.$el.append(content);
+		
+		// Create the views for each criteria : time, spatial, advanced and for download options
+		this.dateCriteriaView = new TimeExtentView ({
+			el : this.$el.find("#date"), 
+			searchCriteriaView : this,
+			model : this.model
+			});
+		this.dateCriteriaView.render();
 				
 		this.areaCriteriaView = new SpatialExtentView({
 			el : this.$el.find("#area"), 
