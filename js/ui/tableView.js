@@ -176,12 +176,13 @@ var TableView = Backbone.View.extend({
 		// Remove previous highlighted rows
 		this.$table.find('.row_selected').removeClass('row_selected');
 		
-		var rows = this.$table.find("tbody tr");
-		
-		for ( var i = 0; i < features.length; i++ ) {
-		
-			var $row = this._getRowFromFeature( features[i] );
-			$row.addClass('row_selected');
+		if ( features ) {
+			var rows = this.$table.find("tbody tr");
+			for ( var i = 0; i < features.length; i++ ) {
+			
+				var $row = this._getRowFromFeature( features[i] );
+				$row.addClass('row_selected');
+			}
 		}
 	},
 	

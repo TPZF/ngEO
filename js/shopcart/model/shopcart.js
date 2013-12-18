@@ -88,15 +88,20 @@ var Shopcart = Backbone.Model.extend({
 	 * products from the search results table to the shopcart.
 	 * The product urls of the selected products are passed as arguments. 
 	 */ 
-	addItems: function(productUrls, features) {
+	addItems: function(features) {
 		
 		// Build the request body
 		var itemsToAdd = [];
-		for (var i=0; i < productUrls.length; i++){
-			itemsToAdd.push({
-				shopcartId : this.id, 
-				product : productUrls[i]
-			}); 
+		var productUrls = [];
+		for (var i=0; i < features.length; i++) {
+		
+			if ( features[i].properties && features[i].properties.productUrl ) {
+				itemsToAdd.push({
+					shopcartId : this.id, 
+					product : features[i].properties.productUrl
+				});
+				productUrls.push( features[i].properties.productUrl ); 
+			}
 		}	
 
 		// Send the request

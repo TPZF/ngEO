@@ -82,7 +82,7 @@ var MapPopup = function(container) {
 	var btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
 		.appendTo( element.find('#mpButtons') )
 		.click( function() {
-			ShopcartCollection.getCurrent().addItems( SearchResults.getProductUrls(products), products );
+			ShopcartCollection.getCurrent().addItems( products );
 		});
 	
 	parentElement.appendTo(container);

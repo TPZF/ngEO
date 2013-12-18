@@ -30,22 +30,6 @@ var SearchResults = {
 		}
 		return productUrls;
 	},
-
-	
-	/** return the non Planned features */
-	getNonPlannedItems : function(features) {
-		
-		var nonPlannedFeatures = [];
-		var eoMeta;
-		
-		for ( var i = 0; i < features.length; i++ ) {
-			eoMeta = features[i].properties.EarthObservation.EarthObservationMetaData;
-			if ( eoMeta && eoMeta.eop_status && eoMeta.eop_status != "PLANNED") {
-				nonPlannedFeatures.push(features[i]);
-			} 	
-		}
-		return nonPlannedFeatures;
-	},
 	
 	//the following method appends the download options using this convention &param_1=value1&....&param_n=value_n
 	//kept here in case of any change !

@@ -1,8 +1,8 @@
 define( ['jquery', 'backbone', 'configuration', 'account/view/createShopcartView', 
-         'account/view/renameShopcartView', 'shopcart/widget/shopcartExportWidget', 
-         'account/view/importShopcartView', 'ui/sharePopup', 'text!account/template/shopcartManagerContent.html'], 
-		function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, 
-				ShopcartExportWidget, ImportShopcartView, SharePopup, shopcartManagerContent_template) {
+         'account/view/renameShopcartView', 'account/view/duplicateShopcartView', 'shopcart/widget/shopcartExportWidget', 
+         'ui/sharePopup', 'text!account/template/shopcartManagerContent.html'], 
+		function($, Backbone, Configuration, CreateShopcartView, RenameShopcartView, DuplicateShopcartView,
+				ShopcartExportWidget, SharePopup, shopcartManagerContent_template) {
 
 var ShopcartManagerView = Backbone.View.extend({
 
@@ -18,79 +18,31 @@ var ShopcartManagerView = Backbone.View.extend({
 		
 		'click #new_shp' : function(event){
 
-			var parentElement = $('<div id="actionPopup">');
-			var element = $('<div id="actionPopupContent"></div>'); 
-			element.appendTo(parentElement);
-			parentElement.appendTo('.ui-page-active');
-			parentElement.ngeowidget({
-				title: "Create a new shopcart",
-				hide: function() {
-					//remove the root of the view to discart all listeners
-					element.remove();
-					parentElement.remove();
-				}
-			});
-			
 			var createShopcartView = new CreateShopcartView({
 				model : this.model,
-				el: element
+				title : "New shopcart"
 			});
-			
 			createShopcartView.render();
-			//Open the popup
-			parentElement.ngeowidget("show");
 		},
 		
-		'click #rename_shp' : function(event){
-			
-			var parentElement = $('<div id="actionPopup">');
-
-			var element = $('<div id="actionPopupContent"></div>'); 
-			element.appendTo(parentElement);
-			parentElement.appendTo('.ui-page-active');
-			parentElement.ngeowidget({
-				title: "Rename the shopcart",
-				hide: function() {
-					element.remove();
-					parentElement.remove();
-				}
-			});
-			
-			var renameShopcartView = new RenameShopcartView
-			({
+		'click #duplicate_shp' : function(event) {
+		
+			var duplicateShopcartView = new DuplicateShopcartView({
 				model : this.model,
-				el: element
+				title : "Duplicate shopcart"
+			});
+			duplicateShopcartView.render();
+		},
+		
+		'click #rename_shp' : function(event) {
+						
+			var renameShopcartView = new RenameShopcartView({
+				model : this.model,
+				title : "Rename shopcart"
 			});
 			renameShopcartView.render();
-			
-			//Open the popup
-			parentElement.ngeowidget("show");
 		},
 		
-		'click #import_shp' : function(event){
-			
-			var parentElement = $('<div id="actionPopup">');
-
-			var element = $('<div id="actionPopupContent"></div>'); 
-			element.appendTo(parentElement);
-			parentElement.appendTo('.ui-page-active');
-			parentElement.ngeowidget({
-				title: "Import a shopcart",
-				hide: function() {
-					parentElement.remove();
-				}
-			});
-			
-			var importShopcartView = new ImportShopcartView({
-				model : this.model,
-				el: element
-			});
-			
-			importShopcartView.render();
-			
-			//Open the popup
-			parentElement.ngeowidget("show");
-		}, 
 		//called when the share button is clicked.
 		'click #share_shp' : function(event){
 
