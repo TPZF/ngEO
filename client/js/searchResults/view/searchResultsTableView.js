@@ -1,8 +1,8 @@
 define(
-		[ 'jquery', 'logger', 'ui/tableView', 'configuration', 'searchResults/model/searchResults',
+		[ 'jquery', 'logger', 'ui/tableView', 'configuration', 'searchResults/model/searchResults', 'shopcart/model/shopcartCollection',
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/dataAccessWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget' ],
-	function($, Logger, TableView, Configuration, SearchResults, SimpleDataAccessRequest, DataAccessWidget,
+	function($, Logger, TableView, Configuration, SearchResults, ShopcartCollection, SimpleDataAccessRequest, DataAccessWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
 			
@@ -69,9 +69,11 @@ var SearchResultsTableView = TableView.extend({
 		if ( this.model.getSelectedProductUrls().length == 0 ) {
 			this.retrieveProduct.button('disable');
 			this.downloadOptionsButton.button('disable');
+			this.addToShopcart.button('disable');
 		} else {
 			this.retrieveProduct.button('enable');
 			this.downloadOptionsButton.button('enable');
+			this.addToShopcart.button('enable');
 		}
 	},
 	
@@ -97,6 +99,13 @@ var SearchResultsTableView = TableView.extend({
 				Logger.inform("Cannot download the product : missing permissions.");
 			}
 
+		});
+		//add selected items to the current or to a new shopcart
+		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true">Add to Shopcart</button>').appendTo($buttonContainer);
+		this.addToShopcart.button();
+		this.addToShopcart.button('disable');		
+		this.addToShopcart.click(function() {
+			ShopcartCollection.getCurrent().addItems( self.model.getSelectedNonPlannedFeatures() );
 		});
 		
 		//add button to the widget footer in order to download products

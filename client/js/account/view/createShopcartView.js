@@ -6,15 +6,12 @@ define( ['jquery', 'logger', 'backbone',  'text!account/template/nameShopcartTem
 var CreateShopcartView = Backbone.View.extend({
 	
 	initialize : function(){
-		this.model.on("sync", this.close, this);
 	},
 	
 	events :{
 		
 		//enable the create shopcart button if and only if the name is not empty
-		'blur #shopcartNameField' : function (event){
-			this.updateSubmitButtonStatus(event);
-		},
+		'blur #shopcartNameField' : 'updateSubmitButtonStatus',
 		
 		//when the textfield gets the focus bind the keypress event
 		'focusin #shopcartNameField' : function(event){
@@ -30,33 +27,18 @@ var CreateShopcartView = Backbone.View.extend({
 		
 		//called when the submit button is clicked
 		'click #submit' : function(event){
-			this.submit(event);
+			event.preventDefault();
+			var self = this;
+			this.submit( $('#shopcartNameField').val(), {
+				success: function() {
+					self.$el.ngeowidget('hide');
+				},
+				error: function() {
+					self.$el.find('#serverMessage').append('<div>' + self.errorMessage() + '</div>');
+				}
+			});
 		}
 	},
-	
-	/**
-	 * submit the create shopcart request
-	 */
-	submit : function(event){
-		event.preventDefault();
-		var success = this.model.create({ "name" : $('#shopcartNameField').val(),
-							"userId" : "",
-							"isDefault" : false});
-		if (!success){
-			this.error();
-		}
-//		else{
-//			this.model.currentShopcartId = this.model.models[this.model.models.length-1].id;
-//		}
-	},
-	
-	/** 
-	 * close the containg widget 
-	 */ 
-	close : function(event){
-		this.$el.parent().ngeowidget('hide');
-
-	}, 
 	
 	/** 
 	 * update the status of the submit button 
@@ -67,22 +49,41 @@ var CreateShopcartView = Backbone.View.extend({
 		}else{
 			this.$el.find('#submit').button('disable');
 		}
+	},	
+	
+	/**
+	 * submit the create shopcart request
+	 */
+	submit : function(name,options) {
+		this.model.create({ "name" : name,
+							"userId" : "",
+							"isDefault" : false}, options);
 	},
 	
-	
-	error : function(event){
-		this.$el.find('#serverMessage').append('<div>Error : A new shopcart cannot be created.</div>');
+	/** 
+	 * Return an error message
+	 */ 
+	errorMessage: function() {
+		return "Error : A new shopcart cannot be created.";
 	},
-	
+			
 	/** 
 	 * Render the view
 	 */ 
 	render: function(){
 	
 		this.$el.append(nameShopcart_template);
+		this.$el.appendTo('.ui-page-active');
+		this.$el.ngeowidget({
+			title: this.options.title,
+			hide: $.proxy( this.remove, this )
+		});
+
 		this.$el.trigger('create');		
 		this.$el.find('#submit').button('disable');
-		var self = this;
+		
+		//Open the popup
+		this.$el.ngeowidget("show");
 
 		return this;
 	}	

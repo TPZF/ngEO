@@ -1,7 +1,7 @@
 
 
-define( ['jquery', 'logger', 'backbone',  'account/view/createShopcartView'], 
-		function($, Logger, Backbone, CreateShopcartView) {
+define( ['account/view/createShopcartView'], 
+		function(CreateShopcartView) {
 
 	
 	/** The rename view is very similar to the createShopcart view 
@@ -10,9 +10,15 @@ define( ['jquery', 'logger', 'backbone',  'account/view/createShopcartView'],
 var RenameShopcartView = CreateShopcartView.extend({
 	
 	/** submit the rename query to the server */ 
-	submit : function(event){
-		event.preventDefault();
-		this.model.getCurrent().set({ "name" : $('#shopcartNameField').val()}).save();
+	submit : function(name,options) {
+		this.model.getCurrent().set({"name" : name}).save(options);
+	},
+	
+	/** 
+	 * Return an error message
+	 */ 
+	errorMessage: function() {
+		return "Error : Shopcart cannot be renamed.";
 	}
 
 });

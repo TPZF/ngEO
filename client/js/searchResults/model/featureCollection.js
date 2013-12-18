@@ -220,7 +220,7 @@ var FeatureCollection = function() {
 	/** Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
 	 */
-	this.getSelectedProductUrls = function(features) {
+	this.getSelectedProductUrls = function() {
 		
 		var productUrls = [];
 		
@@ -231,6 +231,21 @@ var FeatureCollection = function() {
 			}
 		}
 		return productUrls;
+	};
+
+	/** return the non Planned features */
+	this.getSelectedNonPlannedFeatures = function() {
+		
+		var nonPlannedFeatures = [];
+		var eoMeta;
+		
+		for ( var i = 0; i < this.selection.length; i++ ) {
+			eoMeta = this.selection[i].properties.EarthObservation.EarthObservationMetaData;
+			if ( eoMeta && eoMeta.eop_status && eoMeta.eop_status != "PLANNED") {
+				nonPlannedFeatures.push(this.selection[i]);
+			} 	
+		}
+		return nonPlannedFeatures;
 	};
 	
 	// Add events
