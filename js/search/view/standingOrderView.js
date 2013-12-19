@@ -2,10 +2,10 @@
 
 define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/spatialExtentView', 'dataAccess/widget/dataAccessWidget', 'search/view/timeExtentView',
          'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/schedulingOptionsView', 'search/view/openSearchURLView',
-         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/model/downloadManagers', 'dataAccess/view/downloadManagersListView', 'ui/sharePopup',
+         'dataAccess/model/standingOrderDataAccessRequest',  'dataAccess/model/downloadManagers', 'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
 		function($, Backbone, Configuration, Logger, SpatialExtentView, DataAccessWidget, TimeExtentView,
-				 AdvancedSearchView, DownloadOptionsView, SchedulingOptionsView, OpenSearchURLView, StandingOrderDataAccessRequest, DownloadManagers, DownloadManagersListView, SharePopup,
+				 AdvancedSearchView, DownloadOptionsView, SchedulingOptionsView, OpenSearchURLView, StandingOrderDataAccessRequest, DownloadManagers, SharePopup,
 				 searchCriteria_template) {
 
 /**

@@ -6,11 +6,12 @@ define( ['jquery', 'backbone', 'configuration', "hostedProcesses/model/hostedPro
 	 * This view handles the displaying of download managers and the assignment 
 	 * of a download manager to a data access request either a SimpleDataAccessRequest 
 	 * or a StandingOrderDataAccessRequest.
+	 * It handles hosted process configuration as well.
 	 * 
 	 * The attribute request is the request to be submitted.
 	 * 
 	 */
-var DownloadManagersListView = Backbone.View.extend({
+var DataAccessRequestView = Backbone.View.extend({
 
 	initialize : function(options){
 		this.request = options.request;
@@ -24,15 +25,25 @@ var DownloadManagersListView = Backbone.View.extend({
 	
 	events : {
 		'click #validateRequest' : function(event){
-			$("#serverMessage").empty();
-			this.request.setDownloadManager(this.selectedDownloadManager);
-		
-			//disable the DMs list to avoid choosing a different DM once the
-			//validation request has been submitted
-			$('#downloadManagersList').find("option").attr('disabled', 'disabled');
+
+			var hpIsSelected = this.selectHostedProcessView.$el.find('.selected').length > 0;
+			if ( !hpIsSelected || this.selectHostedProcessView.validateParameters() )
+			{
+				// No hosted process selected or selected one have valide parameters
+				$("#serverMessage").empty();
+				this.request.setDownloadManager(this.selectedDownloadManager);
 			
-			// Submit the request
-			this.request.submit();
+				//disable the DMs list to avoid choosing a different DM once the
+				//validation request has been submitted
+				$('#downloadManagersList').find("option").attr('disabled', 'disabled');
+				
+				// Submit the request
+				this.request.submit();
+			}
+			else
+			{
+				$("#serverMessage").html('<p style="color: red;">Please, configure the product processing parameters first</p>');
+			}
 		},
 		
 		//NGEO 782 : the download managers are displayed with a select box
@@ -120,13 +131,13 @@ var DownloadManagersListView = Backbone.View.extend({
 		var self = this;
 		hostedProcessList.fetch()
 		.done(function() {
-			var selectHostedProcessView = new SelectHostedProcessView({
+			self.selectHostedProcessView = new SelectHostedProcessView({
 				model: hostedProcessList,
 				el: self.$el.find("#hostedProcesses"),
 				request: self.request
 			});
 
-			selectHostedProcessView.render();
+			self.selectHostedProcessView.render();
 			self.$el.find("#hostedProcesses").trigger('create');
 		})
 		.fail(function() {
@@ -152,6 +163,6 @@ var DownloadManagersListView = Backbone.View.extend({
 	
 });
 
-return DownloadManagersListView;
+return DataAccessRequestView;
 
 });
