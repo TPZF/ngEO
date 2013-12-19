@@ -68,6 +68,19 @@ var removeItem = function(shopcartContent,id) {
 	return false;
 };
 
+var findFeatureByProductUrl = function(features,url) {
+	for (var i=0; i < features.length; i++){
+		if (features[i].properties.productUrl == url){
+			return true;
+		}
+	}
+	return false;
+};
+
+var saveShopcartContent = function(id) {
+	fs.writeFile('./shopcarts/' + id + '_shopcartContent.json', JSON.stringify(shopcartContents[id],null,'\t'), 'utf8');
+}
+
 module.exports = {
 	
 	get : function(req, res){
@@ -141,6 +154,13 @@ module.exports = {
 		if (!req.params.id && !req.body.id && req.body.name && req.body.name != "") {	
 			var response = req.body;
 			response.id = uuid.v4();
+			shopcartConfigs.push(response);
+			shopcartContents[response.id] = {
+				type: "FeatureCollection",
+				features: []
+			};
+			
+			saveShopcartContent(response.id);
 			res.send(response);
 		}
 		//add shopcart items : post of shopcart items
@@ -153,6 +173,16 @@ module.exports = {
 			var id;
 			//add an id to each shopcart item
 			for (var i=0; i<req.body.shopCartItemAdding.length; i++){		
+				
+				if ( findFeatureByProductUrl( shopcartContents[req.params.id].features, req.body.shopCartItemAdding[i].product ) ) {
+					waitingRequests--;
+					if ( waitingRequests == 0 ) {
+						//save the new content of the shopcart 
+						saveShopcartContent(req.params.id);
+						res.send(response);	
+					}
+					continue;
+				}
 				
 				http.get(req.body.shopCartItemAdding[i].product, function(r) {
 					
@@ -172,7 +202,7 @@ module.exports = {
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
 								//save the new content of the shopcart 
-								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id],null,'\t'), 'utf8');
+								saveShopcartContent(req.params.id);
 								res.send(response);	
 							}
 						});
@@ -180,7 +210,7 @@ module.exports = {
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
 								//save the new content of the shopcart 
-								fs.writeFile('./shopcarts/' + req.params.id + '_shopcartContent.json', JSON.stringify(shopcartContents[req.params.id],null,'\t'), 'utf8');
+								saveShopcartContent(req.params.id);
 								res.send(response);	
 							}
 					}

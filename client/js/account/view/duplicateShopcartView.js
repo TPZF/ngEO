@@ -13,11 +13,23 @@ var DuplicateShopcartView = CreateShopcartView.extend({
 	submit : function(name,options) {
 	
 		var features = this.model.getCurrent().features;
-		var newModel = this.model.create({ "name" : name,
+		
+		var wrapSuccess = function(model) {
+			model.addItems( features );
+			if (options.success) options.success();
+		};
+		
+		
+		var attributes = { "name" : name,
 							"userId" : "",
-							"isDefault" : false}, options);
+							"isDefault" : false };
+			
+		this.model.create(attributes, { 
+								wait: true, 
+								success: wrapSuccess, 
+								error: options.error
+							});
 							
-		newModel.addItems( features );
 	}
 
 });
