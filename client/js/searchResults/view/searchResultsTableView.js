@@ -73,8 +73,14 @@ var SearchResultsTableView = TableView.extend({
 		} else {
 			this.retrieveProduct.button('enable');
 			this.downloadOptionsButton.button('enable');
-			this.addToShopcart.button('enable');
-		}
+			
+			var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();
+			if ( nonPlannedSelectProducts.length == 0 ) {
+				this.addToShopcart.button('disable');
+			} else {
+				this.addToShopcart.button('enable');
+			}
+		}		
 	},
 	
 	/**
