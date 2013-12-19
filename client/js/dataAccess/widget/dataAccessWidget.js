@@ -2,8 +2,8 @@
   * Data widget module
   * Used to assign a download manager/product processing to a data access request
   */
-define( [ "jquery", "configuration", 'dataAccess/view/downloadManagersListView', 'dataAccess/model/downloadManagers' ], 
-		function($,Configuration, DownloadManagersListView, DownloadManagers) {
+define( [ "jquery", "configuration", 'dataAccess/view/dataAccessRequestView', 'dataAccess/model/downloadManagers' ], 
+		function($,Configuration, DataAccessRequestView, DownloadManagers) {
 
 
 var DataAccessWidget = function() {
@@ -33,7 +33,7 @@ var DataAccessWidget = function() {
 		DownloadManagers.fetch().done(function() {
 		
 			// Create the view and render it
-			downloadManagersListView = new DownloadManagersListView({
+			downloadManagersListView = new DataAccessRequestView({
 				model : DownloadManagers,
 				el: element,
 				selectedDownloadManager : "",

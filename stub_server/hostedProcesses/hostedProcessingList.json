@@ -80,7 +80,22 @@
                 {
                     "name": "Products url",
                     "description": "Description of products url",
-                    "type": "String"
+                    "type": "URL"
+                }
+            ],
+            "datasetIds": [ "ND_SAR_1", "ND_S2_1" ]
+        },
+        {
+            "hostedProcessId": "DirectWCTS",
+            "name": "DirectWCTS",
+            "displayName": "Direct WCTS",
+            "URL": "http://server/app.fr",
+            "description": "It allows the online transformation of a SPOT level 1 image (raw image) into a level 2 image (projected)",
+            "parameters": [
+                {
+                    "name": "EOProductURL",
+                    "description": "description of parameter_1",
+                    "type": "EOProductURL"
                 }
             ],
             "datasetIds": [ "ND_SAR_1", "ND_S2_1" ]

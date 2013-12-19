@@ -1,5 +1,6 @@
-define( ['jquery', 'backbone', 'configuration', 'hostedProcesses/view/hostedProcessConfigurationView', 'text!hostedProcesses/template/hostedProcessesListContent.html'], 
-		function($, Backbone, Configuration, HostedProcessConfigurationView, hostedProcessesList_template) {
+define( ['jquery', 'backbone', 'configuration', 'hostedProcesses/view/hostedProcessConfigurationView', 'dataAccess/model/standingOrderDataAccessRequest',
+		'text!hostedProcesses/template/hostedProcessesListContent.html'], 
+		function($, Backbone, Configuration, HostedProcessConfigurationView, StandingOrderDataAccessRequest, hostedProcessesList_template) {
 
 /**
  * This view handles the displaying of hosted processes
@@ -13,6 +14,8 @@ var SelectHostedProcessView = Backbone.View.extend({
 	events: {
 		"click #configureHostedProcess" : function()
 		{
+			$("#serverMessage").empty();
+
 			var selectedHostedProcessIndex = this.$el.find('.selected').data("value");
 
 			var element = $('<div id="hostedProcessConfiguration">');
@@ -37,13 +40,14 @@ var SelectHostedProcessView = Backbone.View.extend({
 		},
 		"click .hostedProcess" : function(event)
 		{
-			// Reinitialize hostedProcessId
-			if ( this.request.hostedProcessId )
-			{
-				this.request.hostedProcessId = null;
-			}
+			var $selectedHostedProcess = $(event.target).closest('.hostedProcess');
 
-			$(event.target).closest('.hostedProcess')
+			// Set hostedProcessId and reinit parameters
+			var selectedHostedProcessIndex = $selectedHostedProcess.data("value");
+			this.request.hostedProcessId = this.model.get('hostedProcesses')[selectedHostedProcessIndex].hostedProcessId;
+			this.request.parameters = [];
+
+			$selectedHostedProcess
 				.siblings().removeClass('selected').end()
 				.toggleClass('selected');
 
@@ -68,6 +72,50 @@ var SelectHostedProcessView = Backbone.View.extend({
 
 		this.$el.html(content);
 
+	},
+
+	/**
+	 *	Check if hosted process parameters are filled, handle EOProductURL type
+	 */
+	validateParameters: function()
+	{
+		var self = this;
+		var hostedProcess = _.find(this.model.get('hostedProcesses'), function(hp){ return hp.hostedProcessId == self.request.hostedProcessId; });
+		for ( var i=0; i<hostedProcess.parameters.length; i++ )
+		{
+			var parameter = hostedProcess.parameters[i];
+			var parameterFilled = _.where(this.request.parameters, {Name: parameter.name}).length > 0;
+			if ( parameter.type != "EOProductURL" )
+			{
+				if ( !parameterFilled )
+					return false;
+			}
+			else
+			{
+				// Handle EOProductURL
+				if ( !parameterFilled )
+				{
+					// Add EOProductParameter if doesn't exists
+					var EOProductURLParameter = {
+						"Name" : parameter.name,
+						"value" : []
+					};
+					
+					// TODO find other way to differenciate standingOrderDataAccessRequest
+					if ( this.request.url.search('standingOrderDataAccessRequest') < 0 )
+					{
+						// Simple or enhanced access request --> Fill EOProductURL parameter with the choosen products
+						for ( var j=0; j<this.request.productURLs.length; j++ )
+						{
+							EOProductURLParameter.value.push( this.request.productURLs[j] );
+						}
+					}
+					this.request.parameters.push(EOProductURLParameter);
+				}
+			}
+		}
+
+		return true;
 	}
 });
 
