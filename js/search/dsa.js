@@ -175,9 +175,9 @@ return {
 				$('#search').addClass('ui-disabled');
 			}
 			else if ( numDatasets == 1 ) {
-				UserPrefs.save( "Dataset", dataset.get('datasetId') );
+				UserPrefs.save( "Dataset", DatasetSearch.getDatasetPath() );
 				
-				if ( DataSetAuthorizations.hasDownloadAccess( dataset.get('datasetId') ) ) {
+				if ( DataSetAuthorizations.hasDownloadAccess( DatasetSearch.getDatasetPath() ) ) {
 					$('#subscribe').removeClass('ui-disabled');
 				} else {
 					$('#subscribe').addClass('ui-disabled');
