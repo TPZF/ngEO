@@ -73,7 +73,7 @@ var HostedProcessConfigurationView = Backbone.View.extend({
 
 		if ( this.$el.find('.configurationInputs').length == 0 )
 		{
-			$('#hostedProcessConfigurationContent').append('<p style="text-align: center;">No parameter to configure by user</p>');
+			this.$el.find('#validateHostedProcessConfiguration').before('<p style="text-align: center;">No parameter to configure by user</p>');
 		}
 	},
 
