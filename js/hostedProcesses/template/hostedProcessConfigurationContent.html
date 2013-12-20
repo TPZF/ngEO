@@ -1,57 +1,50 @@
-<div id="hostedProcessConfigurationContent" class="widget-content ui-body-c">
-
-	<div data-role="fieldcontain">
-		<label style="display: inline-block; font-weight: bold; width: 23%;" for="<%= hostedProcess.name %>">Service: </label>
-		<span id="<%= hostedProcess.name %>" style="display: inline-block; width: 75%"><%= hostedProcess.displayName %></span>
-	</div>
-
-	<div style="text-align: justify;" data-role="fieldcontain">
-		<label style="display: inline-block; vertical-align: top; font-weight: bold; width: 23%;" for="<%= hostedProcess.description %>">Description: </label>
-		<span id="<%= hostedProcess.description %>" style="width: 75%; display: inline-block;"><%= hostedProcess.description %></span>
-	</div>
-
-	<% for ( var i=0; i<hostedProcess.parameters.length; i++ )
-	{
-		var parameter = hostedProcess.parameters[i];
-		/* Do not generate field for EOProductURL type */
-		if ( parameter.type != "EOProductURL" )
-		{ %>
-			<div class="configurationInputs" data-role="fieldcontain">
-			<label title="<%= parameter.description %>" for="<%= parameter.name %>"><%= parameter.name %>: </label>
-			<%
-			switch (parameter.type) { case "String" : %>
-						<input type="text" id="<%= parameter.name %>" data-mini="true" />
-
-				<% break; case "Integer" : case "Float" : %>
-						<input min="<%= parameter.rangeMinValue %>" max="<%= parameter.rangeMaxValue %>" type="number" id="<%= parameter.name %>" data-mini="true" />
-
-				<% break; case "DateTime" : %>
-						<input type="text" data-role="datebox" data-mini="true" data-theme="c" data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d",
-	   					"useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' id="<%= parameter.name %>" data-mini="true" />
-
-				<% break; case "enumeration" : %>
-						<select id="<%= parameter.name %>" data-mini="true" data-theme="c">
-
-							<% for ( var j=0; j<parameter.values.length; j++ )
-							{ %>
-								<option value="<%= parameter.values[j] %>" data-corners="false" data-theme="c" data-mini="true"><%= parameter.values[j] %></option> 
-							<% } %>
-						</select>
-
-				<% break; case "URL" : %>
-						<input type="url" id="<%= parameter.name %>" data-mini="true" />
-
-				<% break;
-			}
-		}
-		%>
-		</div>
-	<% } %>
-
-	<div style="text-align: center;">
-		<button id="validateHostedProcessConfiguration" data-role="button" data-mini="true" data-inline="true" data-theme="a" >OK</button>
-	</div>
-
-	<div style="font-weight: bold; text-align: center;" id="validateMessage"></div>
-
+<div data-role="fieldcontain">
+	<label style="display: inline-block; font-weight: bold; width: 23%;" for="<%= hostedProcess.name %>">Service: </label>
+	<span id="<%= hostedProcess.name %>" style="display: inline-block; width: 75%"><%= hostedProcess.displayName %></span>
 </div>
+
+<div style="text-align: justify;" data-role="fieldcontain">
+	<label style="display: inline-block; vertical-align: top; font-weight: bold; width: 23%;" for="<%= hostedProcess.description %>">Description: </label>
+	<span id="<%= hostedProcess.description %>" style="width: 75%; display: inline-block;"><%= hostedProcess.description %></span>
+</div>
+
+<% for ( var i=0; i<hostedProcess.parameters.length; i++ )
+{
+	var parameter = hostedProcess.parameters[i];
+	/* Do not generate field for EOProductURL type */
+	if ( parameter.type != "EOProductURL" )
+	{ %>
+		<div class="configurationInputs" data-role="fieldcontain">
+		<label title="<%= parameter.description %>" for="<%= parameter.name %>"><%= parameter.name %>: </label>
+		<%
+		switch (parameter.type) { case "String" : %>
+					<input type="text" id="<%= parameter.name %>" data-mini="true" />
+
+			<% break; case "Integer" : case "Float" : %>
+					<input min="<%= parameter.rangeMinValue %>" max="<%= parameter.rangeMaxValue %>" type="number" id="<%= parameter.name %>" data-mini="true" />
+
+			<% break; case "DateTime" : %>
+					<input type="text" data-role="datebox" data-mini="true" data-theme="c" data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d",
+					"useTodayButton": true, "themeDate":"c", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' id="<%= parameter.name %>" data-mini="true" />
+
+			<% break; case "enumeration" : %>
+					<select id="<%= parameter.name %>" data-mini="true" data-theme="c">
+
+						<% for ( var j=0; j<parameter.values.length; j++ )
+						{ %>
+							<option value="<%= parameter.values[j] %>" data-corners="false" data-theme="c" data-mini="true"><%= parameter.values[j] %></option> 
+						<% } %>
+					</select>
+
+			<% break; case "URL" : %>
+					<input type="url" id="<%= parameter.name %>" data-mini="true" />
+
+			<% break; } %>
+		</div>
+<%	} } %>
+
+<div style="text-align: center;">
+	<button id="validateHostedProcessConfiguration" data-role="button" data-mini="true" data-inline="true" data-theme="a" >OK</button>
+</div>
+
+<div style="font-weight: bold; text-align: center;" id="validateMessage"></div>
