@@ -2,7 +2,7 @@
   * Data widget module
   * Used to assign a download manager/product processing to a data access request
   */
-define( [ "jquery", "configuration", 'dataAccess/view/dataAccessRequestView', 'dataAccess/model/downloadManagers' ], 
+define( [ "jquery", "configuration", 'dataAccess/view/dataAccessRequestView', 'dataAccess/model/downloadManagers', 'ui/widget' ], 
 		function($,Configuration, DataAccessRequestView, DownloadManagers) {
 
 

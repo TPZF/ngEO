@@ -1,6 +1,6 @@
 
 
-define( ['jquery', 'logger', 'backbone',  'text!account/template/nameShopcartTemplate.html'], 
+define( ['jquery', 'logger', 'backbone',  'text!account/template/nameShopcartTemplate.html', 'ui/widget'], 
 		function($, Logger, Backbone, nameShopcart_template) {
 
 var CreateShopcartView = Backbone.View.extend({

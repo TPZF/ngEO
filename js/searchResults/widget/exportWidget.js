@@ -4,7 +4,7 @@
   */
 
 
-define( [ "jquery", "configuration", 'searchResults/view/exportView', 'search/model/datasetSearch'], 
+define( [ "jquery", "configuration", 'searchResults/view/exportView', 'search/model/datasetSearch', 'ui/widget'], 
 		function($, Configuration, ExportView, DataSetSearch) {
 
 
