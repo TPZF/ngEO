@@ -88,16 +88,17 @@ var DataSetSearch = SearchCriteria.extend({
 	/** Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
-	getOpenSearchURL : function(){
+	getOpenSearchURL : function(id) {
 
 		var baseUrl = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
 		
 		var url = baseUrl;
-		url += this.getDatasetPath() + "/search?";
-		url += this.getOpenSearchParameters();
 		
 		// Correlation/Interferometry
 		if ( this.get('mode') != "Simple" ) {
+		
+			url += this.get('master') + "/search?";
+			url += this.getOpenSearchParameters();
 		
 			// Add interferometry specific parameters
 			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
@@ -107,7 +108,10 @@ var DataSetSearch = SearchCriteria.extend({
 			slaveUrl += this.slaves + "/search?";
 			slaveUrl += this.getOpenSearchParameters();
 			url += "&with=" + encodeURIComponent(slaveUrl);
-		} 
+		} else {
+			url += id + "/search?";
+			url += this.getOpenSearchParameters();
+		}
 		
 		url += "&format=json";
 		
