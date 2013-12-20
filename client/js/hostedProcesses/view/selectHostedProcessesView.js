@@ -1,5 +1,5 @@
 define( ['jquery', 'backbone', 'configuration', 'hostedProcesses/view/hostedProcessConfigurationView', 'dataAccess/model/standingOrderDataAccessRequest',
-		'text!hostedProcesses/template/hostedProcessesListContent.html'], 
+		'text!hostedProcesses/template/hostedProcessesListContent.html', 'ui/widget'], 
 		function($, Backbone, Configuration, HostedProcessConfigurationView, StandingOrderDataAccessRequest, hostedProcessesList_template) {
 
 /**

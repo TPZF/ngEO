@@ -4,7 +4,7 @@
   */
 
 
-define( [ "jquery", "configuration", 'shopcart/view/shopcartExportView'], 
+define( [ "jquery", "configuration", 'shopcart/view/shopcartExportView', 'ui/widget'], 
 		function($, Configuration, ShopcartExportView) {
 
 
