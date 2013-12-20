@@ -98,7 +98,7 @@ var FeatureCollection = function() {
 	this.launch = function(searchCriteria) {
 	
 		// build base url
-		_url = searchCriteria.getOpenSearchURL();
+		_url = searchCriteria.getOpenSearchURL(this.id);
 		
 		_url += "&count=" + this.countPerPage;
 		
