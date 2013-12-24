@@ -296,6 +296,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		removeLayer: function(layer) {
 			var index = self.layers.indexOf(layer);
 			if ( index >= 0 ) {
+				if (layer.clear) {
+					layer.clear();
+				}
 				if (layer.engineLayer) {
 					mapEngine.removeLayer(layer.engineLayer);
 				}
