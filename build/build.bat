@@ -7,4 +7,6 @@ call lessc --yui-compress ..\client\css\main.less > output\css\main.css
 call lessc --yui-compress ..\client\css\home.less > output\css\home.css
 @echo Compress help.css
 call lessc --yui-compress ..\client\css\help.less > output\css\help.css
+@echo Compress userManual.css
+call lessc --yui-compress ..\client\css\userManual.less > output\css\userManual.css
 pause

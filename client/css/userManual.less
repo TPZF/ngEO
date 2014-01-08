@@ -27,58 +27,13 @@ body {
  * Full page layout
  */
 html, body {	
-	width: 100%;
-	height: 100%;
-	padding: 0;
-	margin: 0;
-	min-width: 960px;
+	min-height: 99.9%;
 }
 
-div {
-	margin:	0;
-	padding: 0;
-}
 
 // Taken from jQuery Mobile
 a {
     color: #2489CE;
     font-weight: bold;
 }
-
-@itoc-width: 400px;
-
-
-#icontent {
-	position: absolute;
-	top: @header-height + 2;
-	bottom: 0;
-	left: @itoc-width + 2;
-	right: 0;
-	border: 0;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-}
-
-#itoc {
-	position: absolute;
-	top: @header-height + 2;
-	bottom: 0;
-	left: 0;
-	width: @itoc-width;
-	border: 0;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	border-right: 2px solid @text-color;
-}
-
-iframe {
-	width: 100%;
-	height: 100%;
-	border: 0;
-}
-
-@import "mixins.less";
-@import "menubar.less";
 
