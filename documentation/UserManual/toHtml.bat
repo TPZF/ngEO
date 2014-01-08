@@ -1,5 +1,5 @@
 PATH C:\Tools\xsltproc;%PATH%
-xsltproc --output userManual.html --timing --novalid toHtml.xsl userManual.xml 
+xsltproc --stringparam base.dir html --stringparam chunk.section.depth 0 --timing --novalid toHtml.xsl userManual.xml 
 pause
 
 	

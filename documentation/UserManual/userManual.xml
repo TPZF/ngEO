@@ -17,10 +17,12 @@
 			<title>
 				ngEO Main Concepts
 			</title>
-			<sect2>
-				<title>
+			<variablelist>
+			<varlistentry>
+				<term>
 					Dataset
-				</title>
+				</term>
+			<listitem>
 					<para> A dataset is a group of products. Various criteria are used to define a dataset such as : the use of products in a particular domain, the products meta data attributes, the user community. </para>
 					<para> There are four types of datasets: </para>
 					<itemizedlist>
@@ -29,11 +31,13 @@
 						<listitem><para>Remote Dataset: is a  dataset handled by external catalogues either by another ngeo instances or by HMA catalogues. Like HMA datasets and GCM.</para>						</listitem>	
 						<listitem><para>Virtual Dataset: it is a dataset composed by one of the above three type.</para></listitem>	
 					</itemizedlist>
-			</sect2>
-			<sect2>
-				<title>
+			</listitem>
+			</varlistentry>		
+			<varlistentry>
+				<term>
 					Product
-				</title>
+				</term>
+				<listitem>
 				<para> There are four types of products supported by ngEO: </para>
 					<itemizedlist>
 						<listitem>
@@ -60,21 +64,23 @@
 							<para>They are former planned products that were removed from the planning. They are handled exactly as planned products and are only expected to be used in CDS datasets.</para>
 						</listitem>	
 					</itemizedlist>
-			</sect2>
-			<sect2><title>Download Manager</title>
-				<para>It is software which is retrieved and run in standalone. It is used to the download of product data.</para>
-			</sect2>
+			</listitem>
+			</varlistentry>
+			<varlistentry><term>Download Manager</term>
+				<listitem><para>It is software which is retrieved and run in standalone. It is used to the download of product data.</para></listitem>	
+			</varlistentry>
 			
-			<sect2><title>Directly downloadable product</title>
-				<para>It is a product having a url which starts with http or https.</para>
-			</sect2>
+			<varlistentry><term>Directly downloadable product</term>
+				<listitem><para>It is a product having a url which starts with http or https.</para></listitem>	
+			</varlistentry>
 			
-			<sect2><title>Simple Data Access Request</title>
-				<para>It is a request issued from the user client in order to retrieve products having a url.</para>
-			</sect2>
-			<sect2><title>Standing Order Data Access Request</title>
-				<para>It is a request issued from the user client in order to schedule searches either by data or by time.</para>
-			</sect2>
+			<varlistentry><term>Simple Data Access Request</term>
+				<listitem><para>It is a request issued from the user client in order to retrieve products having a url.</para></listitem>	
+			</varlistentry>
+			<varlistentry><term>Standing Order Data Access Request</term>
+				<listitem><para>It is a request issued from the user client in order to schedule searches either by data or by time.</para></listitem>	
+			</varlistentry>
+			</variablelist>
 		</sect1>
 	<sect1>
 		<title>How to read this guide?</title>
@@ -90,11 +96,11 @@
 	<chapter id="interover">
 		<title>Interface Overview</title>
 		<para>The user interface home page is the following:</para>
-		<graphic fileref="screenshots/homePage.png" />
+		<graphic fileref="screenshots/homePage.jpg" />
 		<para>It is composed of : 
 			<itemizedlist>
 				<listitem><para>a header containing a menu bar. 
-					<graphic fileref="screenshots/menuBar.png" />
+					<graphic fileref="screenshots/menuBar.jpg" />
 					The entries :
 					<itemizedlist>
 						<listitem><para><emphasis>About</emphasis>: gives a quick introduction to ngEO</para></listitem>
@@ -109,7 +115,7 @@
 				</para></listitem>
 				<listitem><para>a central area which is dedicated to the map displaying. At start up, the map is the 2D map. </para></listitem>
 				<listitem><para>a footer which displays, in the left side, the currently selected dataset, in the middle, the navigation buttons of the results table and in the right side, the status of the search.</para>
-				<para>In the beginning, no dataset is selected, but after a search the status bar can look like this : <graphic fileref="screenshots/statusBarAfterSearch.png" /></para></listitem>
+				<para>In the beginning, no dataset is selected, but after a search the status bar can look like this : <graphic fileref="screenshots/statusBarAfterSearch.jpg" /></para></listitem>
 			</itemizedlist>
 		</para>
 	</chapter>
@@ -120,20 +126,20 @@
 			<title>How to make a Catalog Search?</title>
 			<itemizedlist>
 				<listitem><para>Launch the application: the main home page is displayed.
-					<graphic fileref="screenshots/homePage.png" height="700px" width="1000px"/>
+					<graphic fileref="screenshots/homePage.jpg"/>
 				</para></listitem>
-				<listitem><para>Click on the Datasets icon on the tool bar <inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.png"/>, the Dataset Selection widget is then opened.
-					<graphic fileref="screenshots/datasetSelectionWidget.png"/>
+				<listitem><para>Click on the Datasets icon on the tool bar <inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.jpg"/>, the Dataset Selection widget is then opened.
+					<graphic fileref="screenshots/datasetSelectionWidget.jpg"/>
 				</para></listitem>
 				<listitem><para>Click on one of the datasets.</para></listitem>
 				<listitem><para>Click on the search icon on the tool bar
-					<inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.png"/>,
+					<inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg"/>,
 					the search widget is opened.
-					<graphic fileref="screenshots/searchWidget.png"/>
+					<graphic fileref="screenshots/searchWidget.jpg"/>
 				</para></listitem>
 				<listitem><para>Fill in the search criteria and then click on the Submit Search button
-					<inlinegraphic fileref="screenshots/searchButton.png"/>, the search results table is displayed with the results.
-					<graphic fileref="screenshots/resultsTable.png"/>
+					<inlinegraphic fileref="screenshots/searchButton.jpg"/>, the search results table is displayed with the results.
+					<graphic fileref="screenshots/resultsTable.jpg"/>
 				</para></listitem>
 			</itemizedlist>
 		</sect1>
@@ -143,10 +149,10 @@
 				<listitem><para>Make a catalog search See <xref linkend="howtosearch"/>.</para></listitem>
 				<listitem><para>Once the products are retrieved, check the product id column in the results table:
 				if the product is underlined, this means that the product can be downloaded unless it not downloadable.
-				<inlinegraphic fileref="screenshots/downloadableProduct.png" />
+				<inlinegraphic fileref="screenshots/downloadableProduct.jpg" />
 				</para>
 				<para>For a directly downloadable product, click on the product id, the direct download widget is opened.</para>
-				<graphic fileref="screenshots/directDownloadWidget.png" />
+				<graphic fileref="screenshots/directDownloadWidget.jpg" />
 				<para>According to the product url and to the download managers registered, the user can have the choice to either choose a download via:
 					<itemizedlist>
 						<listitem><para>the browser</para></listitem>
@@ -155,7 +161,7 @@
 				</para></listitem>
 				<listitem><para>If the Browser Download menu is selected, the browser starts the product download.</para></listitem>
 				<listitem><para>If the Download manager Download menu is selected and the download url is validated, a button Download appears.
-					<graphic fileref="screenshots/directDownloadByDM.png"/>
+					<graphic fileref="screenshots/directDownloadByDM.jpg"/>
 				</para></listitem>
 				<listitem><para>Click on the Download button to start the download.</para></listitem>
 			</itemizedlist>
@@ -165,18 +171,18 @@
 			<itemizedlist>
 				<listitem><para>Launch the application: the main home page is displayed.</para></listitem>
 				<listitem><para>Click on the Datasets icon on the tool bar.
-					<inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.png"/>, the Dataset Selection widget is opened.
+					<inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.jpg"/>, the Dataset Selection widget is opened.
 				</para></listitem>
 				<listitem><para>Click on one of the datasets in the dataset selection widget:
-					<graphic fileref="screenshots/datasetSelectionWidget.png"/>
+					<graphic fileref="screenshots/datasetSelectionWidget.jpg"/>
 					The dataset is selected.
 					</para></listitem>
 				<listitem><para>Click on the search icon on the tool bar.
-					<inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.png"/>, the search widget is opened.
+					<inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg"/>, the search widget is opened.
 					</para></listitem>
 				<listitem><para>Fill in the search criteria and then click on the Standing Order button
-					<inlinegraphic fileref="screenshots/STOButton.png"/>, the standing order widget is spawned-up.
-					<graphic fileref="screenshots/STOWidget.png" alt='STO WIDGET IMAGE'/>
+					<inlinegraphic fileref="screenshots/STOButton.jpg"/>, the standing order widget is spawned-up.
+					<graphic fileref="screenshots/STOWidget.jpg" alt='STO WIDGET IMAGE'/>
 				</para></listitem>
 			</itemizedlist>
 			<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
@@ -186,27 +192,27 @@
 			<itemizedlist>
 				<listitem><para>Make a catalogue search See <xref linkend="howtosearch"/>.</para></listitem>
 				<listitem><para>Once the products are retrieved, check the products to include in a Simple Data Access Request.
-				If the Retrieve Product button <inlinegraphic fileref="screenshots/retrieveProductButton.png" alt='RETRIEVE PRODUCT BUTTON'/> is still disabled this means that the products selected does not have a url.
+				If the Retrieve Product button <inlinegraphic fileref="screenshots/retrieveProductButton.jpg" alt='RETRIEVE PRODUCT BUTTON'/> is still disabled this means that the products selected does not have a url.
 				</para></listitem>
 				<listitem><para>Click on Retrieve Product button, the data access widget is opened displaying the list of available download managers.
-					<graphic fileref="screenshots/simpleDARWidget.png" alt='SIMPLE DAR WIDGET'/> 
+					<graphic fileref="screenshots/simpleDARWidget.jpg" alt='SIMPLE DAR WIDGET'/> 
 				</para></listitem>
 				<listitem><para>Click on Validate Your Request button. The request is validated and the server response is displayed underneath the button.
 				If the request is successfully validated, the estimated size of the products are displayed and a notification message confirms that the
 				request has been acknowledged. The Validation button is renamed into 'Confirm Your Request'
 				If the validation has failed an error message is displayed with the list of available download managers.
-					<graphic fileref="screenshots/simpleDARValidatedWidget.png" alt='SIMPLE DAR Validated WIDGET'/> 
+					<graphic fileref="screenshots/simpleDARValidatedWidget.jpg" alt='SIMPLE DAR Validated WIDGET'/> 
 				</para></listitem>
 				<listitem><para>Click on Confirm Your Request button. The request is confirmed and the server response is displayed underneath the button.
 				If the request has been successfully confirmed, the request is being processed, unless an error message is displayed.
-					<graphic fileref="screenshots/simpleDARConfirmedWidget.png" alt='SIMPLE DAR Confirmed WIDGET'/>
+					<graphic fileref="screenshots/simpleDARConfirmedWidget.jpg" alt='SIMPLE DAR Confirmed WIDGET'/>
 				</para></listitem>
-				<listitem><para>Click on the close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.png" alt='WIDGET CLOSE ICON'/>to close the widget.</para></listitem>
+				<listitem><para>Click on the close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg" alt='WIDGET CLOSE ICON'/>to close the widget.</para></listitem>
 			</itemizedlist>
 			<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
 		</sect1>
 		<sect1 id="mapModeHowTo"><title>How to change Map Mode?</title>
-			<para>Click on the 2D/3D <inlinegraphic fileref="screenshots/toolBarIcons/mapMode.png"/> button on the toolbar to change the map mode
+			<para>Click on the 2D/3D <inlinegraphic fileref="screenshots/toolBarIcons/mapMode.jpg"/> button on the toolbar to change the map mode
 				from 2D to 3D and inversely.</para>
 		</sect1>
 		
@@ -214,17 +220,17 @@
 			<itemizedlist>
 				<listitem><para> In order to zoom in either:
 					<itemizedlist>
-						<listitem><para>Click on the Zooum In <inlinegraphic fileref="screenshots/toolBarIcons/zoomInIcon.png"/>button on the toolbar</para></listitem> 
+						<listitem><para>Click on the Zooum In <inlinegraphic fileref="screenshots/toolBarIcons/zoomInIcon.jpg"/>button on the toolbar</para></listitem> 
 						<listitem><para>or move the mouse wheel in.</para></listitem> 
 					</itemizedlist>
 				</para></listitem>
 				<listitem><para> In order to zoom out either:
 					<itemizedlist>
-						<listitem><para>Click on the Zooum Out <inlinegraphic fileref="screenshots/toolBarIcons/zoomOutIcon.png"/>button on the toolbar to zoom out.</para></listitem> 
+						<listitem><para>Click on the Zooum Out <inlinegraphic fileref="screenshots/toolBarIcons/zoomOutIcon.jpg"/>button on the toolbar to zoom out.</para></listitem> 
 						<listitem><para>or move the mouse wheel out.</para></listitem>
 					</itemizedlist>
 				</para></listitem>
-				<listitem><para>Click on the Start View <inlinegraphic fileref="screenshots/toolBarIcons/startViewIcon.png"/>button on the toolbar to return back to the initial view</para></listitem>
+				<listitem><para>Click on the Start View <inlinegraphic fileref="screenshots/toolBarIcons/startViewIcon.jpg"/>button on the toolbar to return back to the initial view</para></listitem>
 			</itemizedlist>
 		</sect1>
 		
@@ -237,9 +243,9 @@
 						<listitem><para>the browse image is projected on the footprint,</para></listitem>
 						<listitem><para>the product row is checked on the results table</para></listitem>
 						<listitem><para>a popup widget is displayed with information on the selected product</para></listitem>
-						<listitem><para>the icon <inlinegraphic fileref="screenshots/darIcon.png" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
+						<listitem><para>the icon <inlinegraphic fileref="screenshots/darIcon.jpg" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
 						Follow the same steps as in section <xref linkend="simpleDARHowTo"/>.
-						<inlinegraphic fileref="screenshots/itemOnMap.png" alt='ITEM ON MAP'/>
+						<inlinegraphic fileref="screenshots/itemOnMap.jpg" alt='ITEM ON MAP'/>
 						</para></listitem>						
 					</itemizedlist>
 				</para></listitem>
@@ -248,13 +254,13 @@
 		
 		<sect1 id="layersHowTo"><title>How to select Layers?</title>
 			<itemizedlist>
-				<listitem><para>Click on the layers icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/layersIcon.png" alt='LAYERS ICON'/>.</para></listitem>		
+				<listitem><para>Click on the layers icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/layersIcon.jpg" alt='LAYERS ICON'/>.</para></listitem>		
 				<listitem><para>The layers widget is displayed.
-				<graphic fileref="screenshots/layersWidget.png" alt='LAYERS WIDGET'/>
+				<graphic fileref="screenshots/layersWidget.jpg" alt='LAYERS WIDGET'/>
 				The Results Footprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
 				</para></listitem>		
 				<listitem><para>Check the checkbox in front of the layer name, the layer is mapped on the map.
-					<graphic fileref="screenshots/projectedLayers.png" alt='PROJECTED LAYERS'/>
+					<graphic fileref="screenshots/projectedLayers.jpg" alt='PROJECTED LAYERS'/>
 				</para></listitem>	
 				<listitem><para>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</para></listitem>
 			</itemizedlist>
@@ -262,9 +268,9 @@
 
 		<sect1 id="backgroundsHowTo"><title>How to change Map Background?</title>
 			<itemizedlist>
-				<listitem><para>Click on the background icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/backgroundIcon.png" alt='BACKGROUND ICON'/>.</para></listitem>
+				<listitem><para>Click on the background icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/backgroundIcon.jpg" alt='BACKGROUND ICON'/>.</para></listitem>
 				<listitem><para>The backgrounds' widget is displayed.
-				 <graphic fileref="screenshots/backgroundsWidget.png" alt='BACKGROUND WIDGET'/>
+				 <graphic fileref="screenshots/backgroundsWidget.jpg" alt='BACKGROUND WIDGET'/>
 				</para></listitem>
 				<listitem><para>Click on the radio button in front of the background name to change the map background.</para></listitem>
 			</itemizedlist>
@@ -273,25 +279,25 @@
 		<sect1 id="downloadManagersHowTo"><title>How to manage Download Managers?</title>
 			<itemizedlist>
 				<listitem><para>Click on My account on the menu bar.
-					<inlinegraphic fileref="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>
+					<inlinegraphic fileref="screenshots/menuBar.jpg" alt='MENUBAR IMAGE'/>
 					The download managers already registered are displayed with the information details on each one of them.
-					<graphic fileref="screenshots/downloadManagersView.png" alt='DOWNLOAD MANAGERS'/>
+					<graphic fileref="screenshots/downloadManagersView.jpg" alt='DOWNLOAD MANAGERS'/>
 				</para></listitem>
 				<listitem><para>If there is no download manager, click on Install Download Manager to install a new one.</para></listitem>
 				<listitem><para>Select the row of the download manager to monitor, then, the command buttons statuses are updated 
 					according to the download manager status.
-					<graphic fileref="screenshots/downloadManagerCommands.png" alt='DOWNLOAD MANAGERS COMMANDS'/>
+					<graphic fileref="screenshots/downloadManagerCommands.jpg" alt='DOWNLOAD MANAGERS COMMANDS'/>
 					<para><emphasis>A STOPPED download manager cannot no more be monitored, so the command buttons are disabled.</emphasis>
-					<inlinegraphic fileref="screenshots/stoppedDM.png" alt='STOPPED DOWNLOAD MANAGER'/></para>
+					<inlinegraphic fileref="screenshots/stoppedDM.jpg" alt='STOPPED DOWNLOAD MANAGER'/></para>
 				</para></listitem>
-				<listitem><para>Click on the Stop button <inlinegraphic fileref="screenshots/dmStopButton.png" alt='DOWNLOAD MANAGER STOP BUTTON'/>
+				<listitem><para>Click on the Stop button <inlinegraphic fileref="screenshots/dmStopButton.jpg" alt='DOWNLOAD MANAGER STOP BUTTON'/>
 					The Stop an ACTIVE or an INACTIVE download manager. 
 				</para></listitem>
-				<listitem><para>Click on the Stop Immediately button <inlinegraphic fileref="screenshots/dmStopImmediatelyButton.png" alt='DOWNLOAD MANAGER STOP IMMEDIATELY BUTTON'/>
+				<listitem><para>Click on the Stop Immediately button <inlinegraphic fileref="screenshots/dmStopImmediatelyButton.jpg" alt='DOWNLOAD MANAGER STOP IMMEDIATELY BUTTON'/>
 					to stop definitively an ACTIVE or an INACTIVE download manager. 
 					<para><emphasis>Please note that once the Stop or the Stop Immediately buttons are clicked, a new command cannot be issued from the user interface.
 					A notification message is displayed to notify the user.</emphasis></para>
-					<graphic fileref="screenshots/dmMonitoringMessage.png" alt='DOWNLOAD MANAGER MONITORING MESSAGE'/>
+					<graphic fileref="screenshots/dmMonitoringMessage.jpg" alt='DOWNLOAD MANAGER MONITORING MESSAGE'/>
 				</para></listitem>
 			</itemizedlist>
 		</sect1>
@@ -299,34 +305,34 @@
 		<sect1 id="darsHowTo"><title>How to manage Data Access Requests?</title>
 			<itemizedlist>
 				<listitem><para>Click on My account on the menu bar.
-					<inlinegraphic fileref="screenshots/menuBar.png" alt='MENUBAR IMAGE'/>
+					<inlinegraphic fileref="screenshots/menuBar.jpg" alt='MENUBAR IMAGE'/>
 				</para></listitem>
 				<listitem><para>Click Data Access Requests tab. On the left side, the download managers already assigned to data access requests
 					are displayed. On the right side is displayed the list of the users' data access requests.
-					<graphic fileref="screenshots/darsView.png" alt='DARS VIEW'/>
+					<graphic fileref="screenshots/darsView.jpg" alt='DARS VIEW'/>
 				</para></listitem>
 				<listitem><para>Click on the first download manager name: only the data access requests assigned to the clicked download manager are displayed .
-					<graphic fileref="screenshots/darsFiltering.png" alt='DARS FILTERING'/>
+					<graphic fileref="screenshots/darsFiltering.jpg" alt='DARS FILTERING'/>
 				</para></listitem>
 				<listitem><para>Click on the second download manager name: only the data access requests assigned to the clicked download manager are displayed .
-					<graphic fileref="screenshots/darsFiltering2.png" alt='DARS FILTERING 2'/>
+					<graphic fileref="screenshots/darsFiltering2.jpg" alt='DARS FILTERING 2'/>
 				</para></listitem>
 				<listitem><para>Click on the highlighted download manager name to disable the filtering.</para></listitem>
 				<listitem><para>Click on the a data access request to expand it.
-					<inlinegraphic fileref="screenshots/expandedDAR.png" alt='EXPANDED DAR'/>
+					<inlinegraphic fileref="screenshots/expandedDAR.jpg" alt='EXPANDED DAR'/>
 					<para>The data access request id, status, completion percentage and the number of products are displayed.</para>
 					<para>Buttons Pause, Resume and Stop Immediately buttons are displayed according to the request status.</para>
 				</para></listitem>
 				<listitem><para>Click on the Products button to visualize the products details.
-					<graphic fileref="screenshots/expandedDARProducts.png" alt='EXPANDED DAR PRODUCTS'/>
+					<graphic fileref="screenshots/expandedDARProducts.jpg" alt='EXPANDED DAR PRODUCTS'/>
 				</para></listitem>
-				<listitem><para>Click on the Stop definitively button <inlinegraphic src="screenshots/stopDefinitivelyButton.png" alt='DOWNLOAD MANAGER STOP DEFINITIVELY BUTTON'/>
+				<listitem><para>Click on the Stop definitively button <inlinegraphic src="screenshots/stopDefinitivelyButton.jpg" alt='DOWNLOAD MANAGER STOP DEFINITIVELY BUTTON'/>
 					to cancel a processing or a paused data access request. 
 				</para></listitem>
-				<listitem><para>Click on the Pause button <inlinegraphic fileref="screenshots/pauseButton.png" alt='PAUSE BUTTON'/>
+				<listitem><para>Click on the Pause button <inlinegraphic fileref="screenshots/pauseButton.jpg" alt='PAUSE BUTTON'/>
 					to pause a processing data access request. 
 				</para></listitem>
-				<listitem><para>Click on the Resume button <inlinegraphic fileref="screenshots/resumeButton.png" alt='RESUME BUTTON'/>
+				<listitem><para>Click on the Resume button <inlinegraphic fileref="screenshots/resumeButton.jpg" alt='RESUME BUTTON'/>
 					to change the status of a paused data access request to processing. 
 				</para></listitem>
 			</itemizedlist>
@@ -336,6 +342,115 @@
 	
 	<chapter id="das">
 		<title>Data Access Services</title>
+		<para>The data access services are the main functionalities of ngeo.
+			They consist in :
+		<itemizedlist>
+			<listitem><para>catalogue searching using dataset geo-temporal criteria
+				and/or dataset inherent criteria</para></listitem>
+			<listitem><para>retrieving products metadata and data</para></listitem>
+			<listitem><para>submitting data access requests</para></listitem>
+			<listitem><para>visualizing and manipulating data on the map.</para></listitem>
+		</itemizedlist>
+		</para>
+		<sect1>
+			<title>Catalogue Search</title>
+			<sect2><title>Datasets Selection</title>
+				<para>
+					The first and necessary step to make a catalogue search is to
+					choose a dataset. The dataset selection widget is accessible by clicking on
+					the <inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.jpg" /> button.
+					When the button is clicked, the widget is opened and it displays
+					the list of available datasets. Each dataset is represented by
+					its name and the number of items it contains.
+					<graphic fileref="screenshots/datasetSelectionWidget.jpg" />
+				</para>
+				<para>
+					<inlinegraphic fileref="screenshots/warning.jpg" /> If there where a
+					connection problem with the server an error message is spawned
+					and the user is notified. The datasets button is then disabled.
+					If the server sends no datasets, a notification message is
+					displayed inside the dataset selection widget.
+				</para>
+				<para>
+					To select a dataset, the user has to scroll out the list and
+					choose the dataset by clicking on the list entry. It is also
+					possible to filter the available list of datasets by the means
+					of the filter combo boxes. The filtering criteria are received
+					from the server, but they should mainly contain : mission,
+					sensor and keywords. 
+					<graphic fileref="screenshots/datasetFilters.jpg" /> 
+					<para>By default, all the
+					criteria are set to "None". As soon as a criteria is chosen in
+					one of the combo boxes, the datasets are filtered and the list is
+					updated, taken into account the other combo boxes selected
+					criteria.</para>
+					<graphic fileref="screenshots/datasetFiltering1.jpg" /> 
+						
+					<para>Here is an examaple of the mission and sensor criteria set to S2 and OPT.</para>	
+					<graphic fileref="screenshots/datasetFiltering2.jpg" />			
+					<para>
+					In order to disable the filtering for a criterion, set back the
+					selected option to "None".</para>
+				</para>
+			</sect2>
+			<sect2><title>Search Criteria</title>
+				<para>
+					Once a dataset has been selected, to set the search criteria,
+					the user has to click on the button <inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg" /> on the
+					toolbar. The search criteria widget is then displayed. <graphic fileref="screenshots/dateCriteria.jpg" />
+					It is composed of several tabs, each tab displays one search criteria type. Each button on the footer has his own role.</para>
+				<para>
+					The Search URL button <inlinegraphic fileref="screenshots/searchURLButton.jpg" />,
+					when clicked, displays the openSearch url which will be
+					submitted.</para>
+					<graphic fileref="screenshots/openSearchUrlPopup.jpg" />
+				<para>The Standing
+				Order button <inlinegraphic fileref="screenshots/STOButton.jpg" />, when
+				clicked, displays the Standing Order Widget. See <xref linkend="STODat"/>. The
+				Submit Search button submits the search request to the server to
+				retrieve the results. See <xref linkend="resultsTable"/>.</para>
+				<para>The Share button <inlinegraphic fileref="screenshots/shareButton.jpg" />, when
+				clicked, displays a popup with the search shared url.
+				Copy the url and paste it in a new browser window, the search widget is displayed with all the search parameters set.
+				</para>
+				<para>
+					<inlinegraphic fileref="screenshots/tip.jpg" /><emphasis>The openSearch url to
+						submit is created according to all the criteria selected inside
+						the search criteria widget.</emphasis>
+				</para> 
+				<para>There search criteria types are :</para>
+					<sect3><title>Date Criteria</title>
+						<para>
+							They consist in the start and stop dates of the selected
+							dataset. In order to change the selected date, click on the
+							icon <inlinegraphic fileref="screenshots/calendarTriggererButton.jpg" /> to
+							display the calendar widget. 
+							<graphic fileref="screenshots/calandarWidget.jpg" /> 
+							Choose the month and year using the combo boxes, then click on the day date. The
+							calendar widget is closed and the chosen date does appear in
+							the text field.
+						</para>
+						<para>
+							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>The same methods are used to modify both the start and stop dates.</emphasis>
+						</para>
+						<para>
+							It is also possible to change the dates using a time slider. To enable the time slider, check the checkbox <img fileref="screenshots/timeSliderCheckBox.jpg" />.
+							The search widget is then hidden and the timeSlider is displayed in the bottom of the map.
+						</para>						
+						<graphic fileref="screenshots/timeSlider.jpg" />
+						<para>	Drag the time bar to move and change the time range. </para>
+						<para>It is also possible to move the time slider bar by clicking on the left and right arrows of the time slider.
+						The bar is then moved respectively to the left or to the right.</para>
+						<graphic fileref="screenshots/timeSliderBar.jpg" />
+						<para>
+							Drag the bar left handle and the bar right handle to enlarge the time range or to make it smaller.
+						</para>
+						<para>
+							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>Each time the bar is moved or resized, a search is launched and the results are displayed on the map.</emphasis>
+						</para>
+					</sect3>
+			</sect2>
+		</sect1>
 	</chapter>
 	
 	<chapter id="account">
