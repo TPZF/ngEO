@@ -38,10 +38,18 @@ return {
 	show: function() {
 		$('.mapPopup').show();
 		$('#statusBar').show();
-		$('#dateRangeSlider').show();
+		
+		var $dateRangeSlider = $('#dateRangeSlider');
+		$dateRangeSlider.show();
+		if ( $dateRangeSlider.is(':ui-dateRangeSlider') ) {
+			$dateRangeSlider.dateRangeSlider('refresh');
+		}
+
 		$('#searchToolbar').show();
 		$('#mapToolbar').show();
 		panelManager.restore();
+		
+		console.log('SHOW');
 	},
 	
 	/**
