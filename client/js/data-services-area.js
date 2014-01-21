@@ -48,8 +48,6 @@ return {
 		$('#searchToolbar').show();
 		$('#mapToolbar').show();
 		panelManager.restore();
-		
-		console.log('SHOW');
 	},
 	
 	/**
