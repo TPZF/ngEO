@@ -6,7 +6,6 @@
 	optimizeCss: "none",
 	optimize: "uglify",
 	modules: [
-		{ name: "help" },
 		{ name: "main" },
 		{ name: "map/map", exclude: ["main"]},
 		{ name: "data-services-area", exclude: ["main", "map/map"]},
