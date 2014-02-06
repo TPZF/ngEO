@@ -1,5 +1,5 @@
 {
-    "shopcarts" : [
+    "shopCartList" : [
                  {
                     "id" : "TPZ_SHP_01",
                     "name" : "S1 product's shopcart",

@@ -15,7 +15,7 @@ var shopcartConfigs = [];
 var shopcartContents = {};
 
 fs.readFile('./shopcarts/shopcarts.json', 'utf8', function (err, data) {
-	shopcartConfigs  = JSON.parse(data).shopcarts;
+	shopcartConfigs  = JSON.parse(data).shopCartList;
 });
 
 
@@ -151,8 +151,8 @@ module.exports = {
 	post : function(req, res){
 		
 		//Create shopcart : post of a shopcart without id
-		if (!req.params.id && !req.body.id && req.body.name && req.body.name != "") {	
-			var response = req.body;
+		if (!req.params.id && !req.body.id && req.body.createShopcart && req.body.createShopcart.shopcart && req.body.createShopcart.shopcart.name != "") {	
+			var response = req.body.createShopcart.shopcart;
 			response.id = uuid.v4();
 			shopcartConfigs.push(response);
 			shopcartContents[response.id] = {

@@ -55,9 +55,7 @@ var CreateShopcartView = Backbone.View.extend({
 	 * submit the create shopcart request
 	 */
 	submit : function(name,options) {
-		this.model.create({ "name" : name,
-							"userId" : "",
-							"isDefault" : false}, options);
+		this.model.create({name : name}, options);
 	},
 	
 	/** 

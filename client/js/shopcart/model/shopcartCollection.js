@@ -49,8 +49,12 @@ var ShopcartCollection = Backbone.Collection.extend({
 	 * Needed because the server response is not what is expected from Backbone
 	 */
 	parse : function(response){
-		// Remove the shopcart attributes from JSON
-		return response.shopcarts;
+		// Remove the shopCartList attributes from JSON
+		if ( response.shopCartList ) {
+			return response.shopCartList;
+		} else {
+			return [];
+		}
 	},
 	
 	/** 

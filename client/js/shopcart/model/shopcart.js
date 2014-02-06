@@ -4,6 +4,16 @@
 define( ['jquery', 'backbone', 'configuration'], 
 			function($, Backbone, Configuration){
 	
+	
+  // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
+  var methodMap = {
+    'create': 'POST',
+    'update': 'PUT',
+    'patch':  'PATCH',
+    'delete': 'DELETE',
+    'read':   'GET'
+  };
+  
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 /** This is the backbone Model of the Shopcart element
  */
@@ -11,8 +21,7 @@ var Shopcart = Backbone.Model.extend({
 	
 	defaults : {
 		name : "",
-		isDefault : false,
-		isShared: false
+		isDefault : false
 	},
 
 	initialize : function(){
@@ -24,6 +33,42 @@ var Shopcart = Backbone.Model.extend({
 		
 		// The selection of the shopcart content
 		this.selection = [];
+	},
+	
+	sync: function(method, model, options) {
+	    var type = methodMap[method];
+
+		// Default JSON-request options.
+		var params = {type: type, dataType: 'json'};
+
+		// Ensure that we have a URL.
+		if (!options.url) {
+		  params.url = _.result(model, 'url') || urlError();
+		}
+
+		// Ensure that we have the appropriate request data.
+		if (options.data == null && model && (method === 'create' || method === 'update')) {
+		  params.contentType = 'application/json';
+		  
+			if ( method == 'create' ) {
+				var createJSON = { createShopcart: {
+									shopcart: this.attributes
+								}
+							};
+				params.data = JSON.stringify(createJSON);
+			} else if ( method == 'update' ) {
+			}
+		}
+
+		// Don't process data on a non-GET request.
+		if (params.type !== 'GET') {
+		  params.processData = false;
+		}
+
+ 		// Make the request, allowing the user to override any Ajax options.
+		var xhr = options.xhr = Backbone.ajax(_.extend(params, options));
+		model.trigger('request', model, xhr, options);
+		return xhr;
 	},
 	
 					
