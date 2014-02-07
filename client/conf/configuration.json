@@ -71,12 +71,6 @@
 		
 		// GlobWeb configuration
 		"globweb": {
-			"elevationLayer": {
-				"type": "WCS",
-				"baseUrl": "http://demonstrator.telespazio.com/wcspub", 
-				"coverage": "GTOPO", 
-				"version": "1.0.0"
-			},
 			"tileErrorTreshold": 2,
 			"displayStats": false,
 			"continuousRendering": false,
