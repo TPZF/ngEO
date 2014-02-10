@@ -153,7 +153,7 @@ var Shopcart = Backbone.Model.extend({
 		var self = this;
 		return $.ajax({
 		 
-		  url: this.url(),
+		  url: this.url() + "/items",
 		  type : 'POST',
 		  dataType: 'json',
 		  contentType: 'application/json',
