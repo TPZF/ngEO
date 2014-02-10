@@ -148,7 +148,10 @@ module.exports = {
 		}
 	},
 	
-	post : function(req, res){
+	/**
+	 * Create a new shopcart
+	 */
+	create : function(req, res){
 		
 		//Create shopcart : post of a shopcart without id
 		if (!req.params.id && !req.body.id && req.body.createShopcart && req.body.createShopcart.shopcart && req.body.createShopcart.shopcart.name != "") {	
@@ -163,8 +166,14 @@ module.exports = {
 			saveShopcartContent(response.id);
 			res.send(response);
 		}
+	},
+	
+	/**
+	 * Add items to shopcart
+	 */
+	addItems: function(req,res) {
 		//add shopcart items : post of shopcart items
-		else if (req.params.id && req.body.shopCartItemAdding) {
+		if (req.params.id && req.body.shopCartItemAdding) {
 			var response = {
 				shopCartItemAdding: []
 			};
@@ -230,13 +239,13 @@ module.exports = {
 		}
 	}, 
 	
-	delete : function(req, res){
-		//delete shopcart 
-		if (req.params.id && !req.body.shopCartItemRemoving){	
-			res.send({"id" : req.params.id});
-		}
-		else if (req.params.id && req.body.shopCartItemRemoving){	
-			
+	deleteShopcart : function(req, res){
+		res.send({"id" : req.params.id});
+	},
+	
+	deleteItems : function(req, res) {
+		if (req.params.id && req.body.shopCartItemRemoving){	
+		
 			var removedItems = [];
 			
 			//console.log( req.params.id );
