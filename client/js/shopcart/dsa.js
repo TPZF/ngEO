@@ -1,10 +1,10 @@
 
-define(["jquery", "ui/menubar", "map/map", 
+define(["jquery", "ui/menubar", "map/map", "searchResults/map",  
         "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
  		 "shopcart/view/shopcartItemView"], 
-	function($, MenuBar, Map, ShopcartCollection, Shopcart, ShopcartTableView) {
+	function($, MenuBar, Map, SearchResultsMap, ShopcartCollection, Shopcart, ShopcartTableView) {
 
-
+	
 return {
 		
 	/**
@@ -17,9 +17,11 @@ return {
 
 		// Create the shopcart table view
 		var tableView = new ShopcartTableView();
-		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setModel);
 		
-		// Add it to status panel
+		// Change model on table when the shopcart is changed
+		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setShopcart);
+		
+		// Add table to status panel
 		panelManager.bottom.addStatus({
 			activator: '#shopcart',
 			show: function() {
@@ -52,7 +54,7 @@ return {
 			//shareShopcart.loadContent();
 			
 			// Show the GUI once loaded
-			shareShopcart.on("itemsAdded", function(id) {
+			shareShopcart.on("add:features", function() {
 				// Toggle the shopcart button to be clicked
 				$("#shopcart").trigger('click');
 				panelManager.bottom.showTable();
@@ -69,24 +71,30 @@ return {
 		});
 		
 		var updateNumberOfItems = function() {
-			var numItems = ShopcartCollection.getCurrent().features.length;
+			var numItems = ShopcartCollection.getCurrent().featureCollection.features.length;
 			$('#shopcartMessage').html( ShopcartCollection.getCurrent().get('name') + ' : ' + numItems + ' items' );
 		};
 		
 		// Manage display of shopcart footprints
 		ShopcartCollection.on('change:current', function( current, prevCurrent ) {
 			if ( prevCurrent ) {
-				prevCurrent.off('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
-				prevCurrent.off('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
-				prevCurrent.off('itemsAdded', updateNumberOfItems );
-				prevCurrent.off('itemsDeleted', updateNumberOfItems );
+				prevCurrent.featureCollection.off('add:features', updateNumberOfItems );
+				prevCurrent.featureCollection.off('remove:features', updateNumberOfItems );
+				
+				SearchResultsMap.removeFeatureCollection( prevCurrent.featureCollection );
 			}
+			
 			updateNumberOfItems();
+			
 			shopcartLayer.clear();
-			current.on('itemsAdded', shopcartLayer.addFeatures, shopcartLayer );
-			current.on('itemsDeleted', shopcartLayer.removeFeatures, shopcartLayer );
-			current.on('itemsAdded', updateNumberOfItems );
-			current.on('itemsDeleted',updateNumberOfItems );
+			
+			SearchResultsMap.addFeatureCollection( current.featureCollection, {
+				layer: shopcartLayer,
+				hasBrowse: false
+			});
+			
+			current.featureCollection.on('add:features', updateNumberOfItems );
+			current.featureCollection.on('remove:features', updateNumberOfItems );
 		});
 		
 	},

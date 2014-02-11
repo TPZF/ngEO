@@ -75,7 +75,8 @@ app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
 app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
 
 //shopcarts list and shopcart content
-app.get('/ngeo/shopcarts/:id?/:format?', shopcarts.get);
+app.get('/ngeo/shopcarts', shopcarts.list);
+app.get('/ngeo/shopcarts/:id/search', shopcarts.getContent);
 
 //create shopcart and add items interfaces
 app.post('/ngeo/shopcarts', shopcarts.create);

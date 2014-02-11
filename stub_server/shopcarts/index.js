@@ -83,68 +83,64 @@ var saveShopcartContent = function(id) {
 
 module.exports = {
 	
-	get : function(req, res){
+	list : function(req, res){
+		res.sendfile('./shopcarts/shopcarts.json');
+	},
 	
-		//shopcart content consulting
-		if (req.params.id){
-			
-			if (doesShopcartExist(req.params.id)){
-			
-				if (!req.params.format){
-					
-					res.sendfile('./shopcarts/' + req.params.id + '_shopcartContent.json');		
+	getContent: function(req,res) {
+	
+		//shopcart content consulting			
+		if (doesShopcartExist(req.params.id)){
+		
+			if (!req.params.format){
 				
-				}else{
-					
-					var filePath, contentType, fileName;
-					
-					switch(req.params.format){
-						case "KML" : 
-							fileName = 'shopcart.kml';
-							filePath = path.join('./shopcarts/', fileName);
-							contentType = 'application/vnd.google-earth.kml+xml';
-							break;
-						case "ATOM" :
-							fileName = 'shopcart.atom';
-							filePath = path.join('./shopcarts/', fileName);
-							contentType = 'application/atom+xml';
-							break;
-						case "HTML" : 
-							fileName = 'shopcart.html';
-							filePath = path.join('./shopcarts/', fileName);
-							contentType = 'text/html';
-							break;
-						default: 
-							filePath = null;
-							break;
-						}
-					
-					if (filePath){
-					
-					    var stat = fs.statSync(filePath);
-	
-					    res.writeHead(200, {
-					        'Content-Type': contentType,
-					        'Content-Length': stat.size,
-					        'Content-Disposition' : "attachment; filename="+ fileName 
-					    });
-	
-					    var readStream = fs.createReadStream(filePath);
-					    readStream.pipe(res);
-					
-					}else{
-						res.send(404);
-					}
-				}
+				res.sendfile('./shopcarts/' + req.params.id + '_shopcartContent.json');		
 			
 			}else{
-				res.send(404);
+				
+				var filePath, contentType, fileName;
+				
+				switch(req.params.format){
+					case "KML" : 
+						fileName = 'shopcart.kml';
+						filePath = path.join('./shopcarts/', fileName);
+						contentType = 'application/vnd.google-earth.kml+xml';
+						break;
+					case "ATOM" :
+						fileName = 'shopcart.atom';
+						filePath = path.join('./shopcarts/', fileName);
+						contentType = 'application/atom+xml';
+						break;
+					case "HTML" : 
+						fileName = 'shopcart.html';
+						filePath = path.join('./shopcarts/', fileName);
+						contentType = 'text/html';
+						break;
+					default: 
+						filePath = null;
+						break;
+					}
+				
+				if (filePath){
+				
+					var stat = fs.statSync(filePath);
+
+					res.writeHead(200, {
+						'Content-Type': contentType,
+						'Content-Length': stat.size,
+						'Content-Disposition' : "attachment; filename="+ fileName 
+					});
+
+					var readStream = fs.createReadStream(filePath);
+					readStream.pipe(res);
+				
+				}else{
+					res.send(404);
+				}
 			}
-			
+		
 		}else{
-			//IF-ngEO-UserShopCartsConfigData
-			res.sendfile('./shopcarts/shopcarts.json');
-			//res.send(500);
+			res.send(404);
 		}
 	},
 	
@@ -192,6 +188,8 @@ module.exports = {
 					}
 					continue;
 				}
+				
+				console.log("Product URL " + req.body.shopCartItemAdding[i].product );
 				
 				http.get(req.body.shopCartItemAdding[i].product, function(r) {
 					

@@ -69,7 +69,7 @@ var FeatureCollection = function() {
 				self.lastPage = Math.ceil( self.totalResults / self.countPerPage );
 			
 				// Add the features to the results
-				_addFeatures( data.features );
+				self.addFeatures( data.features );
 				
 				// Relaunch a search on next page if there is still some results
 				/*if ( data.features.length == self.countPerPage ) {
@@ -87,7 +87,7 @@ var FeatureCollection = function() {
 	};
 	
 	// Add features to the result
-	var _addFeatures = function(features) {
+	this.addFeatures = function(features) {
 		for ( var i = 0; i < features.length; i++ ) {
 			self.features.push( features[i] );
 		}
@@ -95,11 +95,10 @@ var FeatureCollection = function() {
 	};
 	
 	// launch a search
-	this.launch = function(searchCriteria) {
+	this.search = function(baseUrl) {
 	
 		// build base url
-		_url = searchCriteria.getOpenSearchURL(this.id);
-		
+		_url = baseUrl;
 		_url += "&count=" + this.countPerPage;
 		
 		// reset the cache
