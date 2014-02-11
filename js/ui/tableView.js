@@ -31,13 +31,7 @@ var TableView = Backbone.View.extend({
 	 */
 	initialize : function( options ) {
 	
-		if ( this.model ) {
-			this.listenTo(this.model,"reset:features", this.clear);
-			this.listenTo(this.model,"add:features", this.addData);
-			this.listenTo(this.model,"selectFeatures", this.toggleSelection );
-			this.listenTo(this.model,"unselectFeatures", this.toggleSelection );
-			this.listenTo(this.model,"highlightFeatures", this.highlightFeatureCallBack );
-		}
+		this.setModel( this.model );
 		
 		if ( options ) {
 			this.columnDefs = options.columnDefs;
@@ -169,6 +163,32 @@ var TableView = Backbone.View.extend({
 	},
 	
 	/**
+	 * Set the model to be used by the TableView
+	 */
+	setModel: function(model) {
+	
+		if ( this.model ) {
+		
+			// Clean-up previous data
+			this.clear();
+			
+			// Clean-up callbacks
+			this.stopListening(this.model);
+		}
+	
+		this.model = model;
+		
+		if ( this.model ) {
+			this.listenTo(this.model,"reset:features", this.clear);
+			this.listenTo(this.model,"add:features", this.addData);
+			this.listenTo(this.model,"remove:features", this.removeData);
+			this.listenTo(this.model,"selectFeatures", this.toggleSelection );
+			this.listenTo(this.model,"unselectFeatures", this.toggleSelection );
+			this.listenTo(this.model,"highlightFeatures", this.highlightFeatureCallBack );
+		}
+	},
+	
+	/**
 	 * Highlight the features on the table when they have been highlighted on the map.
 	 */
 	highlightFeatureCallBack: function(features, prevFeatures) {
@@ -217,8 +237,10 @@ var TableView = Backbone.View.extend({
 	 * Clear data
 	 */
 	clear: function() {
-		this.$table.find('tbody').empty();
-		this.rowsData = [];
+		if ( this.$table ) {
+			this.$table.find('tbody').empty();
+			this.rowsData = [];
+		}
 	},
 	
 	/**

@@ -200,16 +200,16 @@ var mapClickHandler = function(event)
 			
 			if ( stackPickingIndex == pickedFeatures.length ) {
 				stackPickingIndex = -1;
-				Map.trigger("pickedFeatures", pickedFeatures, event);
+				Map.trigger("pickedFeatures", pickedFeatures, event, featureCollections);
 			} else {
-				Map.trigger("pickedFeatures", [ pickedFeatures[stackPickingIndex] ], event);
+				Map.trigger("pickedFeatures", [ pickedFeatures[stackPickingIndex] ], event, featureCollections);
 			}
 		
 		} else {
 		
 			pickedFeatures = features;
 			stackPickingIndex = -1;
-			Map.trigger("pickedFeatures", pickedFeatures, event);
+			Map.trigger("pickedFeatures", pickedFeatures, event, featureCollections);
 			
 		}
 		

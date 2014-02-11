@@ -28,7 +28,7 @@ define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartI
 				PanelManager.updatePanelSize('bottom');
 			});
 			
-			shopcartItemView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setModel);
+			shopcartItemView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setShopcart);
 			
 			shopcartItemView.render();
 			

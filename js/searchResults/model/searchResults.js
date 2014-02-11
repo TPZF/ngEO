@@ -13,7 +13,9 @@ var SearchResults = {
 	/** launch a search */
 	launch : function(searchCriteria) {
 		for ( var x in this.featureCollection ) {
-			this.featureCollection[x].launch(searchCriteria);
+			var fc = this.featureCollection[x]
+			var baseUrl = searchCriteria.getOpenSearchURL(fc.id)
+			fc.search(baseUrl);
 		}
 		
 		this.trigger('launch');

@@ -16,10 +16,6 @@ var ShopcartItemView = TableView.extend({
 		
 		this.columnDefs = Configuration.data.shopcartTable.columnsDef
 	},
-	
-	events : {
-	},
-
 		
 	/** update the button statuses **/ 
 	toggleSelection : function() {
@@ -36,27 +32,14 @@ var ShopcartItemView = TableView.extend({
 	
 	
 	/**
-	 * Set the model used by the view
+	 * Set the shopcart used by the view
 	 */
-	setModel: function(model) {
+	setShopcart: function(shopcart) {
 	
-		if ( this.model ) {
-			this.stopListening(this.model);
-		}
-		
-		this.model = model;
-		
-		// Clean-up previous data
-		this.clear();
-				
-		// Listen to shopcart content modification
-		this.listenTo(model,"selectShopcartItems", this.toggleSelection );
-		this.listenTo(model,"unselectShopcartItems", this.toggleSelection );
-
-		this.listenTo(model,"itemsAdded", this.addData );
-		this.listenTo(model,"itemsDeleted", this.removeData );
-		
-		model.loadContent();
+		this.shopcart = shopcart;
+		this.setModel( shopcart.featureCollection );
+								
+		shopcart.loadContent();
 	},
 
 	/**
@@ -83,7 +66,7 @@ var ShopcartItemView = TableView.extend({
 		
 		var self = this;
 		this.deleteButton.click(function() {	
-			self.model.deleteSelection();
+			self.shopcart.deleteSelection();
 		});
 		
 		//add button to the widget footer in order to export a shopcart
