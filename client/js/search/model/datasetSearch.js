@@ -308,7 +308,7 @@ var DataSetSearch = Backbone.Model.extend({
 		url = url + "start=" + this.get("start").toISOString()  + "&" + 
 		"stop=" + this.get("stop").toISOString();
 		
-		url += "&" + this.searchArea.getOpenSearchParameter();
+		url += "&" + this.searchArea.getOpenSearchParameter( Configuration.get("search.geometryPrecision",2) );
 		
 		//console.log("DatasetSearch module : addGeoTemporalParams : " + url);
 		return url;

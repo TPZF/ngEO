@@ -14,6 +14,10 @@
 					   ]
 	},
 	
+	"search": {
+		"geometryPrecision": 2
+	},
+	
 	"searchResults": {
 		"countPerPage": 100
 	},
@@ -56,12 +60,6 @@
 		
 		// GlobWeb configuration
 		"globweb": {
-			"elevationLayer": {
-				"type": "WCS",
-				"baseUrl": "http://demonstrator.telespazio.com/wcspub", 
-				"coverage": "GTOPO", 
-				"version": "1.0.0"
-			},
 			"tileErrorTreshold": 2,
 			"displayStats": false,
 			"continuousRendering": false,
@@ -87,7 +85,7 @@
 			"id" : "BlueMarble_TPZ_WMS",
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
-			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+			"baseUrl": "http://172.30.16.61/wmspub",
 			"params": {
 				"layers": "BlueMarble"
 			}

@@ -29,7 +29,7 @@ var _get = function(object,path,defaultValue) {
 		}
 	} else {
 		var value = object[path];
-		if (value) {
+		if (typeof value != 'undefined') {
 			return value;
 		}
 	}
