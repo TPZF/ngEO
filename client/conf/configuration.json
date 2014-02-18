@@ -162,38 +162,14 @@
 			"type": "KML",
 			"location": "../data/earthquake.kml",
 			"visible": false
-		}, {
-/*			"name": "States (WFS)",
+		}/*, {
+			"name": "States (WFS)",
 			"type": "WFS",
 			"baseUrl": "/demoWFS",
 			"featureType": "states",
 			"featureNS": "http://www.openplans.org/topp",
 			"visible": false
-		}, {*/
-			"name": "EOX SAR WMTS",
-			"type": "WMTS",
-			"baseUrl": "http://ngeo.eox.at/c/wmts/",
-			"params" : {
-				"layer": "TEST_SAR",
-				"matrixSet": "WGS84",
-				"format": "image/png",
-				"style": "default"
-			},
-			"projection": "EPSG:4326",
-			"visible": false
-		}, {
-			"name": "EOX Optical WMTS",
-			"type": "WMTS",
-			"baseUrl": "http://ngeo.eox.at/c/wmts/",
-			"params" : {
-				"layer": "TEST_OPTICAL",
-				"matrixSet": "WGS84",
-				"format": "image/png",
-				"style": "default"
-			},
-			"projection": "EPSG:4326",
-			"visible": false
-		}],
+		}*/],
 		
 		"browseDisplay": {
 			"opacity": 0.7
