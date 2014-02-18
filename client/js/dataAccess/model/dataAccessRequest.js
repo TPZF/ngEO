@@ -127,9 +127,13 @@ var DataAccessRequest = {
 		  	  },
 		  
 			  error: function(jqXHR, textStatus, errorThrown) {
-				  console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
-				  self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.requestSubmissionError ;
-				  self.trigger('FailureRequest');
+				   if (jqXHR.status == 0 ) {
+					location.reload();
+				  } else {
+				 	console.log("ERROR when posting DAR :" + textStatus + ' ' + errorThrown);
+				 	self.serverResponse = Configuration.localConfig.dataAccessRequestStatuses.requestSubmissionError ;
+				  	self.trigger('FailureRequest');
+				  }			
 			  }
 		});	
 	}

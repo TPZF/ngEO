@@ -15,6 +15,14 @@ var DownloadManagers = Backbone.Model.extend({
 	initialize : function(){
 		// The base url to retreive the download managers list
 		this.url = Configuration.baseServerUrl + '/downloadManagers';
+		this.listenTo(this,"error",this.onError);
+	},
+
+	/** Call when the model cannot be fetched from the server */
+	onError : function(model,response) {
+		if (response.status == 0) {
+			location.reload();
+		}
 	},
 	
 	getDownloadManagerById: function(id) {
@@ -56,10 +64,14 @@ var DownloadManagers = Backbone.Model.extend({
 				dm.status = "STOPPED";
 				self.trigger("status:change");
 			 })
-			.fail(function(jqXHR, textStatus, errorThrown) {				
-				Logger.error("Cannot change downloand manager status request :" + textStatus + ' ' + errorThrown);
-				// restore previous status
-				dm.status = prevStatus;
+			.fail(function(jqXHR, textStatus, errorThrown) {
+				if (jqXHR.status == 0 ) {
+					location.reload();
+			 	 } else {			
+					Logger.error("Cannot change downloand manager status request :" + textStatus + ' ' + errorThrown);
+					// restore previous status
+					dm.status = prevStatus;
+				}
 			 });
 	}
 

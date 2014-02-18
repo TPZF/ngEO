@@ -69,9 +69,14 @@ var SearchResults = {
 			}		
 		}).fail(function(jqXHR, textStatus, errorThrown) {		
 			  console.log("ERROR when retrieving the products :" + textStatus + ' ' + errorThrown);
-			  //notify that the product search has Failed
-			  self.trigger('error:features', searchUrl); 
-			  self.trigger('endLoading');
+			  console.log( jqXHR.getAllResponseHeaders() );
+			  if (jqXHR.status == 0 ) {
+				location.reload();
+			  } else {
+				  //notify that the product search has Failed
+				  self.trigger('error:features', searchUrl); 
+				  self.trigger('endLoading');
+			  }
 		});
 	},
 	
