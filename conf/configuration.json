@@ -29,6 +29,10 @@
 					   ]
 	},
 	
+	"search": {
+		"geometryPrecision": 2
+	},
+	
 	"searchResults": {
 		"countPerPage": 100
 	},
@@ -96,7 +100,7 @@
 			"id" : "BlueMarble_TPZ_WMS",
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
-			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+			"baseUrl": "http://172.30.16.61/wmspub",
 			"params": {
 				"layers": "BlueMarble"
 			}

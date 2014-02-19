@@ -9,6 +9,15 @@ var toDMS = function(dd) {
 	return deg + ":" + min + ":" + sec;
 };
 
+var numberToString = function(number,precision) {
+	if ( typeof precision != 'undefined' && precision >= 0 ) {
+		var factor = Math.pow(10,precision);
+		return (Math.floor( number * factor ) / factor).toString();
+	} else {
+		return number.toString();
+	}
+};
+
 /**
  * An object to represent the search area
  */
@@ -129,7 +138,7 @@ var SearchArea = function() {
 	
 	//Transform to WKT
 	//NGEO 509 : it is requested to rollback the changes !
-	this.toWKT = function() {
+	this.toWKT = function(precision) {
 		var coords = _feature.geometry.coordinates;
 		var param = "POLYGON(";
 		for ( var j = 0; j < coords.length; j++ ) {
@@ -141,7 +150,7 @@ var SearchArea = function() {
 				if ( i != 0 ) {
 					param += ",";
 				}
-				param += coords[j][i][0] + " " + coords[j][i][1];
+				param += numberToString(coords[j][i][0],precision) + " " + numberToString(coords[j][i][1],precision);
 			}
 			param += ")";
 		}
@@ -152,16 +161,16 @@ var SearchArea = function() {
 	};
 	
 	// 	Get the opensearch parameter for the search area
-	this.getOpenSearchParameter = function() {
+	this.getOpenSearchParameter = function(precision) {
 		var param;
 		if (_mode == SearchArea.POLYGON) {
 			// See http://www.opensearch.org/Specifications/OpenSearch/Extensions/Geo/1.0/Draft_2#The_.22geometry.22_parameter
-			param = "geom=" + this.toWKT(); 
+			param = "geom=" + this.toWKT(precision); 
 		
 		} else if (_mode == SearchArea.BBOX){
 		
-			param = "bbox=" + _feature.bbox[0] + "," + _feature.bbox[1] + "," 
-				+ _feature.bbox[2] + "," + _feature.bbox[3];
+			param = "bbox=" + numberToString(_feature.bbox[0],precision) + "," + numberToString(_feature.bbox[1],precision) + "," 
+				+ numberToString(_feature.bbox[2],precision) + "," + numberToString(_feature.bbox[3],precision);
 		}
 		
 		return param;

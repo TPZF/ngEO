@@ -193,8 +193,8 @@ var SearchCriteria = Backbone.Model.extend({
 	
 		var params = "start=" + this.get("start").toISOString()  + "&" + 
 		"stop=" + this.get("stop").toISOString();
-		
-		params += "&" + this.searchArea.getOpenSearchParameter();
+
+		params += "&" + this.searchArea.getOpenSearchParameter( Configuration.get("search.geometryPrecision",2) );
 		
 		//console.log("DatasetSearch module : addGeoTemporalParams : " + url);
 		return params;
