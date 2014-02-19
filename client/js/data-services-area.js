@@ -48,6 +48,10 @@ return {
 		$('#searchToolbar').show();
 		$('#mapToolbar').show();
 		panelManager.restore();
+			
+		// Show table by default
+		$('#tableCB').click();
+		
 	},
 	
 	/**
