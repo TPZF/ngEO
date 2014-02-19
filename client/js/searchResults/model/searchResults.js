@@ -220,8 +220,18 @@ var SearchResults = {
 				productUrls.push(eor.eop_ProductInformation.eop_filename);
 			} */
 			
-			if ( features[i].properties && features[i].properties.productUrl ) {
-				productUrls.push( features[i].properties.productUrl );
+			for ( var i = 0; i < features.length; i++ ) {
+				var eoMeta = features[i].properties.EarthObservation.EarthObservationMetaData;
+				var isPlanned = false;
+				if ( eoMeta && eoMeta.eop_status && eoMeta.eop_status == "PLANNED") {
+					isPlanned = true;
+				} 	
+				
+				if ( !isPlanned ) {
+					if ( features[i].properties && features[i].properties.productUrl ) {
+						productUrls.push( features[i].properties.productUrl );
+					}
+				}
 			}
 		}
 		return productUrls;
