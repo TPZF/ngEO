@@ -19,6 +19,14 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	initialize : function(){
 		// The base url to retrieve the DARs'statuses list or submit DAR status changes
 		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
+		this.listenTo(this,"error",this.onError);
+	},
+
+	/** Call when the model cannot be fetched from the server */
+	onError : function(model,response) {
+		if (response.status == 0) {
+			location.reload();
+		}
 	},
 	
 	/**
@@ -197,10 +205,13 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
-			  console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
-			  //notify that the download manager status change has Failed
-			  self.trigger('DARStatusChanged', ['ERROR', darID, newStatus,  "ERROR when trying to change status : " + textStatus + ' ' + errorThrown]);  
-
+			  if (jqXHR.status == 0 ) {
+				location.reload();
+			  } else {
+			  	console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
+			  	//notify that the download manager status change has Failed
+				self.trigger('DARStatusChanged', ['ERROR', darID, newStatus,  "ERROR when trying to change status : " + textStatus + ' ' + errorThrown]);
+			  }
 		  }
 		});	
 	}

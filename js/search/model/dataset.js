@@ -19,6 +19,14 @@ var Dataset = Backbone.Model.extend({
 	initialize : function () {
 		// The base url to retreive the dataset Search Info
 		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
+		this.listenTo(this,"error",this.onError);
+	},
+
+	/** Call when the model cannot be fetched from the server */
+	onError : function(model,response) {
+		if (response.status == 0) {
+			location.reload();
+		}
 	},
 	
 	/** Parse the response from server */
