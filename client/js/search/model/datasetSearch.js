@@ -229,7 +229,7 @@ var DataSetSearch = Backbone.Model.extend({
 	/**
 	 * Populate the model with the parameters retrieved from the Shared URL
 	 */
-	populateModelfromURL : function(query){
+	populateModelfromURL : function(query,options){
 			
 		var vars = query.split("&");
 		
@@ -295,7 +295,7 @@ var DataSetSearch = Backbone.Model.extend({
 					
 	   	}
 				
-	    this.set(attributes);
+	    this.set(attributes,options);
 		
 		// Manual trigger of a change:searchArea event because SearchArea is not (yet?) a Backbone model
 		this.trigger('change:searchArea');

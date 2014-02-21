@@ -1,7 +1,7 @@
   
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/dataAccessRequest', 'search/model/datasetSearch'], 
 		function($, Backbone, Configuration, DataAccessRequest, DatasetSearch) {
-
+	
 /**
  * This module deals with the creation and submission of a Standing order data access request
  * It extends DataAccessRequest module.
@@ -82,14 +82,20 @@ var StandingOrderDataAccessRequest = {
 
 		var url = "#data-services-area/sto/" +  DatasetSearch.get("datasetId") + '?';
 		
-		//add area criteria 
-		url += DatasetSearch.searchArea.getOpenSearchParameter();
+		// Extract parameters from the OpenSearchURL
+		var openSearchParameters = this.OpenSearchURL.split('?');
+		if ( openSearchParameters.length > 1 ) {
+			url += openSearchParameters[1];
+		}
+		
+		//add area and date criteria 
+		//url = DatasetSearch.addGeoTemporalParams(url);
 
 		//always add the advanced criteria values selected and already set to the model
-		url = DatasetSearch.addAdvancedCriteria(url);
+		//url = DatasetSearch.addAdvancedCriteria(url);
 
 		//add the download options values selected and already set to the model
-		url = DatasetSearch.addDownloadOptions(url);
+		//url = DatasetSearch.addDownloadOptions(url);
 		
 		//get the scheduling object either the STO is TimeDriven or Data-Driven
 		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;
@@ -106,7 +112,7 @@ var StandingOrderDataAccessRequest = {
 		this.initialize();
 		
 		var vars = query.split("&");
-		
+				
 	    for (var i = 0; i < vars.length; i++) {
 	        
 	    	var pair = vars[i].split("=");

@@ -93,13 +93,16 @@ return {
 			// Show the page first
 			MenuBar.showPage("data-services-area");
 			
+			// Do not use the time slider to avoid 
+			//DatasetSearch.set("useTimeSlider",false);
+			
 			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
 			//and not overwrite the start/stop dates 
 			DatasetSearch.once("change:dataset", function(dataset) {
 				
 				if ( dataset ) {
 
-					DatasetSearch.populateModelfromURL(query);
+					DatasetSearch.populateModelfromURL(query,{silent: true});
 					StandingOrderDataAccessRequest.populateModelfromURL(query);
 				
 					//Display the STO widget
