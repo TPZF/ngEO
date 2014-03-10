@@ -80,6 +80,7 @@ return {
 			if ( prevCurrent ) {
 				prevCurrent.featureCollection.off('add:features', updateNumberOfItems );
 				prevCurrent.featureCollection.off('remove:features', updateNumberOfItems );
+				prevCurrent.off('change:name', updateNumberOfItems);
 				
 				SearchResultsMap.removeFeatureCollection( prevCurrent.featureCollection );
 			}
@@ -93,6 +94,7 @@ return {
 				hasBrowse: false
 			});
 			
+			current.on('change:name', updateNumberOfItems);
 			current.featureCollection.on('add:features', updateNumberOfItems );
 			current.featureCollection.on('remove:features', updateNumberOfItems );
 		});
