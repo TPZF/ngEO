@@ -82,7 +82,7 @@ return {
 				prevCurrent.featureCollection.off('remove:features', updateNumberOfItems );
 				prevCurrent.off('change:name', updateNumberOfItems);
 				
-				SearchResultsMap.removeFeatureCollection( prevCurrent.featureCollection );
+				SearchResultsMap.removeFeatureCollection( prevCurrent.featureCollection, { keepLayer: true } );
 			}
 			
 			updateNumberOfItems();
