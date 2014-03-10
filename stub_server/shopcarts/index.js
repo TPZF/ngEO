@@ -11,12 +11,40 @@ var uuid = require('node-uuid'),
 	http = require('http'),
 	path = require('path');
 
-var shopcartConfigs = [];
 var shopcartContents = {};
 
-fs.readFile('./shopcarts/shopcarts.json', 'utf8', function (err, data) {
-	shopcartConfigs  = JSON.parse(data).shopCartList;
-});
+var shopcartConfigs = [
+                 {
+                    "id" : "TPZ_SHP_01",
+                    "name" : "S1 product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : true
+                },
+                {
+                    "id" : "TPZ_SHP_02",
+                    "name" : "S2 product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                },
+                 {
+                    "id" : "TPZ_SHP_03",
+                    "name" : "S3 product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                },
+                {
+                    "id" : "TPZ_SHP_04",
+                    "name" : "SAR product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                },
+                {
+                    "id" : "TPZ_SHP_05",
+                    "name" : "Optical product's shopcart",
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                }
+        ];
 
 
 fs.readFile('./shopcarts/TPZ_SHP_01_shopcartContent.json', 'utf8', function (err, data) {
@@ -37,7 +65,17 @@ fs.readFile('./shopcarts/TPZ_SHP_04_shopcartContent.json', 'utf8', function (err
 
 fs.readFile('./shopcarts/TPZ_SHP_05_shopcartContent.json', 'utf8', function (err, data) {
 	shopcartContents["TPZ_SHP_05"]  = JSON.parse(data);
+	for ( var i = 6; i <= 100; i++ ) {
+		shopcartContents["TPZ_SHP_" + i]  = JSON.parse(data);
+		shopcartConfigs.push({
+                    "id" : "TPZ_SHP_" + i,
+                    "name" : "Shopcart " + i,
+                    "userId" : "TPZ_user_01",
+                    "isDefault" : false
+                });
+	}
 });
+
 
 var doesShopcartExist = function(id){
 	var found = false;
@@ -84,7 +122,7 @@ var saveShopcartContent = function(id) {
 module.exports = {
 	
 	list : function(req, res){
-		res.sendfile('./shopcarts/shopcarts.json');
+		res.send({  "shopCartList" : shopcartConfigs });
 	},
 	
 	getContent: function(req,res) {
