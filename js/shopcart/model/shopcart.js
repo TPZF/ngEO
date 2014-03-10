@@ -1,8 +1,8 @@
 /**
  * These are the model components for Shopcarts Collection handling
  */
-define( ['jquery', 'backbone', 'configuration', 'searchResults/model/featureCollection'], 
-			function($, Backbone, Configuration, FeatureCollection){
+define( ['jquery', 'logger', 'backbone', 'configuration', 'searchResults/model/featureCollection'], 
+			function($, Logger, Backbone, Configuration, FeatureCollection){
 	
 	
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
@@ -126,7 +126,7 @@ var Shopcart = Backbone.Model.extend({
 		  
 				// Check the response
 				if ( !data.shopCartItemAdding  || !_.isArray(data.shopCartItemAdding) ) {
-					self.trigger('shopcart:addItemsError');  
+					Logger.error("Invalid response from server when adding shopcart items.");
 					return;
 				}
 
@@ -155,7 +155,7 @@ var Shopcart = Backbone.Model.extend({
 		  },
 		  
 		  error: function(jqXHR, textStatus, errorThrown) {
-			  self.trigger('addItemsError');  
+				Logger.error("Unexpected server response when adding shopcart items (" + textStatus + " : " + errorThrown + ").");
 		  }
 		  
 		});
@@ -187,12 +187,24 @@ var Shopcart = Backbone.Model.extend({
 	 * shopcart items.
 	 */ 
 	deleteSelection: function(){
+	
+		if ( this.featureCollection.selection.length == 0 ) 
+			return;
 		
 		// Build the request body
 		var itemsToRemove = [];
-		for (var i=0; i< this.featureCollection.selection.length; i++){
-			itemsToRemove.push({'shopcartId' :  this.id, 'id' : this.featureCollection.selection[i].properties.shopcartItemId}); 
-		}	
+		for (var i=0; i< this.featureCollection.selection.length; i++) {
+			var f = this.featureCollection.selection[i];
+			if ( f.properties && f.properties.shopcartItemId ) {
+				itemsToRemove.push({shopcartId :  this.id, id : f.properties.shopcartItemId}); 
+			}
+		}
+		
+		// Check if items are correct
+		if ( itemsToRemove.length != this.featureCollection.selection.length ) {
+			Logger.error("The selected shopcart items do not contain valid ID and cannot be removed.").
+			return;
+		}
 
 		var self = this;
 		return $.ajax({
@@ -201,26 +213,33 @@ var Shopcart = Backbone.Model.extend({
 			  type : 'DELETE',
 			  dataType: 'json',
 			  contentType: 'application/json',
-			  data : JSON.stringify({'shopCartItemRemoving' : itemsToRemove}),
+			  data : JSON.stringify({shopCartItemRemoving : itemsToRemove}),
 			
 			  success: function(data) {	 					
 
 					// Check the response
 					if ( !data.shopCartItemRemoving  || !_.isArray(data.shopCartItemRemoving) ) {
-						self.trigger('deleteItemsError');  
-						return;
+						Logger.error("Invalid response from server when removing shopcart items.");
+ 						return;
 					}
 					
 					var removedItems = [];
 					for (var i=0; i < data.shopCartItemRemoving.length; i++){
 						removedItems.push( self._removeItem( data.shopCartItemRemoving[i].id ) );
 					}
+					
+					// Check if items are correct
+					if ( removedItems.length != itemsToRemove.length ) {
+						Logger.inform( (itemsToRemove.length - removedItems.length) + " items have not been successfully removed on the server, IDs are not valid."  );
+					}
 
-					self.featureCollection.trigger("remove:features", removedItems);
+					if ( removedItems.length > 0 ) {
+						self.featureCollection.trigger("remove:features", removedItems);
+					}
 			  },
 			  
 			  error: function(jqXHR, textStatus, errorThrown) {
-				  self.trigger('deleteItemsError');  
+					Logger.error("Unexpected server response when removing shopcart items (" + textStatus + " : " + errorThrown + ").");
 			  }
 			  
 		});
