@@ -72,6 +72,18 @@ var ShopcartManagerView = Backbone.View.extend({
 		}
 	},
 	
+	/**
+	 * Refresh the view size
+	 */
+	refreshSize: function() {
+		var parentOffset = this.$el.offset();
+		var $content = this.$el.find('#shopcartListDiv');
+		
+		var height = $(window).height() - (parentOffset.top + this.$el.outerHeight()) + $content.height() - 50;
+	
+		$content.css('max-height',height);
+	},
+	
 	render : function(){
 		var mainContent = _.template(shopcartManagerContent_template, this.model);
 		this.$el.html(mainContent);
@@ -81,6 +93,8 @@ var ShopcartManagerView = Backbone.View.extend({
 		this.$el.find(currentShopcartSelect).attr('checked',true);
 		
 		this.$el.trigger("create");
+		
+		this.refreshSize();
 
 		return this;
 	},
