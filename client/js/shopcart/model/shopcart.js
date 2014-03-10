@@ -24,6 +24,9 @@ var Shopcart = Backbone.Model.extend({
 		isDefault : false
 	},
 
+	/**
+		Initialize the shopcart
+	 */
 	initialize : function(){
 		// The base url to retreive the shopcarts list
 		this.urlRoot = Configuration.baseServerUrl + '/shopcarts';
@@ -32,6 +35,21 @@ var Shopcart = Backbone.Model.extend({
 		this.featureCollection = new FeatureCollection();
 	},
 	
+	/**
+		Parse response from server
+	 */
+	parse: function(response) {
+	
+		if ( response.createShopcart && response.createShopcart.shopcart ) {
+			return response.createShopcart.shopcart;
+		}
+		
+		return response;
+	},
+	
+	/**
+		Sync model with server
+	 */
 	sync: function(method, model, options) {
 	    var type = methodMap[method];
 
@@ -47,14 +65,11 @@ var Shopcart = Backbone.Model.extend({
 		if (options.data == null && model && (method === 'create' || method === 'update')) {
 		  params.contentType = 'application/json';
 		  
-			if ( method == 'create' ) {
-				var createJSON = { createShopcart: {
-									shopcart: this.attributes
-								}
-							};
-				params.data = JSON.stringify(createJSON);
-			} else if ( method == 'update' ) {
-			}
+			var createJSON = { createShopcart: {
+								shopcart: this.attributes
+							}
+						};
+			params.data = JSON.stringify(createJSON);
 		}
 
 		// Don't process data on a non-GET request.
@@ -69,12 +84,15 @@ var Shopcart = Backbone.Model.extend({
 	},
 	
 					
-	// Load the shopcart content
+	/**
+    	Load the shopcart content
+	*/
 	loadContent: function() {
 		this.featureCollection.search( this.url() + '/search?format=json' );
 	},
 
-	/** submit a POST request to the server in order to add the selected 
+	/** 
+	 * Submit a POST request to the server in order to add the selected 
 	 * products from the search results table to the shopcart.
 	 * The product urls of the selected products are passed as arguments. 
 	 */ 

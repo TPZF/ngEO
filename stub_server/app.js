@@ -85,7 +85,7 @@ app.post('/ngeo/shopcarts', shopcarts.create);
 app.post('/ngeo/shopcarts/:id/items', shopcarts.addItems);
 
 //rename shopcart and update items interfaces
-app.put('/ngeo/shopcarts/:id/items', shopcarts.put);
+app.put('/ngeo/shopcarts/:id', shopcarts.put);
 
 //delete shopcart and delete items of shopcart interfaces
 app.delete('/ngeo/shopcarts/:id', shopcarts.deleteShopcart);

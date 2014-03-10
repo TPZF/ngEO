@@ -231,10 +231,13 @@ module.exports = {
 	
 	put : function(req, res){
 		//Rename shopcart 
-		if (req.params.id && req.body.name){	
-			var response = req.body;
+		if (!req.body.createShopcart.shopcart.name) {
+			res.send(500);
+		} else {
+			var response = req.body;		
 			res.send(response);
 		}
+		
 	}, 
 	
 	deleteShopcart : function(req, res){
