@@ -78,19 +78,6 @@ var SearchCriteria = Backbone.Model.extend({
 		});
 			
 	},
-	
-	/** Create the openSearch url. 
-	 * The url contains spatial, temporal and search criteria parameters.
-	 */
-	getOpenSearchURL : function(id){
-
-		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
-		url += id + "/search?";
-		url += this.getOpenSearchParameters();
-		url += "&format=json";
-		
-		return url;
-	},
 
 		
 	/** get the url without base url with all search criteria */

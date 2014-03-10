@@ -42,6 +42,19 @@ var StandingOrder = SearchCriteria.extend({
 		return this.dataset ? this.dataset.get('datasetId') : "";
 	},
 	
+	/** Create the openSearch url. 
+	 * The url contains spatial, temporal and search criteria parameters.
+	 */
+	getOpenSearchURL : function(){
+
+		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
+		url += this.getDatasetPath() + "/search?";
+		url += this.getOpenSearchParameters();
+		url += "&format=json";
+		
+		return url;
+	},
+	
 	/** load the information for the selected dataset from the server 
 	 * unless if no dataset is selected set the dataset to undefined */
 	onDatasetSelectionChanged : function() {
