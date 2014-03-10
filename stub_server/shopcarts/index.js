@@ -94,7 +94,14 @@ module.exports = {
 		
 			if (!req.params.format){
 				
-				res.sendfile('./shopcarts/' + req.params.id + '_shopcartContent.json');		
+				var shopcartContent = shopcartContents[req.params.id];
+				
+				// Remove shopcart item id for test
+				/*for ( var i = 0; i < shopcartContent.features.length; i++ ) {
+					delete shopcartContent.features[i].properties.shopcartItemId;
+				}*/
+				
+				res.send( shopcartContent );		
 			
 			}else{
 				
@@ -255,7 +262,7 @@ module.exports = {
 						
 			//send back the list of shopcart item ids
 			for (var i=0; i<req.body.shopCartItemRemoving.length; i++){
-				if (removeItem( shopcartContents[req.params.id], req.body.shopCartItemRemoving[i].id )) {
+				if (req.body.shopCartItemRemoving[i].id && removeItem( shopcartContents[req.params.id], req.body.shopCartItemRemoving[i].id )) {
 					removedItems.push({"id" : req.body.shopCartItemRemoving[i].id, "shopcartId": req.params.id});
 				}
 			}
