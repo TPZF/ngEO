@@ -20,8 +20,10 @@ var InquiriesView = Backbone.View.extend({
 	
 		// Build the JSON to send to the server
 		var body = {
-			inquiryType : this.$el.find('select').val(),
-			inquiryText : this.$el.find('#inquiryMessage').val()
+			UserInquiry: {
+				inquiryType : this.$el.find('select').val(),
+				inquiryText : this.$el.find('#inquiryMessage').val()
+			}
 		};
 		
 		var self = this;
