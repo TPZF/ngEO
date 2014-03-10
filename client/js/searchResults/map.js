@@ -149,7 +149,7 @@ return {
 	 *
 	 * @param fc 	The feature collection
 	 */
-	removeFeatureCollection: function(fc) {
+	removeFeatureCollection: function(fc,options) {
 			
 			fc.off('add:features', fc._footprintLayer.addFeatures, fc._footprintLayer);
 			fc.off('remove:features', fc._footprintLayer.removeFeatures, fc._footprintLayer);
@@ -157,7 +157,10 @@ return {
 			fc.off('selectFeatures', _onSelectFeatures );
 			fc.off('unselectFeatures', _onUnselectFeatures );
 			fc.off('highlightFeatures', _onHighlightFeatures );
-			Map.removeLayer( fc._footprintLayer );
+			
+			if ( !options || !options.keepLayer ) {
+				Map.removeLayer( fc._footprintLayer );
+			}
 			
 			if ( fc._browsesLayer ) {
 				fc.off('reset:features', fc._browsesLayer.clear, fc._browsesLayer);
