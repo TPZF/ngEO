@@ -6,6 +6,16 @@ define( ["configuration"],
 
 function( Configuration ) {
 
+function pad2(num) {
+    var s = num+"";
+    if (s.length < 2) s = "0" + s;
+    return s;
+}
+
+// Helper function to convert a date to an iso string, only the date part
+var toWMTSTime = function(date) {
+	return date.getUTCFullYear() + "-" + pad2(date.getUTCMonth()+1) + "-" + pad2(date.getUTCDate()) + "T" + pad2(date.getUTCHours()) + ":" + pad2(date.getUTCMinutes()) + ":" + pad2(date.getUTCSeconds()) + "Z";
+};
 var sortByTime = function(a,b) {
 			if ( a.time == b.time ) return 0;
 			if ( a.time < b.time ) return -1; else return 1;
@@ -46,8 +56,14 @@ var BrowsesLayer = function(params,mapEngine) {
 			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
 			if (eoBrowse) {
 							
+				// Fix NGEO-1031 : remove milliseconds from date
+				var begin = Date.fromISOString( eo.gml_beginPosition );
+				begin.setUTCMilliseconds(0);
+				var end = Date.fromISOString( eo.gml_endPosition );
+				end.setUTCMilliseconds(0);
+				
 				var params = {
-					time: eo.gml_beginPosition +"/" + eo.gml_endPosition,
+					time: toWMTSTime(begin) + "/" + toWMTSTime(end),
 					transparent: true
 				};
 				
