@@ -29,11 +29,6 @@ var DataAccessRequest = {
 		
 		this.resetRequest();
 	},
-
-	/** Assign the download manager to the request */
-	setDownloadManager : function(downloadManagerId){
-		this.downloadLocation.DownloadManagerId = downloadManagerId;
-	},
 	
 	/** Submit the request to the server */
 	submit : function(){

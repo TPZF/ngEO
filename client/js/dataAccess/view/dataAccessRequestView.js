@@ -15,7 +15,6 @@ var DataAccessRequestView = Backbone.View.extend({
 
 	initialize : function(options){
 		this.request = options.request;
-		this.selectedDownloadManager = options.selectedDownloadManager;
 		this.listenTo(this.request,'SuccessValidationRequest', this.onValidationSuccess);
 		this.listenTo(this.request,'SuccessConfirmationRequest', this.onConfirmationSuccess);
 		this.listenTo(this.request,'FailureRequest', this.onFailure);
@@ -31,11 +30,13 @@ var DataAccessRequestView = Backbone.View.extend({
 			{
 				// No hosted process selected or selected one have valide parameters
 				$("#serverMessage").empty();
-				this.request.setDownloadManager(this.selectedDownloadManager);
+				this.request.downloadLocation.DownloadManagerId = this.$el.find("#downloadManagersList").val();
+				this.request.downloadLocation.DownloadDirectory = this.$el.find("#downloadDirectory").val();
 			
 				//disable the DMs list to avoid choosing a different DM once the
 				//validation request has been submitted
-				$('#downloadManagersList').find("option").attr('disabled', 'disabled');
+				this.$el.find('#downloadManagersList').selectmenu('disable');
+				this.$el.find('#downloadDirectory').textinput('disable');
 				
 				// Submit the request
 				this.request.submit();
@@ -44,11 +45,6 @@ var DataAccessRequestView = Backbone.View.extend({
 			{
 				$("#serverMessage").html('<p style="color: red;">Please, configure the product processing parameters first</p>');
 			}
-		},
-		
-		//NGEO 782 : the download managers are displayed with a select box
-		'change #downloadManagersList' : function(event){
-			this.selectedDownloadManager =  $("#downloadManagersList").val();
 		}
 	},
 	
@@ -108,20 +104,6 @@ var DataAccessRequestView = Backbone.View.extend({
 		} else {
 			var content = _.template(downloadManagersList_template, this.model.attributes);
 			this.$el.append(content);
-			//empty the status to cover the case where a user has registered a download manager after it has no one installed
-			this.$el.find("#downloadManagerStatusMessage")
-				.empty()
-				// .append("<h4>Select a Download Manager : <h4>")
-				.show()
-			this.$el.find("#downloadManagersList").show();
-			this.$el.find("#downloadManagersFooter").show();
-			
-			//set the first download manager to be selected by default
-			//console.log(this.$el.find('input[type="radio"]:eq(0)')[0]);
-			//NGEO 782 : fixed failure response message content
-			var firstDM = $(this.$el.find('option:eq(0)')[0]);
-			this.selectedDownloadManager = firstDM.attr("value");
-			//console.log(this.selectedDownloadManager);
 		}
 
 		// Create hosted process list
@@ -149,16 +131,6 @@ var DataAccessRequestView = Backbone.View.extend({
 		this.$el.trigger('create');
 		
 		return this;
-	},
-
-	/**
-	 *	Override Backbone remove method which doesn't remove HTML element
-	 */
-	remove: function() {
-	    this.undelegateEvents();
-	    this.$el.empty();
-	    this.stopListening();
-    	return this;
 	}
 	
 });
