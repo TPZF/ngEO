@@ -92,7 +92,7 @@ var DownloadManagersListView = Backbone.View.extend({
 		});
 		this.$el.append( installContent );
 					
-		if (this.model.attributes.downloadmanagers > 0) {
+		if (this.model.attributes.downloadmanagers.length > 0) {
 			var content = _.template(downloadManagersList_template, this.model.attributes);
 			this.$el.append(content);
 			//empty the status to cover the case where a user has registered a download manager after it has no one installed
