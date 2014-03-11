@@ -14,7 +14,6 @@ var DownloadManagersListView = Backbone.View.extend({
 
 	initialize : function(options){
 		this.request = options.request;
-		this.selectedDownloadManager = options.selectedDownloadManager;
 		this.listenTo(this.request,'SuccessValidationRequest', this.onValidationSuccess);
 		this.listenTo(this.request,'SuccessConfirmationRequest', this.onConfirmationSuccess);
 		this.listenTo(this.request,'FailureRequest', this.onFailure);
@@ -25,19 +24,17 @@ var DownloadManagersListView = Backbone.View.extend({
 	events : {
 		'click #validateRequest' : function(event){
 			$("#serverMessage").empty();
-			this.request.setDownloadManager(this.selectedDownloadManager);
-		
+			
+			this.request.downloadLocation.DownloadManagerId = this.$el.find("#downloadManagersList").val();
+			this.request.downloadLocation.DownloadDirectory = this.$el.find("#downloadDirectory").val();
+			
 			//disable the DMs list to avoid choosing a different DM once the
 			//validation request has been submitted
-			$('#downloadManagersList').find("option").attr('disabled', 'disabled');
+			this.$el.find('#downloadManagersList').selectmenu('disable');
+			this.$el.find('#downloadDirectory').textinput('disable');
 			
 			// Submit the request
 			this.request.submit();
-		},
-		
-		//NGEO 782 : the download managers are displayed with a select box
-		'change #downloadManagersList' : function(event){
-			this.selectedDownloadManager =  $("#downloadManagersList").val();
 		}
 	},
 	
@@ -95,21 +92,7 @@ var DownloadManagersListView = Backbone.View.extend({
 		if (this.model.attributes.downloadmanagers.length > 0) {
 			var content = _.template(downloadManagersList_template, this.model.attributes);
 			this.$el.append(content);
-			//empty the status to cover the case where a user has registered a download manager after it has no one installed
-			this.$el.find("#downloadManagerStatusMessage")
-				.empty()
-				.append("<h4>Select a Download Manager : <h4>")
-				.show()
-			this.$el.find("#downloadManagersList").show();
-			this.$el.find("#downloadManagersFooter").show();
-			
-			//set the first download manager to be selected by default
-			//console.log(this.$el.find('input[type="radio"]:eq(0)')[0]);
-			//NGEO 782 : fixed failure response message content
-			var firstDM = $(this.$el.find('option:eq(0)')[0]);
-			this.selectedDownloadManager = firstDM.attr("value");
-			//console.log(this.selectedDownloadManager);
-			
+							
 			this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
 		}
 		

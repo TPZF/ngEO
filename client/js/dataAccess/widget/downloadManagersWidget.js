@@ -40,7 +40,6 @@ var DownloadManagersWidget = function(request) {
 			downloadManagersListView = new DownloadManagersListView({
 				model : DownloadManagers,
 				el: element,
-				selectedDownloadManager : "",
 				request : request
 			});
 			downloadManagersListView.render();

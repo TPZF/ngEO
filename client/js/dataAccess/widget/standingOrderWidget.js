@@ -59,7 +59,6 @@ define(
 					var downloadManagersListView = new DownloadManagersListView({
 						model : DownloadManagers,
 						el: element,
-						selectedDownloadManager : "",
 						request : StandingOrderDataAccessRequest
 					});
 					

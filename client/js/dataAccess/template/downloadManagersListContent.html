@@ -3,15 +3,19 @@
 
 	<div id="dataAccessSpecificMessage">
 	</div>
-	
-	<div id="downloadManagerStatusMessage"></div>
 
-			<select id="downloadManagersList" data-mini="true" data-theme="c">
-			<% _.each(downloadmanagers, function(downloadManager) { %>	
-				<option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></option> 
-			<% }); %>
-			</select>
-	</div>
+	<label>Download directory : 
+		<input type="text" id="downloadDirectory" />
+	</label>
+	
+	<label>Download Manager : 
+		<select id="downloadManagersList" data-mini="true" data-theme="c">
+		<% _.each(downloadmanagers, function(downloadManager) { %>	
+			<option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></option> 
+		<% }); %>
+		</select>
+	</label>
+	
 
 <div id="downloadManagersFooter" class="popup-widget-footer">
 	
