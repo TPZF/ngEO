@@ -36,7 +36,6 @@ var DataAccessWidget = function() {
 			downloadManagersListView = new DataAccessRequestView({
 				model : DownloadManagers,
 				el: element,
-				selectedDownloadManager : "",
 				request : request
 			});
 			downloadManagersListView.render();
