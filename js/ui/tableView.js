@@ -185,6 +185,13 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model,"selectFeatures", this.toggleSelection );
 			this.listenTo(this.model,"unselectFeatures", this.toggleSelection );
 			this.listenTo(this.model,"highlightFeatures", this.highlightFeatureCallBack );
+			
+			// TODO : ugly hack..
+			this.hasGroup = model.id == "Correlation" || model.id == "Interferometry";
+			
+			if ( this.model.features.length > 0 ) {
+				this.addData( this.model.features );
+			}
 		}
 	},
 	

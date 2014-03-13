@@ -5,6 +5,7 @@ require.config({
 		"jquery.mobile": "externs/jquery.mobile-1.2.0",
         //"jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min",
 		//"jquery.mobile": "http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min",
+		"jquery-gantt" : "externs/jquery.fn.gantt",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
@@ -28,8 +29,13 @@ require.config({
         'jqm-datebox-datebox': {
             deps: ['jqm-datebox-core'],
             exports: 'jQuery'
+        },
+        
+        'jquery-gantt': {
+            deps: ['jquery'],
+            exports: 'jQuery'
         }
-                
+               
 	}
 		
   });
