@@ -6,30 +6,22 @@
 // Gantt fill the parent space
 .gantt-view {
 	width: 100%;
-	height: 265px;
-	overflow: scroll;
+	height: 265px; // Fix height for now...
+	//overflow: scroll;
 }
 
-
+/*
 .gantt-left-panel {
 	float: left;
 	width: 200px;
 	background: yellow;
 	height: 300px;
-}
-
-.gantt-data-panel {
-	//margin-left: 200px;
-	//background: red;
-	//height: 300px;
-	position: relative;
-}
+}*/
 
 @gantt-border-left-color: #DEDEDE;
 @gantt-border-top-color: darken(white,50%);
 
-
-
+// Styling for header
 .gantt-view th {
 	border-left : 1px solid @gantt-border-left-color;
 	margin: 0;
@@ -37,32 +29,52 @@
 	font-weight: normal;
 }
 
+// Border on header
+.gantt-head-scroll table {
+	border-bottom : 1px solid @gantt-border-top-color;
+}
+
+// Styling for body : a grid with a very light color at the edge
 .gantt-view td {
 	border-left : 1px solid @gantt-border-left-color;
-	border-top : 1px solid @gantt-border-top-color;
+	border-bottom : 1px solid @gantt-border-top-color;
 	min-width: 20px;
-	margin: 0;
-	padding: 0;
 	height: 20px;
 }
 
+// For 'quarter-day' scale the width is 60px not 20px
+.gantt-body-60 td {
+	min-width: 60px;
+}
+
+// To enable scrolling on the body
+.gantt-body-scroll {
+	height: 231px;
+	overflow: scroll;
+	position: relative;
+}
+
+// To enable horizontal scrolling on the header, piloted by body scrolling
+.gantt-head-scroll {
+	overflow: hidden;
+	margin-right: 20px; // Enough space for the scroll bar (if any!)
+}
+
+// Border for right edge
 .gantt-view td:last-child {
 	border-right : 1px solid @gantt-border-left-color;
 }
 
-
+// Size for head (in month/day scale)
 .gantt-head-20 th {
 	min-width: 20px;
 }
+// Size for body (in quarter-day scale)
 .gantt-head-60 th {
 	min-width: 60px;
 }
 
-.gantt-view tr {
-	margin: 0;
-	padding: 0;
-}
-
+// Styling for the gantt bar
 .gantt-bar {
 	position: absolute;
     background: none repeat scroll 0 0 #FF0000;
