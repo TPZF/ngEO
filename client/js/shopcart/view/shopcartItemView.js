@@ -35,11 +35,8 @@ var ShopcartItemView = TableView.extend({
 	 * Set the shopcart used by the view
 	 */
 	setShopcart: function(shopcart) {
-	
 		this.shopcart = shopcart;
 		this.setModel( shopcart.featureCollection );
-								
-		shopcart.loadContent();
 	},
 
 	/**

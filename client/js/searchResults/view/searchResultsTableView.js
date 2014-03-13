@@ -18,10 +18,7 @@ var SearchResultsTableView = TableView.extend({
 		TableView.prototype.initialize.apply(this, arguments);
 		
 		this.events = _.extend({},TableView.prototype.events,this.events);
-		
-		this.model.on("selectFeatures", this.onSelectionChanged, this );
-		this.model.on("unselectFeatures", this.onSelectionChanged, this );
-		
+				
 		this.columnDefs = Configuration.data.resultsTable.columnsDef;
 		
 		// Set specific class for direct download of product

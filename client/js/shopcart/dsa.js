@@ -15,24 +15,28 @@ return {
 	 */
 	initialize: function(element, router, panelManager) {
 
-		// Create the shopcart table view
+		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
+		panelManager.bottom.addView( tableView );
+	
+		var shopcartStatus = {
+			activator: '#shopcart',
+			$el: $('#shopcartStatus'),
+			views: [tableView],
+			viewActivators: [ $('#shopcartStatus').find('#tableCB') ],
+			model: ShopcartCollection.getCurrent()
+		};
+		
+		// Add shopcart status to panel
+		panelManager.bottom.addStatus(shopcartStatus);	
 		
 		// Change model on table when the shopcart is changed
-		tableView.listenTo(ShopcartCollection, 'change:current', tableView.setShopcart);
-		
-		// Add table to status panel
-		panelManager.bottom.addStatus({
-			activator: '#shopcart',
-			show: function() {
-				$('#shopcartStatus').show();
-			},
-			hide: function() {
-				$('#shopcartStatus').hide();
-			},
-			tableView: tableView,
-			$tableCB: $('#tableCB')
-		});		
+		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
+			shopcartStatus.model = shopcart.featureCollection;
+			tableView.setShopcart(shopcart);
+			shopcart.loadContent();
+		});
+
 		
 		tableView.render();
 		
