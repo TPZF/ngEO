@@ -28,6 +28,9 @@ var GanttView = Backbone.View.extend({
 	
 	},
 	
+	/**
+	 * Set the model on the gantt view
+	 */
 	setModel: function(model) {
 		if ( this.model ) {
 			this.stopListening(this.model);
@@ -45,8 +48,7 @@ var GanttView = Backbone.View.extend({
 	 * Clear the gantt chart
 	 */
 	clear: function() {
-		this.$el.find('.gantt-bar').remove();
-		this.$el.find('table').remove();
+		this.$el.empty();
 	},
 
 	/**
@@ -74,7 +76,7 @@ var GanttView = Backbone.View.extend({
 			this.addBar( Date.fromISOString(features[i].properties.EarthObservation.gml_beginPosition), Date.fromISOString(features[i].properties.EarthObservation.gml_endPosition) );
 		}
 
-		this.$el.scrollLeft( this.$el.find('table').width() );
+		this.$el.find('.gantt-body-scroll').scrollLeft( this.$el.find('table').width() );
 	},
 	
 	/**
@@ -91,6 +93,9 @@ var GanttView = Backbone.View.extend({
 		this.$el.hide();
 	},
 	
+	/**
+	 * Build the day scale
+	 */
 	buildDayScale: function(start,end) {
 		
 		var date = new Date( start.getFullYear(), start.getMonth(), 1, 0, 0, 0, 0);
@@ -110,6 +115,9 @@ var GanttView = Backbone.View.extend({
 		return $('<thead>').append($rowUp).append($rowDown);	
 	},
 	
+	/**
+	 * Build the quarter-day scale
+	 */
 	buildQuarterDayScale: function(start,end) {
 		
 		var date = new Date( start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0, 0);
@@ -129,6 +137,9 @@ var GanttView = Backbone.View.extend({
 		return $('<thead>').append($rowUp).append($rowDown);	
 	},
 	
+	/**
+	 * Build the hour scale
+	 */
 	buildHourScale: function(start,end) {
 		
 		var date = new Date( start.getFullYear(), start.getMonth(), start.getDate(), 0, 0, 0, 0);
@@ -148,6 +159,10 @@ var GanttView = Backbone.View.extend({
 		return $('<thead>').append($rowUp).append($rowDown);	
 	},
 	
+	/**
+	 * Get the position of a date in the gantt chart
+	 * Depends of the chosen scale
+	 */
 	getPosition: function(date) {
 		var diff = date - this.startDate;
 		if ( this.scale == 'day' ) {
@@ -167,46 +182,66 @@ var GanttView = Backbone.View.extend({
 	addBar: function( start, end ) {
 	
 		var $bar = $('<div class="gantt-bar">');
-		var $table = this.$el.find('table');
+		//var $table = this.$el.find('table');
 		var hh = 34; //$table.find('thead').outerHeight();
 		
 		var s = this.getPosition(start);
 		var e = this.getPosition(end);
 		
-		var numBars = this.$el.find('.gantt-data-panel').children('.gantt-bar').length;
-		$bar.css({ top: hh + 2 + numBars * 21, left: s, width: e-s });
+		var numBars = this.$el.find('.gantt-body-scroll').children('.gantt-bar').length;
+		$bar.css({ top: 1 + numBars * 21, left: s, width: e-s });
 		
-		this.$el.find('.gantt-data-panel').append($bar);
+		this.$el.find('.gantt-body-scroll').append($bar);
 	},
 	
+	/**
+	 * Build the table : table is used to build headers, and to have grid on body
+	 */
 	buildTable: function( start, end, nbRows ) {
-		var $table = $('<table cellspacing="0" cellpadding="0">');
+		var $headTable = $('<table cellspacing="0" cellpadding="0">');
 		
 		if ( this.scale == 'day' ) {
-			$table.append( this.buildDayScale( start, end ) );
+			$headTable.append( this.buildDayScale( start, end ) );
 		}
 		if ( this.scale == 'quarter-day' ) {
-			$table.append( this.buildQuarterDayScale( start, end ) );
+			$headTable.append( this.buildQuarterDayScale( start, end ) );
 		}
 		else if ( this.scale == 'hour' ) {
-			$table.append( this.buildHourScale( start, end ) );
+			$headTable.append( this.buildHourScale( start, end ) );
 		}
 			
 		// Build rows for table
+		var $bodyTable = $('<table cellspacing="0" cellpadding="0">');
 		var $tbody = $('<tbody>');
 		for ( var i = 0; i < nbRows; i++ ) {
 		
 			var $row =  $('<tr>');
-			var nbCells = $table.find('thead tr:last-child').children().length;
+			if ( this.scale == 'quarter-day' ) {
+				$row.addClass("gantt-body-60");
+			}
+			
+			var nbCells = $headTable.find('thead tr:last-child').children().length;
 			for ( var j = 0; j < nbCells; j++ ) {
 				$row.append('<td>');
 			}
 			$tbody.append($row);
 		}
-		$table.append( $tbody );
+		$bodyTable.append( $tbody );
 		
-		this.$el.find('.gantt-data-panel')
-			.append( $table );
+		var $bodyTable = $('<div class="gantt-body-scroll">').append($bodyTable);
+		var $headTable = $('<div class="gantt-head-scroll">').append($headTable);
+		
+		this.$el
+			.append( $headTable )
+			.append( $bodyTable );
+			
+		
+		//var diffWidth = this.$el.find('.gantt-head-scroll table').width() - this.$el.find('.gantt-body-scroll table').width();
+			
+		var $head = this.$el.find('.gantt-head-scroll');
+		this.$el.find('.gantt-body-scroll').scroll( function(event) {
+			$head.scrollLeft( $(this).scrollLeft() );
+		});
 	},
 
 	/**
@@ -215,8 +250,6 @@ var GanttView = Backbone.View.extend({
 	render : function() {
 	
 		this.$el.addClass('gantt-view');
-		//this.$el.append('<div class="gantt-left-panel">');
-		this.$el.append('<div class="gantt-data-panel">');
 		
 		this.buildTable( new Date(2005,03,1,12,52,12), new Date(2005,05,1,12,52,12), 20 );					
 		
