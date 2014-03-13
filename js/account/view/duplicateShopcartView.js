@@ -12,7 +12,7 @@ var DuplicateShopcartView = CreateShopcartView.extend({
 	/** submit to the server */ 
 	submit : function(name,options) {
 	
-		var features = this.model.getCurrent().features;
+		var features = this.model.getCurrent().featureCollection.features;
 		
 		var wrapSuccess = function(model) {
 			model.addItems( features );
