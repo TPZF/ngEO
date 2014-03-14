@@ -54,7 +54,8 @@ var GanttView = Backbone.View.extend({
 	 * Clear the gantt chart
 	 */
 	clear: function() {
-		this.$el.find('.gantt-data-panel').empty();
+		this.$el.find('.gantt-data-panel').detach();
+		this.$el.append('<div class="gantt-data-panel">');
 	},
 
 	/**
@@ -192,7 +193,7 @@ var GanttView = Backbone.View.extend({
 	 * Depends of the chosen scale
 	 */
 	getPosition: function(date) {
-		var diff = date - this.startDate;
+		var diff = date - this.startDate + (date.getTimezoneOffset() * 60 * 1000);
 		if ( this.scale == 'day' ) {
 			return (21 * diff) / (3600*1000*24);
 		}
@@ -252,21 +253,24 @@ var GanttView = Backbone.View.extend({
 			
 		// Build rows for table
 		var $bodyTable = $('<table cellspacing="0" cellpadding="0">');
-		var $tbody = $('<tbody>');
-		for ( var i = 0; i < nbRows; i++ ) {
 		
-			var $row =  $('<tr>');
-			if ( this.scale == 'quarter-day' ) {
-				$row.addClass("gantt-body-60");
-			}
-			
-			var nbCells = $headTable.find('thead tr:last-child').children().length;
-			for ( var j = 0; j < nbCells; j++ ) {
-				$row.append('<td>');
-			}
-			$tbody.append($row);
+		var rowStr = '<tr';
+		if ( this.scale == 'quarter-day' ) {
+			rowStr += ' class="gantt-body-60"';
 		}
-		$bodyTable.append( $tbody );
+		rowStr += '>';
+		var nbCells = $headTable.find('thead tr:last-child').children().length;
+		for ( var j = 0; j < nbCells; j++ ) {
+			rowStr +='<td></td>';
+		}
+		rowStr += '</tr>';
+	
+		var tbodyStr = '<tbody>';
+		for ( var i = 0; i < nbRows; i++ ) {			
+			tbodyStr += rowStr;
+		}
+		tbodyStr += '</tbody>';
+		$bodyTable.html( tbodyStr );
 		
 		var $bodyTable = $('<div class="gantt-body-scroll">').append($bodyTable);
 		var $headTable = $('<div class="gantt-head-scroll">').append($headTable);
@@ -303,8 +307,6 @@ var GanttView = Backbone.View.extend({
 		this.$el.append('<div class="gantt-data-panel">');
 		
 		this.$el.trigger('create');
-		
-		this.buildTable( new Date(2005,03,1,12,52,12), new Date(2005,05,1,12,52,12), 20 );					
 		
 	}
 	
