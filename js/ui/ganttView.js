@@ -1,5 +1,5 @@
 define(
-		[ 'jquery', 'backbone', 'jquery-gantt'],
+		[ 'jquery', 'backbone'],
 	function($, Backbone) {
 
 
