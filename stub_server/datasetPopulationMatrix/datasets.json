@@ -11,7 +11,7 @@
             [ "S1", "SAR", "interferometry", "ND_SAR_1", "7"],
             [ "S1", "SAR", "polarimetry", "ND_SAR_1", "7"], 
             
-            [ "", "", "", "ND_OPT_1", "365"],
+            [ "", "", "interferometry", "ND_OPT_1", "365"],
 
 			[ "S2", "OPT", "optical", "ND_S2_1", "6"],
             [ "S2", "OPT", "land mapping", "ND_S2_1", "6"], 

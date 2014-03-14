@@ -29,6 +29,11 @@ var Dataset = Backbone.Model.extend({
 		}
 	},
 	
+	/** Check if the keywords exists */
+	hasKeyword : function(val) {
+		return this.get('keywords').indexOf(val) >= 0;
+	},
+	
 	/** Parse the response from server */
 	parse: function(response,options) {
 		var resp = {};
@@ -43,8 +48,8 @@ var Dataset = Backbone.Model.extend({
 				resp.attributes = _.reject( response.datasetSearchInfo.attributes, function(a) { return _.contains(_ReservedNames,a.id); } );
 			}
 			if ( _.isArray(response.datasetSearchInfo.keywords) ) {
-				// TODO : check the keywords?
-				resp.keywords = response.datasetSearchInfo.keywords;
+				// 'Flattenize' the keyword array
+				resp.keywords = _.pluck( response.datasetSearchInfo.keywords, 'keyword' );
 			}
 			
 			// Set the start/end date for the dataset, ensure there is always a valid time extent
