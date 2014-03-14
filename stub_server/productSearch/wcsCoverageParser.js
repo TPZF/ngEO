@@ -43,7 +43,7 @@ module.exports.parse = function(file,fc) {
 		feature.geometry.coordinates = convertToGeojsonPolygon(posList.textContent);
 		feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation = {
 			eop_type: "wmts",
-			eop_layer: "TM__GTC_1P",
+			eop_layer: "ESA.EECF.ERS_SAR_xS",
 			eop_url: 'http://brow01.v1.ngeo.eox.at/c/wmts/'
 		};
 		featureCollection.features.push( feature ); 
