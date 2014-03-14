@@ -25,7 +25,13 @@ var GanttView = Backbone.View.extend({
 	 * Manage events on the view
 	 */
 	events : {
-	
+		'change input[name=radio-time-scale]': function(event) {
+			this.scale = event.currentTarget.value;
+			if ( this.model.features.length > 0 ) {
+				this.clear();
+				this.addData( this.model.features );
+			}
+		}
 	},
 	
 	/**
@@ -48,7 +54,7 @@ var GanttView = Backbone.View.extend({
 	 * Clear the gantt chart
 	 */
 	clear: function() {
-		this.$el.empty();
+		this.$el.find('.gantt-data-panel').empty();
 	},
 
 	/**
@@ -160,6 +166,28 @@ var GanttView = Backbone.View.extend({
 	},
 	
 	/**
+	 * Build the minute scale
+	 */
+	buildMinuteScale: function(start,end,step) {
+		
+		var date = new Date( start.getFullYear(), start.getMonth(), start.getDate(), start.getHours(), 0, 0, 0);
+		this.startDate = new Date( start.getFullYear(), start.getMonth(), start.getDate(), start.getHours(), 0, 0, 0);
+		
+		var $rowUp = $('<tr>');
+		var $rowDown = $('<tr class="gantt-head-20">');
+		while ( date < end ) {
+		
+			$rowUp.append('<th colspan="' + (60/step) + '">' + date.toISODateString() + ' ' + date.getHours() + 'h</th>');
+			for ( var i = 0; i < 60; i+=step ) {
+				$rowDown.append('<th>' + i + '</th>');
+			}
+			date = new Date( date.getTime() + 3600 * 1000 );
+		}
+		
+		return $('<thead>').append($rowUp).append($rowDown);	
+	},
+	
+	/**
 	 * Get the position of a date in the gantt chart
 	 * Depends of the chosen scale
 	 */
@@ -173,6 +201,12 @@ var GanttView = Backbone.View.extend({
 		}
 		else if ( this.scale == 'hour' ) {
 			return (21 * diff) / (3600*1000);
+		}
+		else if ( this.scale == '10-minute' ) {
+			return (21 * diff) / (600*1000);
+		}
+		else if ( this.scale == 'minute' ) {
+			return (21 * diff) / (60*1000);
 		}
 	},
 	
@@ -209,6 +243,12 @@ var GanttView = Backbone.View.extend({
 		else if ( this.scale == 'hour' ) {
 			$headTable.append( this.buildHourScale( start, end ) );
 		}
+		else if ( this.scale == '10-minute' ) {
+			$headTable.append( this.buildMinuteScale( start, end, 10 ) );
+		}
+		else if ( this.scale == 'minute' ) {
+			$headTable.append( this.buildMinuteScale( start, end, 1 ) );
+		}
 			
 		// Build rows for table
 		var $bodyTable = $('<table cellspacing="0" cellpadding="0">');
@@ -231,7 +271,7 @@ var GanttView = Backbone.View.extend({
 		var $bodyTable = $('<div class="gantt-body-scroll">').append($bodyTable);
 		var $headTable = $('<div class="gantt-head-scroll">').append($headTable);
 		
-		this.$el
+		this.$el.find('.gantt-data-panel')
 			.append( $headTable )
 			.append( $bodyTable );
 			
@@ -250,6 +290,19 @@ var GanttView = Backbone.View.extend({
 	render : function() {
 	
 		this.$el.addClass('gantt-view');
+		this.$el.append('<div class="gantt-left-panel">\
+		<fieldset data-role="controlgroup" data-mini="true">\
+				<legend>Time scale:</legend>\
+					<label>minute<input type="radio" name="radio-time-scale" value="minute" /></label>\
+					<label>10 minute<input type="radio" name="radio-time-scale" value="10-minute" /></label>\
+					<label>Hour<input type="radio" name="radio-time-scale" value="hour" /></label>\
+					<label>Quarter day<input type="radio" name="radio-time-scale" value="quarter-day" checked="checked" /></label>\
+					<label>Day<input type="radio" name="radio-time-scale" value="day" /></label>\
+		</fieldset></div>');
+		
+		this.$el.append('<div class="gantt-data-panel">');
+		
+		this.$el.trigger('create');
 		
 		this.buildTable( new Date(2005,03,1,12,52,12), new Date(2005,05,1,12,52,12), 20 );					
 		

@@ -10,13 +10,17 @@
 	//overflow: scroll;
 }
 
-/*
+@gantt-left-panel-width: 125px;
+
 .gantt-left-panel {
 	float: left;
-	width: 200px;
-	background: yellow;
-	height: 300px;
-}*/
+	width: @gantt-left-panel-width;
+}
+
+.gantt-data-panel {
+	margin-left: @gantt-left-panel-width;
+	border-left: 2px solid darken(white,50%);
+}
 
 @gantt-border-left-color: #DEDEDE;
 @gantt-border-top-color: darken(white,50%);
@@ -50,7 +54,7 @@
 // To enable scrolling on the body
 .gantt-body-scroll {
 	height: 231px;
-	overflow: scroll;
+	overflow: auto;
 	position: relative;
 }
 
