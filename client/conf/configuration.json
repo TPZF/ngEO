@@ -100,7 +100,7 @@
 			"id" : "BlueMarble_TPZ_WMS",
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
-			"baseUrl": "http://172.30.16.61/wmspub",
+			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
 			"params": {
 				"layers": "BlueMarble"
 			}
@@ -129,7 +129,7 @@
 	   		"id" : "OSM_TPZ_Fr",
 			"name": "OSM (TPZ Fr)",
 			"type": "WMS",
-			"baseUrl": "http://demonstrator.telespazio.com/geocache/wms",
+			"baseUrl": "http://demonstrator.telespazio.com/mapcache/wms",
 			"params": {
 				"layers": "imposm-fr",
 				"format": "image/png"
