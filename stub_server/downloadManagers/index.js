@@ -4,6 +4,8 @@
  * IF-ngEO-UserDlManagersConfigData 
  */
 
+var user = require('../user');
+
 module.exports = function(req, res){
   
 	if (req.query.new_status == "STOP" || req.query.new_status == "STOP_IMMEDIATELY"){ //stop request
@@ -12,6 +14,6 @@ module.exports = function(req, res){
 
 	} else{
 		
-		res.sendfile('./downloadManagers/downloadManagersConfigData.json');	
+		res.sendfile('./downloadManagers/downloadManagersConfig-' + user.getId() + '.json');	
 	}
 };
