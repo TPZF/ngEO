@@ -184,6 +184,22 @@ var DataSetSearch = SearchCriteria.extend({
 		this.set('mode',val);
 	},
 	
+	/** check if interferometry is supported */
+	isInterferometrySupported : function() {
+		if (this.datasetIds.length != 2) {
+			return false;
+		}
+		
+		for ( var x in DatasetPopulation.selection ) {
+			var dataset = DatasetPopulation.selection[x];
+			if ( !dataset.hasKeyword('interferometry') ) {
+				return false;
+			}
+		}
+		
+		return true;
+	},
+	
 	/** Call when the dataset selection is changed */
 	onDatasetSelectionChanged : function() {
 	

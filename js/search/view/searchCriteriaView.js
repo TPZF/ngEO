@@ -76,7 +76,7 @@ var SearchCriteriaView = Backbone.View.extend({
 		
 		// Only interferometry supported for Task4
 		//if ( this.model.datasetIds.length > 1 && this.model.datasetIds.length <= 4 ) {
-		if ( this.model.datasetIds.length == 2 ) {
+		if ( this.model.isInterferometrySupported() ) {
 		
 			var $mode = $('<div id="sc-mode-containter" data-role="fieldcontain">\
 				<label for="sc-mode">Mode: </label>\
