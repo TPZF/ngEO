@@ -43,7 +43,7 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "ui/menubar", "logger", "backbone", "jquery.mobile"] ,
+require( ["require", "jquery", "configuration", "ui/menubar", "logger", "backbone", "jquery.mobile", 'shopcart/model/shopcartCollection'] ,
 		function(require, $, Configuration, MenuBar, Logger, Backbone) {
 		
 /** Use a defered object for document ready */
