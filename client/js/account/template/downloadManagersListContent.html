@@ -1,0 +1,34 @@
+<table cellpadding="0" cellspacing="0" border="0">
+	<thead>
+		<th></th>
+		<th>Download Manager Name</th>
+		<th>Download Manager ID</th>
+		<th>Status</th>
+		<!--<th>User ID</th>-->
+		<th>IP Address</th>
+		<th>Last Accessed Date</th>
+	</thead>
+	<tbody>
+	<% _.each(downloadmanagers, function(downloadManager, i) { %>
+	
+		<tr data-dmId="<%= downloadManager.downloadManagerId %>">
+			<% if (downloadManager.status == 'ACTIVE'){ %>
+				<td><span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span></td>
+			<% } else if (downloadManager.status == 'INACTIVE') { %>
+				<td><span class="ui-icon-paused ui-icon ui-shadow">&nbsp;</span></td>
+			<% } else if (downloadManager.status == 'STOPPED') { %>
+				<td><span class="ui-icon-cancelled ui-icon ui-shadow">&nbsp;</span></td>
+			<% } else { %>
+				<td><span class="ui-icon-unknown ui-icon ui-shadow">&nbsp;</span></td> 
+			<% } %>
+			<td><%= downloadManager.downloadManagerFriendlyName %></td>
+			<td><%= downloadManager.downloadManagerId %></td>
+			<td><%= downloadManager.status %></td>
+			<!--<td><%= downloadManager.userId %></td>-->
+			<td><%= downloadManager.ipAddress %></td>
+			<td><%= downloadManager.lastAccessDate %></td>
+		</tr>
+	<% }); %>
+	</tbody>
+</table>
+
