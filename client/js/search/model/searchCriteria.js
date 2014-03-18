@@ -90,7 +90,7 @@ var SearchCriteria = Backbone.Model.extend({
 		params = this.addAdvancedCriteria(params);
 
 		//add the download options values selected and already set to the model
-		params = this.addDownloadOptionsWithProductURIConvention(params);
+		params = this.addDownloadOptions(params);
 		
 		//console.log("DatasetSearch module : getCoreURL method : " + url);
 		
@@ -148,19 +148,30 @@ var SearchCriteria = Backbone.Model.extend({
 						throw "Invalid OpenSearch URL : stop parameter is not correct."
 					}
 					break;
+				
+				case "ngEO_DO":
+					var don = pair[1].substr(1,pair[1].length-2);
+					var parameters = don.split(',');
+					for ( var n = 0; n < parameters.length; n++ ) {
+						var p = parameters[n].split(':');
+						if (p.length != 2) 
+							throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
+						if ( this.get('downloadOptions').hasOwnProperty(p[0]) ) {
+							attributes[p[0]] = this.get('downloadOptions')[p[0]].cropProductSearchArea ? true : p[1];
+						}
+
+					}
+					break;
+					
 					
 				default :
 					
 					if ( this.has(pair[0]) ) {
 						attributes[pair[0]] = pair[1];
 					} else {
-						//set the parameters if there are advanced attributes, download options or attributes of the model
-						//skip any other parameter
+						//set the parameters if there are advanced attributes of the model skip any other parameter
 						if ( this.get('advancedAttributes').hasOwnProperty(pair[0]) ) {
 							attributes[pair[0]] = pair[1];
-						}
-						else if ( this.get('downloadOptions').hasOwnProperty(pair[0]) ) {
-							attributes[pair[0]] = this.get('downloadOptions')[pair[0]].cropProductSearchArea ? true : pair[1];
 						}
 					}
 					break;
@@ -210,38 +221,14 @@ var SearchCriteria = Backbone.Model.extend({
 		//console.log("DatasetSearch module : addAdvancedCriteria : " + url);
 		return url;
 	},
-	
-	/**
-	 * add download options to the given url by appending "&param_1=value_1&...&param_n=value_n" to the url
-	 * returns the modified url
-	 */
-	addDownloadOptions : function(url) {
-	
-		var self = this;
-		//add the selected download options to the opensearch url					
-		_.each(this.get('downloadOptions'), function(option){
-			
-			if ( self.has(option.argumentName) ) {
-				if ( !option.cropProductSearchArea ) {
-					url += '&' + option.argumentName + '=' + self.get(option.argumentName);
-				} else if ( self.get(option.argumentName) ) {
-					url += '&' + option.argumentName + '=' + self.searchArea.toWKT(); 
-				}
-				
-			}
-		});
-
-		//console.log("DatasetSearch module : addDownloadOptions : " + url);
-		return url;
-	},
-	
+		
 	/**
 	 * In case there are selected download options : 
 	 * 		add download options to the given url by appending "&ngEO_DO={param_1:value_1,...,param_n:value_n} 
 	 * 		to the url and returns the modified url.
 	 * otherwise : do not append "&ngEO_DO={} to the url 
 	 */
-	addDownloadOptionsWithProductURIConvention : function(url){
+	addDownloadOptions : function(url){
 	
 		var self = this;
 		//add the selected download options to the opensearch url		
