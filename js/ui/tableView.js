@@ -187,8 +187,13 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model,"highlightFeatures", this.highlightFeatureCallBack );
 			
 			// TODO : ugly hack..
-			this.hasGroup = model.id == "Correlation" || model.id == "Interferometry";
-			
+			var hasGroup = model.id == "Correlation" || model.id == "Interferometry";
+			if ( this.hasGroup != hasGroup ) {
+				this.$el.find('.table-header, .table-content').remove();
+				this.hasGroup = hasGroup;
+				this.buildTable();
+			}
+				
 			if ( this.model.features.length > 0 ) {
 				this.addData( this.model.features );
 			}
@@ -278,20 +283,6 @@ var TableView = Backbone.View.extend({
 			} else {
 				this.rowsData.push( rowData );
 			}
-			
-			/*if ( this.hasGroup )  {
-				var groupId = features[i].properties.EarthObservation.EarthObservationMetaData.eop_productGroupId;
-				var masterId = groupId.split('_')[0];
-				var slaveId = groupId.split('_')[1];
-				if ( slaveId == 0 ) {
-					roots[ masterId ] = rowData;
-					this.rowsData.push( rowData );
-				} else {
-					roots[ masterId ].children.push(rowData);
-				}
-			} else {
-				this.rowsData.push( rowData );
-			}*/
 		}
 		
 		this.visibleRowsData = this.rowsData.slice(0);
@@ -493,16 +484,11 @@ var TableView = Backbone.View.extend({
 		this.$el.hide();
 		this.visible = false;
 	},
-
-	/**
-	 * Render the table
-	 */
-	render : function() {
-			
-		this.visible = false;
-		this.featuresToAdd = [];
-		$(window).resize( $.proxy( this.updateFixedHeader, this ) );
 	
+	/**
+	 * Build the main table element
+	 */
+	buildTable: function() {
 		// Build the table
 		var $table = $('<table cellpadding="0" cellspacing="0" border="0" class="table-view"><thead></thead><tbody></tbody></table>');
 		var $thead = $table.find('thead');
@@ -516,12 +502,24 @@ var TableView = Backbone.View.extend({
 			$row.append( '<th>' + columns[j].sTitle + '</th>');
 		}
 		
-		this.$table = $table.appendTo( this.el );
+		this.$table = $table.prependTo( this.el );
 		
 		// Build the fixed header table
 		this.$table.wrap('<div class="table-content"></div>');
 		this.$headerTable = this.$table.clone().prependTo( this.el ).wrap('<div class="table-header"></div>');
 		this.$table.find('thead').hide();
+	},
+
+	/**
+	 * Render the table
+	 */
+	render : function() {
+			
+		this.visible = false;
+		this.featuresToAdd = [];
+		$(window).resize( $.proxy( this.updateFixedHeader, this ) );
+	
+		this.buildTable();
 		
 		this.renderFooter();		
 		

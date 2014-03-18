@@ -63,6 +63,9 @@ var GanttView = Backbone.View.extend({
 	 */
 	addData: function(features) {
 	
+		if ( features.length == 0 )
+			return;
+	
 		var minDate = features[0].properties.EarthObservation.gml_beginPosition;
 		var maxDate = features[0].properties.EarthObservation.gml_endPosition;
 		
