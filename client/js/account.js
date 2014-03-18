@@ -74,6 +74,7 @@ return {
 			model : DownloadManagers,
 			el : "#downloadManagersMonitoring"
 		});	
+		dmView.render();
 				
 		// Create the view to monitor data access requests
 		darView = new DataAccessRequestMonitoringView({

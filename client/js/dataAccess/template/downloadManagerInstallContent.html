@@ -1,10 +1,5 @@
-<div id="installDownloadManagerMessage" class="widget-content ui-body-c">
-	<% if (downloadmanagers.length == 0){ %>
-		<p><b>No download manager has been registered.</b></p>
-		<p><b>To install a Download Manager click on the following buttons : </b></p>
-	<% } else { %>
-		<p><b>To install a new Download Manager click on the following buttons : </b></p>
-	<% } %>	
+<div class="ui-error-message widget-content ui-body-c">
+	<p><b>To install a Download Manager click on the following buttons : </b></p>
 	<% _.each( downloadManagerInstallationLink, function(value,key) { %>
 		<a data-mini='true' data-inline='true' data-theme='a' data-role='button' href='<%= value %>'><%= key %> Download Manager</a>
 	<% }); %>

@@ -1,14 +1,14 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 'text!account/template/accountDownloadManagersContent.html',
-	 'text!dataAccess/template/downloadManagerInstallContent.html', 'ui/widget'], 
-		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_template, downloadManagerInstall_template) {
+define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 'text!account/template/downloadManagersMonitoringContent.html',
+	 'text!dataAccess/template/downloadManagerInstallContent.html', 'text!account/template/downloadManagersListContent.html', 'ui/widget'], 
+		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_content, downloadManagerInstall_template, downloadManagersList_template) {
 
 var DownloadManagersMonitoringView = Backbone.View.extend({
 
 	initialize : function(){
-		this.model.on("sync" , this.render, this);
-		this.model.on("status:change" , this.render, this);
+		this.model.on("sync" , this.buildDownloadManagersTable, this);
+		this.model.on("status:change" , this.buildDownloadManagersTable, this);
 		this.model.on("error" , this.error, this);
 	},
 	
@@ -62,6 +62,17 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		$content.css('max-height',height);
 	},
 	
+	listTemplate: _.template(downloadManagersList_template),
+	
+	buildDownloadManagersTable: function() {
+		if ( this.model.get('downloadmanagers').length > 0 ) {
+			this.$el.find('#downloadManagersMonitoringContent').html( this.listTemplate(this.model.attributes) );
+		} else {
+			this.$el.find('#downloadManagersMonitoringContent').html( "<p class='ui-error-message'><b>No download managers have been registered.</b></p>" );
+		}
+		this.$el.trigger('create');		
+	},
+	
 	/**
 	 * Call to build the view when the download managers are synced
 	 */
@@ -75,12 +86,9 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		});
 		this.$el.append(installContent);
 		
-		// Add HTML for monitoring download managers if there is any
-		if ( this.model.get('downloadmanagers').length > 0 ) {
-			var content = _.template(downloadManagersMonitoring_template, this.model.attributes);
-			this.$el.append(content);
-		}
-		this.$el.trigger('create');		
+		this.$el.append(downloadManagersMonitoring_content);
+		
+		this.buildDownloadManagersTable();
 
 		$("#stop_dm").button('disable');		
 	
