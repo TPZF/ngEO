@@ -12,15 +12,6 @@ define( ['jquery', 'backbone', 'configuration', "hostedProcesses/model/hostedPro
 	 * 
 	 */
 var DataAccessRequestView = Backbone.View.extend({
-
-	initialize : function(options){
-		this.request = options.request;
-		this.listenTo(this.request,'SuccessValidationRequest', this.onValidationSuccess);
-		this.listenTo(this.request,'SuccessConfirmationRequest', this.onConfirmationSuccess);
-		this.listenTo(this.request,'FailureRequest', this.onFailure);
-		this.listenTo(this.request,'RequestNotValidEvent', this.onFailure);
-		
-	},
 	
 	events : {
 		'click #validateRequest' : function(event){
@@ -45,6 +36,23 @@ var DataAccessRequestView = Backbone.View.extend({
 			{
 				$("#serverMessage").html('<p style="color: red;">Please, configure the product processing parameters first</p>');
 			}
+		}
+	},
+	
+	/**
+	 * Set the request to view
+	 */
+	setRequest: function(request) {
+		if ( this.request ) {
+			this.stopListening(this.request);
+		}
+		
+		this.request = request;
+		if ( this.request ) {
+			this.listenTo(this.request,'SuccessValidationRequest', this.onValidationSuccess);
+			this.listenTo(this.request,'SuccessConfirmationRequest', this.onConfirmationSuccess);
+			this.listenTo(this.request,'FailureRequest', this.onFailure);
+			this.listenTo(this.request,'RequestNotValidEvent', this.onFailure);
 		}
 	},
 	
@@ -87,9 +95,13 @@ var DataAccessRequestView = Backbone.View.extend({
 		$("#serverMessage").html('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
 		
 		// NGEO-900 : close widget when finished
-		this.$el.parent().ngeowidget('hide');
+		var self = this;
+		setTimeout( function() { self.$el.parent().ngeowidget('hide') }, 1000 );
 	},	
 	
+	/**
+	 * Render the view
+	 */
 	render: function(){
 	
 		//after the download managers are retrieved
@@ -99,11 +111,11 @@ var DataAccessRequestView = Backbone.View.extend({
 			var installContent = _.template(downloadManagerInstall_template, { downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink,
 				downloadmanagers: this.model.get('downloadmanagers')
 			});
-			this.$el.append( installContent );
+			this.$el.html( installContent );
 					
 		} else {
 			var content = _.template(downloadManagersList_template, this.model.attributes);
-			this.$el.append(content);
+			this.$el.html(content);
 		}
 
 		// Create hosted process list
