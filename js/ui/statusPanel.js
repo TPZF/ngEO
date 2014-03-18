@@ -41,9 +41,8 @@ var StatusPanel = Backbone.View.extend({
 	toggleView: function(view) {
 			
 		if ( view == this.activeView ) {
-		
 			var viewToHide = this.activeView;
-			this.regionManager.hide(this.region,400, function() {
+			this.regionManager.hide(this.region, 400, function() {
 				viewToHide.hide();	
 			});
 			this.activeView = null;
@@ -52,7 +51,9 @@ var StatusPanel = Backbone.View.extend({
 			if (this.activeView) this.activeView.hide();			
 			view.show();
 			
-			this.regionManager.show(this.region,400);
+			if (!this.activeView) {
+				this.regionManager.show(this.region,400);
+			}
 			
 			this.activeView = view;
 		}
@@ -62,7 +63,6 @@ var StatusPanel = Backbone.View.extend({
 	 * Show a status
 	 */
 	showStatus: function(status) {
-		
 		// Desactivate previous status
 		if ( this.activeStatus ) {
 			this.activeStatus.$el.hide();
