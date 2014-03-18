@@ -8,7 +8,6 @@ define( [ "jquery", "configuration", 'dataAccess/view/dataAccessRequestView', 'd
 
 var DataAccessWidget = function() {
 
-	var downloadManagersListView;
 	
 	var parentElement = $('<div id="dataAccessPopup">');
 	var element = $('<div id="dataAccessPopupContent"></div>'); 
@@ -16,29 +15,24 @@ var DataAccessWidget = function() {
 	parentElement.appendTo('.ui-page-active');
 	var self = this;
 	parentElement.ngeowidget({
-		title: 'Data Access Request',
+		title: 'Data Access Request'
 	});
+	
+	var dataAccessRequestView = new DataAccessRequestView({
+				model : DownloadManagers,
+				el: element
+			});
 
 	/**
 		Open the popup
 	 */
 	this.open = function(request) {
 
-		// Remove previous download managers list view if exists
-		if ( downloadManagersListView )
-		{
-			downloadManagersListView.remove();
-		}
 		// Load DownloadManagers and then build and open the pop-up
 		DownloadManagers.fetch().done(function() {
 		
-			// Create the view and render it
-			downloadManagersListView = new DataAccessRequestView({
-				model : DownloadManagers,
-				el: element,
-				request : request
-			});
-			downloadManagersListView.render();
+			dataAccessRequestView.setRequest(request);
+			dataAccessRequestView.render();
 			
 			//Open the popup
 			parentElement.ngeowidget("show");
@@ -51,7 +45,6 @@ var DataAccessWidget = function() {
 	 *	closed by clicking out side its content.
 	 */
 	this.close = function() {
-		downloadManagersListView.remove();
 		parentElement.ngeowidget("hide");
 	};
 };
