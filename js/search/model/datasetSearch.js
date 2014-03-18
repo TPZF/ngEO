@@ -109,6 +109,9 @@ var DataSetSearch = SearchCriteria.extend({
 			slaveUrl += this.getOpenSearchParameters();
 			url += "&with=" + encodeURIComponent(slaveUrl);
 		} else {
+			if (!id) {
+				id = this.datasetIds.join(',');
+			}
 			url += id + "/search?";
 			url += this.getOpenSearchParameters();
 		}
