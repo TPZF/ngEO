@@ -174,12 +174,13 @@ var GanttView = Backbone.View.extend({
 	 */
 	buildMinuteScale: function(start,end,step) {
 		
-		var date = new Date( start.getFullYear(), start.getMonth(), start.getDate(), start.getHours(), 0, 0, 0);
-		this.startDate = new Date( start.getFullYear(), start.getMonth(), start.getDate(), start.getHours(), 0, 0, 0);
-		
+		var date = new Date( start.getFullYear(), start.getMonth(), start.getDate(), start.getHours() + (start.getTimezoneOffset() / 60), 0, 0, 0);
+		var end2 = new Date( end.getFullYear(), end.getMonth(), end.getDate(), end.getHours() + (start.getTimezoneOffset() / 60), end.getMinutes(), end.getSeconds(), end.getMilliseconds());
+		this.startDate = new Date( start.getFullYear(), start.getMonth(), start.getDate(), start.getHours() + (start.getTimezoneOffset() / 60), 0, 0, 0);
+				
 		var $rowUp = $('<tr>');
 		var $rowDown = $('<tr class="gantt-head-20">');
-		while ( date < end ) {
+		while ( date < end2 ) {
 		
 			$rowUp.append('<th colspan="' + (60/step) + '">' + date.toISODateString() + ' ' + date.getHours() + 'h</th>');
 			for ( var i = 0; i < 60; i+=step ) {
