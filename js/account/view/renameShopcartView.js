@@ -11,7 +11,7 @@ var RenameShopcartView = CreateShopcartView.extend({
 	
 	/** submit the rename query to the server */ 
 	submit : function(name,options) {
-		this.model.getCurrent().set({"name" : name}).save(options);
+		this.model.getCurrent().save({"name" : name},options);
 	},
 	
 	/** 
