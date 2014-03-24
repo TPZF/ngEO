@@ -129,7 +129,8 @@ var DataSetPopulation = Backbone.Model.extend({
 				if ( !treatedDatasets.hasOwnProperty(datasetId) ) {
 					filteredDatasets.push({
 						datasetId : datasetId,
-						name : name_index < row.length ? row[name_index] : datasetId,
+						// Use datasetId for name for consistency (see NGEO-1134)
+						name : datasetId, //name_index < row.length ? row[name_index] : datasetId,
 						itemsCount : row[count_index]
 					});
 					
