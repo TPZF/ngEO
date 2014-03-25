@@ -1,5 +1,5 @@
 {
-        "datasetAuthorizationInfo": [ {
+        "datasetAuthorisationInfo": [ {
                 "datasetId": "SENTINEL2_L1",
                 "searchAccessPolicy": "PRIVATE",
                 "searchAccessGranted": "YES",
