@@ -21,10 +21,8 @@ var DataSetAuthorizations = Backbone.Model.extend({
 	// Parse the response
 	parse: function(response){
 				
-		var authorizations = response.datasetAuthorizationInfo;
-	
 		return { 
-			authorizations: response.datasetAuthorizationInfo
+			authorizations: response.datasetAuthorisationInfo
 		};
 	},
 
