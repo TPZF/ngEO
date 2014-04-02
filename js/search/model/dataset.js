@@ -12,7 +12,8 @@ var Dataset = Backbone.Model.extend({
 		attributes: null,
 		datasetId : "",
 		startDate: null,
-		endDate: null
+		endDate: null,
+		validityEndDate : null
 	},
 	
 	/** Constructor : initialize the url from the configuration */
@@ -63,6 +64,13 @@ var Dataset = Backbone.Model.extend({
 			} else {
 				resp.startDate = new Date( resp.endDate.getTime() );
 				resp.startDate.setUTCFullYear( resp.endDate.getUTCFullYear() - 10 );
+			}
+			
+			if (response.datasetSearchInfo.validityEndDate) {
+				resp.validityEndDate = Date.fromISOString( response.datasetSearchInfo.validityEndDate );
+			} else {
+				resp.validityEndDate = new Date( resp.endDate.getTime() );
+				resp.validityEndDate.setUTCFullYear( resp.endDate.getUTCFullYear() + 5 );
 			}
 		}
 		return resp;
