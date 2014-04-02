@@ -34,7 +34,7 @@ var TimeExtentView = Backbone.View.extend({
 			
 			var dateRangeOptions = {
 				startYear: this.model.dataset.get("startDate").getFullYear(),
-				endYear: this.model.dataset.get("endDate").getFullYear()
+				endYear: this.model.dataset.get("validityEndDate").getFullYear()
 			};
 			this.$fromDateInput.datebox("option", dateRangeOptions );
 			this.$toDateInput.datebox("option", dateRangeOptions );
@@ -111,7 +111,7 @@ var TimeExtentView = Backbone.View.extend({
 				max : this.model.get("stop")
 			},
 			scaleBounds: { min : this.model.dataset.get("startDate"), 
-				max : this.model.dataset.get("endDate")
+				max : this.model.dataset.get("validityEndDate")
 			},
 			change: $.proxy( this.onTimeSliderChanged, this )
 		});
