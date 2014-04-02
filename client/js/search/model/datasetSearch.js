@@ -152,14 +152,14 @@ var DataSetSearch = SearchCriteria.extend({
 			if (!dateRange) {
 				dateRange = {
 					start: dataset.get('startDate'),
-					stop: dataset.get('endDate'),
+					stop: dataset.get('validityEndDate'),
 				};
 			} else {
 				if ( dataset.get('startDate') < dateRange.start ) {
 					dateRange.start = dataset.get('startDate');
 				}
-				if ( dataset.get('endDate') > dateRange.stop ) {
-					dateRange.stop = dataset.get('endDate');
+				if ( dataset.get('validityEndDate') > dateRange.stop ) {
+					dateRange.stop = dataset.get('validityEndDate');
 				}
 			}
 		});
