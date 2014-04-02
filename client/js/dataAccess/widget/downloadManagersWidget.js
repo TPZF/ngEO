@@ -34,7 +34,7 @@ var DownloadManagersWidget = function(request) {
 	this.open = function() {
 	
 		// Load DownloadManagers and then build and open the pop-up
-		DownloadManagers.fetch().done(function() {
+		DownloadManagers.fetch().always(function() {
 		
 			// Create the view and render it
 			downloadManagersListView = new DownloadManagersListView({
