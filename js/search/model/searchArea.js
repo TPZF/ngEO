@@ -80,7 +80,7 @@ var SearchArea = function() {
 	
 		// First convert the layer to GeoJSON
 		if ( !GeoJSONConverter.toGeoJSON(layer) ) {
-			return { valid: false, message: 'format not supported' };
+			return { valid: false, message: 'format not supported or invalid.' };
 		}
 		
 		var f;

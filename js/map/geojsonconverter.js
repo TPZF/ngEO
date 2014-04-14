@@ -129,7 +129,7 @@ return {
 				return true;
 		}
 		
-		if ( features ) {
+		if ( features && features.length > 0 ) {
 			layer.data = _convertOL(features);
 			layer.type = 'GeoJSON';
 			return true;
