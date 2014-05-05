@@ -142,10 +142,10 @@ $.widget( "ui.dateRangeSlider", {
 		var boundsLength = this.dragRightDays - this.dragLeftDays;
 		if ( boundsLength > this.options.boundsMaxLength ) {
 			this.dragLeftDays = this.dragRightDays - this.options.boundsMaxLength;
-			this.options.change( this._computeCurrentDate() ); 
+			//this.options.change( this._computeCurrentDate() ); 
 		} else if ( boundsLength < this.options.boundsMinLength ) {
 			this.dragLeftDays = this.dragRightDays - this.options.boundsMinLength;
-			this.options.change( this._computeCurrentDate() ); 
+			//this.options.change( this._computeCurrentDate() ); 
 		}
 				
 		this.dragBar.width( this.dragRightDays - this.dragLeftDays );
