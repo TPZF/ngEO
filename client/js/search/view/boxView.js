@@ -48,6 +48,10 @@ var BoxView = Backbone.View.extend({
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
 					var bbox = self.model.searchArea.getBBox();
+					bbox.south = Math.max(bbox.south,-90);
+					bbox.north = Math.min(bbox.north,90);
+					self.model.searchArea.setBBox(bbox);
+					
 					$("#west").val( bbox.west );
 					$("#south").val( bbox.south );
 					$("#east").val( bbox.east );
