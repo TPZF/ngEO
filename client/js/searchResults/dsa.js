@@ -28,6 +28,7 @@ return {
 			model : SearchResults 
 		});
 		panelManager.bottom.add( tableView, '#tableCB' );
+		panelManager.on('centerResized', tableView.onSizeChanged, tableView );
 		tableView.render();
 		
 		// Connect search results events with map

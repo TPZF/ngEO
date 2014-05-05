@@ -197,6 +197,9 @@ var SearchResultsTableView = Backbone.View.extend({
 		this.visible = false;
 	},
 	
+	/**
+	 * Method to call when size has changed
+	 */
 	onSizeChanged: function() {
 		if (this.visible) {
 			this.table.fnAdjustColumnSizing( true );
