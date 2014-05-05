@@ -101,13 +101,20 @@ var DataSetSearch = Backbone.Model.extend({
 					
 						// Stop is current date, or dataset stop
 						stop = new Date();
+						if ( stop < datasetStart ) {
+							stop = new Date( datasetStart.getTime() + ONE_MONTH );
+						} 
+						
+						if ( stop > datasetStop ) {
+							stop = new Date( datasetStop.getTime() );
+						}
 												
 						// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
-						var diff = (datasetStop - datasetStart);
+						var diff = (stop - datasetStart);
 						if ( diff > ONE_MONTH ) {
 							start = new Date( stop.getTime() - ONE_MONTH );
 						} else {
-							start = new Date(datasetStart.getTime() );
+							start = new Date( datasetStart.getTime() );
 						}
 											
 						// Reset start time
