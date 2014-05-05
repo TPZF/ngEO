@@ -234,7 +234,17 @@ var DataSetSearch = SearchCriteria.extend({
 		var rangeStop = this.get('dateRange').stop;
 		
 		if ( stop > rangeStop || start < rangeStart ) {
-			stop = new Date( rangeStop.getTime() );
+		
+			// Stop is current date, or dataset stop
+			stop = new Date();
+			if ( stop < rangeStart ) {
+				stop = new Date( rangeStart.getTime() + ONE_MONTH );
+			} 
+			
+			if ( stop > rangeStop ) {
+				stop = new Date( rangeStop.getTime() );
+			}
+						
 			// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
 			var diff = (rangeStop - rangeStart);
 			if ( diff > ONE_MONTH ) {
