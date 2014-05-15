@@ -137,7 +137,7 @@ var FeatureCollection = function() {
 			this.features.length = 0;
 			this.trigger('reset:features',this);
 			if ( _pageCache[this.currentPage] ) {
-				_addFeatures( _pageCache[this.currentPage] );
+				this.addFeatures( _pageCache[this.currentPage] );
 			} else {
 				this.trigger('startLoading', this);
 				_fetch(1 + (this.currentPage-1)*this.countPerPage, _url);
