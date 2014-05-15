@@ -328,11 +328,13 @@
 					<graphic fileref="screenshots/datasetSelectionWidget.jpg" />
 				</para>
 				<para>
-					<inlinegraphic fileref="screenshots/warning.jpg" /> If there where a
-					connection problem with the server an error message is spawned
-					and the user is notified. The datasets button is then disabled.
-					If the server sends no datasets, a notification message is
-					displayed inside the dataset selection widget.
+					<inlinegraphic fileref="screenshots/tip.jpg" /> Only datasets with search authorization are displayed.
+				</para>
+				<para>
+					<inlinegraphic fileref="screenshots/tip.jpg" /> The icon <inlinegraphic fileref="screenshots/viewDisabled.jpg" /> means that you cannot view the dataset products, i.e. browse the product image in the map.
+				</para>
+				<para>
+					<inlinegraphic fileref="screenshots/tip.jpg" /> The icon <inlinegraphic fileref="screenshots/downloadDisabled.jpg" /> means that you cannot download the datasets products.
 				</para>
 				<para>
 					To select a dataset, the user has to scroll out the list and
