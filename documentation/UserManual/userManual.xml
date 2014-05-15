@@ -85,61 +85,28 @@
 	<sect1>
 		<title>How to read this guide?</title>
 		<itemizedlist>
-			<listitem><para><xref linkend="interover"/>: It is a chapter to present the main home application page and sections.</para></listitem>
 			<listitem><para><xref linkend="gettingstarted"/>: It is a chapter to summarize the main procedures to start dealing with the application functionalities.</para></listitem>
 			<listitem><para><xref linkend="das"/>: It is a chapter to describe the functionalities and widgets of Data Services Area Menu.</para></listitem>
 			<listitem><para><xref linkend="account"/>: It is a chapter to describe the functionalities and widgets of My account Menu.</para></listitem>
 		</itemizedlist>
 	</sect1>
 	</chapter>
-	
-	<chapter id="interover">
-		<title>Interface Overview</title>
-		<para>The user interface home page is the following:</para>
-		<graphic fileref="screenshots/homePage.jpg" />
-		<para>It is composed of : 
-			<itemizedlist>
-				<listitem><para>a header containing a menu bar. 
-					<graphic fileref="screenshots/menuBar.jpg" />
-					The entries :
-					<itemizedlist>
-						<listitem><para><emphasis>About</emphasis>: gives a quick introduction to ngEO</para></listitem>
-						<listitem><para><emphasis>Data Services Area</emphasis>: is the main menu to deal with catalog
-							searches and data access services.
-							At start up, the Data Services Area entry is activated. An active menu entry is colored in blue.
-							</para></listitem>
-						<listitem><para><emphasis>My account</emphasis>: is the menu for monitoring download managers,
-							data access requests and user preferences.</para></listitem>
-						<listitem><para><emphasis>User Guide</emphasis>: is a link to the online user guide launched from the application.</para></listitem>
-					</itemizedlist>
-				</para></listitem>
-				<listitem><para>a central area which is dedicated to the map displaying. At start up, the map is the 2D map. </para></listitem>
-				<listitem><para>a footer which displays, in the left side, the currently selected dataset, in the middle, the navigation buttons of the results table and in the right side, the status of the search.</para>
-				<para>In the beginning, no dataset is selected, but after a search the status bar can look like this : <graphic fileref="screenshots/statusBarAfterSearch.jpg" /></para></listitem>
-			</itemizedlist>
-		</para>
-	</chapter>
-	
+		
 	<chapter id="gettingstarted">
 		<title>Getting Started</title>
 		<sect1 id="howtosearch">
 			<title>How to make a Catalog Search?</title>
 			<itemizedlist>
-				<listitem><para>Launch the application: the main home page is displayed.
+				<listitem><para>Launch the application and click on "Data Services Area" link :
 					<graphic fileref="screenshots/homePage.jpg"/>
 				</para></listitem>
 				<listitem><para>Click on the Datasets icon on the tool bar <inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.jpg"/>, the Dataset Selection widget is then opened.
 					<graphic fileref="screenshots/datasetSelectionWidget.jpg"/>
 				</para></listitem>
 				<listitem><para>Click on one of the datasets.</para></listitem>
-				<listitem><para>Click on the search icon on the tool bar
-					<inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg"/>,
-					the search widget is opened.
-					<graphic fileref="screenshots/searchWidget.jpg"/>
-				</para></listitem>
-				<listitem><para>Fill in the search criteria and then click on the Submit Search button
-					<inlinegraphic fileref="screenshots/searchButton.jpg"/>, the search results table is displayed with the results.
-					<graphic fileref="screenshots/resultsTable.jpg"/>
+				<listitem><para>Click on the Search button below the datasets.</para></listitem>
+				<listitem><para>The results are displayed on the map, and the status bar is updated.
+					<graphic fileref="screenshots/statusBar.jpg"/>
 				</para></listitem>
 			</itemizedlist>
 		</sect1>
@@ -147,9 +114,9 @@
 			<title>How to Download Products?</title>
 			<itemizedlist>
 				<listitem><para>Make a catalog search See <xref linkend="howtosearch"/>.</para></listitem>
-				<listitem><para>Once the products are retrieved, check the product id column in the results table:
+				<listitem><para>Once the products are retrieved, click on Table button. Check the product id column in the results table:
 				if the product is underlined, this means that the product can be downloaded unless it not downloadable.
-				<inlinegraphic fileref="screenshots/downloadableProduct.jpg" />
+				<graphic fileref="screenshots/downloadableProduct.jpg" />
 				</para>
 				<para>For a directly downloadable product, click on the product id, the direct download widget is opened.</para>
 				<graphic fileref="screenshots/directDownloadWidget.jpg" />
@@ -159,55 +126,51 @@
 						<listitem><para>or the local download manager.</para></listitem>
 					</itemizedlist>
 				</para></listitem>
-				<listitem><para>If the Browser Download menu is selected, the browser starts the product download.</para></listitem>
-				<listitem><para>If the Download manager Download menu is selected and the download url is validated, a button Download appears.
-					<graphic fileref="screenshots/directDownloadByDM.jpg"/>
-				</para></listitem>
-				<listitem><para>Click on the Download button to start the download.</para></listitem>
+				<listitem><para>Click on "Via Browser" button to start the download.</para></listitem>
 			</itemizedlist>
+		</sect1>
+		<sect1 id="simpleDARHowTo">
+			<title>How to submit a Data Access request?</title>
+			<itemizedlist>
+				<listitem><para>Make a catalogue search See <xref linkend="howtosearch"/>.</para></listitem>
+				<listitem><para>Once the products are retrieved, check the products to include in a Data Access Request.
+				If the Retrieve Product button <inlinegraphic fileref="screenshots/retrieveProductButton.jpg" alt='RETRIEVE PRODUCT BUTTON'/> is still disabled this means that the products selected does not have a url.
+				</para></listitem>
+				<listitem><para>Click on Retrieve Product button, the data access widget is opened displaying the list of available download managers.
+					<graphic fileref="screenshots/darWidget.jpg"/> 
+				</para></listitem>
+				<listitem><para>Click on Validate button. The request is validated and the server response is displayed underneath the button.
+				If the request is successfully validated, the estimated size of the products are displayed and a notification message confirms that the
+				request has been acknowledged. The Validation button is renamed into 'Confirm Your Request'
+				If the validation has failed an error message is displayed with the list of available download managers.
+					<graphic fileref="screenshots/validatedDARWidget.jpg"/> 
+				</para></listitem>
+				<listitem><para>Click on Confirm button. The request is confirmed and the server response is displayed underneath the button.
+				If the request has been successfully confirmed, the request is being processed, unless an error message is displayed.
+				</para></listitem>
+			</itemizedlist>
+			<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
 		</sect1>
 		<sect1 id="STOHowTo">
 			<title>How to submit a Standing Order?</title>
 			<itemizedlist>
-				<listitem><para>Launch the application: the main home page is displayed.</para></listitem>
-				<listitem><para>Click on the Datasets icon on the tool bar.
+				<listitem><para>Launch the application and click on "Data Services Area" link.</para></listitem>
+				<listitem><para>Click on the Datasets icon on the left tool bar.
 					<inlinegraphic fileref="screenshots/toolBarIcons/datasetsIcon.jpg"/>, the Dataset Selection widget is opened.
 				</para></listitem>
 				<listitem><para>Click on one of the datasets in the dataset selection widget:
 					<graphic fileref="screenshots/datasetSelectionWidget.jpg"/>
 					The dataset is selected.
 					</para></listitem>
-				<listitem><para>Click on the search icon on the tool bar.
-					<inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg"/>, the search widget is opened.
+				<listitem><para>Click on the Subscribe button on the left tool bar.
+					<inlinegraphic fileref="screenshots/toolBarIcons/subscribeIcon.jpg"/>, the Subscribe widget is opened.
+					<graphic fileref="screenshots/subscribeWidget.jpg"/>
 					</para></listitem>
-				<listitem><para>Fill in the search criteria and then click on the Standing Order button
-					<inlinegraphic fileref="screenshots/STOButton.jpg"/>, the standing order widget is spawned-up.
-					<graphic fileref="screenshots/STOWidget.jpg" alt='STO WIDGET IMAGE'/>
+				<listitem><para>Fill in the Subscribe criteria and then click on the Order button, the Data Access Request widget is spawned-up.
+					<graphic fileref="screenshots/darWidget.jpg"/>
 				</para></listitem>
-			</itemizedlist>
-			<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
-		</sect1>
-		<sect1 id="simpleDARHowTo">
-			<title>How to submit a Simple Data Access request?</title>
-			<itemizedlist>
-				<listitem><para>Make a catalogue search See <xref linkend="howtosearch"/>.</para></listitem>
-				<listitem><para>Once the products are retrieved, check the products to include in a Simple Data Access Request.
-				If the Retrieve Product button <inlinegraphic fileref="screenshots/retrieveProductButton.jpg" alt='RETRIEVE PRODUCT BUTTON'/> is still disabled this means that the products selected does not have a url.
-				</para></listitem>
-				<listitem><para>Click on Retrieve Product button, the data access widget is opened displaying the list of available download managers.
-					<graphic fileref="screenshots/simpleDARWidget.jpg" alt='SIMPLE DAR WIDGET'/> 
-				</para></listitem>
-				<listitem><para>Click on Validate Your Request button. The request is validated and the server response is displayed underneath the button.
-				If the request is successfully validated, the estimated size of the products are displayed and a notification message confirms that the
-				request has been acknowledged. The Validation button is renamed into 'Confirm Your Request'
-				If the validation has failed an error message is displayed with the list of available download managers.
-					<graphic fileref="screenshots/simpleDARValidatedWidget.jpg" alt='SIMPLE DAR Validated WIDGET'/> 
-				</para></listitem>
-				<listitem><para>Click on Confirm Your Request button. The request is confirmed and the server response is displayed underneath the button.
-				If the request has been successfully confirmed, the request is being processed, unless an error message is displayed.
-					<graphic fileref="screenshots/simpleDARConfirmedWidget.jpg" alt='SIMPLE DAR Confirmed WIDGET'/>
-				</para></listitem>
-				<listitem><para>Click on the close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg" alt='WIDGET CLOSE ICON'/>to close the widget.</para></listitem>
+				<listitem><para>Click on Validate and then Submit to register the standing order.</para></listitem>
+				
 			</itemizedlist>
 			<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
 		</sect1>
@@ -396,22 +359,14 @@
 			<sect2><title>Search Criteria</title>
 				<para>
 					Once a dataset has been selected, to set the search criteria,
-					the user has to click on the button <inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg" /> on the
-					toolbar. The search criteria widget is then displayed. <graphic fileref="screenshots/dateCriteria.jpg" />
-					It is composed of several tabs, each tab displays one search criteria type. Each button on the footer has his own role.</para>
-				<para>
-					The Search URL button <inlinegraphic fileref="screenshots/searchURLButton.jpg" />,
-					when clicked, displays the openSearch url which will be
-					submitted.</para>
-					<graphic fileref="screenshots/openSearchUrlPopup.jpg" />
-				<para>The Standing
-				Order button <inlinegraphic fileref="screenshots/STOButton.jpg" />, when
-				clicked, displays the Standing Order Widget. See <xref linkend="STODar"/>. The
-				Submit Search button submits the search request to the server to
+					the user has to click on the button <inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg" /> on the left	toolbar.
+					The search criteria widget is then displayed. <graphic fileref="screenshots/dateCriteria.jpg" />
+					It is composed of several accordion, each accordion displays a search criteria type. Each button on the footer has his own role.</para>
+		
+				<para>The Search button submits the search request to the server to
 				retrieve the results. See <xref linkend="resultsTable"/>.</para>
-				<para>The Share button <inlinegraphic fileref="screenshots/shareButton.jpg" />, when
-				clicked, displays a popup with the search shared url.
-				Copy the url and paste it in a new browser window, the search widget is displayed with all the search parameters set.
+				<para>The Share button when	clicked, displays a popup. <inlinegraphic fileref="screenshots/sharePopup.jpg" />
+				Clik on url, a new browser window is opened, the search widget is displayed with all the search parameters set.
 				</para>
 				<para>
 					<inlinegraphic fileref="screenshots/tip.jpg" /><emphasis>The openSearch url to
@@ -455,19 +410,19 @@
 							search. To visualize the area widget, click on Area tab inside
 							the search criteria widget. 
 						</para>	
-						<graphic filref="screenshots/areaWidget.jpg" />
+						<graphic fileref="screenshots/areaWidget.jpg" />
 
 						<para>The area is created using either a rectangular zone, a polygon a Gazetteer or can be imported from a file.</para>					
 						
 						<para><emphasis>A rectangle search area or a BBOX </emphasis>is defined by :
 							<itemizedlist>
-								<listitem><para>- West: the maximum longitude</para></listitem>
-								<listitem><para>- East: the minimum longitude</para></listitem>
-								<listitem><para>- North: the maximum latitude</para></listitem>
-								<listitem><para>- South: the minimum latitude</para></listitem>
+								<listitem><para>West: the maximum longitude</para></listitem>
+								<listitem><para>East: the minimum longitude</para></listitem>
+								<listitem><para>North: the maximum latitude</para></listitem>
+								<listitem><para>South: the minimum latitude</para></listitem>
 							</itemizedlist>
 							By default, the coordinates are synchronized with the map
-							extent. To disable this behavior uncheck the <inlinegraphic filref="screenshots/useExtentCheckBox.jpg" /> check box. 
+							extent. To disable this behavior uncheck the <inlinegraphic fileref="screenshots/useExtentCheckBox.jpg" /> check box. 
 							Thus the coordinates can be entered manually is each text field.
 						</para>
 						
@@ -501,9 +456,9 @@
 							The gazetteer view is displayed.</para>
 							
 							<graphic fileref="screenshots/gazetteerWidget.jpg" /> 
-							<para>Enter the location to search for in the saerch the text field and the press the Enter keyboard.</para>
+							<para>Enter the location to search in the text field and the press the Enter keyboard.</para>
 							<para>The location items retrieved from the server are displayed in a list.</para>
-							<graphic fileref="screenshots/gazetteerFrance.jpg" />
+							<graphic fileref="screenshots/gazetteerResult.jpg" />
 							<para>Click on the choosen location to define the search area.</para>
 						</para>
 						
@@ -512,7 +467,6 @@
 						</para>
 						<graphic fileref="screenshots/importWidget.jpg" /> 
 						<para>Drag a KML, GML or GeoJSON file from the file system and then drop it in the Drop zone of the import view.</para>
-						<graphic fileref="screenshots/importedFranceGeoJson.jpg" />
 						<para>The imported zone in the drawn on the map and a notification message appears underneath the Drop zone.</para>
 						<para>
 							<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>Only KML, GML and GeoJSON files can be imported.</emphasis>
@@ -568,25 +522,24 @@
 			</sect2>
 			</sect1>
 			
-			<sect1><title>Retrieve Products</title>
-					<sect2><title id="resultsTable">Search Results</title>
+			<sect1><title>Search Results</title>
+					<sect2><title id="resultsTable">Table Results</title>
 						<para>
-							Once the search criteria have been filled in and the Submit
-							Search button <inlinegraphic fileref="screenshots/searchButton.jpg" /> clicked,
-							the search results table is displayed with the products metadata
-							in the bottom of the home page. 
+							Once the search criteria have been filled in and the Search button clicked,
+							results are availabe in a table with the products metadata	in the bottom of the home page.
+							Click on the table button <inlinegraphic fileref="screenshots/tableButton.jpg" />  to display the results table.
 						</para>
 							<graphic fileref="screenshots/resultsTable.jpg" />
 						<para>
 							<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>If no dataset has
-								been selected and the <inlinegraphic fileref="screenshots/toolBarIcons/tableViewIcon.jpg" /> is clicked,
+								been selected and the <inlinegraphic fileref="screenshots/tableButton.jpg" /> is clicked,
 								the results table is empty.
 							</emphasis>
 						</para>
 						<para>
 							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>The results table can
 								be hidden by clicking on the <inlinegraphic
-								fileref="screenshots/toolBarIcons/tableViewIcon.jpg" /> button on
+								fileref="screenshots/tableButton.jpg" /> button on
 								the toolbar.
 							</emphasis>
 						</para>
@@ -625,28 +578,13 @@
 							<listitem><para>or the local download manager</para></listitem>
 						</itemizedlist>
 						</para>
-						<para>If the "Browser Download" menu is selected, the browser
-							starts the product download.</para>
-						<para>
-							If the "Download manager Download" entry is selected and the
-							download url is validated, a button Download is displayed. <graphic
-								fileref="screenshots/directDownloadByDM.jpg"
-								alt='DIRECT DOWNLOAD WIDGET BY dm' /><para> When the button is
-							clicked, the download starts.</para>
-						</para>
 					</sect2>
 					
-					<sect2><title id="simpleDar">Simple Data Access Request</title>
+					<sect2><title id="simpleDar">Data Access Request</title>
 
-						<para>A Simple data Access Request is a request to the server
+						<para>A Data Access Request is a request to the server
 							issued from the results table with product items having a url field filled in. </para>
 						
-						<para><emphasis>Even if the product url does not start with http or https, the product can be used in a simple data access request.
-							However it is not directly downloadable. 
-							<para>S2 products are a good example.</para>
-							</emphasis>
-						</para>
-
 						<para>This request aims to issue a download request for all the items
 							included when they will be downloadable. A download manager has
 							to be assigned to the request and will insure the download.</para>
@@ -665,7 +603,7 @@
 						<para>
 							Click on Retrieve Product button to display the data access
 							widget with the list of available download managers. <graphic
-								fileref="screenshots/simpleDARWidget.jpg" alt='SIMPLE DAR WIDGET' />
+								fileref="screenshots/darWidget.jpg" />
 						</para>
 
 						<para>The "Validate" button makes the validation
@@ -675,8 +613,7 @@
 							notification message confirms that the request has been
 							acknowleged. The Validation button is renamed into "Confirm":</para>
 							<graphic
-								fileref="screenshots/simpleDARValidatedWidget.jpg"
-								alt='SIMPLE DAR Confirmed WIDGET' />
+								fileref="screenshots/validatedDARWidget.jpg" />
 						<para>
 							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>If the validation has
 								failed an error message is dispalyed.</emphasis>
@@ -689,12 +626,8 @@
 							confirmed, the request is being processed, unless an error
 							message is dispalyed. 
 						</para>
-						<graphic
-								fileref="screenshots/simpleDARConfirmedWidget.jpg"
-								alt='SIMPLE DAR Confirmed WIDGET' />
 						<para>
-							The close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg"
-								alt='WIDGET CLOSE ICON' /> aims to close the widget.
+							The close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg" /> aims to close the widget.
 						</para>
 					</sect2>
 
@@ -703,19 +636,13 @@
 						in order to retrieve and download products. Thus, a download manager has
 							to be assigned to the request and will insure the download.</para>
 											
-						<para>This functionnality is available from all the tabs of the search criteria Widget.</para>
-						<graphic fileref="screenshots/dateCriteria.jpg" />
-						<para>	First of all, click on the Standing Order button <inlinegraphic
-								fileref="screenshots/STOButton.jpg" alt='STO DAR BUTTON' /> to display the data access
-							widget with the scheduling options.
-							<graphic
-								fileref="screenshots/STOWidget.jpg" alt='STO DAR WIDGET' />
-						</para>	
+						<para>This functionnality is available from the Subscribe button <inlinegraphic fileref="screenshots/toolBarIcons/subscribeButton.jpg" /> in the left toolbar.</para>
+						<graphic fileref="screenshots/subscribeWidget.jpg" />
 						<para>The "Data-driven Order" radio button is selected by default to submit a <emphasis>data-driven</emphasis> Standing Order</para>
 						
-						<para>Fill in the fields and click on the "Create Request" button. Then the list of available download managers is displayed.
+						<para>Fill in the fields (same as a search) and click on the Order button. Then the list of available download managers is displayed.
 						<graphic
-								fileref="screenshots/STODM.jpg" alt='STO DAR DM WIDGET' />
+								fileref="screenshots/darWidget.jpg" />
 						</para>
 						
 						<para>The "Validate" button makes the validation
@@ -723,7 +650,7 @@
 							underneath the button. If the request is successfully validated, a
 							notification message confirms that the request has been
 							acknowleged. The validation button is renamed into "Confirm" <graphic
-								fileref="screenshots/validatedSTOWidget.jpg" alt='STO DAR WIDGET' /></para>
+								fileref="screenshots/validatedDARWidget.jpg" /></para>
 						<para>
 							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>If the validation has
 								failed an error message is dispalyed.</emphasis>
@@ -734,9 +661,7 @@
 							request to the server. The server response is displayed
 							underneath the button. If the request has been successfully
 							confirmed, the request is being processed, unless an error
-							message is dispalyed. <graphic
-								fileref="screenshots/confirmedSTOWidget.jpg"
-								alt='STO DAR Confirmed WIDGET' />
+							message is dispalyed. 
 						</para>
 						<para>
 							The close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg"
@@ -745,15 +670,49 @@
 						
 						<para> To submit a <emphasis>time-driven </emphasis> standing order click on the Time Driven radio button
 						<inlinegraphic fileref="screenshots/timeSTORadio.jpg" /> and fill in the additionnal time-driven scheduling options and follow the same steps than the <emphasis>data-Driven</emphasis> Standing Order.
-						<graphic
-								fileref="screenshots/timeSTOWidget.jpg"
-								alt='time STO DAR WIDGET' /></para>
+						<graphic fileref="screenshots/timeSTOWidget.jpg" /></para>
 								
 						<para><emphasis>Time-Driven and Data-Driven requests can be shared by clicking on the Share button of the widget.
 						a popup will appear with the url to share. Copy the url and paste it in a new window. The Standing order widget is opened with the 
 						same criteria.</emphasis>
 						</para>
 					</sect2>
+					<sect2><title>Hosted Processing</title>
+						<para>A processing can be added when a product is downloaded through a Data Access Request.</para>
+						<para>The different processing available are accessible when a Data Access Request is created by opening the Processing accordion.</para>
+						<graphic fileref="screenshots/darProcessingWidget.jpg" />
+						<para>Click on a listed processing to select it for the Data Acccess Request.</para>
+						<graphic fileref="screenshots/processingSelection.jpg" />
+						<para>Then, click on Configure to set the processing parameters. Parameters are specific for each processing.</para>
+					</sect2>
+			</sect1>
+			
+			<sect1 id="shopcart"><title>Shopcart</title>
+					<para>The user has a current shopcart available in the Data Access Services area. He can manage its shopcarts in My Account area. See <xref linkend="shopcartMgmt"/>
+					</para>
+
+				<sect2>
+					<title>Content</title>
+					<para>The current shopcart content is displayed directly in the map.</para>
+					<para>Click on Shopcart button <inlinegraphic fileref="screenshots/shopcartButton.jpg" /> to display the name of the current shopcart being used.</para>
+					<para>Click on Table button <inlinegraphic fileref="screenshots/shopcartTableButton.jpg" /> to display the items in a table.</para>
+					<graphic fileref="screenshots/shopcartTable.jpg" />
+				</sect2>
+				<sect2>
+					<title>Manage shopcart items</title>
+						Items are added into the current shopcart via :
+						<itemizedlist>
+							<listitem><para>Map : click on a product in the map and then click on Add To Shopcart button<graphic fileref="screenshots/mapPopupAddShopcart.jpg" /></para></listitem>
+							<listitem><para>Table : select products and then click on Add to Shopcart button <inlinegraphic fileref="screenshots/addShopcartButton.jpg" /></para></listitem>
+						</itemizedlist>
+						
+						In the Shopcart table, the user can :
+						<itemizedlist>
+							<listitem><para>Update the download options of the selected shopcart items.</para></listitem>
+							<listitem><para>Delete the selected items from the shopcart</para></listitem>
+							<listitem><para>Export the selected items in KML, Atom or HTML format</para></listitem>
+						</itemizedlist>
+				</sect2>
 			</sect1>
 			
 			<sect1><title id="map">Map</title>
@@ -1012,20 +971,33 @@
 			</para>
 					
 		</sect1>
+		
+		<sect1 id="shopcartMgmt"><title>Shopcarts Management</title>
+			<para>
+				Click on the Shopcarts tab in My account, the view all the available shopcarts from the user.				
+			</para>
+			<graphic fileref="screenshots/shopcartsTab.jpg" />
+			<para>Click on shopcart to change the current shopcart accessible in the Data Access Services area.</para>
+			<para>The following actions are avaible in the buttons below : </para>
+			<itemizedlist>
+				<listitem><para>Click on New to create a new empty shopcart.</para></listitem>
+				<listitem><para>Click on Share to share your shopcart.</para></listitem>
+				<listitem><para>Click on Export to export the shopcart content in KML, Atom or HTML format.</para></listitem>
+				<listitem><para>Click on Rename to rename the current shopcart.</para></listitem>
+				<listitem><para>Click on Duplicate to duplicate all the current shopcart content in a new shopcart.</para></listitem>
+				<listitem><para>Click on Delete to remove the curernt shopcart.</para></listitem>
+			</itemizedlist>
+		</sect1>
+		
 		<sect1 id="inquiries"><title>Inquiries</title>
 			<para>
 				Click on the Inquiries tab in My account, the view displays the inquiry form.
 				
 			</para>
-			<graphic
-					fileref="screenshots/inquiriesTab.jpg" alt='Prefs Tab' />
+			<graphic fileref="screenshots/inquiriesTab.jpg" />
 			<para>To choose the inquiry type, click on the combobox and choose one of the possible inquiry types:
 			Suggestion, Question, Complaint, Request for bulk order, Request on-demand media delivery, Other.</para>
-			<graphic
-					fileref="screenshots/inquiriesTypes.jpg" alt='Prefs Tab' />
 			<para> The inquiry text message has to be typed in the text area underneath</para>
-			<graphic
-					fileref="screenshots/inquiriesText.jpg" alt='Prefs Tab' />
 			Finally click on the Submit button <inlinegraphic fileref="screenshots/inquiriesSubmitButton.jpg" alt='Prefs Tab' />to submit the inquiry request.
 		</sect1>
 
