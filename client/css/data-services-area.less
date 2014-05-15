@@ -119,33 +119,36 @@ menu[type=toolbar] {
 /** 
  * Styling for a message displaying the current dataset selected
  */
+
 .status-message {
+	float: left;
 	line-height: @statusBar-height; // To vertical align text
 }
 
+.status-block {
+	float: right;
+	line-height: @statusBar-height; // To vertical align text
+}
+
+#resultsMessage {
+	display: inline-block;
+	min-width: 17em;
+    text-align: right;
+}
 
 /**
  * The result status bar
  */
-.status-block {
-	text-align: right;
+
+#resultsBar {
+	text-align: center
 }
+
 #tableCG {
 	display: inline-block;
 	margin: 0 0 0 0.5em;
 }
 
-/**
- * Center paging buttons in the status bar
- */
 #paging {
-	text-align: center;
-}
-
-/** 
- * Styling for a message displaying the current dataset selected
- */
-#resultsMessage {
-	text-align: right;
-	line-height: @statusBar-height; // To vertical align text
+	display: inline-block;
 }
