@@ -120,7 +120,7 @@ var SearchResultsView = Backbone.View.extend({
 	render : function() {
 	
 		this.$el
-			.addClass('ui-grid-b')
+			//.addClass('ui-grid-c')
 			.html(searchResultsViewContent);
 		this.$el.trigger('create');
 		
