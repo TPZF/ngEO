@@ -78,6 +78,9 @@ var BrowsesLayer = function(params,mapEngine) {
 				} else if ( type == "wmts" ) {
 					params.layer = eoBrowse.eop_layer || "TEST_SAR";
 					params.matrixSet = "WGS84";
+				} else {
+					// No type is defined, return
+					return;
 				}
 				
 				var config = {
