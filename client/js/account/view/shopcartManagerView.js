@@ -89,8 +89,10 @@ var ShopcartManagerView = Backbone.View.extend({
 		this.$el.html(mainContent);
 		
 		// Select the current one
-		var currentShopcartSelect = "#" + this.model.getCurrent().id + "_input"; 
-		this.$el.find(currentShopcartSelect).attr('checked',true);
+		if ( this.model.getCurrent() ) {
+			var currentShopcartSelect = "#" + this.model.getCurrent().id + "_input"; 
+			this.$el.find(currentShopcartSelect).attr('checked',true);
+		}
 		
 		this.$el.trigger("create");
 		
