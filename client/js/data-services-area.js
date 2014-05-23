@@ -50,8 +50,10 @@ return {
 		panelManager.restore();
 			
 		// Show table by default
-		$('#tableCB').click();
-		
+		if ( !$('#tableCB').attr('checked') ) {
+			$('#tableCB').click();
+			$('#tableCB').attr('checked',true).checkboxradio('refresh');
+		}
 	},
 	
 	/**
