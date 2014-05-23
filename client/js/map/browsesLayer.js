@@ -54,7 +54,7 @@ var BrowsesLayer = function(params,mapEngine) {
 			var eo = feature.properties.EarthObservation;
 			if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return;
 			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
-			if (eoBrowse) {
+			if (eoBrowse && eoBrowse.eop_layer) {
 							
 				// Fix NGEO-1031 : remove milliseconds from date
 				var begin = Date.fromISOString( eo.gml_beginPosition );
@@ -78,6 +78,9 @@ var BrowsesLayer = function(params,mapEngine) {
 				} else if ( type == "wmts" ) {
 					params.layer = eoBrowse.eop_layer || "TEST_SAR";
 					params.matrixSet = "WGS84";
+				} else {
+					// No type is defined, return
+					return;
 				}
 				
 				var config = {
