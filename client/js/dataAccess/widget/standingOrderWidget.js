@@ -54,7 +54,7 @@ define(
 				
 				element.empty();
 				
-				DownloadManagers.fetch().done(function() {
+				DownloadManagers.fetch().always(function() {
 					
 					var downloadManagersListView = new DownloadManagersListView({
 						model : DownloadManagers,
