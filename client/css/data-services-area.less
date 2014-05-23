@@ -90,37 +90,42 @@ menu[type=toolbar] {
 	text-shadow: 0 0 0;
 	background: @widget-background-color;
 	.user-select(none);
-}
-
-/** 
- * Styling for a message displaying the current dataset selected
- */
-#datasetMessage {
-	line-height: @statusBar-height; // To vertical align text
-}
-
-/**
- * The result status bar
- */
-#resultsBlock {
-	text-align: right;
-}
-#resultCG {
-	display: inline-block;
-	margin: 0 0 0 0.5em;
-}
-
-/**
- * Center paging buttons in the status bar
- */
-#paging {
 	text-align: center;
 }
 
 /** 
  * Styling for a message displaying the current dataset selected
  */
-#resultsMessage {
-	text-align: right;
+
+.status-message {
+	float: left;
 	line-height: @statusBar-height; // To vertical align text
+}
+
+.status-block {
+	float: right;
+	line-height: @statusBar-height; // To vertical align text
+}
+
+#resultsMessage {
+	display: inline-block;
+	min-width: 17em;
+    text-align: right;
+}
+
+/**
+ * The result status bar
+ */
+
+#resultsBar {
+	text-align: center
+}
+
+#tableCG {
+	display: inline-block;
+	margin: 0 0 0 0.5em;
+}
+
+#paging {
+	display: inline-block;
 }
