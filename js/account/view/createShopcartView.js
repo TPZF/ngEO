@@ -8,18 +8,22 @@ var CreateShopcartView = Backbone.View.extend({
 	events :{
 				
 		//called when the submit button is clicked
-		'click #submit' : function(event){
+		'click #submitShopcart' : function(event){
 			event.preventDefault();
 			
 			var name = this.$el.find('#shopcartNameField').val();
 			if ( name && name != "" ) {
 				var self = this;
 				this.submit( name, {
-						success: function() {
+						success: function(model) {
+							if ( self.options.success ) {
+								self.options.success(model);
+							}
 							self.$el.ngeowidget('hide');
 						},
 						error: function() {
-							self.$el.find('#serverMessage').append('<p>' + self.errorMessage() + '</p>');
+							self.$el.find('#serverMessage').html('<p>' + self.errorMessage() + '</p>');
+							//$('#submitShopcart').button('disable');
 						}
 					});
 			} else {
@@ -39,7 +43,7 @@ var CreateShopcartView = Backbone.View.extend({
 	 * Return an error message
 	 */ 
 	errorMessage: function() {
-		return "Error : A new shopcart cannot be created.";
+		return "Error : cannot create the shopcart on the server.";
 	},
 			
 	/** 

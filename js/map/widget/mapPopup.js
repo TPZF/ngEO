@@ -3,9 +3,9 @@
   */
 
 
-define( [ "jquery", "logger", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/dataAccessWidget", 
-          "searchResults/model/searchResults", "map/utils", "shopcart/model/shopcartCollection" ], 
-	function($, Logger, Configuration, Map, SimpleDataAccessRequest, DataAccessWidget, SearchResults, Utils, ShopcartCollection) {
+define( [ "jquery", "globalEvents", "logger", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/dataAccessWidget", 
+          "searchResults/model/searchResults", "map/utils" ], 
+	function($, GlobalEvents, Logger, Configuration, Map, SimpleDataAccessRequest, DataAccessWidget, SearchResults, Utils) {
 
 
 var MapPopup = function(container) {
@@ -82,7 +82,7 @@ var MapPopup = function(container) {
 	var btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
 		.appendTo( element.find('#mpButtons') )
 		.click( function() {
-			ShopcartCollection.getCurrent().addItems( products );
+			GlobalEvents.trigger('addToShopcart', products );
 		});
 	
 	parentElement.appendTo(container);
