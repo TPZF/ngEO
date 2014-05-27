@@ -1,8 +1,8 @@
 
-define(["jquery", "ui/menubar", "map/map", "searchResults/map",  
+define(["jquery", "globalEvents", "ui/menubar", "map/map", "searchResults/map",  
         "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
- 		 "shopcart/view/shopcartItemView"], 
-	function($, MenuBar, Map, SearchResultsMap, ShopcartCollection, Shopcart, ShopcartTableView) {
+ 		 "shopcart/view/shopcartItemView", "account/view/createShopcartView"], 
+	function($, GlobalEvents, MenuBar, Map, SearchResultsMap, ShopcartCollection, Shopcart, ShopcartTableView, CreateShopcartView) {
 
 	
 return {
@@ -102,6 +102,27 @@ return {
 			current.featureCollection.on('add:features', updateNumberOfItems );
 			current.featureCollection.on('remove:features', updateNumberOfItems );
 		});
+		
+		// Subscribe add to shopcart
+		GlobalEvents.on('addToShopcart', function(features) {
+		
+			if (!ShopcartCollection.getCurrent()) {
+
+				var createShopcartView = new CreateShopcartView({
+					model : ShopcartCollection,
+					title : "Create shopcart",
+					success : function(model) {
+						ShopcartCollection.setCurrent( model );
+						ShopcartCollection.getCurrent().addItems( features );
+					}
+				});
+				createShopcartView.render();
+				
+			} else {
+				ShopcartCollection.getCurrent().addItems( features );
+			}
+
+		})
 		
 	},
 };

@@ -1,8 +1,8 @@
 define(
-		[ 'jquery', 'logger', 'ui/tableView', 'configuration', 'searchResults/model/searchResults', 'shopcart/model/shopcartCollection',
+		[ 'jquery', 'logger', 'globalEvents', 'ui/tableView', 'configuration', 'searchResults/model/searchResults',
 		  'dataAccess/model/simpleDataAccessRequest','dataAccess/widget/dataAccessWidget',
 		  'dataAccess/widget/directDownloadWidget', 'searchResults/widget/downloadOptionsWidget', 'searchResults/widget/exportWidget' ],
-	function($, Logger, TableView, Configuration, SearchResults, ShopcartCollection, SimpleDataAccessRequest, DataAccessWidget,
+	function($, Logger, GlobalEvents, TableView, Configuration, SearchResults, SimpleDataAccessRequest, DataAccessWidget,
 			DirectDownloadWidget, DownloadOptionsWidget, ExportWidget ) {
 
 			
@@ -110,7 +110,7 @@ var SearchResultsTableView = TableView.extend({
 		this.addToShopcart.button();
 		this.addToShopcart.button('disable');		
 		this.addToShopcart.click(function() {
-			ShopcartCollection.getCurrent().addItems( self.model.getSelectedNonPlannedFeatures() );
+			GlobalEvents.trigger('addToShopcart', self.model.getSelectedNonPlannedFeatures() );
 		});
 		
 		//add button to the widget footer in order to download products
