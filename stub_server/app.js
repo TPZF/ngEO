@@ -128,7 +128,7 @@ proxy.setup(app,[{
 }]);
 	
 var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
-app.use('/wms2eos', wms2eosProxy);
+//app.use('/wms2eos', wms2eosProxy);
 
 
 http.createServer(app).listen(app.get('port'), function(){
