@@ -3,11 +3,19 @@
  * Style for gantt chart
  */
  
+ @gantt-height: 265px;
+ 
 // Gantt fill the parent space
 .gantt-view {
 	width: 100%;
-	height: 265px; // Fix height for now...
+	height:  @gantt-height; // Fix height for now...
 	//overflow: scroll;
+}
+
+
+.gantt-nodata {
+    line-height: @gantt-height;
+    text-align: center;
 }
 
 @gantt-left-panel-width: 125px;

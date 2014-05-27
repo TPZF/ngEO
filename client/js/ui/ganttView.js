@@ -55,16 +55,19 @@ var GanttView = Backbone.View.extend({
 	 */
 	clear: function() {
 		this.$el.find('.gantt-data-panel').detach();
-		this.$el.append('<div class="gantt-data-panel">');
+		this.$el.append('<div class="gantt-data-panel"><div class="gantt-nodata">No data to display</div></div>');
 	},
 
 	/**
 	 * Add data to gantt chart
 	 */
 	addData: function(features) {
-	
-		if ( features.length == 0 )
+			
+		if ( features.length == 0 ) {
 			return;
+		}
+		
+		this.$el.find('.gantt-data-panel').empty();
 	
 		var minDate = features[0].properties.EarthObservation.gml_beginPosition;
 		var maxDate = features[0].properties.EarthObservation.gml_endPosition;
@@ -83,7 +86,8 @@ var GanttView = Backbone.View.extend({
 		this.buildTable( Date.fromISOString(minDate), Date.fromISOString(maxDate), features.length  );
 		
 		for ( var i = 0; i < features.length; i++ ) {
-			this.addBar( Date.fromISOString(features[i].properties.EarthObservation.gml_beginPosition), Date.fromISOString(features[i].properties.EarthObservation.gml_endPosition) );
+			this.addBar( Date.fromISOString(features[i].properties.EarthObservation.gml_beginPosition), 
+					Date.fromISOString(features[i].properties.EarthObservation.gml_endPosition), features[i].id );
 		}
 
 		this.$el.find('.gantt-body-scroll').scrollLeft( this.$el.find('table').width() );
@@ -218,9 +222,12 @@ var GanttView = Backbone.View.extend({
 	/**
 	 * Add a bar to the gantt chart
 	 */
-	addBar: function( start, end ) {
+	addBar: function( start, end, id ) {
 	
-		var $bar = $('<div class="gantt-bar">');
+		var tooltip = "Id : " + id + "&#13;";
+		tooltip += "Start : " + start.toISOString() + "&#13;";
+		tooltip += "End  : " + end.toISOString();
+		var $bar = $('<div title="' + tooltip +'" class="gantt-bar">');
 		//var $table = this.$el.find('table');
 		var hh = 34; //$table.find('thead').outerHeight();
 		
@@ -254,6 +261,13 @@ var GanttView = Backbone.View.extend({
 		else if ( this.scale == 'minute' ) {
 			$headTable.append( this.buildMinuteScale( start, end, 1 ) );
 		}
+		
+		var nbCells = $headTable.find('thead tr:last-child').children().length;
+		
+		if ( nbCells > 1000 ) {
+			this.$el.append('<div class="gantt-data-panel"><div class="gantt-nodata">Cannot display data for the selected time scale : ' + nbCells +' steps needed.</div></div>');
+			return;
+		}
 			
 		// Build rows for table
 		var $bodyTable = $('<table cellspacing="0" cellpadding="0">');
@@ -263,25 +277,22 @@ var GanttView = Backbone.View.extend({
 			rowStr += ' class="gantt-body-60"';
 		}
 		rowStr += '>';
-		var nbCells = $headTable.find('thead tr:last-child').children().length;
 		for ( var j = 0; j < nbCells; j++ ) {
 			rowStr +='<td></td>';
 		}
 		rowStr += '</tr>';
 	
-		var tbodyStr = '<tbody>';
+		var tbodyStr = '<table cellspacing="0" cellpadding="0"><tbody>';
 		for ( var i = 0; i < nbRows; i++ ) {			
 			tbodyStr += rowStr;
 		}
-		tbodyStr += '</tbody>';
-		$bodyTable.html( tbodyStr );
+		tbodyStr += '</tbody></table>';
 		
-		var $bodyTable = $('<div class="gantt-body-scroll">').append($bodyTable);
 		var $headTable = $('<div class="gantt-head-scroll">').append($headTable);
 		
 		this.$el.find('.gantt-data-panel')
 			.append( $headTable )
-			.append( $bodyTable );
+			.append( '<div class="gantt-body-scroll">' + tbodyStr + '</div>' );
 			
 		
 		//var diffWidth = this.$el.find('.gantt-head-scroll table').width() - this.$el.find('.gantt-body-scroll table').width();
@@ -290,6 +301,7 @@ var GanttView = Backbone.View.extend({
 		this.$el.find('.gantt-body-scroll').scroll( function(event) {
 			$head.scrollLeft( $(this).scrollLeft() );
 		});
+	
 	},
 
 	/**
@@ -301,14 +313,14 @@ var GanttView = Backbone.View.extend({
 		this.$el.append('<div class="gantt-left-panel">\
 		<fieldset data-role="controlgroup" data-mini="true">\
 				<legend>Time scale:</legend>\
-					<label>minute<input type="radio" name="radio-time-scale" value="minute" /></label>\
+					<label>Minute<input type="radio" name="radio-time-scale" value="minute" /></label>\
 					<label>10 minute<input type="radio" name="radio-time-scale" value="10-minute" /></label>\
 					<label>Hour<input type="radio" name="radio-time-scale" value="hour" /></label>\
 					<label>Quarter day<input type="radio" name="radio-time-scale" value="quarter-day" checked="checked" /></label>\
 					<label>Day<input type="radio" name="radio-time-scale" value="day" /></label>\
 		</fieldset></div>');
 		
-		this.$el.append('<div class="gantt-data-panel">');
+		this.clear();
 		
 		this.$el.trigger('create');
 		
