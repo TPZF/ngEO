@@ -1,51 +1,345 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Chapter 2. Interface Overview</title>
+<title>Chapter 2. Getting Started</title>
 <link rel="stylesheet" type="text/css" href="../../css/userManual.css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.78.1">
 <link rel="home" href="index.html" title="ngEO Web Client User Manual">
 <link rel="up" href="index.html" title="ngEO Web Client User Manual">
 <link rel="prev" href="ch01.html" title="Chapter 1. Overview">
-<link rel="next" href="ch03.html" title="Chapter 3. Getting Started">
+<link rel="next" href="ch03.html" title="Chapter 3. Data Access Services">
 <base target="content">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter">
 <div class="titlepage"><div><div><h1 class="title">
-<a name="interover"></a>Chapter 2. Interface Overview</h1></div></div></div>
-<p>The user interface home page is the following:</p>
-<div><img src="screenshots/homePage.jpg"></div>
-<p>It is composed of : 
-			</p>
+<a name="gettingstarted"></a>Chapter 2. Getting Started</h1></div></div></div>
+<div class="toc"><dl class="toc">
+<dt><span class="sect1"><a href="ch02.html#howtosearch">2.1. How to make a Catalog Search?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#id515680">2.2. How to Download Products?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#simpleDARHowTo">2.3. How to submit a Data Access request?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#STOHowTo">2.4. How to submit a Standing Order?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#mapModeHowTo">2.5. How to change Map Mode?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#mapNavigationHowTo">2.6. How to navigate on the Map?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#productsOnMapHowTo">2.7. How to use products on the Map?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#layersHowTo">2.8. How to select Layers?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#backgroundsHowTo">2.9. How to change Map Background?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#downloadManagersHowTo">2.10. How to manage Download Managers?</a></span></dt>
+<dt><span class="sect1"><a href="ch02.html#darsHowTo">2.11. How to manage Data Access Requests?</a></span></dt>
+</dl></div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="howtosearch"></a>2.1. How to make a Catalog Search?</h2></div></div></div>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
 <li class="listitem">
-<p>a header containing a menu bar. 
+<p>Launch the application and click on "Data Services Area" link :
 					</p>
-<div><img src="screenshots/menuBar.jpg"></div>
+<div><img src="screenshots/homePage.jpg"></div>
 <p>
-					The entries :
+				</p>
+</li>
+<li class="listitem">
+<p>Click on the Datasets icon on the tool bar <img src="screenshots/toolBarIcons/datasetsIcon.jpg">, the Dataset Selection widget is then opened.
+					</p>
+<div><img src="screenshots/datasetSelectionWidget.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on one of the datasets.</p></li>
+<li class="listitem"><p>Click on the Search button below the datasets.</p></li>
+<li class="listitem">
+<p>The results are displayed on the map, and the status bar is updated.
+					</p>
+<div><img src="screenshots/statusBar.jpg"></div>
+<p>
+				</p>
+</li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id515680"></a>2.2. How to Download Products?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Make a catalog search See <a class="xref" href="ch02.html#howtosearch" title="2.1. How to make a Catalog Search?">Section 2.1, “How to make a Catalog Search?”</a>.</p></li>
+<li class="listitem">
+<p>Once the products are retrieved, click on Table button. Check the product id column in the results table:
+				if the product is underlined, this means that the product can be downloaded unless it not downloadable.
+				</p>
+<div><img src="screenshots/downloadableProduct.jpg"></div>
+<p>
+				</p>
+<p>For a directly downloadable product, click on the product id, the direct download widget is opened.</p>
+<div><img src="screenshots/directDownloadWidget.jpg"></div>
+<p>According to the product url and to the download managers registered, the user can have the choice to either choose a download via:
 					</p>
 <div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
-<li class="listitem"><p><span class="emphasis"><em>About</em></span>: gives a quick introduction to ngEO</p></li>
-<li class="listitem"><p><span class="emphasis"><em>Data Services Area</em></span>: is the main menu to deal with catalog
-							searches and data access services.
-							At start up, the Data Services Area entry is activated. An active menu entry is colored in blue.
-							</p></li>
-<li class="listitem"><p><span class="emphasis"><em>My account</em></span>: is the menu for monitoring download managers,
-							data access requests and user preferences.</p></li>
-<li class="listitem"><p><span class="emphasis"><em>User Guide</em></span>: is a link to the online user guide launched from the application.</p></li>
+<li class="listitem"><p>the browser</p></li>
+<li class="listitem"><p>or the local download manager.</p></li>
 </ul></div>
 <p>
 				</p>
 </li>
-<li class="listitem"><p>a central area which is dedicated to the map displaying. At start up, the map is the 2D map. </p></li>
+<li class="listitem"><p>Click on "Via Browser" button to start the download.</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="simpleDARHowTo"></a>2.3. How to submit a Data Access request?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Make a catalogue search See <a class="xref" href="ch02.html#howtosearch" title="2.1. How to make a Catalog Search?">Section 2.1, “How to make a Catalog Search?”</a>.</p></li>
+<li class="listitem"><p>Once the products are retrieved, check the products to include in a Data Access Request.
+				If the Retrieve Product button <img src="screenshots/retrieveProductButton.jpg"> is still disabled this means that the products selected does not have a url.
+				</p></li>
 <li class="listitem">
-<p>a footer which displays, in the left side, the currently selected dataset, in the middle, the navigation buttons of the results table and in the right side, the status of the search.</p>
-<p>In the beginning, no dataset is selected, but after a search the status bar can look like this : </p>
-<div><img src="screenshots/statusBarAfterSearch.jpg"></div>
+<p>Click on Retrieve Product button, the data access widget is opened displaying the list of available download managers.
+					</p>
+<div><img src="screenshots/darWidget.jpg"></div>
+<p> 
+				</p>
 </li>
+<li class="listitem">
+<p>Click on Validate button. The request is validated and the server response is displayed underneath the button.
+				If the request is successfully validated, the estimated size of the products are displayed and a notification message confirms that the
+				request has been acknowledged. The Validation button is renamed into 'Confirm Your Request'
+				If the validation has failed an error message is displayed with the list of available download managers.
+					</p>
+<div><img src="screenshots/validatedDARWidget.jpg"></div>
+<p> 
+				</p>
+</li>
+<li class="listitem"><p>Click on Confirm button. The request is confirmed and the server response is displayed underneath the button.
+				If the request has been successfully confirmed, the request is being processed, unless an error message is displayed.
+				</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="STOHowTo"></a>2.4. How to submit a Standing Order?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Launch the application and click on "Data Services Area" link.</p></li>
+<li class="listitem"><p>Click on the Datasets icon on the left tool bar.
+					<img src="screenshots/toolBarIcons/datasetsIcon.jpg">, the Dataset Selection widget is opened.
+				</p></li>
+<li class="listitem">
+<p>Click on one of the datasets in the dataset selection widget:
+					</p>
+<div><img src="screenshots/datasetSelectionWidget.jpg"></div>
+<p>
+					The dataset is selected.
+					</p>
+</li>
+<li class="listitem">
+<p>Click on the Subscribe button on the left tool bar.
+					<img src="screenshots/toolBarIcons/subscribeIcon.jpg">, the Subscribe widget is opened.
+					</p>
+<div><img src="screenshots/subscribeWidget.jpg"></div>
+<p>
+					</p>
+</li>
+<li class="listitem">
+<p>Fill in the Subscribe criteria and then click on the Order button, the Data Access Request widget is spawned-up.
+					</p>
+<div><img src="screenshots/darWidget.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on Validate and then Submit to register the standing order.</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="mapModeHowTo"></a>2.5. How to change Map Mode?</h2></div></div></div>
+<p>Click on the 2D/3D <img src="screenshots/toolBarIcons/mapMode.jpg"> button on the toolbar to change the map mode
+				from 2D to 3D and inversely.</p>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="mapNavigationHowTo"></a>2.6. How to navigate on the Map?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p> In order to zoom in either:
+					</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>Click on the Zooum In <img src="screenshots/toolBarIcons/zoomInIcon.jpg">button on the toolbar</p></li>
+<li class="listitem"><p>or move the mouse wheel in.</p></li>
 </ul></div>
 <p>
-		</p>
+				</p>
+</li>
+<li class="listitem">
+<p> In order to zoom out either:
+					</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>Click on the Zooum Out <img src="screenshots/toolBarIcons/zoomOutIcon.jpg">button on the toolbar to zoom out.</p></li>
+<li class="listitem"><p>or move the mouse wheel out.</p></li>
+</ul></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on the Start View <img src="screenshots/toolBarIcons/startViewIcon.jpg">button on the toolbar to return back to the initial view</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="productsOnMapHowTo"></a>2.7. How to use products on the Map?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Make a catalogue search See <a class="xref" href="ch02.html#howtosearch" title="2.1. How to make a Catalog Search?">Section 2.1, “How to make a Catalog Search?”</a>.</p></li>
+<li class="listitem"><p>Once the products are retrieved, the related footprints are drawn on the map.</p></li>
+<li class="listitem">
+<p>Click inside a footprint:
+					</p>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: circle; ">
+<li class="listitem"><p>the browse image is projected on the footprint,</p></li>
+<li class="listitem"><p>the product row is checked on the results table</p></li>
+<li class="listitem"><p>a popup widget is displayed with information on the selected product</p></li>
+<li class="listitem"><p>the icon <img src="screenshots/darIcon.jpg"> allows submitting a Simple Data access Request.
+						Follow the same steps as in section <a class="xref" href="ch02.html#simpleDARHowTo" title="2.3. How to submit a Data Access request?">Section 2.3, “How to submit a Data Access request?”</a>.
+						<img src="screenshots/itemOnMap.jpg">
+						</p></li>
+</ul></div>
+<p>
+				</p>
+</li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="layersHowTo"></a>2.8. How to select Layers?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Click on the layers icon on the toolbar <img src="screenshots/toolBarIcons/layersIcon.jpg">.</p></li>
+<li class="listitem">
+<p>The layers widget is displayed.
+				</p>
+<div><img src="screenshots/layersWidget.jpg"></div>
+<p>
+				The Results Footprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
+				</p>
+</li>
+<li class="listitem">
+<p>Check the checkbox in front of the layer name, the layer is mapped on the map.
+					</p>
+<div><img src="screenshots/projectedLayers.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="backgroundsHowTo"></a>2.9. How to change Map Background?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Click on the background icon on the toolbar <img src="screenshots/toolBarIcons/backgroundIcon.jpg">.</p></li>
+<li class="listitem">
+<p>The backgrounds' widget is displayed.
+				 </p>
+<div><img src="screenshots/backgroundsWidget.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on the radio button in front of the background name to change the map background.</p></li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="downloadManagersHowTo"></a>2.10. How to manage Download Managers?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem">
+<p>Click on My account on the menu bar.
+					<img src="screenshots/menuBar.jpg">
+					The download managers already registered are displayed with the information details on each one of them.
+					</p>
+<div><img src="screenshots/downloadManagersView.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>If there is no download manager, click on Install Download Manager to install a new one.</p></li>
+<li class="listitem">
+<p>Select the row of the download manager to monitor, then, the command buttons statuses are updated 
+					according to the download manager status.
+					</p>
+<div><img src="screenshots/downloadManagerCommands.jpg"></div>
+<p>
+					</p>
+<p><span class="emphasis"><em>A STOPPED download manager cannot no more be monitored, so the command buttons are disabled.</em></span>
+					<img src="screenshots/stoppedDM.jpg"></p>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on the Stop button <img src="screenshots/dmStopButton.jpg">
+					The Stop an ACTIVE or an INACTIVE download manager. 
+				</p></li>
+<li class="listitem">
+<p>Click on the Stop Immediately button <img src="screenshots/dmStopImmediatelyButton.jpg">
+					to stop definitively an ACTIVE or an INACTIVE download manager. 
+					</p>
+<p><span class="emphasis"><em>Please note that once the Stop or the Stop Immediately buttons are clicked, a new command cannot be issued from the user interface.
+					A notification message is displayed to notify the user.</em></span></p>
+<p>
+					</p>
+<div><img src="screenshots/dmMonitoringMessage.jpg"></div>
+<p>
+				</p>
+</li>
+</ul></div>
+</div>
+<div class="sect1">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="darsHowTo"></a>2.11. How to manage Data Access Requests?</h2></div></div></div>
+<div class="itemizedlist"><ul class="itemizedlist" style="list-style-type: disc; ">
+<li class="listitem"><p>Click on My account on the menu bar.
+					<img src="screenshots/menuBar.jpg">
+				</p></li>
+<li class="listitem">
+<p>Click Data Access Requests tab. On the left side, the download managers already assigned to data access requests
+					are displayed. On the right side is displayed the list of the users' data access requests.
+					</p>
+<div><img src="screenshots/darsView.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem">
+<p>Click on the first download manager name: only the data access requests assigned to the clicked download manager are displayed .
+					</p>
+<div><img src="screenshots/darsFiltering.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem">
+<p>Click on the second download manager name: only the data access requests assigned to the clicked download manager are displayed .
+					</p>
+<div><img src="screenshots/darsFiltering2.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on the highlighted download manager name to disable the filtering.</p></li>
+<li class="listitem">
+<p>Click on the a data access request to expand it.
+					<img src="screenshots/expandedDAR.jpg">
+					</p>
+<p>The data access request id, status, completion percentage and the number of products are displayed.</p>
+<p>
+					</p>
+<p>Buttons Pause, Resume and Stop Immediately buttons are displayed according to the request status.</p>
+<p>
+				</p>
+</li>
+<li class="listitem">
+<p>Click on the Products button to visualize the products details.
+					</p>
+<div><img src="screenshots/expandedDARProducts.jpg"></div>
+<p>
+				</p>
+</li>
+<li class="listitem"><p>Click on the Stop definitively button <img src="screenshots/stopDefinitivelyButton.jpg">
+					to cancel a processing or a paused data access request. 
+				</p></li>
+<li class="listitem"><p>Click on the Pause button <img src="screenshots/pauseButton.jpg">
+					to pause a processing data access request. 
+				</p></li>
+<li class="listitem"><p>Click on the Resume button <img src="screenshots/resumeButton.jpg">
+					to change the status of a paused data access request to processing. 
+				</p></li>
+</ul></div>
+</div>
 </div></body>
 </html>
