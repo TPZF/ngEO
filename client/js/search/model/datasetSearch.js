@@ -184,16 +184,37 @@ var DataSetSearch = SearchCriteria.extend({
 	
 	/** Set the mode for search : Simple, Correlation, Interferometry */
 	setMode: function(val) {
-		this.slaves = this.datasetIds.slice(0);
-		var master = this.slaves.shift();
-		this.set('master',master);
+	
+		if ( val != 'Simple' ) {
+			
+			this.slaves = this.datasetIds.slice(0);
+			var master = this.slaves.shift();
+			
+			// Take into account the case of interferometry/correlation on a single dataset
+			if ( this.slaves.length == 0 ) {
+				this.slaves.push( master );
+			}
+			
+			this.set('master',master);
+			
+		} else {
+		
+			this.set('master','');
+			this.slaves = "";
+			
+		}
 		
 		this.set('mode',val);
 	},
 	
 	/** check if interferometry is supported */
 	isInterferometrySupported : function() {
-		if (this.datasetIds.length != 2) {
+		
+		if ( this.datasetIds.length == 0 ) {
+			return false;
+		}
+		
+		if ( this.datasetIds.length > 2 ) {
 			return false;
 		}
 		
