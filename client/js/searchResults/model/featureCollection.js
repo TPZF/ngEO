@@ -237,7 +237,7 @@ var FeatureCollection = function() {
 	};
 
 	/** return the non Planned features */
-	this.getSelectedNonPlannedFeatures = function() {
+/*	this.getSelectedNonPlannedFeatures = function() {
 		
 		var nonPlannedFeatures = [];
 		var eoMeta;
@@ -249,7 +249,7 @@ var FeatureCollection = function() {
 			} 	
 		}
 		return nonPlannedFeatures;
-	};
+	};*/
 	
 	// Add events
 	_.extend(this, Backbone.Events);

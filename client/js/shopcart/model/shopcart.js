@@ -5,6 +5,18 @@ define( ['jquery', 'logger', 'backbone', 'configuration', 'searchResults/model/f
 			function($, Logger, Backbone, Configuration, FeatureCollection){
 	
 	
+	
+// Check if a feature is planned or not
+var isNotPlanned = function(properties) {
+
+	if (properties.EarthObservation && properties.EarthObservation.EarthObservationMetaData
+		&& properties.EarthObservation.EarthObservationMetaData.eop_status) {
+		return properties.EarthObservation.EarthObservationMetaData.eop_status != "PLANNED";
+	}
+	
+	return true;
+};
+
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
   var methodMap = {
     'create': 'POST',
@@ -90,6 +102,7 @@ var Shopcart = Backbone.Model.extend({
 	loadContent: function() {
 		this.featureCollection.search( this.url() + '/search?format=json' );
 	},
+	
 
 	/** 
 	 * Submit a POST request to the server in order to add the selected 
@@ -103,7 +116,7 @@ var Shopcart = Backbone.Model.extend({
 		var productUrls = [];
 		for (var i=0; i < features.length; i++) {
 		
-			if ( features[i].properties && features[i].properties.productUrl ) {
+			if ( features[i].properties && features[i].properties.productUrl && isNotPlanned(features[i].properties) ) {
 				itemsToAdd.push({
 					shopcartId : this.id, 
 					product : features[i].properties.productUrl
@@ -150,6 +163,14 @@ var Shopcart = Backbone.Model.extend({
 						// TODO handle error
 					}
 				}
+				
+				// Display informative message
+				var requestProductMsg = "User request to add " + features.length + " product" + (features.length > 1 ? 's' : '') + " to shopcart "  + self.get('name') + ".";
+				var addedProductMsg = featuresAdded.length + " product" + (featuresAdded.length > 1 ? 's are' : ' is') + " added.";
+				if ( features.length != featuresAdded.length ) {
+					addedProductMsg += "<br>A product cannot be added if already exists in the shopcart or if it is a planned product.";
+				}
+				Logger.inform(requestProductMsg + "<br>" + addedProductMsg);
 				
 				self.featureCollection.addFeatures( featuresAdded );
 		  },
