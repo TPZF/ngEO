@@ -72,13 +72,14 @@ var SearchResultsTableView = TableView.extend({
 		} else {
 			this.retrieveProduct.button('enable');
 			this.downloadOptionsButton.button('enable');
+			this.addToShopcart.button('enable');
 			
-			var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();
+			/*var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();
 			if ( nonPlannedSelectProducts.length == 0 ) {
 				this.addToShopcart.button('disable');
 			} else {
 				this.addToShopcart.button('enable');
-			}
+			}*/
 		}		
 	},
 	
@@ -110,7 +111,7 @@ var SearchResultsTableView = TableView.extend({
 		this.addToShopcart.button();
 		this.addToShopcart.button('disable');		
 		this.addToShopcart.click(function() {
-			GlobalEvents.trigger('addToShopcart', self.model.getSelectedNonPlannedFeatures() );
+			GlobalEvents.trigger('addToShopcart', self.model.selection );
 		});
 		
 		//add button to the widget footer in order to download products
