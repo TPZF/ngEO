@@ -30,4 +30,4 @@ var postProcess = function(filePath) {
 
 postProcess( __dirname + '/output/index.html' );
 postProcess( __dirname + '/output/sec/index.html' );
-postProcess( __dirname + '/output/help.html' );
+postProcess( __dirname + '/output/sec/help.html' );
