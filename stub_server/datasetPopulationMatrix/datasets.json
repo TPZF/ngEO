@@ -7,8 +7,8 @@
         "datasetPopulationValues" : [ 
 			[ "", "", "", "ATS_TOA_1P", "100" ],
 			[ "", "", "", "ASA_WS__0P", "5" ],
-			[ "", "", "", "ND_SAR_1", "7"], 
-            [ "S1", "SAR", "interferometry", "ND_SAR_1", "7"],
+			[ "S1", "SAR", "", "ND_SAR_1", "15"], 
+            [ "S1", "SAR", "interferometry", "ND_SAR_1", "8"],
             [ "S1", "SAR", "polarimetry", "ND_SAR_1", "7"], 
             
             [ "", "", "interferometry", "ND_OPT_1", "365"],
@@ -20,6 +20,7 @@
             [ "", "", "", "LD_SENTINEL_1", "7"], 
             [ "S1", "SAR", "land mapping", "LD_SENTINEL_1","7"],
             [ "S1", "OPT", "ice mapping", "LD_SENTINEL_1", "7"],
+            [ "S1", "OPT", "interferometry", "LD_SENTINEL_1", "7"],
             
             [ "S2", "", "land mapping", "SENTINEL2_L1", "7"],
             [ "S2", "", "land mapping", "Sentinel2", "3"],

@@ -49,7 +49,12 @@
             }
         ],
         "attributes": [
-             {
+            {
+                "id": "uuid",
+                "type": "string"
+            },
+			
+            {
                 "id": "pass",
                 "type": "enumeration",
                 "possibleValues": [
