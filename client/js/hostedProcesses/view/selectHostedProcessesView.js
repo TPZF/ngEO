@@ -29,7 +29,7 @@ var SelectHostedProcessView = Backbone.View.extend({
 			});
 
 			var hostedProcessConfigurationView = new HostedProcessConfigurationView({
-				model: this.model.get('hostedProcesses')[selectedHostedProcessIndex],
+				model: this.model.get('hostedProcess')[selectedHostedProcessIndex],
 				el: element,
 				request: this.request
 			});
@@ -44,7 +44,7 @@ var SelectHostedProcessView = Backbone.View.extend({
 
 			// Set hostedProcessId and reinit parameters
 			var selectedHostedProcessIndex = $selectedHostedProcess.data("value");
-			this.request.hostedProcessId = this.model.get('hostedProcesses')[selectedHostedProcessIndex].hostedProcessId;
+			this.request.hostedProcessId = this.model.get('hostedProcess')[selectedHostedProcessIndex].hostedProcessId;
 			this.request.parameters = [];
 
 			$selectedHostedProcess
@@ -67,7 +67,7 @@ var SelectHostedProcessView = Backbone.View.extend({
 	render : function()
 	{
 		var content = _.template(hostedProcessesList_template, {
-			hostedProcesses: this.model.get('hostedProcesses')
+			hostedProcesses: this.model.get('hostedProcess')
 		});
 
 		this.$el.html(content);

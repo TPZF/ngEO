@@ -1,12 +1,12 @@
 {
-    "hostedProcesses": [
+    "hostedProcess": [
         {
             "hostedProcessId": "Basic_SLC_geocoder",
             "name": "Basic_SLC_geocoder",
             "displayName": "Basic SLC geocoder",
             "URL": "http://server/app.fr",
             "description": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-            "parameters": [
+            "parameter": [
                 {
                     "name": "parameter_1",
                     "description": "description of parameter_1",
@@ -39,7 +39,7 @@
             "displayName": "SPOT Image Reconditioning",
             "URL": "http://server/app.fr",
             "description": "Brief description text of hostedProcess_2",
-            "parameters": [
+            "parameter": [
                 {
                     "name": "Output Format",
                     "description": "description of parameter_1",
@@ -66,7 +66,7 @@
             "displayName": "Calibration of user image",
             "URL": "http://server/app.fr",
             "description": "Brief description text of hostedProcess_3",
-            "parameters": [
+            "parameter": [
                 {
                     "name": "Output Format",
                     "description": "description of parameter_1",
@@ -91,7 +91,7 @@
             "displayName": "Direct WCTS",
             "URL": "http://server/app.fr",
             "description": "It allows the online transformation of a SPOT level 1 image (raw image) into a level 2 image (projected)",
-            "parameters": [
+            "parameter": [
                 {
                     "name": "EOProductURL",
                     "description": "description of parameter_1",

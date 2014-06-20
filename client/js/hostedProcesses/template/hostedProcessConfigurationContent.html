@@ -8,9 +8,9 @@
 	<span id="<%= hostedProcess.description %>" style="width: 75%; display: inline-block;"><%= hostedProcess.description %></span>
 </div>
 
-<% for ( var i=0; i<hostedProcess.parameters.length; i++ )
+<% for ( var i=0; i<hostedProcess.parameter.length; i++ )
 {
-	var parameter = hostedProcess.parameters[i];
+	var parameter = hostedProcess.parameter[i];
 	/* Do not generate field for EOProductURL type */
 	if ( parameter.type != "EOProductURL" )
 	{ %>
