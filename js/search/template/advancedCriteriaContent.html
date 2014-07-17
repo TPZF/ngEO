@@ -14,7 +14,7 @@
 	<% _.each( model.get("advancedAttributes"), function(criterion, i) { %>		
 	
 		   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes  -->
-			<% if (criterion.type == 'enumeration') { %> 
+			<% if (criterion.type == 'List') { %> 
 
 					 <div data-role="fieldcontain">
 						
@@ -42,7 +42,7 @@
 					</div>
 				
 			<!-- the criterion is an integer within a range  -->	
-			<% } else if (criterion.type == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+			<% } else if (criterion.type == 'Integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 				
 
 				<div data-role="fieldcontain">
@@ -70,7 +70,7 @@
 				</div>
 
 			<!-- the criterion is an string  -->	
-			<% } else if (criterion.type == 'string') { %>	
+			<% } else if (criterion.type == 'String') { %>	
 			
 				<div data-role="fieldcontain">
 						
@@ -85,7 +85,7 @@
 				</div>
 
 			<!-- the criterion is an float  -->	
-			<% } else if (criterion.type == 'float') { %>	
+			<% } else if (criterion.type == 'Float' || criterion.type == 'Integer') { %>	
 			
 				<div data-role="fieldcontain">
 						
