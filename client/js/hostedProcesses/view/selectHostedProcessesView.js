@@ -80,10 +80,10 @@ var SelectHostedProcessView = Backbone.View.extend({
 	validateParameters: function()
 	{
 		var self = this;
-		var hostedProcess = _.find(this.model.get('hostedProcesses'), function(hp){ return hp.hostedProcessId == self.request.hostedProcessId; });
-		for ( var i=0; i<hostedProcess.parameters.length; i++ )
+		var hostedProcess = _.find(this.model.get('hostedProcess'), function(hp){ return hp.hostedProcessId == self.request.hostedProcessId; });
+		for ( var i=0; i<hostedProcess.parameter.length; i++ )
 		{
-			var parameter = hostedProcess.parameters[i];
+			var parameter = hostedProcess.parameter[i];
 			var parameterFilled = _.where(this.request.parameters, {Name: parameter.name}).length > 0;
 			if ( parameter.type != "EOProductURL" )
 			{
