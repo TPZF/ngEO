@@ -48,7 +48,7 @@
         "attributes": [
              {
                 "id": "pass",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
@@ -61,7 +61,7 @@
           
             {
                 "id": "sensor",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "OLCI"
@@ -79,7 +79,7 @@
             },
             {
                 "id": "status",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"

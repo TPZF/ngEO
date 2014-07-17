@@ -48,7 +48,7 @@
         "attributes": [
              {
                 "id": "pass",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
@@ -61,7 +61,7 @@
             
             {
                 "id": "status",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"
@@ -80,7 +80,7 @@
             
             {
                 "id": "granule",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "yes"
@@ -92,14 +92,14 @@
             },
             {
                 "id": "orbit",
-                "type": "integer",
+                "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "70000"
             },
             
             {
                 "id": "track",
-                "type": "integer",
+                "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "501"
             }

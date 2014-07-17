@@ -49,7 +49,7 @@
              
               {
                 "id": "satellite",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Sentinel-1A"
@@ -62,7 +62,7 @@
              
              {
                 "id": "pass",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Ascending"
@@ -75,21 +75,21 @@
             
             {
                 "id": "orbit",
-                "type": "integer",
+                "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "70000"
             },
             
             {
                 "id": "track",
-                "type": "integer",
+                "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "501"
             },
             
             {
                 "id": "status",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "Archived"
@@ -108,7 +108,7 @@
             
             {
                 "id": "daynight flag",
-                "type": "enumeration",
+                "type": "List",
                 "possibleValues": [
                     {
                         "possibleValue": "night"
