@@ -1,1 +1,1 @@
-{"datasetSearchInfo":{"datasetId":"S2MSI1B.Sentinel-2.MSI.IM","description":"Sentinel-2 data from FAT","keywords":[{"keyword":""}],"downloadOptions":[],"attributes":[{"id":"stop","type":"string","possibleValues":[]}]}}
+{"datasetSearchInfo":{"datasetId":"S2MSI1B.Sentinel-2.MSI.IM","description":"Sentinel-2 data from FAT","keywords":[{"keyword":""}],"downloadOptions":[],"attributes":[{"id":"stop","type":"String","possibleValues":[]}]}}

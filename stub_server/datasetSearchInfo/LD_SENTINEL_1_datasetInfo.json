@@ -57,12 +57,12 @@
            
             {
                 "id": "uid",
-                "type": "string"
+                "type": "String"
             },
 			
             {
                 "id": "number",
-                "type": "float"
+                "type": "Float"
             }
 
         ],
