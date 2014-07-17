@@ -1,5 +1,7 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
+var _ReservedNames = [ 'start', 'stop', 'geom', 'bbox' ];
+
 var Dataset = Backbone.Model.extend({
 
 	//	Dataset attributes
@@ -34,12 +36,12 @@ var Dataset = Backbone.Model.extend({
 		if ( response.datasetSearchInfo  ) {
 			resp.description = response.datasetSearchInfo.description;
 			if ( _.isArray(response.datasetSearchInfo.downloadOptions) ) {
-				// TODO : check the content?
-				resp.downloadOptions = response.datasetSearchInfo.downloadOptions;
+				// Remove reserved names
+				resp.downloadOptions = _.reject( response.datasetSearchInfo.downloadOptions, function(o) { return _.contains(_ReservedNames,o.argumentName); } );
 			}
 			if ( _.isArray(response.datasetSearchInfo.attributes) ) {
-				// TODO : check the content?
-				resp.attributes = response.datasetSearchInfo.attributes;
+				// Remove reserved names
+				resp.attributes = _.reject( response.datasetSearchInfo.attributes, function(a) { return _.contains(_ReservedNames,a.id); } );
 			}
 			if ( _.isArray(response.datasetSearchInfo.keywords) ) {
 				// TODO : check the keywords?
