@@ -6,18 +6,17 @@ var fs = require('fs');
 
 module.exports = function(req, res){
 
-	if (req.body.EnhancedDataAccessRequest.requestStage == "validation"){
+	if (req.body.hostedProcessDataAccessRequest.requestStage == "validation"){
 	
 		fs.readFile('./simpleDataAccessRequest/validationResponse.json', 'utf8', function (err, data) {
 			var response = JSON.parse(data);
-			console.log(req.data);
-			response.dataAccessRequestStatus.dlManagerId = req.body.EnhancedDataAccessRequest.downloadLocation.DownloadManagerId;
+			response.dataAccessRequestStatus.dlManagerId = req.body.hostedProcessDataAccessRequest.downloadLocation.DownloadManagerId;
 			
 			res.send(response);
 		});
 		
 	
-	} else if (req.body.EnhancedDataAccessRequest.requestStage == "confirmation"){
+	} else if (req.body.hostedProcessDataAccessRequest.requestStage == "confirmation"){
 		res.sendfile('./simpleDataAccessRequest/confirmationResponse.json');
 	
 	} else {

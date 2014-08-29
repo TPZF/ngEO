@@ -55,7 +55,7 @@ var StandingOrderDataAccessRequest = {
 		if ( this.hostedProcessId )
 		{
 			request.StandingOrderDataAccessRequest.hostedProcessId = this.hostedProcessId;
-			request.StandingOrderDataAccessRequest.parameters = this.parameters;
+			request.StandingOrderDataAccessRequest.parameter = this.parameters;
 		}
 
 		//if createBulkOrder is set to true after a validation request
