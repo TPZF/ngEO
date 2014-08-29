@@ -84,21 +84,21 @@ var SelectHostedProcessView = Backbone.View.extend({
 		for ( var i=0; i<hostedProcess.parameter.length; i++ )
 		{
 			var parameter = hostedProcess.parameter[i];
-			var parameterFilled = _.where(this.request.parameters, {Name: parameter.name}).length > 0;
+			var parameterFilled = _.where(this.request.parameters, {name: parameter.name}).length > 0;
 			if ( parameter.type != "EOProductURL" )
 			{
 				if ( !parameterFilled )
 					return false;
 			}
-			else
+			/*else
 			{
 				// Handle EOProductURL
 				if ( !parameterFilled )
 				{
 					// Add EOProductParameter if doesn't exists
-					var EOProductURLParameter = {
-						"Name" : parameter.name,
-						"value" : []
+					var eoProductURLParameter = {
+						name: parameter.name,
+						value : []
 					};
 					
 					// TODO find other way to differenciate standingOrderDataAccessRequest
@@ -107,12 +107,12 @@ var SelectHostedProcessView = Backbone.View.extend({
 						// Simple or enhanced access request --> Fill EOProductURL parameter with the choosen products
 						for ( var j=0; j<this.request.productURLs.length; j++ )
 						{
-							EOProductURLParameter.value.push( this.request.productURLs[j] );
+							eoProductURLParameter.value.push( this.request.productURLs[j] );
 						}
 					}
-					this.request.parameters.push(EOProductURLParameter);
+					this.request.parameters.push(eoProductURLParameter);
 				}
-			}
+			}*/
 		}
 
 		return true;

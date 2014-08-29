@@ -39,8 +39,8 @@ var HostedProcessConfigurationView = Backbone.View.extend({
 				if ( self.validateField( this ) )
 				{
 					properties.push({
-						"Name": $(this).attr("id"),
-						"value": $(this).val()
+						name: $(this).attr("id"),
+						value: $(this).val()
 					});
 				}
 				else

@@ -32,24 +32,24 @@ var SimpleDataAccessRequest = {
 		if ( this.hostedProcessId )
 		{
 			this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequest";
+			var params = [];
+			// Add hosted processing parameters
+			for ( var i = 0; i < this.productURLs.length; i++ ) {
+				params.push({
+					name : "productURL",
+					value : this.productURLs[i]
+				});
+			}
+			params = params.concat( this.parameters );
+
 			var request = {
-					EnhancedDataAccessRequest : {
+					hostedProcessDataAccessRequest : {
 						requestStage :  this.requestStage,
 						hostedProcessId : this.hostedProcessId,
 						downloadLocation : this.downloadLocation,
-						parameters : []
+						parameter : params
 					}
-			}
-
-			// Add hosted processing parameters
-			for ( var i = 0; i < this.productURLs.length; i++ ) {
-				request.EnhancedDataAccessRequest.parameters.push({
-					"name" : "productURL",
-					"value" : this.productURLs[i]
-				});
-			}
-			request.EnhancedDataAccessRequest.parameters = request.EnhancedDataAccessRequest.parameters.concat( this.parameters );
-
+			};
 		}
 		else
 		{
