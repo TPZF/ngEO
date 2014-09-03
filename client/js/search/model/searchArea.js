@@ -113,6 +113,11 @@ var SearchArea = function() {
 		return _mode;
 	};
 	
+	// Set the mode for the search area
+	this.setMode = function(mode) {
+		_mode = mode;
+	};
+
 	// Get the bbox as a object
 	this.getBBox = function() {
 		return { west: _feature.bbox[0],
