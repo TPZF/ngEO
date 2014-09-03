@@ -27,6 +27,7 @@ var PolygonView = Backbone.View.extend({
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
 					$('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
+					self.model.searchArea.setMode( 1 );
 				}
 			});
 		},
