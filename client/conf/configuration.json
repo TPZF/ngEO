@@ -11,7 +11,8 @@
 						{"sTitle" : "Product", "mData" : "id" }, 
 						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
 						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
-					   ]
+					   ],
+		"directDownloadIndex" : 7
 	},
 	
 	"search": {

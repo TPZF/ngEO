@@ -239,7 +239,7 @@ var SearchResultsTableView = Backbone.View.extend({
 			"bPaginate": false,
 			/*"bScrollCollapse": true,*/
 			"fnCreatedRow": function( nRow, aData, iDataIndex ) {
-				var selector = "td:eq(" + Configuration.localConfig.directDownload.productColumnIndex + ")";
+				var selector = "td:eq(" + Configuration.get("resultsTable.directDownloadColumn",8) + ")";
 				if (self.model.isBrowserSupportedUrl( self.model.features[iDataIndex])){
 					$(nRow).find(selector).addClass("ui-direct-download");
 				}
