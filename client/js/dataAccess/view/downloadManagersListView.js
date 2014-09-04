@@ -23,6 +23,8 @@ var DownloadManagersListView = Backbone.View.extend({
 	
 	events : {
 		'click #validateRequest' : function(event){
+		
+			$("#validateRequest").button('disable');
 			$("#serverMessage").empty();
 			
 			this.request.downloadLocation.DownloadManagerId = this.$el.find("#downloadManagersList").val();
@@ -50,7 +52,9 @@ var DownloadManagersListView = Backbone.View.extend({
 	 * update the button text in the jqm span for button text to make the
 	 * button text updated*/
 	onValidationSuccess : function(serverMessage,configMessage) {
-		$("#validateRequest").html("Confirm"); 
+		$("#validateRequest")
+			.button('enable')
+			.html("Confirm"); 
 		$("#downloadManagersFooter .ui-btn-text").html("Confirm");
 		
 		var message = '<p>'+configMessage+'</p><p>'+serverMessage+'</p>';
@@ -70,8 +74,6 @@ var DownloadManagersListView = Backbone.View.extend({
 	 * Called when the confirmation succeeds
 	 */
 	onConfirmationSuccess : function(serverMessage,configMessage) {
-		// Disable the confirm button
-		$("#validateRequest").button('disable');
 		// Display the message
 		//NGEO 782 : fixed failure response message content
 		$("#serverMessage").html('<p>'+configMessage+'</p><p>'+serverMessage+'</p>');
