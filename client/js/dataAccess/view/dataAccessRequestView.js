@@ -75,7 +75,7 @@ var DataAccessRequestView = Backbone.View.extend({
 				  
 		// Display the estimated size and a warning message if the size exceeds a thresold (REQ)
 		if ( this.request.totalSize ) {
-			message += "<p> Estimated Size : " + this.request.totalSize + "<p>";
+			message += "<p> Estimated Size : " + this.request.totalSize + " bytes.<p>";
 			if ( this.request.totalSize > Configuration.get('simpleDataAccessRequest.warningMaximumSize',1e9) ) {
 				message += "<p>WARNING : The amount of data to download is huge.</p><p>Are you sure you want to confirm your request?</p>"; 
 			}
