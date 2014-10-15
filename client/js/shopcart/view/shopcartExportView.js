@@ -19,8 +19,7 @@ var ShopcartExportView = Backbone.View.extend({
 			} else {
 				var format = $select.val();
 				$download.removeClass('ui-disabled');
-				console.log("url export :: " + ShopcartCollection.getCurrent().url() + "/" + format);
-				$download.attr('href', ShopcartCollection.getCurrent().url() + "/" + format);
+				$download.attr('href', ShopcartCollection.getCurrent().url() + "?format=" + format);
 			}		
 		},
 		
