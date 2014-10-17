@@ -14,7 +14,7 @@ var ShopcartItemView = TableView.extend({
 
 		this.events = _.extend({},TableView.prototype.events,this.events);
 		
-		this.columnDefs = Configuration.data.shopcartTable.columnsDef
+		this.columnDefs = Configuration.data.tableView.columnsDef;
 	},
 		
 	/** update the button statuses **/ 

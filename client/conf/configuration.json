@@ -1,6 +1,6 @@
-{
-	// Parameters for result table
-	"resultsTable": {
+{			
+	"tableView": {
+		"maxVisibleColumns": 10,
 		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
 						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
 						{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
@@ -10,22 +10,11 @@
 						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
 						{"sTitle" : "Product", "mData" : "id" }, 
 						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
-						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
-					   ]
-	},
-		
-	// Parameters for shopcart table
-	"shopcartTable": {
-		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
-						{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
-						{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
-						{"sTitle" : "Stop", "mData" : "properties.EarthObservation.gml_endPosition"}, 
-						{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
-						{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
-						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
-						{"sTitle" : "Product", "mData" : "id" }, 
-						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
-						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"} 
+						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"},
+						{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationAzimuthAngle"},
+						{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationZenithAngle"},
+						{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationElevationAngle"},
+						{"sTitle" : "Test",  "sContentPadding": "mmm", "mData" : "properties.Test"} 
 					   ]
 	},
 	
