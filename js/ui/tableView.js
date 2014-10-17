@@ -1,6 +1,6 @@
 define(
-		[ 'jquery', 'backbone', 'map/map'],
-	function($, Backbone, Map) {
+		[ 'jquery', 'backbone', 'map/map', 'text!ui/template/tableColumnsPopup.html'],
+	function($, Backbone, Map, tableColumnsPopupTemplate) {
 
 	
 /**
@@ -42,6 +42,8 @@ var TableView = Backbone.View.extend({
 		this.rowsData = [];
 		this.visibleRowsData = [];
 		this.feature2row = {};
+		
+		this.maxVisibleColumns = 10;
 	},
 
 	/**
@@ -70,9 +72,9 @@ var TableView = Backbone.View.extend({
 			}
 			
 			if ( this.model.highlight ) {
-				var feature = $row.data('internal').feature; 
-				if (feature != null) {
-					this.model.highlight([feature]);
+				var data = $row.data('internal');
+				if (data && data.feature) {
+					this.model.highlight([data.feature]);
 				}
 			}
 		},
@@ -81,6 +83,9 @@ var TableView = Backbone.View.extend({
 		'click th' : function (event) {
 		
 			var $cell = $(event.currentTarget);
+			
+			if ($cell.find('.table-view-chekbox').length > 0)
+				return;
 			
 			if ( $cell.hasClass('sorting_asc') ) {
 				$cell.removeClass('sorting_asc');
@@ -152,13 +157,58 @@ var TableView = Backbone.View.extend({
 		// Called when the user clicks on the checkbox of the dataTables
 		'click .table-view-chekbox' : function(event){
 			// retreive the position of the selected row
-			var $row = $(event.currentTarget).closest('tr');
-			var feature = $row.data('internal').feature;
-			if ( $(event.currentTarget).hasClass('ui-icon-checkbox-off') ) {
-				this.model.select( feature );
+			var $target = $(event.currentTarget);
+			var $row = $target.closest('tr');
+			var data = $row.data('internal');
+		
+			if ( $target.hasClass('ui-icon-checkbox-off') ) {
+				if ( data ) {
+					this.model.select( data.feature );
+				}
+				else {
+					this.model.selectAll();
+					$target.removeClass('ui-icon-checkbox-off');
+					$target.addClass('ui-icon-checkbox-on');
+				}
 			} else {
-				this.model.unselect( feature );
+				if ( data ) {
+					this.model.unselect( data.feature );
+				}
+				else {
+					this.model.unselectAll();
+					$target.removeClass('ui-icon-checkbox-on');
+					$target.addClass('ui-icon-checkbox-off');
+				}
 			}
+		 },
+		 
+		 'click #table-columns-button' : function(event) {
+			
+			var self = this;
+			$(_.template(tableColumnsPopupTemplate,this)).appendTo('.ui-page-active')
+					.trigger('create')
+					.popup({
+						theme : 'c'
+					})
+					.bind({
+						popupafterclose: function(event, ui) {
+						
+							$(this).find('input').each( function(i) {
+								self.columnDefs[i].visible = $(this).attr('checked');
+							});
+							
+							// Rebuild the table with the new columns
+							self.buildTable();
+							self.buildTableContent();
+							self.updateFixedHeader();
+							
+							$(this).remove();
+						
+						}
+					})
+					.popup('open', {
+						positionTo: this.$el.find('#table-columns-button')
+					});
 		 }
 	},
 	
@@ -251,7 +301,12 @@ var TableView = Backbone.View.extend({
 	clear: function() {
 		if ( this.$table ) {
 			this.$table.find('tbody').empty();
+
 			this.rowsData = [];
+			
+			for ( var i = 0; i < this.columnDefs.length; i++ ) {
+				this.columnDefs[i].numValidCell = 0;
+			}
 		}
 	},
 	
@@ -275,7 +330,11 @@ var TableView = Backbone.View.extend({
 				totalNumChildren: 0
 			};
 			for ( var j=0; j < columns.length; j++ ) {
-				rowData.cellData.push( getData(features[i],columns[j].mData) );
+				var d = getData(features[i],columns[j].mData);
+				rowData.cellData.push( d );
+				if (d) {
+					columns[j].numValidCell++;
+				}
 			}
 			
 			if ( parentRowData ) {
@@ -287,6 +346,7 @@ var TableView = Backbone.View.extend({
 		
 		this.visibleRowsData = this.rowsData.slice(0);
 		
+		this.buildTable();
 		this.buildTableContent();
 		this.updateFixedHeader();
 		if ( prevNumRows != 0 ) {
@@ -391,16 +451,18 @@ var TableView = Backbone.View.extend({
 		$row.append('<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>');
 		for ( var j = 0; j < rowData.cellData.length; j++ ) {
 		
-			// Check if column has some specific classes
-			var classes = null;
-			if ( this.columnDefs[j].getClasses ) {
-				classes = this.columnDefs[j].getClasses( rowData.feature );
-			}
-			
-			if ( classes ) {
-				$row.append( '<td class="' + classes + '">' +  rowData.cellData[j] + '</td>');
-			} else {
-				$row.append( '<td>' +  rowData.cellData[j] + '</td>');
+			if ( this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0 ) {
+				// Check if column has some specific classes
+				var classes = null;
+				if ( this.columnDefs[j].getClasses ) {
+					classes = this.columnDefs[j].getClasses( rowData.feature );
+				}
+				
+				if ( classes ) {
+					$row.append( '<td class="' + classes + '">' +  rowData.cellData[j] + '</td>');
+				} else {
+					$row.append( '<td>' +  rowData.cellData[j] + '</td>');
+				}
 			}
 		}
 		
@@ -473,7 +535,9 @@ var TableView = Backbone.View.extend({
 	 */
 	show: function() {
 		this.$el.show();
-		this.updateFixedHeader();
+		if ( this.rowsData.length > 0 ) {
+			this.updateFixedHeader();
+		}
 		this.visible = true;
 	},
 	
@@ -489,6 +553,17 @@ var TableView = Backbone.View.extend({
 	 * Build the main table element
 	 */
 	buildTable: function() {
+	
+		this.$el.find('.table-content').remove();
+		this.$el.find('.table-header').remove();
+		this.$el.find('.table-nodata').remove();
+
+		if ( this.rowsData.length == 0 ) {
+			this.$el.prepend('<div class="table-nodata">No data to display</div>');
+			return;
+		}
+
+		
 		// Build the table
 		var $table = $('<table cellpadding="0" cellspacing="0" border="0" class="table-view"><thead></thead><tbody></tbody></table>');
 		var $thead = $table.find('thead');
@@ -497,9 +572,11 @@ var TableView = Backbone.View.extend({
 		if ( this.hasGroup ) {
 			$row.append('<th></th>');
 		}
-		$row.append('<th></th>');
+		$row.append('<th><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></th>');
 		for ( var j=0; j < columns.length; j++ ) {
-			$row.append( '<th>' + columns[j].sTitle + '</th>');
+			if ( columns[j].visible && columns[j].numValidCell > 0 ) {
+				$row.append( '<th>' + columns[j].sTitle + '</th>');
+			}
 		}
 		
 		this.$table = $table.prependTo( this.el );
@@ -514,13 +591,18 @@ var TableView = Backbone.View.extend({
 	 * Render the table
 	 */
 	render : function() {
+	
+		for ( var i = 0; i < this.columnDefs.length; i++ ) {
+			this.columnDefs[i].visible = i < this.maxVisibleColumns;
+			this.columnDefs[i].numValidCell = 0;
+		}
 			
 		this.visible = false;
 		this.featuresToAdd = [];
 		$(window).resize( $.proxy( this.updateFixedHeader, this ) );
 	
 		this.buildTable();
-		
+				
 		this.renderFooter();		
 		
 		this.$el.trigger('create');
@@ -530,26 +612,10 @@ var TableView = Backbone.View.extend({
 	 * Render footer
 	 */
 	renderFooter: function() {
-		var footer = $('<div class="ui-grid-b"></div>')
-			.append('<div class="table-filter ui-block-a"><label>Search: <input data-mini="true" type="text"></label></div>');
-			
-		var self = this;
-		
-		// Buttons for selection/deselection
-		var $selectContainer = $('<div class="ui-block-b table-middleButtons"></div>');
-		$('<button data-role="button" data-inline="true" data-mini="true">Select All</button>')
-			.appendTo($selectContainer)
-			.click( function(){
-				self.model.selectAll();
-			});
-		$('<button data-role="button" data-inline="true" data-mini="true">Deselect All</button>')
-			.appendTo($selectContainer)
-			.click(function(){
-				self.model.unselectAll();
-			}),
-		$selectContainer.appendTo( footer );
-					
-		var $buttonContainer = $('<div class="ui-block-c table-rightButtons"></div>').appendTo(footer);
+		var footer = $('<div class="ui-grid-a"></div>')
+			.append('<div class="table-filter ui-block-a"><label>Search: <input data-mini="true" type="text"></label><button data-mini="true" data-inline="true" id="table-columns-button">Columns</button></div>');
+							
+		var $buttonContainer = $('<div class="ui-block-b table-rightButtons"></div>').appendTo(footer);
 		
 		if ( this.renderButtons )
 			this.renderButtons($buttonContainer);

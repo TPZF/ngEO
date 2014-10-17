@@ -19,7 +19,7 @@ var SearchResultsTableView = TableView.extend({
 		
 		this.events = _.extend({},TableView.prototype.events,this.events);
 				
-		this.columnDefs = Configuration.data.resultsTable.columnsDef;
+		this.columnDefs = Configuration.data.tableView.columnsDef;
 		
 		// Set specific class for direct download of product
 		var ddIndex = Configuration.localConfig.directDownload.productColumnIndex;
