@@ -45,6 +45,9 @@ fs.readFile('./productSearch/Global_response.json', 'utf8', function (err, data)
 fs.readFile('./productSearch/MultiLine_response.json', 'utf8', function (err, data) {
 	featureCollections['MultiLine']  = JSON.parse(data);
 });
+fs.readFile('./productSearch/HalfOrbit_response.json', 'utf8', function (err, data) {
+	featureCollections['HalfOrbit']  = JSON.parse(data);
+});
 fs.readFile('./productSearch/Correlation_response.json', 'utf8', function (err, data) {
 	featureCollections['Correlation']  = JSON.parse(data);
 });

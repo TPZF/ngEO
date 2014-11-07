@@ -67,7 +67,13 @@
 			"tileErrorTreshold": 2,
 			"displayStats": false,
 			"continuousRendering": false,
-			"zoomDuration": 500
+			"zoomDuration": 500,
+			"elevationLayer": {
+				"type": "WCS",
+				"baseUrl": "http://demonstrator.telespazio.com/wcspub", 
+				"coverage": "GTOPO", 
+				"version": "1.0.0"
+			}
 		},
 		
 		"backgroundLayers": [{

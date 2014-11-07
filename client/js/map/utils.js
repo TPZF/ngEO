@@ -73,6 +73,7 @@ define( function() {
 		 * Tesselate the feature to follow great-circle
 		 */
 		tesselateGreatCircle: function(feature) {
+		
 			// Tesselate polygon to follow great circle
 			// TODO : holes are not managed
 			var geometry = feature.geometry;
@@ -102,7 +103,7 @@ define( function() {
 		fixDateLine: function(feature) {
 			
 			// Fix dateline if needed
-			if ( (feature.bbox[2] - feature.bbox[0]) > 180 ) {
+			if ( (feature.bbox[2] - feature.bbox[0]) > 270 ) {
 			
 				var geometry = feature.geometry;
 				switch (geometry.type) {

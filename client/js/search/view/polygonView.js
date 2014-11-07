@@ -20,21 +20,29 @@ var PolygonView = Backbone.View.extend({
 	events :{
 				
 		'click #drawpolygon': function(event) {
+			this.$el.find('#polygonTextError').hide();
 			var self = this;
 			PolygonHandler.start({
 				layer: this.parentView.searchAreaLayer,
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
 					self.$el.find('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
+					self.model.searchArea.setMode( 1 );
 				}
 			});
 		},
-				
+		
+		'focus #polygontext': function(event) {
+			this.$el.find('#polygonTextError').hide();
+		},
+		
 		'change #polygontext': function(event) {
 			if (!this.model.searchArea.setPolygonFromText( $(event.currentTarget).val() )) {
 				// Erase content
 				$(event.currentTarget).val('');
-				// TODO : display a message to user
+				this.$el.find('#polygonTextError')
+					.html("Please enter valid coordinates : D:M:S.")
+					.show();
 			}
 			this.parentView.updateSearchAreaLayer();
 		},
@@ -49,6 +57,7 @@ var PolygonView = Backbone.View.extend({
 	// Open the view : show it and update the model
 	open: function() {
 		var text = this.$el.find('#polygontext').val();
+		this.$el.find('#polygonTextError').hide();
 		this.model.searchArea.setPolygonFromText( text );
 		this.parentView.updateSearchAreaLayer();
 		this.$el.show();
