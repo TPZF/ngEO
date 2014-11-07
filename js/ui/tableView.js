@@ -37,7 +37,7 @@ var TableView = Backbone.View.extend({
 			this.columnDefs = options.columnDefs;
 		}
 
-		this.hasGroup = false;
+		this.hasExpandableRows = false;
 		
 		this.rowsData = [];
 		this.visibleRowsData = [];
@@ -102,55 +102,18 @@ var TableView = Backbone.View.extend({
 		
 		// Call when the expand icon is clicked
 		'click .table-view-expand' : function(event){
-				var $row = $(event.currentTarget).closest('tr');
-				$(event.currentTarget)
+				// Change icon and return the row
+				var $row = $(event.currentTarget)
 					.toggleClass('ui-icon-minus')
-					.toggleClass('ui-icon-plus');
+					.toggleClass('ui-icon-plus')
+					.closest('tr');
 					
-				// TODO !!! : improve that !!
 				var rowData = $row.data('internal');
 				rowData.isExpand = !rowData.isExpand;
 				if ( rowData.isExpand ) {
-					
-					$( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Loading...</td></tr>' ).insertAfter( $row )
-					rowData.isLoading = true;
-					
-					var self = this;
-					$.ajax({
-						url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
-						dataType: 'json'
-							
-					}).done(function(data) {
-						if ( data.features.length == 0 ) {
-						  $row.next().remove();
-						  $( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
-						} else {
-							rowData.totalNumChildren = data.properties.totalResults;
-							self.model.trigger('add:features',data.features,self.model,rowData);
-							rowData.isLoading = false;
-						}
-					}).fail(function(jqXHR, textStatus, errorThrown) {		
-						  $row.next().remove();
-						  $( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Error while loading</td></tr>' ).insertAfter( $row )
-					});
-								
+					this.expandRow($row);
 				} else {
-					if ( rowData.isLoading ) {
-						$row.next().remove();
-					} else {
-						var features = [];
-						for ( var i = 0; i < rowData.children.length; i++ ) {
-							features.push( rowData.children[i].feature );
-						}
-						var newSelection = _.difference(this.model.selection, features);
-						this.model.setSelection(newSelection);
-						this.model.trigger('remove:features',features,this.model);
-						rowData.children.length = 0;
-						this.buildTableContent();
-						this.updateFixedHeader();
-						this.toggleSelection( this.model.selection );
-						this.highlightFeatureCallBack(this.model.highlights,[]);
-					}
+					this.closeRow($row);
 				}
 			},
 		
@@ -190,21 +153,17 @@ var TableView = Backbone.View.extend({
 					.popup({
 						theme : 'c'
 					})
-					.bind({
-						popupafterclose: function(event, ui) {
+					.on('change', 'input', function(event) {
+						// Get the column to change
+						var i = $(this).data('index');
+						self.columnDefs[i].visible = $(this).attr('checked');
 						
-							$(this).find('input').each( function(i) {
-								self.columnDefs[i].visible = $(this).attr('checked');
-							});
-							
-							// Rebuild the table with the new columns
-							self.buildTable();
-							self.buildTableContent();
-							self.updateFixedHeader();
-							
-							$(this).remove();
-						
-						}
+						// Rebuild the table with the new columns
+						self.buildTable();
+						self.buildTableContent();
+					})
+					.on('popupafterclose', function(event, ui) {
+						$(this).remove();
 					})
 					.popup('open', {
 						positionTo: this.$el.find('#table-columns-button')
@@ -234,15 +193,7 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model,"remove:features", this.removeData);
 			this.listenTo(this.model,"selectFeatures", this.toggleSelection );
 			this.listenTo(this.model,"unselectFeatures", this.toggleSelection );
-			this.listenTo(this.model,"highlightFeatures", this.highlightFeatureCallBack );
-			
-			// TODO : ugly hack..
-			var hasGroup = model.id == "Correlation" || model.id == "Interferometry";
-			if ( this.hasGroup != hasGroup ) {
-				this.$el.find('.table-header, .table-content').remove();
-				this.hasGroup = hasGroup;
-				this.buildTable();
-			}
+			this.listenTo(this.model,"highlightFeatures", this.highlightFeature );
 				
 			if ( this.model.features.length > 0 ) {
 				this.addData( this.model.features );
@@ -251,9 +202,76 @@ var TableView = Backbone.View.extend({
 	},
 	
 	/**
+	 * Expand a row
+	 */
+	expandRow: function($row) {
+	
+		var rowData = $row.data('internal');
+	
+		// First add a row for loading
+		$( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Loading...</td></tr>' ).insertAfter( $row )
+		
+		// If row is already loading, exit !
+		if ( rowData.isLoading )
+			return;
+			
+		// Now load the data
+		rowData.isLoading = true;
+		var self = this;
+		$.ajax({
+			url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
+			dataType: 'json'
+				
+		}).done(function(data) {
+			rowData.isLoading = false;
+			if ( !rowData.isExpand )
+				return;
+			if ( data.features.length == 0 ) {
+			  $row.next().remove();
+			  $( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
+			} else {
+				rowData.totalNumChildren = data.properties.totalResults;
+				// HACK : do not use addFeatures but just the event in order to add element to the table and the map
+				self.model.trigger('add:features',data.features,self.model,rowData);
+			}
+		}).fail(function(jqXHR, textStatus, errorThrown) {
+			rowData.isLoading = false;
+			if ( !rowData.isExpand )
+				return;	
+			$row.next().remove();
+			$( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Error while loading</td></tr>' ).insertAfter( $row )
+		});
+		
+	},
+	
+	
+	/**
+	 * Close a row
+	 */
+	closeRow: function($row) {
+	
+		var rowData = $row.data('internal');
+	
+		if ( rowData.isLoading ) {
+			$row.next().remove();
+		} else {
+			var features = [];
+			for ( var i = 0; i < rowData.children.length; i++ ) {
+				features.push( rowData.children[i].feature );
+			}
+			var newSelection = _.difference(this.model.selection, features);
+			this.model.setSelection(newSelection);
+			this.model.trigger('remove:features',features,this.model);
+			rowData.children.length = 0;
+			this.buildTableContent();
+		}
+	},
+
+	
+	/**
 	 * Highlight the features on the table when they have been highlighted on the map.
 	 */
-	highlightFeatureCallBack: function(features, prevFeatures) {
+	highlightFeature: function(features, prevFeatures) {
 		
 		// Remove previous highlighted rows
 		this.$table.find('.row_selected').removeClass('row_selected');
@@ -303,7 +321,9 @@ var TableView = Backbone.View.extend({
 			this.$table.find('tbody').empty();
 
 			this.rowsData = [];
+			this.hasExpandableRows = false;
 			
+			// Reset the number of non-empty cells
 			for ( var i = 0; i < this.columnDefs.length; i++ ) {
 				this.columnDefs[i].numValidCell = 0;
 			}
@@ -315,15 +335,15 @@ var TableView = Backbone.View.extend({
 	 */
 	addData : function(features,model,parentRowData) {
 	
-		//var roots = [];
-		var prevNumRows = this.visibleRowsData.length;
-	
 		var columns = this.columnDefs;
-		for ( var i=0; i < features.length; i++ ) {	
+		for ( var i=0; i < features.length; i++ ) {
+			if (features[i].properties.rel) {
+				this.hasExpandableRows = true;
+			}
 			var rowData = {
 				feature: features[i],
 				cellData: [],
-				isExpandable: this.hasGroup ? !parentRowData : false,
+				isExpandable: features[i].properties.rel ? !parentRowData : false,
 				isExpand: false,
 				children: [],
 				isLoading : false,
@@ -348,11 +368,6 @@ var TableView = Backbone.View.extend({
 		
 		this.buildTable();
 		this.buildTableContent();
-		this.updateFixedHeader();
-		if ( prevNumRows != 0 ) {
-			this.toggleSelection( this.model.selection );
-			this.highlightFeatureCallBack(this.model.highlights,[]);
-		}
 	},
 	
 	/**
@@ -402,9 +417,6 @@ var TableView = Backbone.View.extend({
 		}
 		
 		this.buildTableContent();
-		this.updateFixedHeader();
-		this.toggleSelection( this.model.selection );
-		this.highlightFeatureCallBack(this.model.highlights,[]);
 	},
 	
 	/**
@@ -412,7 +424,7 @@ var TableView = Backbone.View.extend({
 	 */
 	sortData: function(columnIndex,order) {
 	
-		columnIndex -= this.hasGroup ? 2 : 1;
+		columnIndex -= this.hasExpandableRows ? 2 : 1;
 
 		if ( order == "original" ) {
 			this.visibleRowsData = this.rowsData.slice(0);
@@ -429,14 +441,16 @@ var TableView = Backbone.View.extend({
 		}
 
 		this.buildTableContent();
-		this.toggleSelection( this.model.selection );
-		this.highlightFeatureCallBack(this.model.highlights,[]);
 	},
 
+	/**
+	 * Create a row given rowData
+	 */
 	_createRow: function(rowData,$body) {
 		var $row = $('<tr></tr>');
 		
-		if ( this.hasGroup ) {
+		// Magnage expand
+		if ( this.hasExpandableRows ) {
 		
 			if ( rowData.isExpandable ) {
 				if ( rowData.isExpand ) {
@@ -493,6 +507,10 @@ var TableView = Backbone.View.extend({
 			}
 			
 		}
+		
+		this.updateFixedHeader();
+		this.toggleSelection( this.model.selection );
+		this.highlightFeature(this.model.highlights,[]);
 	},
 	
 	/**
@@ -569,7 +587,7 @@ var TableView = Backbone.View.extend({
 		var $thead = $table.find('thead');
 		var $row = $('<tr></tr>').appendTo($thead);
 		var columns = this.columnDefs;
-		if ( this.hasGroup ) {
+		if ( this.hasExpandableRows ) {
 			$row.append('<th></th>');
 		}
 		$row.append('<th><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></th>');
@@ -592,6 +610,7 @@ var TableView = Backbone.View.extend({
 	 */
 	render : function() {
 	
+		// Update column definition  with the visible flag and a counter to know the number of non-empty cell
 		for ( var i = 0; i < this.columnDefs.length; i++ ) {
 			this.columnDefs[i].visible = i < this.maxVisibleColumns;
 			this.columnDefs[i].numValidCell = 0;
