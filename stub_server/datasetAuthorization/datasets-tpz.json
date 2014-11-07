@@ -1,6 +1,6 @@
 {
         "datasetAuthorisationInfo": [ {
-                "datasetId": "SENTINEL2_L1",
+                "dataSetId": "SENTINEL2_L1",
                 "searchAccessPolicy": "PRIVATE",
                 "searchAccessGranted": "YES",
                 "downloadAccessPolicy": "PRIVATE",
@@ -16,7 +16,7 @@
                         "viewAccessPolicy": "RESTRICTED"
                 }		
         }, {
-                "datasetId": "SENTINEL3_L2",
+                "dataSetId": "SENTINEL3_L2",
                 "searchAccessPolicy": "PRIVATE",
                 "searchAccessGranted": "YES",
                 "downloadAccessPolicy": "PRIVATE",
