@@ -113,6 +113,11 @@ var SearchArea = function() {
 		return _mode;
 	};
 	
+	// Set the mode for the search area
+	this.setMode = function(mode) {
+		_mode = mode;
+	};
+
 	// Get the bbox as a object
 	this.getBBox = function() {
 		return { west: _feature.bbox[0],
@@ -180,6 +185,7 @@ var SearchArea = function() {
 	this.empty = function() {
 		_feature.bbox = [ 0, 0, 0, 0 ];
 		_feature.geometry.coordinates = [[ [0,0] ]];
+		_mode == SearchArea.EMPTY;
 		_updateFeature();
 	};
 	
@@ -206,7 +212,6 @@ var SearchArea = function() {
 		var polygonRe = /\s*([-+]?)(\d+):(\d+):(\d+)\s+([-+]?)(\d+):(\d+):(\d+)/gm;
 		var match = polygonRe.exec(text);
 		if (!match) {
-			_mode = SearchArea.POLYGON;
 			this.empty();
 			return false;
 		}
@@ -218,6 +223,11 @@ var SearchArea = function() {
 			lon *= (match[5] == '-') ? -1.0 : 1.0;
 			coordinates.push( [lon,lat] );
 			match = polygonRe.exec(text);
+		}
+		// Close polygon if needed
+		if ( coordinates[0][0] != coordinates[coordinates.length-1][0] 
+		|| coordinates[0][1] != coordinates[coordinates.length-1][1]  ) {
+			coordinates.push( coordinates[0] );
 		}
 		_feature.geometry.coordinates = [coordinates];
 		_mode = SearchArea.POLYGON;
@@ -256,6 +266,8 @@ var SearchArea = function() {
 
 SearchArea.BBOX = 0;
 SearchArea.POLYGON = 1;
+SearchArea.EMPTY = -1;
+
 
 return SearchArea;
 

@@ -83,9 +83,12 @@ $.widget( "ui.dateRangeSlider", {
 			
 		// Create a container for the scale bar, needed to manage scrolling
 		this.container = $('<div class="dateSlider-container"></div>').appendTo(this.element);
-		
+
 		// Create the scale bar
 		this._createScaleBar();
+		
+		// Get the initial scale postion
+		this.scalePosition = this.container.scrollLeft();
 		
 		this.wheelTimeoutVar = null;
 		this.element.mousewheel( function(event,delta) {
