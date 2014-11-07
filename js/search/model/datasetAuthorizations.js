@@ -28,19 +28,19 @@ var DataSetAuthorizations = Backbone.Model.extend({
 
 	// Check if a dataset has search access
 	hasSearchAccess: function(datasetId) {
-		var auth = _.findWhere( this.get('authorizations'), { datasetId: datasetId } );
+		var auth = _.findWhere( this.get('authorizations'), { dataSetId: datasetId } );
 		return auth ? auth.searchAccessGranted == "YES" : true;
 	},
 
 	// Check if a dataset has download access
 	hasDownloadAccess: function(datasetId) {
-		var auth = _.findWhere( this.get('authorizations'), { datasetId: datasetId } );
+		var auth = _.findWhere( this.get('authorizations'), { dataSetId: datasetId } );
 		return auth ? auth.downloadAccessGranted == "YES" : true;
 	},
 	
 	// Check if a dataset has view access
 	hasViewAccess: function(datasetId) {
-		var auth = _.findWhere( this.get('authorizations'), { datasetId: datasetId } );
+		var auth = _.findWhere( this.get('authorizations'), { dataSetId: datasetId } );
 		if (!auth) {
 			return true;
 		}
