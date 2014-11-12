@@ -61,6 +61,7 @@ return function(dsa) {
 				$(this).parent().remove();
 			}
 		});
+		$('#layersWidget').trigger('create');
 	});
 
 	// Create widget

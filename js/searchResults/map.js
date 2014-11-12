@@ -1,6 +1,6 @@
 
-define(["jquery", "logger", "map/map", "map/selectHandler"], 
-	function($, Logger, Map, SelectHandler) {
+define(["jquery", "logger", "searchResults/browsesManager", "map/map", "map/selectHandler"], 
+	function($, Logger, BrowsesManager, Map, SelectHandler) {
 
 
 // Call when a feature is selected to synchronize the map
@@ -11,16 +11,8 @@ var _onSelectFeatures = function(features,fc) {
 		} else {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "select" );
 		}
-	}
-	
-	// Only display browse if the user has view access
-	if ( fc._browsesLayer ) {
-		if ( fc.viewAccess ) {
-			fc._browsesLayer.addFeatures(features);
-		} else if (!fc._viewAccessInformation) {
-			Logger.inform("You do not have enough permission to view the product.");
-			fc._viewAccessInformation = true;
-		}
+		
+		BrowsesManager.addBrowse(features[i],fc.id);
 	}
 };
 
@@ -32,9 +24,7 @@ var _onUnselectFeatures = function(features,fc) {
 		} else {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "default" );
 		
-			if ( fc._browsesLayer ) {
-				fc._browsesLayer.removeFeatures([features[i]]);
-			}
+			BrowsesManager.removeBrowse(features[i]);
 		}
 	}
 };
@@ -50,9 +40,7 @@ var _onHighlightFeatures = function(features,prevFeatures,fc) {
 				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select" );
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default" );
-				if ( fc._browsesLayer ) {
-					fc._browsesLayer.removeFeatures([prevFeatures[i]]);
-				}
+				BrowsesManager.removeBrowse(prevFeatures[i]);
 			}
 		}
 	}
@@ -64,18 +52,7 @@ var _onHighlightFeatures = function(features,prevFeatures,fc) {
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
 			}
-		}
-		
-		if ( fc._browsesLayer ) {
-			fc._browsesLayer.addFeatures(features);
-
-			// Only display browse if the user has view access
-			if ( fc.viewAccess ) {
-				fc._browsesLayer.addFeatures(features);
-			} else if (!fc._viewAccessInformation) {
-				Logger.inform("You do not have enough permission to view the product.");
-				fc._viewAccessInformation = true;
-			}
+			BrowsesManager.addBrowse(features[i],fc.id);
 		}
 	}
 };
@@ -121,17 +98,7 @@ return {
 					greatCircle: true
 				});
 			}
-			
-			if ( options.hasBrowse ) {
-				var browsesLayer = Map.addLayer({
-					name: options.layerName + " Browses",
-					type: "Browses",
-					visible: true
-				});
-				fc._browsesLayer = browsesLayer;
-				fc.on('reset:features', browsesLayer.clear, browsesLayer);
-			}
-			
+				
 			fc._footprintLayer = footprintLayer;
 			fc.on('add:features', footprintLayer.addFeatures, footprintLayer);
 			fc.on('remove:features', footprintLayer.removeFeatures, footprintLayer);
@@ -161,12 +128,7 @@ return {
 			if ( !options || !options.keepLayer ) {
 				Map.removeLayer( fc._footprintLayer );
 			}
-			
-			if ( fc._browsesLayer ) {
-				fc.off('reset:features', fc._browsesLayer.clear, fc._browsesLayer);
-				Map.removeLayer( fc._browsesLayer );
-			}
-			
+					
 			SelectHandler.removeFeatureCollection(fc);
 			
 	}

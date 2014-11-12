@@ -272,6 +272,7 @@ var TableView = Backbone.View.extend({
 	 * Highlight the features on the table when they have been highlighted on the map.
 	 */
 	highlightFeature: function(features, prevFeatures) {
+		if ( !this.$table ) return;
 		
 		// Remove previous highlighted rows
 		this.$table.find('.row_selected').removeClass('row_selected');
@@ -302,7 +303,8 @@ var TableView = Backbone.View.extend({
 	 * Toggle selection for the given features
 	 */
 	toggleSelection: function(features) {
-
+		if ( !this.$table ) return;
+		
 		for ( var i = 0; i < features.length; i++ ) {
 			var $row = this._getRowFromFeature( features[i] );
 			if ( $row ) {
