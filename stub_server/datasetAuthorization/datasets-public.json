@@ -32,7 +32,7 @@
                 "downloadAccessPolicy": "PRIVATE",
                 "downloadAccessGranted": "YES",
                 "browseLayerAuthorizations": [{
-                        "browseLayerId": "Sentinel 3 HR browse",
+                        "browseLayerId": "ESA.EECF.ERS_SAR_xS",
                         "viewAccessGranted": "NO", 
                         "viewAccessPolicy": "RESTRICTED"
                 }, {

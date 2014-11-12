@@ -4,31 +4,25 @@ define(["jquery", "logger", "search/model/datasetAuthorizations", "map/map", "ma
 
 
 var _browseLayerMap = {};
+var _browseAccessInformationMap = {};
 
+/**
+ * Get the key to be used in the map for the given browse info
+ */
 var _getKey = function(browseInfo) {
+	// Note : use filename if url not present because of some problems with WEBS
 	return (browseInfo.eop_url || browseInfo.eop_filename) + browseInfo.eop_layer;
 };
 
-
+/**
+ * Retreive the browse infromation from a feature
+ */
 var _getBrowseInformation = function(feature) {
 	var eo = feature.properties.EarthObservation;
 	if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return null;
 	var browseInfo = eo.EarthObservationResult.eop_BrowseInformation;
 	if (!browseInfo) return null;
 	return browseInfo;
-};
-
-
-var _getBrowseLayer = function(browseInfo,create) {
-	var key = (browseInfo.eop_url || browseInfo.eop_filename) + browseInfo.eop_layer;
-	if (create && !_browseLayerMap[key]) {
-		_browseLayerMap[key] = Map.addLayer({
-					name: browseInfo.eop_layer,
-					type: "Browses",
-					visible: true
-				});
-	}
-	return _browseLayerMap[key];
 };
 
 return {
@@ -42,9 +36,9 @@ return {
 	 addBrowse: function(feature,datasetId) {
 	 
 	 	var browseInfo = _getBrowseInformation(feature);
+		var key = _getKey(browseInfo);
 		if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId,browseInfo.eop_layer) ) {	
 		
-			var key = _getKey(browseInfo);
 			var browseLayer = _browseLayerMap[key];
 			if (!browseLayer) {
 				browseLayer = _browseLayerMap[key] = Map.addLayer({
@@ -55,9 +49,9 @@ return {
 			}
 			browseLayer.addBrowse(feature,browseInfo);
 	
-		} else if (!browseLayer._viewAccessInformation) {
-			Logger.inform("You do not have enough permission to view the layer.");
-			browseLayer._viewAccessInformation = true;
+		} else if ( !_browseAccessInformationMap[key] ) {
+			Logger.inform("You do not have enough permission to browse the layer " + browseInfo.eop_layer + ".");
+			_browseAccessInformationMap[key] = true;
 		}
 						
 	},
