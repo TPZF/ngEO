@@ -45,90 +45,6 @@ var BrowsesLayer = function(params,mapEngine) {
 	};
 	
 	/**
-	 * Add a browse for the given feature
-	 */
-	var addBrowse = function(feature,vis) {
-	
-		if (!browseLayersMap.hasOwnProperty(feature.id)) {
-	
-			var eo = feature.properties.EarthObservation;
-			if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return;
-			var eoBrowse = eo.EarthObservationResult.eop_BrowseInformation;
-			if (eoBrowse && eoBrowse.eop_layer) {
-							
-				// Fix NGEO-1031 : remove milliseconds from date
-				var begin = Date.fromISOString( eo.gml_beginPosition );
-				begin.setUTCMilliseconds(0);
-				var end = Date.fromISOString( eo.gml_endPosition );
-				end.setUTCMilliseconds(0);
-				
-				var params = {
-					time: toWMTSTime(begin) + "/" + toWMTSTime(end),
-					transparent: true
-				};
-				
-				var type = eoBrowse.eop_type;
-				if (!type) {
-					type = "wmts";
-				}
-				
-				if ( type == "wms" ) {
-					params.layers = eoBrowse.eop_layer;
-					params.styles = "ellipsoid";
-				} else if ( type == "wmts" ) {
-					params.layer = eoBrowse.eop_layer || "TEST_SAR";
-					params.matrixSet = "WGS84";
-				} else {
-					// No type is defined, return
-					return;
-				}
-				
-				var config = {
-					name: feature.id,
-					type: type,
-					visible: vis,
-					baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
-					opacity: Configuration.data.map.browseDisplay.opacity,
-					params: params,
-					bbox: feature.bbox
-				};
-				
-				var browseLayerDesc = {
-					time:  eo.gml_endPosition,
-					params: config,
-					engineLayer: mapEngine.addLayer(config)
-				};
-				
-				browseLayersMap[feature.id] = browseLayerDesc;
-				browseLayers.push( browseLayerDesc );
-				
-				updateBroweLayersIndex();
-			}
-		}
-	};
-	
-	/**
-	 * Remove the browse layer of the given feature
-	 */
-	var removeBrowse = function(feature) {	
-		// Create the WMS if it does not exists
-		if (browseLayersMap.hasOwnProperty(feature.id)) {
-		
-			// Get the browse layer structure from the map
-			var bl = browseLayersMap[ feature.id ];
-			
-			// Delete it
-			delete browseLayersMap[ feature.id ];
-			
-			// Remove browse layer from the current engine
-			mapEngine.removeLayer(bl.engineLayer);
-			
-			// Remove from array
-			browseLayers.splice( browseLayers.indexOf(bl), 1 );
-		}
-	};
-
-	/**
 	 * Change visibility of browse layers
 	 */
 	this.setVisible = function(vis) {
@@ -153,19 +69,80 @@ var BrowsesLayer = function(params,mapEngine) {
 	/**
 	 * Add features to layer
 	 */
-	this.addFeatures = function(features) {
-		for ( var i = 0; i < features.length; i++ ) {
-			addBrowse( features[i], this.params.visible );
+	this.addBrowse = function(feature,eoBrowse) {
+		if (!browseLayersMap.hasOwnProperty(feature.id)) {
+			var eo = feature.properties.EarthObservation;
+			// Fix NGEO-1031 : remove milliseconds from date
+			var begin = Date.fromISOString( eo.gml_beginPosition );
+			begin.setUTCMilliseconds(0);
+			var end = Date.fromISOString( eo.gml_endPosition );
+			end.setUTCMilliseconds(0);
+			
+			var params = {
+				time: toWMTSTime(begin) + "/" + toWMTSTime(end),
+				transparent: true
+			};
+			
+			var type = eoBrowse.eop_type;
+			if (!type) {
+				type = "wmts";
+			}
+			
+			if ( type == "wms" ) {
+				params.layers = eoBrowse.eop_layer;
+				params.styles = "ellipsoid";
+			} else {
+				// Default is WMTS
+				params.layer = eoBrowse.eop_layer || "TEST_SAR";
+				params.matrixSet = "WGS84";
+			}
+			
+			var config = {
+				name: feature.id,
+				type: type,
+				visible: this.params.visible,
+				baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
+				opacity: Configuration.data.map.browseDisplay.opacity,
+				params: params,
+				bbox: feature.bbox
+			};
+			
+			var browseLayerDesc = {
+				time:  eo.gml_endPosition,
+				params: config,
+				engineLayer: mapEngine.addLayer(config)
+			};
+			
+			browseLayersMap[feature.id] = browseLayerDesc;
+			browseLayers.push( browseLayerDesc );
+			
+			updateBroweLayersIndex();
 		}
 	};
 
 	/**
-	 * Remove features form layer
+	 * Remove browse from layer
 	 */
-	this.removeFeatures = function(features,style)  {
-		for ( var i = 0; i < features.length; i++ ) {
-			removeBrowse(features[i]);
+	this.removeBrowse = function(id)  {
+		// Create the WMS if it does not exists
+		if (browseLayersMap.hasOwnProperty(id)) {
+		
+			// Get the browse layer structure from the map
+			var bl = browseLayersMap[ id ];
+			
+			// Delete it
+			delete browseLayersMap[ id ];
+			
+			// Remove browse layer from the current engine
+			mapEngine.removeLayer(bl.engineLayer);
+			
+			// Remove from array
+			browseLayers.splice( browseLayers.indexOf(bl), 1 );
 		}
+	};
+	
+	this.isEmpty = function() {
+		return browseLayers.length == 0;
 	};
 	
 	/**

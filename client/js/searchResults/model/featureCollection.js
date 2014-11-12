@@ -116,6 +116,12 @@ var FeatureCollection = function() {
 	
 	// Reset the results
 	this.reset = function() {
+		// reset highlight/select
+		this.trigger( "highlightFeatures", [], this.highlights, this );
+		this.trigger( "unselectFeatures", this.selection, this );
+		this.highlights = [];
+		this.selection = [];
+		
 		_url = "";
 		// reset the cache
 		_pageCache.length = 0;
@@ -124,9 +130,6 @@ var FeatureCollection = function() {
 		this.totalResults = 0;
 		// reset the features
 		this.features.length = 0;
-		// reset highlight/select
-		this.highlights = [];
-		this.selection = [];
 		this.trigger('reset:features',this);
 	};
 	
@@ -135,6 +138,11 @@ var FeatureCollection = function() {
 		if ( page >= 1 && page <= this.lastPage ) {
 			this.currentPage = page;
 			this.features.length = 0;
+			// reset highlight/select
+			this.trigger( "highlightFeatures", [], this.highlights, this );
+			this.trigger( "unselectFeatures", this.selection, this );
+			this.highlights = [];
+			this.selection = [];
 			this.trigger('reset:features',this);
 			if ( _pageCache[this.currentPage] ) {
 				this.addFeatures( _pageCache[this.currentPage] );
