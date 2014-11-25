@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "configuration", "externs/OpenLayers.ngeo" ],
+define( [ "configuration", "externs/OpenLayers.debug" ],
  
  function(Configuration) {
   
@@ -72,7 +72,8 @@ OpenLayersMapEngine = function( element )
 		// NEVER USE fractionnal zoom right now, break the WMTS display as overlay
 		//,fractionalZoom: true
 		,autoUpdateSize: false
-		,resolutions : resolutions
+		,resolutions : resolutions,
+		fallThrough: true
 		
 	});
 	
@@ -332,7 +333,7 @@ OpenLayersMapEngine.prototype.subscribe = function(name,callback)
 	case "mousemove":
 	case "click":
 	case "dblclick":
-		this.element.addEventListener( name, callback, true );
+		this._map.events.register(name, undefined, callback, true);
 		break;
 	}
 }
