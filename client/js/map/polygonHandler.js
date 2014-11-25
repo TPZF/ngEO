@@ -39,6 +39,12 @@ function isDoubleClick(event) {
 	return isDoubleClick;
 }
 
+function updateFeature() {
+	feature.geometry.type = "Polygon";
+	feature.geometry.coordinates = [coords];
+	layer.updateFeature(feature);
+};
+
 // Called on a click : add a new point in the polygon
 function onClick(event) {
 	if ( started && event.button == 0 ) {
@@ -56,7 +62,7 @@ function onClick(event) {
 				// Duplicate the last point for mouse move update
 				coords.splice( coords.length-1, 0, point );
 			}
-			layer.updateFeature(feature);
+			updateFeature();
 		}
 	}
 };
@@ -66,7 +72,7 @@ function onMouseMove(event) {
 	if ( started && coords.length > 0 && event.button == 0 ) {							
 		var point = Map.getLonLatFromEvent( event );
 		coords[ coords.length-2 ] = point;
-		layer.updateFeature(feature);
+		updateFeature();
 	}
 	
 };
@@ -134,6 +140,8 @@ return {
 		SelectHandler.start();
 		
 		if (onstop) {
+			feature.geometry.type = "Polygon";
+			feature.geometry.coordinates = [coords];
 			onstop();
 		}
 	}

@@ -109,10 +109,8 @@ define( function() {
 				switch (geometry.type) {
 					case "Polygon":
 						var out = this.fixDateLineCoords( geometry.coordinates[0] );
-						feature.geometry = {
-							type: "MultiPolygon",
-							coordinates: [ [out[0]], [out[1]] ]
-						};
+						feature.geometry.type = "MultiPolygon";
+						feature.geometry.coordinates = [ [out[0]], [out[1]] ];
 						break;
 					case "MultiPolygon":
 						var dateLineCoords = [];
@@ -120,16 +118,12 @@ define( function() {
 							var out = this.fixDateLineCoords( geometry.coordinates[i][0] );
 							dateLineCoords.push( [out[0]], [out[1]] );
 						}
-						feature.geometry = {
-							type: "MultiPolygon",
-							coordinates: dateLineCoords
-						};
+						feature.geometry.type = "MultiPolygon";
+						feature.geometry.coordinates = dateLineCoords;
 						break;
 					case "LineString":
-						feature.geometry = {
-							type: "MultiLineString",
-							coordinates: this.fixDateLineCoords( geometry.coordinates )
-						};
+						feature.geometry.type = "MultiLineString";
+						feature.geometry.coordinates = this.fixDateLineCoords( geometry.coordinates );
 						break;
 					case "MultiLineString":
 						var dateLineCoords = [];
@@ -137,10 +131,8 @@ define( function() {
 							var out = this.fixDateLineCoords( geometry.coordinates[i] );
 							dateLineCoords.push( out[0], out[1] );
 						}
-						feature.geometry = {
-							type: "MultiLineString",
-							coordinates: dateLineCoords
-						};
+						feature.geometry.type = "MultiLineString";
+						feature.geometry.coordinates = dateLineCoords;
 						break;
 				}
 				

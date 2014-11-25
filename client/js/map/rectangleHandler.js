@@ -18,19 +18,22 @@ var self = null;
  
 // Update the feature used to represent the rectangle
 function updateFeature(pt1,pt2) {
-	var minX = Math.min( pt1[0], pt2[0] );
-	var maxX = Math.max( pt1[0], pt2[0] );
-	var minY = Math.min( pt1[1], pt2[1] );
-	var maxY = Math.max( pt1[1], pt2[1] );
-	
-	feature.bbox = [ minX, minY, maxX, maxY ];
-	feature.geometry.coordinates = [[ [ minX, minY ],
-		[ maxX, minY ],
-		[ maxX, maxY ],
-		[ minX, maxY ],
-		[ minX, minY ]
-	]];
-	layer.updateFeature(feature);
+	if (pt1 && pt2) {
+		var minX = Math.min( pt1[0], pt2[0] );
+		var maxX = Math.max( pt1[0], pt2[0] );
+		var minY = Math.min( pt1[1], pt2[1] );
+		var maxY = Math.max( pt1[1], pt2[1] );
+		
+		feature.bbox = [ minX, minY, maxX, maxY ];
+		feature.geometry.type = "Polygon";
+		feature.geometry.coordinates = [[ [ minX, minY ],
+			[ maxX, minY ],
+			[ maxX, maxY ],
+			[ minX, maxY ],
+			[ minX, minY ]
+		]];
+		layer.updateFeature(feature);
+	}
 };
 
 // Called when left mouse button is pressed : start drawing the rectangle
