@@ -103,7 +103,12 @@ var AdvancedSearchView = Backbone.View.extend({
 	
 	render: function(){
 
-		var content = _.template(advancedCriteria_template, this.model);
+		var criterionLabels = Configuration.get("search.advancedCriteriaLabels",{});
+		var content = _.template(advancedCriteria_template, {
+			dataset: this.model.dataset,
+			attributes: this.model.attributes,
+			criterionLabels: criterionLabels
+		});
 		this.$el.append(content);
 		this.$el.trigger('create');
 		return this;

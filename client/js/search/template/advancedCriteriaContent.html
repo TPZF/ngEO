@@ -1,7 +1,6 @@
-<% if (!dataset) { %> 
+<% if (!dataset) { %>
 
     <!-- if no dataset has been selected display an information message to the user -->
-
 	<div id="advancedCriteriaMessage" class="widget-content ui-body-c">
 		<p><b>No dataset has been selected.</b></p>
 		<p><b>Please select a dataset first to see its advanced criteria </b></p>
@@ -10,7 +9,6 @@
 <% } else { %>	
 	
 	<!-- if the selected dataset has no advanced criteria display an information message to the user -->
-	
 	<% if (dataset.get("attributes").length == 0 ) { %>
 		<div id="advancedCriteriaMessage" class="widget-content ui-body-c">
 			<p><b>The selected dataset : <%=dataset.attributes.id %> </b></p>
@@ -25,13 +23,13 @@
 		<% _.each(dataset.get("attributes"), function(criterion, i) { %>		
 		
 			   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes  -->
-				<% if (criterion.type == 'List') { %> 
+				<% if (criterion.type.toLowerCase() == 'list') { %> 
 
 						 <div data-role="fieldcontain">
 							
 							<fieldset data-role="controlgroup">
 								
-								<legend><%= criterion.id %>:</legend>
+								<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
     	
     							<% _.each(criterion.possibleValues, function(possibleValue) { %>
 								
@@ -53,14 +51,14 @@
    						</div>
 					
 				<!-- the criterion is an integer within a range  -->	
-				<% } else if (criterion.type == 'Integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+				<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 					
 
 					<div data-role="fieldcontain">
 							
 							<fieldset data-role="controlgroup">
 								
-								<legend><%= criterion.id %>:</legend>
+								<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
 
 								<% if (_.has(attributes, criterion.id)){ %>
 									<label for="<%= criterion.id %>_from">from:</label>
@@ -81,11 +79,11 @@
    					</div>
 
 				<!-- the criterion is an string  -->	
-				<% } else if (criterion.type == 'String') { %>	
+				<% } else if (criterion.type.toLowerCase() == 'string') { %>	
 				
 					<div data-role="fieldcontain">
 							
-						<label class="capitalize" for="<%= criterion.id %>"><%= criterion.id %>:</label>
+						<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
 
 						<% if (_.has(attributes, criterion.id)){ %>
 							<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= attributes[criterion.id] %>" data-mini="true"/>
@@ -98,11 +96,11 @@
    					</div>
 
 				<!-- the criterion is an float  -->	
-				<% } else if (criterion.type == 'Float' || criterion.type == 'Integer') { %>	
+				<% } else if (criterion.type.toLowerCase() == 'float' || criterion.type.toLowerCase() == 'integer') { %>	
 				
 					<div data-role="fieldcontain">
 							
-						<label class="capitalize" for="<%= criterion.id %>"><%= criterion.id %>:</label>
+						<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
 
 						<% if (_.has(attributes, criterion.id)){ %>
 							<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= attributes[criterion.id] %>" data-mini="true"/>
