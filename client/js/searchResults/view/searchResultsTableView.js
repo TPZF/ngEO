@@ -172,7 +172,11 @@ var SearchResultsTableView = Backbone.View.extend({
 			this.downloadOptionsButton.button('disable');
 		} else {
 			this.retrieveProduct.button('enable');
-			this.downloadOptionsButton.button('enable');
+			if ( DatasetSearch.dataset.get('downloadOptions').length != 0 ) {
+				this.downloadOptionsButton.button('enable');
+			} else {
+				this.downloadOptionsButton.button('disable');
+			}
 		}
 	},
 	
