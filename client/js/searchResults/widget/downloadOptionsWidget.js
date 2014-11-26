@@ -4,8 +4,8 @@
   */
 
 
-define( [ "jquery", "configuration", 'search/view/downloadOptionsView', 'search/model/datasetSearch', 'searchResults/model/searchResults'], 
-		function($, Configuration, DownloadOptionsView, DataSetSearch, SearchResults) {
+define( [ "jquery", "backbone", "configuration", 'search/view/downloadOptionsView', 'search/model/datasetSearch', 'searchResults/model/searchResults'], 
+		function($, Backbone, Configuration, DownloadOptionsView, DataSetSearch, SearchResults) {
 
 
 var DownloadOptionsWidget = function() {
@@ -22,9 +22,12 @@ var DownloadOptionsWidget = function() {
 			parentElement.remove();
 		}
 	});
+	
+	// Use a model to store the download options of selected products
+	var selectedDownloadOptions = new Backbone.Model();
 
 	var downloadOptionsView = new DownloadOptionsView({
-		model : DataSetSearch,
+		model : productDO,
 		el: element
 	});
 		
@@ -33,6 +36,10 @@ var DownloadOptionsWidget = function() {
 	 */
 	this.open = function() {
 	
+		//  Update the selected download options model
+		selectedDownloadOptions.dataset = DataSetSearch.dataset;
+		selectedDownloadOptions.attributes = SearchResults.getSelectedDownloadOptions();
+		
 		downloadOptionsView.render();
 		
 		downloadOptionsView.$el.append('\
@@ -46,7 +53,7 @@ var DownloadOptionsWidget = function() {
 		downloadOptionsView.$el.find('#downloadOptionsUpdate').click( function(event){
 			//update the product url of the selected products with the selected download options
 			//and display a message to the user.
-			$.when(SearchResults.updateProductUrls(DataSetSearch.getSelectedDownloadOptions())).done(function(){
+			$.when(SearchResults.updateProductUrls(selectedDownloadOptions.attributes)).done(function(){
 				$("#downloadOptionsMessage").empty();
 				$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
 			});

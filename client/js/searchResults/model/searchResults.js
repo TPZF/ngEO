@@ -4,6 +4,28 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 
+var _getProductDownloadOptions = function(feature) {
+	var downloadOptions = {};
+	if ( feature.properties && feature.properties.productUrl  ) {
+		var url = feature.properties.productUrl;
+
+		var idx = url.indexOf("ngEO_DO={");
+		if ( idx >= 0 ) {
+			var str = url.substring(idx+9,url.length-1);
+			var kvs = str.split(',');
+			
+			for ( var n = 0; n < kvs.length; n++ ) {
+				var kv = kvs[n].split(':');
+				if ( kv.length == 2 ) {				
+					downloadOptions[ kv[0] ] = kv[1];
+				}
+			}
+		}
+	}
+
+	return 	downloadOptions;	
+};
+
 var SearchResults = {
 	
 	// Store the count per page
@@ -359,6 +381,37 @@ var SearchResults = {
 				feature.properties.productUrl =  url;
 			} 
 		});
+	},
+	
+	/** 
+	 * Get the download options on the selected products
+	 */
+	getSelectedDownloadOptions: function() {
+			
+		if ( this.selection.length == 0 )
+			return {};
+		
+		// Retreive download options for first product in selection
+		var selectedDowndloadOptions = _getProductDownloadOptions( this.selection[0] );
+		
+		// Now check if the other have the same download options
+		for ( var i = 1; i < this.selection.length; i++ ) {
+			var dos = _getProductDownloadOptions( this.selection[i] );
+			
+			for ( var x in dos ) {
+				if ( selectedDowndloadOptions[x] != dos[x] ) {
+					selectedDowndloadOptions[x] = "@conflict";
+				}
+			}
+			
+			for ( var x in selectedDowndloadOptions ) {
+				if ( selectedDowndloadOptions[x] != dos[x] ) {
+					selectedDowndloadOptions[x] = "@conflict";
+				}
+			}		
+		}
+		
+		return selectedDowndloadOptions;
 	},
 	
 	/**  Check whether the given feature has a direct download url supported by a browser */
