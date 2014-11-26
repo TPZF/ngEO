@@ -30,9 +30,9 @@
 						<option value="None">None</option>
 						<% _.each(option.values, function(value) { %>
 							<% if (_.has(attributes, option.argumentName) && (attributes[option.argumentName] == value.name)) {  %>						
-								<option value="<%= value.name%>" selected><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>
+								<option value="<%= value.name%>" selected><%=value.humanReadable%></option>
 							<% } else { %>	 
-			 					<option value="<%= value.name%>"><%=value.humanReadable%> - sizeFactor : <%=value.sizeFactor%></option>		
+			 					<option value="<%= value.name%>"><%=value.humanReadable%></option>		
 							<% } %>	 
 						<% }); %>
 					</select>	
