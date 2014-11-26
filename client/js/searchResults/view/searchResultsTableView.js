@@ -226,6 +226,8 @@ var SearchResultsTableView = Backbone.View.extend({
 		for ( var i = 1; i < columnsDef.length; i++ ) {
 			columnsDef[i].sDefaultContent = "None";
 		}
+		
+		var directColumnIndex = Configuration.get("resultsTable.directDownloadColumn",-1);
 
 		// Build parameters for dataTables
 		var parameters = {
@@ -238,12 +240,12 @@ var SearchResultsTableView = Backbone.View.extend({
 			"sScrollY": "200px",
 			"bPaginate": false,
 			/*"bScrollCollapse": true,*/
-			"fnCreatedRow": function( nRow, aData, iDataIndex ) {
-				var selector = "td:eq(" + Configuration.get("resultsTable.directDownloadColumn",8) + ")";
+			"fnCreatedRow": directColumnIndex >= 0 ? function( nRow, aData, iDataIndex ) {
+				var selector = "td:eq(" + directColumnIndex + ")";
 				if (self.model.isBrowserSupportedUrl( self.model.features[iDataIndex])){
 					$(nRow).find(selector).addClass("ui-direct-download");
 				}
-			}
+			} : null
 		};
 				
 		var self = this;
