@@ -21,11 +21,12 @@ define( function() {
 		 * Compute the bbox of a feature
 		 */
 		computeExtent: function(feature) {
-			var isMultiPolygon = feature.geometry.type == "MultiPolygon";
-			var numOuterRings = isMultiPolygon ? feature.geometry.coordinates.length : 1;
-			
+			if (feature.bbox)
+				return;
+							
 			// Get the coordinates
 			var coords;
+			var numOuterRings = 1
 			switch (feature.geometry.type) {
 				case "Point":
 					coords = feature.geometry.coordinates;
@@ -38,12 +39,14 @@ define( function() {
 					coords = feature.geometry.coordinates[0];
 					break;
 				case "MultiPolygon":
+					numOuterRings = j;
 					coords = feature.geometry.coordinates[0][0];
 					break;
 				case "LineString":
 					coords = feature.geometry.coordinates;
 					break;
 				case "MultiLineString":
+					numOuterRings = j;
 					coords = feature.geometry.coordinates[0];
 					break;
 			}
@@ -52,20 +55,29 @@ define( function() {
 				return;
 
 			
-			var minX = coords[0][0];
-			var minY = coords[0][1];
-			var maxX =  coords[0][0];
-			var maxY =  coords[0][1];
+			var minX = 10000;
+			var minY = 10000;
+			var maxX = -10000;
+			var maxY = -10000
 			
 			for ( var j = 0; j < numOuterRings; j++ ) {
-				coords = isMultiPolygon ? feature.geometry.coordinates[j][0] : coords;
-				for ( var i = 1;  i < coords.length; i++ )	{
+				switch (feature.geometry.type) {
+					case "MultiPolygon":
+						coords = feature.geometry.coordinates[j][0];
+						break;
+					case "MultiLineString":
+						numOuterRings = j;
+						coords = feature.geometry.coordinates[j];
+						break;
+				}
+				for ( var i = 0;  i < coords.length; i++ )	{				
 					minX = Math.min( minX, coords[i][0] );	
 					minY = Math.min( minY, coords[i][1] );	
 					maxX = Math.max( maxX, coords[i][0] );	
 					maxY = Math.max( maxY, coords[i][1] );	
 				}
 			}
+			
 			feature.bbox = [ minX, minY, maxX, maxY ];
 		},
 		
@@ -103,14 +115,22 @@ define( function() {
 		fixDateLine: function(feature) {
 			
 			// Fix dateline if needed
-			if ( (feature.bbox[2] - feature.bbox[0]) > 270 ) {
+			this.computeExtent(feature);
+			if ( Math.abs(feature.bbox[2] - feature.bbox[0]) > 270  ) {
 			
+				var featureCopy = {
+					id: feature.id,
+					type: "Feature",
+					geometry: {
+					},
+					properties: feature.properties
+				};
 				var geometry = feature.geometry;
 				switch (geometry.type) {
 					case "Polygon":
 						var out = this.fixDateLineCoords( geometry.coordinates[0] );
-						feature.geometry.type = "MultiPolygon";
-						feature.geometry.coordinates = [ [out[0]], [out[1]] ];
+						featureCopy.geometry.type = "MultiPolygon";
+						featureCopy.geometry.coordinates = [ [out[0]], [out[1]] ];
 						break;
 					case "MultiPolygon":
 						var dateLineCoords = [];
@@ -118,12 +138,12 @@ define( function() {
 							var out = this.fixDateLineCoords( geometry.coordinates[i][0] );
 							dateLineCoords.push( [out[0]], [out[1]] );
 						}
-						feature.geometry.type = "MultiPolygon";
-						feature.geometry.coordinates = dateLineCoords;
+						featureCopy.geometry.type = "MultiPolygon";
+						featureCopy.geometry.coordinates = dateLineCoords;
 						break;
 					case "LineString":
-						feature.geometry.type = "MultiLineString";
-						feature.geometry.coordinates = this.fixDateLineCoords( geometry.coordinates );
+						featureCopy.geometry.type = "MultiLineString";
+						featureCopy.geometry.coordinates = this.fixDateLineCoords( geometry.coordinates );
 						break;
 					case "MultiLineString":
 						var dateLineCoords = [];
@@ -131,14 +151,16 @@ define( function() {
 							var out = this.fixDateLineCoords( geometry.coordinates[i] );
 							dateLineCoords.push( out[0], out[1] );
 						}
-						feature.geometry.type = "MultiLineString";
-						feature.geometry.coordinates = dateLineCoords;
+						featureCopy.geometry.type = "MultiLineString";
+						featureCopy.geometry.coordinates = dateLineCoords;
 						break;
 				}
-				
-				this.computeExtent( feature );
-				feature.bbox[0] = this.normalizeLon( feature.bbox[0] ); 
-				feature.bbox[2] = this.normalizeLon( feature.bbox[2] ); 
+
+				return featureCopy;
+			}
+			else
+			{
+				return feature;
 			}
 			
 		},

@@ -42,6 +42,9 @@ function isDoubleClick(event) {
 function updateFeature() {
 	feature.geometry.type = "Polygon";
 	feature.geometry.coordinates = [coords];
+	// If there is any bbox, clear it, it is no longer valid.
+	// Sometimes the map backend can compute the bbox for rendering purposes
+	feature.bbox = null;
 	layer.updateFeature(feature);
 };
 

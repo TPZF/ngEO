@@ -2,9 +2,9 @@
  * OpenLayers map engine
  */
 
-define( [ "configuration", "externs/OpenLayers.ngeo" ],
+define( [ "configuration", "map/utils", "externs/OpenLayers.ngeo" ],
  
- function(Configuration) {
+ function(Configuration,MapUtils) {
   
 var _projection = Configuration.get('map.projection',"EPSG:4326");
   
@@ -461,7 +461,7 @@ OpenLayersMapEngine.prototype.removeAllFeatures = function(layer)
  */
 OpenLayersMapEngine.prototype.addFeature = function(layer,feature)
 {
-	var olFeatures = this._geoJsonFormat.read(feature);
+	var olFeatures = this._geoJsonFormat.read( MapUtils.fixDateLine(feature) );
 	layer.addFeatures( olFeatures );
 
 }
@@ -497,7 +497,7 @@ OpenLayersMapEngine.prototype.updateFeature = function(layer,feature)
 {
 	var olFeature = layer.getFeatureByFid(feature.id);
 	layer.removeFeatures( olFeature );
-	layer.addFeatures( this._geoJsonFormat.read(feature) );
+	layer.addFeatures( this._geoJsonFormat.read( MapUtils.fixDateLine(feature) ) );
 }
 
 /**

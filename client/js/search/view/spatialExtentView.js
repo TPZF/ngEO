@@ -43,9 +43,10 @@ var SpatialExtentView = Backbone.View.extend({
 				type: "Feature",
 				visible: true,
 				style: "search-area",
-				data: this.model.searchArea.getFeature()
+				greatCircle: false
 			};
 			this.searchAreaLayer = Map.addLayer( searchAreaParams  );
+			this.searchAreaLayer.addFeature( this.model.searchArea.getFeature() );
 		} else {
 			this.searchAreaLayer.updateFeature( this.model.searchArea.getFeature()  );
 		}

@@ -47,15 +47,16 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		};
 		this.addFeatures = function(features) {
 			for ( var i = 0; i < features.length; i++ ) {
-				if ( features[i].geometry ) {
-					Utils.computeExtent( features[i] );
-					if (params.greatCircle) {
-						Utils.tesselateGreatCircle( features[i] );
-					}
-					Utils.fixDateLine( features[i] );
-					mapEngine.addFeature( this.engineLayer, features[i] );
-					this.features.push(features[i]);
+				this.addFeature( features[i] );
+			}
+		};
+		this.addFeature = function(feature) {
+			if ( feature.geometry ) {
+				if (params.greatCircle) {
+					Utils.tesselateGreatCircle( feature );
 				}
+				mapEngine.addFeature( this.engineLayer, feature );
+				this.features.push(feature);
 			}
 		};
 		this.removeFeatures = function(features) {
@@ -71,8 +72,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			}
 		};
 		this.updateFeature = function(feature) {
-			Utils.computeExtent( feature );
-			Utils.fixDateLine( feature );
+			if (params.greatCircle) {
+				Utils.tesselateGreatCircle( feature );
+			}
 			mapEngine.updateFeature( this.engineLayer, feature );
 		};
 		this.changeEngine = function(mapEngine) {
@@ -81,7 +83,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			for ( var i = 0; i < this.features.length; i++ ) {
 				var f = this.features[i];
 				mapEngine.addFeature( this.engineLayer, f );
-				if ( f && f.properties.styleHint && f.properties.styleHint != 'default' ) {
+				if ( f && f.properties && f.properties.styleHint && f.properties.styleHint != 'default' ) {
 					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.styleHint );
 				}
 			}
