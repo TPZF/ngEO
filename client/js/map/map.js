@@ -7,8 +7,6 @@ define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPre
 // The function to define the map module
 function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, Utils ) {
 
-
-
 	/**
 	 * Inner class
 	 */
@@ -47,15 +45,16 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		};
 		this.addFeatures = function(features) {
 			for ( var i = 0; i < features.length; i++ ) {
-				if ( features[i].geometry ) {
-					Utils.computeExtent( features[i] );
-					if (params.greatCircle) {
-						Utils.tesselateGreatCircle( features[i] );
-					}
-					Utils.fixDateLine( features[i] );
-					mapEngine.addFeature( this.engineLayer, features[i] );
-					this.features.push(features[i]);
+				this.addFeature( features[i] );
+			}
+		};
+		this.addFeature = function(feature) {
+			if ( feature.geometry ) {
+				if (params.greatCircle) {
+					Utils.tesselateGreatCircle( feature );
 				}
+				mapEngine.addFeature( this.engineLayer, feature );
+				this.features.push(feature);
 			}
 		};
 		this.removeFeatures = function(features) {
@@ -71,13 +70,10 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			}
 		};
 		this.updateFeature = function(feature) {
-			// Hack : keep the original geometry, because fixDateLine modify the geomeetry
-			var originalGeometry = feature.geometry;
-			Utils.computeExtent( feature );
-			Utils.fixDateLine( feature );
+			if (params.greatCircle) {
+				Utils.tesselateGreatCircle( feature );
+			}
 			mapEngine.updateFeature( this.engineLayer, feature );
-			// Restore geometry
-			feature.geometry = originalGeometry;
 		};
 		this.changeEngine = function(mapEngine) {
 			this.engineLayer = mapEngine.addLayer( this.params );
@@ -85,7 +81,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			for ( var i = 0; i < this.features.length; i++ ) {
 				var f = this.features[i];
 				mapEngine.addFeature( this.engineLayer, f );
-				if ( f && f.properties.styleHint && f.properties.styleHint != 'default' ) {
+				if ( f && f.properties && f.properties.styleHint && f.properties.styleHint != 'default' ) {
 					mapEngine.modifyFeatureStyle( this.engineLayer, f, f.properties.styleHint );
 				}
 			}
@@ -186,6 +182,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 	 * Public interface
 	 */
 	return {
+	
+		/**
+		 * The handler used for interaction with the map : selection, polygon drawing, etc..
+		 */
+		handler: null,
 	
 		/**
 		 * The background layers that can be used on the map.
@@ -384,13 +385,22 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				return false;
 			}
 			
+			var previousHandler = null;
+			
 			if ( mapEngine ) {
+				// Stop current handler because it depends on the map engine
+				if ( this.handler ) {
+					previousHandler = this.handler;
+					this.handler.stop();
+				}
+				
 				// Retrieve the current viewport extent
 				var extent = mapEngine.getViewportExtent();
 				
 				// Destroy the old map engine
 				mapEngine.destroy();
 				mapEngine = null;
+				
 			}
 				
 			// Callback called by the map engine when the map engine is initialized
@@ -402,6 +412,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
+					
+				if ( previousHandler ) 
+					previousHandler.start();
 												
 			};
 						

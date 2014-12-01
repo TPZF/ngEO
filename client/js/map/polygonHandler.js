@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map', 'map/selectHandler'], function($, Map, SelectHandler) {
+define(['map/handler', 'map/map'], function(Handler, Map) {
 	
 /**
  * Private variables
@@ -39,6 +39,15 @@ function isDoubleClick(event) {
 	return isDoubleClick;
 }
 
+function updateFeature() {
+	feature.geometry.type = "Polygon";
+	feature.geometry.coordinates = [coords];
+	// If there is any bbox, clear it, it is no longer valid.
+	// Sometimes the map backend can compute the bbox for rendering purposes
+	feature.bbox = null;
+	layer.updateFeature(feature);
+};
+
 // Called on a click : add a new point in the polygon
 function onClick(event) {
 	if ( started && event.button == 0 ) {
@@ -56,7 +65,7 @@ function onClick(event) {
 				// Duplicate the last point for mouse move update
 				coords.splice( coords.length-1, 0, point );
 			}
-			layer.updateFeature(feature);
+			updateFeature();
 		}
 	}
 };
@@ -66,7 +75,7 @@ function onMouseMove(event) {
 	if ( started && coords.length > 0 && event.button == 0 ) {							
 		var point = Map.getLonLatFromEvent( event );
 		coords[ coords.length-2 ] = point;
-		layer.updateFeature(feature);
+		updateFeature();
 	}
 	
 };
@@ -74,10 +83,9 @@ function onMouseMove(event) {
 /**
  * Public interface
  */
-return {
+self = new Handler({
 	// Start the handler
 	start: function(options) {
-		self = this;
 		mapEngine = Map.getMapEngine();
 		
 		// Create the layer if not already created
@@ -117,9 +125,6 @@ return {
 		// Prepare mouse listening and reset coordinates
 		coords.length = 0;
 		started = true;
-		
-		// TODO : find a better way to manage the default handler
-		SelectHandler.stop();
 	},
 	
 	// Stop the handler
@@ -129,14 +134,15 @@ return {
 		// Unsubscribe to mouse events
 		mapEngine.unsubscribe("mousemove", onMouseMove);
 		mapEngine.unsubscribe("mouseup", onClick);
-		
-		// TODO : find a better way to manage the default handler
-		SelectHandler.start();
-		
+
 		if (onstop) {
+			feature.geometry.type = "Polygon";
+			feature.geometry.coordinates = [coords];
 			onstop();
 		}
 	}
-};
+});
+
+return self;
 		
 });

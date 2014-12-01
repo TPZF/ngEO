@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map'], function($, Map) {
+define(['map/handler', 'map/map'], function(Handler, Map) {
 	
 /**
  * Private variables
@@ -11,6 +11,8 @@ var mapEngine;
 var started = false;
 var onstop = null;
 var self = null;
+var startX;
+var endX;
 
 /**
  * Private methods
@@ -18,24 +20,30 @@ var self = null;
  
 // Update the feature used to represent the rectangle
 function updateFeature(pt1,pt2) {
-	var minX = Math.min( pt1[0], pt2[0] );
-	var maxX = Math.max( pt1[0], pt2[0] );
-	var minY = Math.min( pt1[1], pt2[1] );
-	var maxY = Math.max( pt1[1], pt2[1] );
-	
-	feature.bbox = [ minX, minY, maxX, maxY ];
-	feature.geometry.coordinates = [[ [ minX, minY ],
-		[ maxX, minY ],
-		[ maxX, maxY ],
-		[ minX, maxY ],
-		[ minX, minY ]
-	]];
-	layer.updateFeature(feature);
+	if (pt1 && pt2) {
+		
+		var minX = (endX > startX) ? pt1[0] : pt2[0];
+		var maxX = (endX > startX) ? pt2[0] : pt1[0];
+		
+		var minY = Math.min( pt1[1], pt2[1] );
+		var maxY = Math.max( pt1[1], pt2[1] );
+		
+		feature.bbox = [ minX, minY, maxX, maxY ];
+		feature.geometry.type = "Polygon";
+		feature.geometry.coordinates = [[ [ minX, minY ],
+			[ maxX, minY ],
+			[ maxX, maxY ],
+			[ minX, maxY ],
+			[ minX, minY ]
+		]];
+		layer.updateFeature(feature);
+	}
 };
 
 // Called when left mouse button is pressed : start drawing the rectangle
 function onMouseDown(event) {
-	if ( event.button == 0 ) {		
+	if ( event.button == 0 ) {
+		startX = event.pageX;
 		startPoint = Map.getLonLatFromEvent( event );
 		updateFeature( startPoint, startPoint );
 		started = true;
@@ -53,6 +61,7 @@ function onMouseMove(event) {
 // Called when left mouse button is release  : end drawing the rectangle
 function onMouseUp(event) {
 	if ( started && event.button == 0 ) {
+		endX = event.pageX;
 		var endPoint = Map.getLonLatFromEvent( event );
 		updateFeature(  startPoint, endPoint );
 		
@@ -65,10 +74,9 @@ function onMouseUp(event) {
 /**
  * Public interface
  */
-return {
+self = new Handler({
 	// Start the handler
 	start: function(options) {
-		self = this;
 		mapEngine = Map.getMapEngine();
 		
 		// Create the layer if not already created
@@ -120,6 +128,9 @@ return {
 			onstop();
 		}
 	}
-};
+});
+
+return self;
+
 		
 });
