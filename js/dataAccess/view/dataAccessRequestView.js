@@ -1,5 +1,5 @@
 define( ['jquery', 'backbone', 'configuration', "hostedProcesses/model/hostedProcessList", "hostedProcesses/view/selectHostedProcessesView", 'text!dataAccess/template/downloadManagersListContent.html',
-	 'text!dataAccess/template/downloadManagerInstallContent.html'], 
+	 'text!dataAccess/template/downloadManagerInstallContent.html', 'jquery.autocomplete'], 
 		function($, Backbone, Configuration, HostedProcessList, SelectHostedProcessView, downloadManagersList_template, downloadManagerInstall_template) {
 
 	/**
@@ -21,8 +21,8 @@ var DataAccessRequestView = Backbone.View.extend({
 			{
 				// No hosted process selected or selected one have valide parameters
 				$("#serverMessage").empty();
-				this.request.downloadLocation.DownloadManagerId = this.$el.find("#downloadManagersList").val();
-				this.request.downloadLocation.DownloadDirectory = this.$el.find("#downloadDirectory").val();
+				var dmId = this.request.downloadLocation.DownloadManagerId = this.$el.find("#downloadManagersList").val();
+				var dir = this.request.downloadLocation.DownloadDirectory = this.$el.find("#downloadDirectory").val();
 			
 				//disable the DMs list to avoid choosing a different DM once the
 				//validation request has been submitted
@@ -31,6 +31,14 @@ var DataAccessRequestView = Backbone.View.extend({
 				
 				// Submit the request
 				this.request.submit();
+				
+				// Store the used directories
+				var dirs = localStorage.getItem("directories-" + dmId) || "";
+				dirs = dirs.split(',');
+				if ( dirs.indexOf(dir) < 0) {
+					dirs.push(dir);
+				}
+				localStorage.setItem("directories-" + dmId,dirs.join(','));
 			}
 			else
 			{
@@ -97,7 +105,25 @@ var DataAccessRequestView = Backbone.View.extend({
 		// NGEO-900 : close widget when finished
 		var self = this;
 		setTimeout( function() { self.$el.parent().ngeowidget('hide') }, 1000 );
-	},	
+	},
+	
+	/**
+	 * Directory suggestion, depends on the selected download manager
+	 */
+	directorySuggestion: function(term,response) {
+		var dmId = this.$el.find("#downloadManagersList").val();
+		var dirs = localStorage.getItem("directories-" + dmId);
+		var suggestions = [];
+		if ( dirs ) {
+			dirs = dirs.split(',');
+			for ( var n=0; n < dirs.length; n++ ) {
+				if ( dirs[n] !== term && dirs[n].indexOf(term) >= 0 ) {
+					suggestions.push(dirs[n]);
+				}
+			}
+		}
+		response(suggestions);
+	},
 	
 	/**
 	 * Render the view
@@ -116,6 +142,8 @@ var DataAccessRequestView = Backbone.View.extend({
 		} else {
 			var content = _.template(downloadManagersList_template, this.model.attributes);
 			this.$el.html(content);
+			
+			this.$el.find("#downloadDirectory").autoComplete({ minChars: 0, cache: false, source: $.proxy(this.directorySuggestion,this) });
 		}
 
 		// Create hosted process list

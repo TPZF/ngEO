@@ -9,6 +9,7 @@ require.config({
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
 		"jquery.dataTables" : "externs/jquery.dataTables",
+		"jquery.autocomplete": "externs/jquery.auto-complete",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"
