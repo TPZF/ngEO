@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map'], function($, Map) {
+define(['map/handler', 'map/map'], function(Handler, Map) {
 	
 /**
  * Private variables
@@ -74,10 +74,9 @@ function onMouseUp(event) {
 /**
  * Public interface
  */
-return {
+self = new Handler({
 	// Start the handler
 	start: function(options) {
-		self = this;
 		mapEngine = Map.getMapEngine();
 		
 		// Create the layer if not already created
@@ -129,6 +128,9 @@ return {
 			onstop();
 		}
 	}
-};
+});
+
+return self;
+
 		
 });

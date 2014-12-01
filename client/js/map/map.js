@@ -7,8 +7,6 @@ define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPre
 // The function to define the map module
 function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, Utils ) {
 
-
-
 	/**
 	 * Inner class
 	 */
@@ -184,6 +182,11 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 	 * Public interface
 	 */
 	return {
+	
+		/**
+		 * The handler used for interaction with the map : selection, polygon drawing, etc..
+		 */
+		handler: null,
 	
 		/**
 		 * The background layers that can be used on the map.
@@ -377,13 +380,22 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				return false;
 			}
 			
+			var previousHandler = null;
+			
 			if ( mapEngine ) {
+				// Stop current handler because it depends on the map engine
+				if ( this.handler ) {
+					previousHandler = this.handler;
+					this.handler.stop();
+				}
+				
 				// Retrieve the current viewport extent
 				var extent = mapEngine.getViewportExtent();
 				
 				// Destroy the old map engine
 				mapEngine.destroy();
 				mapEngine = null;
+				
 			}
 				
 			// Callback called by the map engine when the map engine is initialized
@@ -395,6 +407,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				// Zoom to previous extent
 				if ( extent )
 					map.zoomToExtent( extent );
+					
+				if ( previousHandler ) 
+					previousHandler.start();
 												
 			};
 						

@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map', 'map/selectHandler'], function($, Map, SelectHandler) {
+define(['map/handler', 'map/map'], function(Handler, Map) {
 	
 /**
  * Private variables
@@ -83,10 +83,9 @@ function onMouseMove(event) {
 /**
  * Public interface
  */
-return {
+self = new Handler({
 	// Start the handler
 	start: function(options) {
-		self = this;
 		mapEngine = Map.getMapEngine();
 		
 		// Create the layer if not already created
@@ -126,9 +125,6 @@ return {
 		// Prepare mouse listening and reset coordinates
 		coords.length = 0;
 		started = true;
-		
-		// TODO : find a better way to manage the default handler
-		SelectHandler.stop();
 	},
 	
 	// Stop the handler
@@ -138,16 +134,15 @@ return {
 		// Unsubscribe to mouse events
 		mapEngine.unsubscribe("mousemove", onMouseMove);
 		mapEngine.unsubscribe("mouseup", onClick);
-		
-		// TODO : find a better way to manage the default handler
-		SelectHandler.start();
-		
+
 		if (onstop) {
 			feature.geometry.type = "Polygon";
 			feature.geometry.coordinates = [coords];
 			onstop();
 		}
 	}
-};
+});
+
+return self;
 		
 });

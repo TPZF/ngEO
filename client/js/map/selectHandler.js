@@ -1,5 +1,5 @@
 
-define(['jquery', 'map/map', 'searchResults/model/searchResults'], function($, Map, SearchResults) {
+define(['map/handler', 'map/map', 'searchResults/model/searchResults'], function(Handler, Map, SearchResults) {
 	
 /**
  * Private variables
@@ -238,7 +238,7 @@ function clearStack() {
 /**
  * Public interface
  */
-return {
+return new Handler({
 
 	/**
 	 * Initialize the select handler
@@ -250,9 +250,10 @@ return {
 	/**
 	 * Start the handler
 	 */
-	start: function() {		
+	start: function() {
+			
 		mapEngine = Map.getMapEngine();
-		
+			
 		// Click is not used because OpenLayers is messing up with click when navigation is active
 		mapEngine.subscribe( 'mousedown', onMouseDown);
 		mapEngine.subscribe( 'mouseup', mapClickHandler);
@@ -269,6 +270,8 @@ return {
 		mapEngine.unsubscribe( 'mousedown', onMouseDown);
 		mapEngine.unsubscribe( 'mouseup', mapClickHandler);
 	}
-};
+});
+
+
 		
 });
