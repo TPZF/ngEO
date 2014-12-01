@@ -13,6 +13,9 @@
 			<% if (!option.cropProductSearchArea) { %>
 				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.description %> : </label>
 					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+					<% if ( model.get(option.argumentName) == "@conflict" ) {  %>
+					<option value="" selected style="display: none;"></option>
+					<% } %>
 					<option value="None">None</option>
 					<% _.each(option.values, function(value) { %>
 						<% if ( model.get(option.argumentName) && (model.get(option.argumentName) == value.name) ) {  %>						

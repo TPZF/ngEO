@@ -9,12 +9,7 @@ var Handler = function(impl) {
 	
 	/**
 	 * Public interface
-	 */
-	this.initialize = function(options) {
-		if (impl.initialize)
-			impl.initialize(options);
-	};
-	
+	 */	
 	this.start = function(options) {
 		_previousHandler = Map.handler;
 		if ( _previousHandler ) {
@@ -34,6 +29,13 @@ var Handler = function(impl) {
 			_previousHandler = null;
 		}
 	};
+	
+	// Copy other methods
+	for ( var x in impl ) {
+		if ( impl[x] instanceof Function && x != 'start' && x != 'stop' ) {
+			this[x] = impl[x];
+		}
+	}
 };
 
 return Handler;

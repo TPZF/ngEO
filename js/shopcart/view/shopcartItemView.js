@@ -43,7 +43,8 @@ var ShopcartItemView = TableView.extend({
 	 * Render buttons
 	 */
 	renderButtons: function($buttonContainer) {
-	
+		var self = this;
+		
 		//add button to the widget footer in order to download products
 		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
 		this.downloadOptionsButton.button();
@@ -52,7 +53,7 @@ var ShopcartItemView = TableView.extend({
 		this.downloadOptionsButton.click(function() {
 		
 			var downloadOptionsWidget = new DownloadOptionsWidget();
-			downloadOptionsWidget.open();
+			downloadOptionsWidget.open(self.shopcart.featureCollection);
 
 		});
 		
@@ -61,7 +62,7 @@ var ShopcartItemView = TableView.extend({
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
 		
-		var self = this;
+		
 		this.deleteButton.click(function() {	
 			self.shopcart.deleteSelection();
 		});
