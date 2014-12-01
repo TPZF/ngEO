@@ -27,7 +27,7 @@ var DownloadOptionsWidget = function() {
 	var selectedDownloadOptions = new Backbone.Model();
 
 	var downloadOptionsView = new DownloadOptionsView({
-		model : productDO,
+		model : selectedDownloadOptions,
 		el: element
 	});
 		
