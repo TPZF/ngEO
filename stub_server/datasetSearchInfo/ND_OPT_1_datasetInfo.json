@@ -82,7 +82,7 @@
             },
             
             {
-                "id": "status",
+                "id": "cseop_status",
                 "type": "List",
                 "possibleValues": [
                     {
