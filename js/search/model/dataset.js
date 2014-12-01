@@ -1,6 +1,6 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
-var _ReservedNames = [ 'start', 'stop', 'geom', 'bbox' ];
+var _ReservedNames = [ 'start', 'stop', 'geom', 'bbox', 'id', 'lat', 'lon' , 'radius', 'rel' ,'loc' ];
 
 var Dataset = Backbone.Model.extend({
 

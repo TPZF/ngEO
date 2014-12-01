@@ -1,4 +1,3 @@
-{			
 	"tableView": {
 		"maxVisibleColumns": 10,
 		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
@@ -10,16 +9,69 @@
 						{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
 						{"sTitle" : "Product", "mData" : "id" }, 
 						{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
-						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"},
+						{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"}, 
 						{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationAzimuthAngle"},
 						{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationZenithAngle"},
 						{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationElevationAngle"},
 						{"sTitle" : "Test",  "sContentPadding": "mmm", "mData" : "properties.Test"} 
-					   ]
+					   ],
+		"directDownloadColumn" : -1
 	},
 	
 	"search": {
-		"geometryPrecision": 2
+		"geometryPrecision": 2,
+		"advancedCriteriaLabels" : {
+			"ailz"	    						:"ANX Ill. Zen.",
+			"csalt_cycleNumber"	    			:"Cycle number",
+			"csalt_isSegment"	    			:"Is segment",
+			"csalt_instrumentType"	    		:"Instrument type",
+			"csalt_relativePassNumber"    		:"Relative pass number",
+			"cseop_asut"   						:"ASUT",
+			"cseop_acquisitionType"        		:"Acquisition type",
+			"csatm_cloudCoverPercentage"    	:"Cloud cover percentage",
+			"csatm_centreViewAngles"    		:"Centre view angles",
+			"csatm_multiViewAngles"    			:"Multiview angles",
+			"csatm_snowCoverPercentage"    		:"Snow cover percentage",
+			"cseop_anxStart"	    			:"ANX Start",
+			"cseop_anxStop"	    				:"ANX Stop",
+			"cseop_fileName"        			:"File name",
+			"cseop_anxIllZen"       			:"Illumination azimuth angle",
+			"cseop_identifier"        			:"Identifier",
+			"cseop_illuminationElevationAngle"	:"Illumination elevation angle",
+			"cseop_imageQualityDegradation"		:"Image quality degradation",
+			"cseop_imageQualityDegradationTag"	:"Image quality degradation tag",
+			"cseop_imageQualityReportURL"	    :"Image quality report URL",
+			"cseop_imageQualityStatus"       	:"Image quality status",
+			"isn"       						:"Instrument short name",
+			"cslmb_sensorType"	    			:"Sensor type",
+			"cseop_orbitDirection"        		:"Orbit direction",
+			"on"        						:"Orbit number",
+			"csopt_cloudCoverPercentage"    	:"Cloud cover percentage",
+			"csopt_snowCoverPercentage"    		:"Snow cover percentage",
+			"pgrpi"	    						:"Product group Id",
+			"cseop_processingMode"	    		:"Processing mode",
+			"psi"       						:"Platform serial identifier",
+			"psn"       						:"Platform short name",
+			"cseop_productType"        			:"Product type",
+			"s2ca"	    						:"Cloudy area",
+			"s2cc"	    						:"Cloud cover percentage",
+			"s2ct"	    						:"Cloud threshold",
+			"cssar_antennaLookDirection"    	:"Antenna look direction",
+			"cssar_dopplerFrequency"    		:"Doppler frequency",
+			"cssar_incidenceAngleVariation"    	:"Incidence angle variation",
+			"cssar_maximumIncidenceAngle"		:"Maximum incidence angle",
+			"cssar_minimumIncidenceAngle"		:"Minimum incidence angle",
+			"cssar_polarisationChannels"	    :"Polarisation channels",
+			"cssar_polarisationMode"	    	:"Polarisation mode",
+			"si"        						:"Swath identifier",
+			"cseop_size"	    				:"Size",
+			"som"       						:"Sensor operational mode",
+			"st"        						:"Sensor type",
+			"cseop_status"    					:"Status",
+			"cseop_timeliness"        			:"Timeliness",
+			"cseop_wrsLatitudeGrid"	    		:"Frame",
+			"cseop_wrsLongitudeGrid"	    	:"Track"
+		}
 	},
 	
 	"searchResults": {

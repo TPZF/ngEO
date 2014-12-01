@@ -1,6 +1,5 @@
 
 <!-- if the selected dataset has no advanced criteria display an information message to the user -->
-
 <% if ( _.size( model.get("advancedAttributes") ) == 0 ) { %>
 	<div class="widget-content ui-body-c ui-error-message">
 		<p><b>No advanced criteria available.</b></p>
@@ -14,13 +13,13 @@
 	<% _.each( model.get("advancedAttributes"), function(criterion, i) { %>		
 	
 		   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes  -->
-			<% if (criterion.type == 'List') { %> 
+			<% if (criterion.type.toLowerCase() == 'list') { %> 
 
 					 <div data-role="fieldcontain">
 						
 						<fieldset data-role="controlgroup">
 							
-							<legend><%= criterion.id %>:</legend>
+							<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
 	
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
 							
@@ -42,14 +41,14 @@
 					</div>
 				
 			<!-- the criterion is an integer within a range  -->	
-			<% } else if (criterion.type == 'Integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+			<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 				
 
 				<div data-role="fieldcontain">
 						
 						<fieldset data-role="controlgroup">
 							
-							<legend><%= criterion.id %>:</legend>
+							<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
 
 							<% if ( model.get(criterion.id) ){ %>
 								<label for="<%= criterion.id %>_from">from:</label>
@@ -70,11 +69,11 @@
 				</div>
 
 			<!-- the criterion is an string  -->	
-			<% } else if (criterion.type == 'String') { %>	
+			<% } else if (criterion.type.toLowerCase() == 'string') { %>	
 			
 				<div data-role="fieldcontain">
 						
-					<label class="capitalize" for="<%= criterion.id %>"><%= criterion.id %>:</label>
+					<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
 
 					<% if ( model.get(criterion.id) ){ %>
 						<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= model.get(criterion.id) %>" data-mini="true"/>
@@ -85,11 +84,11 @@
 				</div>
 
 			<!-- the criterion is an float  -->	
-			<% } else if (criterion.type == 'Float' || criterion.type == 'Integer') { %>	
+			<% } else if (criterion.type.toLowerCase() == 'float' || criterion.type.toLowerCase() == 'integer') { %>	
 			
 				<div data-role="fieldcontain">
 						
-					<label class="capitalize" for="<%= criterion.id %>"><%= criterion.id %>:</label>
+					<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
 
 					<% if ( model.get(criterion.id) ){ %>
 						<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= model.get(criterion.id) %>" data-mini="true"/>

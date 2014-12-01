@@ -22,7 +22,7 @@ var SearchResultsTableView = TableView.extend({
 		this.columnDefs = Configuration.data.tableView.columnsDef;
 		
 		// Set specific class for direct download of product
-		var ddIndex = Configuration.localConfig.directDownload.productColumnIndex;
+		var ddIndex = Configuration.get("tableView.directDownloadColumn",-1);
 		if ( ddIndex >= 0 && ddIndex < this.columnDefs.length ) {
 			this.columnDefs[  ddIndex ].getClasses = function(feature) {
 				return SearchResults.isBrowserSupportedUrl(feature) ? "ui-direct-download" : "";
