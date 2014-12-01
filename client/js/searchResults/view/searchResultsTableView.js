@@ -71,7 +71,11 @@ var SearchResultsTableView = TableView.extend({
 			this.addToShopcart.button('disable');
 		} else {
 			this.retrieveProduct.button('enable');
-			this.downloadOptionsButton.button('enable');
+			if ( this.model.dataset && this.model.getAvailableDownloadOptions().length != 0 ) {
+				this.downloadOptionsButton.button('enable');
+			} else {
+				this.downloadOptionsButton.button('disable');
+			}
 			this.addToShopcart.button('enable');
 			
 			/*var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();
@@ -124,7 +128,7 @@ var SearchResultsTableView = TableView.extend({
 		this.downloadOptionsButton.click(function() {
 			
 			var downloadOptionsWidget = new DownloadOptionsWidget();
-			downloadOptionsWidget.open();
+			downloadOptionsWidget.open(self.model);
 
 		});
 		

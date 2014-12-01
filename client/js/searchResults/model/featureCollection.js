@@ -4,6 +4,29 @@
 define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
 
 
+var _getProductDownloadOptions = function(feature) {
+	var downloadOptions = {};
+	if ( feature.properties && feature.properties.productUrl  ) {
+		var url = feature.properties.productUrl;
+
+		var idx = url.indexOf("ngEO_DO={");
+		if ( idx >= 0 ) {
+			var str = url.substring(idx+9,url.length-1);
+			var kvs = str.split(',');
+			
+			for ( var n = 0; n < kvs.length; n++ ) {
+				var kv = kvs[n].split(':');
+				if ( kv.length == 2 ) {				
+					downloadOptions[ kv[0] ] = kv[1];
+				}
+			}
+		}
+	}
+
+	return 	downloadOptions;	
+};
+
+
 var FeatureCollection = function() {
 	
 	
@@ -39,6 +62,9 @@ var FeatureCollection = function() {
 	
 	// Download access
 	this.downloadAccess = true;
+	
+	// The dataset
+	this.dataset = null;
 	
 	// The id of the feature collection
 	this.id = "";
@@ -243,7 +269,95 @@ var FeatureCollection = function() {
 		}
 		return productUrls;
 	};
+	
+	/** the following method appends the download options using this convention ngEO product URI :
+	 *  it appends the download options to the product url as follows: &ngEO_DO={param_1:value1,....,param_n:value_n}
+	 */
+	this.updateProductUrls = function(selectedDownloadOptions) {
+		
+		_.each(this.selection, function(feature){
+			if ( feature.properties && feature.properties.productUrl  ) {
+				var url = feature.properties.productUrl;
+				//console.log("product url initial = " + url);
 
+				//remove the already added download options : this fixes the already existing bug :
+				//when none is chosen the download option is not removed from the url
+				if (url.indexOf("ngEO_DO={") != -1){
+					var url = url.substring(0, url.indexOf("ngEO_DO={")-1);
+					//console.log("product url removed download options  = " + url);
+				}
+				
+				_.each(selectedDownloadOptions, function(optionValue, optionKey, list){
+								
+					//the download option is not set in the url
+
+					if (url.indexOf("ngEO_DO={") != -1){//in that case the ngEO_DO={} is the last param according to the ICD
+						
+						var urlWithoutlastBaraket = url.substring(0, url.length-1);
+						urlWithoutlastBaraket += "," + optionKey + ":" + optionValue + "}";
+						url = urlWithoutlastBaraket;
+					
+					}else{//there are no download options already added
+						
+						if (url.indexOf("?") == -1){
+							url += "?";
+						} else {//there are parameters in the url
+							url += "&";
+						}
+						url += "ngEO_DO={" + optionKey + ":" + optionValue + "}";
+					
+					}
+				});	
+				//console.log("product url updated = " + url);
+				feature.properties.productUrl =  url;
+			} 
+		});
+	};
+		
+	/** 
+	 * Get the download options on the selected products
+	 */
+	this.getSelectedDownloadOptions = function() {
+			
+		if ( this.selection.length == 0 )
+			return {};
+		
+		// Retreive download options for first product in selection
+		var selectedDowndloadOptions = _getProductDownloadOptions( this.selection[0] );
+		
+		// Now check if the other have the same download options
+		for ( var i = 1; i < this.selection.length; i++ ) {
+			var dos = _getProductDownloadOptions( this.selection[i] );
+			
+			for ( var x in dos ) {
+				if ( selectedDowndloadOptions[x] != dos[x] ) {
+					selectedDowndloadOptions[x] = "@conflict";
+				}
+			}
+			
+			for ( var x in selectedDowndloadOptions ) {
+				if ( selectedDowndloadOptions[x] != dos[x] ) {
+					selectedDowndloadOptions[x] = "@conflict";
+				}
+			}		
+		}
+		
+		return selectedDowndloadOptions;
+	};
+	
+	/** 
+	 * Get the available download options for the selected products
+	 */
+	this.getAvailableDownloadOptions = function() {
+			
+		if ( this.dataset ) {
+			return this.dataset.get('downloadOptions');
+		}
+		
+		// TODO : fill download options
+		return [];
+	};
+	
 	/** return the non Planned features */
 /*	this.getSelectedNonPlannedFeatures = function() {
 		

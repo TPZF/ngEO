@@ -1,3 +1,4 @@
+{
 	"tableView": {
 		"maxVisibleColumns": 10,
 		"columnsDef" : [{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
