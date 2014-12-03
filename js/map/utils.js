@@ -109,14 +109,48 @@ define( function() {
 			}
 		},
 		
+		crossDateLine: function(coords) {
+			var posc = [];		
+			var negc = [];
+			for ( var n = 0; n < coords.length-1; n++) {
+				var x1 = coords[n][0];
+				var x2 = coords[n+1][0];
+				
+				if ( Math.abs(x1 - x2) > 180 )
+					return true;
+            }
+			
+			return false;
+		},
+		
 		/**
 		 * Fix dateline
 		 */
 		fixDateLine: function(feature) {
 			
 			// Fix dateline if needed
-			this.computeExtent(feature);
-			if ( Math.abs(feature.bbox[2] - feature.bbox[0]) > 270  ) {
+			var crossDateLine = false;
+			var geometry = feature.geometry;
+			switch (geometry.type) {
+				case "Polygon":
+					crossDateLine = this.crossDateLine( geometry.coordinates[0]  );
+					break;
+				case "MultiPolygon":
+					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+						crossDateLine |= this.crossDateLine( geometry.coordinates[i][0]  );					
+					}
+					break;
+				case "LineString":
+					crossDateLine |= this.crossDateLine( geometry.coordinates[i][0]  );	
+					break;
+				case "MultiLineString":
+					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+						crossDateLine |= this.crossDateLine( geometry.coordinates[i]  );	
+					}
+					break;
+			}	
+			
+			if ( crossDateLine  ) {
 			
 				var featureCopy = {
 					id: feature.id,
@@ -125,7 +159,6 @@ define( function() {
 					},
 					properties: feature.properties
 				};
-				var geometry = feature.geometry;
 				switch (geometry.type) {
 					case "Polygon":
 						var out = this.fixDateLineCoords( geometry.coordinates[0] );
