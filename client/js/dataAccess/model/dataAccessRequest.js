@@ -42,7 +42,7 @@ var DataAccessRequest = {
 		
 		return $.ajax({
 		  url: self.url,
-		  type : 'POST',
+		  type : 'PUT',
 		  dataType: 'json',
 		  contentType: 'application/json',
 		  data : JSON.stringify(self.getRequest()),

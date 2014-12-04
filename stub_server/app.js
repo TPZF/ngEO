@@ -55,10 +55,10 @@ app.get('/ngeo/catalogue/:datasetId/search', productSearch);
 app.get(/\/ngeo\/downloadManagers.*/, downloadManagers);
 
 //simple DAR interface
-app.post('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
+app.put('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
 
 //standing order DAR interface
-app.post('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
+app.put('/ngeo/standingOrderDataAccessRequest', standingOrderDataAccessRequest);
 
 //data access statuses interface
 app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
