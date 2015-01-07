@@ -128,6 +128,14 @@ return {
 			if ( !options || !options.keepLayer ) {
 				Map.removeLayer( fc._footprintLayer );
 			}
+			
+			// Remove browse on highlight and selection
+			for ( var i = 0; i < fc.highlights.length; i++ ) {
+				BrowsesManager.removeBrowse(fc.highlights[i]);
+			}
+			for ( var i = 0; i < fc.selection.length; i++ ) {
+				BrowsesManager.removeBrowse(fc.selection[i]);
+			}
 					
 			SelectHandler.removeFeatureCollection(fc);
 			
