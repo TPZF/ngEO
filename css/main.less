@@ -5,9 +5,13 @@
 @active-color: #2489ce;
 @border-color: lighten(@background-color,80%);
 
+
 /* Layout */
 @font-size: 14px;
 @header-height: 48px;
+
+/* Width to avoid warping the elements on next line while resizing the window */
+@base-width: 1120px;
 
 /**
  * Main body definition (no longer needed because of jquery-mobile?)
@@ -30,7 +34,7 @@ html, body {
 	padding: 0;
 	margin: 0;
 	//overflow: hidden;
-	min-width: 960px;
+	min-width: @base-width;
 }
 
 .ui-error-message{
