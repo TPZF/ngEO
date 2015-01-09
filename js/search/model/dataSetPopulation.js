@@ -46,6 +46,33 @@ var DataSetPopulation = Backbone.Model.extend({
 		// The base url to retreive the datasets population matrix
 		this.url = Configuration.baseServerUrl + '/datasetPopulationMatrix';
 		this.selection = {};
+		this.cache = {};
+	},
+	
+	/**
+	 * Fetch dataset
+	 * Use a cache
+	 */
+	fetchDataset: function(datasetId,callback) {
+		if ( this.cache.hasOwnProperty(datasetId) ) {
+			if (callback) {
+				callback( this.cache[datasetId] );
+			}	
+		} else {
+			var self = this;
+			var dataset = new DataSet({datasetId : datasetId});		
+			dataset.fetch({
+				success: function(model) {
+					self.cache[datasetId] = model;
+					callback(model);
+				},
+				error: function() {
+					self.trigger('datasetFetch',datasetId,"ERROR");
+				}
+			});
+			
+			
+		}
 	},
 	
 	/**
@@ -53,18 +80,12 @@ var DataSetPopulation = Backbone.Model.extend({
 	 */
 	select : function(datasetId) {
 		if (!this.selection.hasOwnProperty(datasetId)) {
-			var dataset = new DataSet({datasetId : datasetId});		
 			var self = this;
-			dataset.fetch({
-				success: function(model, response, options) {
-					self.selection[datasetId] = dataset;
-					self.trigger('select',dataset);
-					self.trigger('datasetFetch',dataset,"SUCCESS");
-				},
-				error: function(model, xhr, options) {
-					self.trigger('datasetFetch',datasetId,"ERROR");
-				}
-			});
+			this.fetchDataset(datasetId,function(model) {
+					self.selection[datasetId] = model;
+					self.trigger('select',model);
+					self.trigger('datasetFetch',model,"SUCCESS");
+				});
 		}
 	},
 	
