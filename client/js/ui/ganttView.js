@@ -1,6 +1,6 @@
 define(
-		[ 'jquery', 'backbone'],
-	function($, Backbone) {
+		[ 'jquery', 'backbone', 'map/map'],
+	function($, Backbone, Map) {
 
 
 var monthDay=["31","28","31","30","31","30","31","31","30","31","30","31"];
@@ -86,8 +86,7 @@ var GanttView = Backbone.View.extend({
 		this.buildTable( Date.fromISOString(minDate), Date.fromISOString(maxDate), features.length  );
 		
 		for ( var i = 0; i < features.length; i++ ) {
-			this.addBar( Date.fromISOString(features[i].properties.EarthObservation.gml_beginPosition), 
-					Date.fromISOString(features[i].properties.EarthObservation.gml_endPosition), features[i].id );
+			this.addBar( features[i] );
 		}
 
 		this.$el.find('.gantt-body-scroll').scrollLeft( this.$el.find('table').width() );
@@ -220,11 +219,14 @@ var GanttView = Backbone.View.extend({
 	},
 	
 	/**
-	 * Add a bar to the gantt chart
+	 * Add a bar to the gantt chart for the given feature
 	 */
-	addBar: function( start, end, id ) {
+	addBar: function( feature ) {
+
+		var start = Date.fromISOString(feature.properties.EarthObservation.gml_beginPosition);
+		var end = Date.fromISOString(feature.properties.EarthObservation.gml_endPosition);
 	
-		var tooltip = "Id : " + id + "&#13;";
+		var tooltip = "Id : " + feature.id + "&#13;";
 		tooltip += "Start : " + start.toISOString() + "&#13;";
 		tooltip += "End  : " + end.toISOString();
 		var $bar = $('<div title="' + tooltip +'" class="gantt-bar">');
@@ -237,7 +239,15 @@ var GanttView = Backbone.View.extend({
 		var numBars = this.$el.find('.gantt-body-scroll').children('.gantt-bar').length;
 		$bar.css({ top: 1 + numBars * 21, left: s, width: e-s });
 		
-		this.$el.find('.gantt-body-scroll').append($bar);
+		var self = this;
+		$bar.appendTo(this.$el.find('.gantt-body-scroll'))
+			// ZoomTo & highlight the selected feature
+			.click(function(){
+				if ( self.model.highlight ) {
+					Map.zoomToFeature( feature );
+					self.model.highlight([feature]);
+				}
+			});
 	},
 	
 	/**
