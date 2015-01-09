@@ -37,7 +37,10 @@
 		highDays: false,
 		highDates: false,
 		highDatesAlt: false,
-		enableDates: false
+		enableDates: false,
+
+		calDateList: false,
+		calShowDateList: false
 	});
 	$.extend( $.mobile.datebox.prototype, {
 		_cal_gen: function (start,prev,last,other,month) {
@@ -262,6 +265,30 @@
 			}
 			if ( o.calShowWeek ) { temp.find('.'+uid+'griddate').addClass(uid+'griddate-week'); }
 			
+			var dList = o.calDateList;
+			if ( o.calShowDateList && dList !== false ) {
+				var listControl = $( "<div style='margin: 10px 5px;'>" );
+				listControl.a = $( "<select name='pickdate'></select>" ).appendTo(listControl);
+				
+				listControl.a.append("<option data-placeholder='true' value='false'>" +
+					w.__( "calDateListLabel" ) + "</option>" );
+
+				for ( i = 0; i < dList.length; i++ ) {
+					listControl.a.append( 
+						$( "<option value='" + dList[i][0] + "'>" + dList[i][1] + "</option>" )
+					);
+				}
+				
+				listControl.a.on( "change", function() {
+					tempVal = $( this ).val().split( "-" );
+					w.theDate = new w._date(tempVal[0], tempVal[1]-1, tempVal[2], 0,0,0,0);
+					w.d.input.trigger('datebox',{'method':'doset'});
+				});
+				
+				listControl.find( "select" ).selectmenu( { mini: true, nativeMenu: false } );
+				listControl.appendTo( temp.parent() );
+			}
+
 			if ( o.useTodayButton || o.useClearButton ) {
 				hRow = $('<div>', {'class':uid+'controls'});
 				

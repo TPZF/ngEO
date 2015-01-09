@@ -78,6 +78,8 @@
 	"searchResults": {
 		"countPerPage": 100
 	},
+
+	"keyDates" : [["2015-04-25", "Super date"]],
 	
 	"downloadManager" : {		
 		"downloadManagerInstallationLink" : {
