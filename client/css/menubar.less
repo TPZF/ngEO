@@ -15,7 +15,7 @@ header {
 	padding: 0;
 	border-bottom: 2px solid @text-color;
 	height: @header-height;
-	min-width: 960px;
+	min-width: @base-width;
 	
 	/* All elements in header are inline, and vertically aligned */
 	> * {
@@ -80,6 +80,6 @@ header {
 .menuBarPageContent {
  	background-color: fade(@background-color, 50%); 
     margin:0px auto;
-	width: 960px;
+	width: @base-width;
     padding: 1em;
 }
