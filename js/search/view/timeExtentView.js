@@ -67,10 +67,19 @@ var TimeExtentView = Backbone.View.extend({
 			if ( useTimeSlider  ) {
 				this.addTimeSlider();
 			}
+
+			// Retrieve key dates from configuration.json
+			var dates = Configuration.get("keyDates").slice(0);
+
+			// Add dataset start/stop and today days
+			dates.unshift([this.model.get("dateRange").stop.toISODateString(), "Stop dataset"]);
+			dates.unshift([(new Date()).toISODateString(), "Today"]);
+			dates.unshift([this.model.get("dateRange").start.toISODateString(), "Start dataset"]);
 			
 			var dateRangeOptions = {
 				startYear: dateRange.start.getFullYear(),
-				endYear: dateRange.stop.getFullYear()
+				endYear: dateRange.stop.getFullYear(),
+				calDateList: dates
 			};
 			this.$fromDateInput.datebox("option", dateRangeOptions );
 			this.$toDateInput.datebox("option", dateRangeOptions );
@@ -103,10 +112,12 @@ var TimeExtentView = Backbone.View.extend({
 	onTimeSliderChanged: function(bounds) {
 		// Update the model
 		// Silent to avoid double update
-		this.model.set({ start: bounds.min,
-			stop: bounds.max }, {
-				silent: true
-			});
+		this.model.set({
+			start: bounds.min,
+			stop: bounds.max
+		}, {
+			silent: true
+		});
 		// Update the inputs
 		this.$fromDateInput.val( bounds.min.toISODateString() );
 		this.$toDateInput.val( bounds.max.toISODateString() );
@@ -138,7 +149,8 @@ var TimeExtentView = Backbone.View.extend({
 	},
 	
 	render: function(){
-		var content = _.template(dateCriteria_template, this.model);
+
+		var content = _.template(dateCriteria_template, { model: this.model, keyDates: JSON.stringify(Configuration.get("keyDates")) });
 		this.$el.append(content);
 		
 		// Keep the DOM elements needed by the view

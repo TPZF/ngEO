@@ -103,7 +103,8 @@
 					durationOrder: ['d', 'h', 'i', 's'],
 					meridiem: ['AM', 'PM'],
 					timeOutput: '%k:%M', //{ '12': '%l:%M %p', '24': '%k:%M' },
-					durationFormat: '%Dd %DA, %Dl:%DM:%DS'
+					durationFormat: '%Dd %DA, %Dl:%DM:%DS',
+					calDateListLabel: "Other dates"
 				}
 			}
 		},
