@@ -18,16 +18,22 @@ var DatasetSelectionView = Backbone.View.extend({
 	events : {
 	
 		'click li' : function(event){
-			
+			if (! $(event.target).hasClass('ui-icon')) {
+				var datasetId = event.currentTarget.id;
+				this.model.fetchDataset(datasetId,function(model) {
+						if ( model.get('description') ) {
+							$('#dsPopupDescription').html('<p>'+model.get('description')+'</p>').popup('open',{ positionTo: "#" + datasetId + " .ui-li-count" });
+						}
+					});
+			}
+		},
+		
+		'click .ui-icon': function(event) {
 			var $target = $(event.currentTarget);
-			
-			if ( $target.hasClass('ui-btn-active') ) {
-				$target.removeClass('ui-btn-active');
-				this.model.unselect(event.currentTarget.id);
-				
+			if ( $target.hasClass("ui-icon-checkbox-off") ) {
+				this.model.select(event.currentTarget.parentElement.id);
 			} else {
-				$target.addClass('ui-btn-active');
-				this.model.select(event.currentTarget.id);
+				this.model.unselect(event.currentTarget.parentElement.id);
 			}
 		},
 		
@@ -46,10 +52,10 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.listenTo(this.model,"select",this.onSelect);
 		this.listenTo(this.model,"unselect",this.onUnselect);
 		
+		// Update the checkbox if no fetch possible
 		this.listenTo(this.model,"datasetFetch", function(datasetId,status) {
 			if ( status == "ERROR" ) {
-				var $elt = this.$el.find('#' + datasetId );
-				$elt.removeClass('ui-btn-active');
+				Logger.error("Dataset " + datasetId + " is not available on the server.");
 			}
 		});
 	},
@@ -58,16 +64,18 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Call when a dataset is selected
 	 */
 	onSelect: function(dataset) {
-		var $elt = this.$el.find('#' + dataset.get('datasetId') );
-		$elt.addClass('ui-btn-active');
+		var $elt = this.$el.find('#' + dataset.get('datasetId') + ' .ui-icon' );
+		$elt.removeClass("ui-icon-checkbox-off");
+		$elt.addClass("ui-icon-checkbox-on");
 	},
 	
 	/**
 	 * Call when a dataset is unselected
 	 */
 	onUnselect: function(dataset) {
-		var $elt = this.$el.find('#' + dataset.get('datasetId') );
-		$elt.removeClass('ui-btn-active');
+		var $elt = this.$el.find('#' + dataset.get('datasetId') + ' .ui-icon' );
+		$elt.removeClass("ui-icon-checkbox-on");
+		$elt.addClass("ui-icon-checkbox-off");
 	},
 	
 	/**
@@ -198,7 +206,8 @@ var DatasetSelectionView = Backbone.View.extend({
 				if ( $elt.length == 0 ) {
 					 this.model.unselect( dataset.get('datasetId') )
 				} else {
-					$elt.addClass('ui-btn-active');
+					$elt.find('.ui-li-icon').addClass('ui-icon-checkbox-on');
+					$elt.find('.ui-li-icon').removeClass('ui-icon-checkbox-off');
 				}
 		}, this );
 	}
