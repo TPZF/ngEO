@@ -69,17 +69,36 @@ var TimeExtentView = Backbone.View.extend({
 			}
 
 			// Retrieve key dates from configuration.json
-			var dates = Configuration.get("keyDates").slice(0);
+			var keyDates = Configuration.get("keyDates").slice(0);
+			keyDates.push([(new Date()).toISODateString(), "Today"]);
 
-			// Add dataset start/stop and today days
-			dates.unshift([this.model.get("dateRange").stop.toISODateString(), "Stop dataset"]);
-			dates.unshift([(new Date()).toISODateString(), "Today"]);
-			dates.unshift([this.model.get("dateRange").start.toISODateString(), "Start dataset"]);
+			// Filter keyDates which aren't in range
+			var startDate = dateRange.start;
+			var stopDate = dateRange.validityStop;
+			var i = keyDates.length;
+			while(i--)
+			{
+				var keyDate = new Date(keyDates[i][0]);
+				var inRange = (keyDate <= stopDate && keyDate >= startDate);
+				if ( !inRange )
+				{
+					keyDates.splice(i, 1);
+				}
+			}
+
+			// Add start/stop dates
+			keyDates.push([startDate.toISODateString(), "Start dataset"]);
+			keyDates.push([stopDate.toISODateString(), "Stop dataset"]);
+
+			// Sort dates
+			keyDates.sort(function(a,b){
+				return new Date(a[0]) - new Date(b[0]);
+			});
 			
 			var dateRangeOptions = {
-				startYear: dateRange.start.getFullYear(),
-				endYear: dateRange.stop.getFullYear(),
-				calDateList: dates
+				startYear: startDate.getFullYear(),
+				endYear: stopDate.getFullYear(),
+				calDateList: keyDates
 			};
 			this.$fromDateInput.datebox("option", dateRangeOptions );
 			this.$toDateInput.datebox("option", dateRangeOptions );
