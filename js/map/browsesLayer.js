@@ -2,9 +2,9 @@
   * Browses layer module
   */
 
-define( ["configuration"], 
+define( ["configuration", "map/utils"], 
 
-function( Configuration ) {
+function( Configuration, MapUtils ) {
 
 function pad2(num) {
     var s = num+"";
@@ -97,6 +97,7 @@ var BrowsesLayer = function(params,mapEngine) {
 				params.matrixSet = "WGS84";
 			}
 			
+			MapUtils.computeExtent(feature);
 			var config = {
 				name: feature.id,
 				type: type,
