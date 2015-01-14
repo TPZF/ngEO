@@ -1,6 +1,6 @@
 
-export WEBC_VERSION=2.7
-export WEBC_RELEASE=SNAPSHOT20140620
+export WEBC_VERSION=2.10
+export WEBC_RELEASE=SNAPSHOT20141017
 
 # Build the WebClient first : minificaiton, combination
 cd ../build
