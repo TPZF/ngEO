@@ -336,40 +336,43 @@ var TableView = Backbone.View.extend({
 	 * Add data 
 	 */
 	addData : function(features,model,parentRowData) {
-	
-		var columns = this.columnDefs;
-		for ( var i=0; i < features.length; i++ ) {
-			if (features[i].properties.rel) {
-				this.hasExpandableRows = true;
-			}
-			var rowData = {
-				feature: features[i],
-				cellData: [],
-				isExpandable: features[i].properties.rel ? !parentRowData : false,
-				isExpand: false,
-				children: [],
-				isLoading : false,
-				totalNumChildren: 0
-			};
-			for ( var j=0; j < columns.length; j++ ) {
-				var d = getData(features[i],columns[j].mData);
-				rowData.cellData.push( d );
-				if (d) {
-					columns[j].numValidCell++;
+		
+		if ( features.length > 0 )
+		{
+			var columns = this.columnDefs;
+			for ( var i=0; i < features.length; i++ ) {
+				if (features[i].properties.rel) {
+					this.hasExpandableRows = true;
+				}
+				var rowData = {
+					feature: features[i],
+					cellData: [],
+					isExpandable: features[i].properties.rel ? !parentRowData : false,
+					isExpand: false,
+					children: [],
+					isLoading : false,
+					totalNumChildren: 0
+				};
+				for ( var j=0; j < columns.length; j++ ) {
+					var d = getData(features[i],columns[j].mData);
+					rowData.cellData.push( d );
+					if (d) {
+						columns[j].numValidCell++;
+					}
+				}
+				
+				if ( parentRowData ) {
+					parentRowData.children.push( rowData );
+				} else {
+					this.rowsData.push( rowData );
 				}
 			}
 			
-			if ( parentRowData ) {
-				parentRowData.children.push( rowData );
-			} else {
-				this.rowsData.push( rowData );
-			}
+			this.visibleRowsData = this.rowsData.slice(0);
+			
+			this.buildTable();
+			this.buildTableContent();
 		}
-		
-		this.visibleRowsData = this.rowsData.slice(0);
-		
-		this.buildTable();
-		this.buildTableContent();
 	},
 	
 	/**
