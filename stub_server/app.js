@@ -117,7 +117,7 @@ app.get(/\/ngeo\/downloadHelper.*/, downloadHelper);
 // Setup some proxy route (to have access to WFS or GeoRSS services)
 proxy.setup(app,[{ 
 	'method': 'post',
-	'host': 'demo.opengeo.org',
+	'host': 'demo.boundlessgeo.com',
 	'pattern': '/demoWFS',
 	'replace': '/geoserver/wfs'
 	}, {

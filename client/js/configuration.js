@@ -54,21 +54,38 @@ var configuration = {
 		
 	// Load configuration data from the server
 	load: function() {
-		return $.ajax({
-		  url: this.url,
-		  dataType: 'json',
-		  // Remove comments from JSON file
-		  dataFilter: function(data) {
-			var dataWoComments = removeComments(data);
-			return dataWoComments;
-		  },
-		  success: function(data) {
-			configuration.data = data;
-		  },
-		  error: function(jqXHR, textStatus, errorThrown) {
-			console.log("Configuration not found " + textStatus + ' ' + errorThrown);
-		  }
-		});
+	
+		var externalData = {};
+		
+		return $.when(
+			$.ajax({
+				  url: this.url,
+				  dataType: 'json',
+				  // Remove comments from JSON file
+				  dataFilter: function(data) {
+					var dataWoComments = removeComments(data);
+					return dataWoComments;
+				  },
+				  success: function(data) {
+					configuration.data = data;
+					$.extend(true,configuration.data,externalData);
+				  },
+				  error: function(jqXHR, textStatus, errorThrown) {
+					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
+				  }
+			}),
+			$.ajax({
+				  url: this.baseServerUrl + "/webClientConfigurationData",
+				  dataType: 'json',
+				  success: function(data) {
+					externalData = data;
+					$.extend(true,configuration.data,externalData);
+				  },
+				  error: function(jqXHR, textStatus, errorThrown) {
+					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
+				  }
+			})
+		);
 	},
 	
 	// Get a configuration parameter
