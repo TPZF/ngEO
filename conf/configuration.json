@@ -239,24 +239,7 @@
 			}
 		},
 		
-		"layers": [{
-			"name": "Earthquake Feed (GeoRSS)",
-			"type": "GeoRSS",
-			"location": "../data/eqs7day-M5.xml",
-			"visible": false
-		}, {
-			"name": "USGS Real-time Earthquakes (KML)",
-			"type": "KML",
-			"location": "../data/earthquake.kml",
-			"visible": false
-		}/*, {
-			"name": "States (WFS)",
-			"type": "WFS",
-			"baseUrl": "/demoWFS",
-			"featureType": "states",
-			"featureNS": "http://www.openplans.org/topp",
-			"visible": false
-		}*/],
+		"layers": [],
 		
 		"browseDisplay": {
 			"opacity": 0.7
