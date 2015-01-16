@@ -120,7 +120,7 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 		gwLayer = new GlobWeb.OSMLayer(layer);
 		break;
 	case "WMS":
-		gwLayer = new GlobWeb.WMSLayer( $.extend({ name: layer.name, baseUrl: layer.baseUrl}, layer.params) );
+		gwLayer = new GlobWeb.WMSLayer( $.extend({ name: layer.name, baseUrl: layer.baseUrl, crossOrigin: layer.crossOrigin}, layer.params) );
 		break;
 	case "BING":
 		gwLayer = new GlobWeb.BingLayer(layer);
@@ -155,7 +155,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	var gwLayer;
 	switch (layer.type.toUpperCase()) {
 	case "WMS":
-		gwLayer = new GlobWeb.WMSLayer($.extend({ name: layer.name, baseUrl: layer.baseUrl}, layer.params));
+		gwLayer = new GlobWeb.WMSLayer($.extend({ name: layer.name, baseUrl: layer.baseUrl, crossOrigin: layer.crossOrigin}, layer.params));
 		break;
 	case "WMTS":
 		var config = {
@@ -165,7 +165,8 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 			layer: layer.params.layer,
 			format: layer.params.format,
 			matrixSet: layer.params.matrixSet,
-			time: layer.params.time,
+			time: layer.params.time, 
+			crossOrigin: layer.crossOrigin
 		};
 		if ( layer.bbox ) {
 			config.geoBound = new GlobWeb.GeoBound( layer.bbox[0], layer.bbox[1], layer.bbox[2], layer.bbox[3] );
