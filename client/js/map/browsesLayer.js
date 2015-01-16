@@ -88,9 +88,10 @@ var BrowsesLayer = function(params,mapEngine) {
 					type: type,
 					visible: vis,
 					baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
-					opacity: Configuration.data.map.browseDisplay.opacity,
+					opacity: Configuration.get("map.browseDisplay.opacity", 1.0)
 					params: params,
-					bbox: feature.bbox
+					bbox: feature.bbox,
+					crossOrigin: Configuration.get("map.browseDisplay.crossOrigin", "anonymous")
 				};
 				
 				var browseLayerDesc = {
