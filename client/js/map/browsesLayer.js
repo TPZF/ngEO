@@ -88,7 +88,7 @@ var BrowsesLayer = function(params,mapEngine) {
 					type: type,
 					visible: vis,
 					baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
-					opacity: Configuration.get("map.browseDisplay.opacity", 1.0)
+					opacity: Configuration.get("map.browseDisplay.opacity", 1.0),
 					params: params,
 					bbox: feature.bbox,
 					crossOrigin: Configuration.get("map.browseDisplay.crossOrigin", "anonymous")
