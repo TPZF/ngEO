@@ -9,7 +9,7 @@ var datasetPopulationMatrix;
 fs.readFile('./datasetPopulationMatrix/datasets.json', 'utf8', function (err, data) {
 	datasetPopulationMatrix  = JSON.parse(data);
 	for ( var i = 16; i <= 1000; i++ ) {
-		datasetPopulationMatrix.datasetpopulationmatrix.datasetPopulationValues.push( [ "M" + i, "", "", "test" + i,"100"] );
+		datasetPopulationMatrix.datasetpopulationmatrix.datasetPopulationValues.push( [ "M" + i, "", "", "false", "test" + i,"100"] );
 	  }
 });
 

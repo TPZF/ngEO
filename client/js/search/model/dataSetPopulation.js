@@ -47,6 +47,7 @@ var DataSetPopulation = Backbone.Model.extend({
 		this.url = Configuration.baseServerUrl + '/datasetPopulationMatrix';
 		this.selection = {};
 		this.cache = {};
+		this._usableForInterferomtry = {};
 	},
 	
 	/**
@@ -112,6 +113,14 @@ var DataSetPopulation = Backbone.Model.extend({
 		}
 	},
 	
+	/**
+	 * Chech if a dataset is usable by interferomretry
+	 * See NGEOD-434
+	 */
+	usableForInterferometry: function(datasetId) {
+		return this._usableForInterferomtry[datasetId];
+	},
+	
 	/** 
 	 * Parse the response from the server
 	 */
@@ -129,6 +138,16 @@ var DataSetPopulation = Backbone.Model.extend({
 				var row = matrix[n];
 				row.push( row[nameIndex] );
 				row.splice( nameIndex, 1 );
+			}
+		}
+		
+		// See NGEOD-434
+		// usableForInterferometry is stored in the criteria titles
+		var usableForInterferomtryIndex = criteriaTitles.indexOf('usableForInterferometry');
+		if ( usableForInterferomtryIndex >= 0 ) {
+			for ( var n = 0; n < matrix.length; n++ ) {
+				var row = matrix[n];
+				this._usableForInterferomtry[ row[ row.length-2] ] = row[usableForInterferomtryIndex] == "true";
 			}
 		}
 		

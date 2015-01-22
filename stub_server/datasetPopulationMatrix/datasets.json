@@ -2,46 +2,46 @@
 	
     "datasetpopulationmatrix" : {
     
-        "criteriaTitles" : ["mission","sensor", "keyword"], 
+        "criteriaTitles" : ["mission","sensor", "keyword", "usableForInterferometry"], 
        
         "datasetPopulationValues" : [ 
-			[ "", "", "", "ATS_TOA_1P", "100" ],
-			[ "", "", "", "ASA_WS__0P", "5" ],
-			[ "S1", "SAR", "", "ND_SAR_1", "15"], 
-            [ "S1", "SAR", "interferometry", "ND_SAR_1", "8"],
-            [ "S1", "SAR", "polarimetry", "ND_SAR_1", "7"], 
+			[ "", "", "", "false", "ATS_TOA_1P", "100" ],
+			[ "", "", "", "false", "ASA_WS__0P", "5" ],
+			[ "S1", "SAR", "", "true", "ND_SAR_1", "15"], 
+            [ "S1", "SAR", "interferometry", "true", "ND_SAR_1", "8"],
+            [ "S1", "SAR", "polarimetry", "true", "ND_SAR_1", "7"], 
             
-            [ "", "", "interferometry", "ND_OPT_1", "365"],
+            [ "", "", "interferometry", "true", "ND_OPT_1", "365"],
 
-			[ "S2", "OPT", "optical", "ND_S2_1", "6"],
-            [ "S2", "OPT", "land mapping", "ND_S2_1", "6"], 
-            [ "S2", "OPT", "reflectance", "ND_S2_1", "6"],
+			[ "S2", "OPT", "optical", "false", "ND_S2_1", "6"],
+            [ "S2", "OPT", "land mapping", "false", "ND_S2_1", "6"], 
+            [ "S2", "OPT", "reflectance", "false", "ND_S2_1", "6"],
          
-            [ "", "", "", "LD_SENTINEL_1", "7"], 
-            [ "S1", "SAR", "land mapping", "LD_SENTINEL_1","7"],
-            [ "S1", "OPT", "ice mapping", "LD_SENTINEL_1", "7"],
-            [ "S1", "OPT", "interferometry", "LD_SENTINEL_1", "7"],
+            [ "", "", "", "false", "LD_SENTINEL_1", "7"], 
+            [ "S1", "SAR", "land mapping", "false", "LD_SENTINEL_1","7"],
+            [ "S1", "OPT", "ice mapping", "false", "LD_SENTINEL_1", "7"],
+            [ "S1", "OPT", "interferometry", "false", "LD_SENTINEL_1", "7"],
             
-            [ "S2", "", "land mapping", "SENTINEL2_L1", "7"],
-            [ "S2", "", "land mapping", "Sentinel2", "3"],
+            [ "S2", "", "land mapping", "false", "SENTINEL2_L1", "7"],
+            [ "S2", "", "land mapping", "false", "Sentinel2", "3"],
            
-            [ "S3", "", "land mapping", "SENTINEL3", "7"],
-            [ "S3", "", "", "SENTINEL3_L1", "7"], 
-            [ "S3", "SAR", "land mapping", "SENTINEL3_L2","7"],
+            [ "S3", "", "land mapping", "false", "SENTINEL3", "7"],
+            [ "S3", "", "", "false", "SENTINEL3_L1", "7"], 
+            [ "S3", "SAR", "land mapping", "false", "SENTINEL3_L2","7"],
 			
-			[ "", "", "", "landsat","100"],
+			[ "", "", "", "false", "landsat","100"],
             
-			[ "", "", "", "Global","1"],
+			[ "", "", "", "false", "Global","1"],
 			
-			[ "", "", "", "Line","1"],
+			[ "", "", "", "false", "Line","1"],
 			
-			[ "", "", "", "MultiLine","1"],
+			[ "", "", "", "false", "MultiLine","1"],
 		
-			[ "", "", "", "Crossing","2"],
+			[ "", "", "", "false", "Crossing","2"],
 			
- 			[ "", "", "", "HalfOrbit","0"],
+ 			[ "", "", "", "false", "HalfOrbit","0"],
 			
-			[ "", "", "", "Invalid","0"]
+			[ "", "", "", "false", "Invalid","0"]
        ]
     }
         

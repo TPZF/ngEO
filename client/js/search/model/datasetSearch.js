@@ -220,7 +220,13 @@ var DataSetSearch = SearchCriteria.extend({
 		
 		for ( var x in DatasetPopulation.selection ) {
 			var dataset = DatasetPopulation.selection[x];
+			/* Old method to check if a dataset supports interferometry
 			if ( !dataset.hasKeyword('interferometry') ) {
+				return false;
+			}*/
+			
+			// New method... use the criteria 'usableForInterferometry'
+			if ( !DatasetPopulation.usableForInterferometry(x) ) {
 				return false;
 			}
 		}
