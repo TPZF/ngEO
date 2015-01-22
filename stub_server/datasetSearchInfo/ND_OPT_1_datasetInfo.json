@@ -22,6 +22,7 @@
         "downloadOptions": [
             {
                 "argumentName": "productFormat",
+				"caption": "Product format",
                 "description": "Desired download format",
                 "values": [
                     {
