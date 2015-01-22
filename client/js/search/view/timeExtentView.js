@@ -134,8 +134,6 @@ var TimeExtentView = Backbone.View.extend({
 		this.model.set({
 			start: bounds.min,
 			stop: bounds.max
-		}, {
-			silent: true
 		});
 		// Update the inputs
 		this.$fromDateInput.val( bounds.min.toISODateString() );

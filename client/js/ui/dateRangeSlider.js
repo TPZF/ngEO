@@ -382,8 +382,10 @@ $.widget( "ui.dateRangeSlider", {
 		switch (key)
 		{
 			case 'bounds':
-				this.options.bounds = value;
-				this._updateDragBar();
+				if ( value.min != this.options.bounds.min || value.max != this.options.bounds.max ) {
+					this.options.bounds = value;
+					this._updateDragBar();
+				}
 				break;
 				
 			case 'scaleBounds':
