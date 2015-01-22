@@ -198,6 +198,9 @@ var DatasetSelectionView = Backbone.View.extend({
 			if ( !DatasetAuthorizations.hasViewAccess( datasets[i].datasetId ) ) {
 				$('#' + datasets[i].datasetId).append( '<img src="../images/noview.png" />' );
 			} 
+			if ( !DatasetAuthorizations.hasSearchAccess( datasets[i].datasetId ) ) {
+				$('#' + datasets[i].datasetId).addClass('ui-disabled');
+			} 
 		}
 	
 		// Synchronize the selection with dataset list
