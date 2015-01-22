@@ -102,7 +102,7 @@ var findFeature = function(fc,id) {
 	}
 };
 
-var initializeFeatureCollection = function(featureCollection,id) {
+var setupProductUrl = function(featureCollection,id) {
 	for ( var i = 0; i < featureCollection.features.length; i++ )  {
 		var feature = featureCollection.features[i];
 		feature.properties.productUrl = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + feature.id;
@@ -124,16 +124,8 @@ module.exports = function(req, res){
 	}
 	
 	var featureCollection = featureCollections[fcId];
-
-	// Process feature collection to add productUrl
-	if (!initialized) {
-		for ( var x in featureCollections ) {
-			if ( featureCollections.hasOwnProperty(x) ) {
-				initializeFeatureCollection( featureCollections[x], x );
-			}
-		}
-		initialized = true;
-	}
+	
+	setupProductUrl( featureCollection, req.param('datasetId') );
 	
 	// Find with id or not
 	if ( req.query.id ) {

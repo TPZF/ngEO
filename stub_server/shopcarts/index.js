@@ -219,6 +219,10 @@ module.exports = {
 				shopCartItemAdding: []
 			};
 			
+			if ( req.body.shopCartItemAdding.length == 0 ) {
+				res.send(response);	
+			}
+			
 			var waitingRequests = req.body.shopCartItemAdding.length;
 			var id;
 			//add an id to each shopcart item
@@ -234,7 +238,7 @@ module.exports = {
 					continue;
 				}
 				
-				console.log("Product URL " + req.body.shopCartItemAdding[i].product );
+				//console.log("Product URL " + req.body.shopCartItemAdding[i].product );
 				
 				http.get(req.body.shopCartItemAdding[i].product, function(r) {
 					
