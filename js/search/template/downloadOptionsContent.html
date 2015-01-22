@@ -11,7 +11,7 @@
 	<form>			
 		<% _.each(model.get("downloadOptions"), function(option) { %>		
 			<% if (!option.cropProductSearchArea) { %>
-				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.description %> : </label>
+				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
 					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
 					<% if ( model.get(option.argumentName) == "@conflict" ) {  %>
 					<option value="" selected style="display: none;"></option>
@@ -30,7 +30,7 @@
 		
 		<% _.each(model.get("downloadOptions"), function(option) { %>		
 			<% if (option.cropProductSearchArea) { %>
-				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.description %></label>
+				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
 				<% if ( model.get(option.argumentName) ) {  %>						
 					<input type="checkbox" id="<%= option.argumentName %>" checked="checked" data-mini="true"/>
 				<% } else { %>	 
