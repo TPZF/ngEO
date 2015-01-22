@@ -38,30 +38,33 @@ var DownloadOptionsWidget = function() {
 	
 		//  Update the selected download options model
 		selectedDownloadOptions.attributes = featureCollection.getSelectedDownloadOptions();
-		selectedDownloadOptions.set( 'downloadOptions', featureCollection.getAvailableDownloadOptions() );
 		
-		downloadOptionsView.render();
-		
-		downloadOptionsView.$el.append('\
-			<div class="popup-widget-footer">\
-				<button id="downloadOptionsUpdate" data-role="button" data-mini="true"\
-						data-inline="true" data-theme="a">Update</button>\
-				<div id="downloadOptionsMessage"></div>\
-			</div>').trigger('create');
+		// Fetch the available download options and then display the widget
+		featureCollection.fetchAvailableDownloadOptions( function(downloadOptions) {
+			selectedDownloadOptions.set( 'downloadOptions', downloadOptions );
 			
-		// called when  'Update' is clicked
-		downloadOptionsView.$el.find('#downloadOptionsUpdate').click( function(event){
-			//update the product url of the selected products with the selected download options
-			//and display a message to the user.
-			$.when(featureCollection.updateProductUrls(selectedDownloadOptions.attributes)).done(function(){
-				$("#downloadOptionsMessage").empty();
-				$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
+			downloadOptionsView.render();
+			
+			downloadOptionsView.$el.append('\
+				<div class="popup-widget-footer">\
+					<button id="downloadOptionsUpdate" data-role="button" data-mini="true"\
+							data-inline="true" data-theme="a">Update</button>\
+					<div id="downloadOptionsMessage"></div>\
+				</div>').trigger('create');
+				
+			// called when  'Update' is clicked
+			downloadOptionsView.$el.find('#downloadOptionsUpdate').click( function(event){
+				//update the product url of the selected products with the selected download options
+				//and display a message to the user.
+				$.when(featureCollection.updateProductUrls(selectedDownloadOptions.attributes)).done(function(){
+					$("#downloadOptionsMessage").empty();
+					$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
+				});
 			});
+				
+			//trigger jqm styling
+			parentElement.ngeowidget("show");
 		});
-			
-			
-		//trigger jqm styling
-		parentElement.ngeowidget("show"); 
 	};
 		
 	/**
