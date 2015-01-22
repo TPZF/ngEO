@@ -132,7 +132,7 @@ var MapPopup = function(container) {
 		if ( products.length == 1 ) {
 			content = '<p><b>Product: ' + products[0].id + '</b></p>';
 			if ( adv ) {
-				var columnDefs = Configuration.data.resultsTable.columnsDef;
+				var columnDefs = Configuration.data.tableView.columnsDef;
 				for ( var i = 0; i < columnDefs.length; i++ ) {
 					if ( columnDefs[i].sTitle != 'Product' ) {
 						var value = getData( products[0], columnDefs[i].mData );
