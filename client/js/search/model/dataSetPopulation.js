@@ -196,14 +196,11 @@ var DataSetPopulation = Backbone.Model.extend({
 				
 				if ( !treatedDatasets.hasOwnProperty(datasetId) ) {
 				
-					// Check authorization
-					if ( DataSetAuthorizations.hasSearchAccess(datasetId) ) {
-						filteredDatasets.push({
-							datasetId : datasetId,
-							name : name_index < row.length ? row[name_index] : datasetId,
-							itemsCount : row[count_index]
-						});
-					}
+					filteredDatasets.push({
+						datasetId : datasetId,
+						name : name_index < row.length ? row[name_index] : datasetId,
+						itemsCount : row[count_index]
+					});
 					
 					treatedDatasets[ datasetId ] = true;
 				}
