@@ -12,7 +12,7 @@ var _onSelectFeatures = function(features,fc) {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "select" );
 		}
 		
-		BrowsesManager.addBrowse(features[i],fc.id);
+		BrowsesManager.addBrowse(features[i],fc.getDatasetId(features[i]));
 	}
 };
 
@@ -52,7 +52,7 @@ var _onHighlightFeatures = function(features,prevFeatures,fc) {
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
 			}
-			BrowsesManager.addBrowse(features[i],fc.id);
+			BrowsesManager.addBrowse(features[i],fc.getDatasetId(features[i]));
 		}
 	}
 };

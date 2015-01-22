@@ -23,7 +23,11 @@ var ShopcartItemView = TableView.extend({
 
 		if ( this.model.selection.length > 0 ) {
 			this.deleteButton.button('enable');
-			this.downloadOptionsButton.button('enable');
+			if ( this.model.getSelectionDatasetIds().length == 1 ) {
+				this.downloadOptionsButton.button('enable');
+			} else {
+				this.downloadOptionsButton.button('disable');
+			}
 		} else {
 			this.deleteButton.button('disable');
 			this.downloadOptionsButton.button('disable');

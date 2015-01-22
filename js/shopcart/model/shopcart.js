@@ -165,12 +165,17 @@ var Shopcart = Backbone.Model.extend({
 				}
 				
 				// Display informative message
-				var requestProductMsg = "User request to add " + features.length + " product" + (features.length > 1 ? 's' : '') + " to shopcart "  + self.get('name') + ".";
-				var addedProductMsg = featuresAdded.length + " product" + (featuresAdded.length > 1 ? 's are' : ' is') + " added.";
+				var addToShopcartMsg;
 				if ( features.length != featuresAdded.length ) {
-					addedProductMsg += "<br>A product cannot be added if already exists in the shopcart or if it is a planned product.";
+					if ( featuresAdded.length > 0 )
+						addToShopcartMsg = "Only " + featuresAdded.length + " product" + (featuresAdded.length > 1 ? 's' : '') + " on " + features.length + " added to shopcart "  + self.get('name') + ".";
+					else
+						addToShopcartMsg = features.length + " product" + (featuresAdded.length > 1 ? 's' : '') + " not added to shopcart "  + self.get('name') + ".";
+					addToShopcartMsg += "<br>A product cannot be added if already exists in the shopcart or if it is a planned product.";
+				} else {
+					addToShopcartMsg = featuresAdded.length + " product" + (featuresAdded.length > 1 ? 's' : '') + " added to shopcart "  + self.get('name') + ".";
 				}
-				Logger.inform(requestProductMsg + "<br>" + addedProductMsg);
+				Logger.inform(addToShopcartMsg);
 				
 				self.featureCollection.addFeatures( featuresAdded );
 		  },
@@ -183,23 +188,13 @@ var Shopcart = Backbone.Model.extend({
 	},
 	
 	/** 
-	 * Helper function toe remove one item from the shopcart
+	 * Helper function to get a feature from the shopcart item id
 	 */ 
-	_removeItem: function(id) {
+	_getFeatureFromShopcartItemId: function(id) {
 		var features = this.featureCollection.features;
-		var selection = this.featureCollection.selection;
-		
 		for ( var i = 0; i < features.length; i++ ) {
-			var feature = features[i];
-			if ( feature.properties.shopcartItemId == id ) {
-				// Remove it from items
-				features.splice(i,1);
-				// Remove it from selection also
-				var is = selection.indexOf(feature);
-				if ( is >= 0 ) {
-					selection.splice(is,1);
-				}
-				return feature;
+			if ( features[i].properties.shopcartItemId == id ) {
+				return features[i];
 			}
 		}
 	},
@@ -238,7 +233,7 @@ var Shopcart = Backbone.Model.extend({
 			
 			  success: function(data) {	 					
 
-					// Check the response
+					// Check the response is correct
 					if ( !data.shopCartItemRemoving  || !_.isArray(data.shopCartItemRemoving) ) {
 						Logger.error("Invalid response from server when removing shopcart items.");
  						return;
@@ -246,7 +241,7 @@ var Shopcart = Backbone.Model.extend({
 					
 					var removedItems = [];
 					for (var i=0; i < data.shopCartItemRemoving.length; i++){
-						removedItems.push( self._removeItem( data.shopCartItemRemoving[i].id ) );
+						removedItems.push( self._getFeatureFromShopcartItemId( data.shopCartItemRemoving[i].id ) );
 					}
 					
 					// Check if items are correct
@@ -255,7 +250,7 @@ var Shopcart = Backbone.Model.extend({
 					}
 
 					if ( removedItems.length > 0 ) {
-						self.featureCollection.trigger("remove:features", removedItems);
+						self.featureCollection.removeFeatures(removedItems);
 					}
 			  },
 			  

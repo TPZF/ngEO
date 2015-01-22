@@ -1,9 +1,11 @@
 /**
  * FeatureCollection received from search results
  */
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation'], function($, Backbone, Configuration, DataSetPopulation) {
 
-
+/**
+ * Extract the download options from the product url
+ */
 var _getProductDownloadOptions = function(feature) {
 	var downloadOptions = {};
 	if ( feature.properties && feature.properties.productUrl  ) {
@@ -116,12 +118,20 @@ var FeatureCollection = function() {
 		});
 	};
 	
-	// Add features to the result
+	// Add features to collection
 	this.addFeatures = function(features) {
 		for ( var i = 0; i < features.length; i++ ) {
 			self.features.push( features[i] );
 		}
 		self.trigger('add:features',features,self);
+	};
+	
+	// Remove features from the collection
+	this.removeFeatures = function(features) {
+		this.setSelection( _.difference(this.selection, features) );
+		this.highlight( _.difference(this.highlights, features) );
+		this.features = _.difference(this.features, features);
+		self.trigger('remove:features',features,self);
 	};
 	
 	// launch a search
@@ -345,17 +355,59 @@ var FeatureCollection = function() {
 		return selectedDowndloadOptions;
 	};
 	
-	/** 
-	 * Get the available download options for the selected products
+	/**
+	 * Get the dataset id of a feature.
 	 */
-	this.getAvailableDownloadOptions = function() {
-			
-		if ( this.dataset ) {
-			return this.dataset.get('downloadOptions');
+	this.getDatasetId = function(feature) {
+	
+		// If the feature collection has a dataset, just return its id
+		if (this.dataset) {
+			return this.dataset.get('datasetId');
 		}
 		
-		// TODO : fill download options
-		return [];
+		// Otherwise extract the id from the feature
+		var re = /catalogue\/(\w+)\/search/;
+		var match = re.exec(feature.properties.productUrl);
+		if (match) {	
+			return match[1];
+		}
+		return null;
+	},
+	
+	/**
+	 * Get the datasets from the selection
+	 */
+	this.getSelectionDatasetIds = function() {
+		var datasetIds = [];
+		for ( var i = 0; i < this.selection.length; i++ ) {
+			var datasetId = this.getDatasetId(this.selection[i]);
+			if (datasetId) {			
+				if ( datasetIds.indexOf(datasetId) < 0 ) {
+					datasetIds.push(datasetId);
+				}
+			}
+		}
+		return datasetIds;
+	},
+	
+	/** 
+	 * Fetch the available download options for the selected products
+	 */
+	this.fetchAvailableDownloadOptions = function(callback) {
+			
+		if ( this.dataset ) {
+			return callback(this.dataset.get('downloadOptions'));
+		}
+		
+		var downloadOptions = [];
+		var datasetIds = this.getSelectionDatasetIds();
+		if ( datasetIds.length == 1 ) {
+			DataSetPopulation.fetchDataset(datasetIds[0], function(dataset) {
+				callback(dataset.get('downloadOptions'));
+			});
+		} else {
+			callback([]);
+		}
 	};
 	
 	/** return the non Planned features */
