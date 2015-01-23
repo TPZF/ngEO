@@ -68,7 +68,7 @@ app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
 
 // user inquiry
 app.post('/ngeo/userInquiry', function(req,res) {
-	if (req.body.inquiryType && req.body.inquiryText ) {
+	if (req.body.UserInquiry && req.body.UserInquiry.inquiryType && req.body.UserInquiry.inquiryText ) {
 		res.send(200);
 	} else {
 		res.send(400);
