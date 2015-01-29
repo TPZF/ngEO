@@ -51,6 +51,9 @@ fs.readFile('./productSearch/HalfOrbit_response.json', 'utf8', function (err, da
 fs.readFile('./productSearch/Correlation_response.json', 'utf8', function (err, data) {
 	featureCollections['Correlation']  = JSON.parse(data);
 });
+fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, data) {
+	featureCollections['DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME']  = JSON.parse(data);
+});
 
 var initialized = false;
 

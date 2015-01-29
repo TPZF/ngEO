@@ -126,13 +126,15 @@ var SearchResultsView = Backbone.View.extend({
 		
 		// Set the dataset
 		if ( DatasetSearch.get('mode') == "Simple" ) {
-			this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id );
+			this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id ).attr("title", this.model.id);
 		} else {
- 			this.$el.find('#datasetMessage').html('Dataset : ' + DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(','));
+			var datasetName = DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(',');
+ 			this.$el.find('#datasetMessage').html('Dataset : ' + datasetName).attr("title", datasetName);
 			
 			// Update message when master has changed
 			DatasetSearch.on('change:master', function() {
-				this.$el.find('#datasetMessage').html('Dataset : ' + DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(','));
+				var datasetName = DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(',');
+				this.$el.find('#datasetMessage').html('Dataset : ' + datasetName).attr("title", datasetName);
 			}, this);
 		}
 

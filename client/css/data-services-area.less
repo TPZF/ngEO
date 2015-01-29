@@ -120,14 +120,27 @@ menu[type=toolbar] {
  * Styling for a message displaying the current dataset selected
  */
 
+/* Styling for long datasets names(turn to ...) */
+#datasetMessage {
+	white-space: nowrap;
+	width: 190px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	width: 30%;
+}
+
 .status-message {
 	float: left;
+	text-align: left;
 	line-height: @statusBar-height; // To vertical align text
 }
 
 .status-block {
 	float: right;
+	text-align: right;
 	line-height: @statusBar-height; // To vertical align text
+	width: 39%;
+	white-space: nowrap;
 }
 
 #resultsMessage {
@@ -151,4 +164,5 @@ menu[type=toolbar] {
 
 #paging {
 	display: inline-block;
+	width: 30%;
 }

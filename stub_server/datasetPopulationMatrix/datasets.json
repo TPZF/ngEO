@@ -41,7 +41,9 @@
 			
  			[ "", "", "", "false", "HalfOrbit","0"],
 			
-			[ "", "", "", "false", "Invalid","0"]
+			[ "", "", "", "false", "Invalid","0"],
+			
+		    [ "", "", "", "false", "DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME", "100" ]
        ]
     }
         
