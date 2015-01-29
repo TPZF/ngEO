@@ -21,7 +21,17 @@ var SearchCriteriaView = Backbone.View.extend({
 	events: {		
 		// Click on search
 		"click .scSubmit": function(event) {
-			SearchResults.launch( this.model );
+			var rangeIsValid = this.model.get("start") <= this.model.get("stop");
+			if ( rangeIsValid )
+			{
+				SearchResults.launch( this.model );
+			}
+			else
+			{
+				// Prevent user that the range isn't valid
+				$("#dateWarningPopup")
+					.popup("open");
+			}
 		},
 					
 		// To share a search
