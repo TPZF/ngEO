@@ -83,7 +83,8 @@ var TableView = Backbone.View.extend({
 		'click th' : function (event) {
 		
 			var $cell = $(event.currentTarget);
-			
+			$cell.siblings("th").removeClass('sorting_asc').removeClass('sorting_desc');
+
 			if ($cell.find('.table-view-chekbox').length > 0)
 				return;
 			
@@ -522,35 +523,37 @@ var TableView = Backbone.View.extend({
 	 * Update fixed header
 	 */
 	updateFixedHeader: function() {
-	
-		this.$el.find('.table-header').css('margin-right',0);
-		this.$table.find('colgroup').remove();
-		this.$headerTable.find('colgroup').remove();
+		if ( this.$table ) {
+			this.$el.find('.table-header').css('margin-right',0);
+			this.$table.find('colgroup').remove();
+			this.$headerTable.find('colgroup').remove();
 
-		this.$table.find('thead').show();
-		
-		var colWidths = this.$table.find( "tr:first" ).children().map(function() {
-			return  $( this ).width();
-		});
-		
-		var $colgroup = $( "<colgroup></colgroup>" );
-		this.$table.find( "tr:eq(0)" ).children().each(function(i) {
-			$colgroup.append( "<col>" );
-		});
+			this.$table.find('thead').show();
+			
+			var colWidths = this.$table.find( "tr:first" ).children().map(function() {
+				return  $( this ).width();
+			});
+			
+			var $colgroup = $( "<colgroup></colgroup>" );
+			this.$table.find( "tr:eq(0)" ).children().each(function(i) {
+				$colgroup.append( "<col>" );
+			});
 
-		$colgroup.children().each(function(i) {
-			$( this ).css( "width", colWidths[i] + 'px' );
-		});
-		
-		// Copy table COLGROUP to grid head and grid foot
-		$colgroup
-			.insertBefore( this.$table.find('thead') )
-			.clone()
-			.insertBefore( this.$headerTable.find('thead') );
+			$colgroup.children().each(function(i) {
+				$( this ).css( "width", colWidths[i] + 'px' );
+			});
+			
+			// Copy table COLGROUP to grid head and grid foot
+			$colgroup
+				.insertBefore( this.$table.find('thead') )
+				.clone()
+				.insertBefore( this.$headerTable.find('thead') );
 
-		this.$table.find('thead').hide();
-		var diffWidth = this.$headerTable.width() - this.$table.width();
-		this.$el.find('.table-header').css('margin-right',diffWidth);
+			this.$table.find('thead').hide();
+			var diffWidth = this.$headerTable.width() - this.$table.width();
+			this.$el.find('.table-header').css('margin-right',diffWidth);
+		}
+
 	},
 	
 	/**
