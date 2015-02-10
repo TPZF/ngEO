@@ -39,10 +39,10 @@ define(['jquery', 'configuration', 'dataAccess/model/simpleDataAccessRequest', '
 					}
 				};
 				SimpleDataAccessRequest.setProducts ([feature]);
-				SimpleDataAccessRequest.setDownloadManager(DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid);
+				SimpleDataAccessRequest.downloadLocation.DownloadManagerId = DownloadManagers.attributes.downloadmanagers[0].downloadManagerId;
 		
 				QUnit.equal(SimpleDataAccessRequest.downloadLocation.DownloadManagerId, 
-				DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid, "a download manager is assigned to the request");
+				DownloadManagers.attributes.downloadmanagers[0].downloadManagerId, "a download manager is assigned to the request");
 		
 				QUnit.ok(SimpleDataAccessRequest.productURLs != undefined, "Product urls set to the request");
 				

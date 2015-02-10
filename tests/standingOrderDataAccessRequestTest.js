@@ -21,9 +21,9 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 				//StandingOrderDataAccessRequest.OpenSearchURL = "http://localhost:3000/server/catalogueSearch/ND_OPT_1?start=2012-12-07&stop=2012-12-07&count=10&bbox=-15.5775,47.07669921875,12.5475,57.84330078125";
 				StandingOrderDataAccessRequest.OpenSearchURL = "http://localhost:3000/server/catalogueSearch/ND_OPT_1?start=2012-12-07T09:34:00&stop=2012-12-07T09:34:00&count=10&bbox=-15.5775,47.07669921875,12.5475,57.84330078125";
 				
-				StandingOrderDataAccessRequest.endDate = "2012-12-07";
+				StandingOrderDataAccessRequest.endDate = new Date("2012-12-07");
 				//StandingOrderDataAccessRequest.endTime = "10:34";
-				StandingOrderDataAccessRequest.setDownloadManager(DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid);
+				StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId = DownloadManagers.attributes.downloadmanagers[0].downloadManagerId;
 				
 				QUnit.equal(StandingOrderDataAccessRequest.requestStage, 
 						"validation",  "Request Stage Validation");	
@@ -44,7 +44,7 @@ define(['jquery', 'configuration', 'dataAccess/model/standingOrderDataAccessRequ
 							"confirmation",  "Request Stage Validation");	
 					
 					QUnit.equal(StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId, 
-							DownloadManagers.attributes.downloadmanagers[0].downloadmanagerid, "a download manager is assigned to the request");
+							DownloadManagers.attributes.downloadmanagers[0].downloadManagerId, "a download manager is assigned to the request");
 					
 					//Check that the server has returned the id of the DAR
 					QUnit.ok(true, "Validation Request Submitted to the server");

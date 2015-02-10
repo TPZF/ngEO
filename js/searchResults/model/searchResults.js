@@ -1,5 +1,5 @@
 /**
- * results table model as received from the server
+ * Results table model as received from the server
  */
 define( ['jquery', 'backbone', 'configuration', 'searchResults/model/featureCollection', 'search/model/dataSetPopulation', 'search/model/datasetSearch', 'search/model/datasetAuthorizations'],
 	function($, Backbone, Configuration, FeatureCollection, DataSetPopulation, DatasetSearch, DatasetAuthorizations) {
@@ -10,7 +10,7 @@ var SearchResults = {
 	featureCollection : {
 	},
 	
-	/** launch a search */
+	/** Launch a search */
 	launch : function(searchCriteria) {
 		for ( var x in this.featureCollection ) {
 			var fc = this.featureCollection[x]
@@ -33,7 +33,7 @@ var SearchResults = {
 		return productUrls;
 	},
 	
-	/** the direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */
+	/** The direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */
 	getDirectDownloadProductUrl : function(feature) {
 		
 		var eor = feature.properties.EarthObservation.EarthObservationResult;
