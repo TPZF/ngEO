@@ -414,7 +414,7 @@ var TableView = Backbone.View.extend({
 		for ( var i=0; i < this.rowsData.length; i++ ) {
 			
 			var match = false;
-			for ( var j=0; !match && j < this.rowsData.cellData.length; j++ ) {
+			for ( var j=0; !match && j < this.rowsData[i].cellData.length; j++ ) {
 				match = String(this.rowsData[i].cellData[j]).search( val ) >= 0;
 			}
 			if (match) {

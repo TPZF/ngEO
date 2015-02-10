@@ -1,7 +1,8 @@
-define(['jquery', 'configuration', 'ui/tableView', 'searchResults/model/searchResults'], 
-        function ($, Configuration, TableView, SearchResults) {
+define(['jquery', 'configuration', 'ui/tableView', 'searchResults/model/featureCollection'], 
+        function ($, Configuration, TableView, FeatureCollection) {
 
 		var view = null;
+		var fc = null;
 		var columnDefs = [
 					{"sTitle" : "Name", "mData" : "properties.name" },
 					{"sTitle" : "Date", "mData" : "properties.date"}
@@ -35,16 +36,17 @@ define(['jquery', 'configuration', 'ui/tableView', 'searchResults/model/searchRe
 	    // Define the QUnit module and lifecycle.
 	    QUnit.module("TableView", {
 	    	setup: function() {
+	    			fc = new FeatureCollection();
 					// Create a view
 					view = new TableView({
-						model: SearchResults,
+						model: fc,
 						columnDefs: columnDefs
 					});
 					view.render();
 					view.$el.append("#qunit-fixture");
 		    	},
 			teardown: function() {
-					SearchResults.reset();
+					fc.reset();
 					view.remove();
 					view = null;
 				}
@@ -52,19 +54,19 @@ define(['jquery', 'configuration', 'ui/tableView', 'searchResults/model/searchRe
     
 	    QUnit.test("Check add features",  function () {				
 				
-				SearchResults._addFeatures(features);
+				fc.addFeatures(features);
 			
 				QUnit.ok( view.rowsData.length == 3, "3 Rows added" );
-				QUnit.ok( view.rowsData[0][1] == "toto", "Row 1 : value ok" );
-				QUnit.ok( view.rowsData[2][1] == "tutu", "Row 3 : value ok" );
+				QUnit.ok( view.rowsData[0].cellData[0] == "toto", "Row 1 : value ok" );
+				QUnit.ok( view.rowsData[2].cellData[0] == "tutu", "Row 3 : value ok" );
 				
 				QUnit.ok( view.$el.find('.table-content tbody tr').length == 3, "3 rows build" );
 		});
 		
 		
 	    QUnit.test("Check filter features",  function () {
-		
-				SearchResults._addFeatures(features);
+				
+				fc.addFeatures(features);
 				
 				view.filterData('');
 				QUnit.ok( view.$el.find('.table-content tbody tr').length == 3, "3 rows after empty filter" );
@@ -76,26 +78,26 @@ define(['jquery', 'configuration', 'ui/tableView', 'searchResults/model/searchRe
 		
 	    QUnit.test("Check sort features",  function () {	
 		
-				SearchResults._addFeatures(features);
+				fc.addFeatures(features);
 				
 				view.sortData(1,'desc');
-				QUnit.ok( view.visibleRowsData[0][1] == "tutu", "sort desc works" );
+				QUnit.ok( view.visibleRowsData[0].cellData[0] == "tutu", "sort desc works" );
 				view.sortData(1,'asc');
-				QUnit.ok( view.visibleRowsData[0][1] == "titi", "sort asc works" );
+				QUnit.ok( view.visibleRowsData[0].cellData[0] == "titi", "sort asc works" );
 				view.sortData(1,'original');
-				QUnit.ok( view.visibleRowsData[0][1] == "toto", "sort original works" );
+				QUnit.ok( view.visibleRowsData[0].cellData[0] == "toto", "sort original works" );
 		    });
     
 	    QUnit.test("Check remove feature",  function () {
 
-				SearchResults._addFeatures(features);
+				fc.addFeatures(features);
 				
 				QUnit.ok( view.$el.find('.table-content tbody tr').length == 3, "3 rows at beginning" );
 
 				view.removeData( [ features[0], features[2] ] );
 				
 				QUnit.ok( view.rowsData.length == 1, "1 row data after removal" );
-				QUnit.ok( view.rowsData[0][0] == features[1], "Data ok after removal" );
+				QUnit.ok( view.rowsData[0].feature == features[1], "Data ok after removal" );
 					
 				QUnit.ok( view.$el.find('.table-content tbody tr').length == 1, "1 row after removal" );
 		    });

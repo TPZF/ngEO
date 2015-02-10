@@ -6,6 +6,7 @@ define(
 	
 /**
  * The view for search results
+ * The model of this view is FeatureCollection
  */
 var SearchResultsView = Backbone.View.extend({
 
