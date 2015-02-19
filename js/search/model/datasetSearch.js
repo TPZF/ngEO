@@ -5,63 +5,24 @@ define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation'
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
 
-// Helper function
-var _mergeAttributes = function( datasets, attrName, id ) {
-	var mergedAttributes = {};
-	var isFirst = true;
-	
-	_.each( datasets, function(dataset) {
-	
-		var attrs = dataset.get(attrName);
-		var attrMap = {};
-		if (attrs) {
-			for ( var i = 0; i < attrs.length; i++ ) {
-				attrMap[ attrs[i][id] ] = attrs[i];
-			}
-		}
-		
-		if ( isFirst ) {
-			mergedAttributes = attrMap;
-			isFirst = false;
-		} else {
-		
-			// Exclude attribute not in the map
-			for ( var x in mergedAttributes ) {
-				if ( !attrMap[x] ) {
-					delete mergedAttributes[x];
-				} else if ( !_.isEqual( attrMap[x], mergedAttributes[x] ) ) {
-					delete mergedAttributes[x];
-				}
-			}
-	
-		}
-				
-	});
-	
-	return mergedAttributes;
-};
-
 /**
  * This class manages the criteria for search
- *
  */
 var DataSetSearch = SearchCriteria.extend({
 	
-	defaults:{
-		stop: new Date(),
-		start : new Date( new Date().getTime() - ONE_MONTH ),
-		useExtent : true,
-		advancedAttributes: {},
-		downloadOptions: {},
-		useTimeSlider : true, //flag for displaying time slider or not
-		mode: "Simple",
-		// Correlation/Interferometry parameters
-		dDiff: 10,
-		sOverP: 25,
-		nBase: 5,
-		bSync: 5,
-		master: ""
-	},
+	// Extend SearchCriteria defaults
+	defaults: _.extend({}, SearchCriteria.prototype.defaults.call(this),
+        {
+			useTimeSlider : true, //flag for displaying time slider or not
+			mode: "Simple",
+			// Correlation/Interferometry parameters
+			dDiff: 10,
+			sOverP: 25,
+			nBase: 5,
+			bSync: 5,
+			master: ""
+		}
+    ),
 	
 	name: "Search",
 	
@@ -79,13 +40,10 @@ var DataSetSearch = SearchCriteria.extend({
 		
 		// The number of selected datasets
 		this.numDatasets = 0;
-		
-		// Automatically load the dataset when the datasetId is changed
-		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged );
-		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged );
 	},
 	
-	/** Create the openSearch url. 
+	/** 
+	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
 	getOpenSearchURL : function(id) {
@@ -98,7 +56,7 @@ var DataSetSearch = SearchCriteria.extend({
 		if ( this.get('mode') != "Simple" ) {
 		
 			url += this.get('master') + "/search?";
-			url += this.getOpenSearchParameters();
+			url += this.getOpenSearchParameters(id);
 		
 			// Add interferometry specific parameters
 			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
@@ -106,14 +64,14 @@ var DataSetSearch = SearchCriteria.extend({
 			// Interferometry : only one dataset
 			var slaveUrl = baseUrl;
 			slaveUrl += this.slaves + "/search?";
-			slaveUrl += this.getOpenSearchParameters();
+			slaveUrl += this.getOpenSearchParameters(id);
 			url += "&with=" + encodeURIComponent(slaveUrl);
 		} else {
 			if (!id) {
 				id = this.datasetIds.join(',');
 			}
 			url += id + "/search?";
-			url += this.getOpenSearchParameters();
+			url += this.getOpenSearchParameters(id);
 		}
 		
 		url += "&format=json";
@@ -127,15 +85,25 @@ var DataSetSearch = SearchCriteria.extend({
 	getSharedSearchURL : function(){
 
 		var url = "#data-services-area/search/" +  this.datasetIds.join(',') + '?';
-		url += this.getOpenSearchParameters();
-		// Correlation/Interferometry
-		if ( this.get('mode') != "Simple" ) {
-		
-			// Add interferometry specific parameters
-			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
-			url += "&mode=" + this.get('mode');
-		} 
-		return url;
+		var sharedParameters = {};
+
+		// Build shared open search parameters url for each dataset
+		// since advanced&download options are independent between datasets
+		for ( var i=0; i<this.datasetIds.length; i++ ) {
+			var datasetId = this.datasetIds[i];
+			var osUrl = this.getOpenSearchParameters(datasetId);
+
+			// Correlation/Interferometry
+			if ( this.get('mode') != "Simple" ) {
+				// Add interferometry specific parameters
+				osUrl += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
+				osUrl += "&mode=" + this.get('mode');
+			}
+			// Store open search url for the given datasetId
+			sharedParameters[datasetId] = osUrl;
+		}
+
+		return "#data-services-area/search/" + this.datasetIds.join(',') + '?' + escape(JSON.stringify(sharedParameters));
 	},
 	
 	/**	
@@ -145,7 +113,9 @@ var DataSetSearch = SearchCriteria.extend({
 		return this.get('mode') == "Simple" ? this.datasetIds.join(',') : this.get('master');
 	},
 	
-	/** Compute the available date range from the selected datasets */
+	/**
+	 * Compute the available date range from the selected datasets
+	 */
 	computeDateRange: function() {
 		var dateRange = null;
 		_.each( DatasetPopulation.selection, function(dataset) {
@@ -171,7 +141,9 @@ var DataSetSearch = SearchCriteria.extend({
 		this.set('dateRange', dateRange);
 	},
 	
-	/** Set the master dataset for correlation/interferoemtry */
+	/**
+	 * Set the master dataset for correlation/interferoemtry
+	 */
 	setMaster: function(val) {
 		var i = this.datasetIds.indexOf(val);
 		if ( i >= 0 ) {
@@ -182,7 +154,9 @@ var DataSetSearch = SearchCriteria.extend({
 	},
 	
 	
-	/** Set the mode for search : Simple, Correlation, Interferometry */
+	/**
+	 * Set the mode for search : Simple, Correlation, Interferometry
+	 */
 	setMode: function(val) {
 	
 		if ( val != 'Simple' ) {
@@ -207,7 +181,9 @@ var DataSetSearch = SearchCriteria.extend({
 		this.set('mode',val);
 	},
 	
-	/** check if interferometry is supported */
+	/**
+	 * Check if interferometry is supported
+	 */
 	isInterferometrySupported : function() {
 		
 		if ( this.datasetIds.length == 0 ) {
@@ -234,26 +210,24 @@ var DataSetSearch = SearchCriteria.extend({
 		return true;
 	},
 	
-	/** Call when the dataset selection is changed */
-	onDatasetSelectionChanged : function() {
-	
+	/**
+	 * @override
+	 * Call when the dataset selection is changed
+	 */
+	onDatasetSelectionChanged : function(dataset) {
+		
+		// Recompute datasetIds parameter which is used in many places
 		this.datasetIds = [];
 		for ( var x in DatasetPopulation.selection ) {
 			this.datasetIds.push(x);
 		}
 		
-		//reset all the selected attributes and download options from the old selection
-		this.clearAdvancedAttributesAndDownloadOptions();
-	
+		// Use parent's onDatasetSelectionChanged implementation
+		SearchCriteria.prototype.onDatasetSelectionChanged.call(this, dataset);
+
 		// Recompute the date range
 		this.computeDateRange();
 		
-		// Recompute advanced attributes
-		this.set('advancedAttributes', _mergeAttributes( DatasetPopulation.selection, 'attributes', 'id' ) );
-		
-		// Recompute download options
-		this.set('downloadOptions', _mergeAttributes( DatasetPopulation.selection, 'downloadOptions', 'argumentName' ) );
-	
 		if (!this.get('dateRange'))
 			return;
 							
@@ -296,9 +270,10 @@ var DataSetSearch = SearchCriteria.extend({
 			stop.setUTCSeconds(59);
 			stop.setUTCMilliseconds(999);
 			
-			this.set({ start: start,
-					stop: stop
-				}); 
+			this.set({
+				start: start,
+				stop: stop
+			}); 
 		} 
 	
 	}

@@ -67,47 +67,65 @@ return {
 		standingOrderView.render();
 			
 		router.route(
-				"data-services-area/search/:datasetId?:query", 
-				"search", function(datasetId, query) {
+				"data-services-area/search/:datasetIds?:query", 
+				"search", function(datasetIds, query) {
 			
+			// Object containing the shared parameters for each dataset
+			var sharedParameters = JSON.parse(unescape(query));
+			// Variable used to count the number of fetched datasets
+			var datasetsToBeFetched = datasetIds.split(",").length;
+
 			// Show the page first
 			MenuBar.showPage("data-services-area");
-						
-			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
-			//and not overwrite the start/stop dates 
-			DataSetPopulation.once("datasetFetch", function(dataset,status) {
 			
+			// On dataset fetch callback
+			var onFetch = function(dataset, status) {
+			
+				var datasetId = dataset.get('datasetId');
 				if ( status == "SUCCESS" ) {
-													
-					DatasetSearch.populateModelfromURL(query);
+					var currentSharedParameters = sharedParameters[datasetId];
+					DatasetSearch.populateModelfromURL( currentSharedParameters, datasetId );
 					
 					// Resfreh the view
 					searchView.refresh();
 					
-					// Show search panel
-					$('#search').click();
+					// Show search panel only if not already opened
+					if ( !$('#search').hasClass('toggle') ) {
+						$('#search').click();
+					}
 					
 					// And launch the search!
 					SearchResults.launch( DatasetSearch );
 					
 				} else {
 
-					Logger.error('Cannot load the dataset ' + dataset + '.<br> The search cannot be shared.');
+					Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
 					MenuBar.showPage("data-services-area");
 					
 				}
-			});
-			
-			// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
-			DataSetPopulation.select(datasetId);
 
+				// Unsubscribe onFetch event once there are no more shared datasets
+				// to initialize
+				if ( --datasetsToBeFetched == 0 ) {
+					DataSetPopulation.off("datasetFetch", onFetch);
+				}
+			}
+
+			//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
+			//and not overwrite the start/stop dates 
+			DataSetPopulation.on("datasetFetch", onFetch);
+			
+			// Select & fetch all shared datasets
+			_.each( datasetIds.split(","), function(id) {
+				DataSetPopulation.select(id);
+			} );
 		});
 		
 		//Route standing order url
 		router.route(
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
-									
+			
 			// Show the page first
 			MenuBar.showPage("data-services-area");
 			
@@ -116,8 +134,8 @@ return {
 				
 				if ( status == "SUCCESS" ) {
 					
-					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 					standingOrder.populateModelfromURL(query);
+					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 					
 					// Resfreh the  view
 					standingOrderView.refresh();

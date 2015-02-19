@@ -25,7 +25,7 @@ var _getProductDownloadOptions = function(feature) {
 		}
 	}
 
-	return 	downloadOptions;	
+	return downloadOptions;	
 };
 
 
@@ -134,7 +134,7 @@ var FeatureCollection = function() {
 		self.trigger('remove:features',features,self);
 	};
 	
-	// launch a search
+	// Launch a search
 	this.search = function(baseUrl) {
 	
 		// build base url
@@ -235,7 +235,9 @@ var FeatureCollection = function() {
 		this.trigger( "unselectFeatures", [feature], this );
 	};
 
-	/** select all the items of the table which are not selected */
+	/**
+	 * Select all the items of the table which are not selected
+	 */
 	this.selectAll = function(){
 		
 		var selected = _.difference(this.features, this.selection);
@@ -248,7 +250,9 @@ var FeatureCollection = function() {
 		}
 	};
 	
-	/** unselect all the already selected table items */
+	/** 
+	 * Unselect all the already selected table items
+	 */
 	this.unselectAll =function() {
 		
 		//this.setSelection([]);
@@ -264,7 +268,8 @@ var FeatureCollection = function() {
 
 	};
 	
-	/** Get the list of products URLs from a list of features
+	/** 
+	 * Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
 	 */
 	this.getSelectedProductUrls = function() {
@@ -280,8 +285,9 @@ var FeatureCollection = function() {
 		return productUrls;
 	};
 	
-	/** the following method appends the download options using this convention ngEO product URI :
-	 *  it appends the download options to the product url as follows: &ngEO_DO={param_1:value1,....,param_n:value_n}
+	/** 
+	 * The following method appends the download options using this convention ngEO product URI :
+	 * it appends the download options to the product url as follows: &ngEO_DO={param_1:value1,....,param_n:value_n}
 	 */
 	this.updateProductUrls = function(selectedDownloadOptions) {
 		
@@ -292,30 +298,31 @@ var FeatureCollection = function() {
 
 				//remove the already added download options : this fixes the already existing bug :
 				//when none is chosen the download option is not removed from the url
-				if (url.indexOf("ngEO_DO={") != -1){
-					var url = url.substring(0, url.indexOf("ngEO_DO={")-1);
+				if (url.indexOf("ngEO_DO={") != -1) {
+					var url = url.substring(0, url.indexOf("ngEO_DO={") - 1);
 					//console.log("product url removed download options  = " + url);
 				}
 				
-				_.each(selectedDownloadOptions, function(optionValue, optionKey, list){
-								
-					//the download option is not set in the url
-
-					if (url.indexOf("ngEO_DO={") != -1){//in that case the ngEO_DO={} is the last param according to the ICD
-						
-						var urlWithoutlastBaraket = url.substring(0, url.length-1);
-						urlWithoutlastBaraket += "," + optionKey + ":" + optionValue + "}";
-						url = urlWithoutlastBaraket;
+				_.each(selectedDownloadOptions, function(optionValue, optionKey, list) {
 					
-					}else{//there are no download options already added
+					if ( optionValue )	{
+						//the download option is not set in the url
+						if (url.indexOf("ngEO_DO={") != -1){//in that case the ngEO_DO={} is the last param according to the ICD
+							
+							var urlWithoutlastBaraket = url.substring(0, url.length-1);
+							urlWithoutlastBaraket += "," + optionValue.argumentName + ":" + optionValue.value + "}";
+							url = urlWithoutlastBaraket;
 						
-						if (url.indexOf("?") == -1){
-							url += "?";
-						} else {//there are parameters in the url
-							url += "&";
+						} else { //there is no download option already added
+							
+							if (url.indexOf("?") == -1){
+								url += "?";
+							} else { //there are parameters in the url
+								url += "&";
+							}
+							url += "ngEO_DO={" + optionValue.argumentName + ":" + optionValue.value + "}";
+						
 						}
-						url += "ngEO_DO={" + optionKey + ":" + optionValue + "}";
-					
 					}
 				});	
 				//console.log("product url updated = " + url);
@@ -333,26 +340,26 @@ var FeatureCollection = function() {
 			return {};
 		
 		// Retreive download options for first product in selection
-		var selectedDowndloadOptions = _getProductDownloadOptions( this.selection[0] );
+		var selectedDownloadOptions = _getProductDownloadOptions( this.selection[0] );
 		
 		// Now check if the other have the same download options
 		for ( var i = 1; i < this.selection.length; i++ ) {
 			var dos = _getProductDownloadOptions( this.selection[i] );
 			
 			for ( var x in dos ) {
-				if ( selectedDowndloadOptions[x] != dos[x] ) {
-					selectedDowndloadOptions[x] = "@conflict";
+				if ( selectedDownloadOptions[x] != dos[x] ) {
+					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
 			
-			for ( var x in selectedDowndloadOptions ) {
-				if ( selectedDowndloadOptions[x] != dos[x] ) {
-					selectedDowndloadOptions[x] = "@conflict";
+			for ( var x in selectedDownloadOptions ) {
+				if ( selectedDownloadOptions[x] != dos[x] ) {
+					selectedDownloadOptions[x] = "@conflict";
 				}
-			}		
+			}
 		}
 		
-		return selectedDowndloadOptions;
+		return selectedDownloadOptions;
 	};
 	
 	/**
