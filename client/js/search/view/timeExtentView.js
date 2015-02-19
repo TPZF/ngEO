@@ -167,7 +167,10 @@ var TimeExtentView = Backbone.View.extend({
 	
 	render: function(){
 
-		var content = _.template(dateCriteria_template, { model: this.model, keyDates: JSON.stringify(Configuration.get("keyDates")) });
+		var content = _.template(dateCriteria_template, {
+			model: this.model,
+			keyDates: JSON.stringify(Configuration.get("keyDates"))
+		});
 		this.$el.append(content);
 		
 		// Keep the DOM elements needed by the view
