@@ -1,16 +1,25 @@
-
-
 define( ['jquery', 'backbone', 'configuration', 'text!search/template/downloadOptionsContent.html'], 
 		function($, Backbone, Configuration, downloadOptions_template) {
 
 var DownloadOptionsView = Backbone.View.extend({
 
-	/** the model is the DatasetSearch (the search model containing search parameters)
-	/* the dataset property of DatasetSearch is the Dataset backbone model containing the download options
+	/** 
+	 * The model is the DatasetSearch (the search model containing search parameters)
+	 * The dataset property of DatasetSearch is the Dataset backbone model containing the download options
+	 *
+	 * @param options
+	 *		<ul>
+	 *			<li>dataset : The dataset</li>
+	 *			<li>includeCollapsibleHeader : Boolean indicating if the template need to add collapsible header</li>
+	 *		</ul>
 	 */
+	id: "downloadOptionsView",
 	
-	initialize : function() {
+	initialize : function(options) {
 		this.listenTo( this.model, 'change:downloadOptions', this.render );
+		this.dataset = options.dataset;
+		this.downloadOptions = this.model.get("downloadOptions");
+		this.includeCollapsibleHeader = options.hasOwnProperty('includeCollapsibleHeader') ? options.includeCollapsibleHeader : true;
 	}, 
 	
 	events : {
@@ -20,30 +29,30 @@ var DownloadOptionsView = Backbone.View.extend({
 		'change select' : function(event){
 			var option = {};
 			//WEBC_FAT_12 Removed Download options checkbox
-			//In case one choice is in the select box, the change event is not fired so the None is added 
+			//In case of one choice is in the select box, the change event is not fired so the None is added 
 			//to allow changing the values.
+			var name = event.currentTarget.id;
 			var value = $(event.currentTarget).val();
+			var attributeToUpdate = _.findWhere( this.downloadOptions[this.dataset.get("datasetId")], { "argumentName": name } );
 			if ( value != "None" )
 			{
-				this.model.set( event.currentTarget.id, value );
+				attributeToUpdate.value = value;
 			}
 			else
 			{
-				this.model.unset( event.currentTarget.id );
+				delete attributeToUpdate.value;
 			}
 		},
 		
 		// For input checkbox, ie cropProductSearhArea
 		'change input': function(event) {
-			//check the status of the label wrapping the checkbox since
-			//this label stores the checkbox status (cf jqm)
-			var labelSelector  = "#" + event.currentTarget.id + "_label";
-			var $targetLabel = $(labelSelector);
-			var checked = $targetLabel.hasClass('ui-checkbox-on');			
-			if (!checked){
-				this.model.set( event.currentTarget.id, true );
-			}else{
-				this.model.unset( event.currentTarget.id );
+			var name = event.currentTarget.id;
+			var isChecked = $(event.target).is(':checked');
+			var attributeToUpdate = _.findWhere( this.downloadOptions[this.dataset.get("datasetId")], { "argumentName": name } );
+			if (isChecked) {
+				attributeToUpdate.value = true;
+			} else {
+				delete attributeToUpdate.value;
 			}
 			
 		}
@@ -52,7 +61,11 @@ var DownloadOptionsView = Backbone.View.extend({
 	
 	render: function(){
 
-		var content = _.template(downloadOptions_template, this.model, { variable: 'model' });
+		var content = _.template(downloadOptions_template, {
+			model: this.model,
+			dataset: this.dataset,
+			includeCollapsibleHeader: this.includeCollapsibleHeader
+		});
 		this.$el.html(content);
 		this.$el.trigger('create');
 		return this;

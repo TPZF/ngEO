@@ -33,30 +33,38 @@ define(['jquery', 'configuration', 'searchResults/model/featureCollection'],
 				fc.features.push( feature );
 				fc.select( feature );
 				
-				fc.updateProductUrls({
-					downloadMode: "OnCompletion"
-				});
+				fc.updateProductUrls([{
+					argumentName: "downloadMode",
+					value: "OnCompletion"
+				}]);
 				
 				//QUnit.equal( feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename, "http://dummy?downloadMode=OnCompletion" );
 				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:OnCompletion}" );
 				
-				fc.updateProductUrls({
-					downloadMode: "Continously"
-				});
+				fc.updateProductUrls([{
+					argumentName: "downloadMode",
+					value: "Continously"
+				}]);
 				
 				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:Continously}" );
 			
-				fc.updateProductUrls({
-					downloadMode: "Continously",
-					type: "PNG"
-				});
+				fc.updateProductUrls([{
+					argumentName: "downloadMode",
+					value: "Continously"
+				},{
+					argumentName: "type",
+					value: "PNG"
+				}]);
 				
 				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:PNG}" );
 		
-				fc.updateProductUrls({
-					downloadMode: "Continously",
-					type: "JPEG"
-				});
+				fc.updateProductUrls([{
+					argumentName: "downloadMode",
+					value: "Continously"
+				},{
+					argumentName: "type",
+					value: "JPEG"
+				}]);
 				
 				QUnit.equal( feature.properties.productUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:JPEG}" );
 				
