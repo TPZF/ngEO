@@ -1,6 +1,3 @@
-
-
-  
 define( ['jquery', 'backbone', 'configuration', 'search/model/dataset', 'search/model/datasetAuthorizations'], function($, Backbone, Configuration, DataSet, DataSetAuthorizations) {
 
 /**
@@ -68,11 +65,9 @@ var DataSetPopulation = Backbone.Model.extend({
 					callback(model);
 				},
 				error: function() {
-					self.trigger('datasetFetch',datasetId,"ERROR");
+					self.trigger('datasetFetch', datasetId, "ERROR");
 				}
-			});
-			
-			
+			});	
 		}
 	},
 	
@@ -82,11 +77,11 @@ var DataSetPopulation = Backbone.Model.extend({
 	select : function(datasetId) {
 		if (!this.selection.hasOwnProperty(datasetId)) {
 			var self = this;
-			this.fetchDataset(datasetId,function(model) {
-					self.selection[datasetId] = model;
-					self.trigger('select',model);
-					self.trigger('datasetFetch',model,"SUCCESS");
-				});
+			this.fetchDataset(datasetId, function(model) {
+				self.selection[datasetId] = model;
+				self.trigger('select', model);
+				self.trigger('datasetFetch', model, "SUCCESS");
+			});
 		}
 	},
 	
@@ -114,7 +109,7 @@ var DataSetPopulation = Backbone.Model.extend({
 	},
 	
 	/**
-	 * Chech if a dataset is usable by interferomretry
+	 * Check if a dataset is usable by interferomretry
 	 * See NGEOD-434
 	 */
 	usableForInterferometry: function(datasetId) {
@@ -187,7 +182,7 @@ var DataSetPopulation = Backbone.Model.extend({
 			}
 		}
 		
-		// restore the criteria filter
+		// Restore the criteria filter
 		criteriaFilter[index] = backupFilter;
 		
 		return criteriaValues;

@@ -25,10 +25,6 @@ var DownloadManagers = Backbone.Model.extend({
 		}
 	},
 	
-	getDownloadManagerById: function(id) {
-		return _.findWhere
-	},
-	
 	/** get a download manager user friendly name given its id */
 	getDownloadManagerName : function (id) {
 		var dm = _.findWhere( this.get("downloadmanagers"), {downloadManagerId: id} );
