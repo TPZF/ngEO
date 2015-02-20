@@ -5,31 +5,25 @@
 	<h3>Download Options : <%= dataset.get("datasetId") %></h3>
 <% } %>
 	<div class="downloadOptions">
-		<% if ( _.size(model.get("downloadOptions")) == 0 ) { %>
+		<% if ( downloadOptions.length == 0 ) { %>
 			<div id="downloadOptionsMessage" class="widget-content ui-body-c ui-error-message">
 				<p><b>No download options available.</b></p>
 			</div>	
 		<% } else { %>
-
-			<!-- 	display  download options -->
+			<!-- display  download options -->
 			<form>
 				<%
-				var downloadOptions = model.get("downloadOptions")[dataset.get("datasetId")];
 				_.each(downloadOptions, function(option) {	%>
 					<% if (!option.cropProductSearchArea) { %>
-						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
-							<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
-							<!-- <% if ( model.get(option.argumentName) == "@conflict" ) {  %> -->
+						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> :
+						</label>
+						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
 							<% if ( option.value == "@conflict" ) { %>
-							<option value="" selected style="display: none;"></option>
+								<option value="" selected style="display: none;"></option>
 							<% } %>
 							<option value="None">None</option>
 							<% _.each(option.values, function(value) { %>
-								<% if ( option.value && option.value == value.name ) {  %>
-									<option value="<%= value.name%>" selected><%=value.humanReadable%></option>
-								<% } else { %>	 
-									<option value="<%= value.name%>"><%=value.humanReadable%></option>
-								<% } %>	 
+								<option value="<%= value.name%>" <% if ( option.value && option.value == value.name) print('selected'); %> ><%=value.humanReadable%></option>
 							<% }); %>
 						</select>	
 					<% } %>
@@ -38,11 +32,7 @@
 				<% _.each(downloadOptions, function(option) { %>
 					<% if (option.cropProductSearchArea) { %>
 						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
-						<% if ( option.value ) {  %>						
-							<input type="checkbox" id="<%= option.argumentName %>" checked="checked" data-mini="true"/>
-						<% } else { %>	 
-							<input type="checkbox" id="<%= option.argumentName %>" data-mini="true"/>
-						<% } %>	 					
+						<input type="checkbox" id="<%= option.argumentName %>" <% if ( option.value ) print('checked="checked"'); %> data-mini="true"/>					
 					<% } %>			
 				<% }); %>
 				

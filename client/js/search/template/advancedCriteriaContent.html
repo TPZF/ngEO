@@ -2,26 +2,21 @@
 	<h3>Advanced : <%= dataset.get("datasetId") %></h3>
 	<div class="searchCriteria">
 		<!-- if the selected dataset has no advanced criteria display an information message to the user -->
-		<% if ( _.size( model.get("advancedAttributes") ) == 0 ) { %>
+		<% if ( advancedAttributes.length == 0 ) { %>
 			<div class="widget-content ui-body-c ui-error-message">
 				<p><b>No advanced criteria available.</b></p>
 			</div>
 
 		<% } else { %>
 
-		<!-- 	display search criteria -->
-			<form>			
-
-			<%
-			var advancedAttributes = model.get("advancedAttributes")[dataset.get("datasetId")];
-			_.each( advancedAttributes, function(criterion, i) { %>		
-				   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes  -->
-				   	<%	
-				   		var value = criterion.value;
+		<!-- display search criteria -->
+			<form>
+			<% _.each( advancedAttributes, function(criterion, i) { %>		
+				   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes -->
+				   <% 	var value = criterion.value;
 				   		if (criterion.type.toLowerCase() == 'list') { %> 
 
 							 <div data-role="fieldcontain">
-								
 								<fieldset data-role="controlgroup">
 									
 									<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
@@ -29,15 +24,9 @@
 									<% _.each(criterion.possibleValues, function(possibleValue) { %>
 									
 										<label>
-										
-										<!-- select the check box if its set is the model  -->
-										<% if ( value && value.indexOf(possibleValue.possibleValue) != -1 ) { %>
-											<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true" checked="checked" />
-										<% } else { %>	 
-											<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true"/>
-										<% } %>	
-
-										<%=possibleValue.possibleValue%>
+											<!-- select the check box if value is defined -->
+											<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue.possibleValue) != -1 ) print('checked="checked"'); %> />
+											<%=possibleValue.possibleValue%>
 										</label>
 										
 									<% }); %>
@@ -45,14 +34,11 @@
 								</fieldset>
 							</div>
 						
-					<!-- the criterion is an integer within a range  -->	
-					<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
-						
+					<!-- the criterion is an integer within a range -->	
+					<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>			
 
 						<div data-role="fieldcontain">
-								
 								<fieldset data-role="controlgroup">
-									
 									<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
 
 									<% if ( value ) { %>
@@ -73,34 +59,20 @@
 								</fieldset>
 						</div>
 
-					<!-- the criterion is an string  -->
+					<!-- the criterion is an string -->
 					<% } else if (criterion.type.toLowerCase() == 'string') { %>	
 					
 						<div data-role="fieldcontain">
-								
 							<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
-
-							<% if ( value ){ %>
-								<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= value %>" data-mini="true"/>
-							<% } else { %>	
-								<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" data-mini="true"/>
-						
-							<% } %>
+							<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
 						</div>
 
-					<!-- the criterion is an float  -->	
+					<!-- the criterion is an float -->	
 					<% } else if (criterion.type.toLowerCase() == 'float' || criterion.type.toLowerCase() == 'integer') { %>
 					
 						<div data-role="fieldcontain">
-								
 							<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
-
-							<% if ( value ){ %>
-								<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" value="<%= value %>" data-mini="true"/>
-							<% } else { %>	
-								<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" data-mini="true"/>
-						
-							<% } %>
+							<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
 						</div>
 					<% } else { %>
 						<div class="ui-error-message">
