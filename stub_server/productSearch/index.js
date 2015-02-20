@@ -142,14 +142,15 @@ module.exports = function(req, res){
 		bbox = bbox.map( parseFloat );
 		searchArea = new terraformer.Polygon([ [ [bbox[0],bbox[1]],
 				[bbox[0],bbox[3]], [bbox[2],bbox[3]], [bbox[2],bbox[1]], [bbox[0],bbox[1]] ] ]);
-	} else if ( req.query.g ) {
-		searchArea = wkt.parse(req.query.g);
-		for ( var i =0; i < searchArea.coordinates[0].length; i++ ) {
-			var x = searchArea.coordinates[0][i][1];
-			var y = searchArea.coordinates[0][i][0];
-			searchArea.coordinates[0][i][0] = x;
-			searchArea.coordinates[0][i][1] = y;
-		}
+	} else if ( req.query.geom ) {
+		searchArea = wkt.parse(req.query.geom);
+		// No need to inverse lon/lat ! Wkt already parses in lon/lat specification
+		// for ( var i =0; i < searchArea.coordinates[0].length; i++ ) {
+		// 	var x = searchArea.coordinates[0][i][1];
+		// 	var y = searchArea.coordinates[0][i][0];
+		// 	searchArea.coordinates[0][i][0] = x;
+		// 	searchArea.coordinates[0][i][1] = y;
+		// }
 	}
 	
 	var inside = function(feature) {
