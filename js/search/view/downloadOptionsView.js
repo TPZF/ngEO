@@ -62,7 +62,7 @@ var DownloadOptionsView = Backbone.View.extend({
 	render: function(){
 
 		var content = _.template(downloadOptions_template, {
-			model: this.model,
+			downloadOptions: this.model.get("downloadOptions")[this.dataset.get("datasetId")],
 			dataset: this.dataset,
 			includeCollapsibleHeader: this.includeCollapsibleHeader
 		});
