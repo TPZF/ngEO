@@ -38,18 +38,20 @@ var StandingOrderDataAccessRequest = {
 		
 	},
 	
-	/** build the request to submit */
+	/** 
+	 * Build the request to submit
+	 */
 	getRequest : function() {
 
 		var request = {
-				StandingOrderDataAccessRequest : {
-					requestStage :  this.requestStage,
-					OpenSearchURL : this.OpenSearchURL,
-					DownloadOptions : this.DownloadOptions,
-					SchedulingOptions : this.getSchedulingOptions(),
-					downloadLocation : this.downloadLocation,
-				}
-			};
+			StandingOrderDataAccessRequest : {
+				requestStage :  this.requestStage,
+				OpenSearchURL : this.OpenSearchURL,
+				DownloadOptions : this.DownloadOptions,
+				SchedulingOptions : this.getSchedulingOptions(),
+				downloadLocation : this.downloadLocation,
+			}
+		};
 		
 		// Add hosted processing parameters if defined
 		if ( this.hostedProcessId )
@@ -58,9 +60,9 @@ var StandingOrderDataAccessRequest = {
 			request.StandingOrderDataAccessRequest.parameter = this.parameters;
 		}
 
-		//if createBulkOrder is set to true after a validation request
-		//take into account the createBulkOrder for the confirmation request
-		if (self.createBulkOrder){
+		// If createBulkOrder is set to true after a validation request
+		// take into account the createBulkOrder for the confirmation request
+		if (this.createBulkOrder){
 			request.StandingOrderDataAccessRequest.createBulkOrder = true;
 		}
 		
@@ -68,34 +70,37 @@ var StandingOrderDataAccessRequest = {
 		return  request;
 	},
 	
-	/** the shared standing order url contains :
-	 * 	1- all the search parameters as for as for a shared  search url. 
+	/** 
+	 * The shared standing order url contains :
+	 * 	1- all the search parameters as for as for a shared search url. 
 	 *  2- scheduling options parameters relative to a standing order request
 	 */
-	getSharedURL : function(searchCriteria){
+	getSharedURL : function(standingOrder){
 
-		var url = "#data-services-area/sto/" +  searchCriteria.dataset.get("datasetId") + '?';
+		var datasetId = standingOrder.dataset.get("datasetId");
+		var url = "#data-services-area/sto/" + datasetId + '?';
 		
-		//add area criteria 
-		url += searchCriteria.searchArea.getOpenSearchParameter();
+		// Add area criteria 
+		url += standingOrder.searchArea.getOpenSearchParameter();
 
-		//always add the advanced criteria values selected and already set to the model
-		url = searchCriteria.addAdvancedCriteria(url);
+		// Always add the advanced criteria values selected and already set to the model
+		url = standingOrder.addAdvancedCriteria(url, datasetId);
 
-		//add the download options values selected and already set to the model
-		url = searchCriteria.addDownloadOptions(url);
+		// Add the download options values selected and already set to the model
+		url = standingOrder.addDownloadOptions(url, datasetId);
 		
-		//get the scheduling object either the STO is TimeDriven or Data-Driven
+		// Get the scheduling object either the STO is TimeDriven or Data-Driven
 		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;
 		url += "&" + $.param(options);
 		
 		return url;
 	},
 	
-	/** Method used in the case of a shared standing order url.
+	/** 
+	 * Method used in the case of a shared standing order url.
 	 * It fill in the STO request with the given values.
 	 */
-	populateModelfromURL : function(query, dataset){
+	populateModelfromURL : function(query, standingOrder){
 		
 		this.initialize();
 		
@@ -127,35 +132,42 @@ var StandingOrderDataAccessRequest = {
 	    	}
 	    }
 	    
-		//set open search url
-	    this.OpenSearchURL = dataset.getOpenSearchURL();
-		//set selected download options
-	    this.DownloadOptions = dataset.getSelectedDownloadOptions();
+		// Set open search url
+	    this.OpenSearchURL = standingOrder.getOpenSearchURL();
+		// Set selected download options
+	    this.DownloadOptions = standingOrder.getSelectedDownloadOptions();
 	},
 	
-	/** build the Scheduling option property depending on the STO type */
-	getSchedulingOptions : function (){
+	/**
+	 * Build the Scheduling option property depending on the STO type
+	 */
+	getSchedulingOptions : function () {
 		
-		if (this.timeDriven){
+		if (this.timeDriven) {
 			
-			return { TimeDriven : { 
-				startDate : this.startDate.toISODateString(),
-				endDate : this.endDate.toISODateString(),
-				repeatPeriod : this.repeatPeriod, 
-				slideAcquisitionTime : this.slideAcquisitionTime 
+			return {
+				TimeDriven : { 
+					startDate : this.startDate.toISODateString(),
+					endDate : this.endDate.toISODateString(),
+					repeatPeriod : this.repeatPeriod, 
+					slideAcquisitionTime : this.slideAcquisitionTime 
 				} 
 			};
 
-		}else{
-			return { DataDriven : { 
-				startDate : this.startDate.toISODateString(),
-				endDate : this.endDate.toISODateString()
-			} };
+		} else {
+			return {
+				DataDriven : { 
+					startDate : this.startDate.toISODateString(),
+					endDate : this.endDate.toISODateString()
+				}
+			};
 		}
 	},
 	
-	/** message to display as information 
-	 * Display nothing for STO */
+	/** 
+	 * Message to display as information 
+	 * Display nothing for STO
+	 */
 	getSpecificMessage : function(){
 		
 //		var collapsibleContent = "<h5> Standing Order info <h5>";
@@ -176,7 +188,9 @@ var StandingOrderDataAccessRequest = {
 	},
 	
 	
-	/** check whether the request is valid or not */
+	/**
+	 * Check whether the request is valid or not
+	 */
 	isValid : function(){
 		
 		var dataAccessConfig = Configuration.localConfig.dataAccessRequestStatuses;
@@ -231,14 +245,16 @@ var StandingOrderDataAccessRequest = {
 		return false;
 	},
 		
-	/** specific Standing order additional processing after validation request */
+	/**
+	 * Specific Standing order additional processing after validation request
+	 */
 	validationProcessing : function (dataAccessRequestStatus){
 		//there is nothing specific for standing orders
 	}
 	
 }
 
-//add DataAccessRequest methods to StandingOrderDataAccessRequest
+// Add DataAccessRequest methods to StandingOrderDataAccessRequest
 _.extend(StandingOrderDataAccessRequest, DataAccessRequest);
 
 return StandingOrderDataAccessRequest;
