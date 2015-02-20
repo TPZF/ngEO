@@ -17,7 +17,9 @@ var SimpleDataAccessRequest = {
 	
 	totalSize : 0,
 	
-	/** reset specific parameters of a simple DAR */
+	/**
+	 * Reset specific parameters of a simple DAR
+	 */
 	resetRequest : function (){
 		
 		this.rejectedProductsNB = 0;
@@ -25,7 +27,9 @@ var SimpleDataAccessRequest = {
 		this.hostedProcessId = null;
 	},
 	
-	/** get the current request to submit */
+	/**
+	 * Get the current request to submit
+	 */
 	getRequest : function() {
 
 		// The JSON to send to the server
@@ -43,12 +47,12 @@ var SimpleDataAccessRequest = {
 			params = params.concat( this.parameters );
 
 			var request = {
-					hostedProcessDataAccessRequest : {
-						requestStage :  this.requestStage,
-						hostedProcessId : this.hostedProcessId,
-						downloadLocation : this.downloadLocation,
-						parameter : params
-					}
+				hostedProcessDataAccessRequest : {
+					requestStage :  this.requestStage,
+					hostedProcessId : this.hostedProcessId,
+					downloadLocation : this.downloadLocation,
+					parameter : params
+				}
 			};
 		}
 		else
@@ -80,7 +84,9 @@ var SimpleDataAccessRequest = {
 		return request;	
 	},
 		
-	/** get message the display when a simple DAT creation is triggered */
+	/** 
+	 * Get message the display when a simple DAT creation is triggered
+	 */
 	getSpecificMessage : function(){
 		
 /*		var collapsibleContent = "<h5>Selected Products : " + (this.productURLs.length + this.rejectedProductsNB) + "<h5>";
@@ -101,7 +107,8 @@ var SimpleDataAccessRequest = {
 	},
 	
 	
-	/** Set the list of products for the DAR 
+	/** 
+	 * Set the list of products for the DAR 
 	 * if the file name is empty the product is rejected
 	 */
 	setProducts: function(products) {
@@ -109,60 +116,64 @@ var SimpleDataAccessRequest = {
 		this.rejectedProductsNB = products.length - this.productURLs.length;
 	},
 	
-	/** check whether the request is valid or not */
+	/**
+	 * Check whether the request is valid or not
+	 */
 	isValid : function(){
 		
 		var dataAccessConfig = Configuration.localConfig.dataAccessRequestStatuses;
 
-		//if request not valid when no download manager then display the specific message
-		//the validate button is not disabled since when the user selects a download manager the request
+		// If request not valid when no download manager then display the specific message
+		// the validate button is not disabled since when the user selects a download manager the request
 		if (this.downloadLocation.DownloadManagerId == ""){
 			this.serverResponse = dataAccessConfig.invalidDownloadManagersError;
 			return false;
 		}
 		
-		//Request not valid when no product urls set then display the specific message
+		// Request not valid when no product urls set then display the specific message
 		if ( this.productURLs.length == 0){
 			this.serverResponse = Configuration.localConfig.simpleDataAccess.invalidProductURLsError;
 			this.trigger('RequestNotValidEvent');
 			return false;
 		}
 		
-		//initial request : nominal case
+		// Initial request : nominal case
 		if (this.step == 0 && 
 		    this.id == "" &&
 		    this.requestStage == dataAccessConfig.validationRequestStage) {
 			return true;
 		}
 		
-		//second stage submission with and without bulk order
+		// Second stage submission with and without bulk order
 		if (this.step == 1 &&
 			this.id != "" &&
 			this.requestStage == dataAccessConfig.confirmationRequestStage) {
 			return true;
 		}
 		
-		//disable the request validation if the request is not valid
+		// Disable the request validation if the request is not valid
 		this.trigger('RequestNotValidEvent');
 		
 		return false;
 	},
 	
-	/** specific simple DAR additional processing after validation request */
+	/** 
+	 * Specific simple DAR additional processing after validation request
+	 */
 	validationProcessing : function(dataAccessRequestStatus){
 		
-		//calculate the total download estimated size  
-		  this.totalSize = 0;
-		  var productStatuses = dataAccessRequestStatus.productStatuses; 
-		  for ( var i = 0; i < productStatuses.length; i++) {
-				if ( productStatuses[i] && productStatuses[i].expectedSize ) {
-					this.totalSize += parseInt( productStatuses[i].expectedSize );
-				}
-		  }
+		// Calculate the total download estimated size  
+		this.totalSize = 0;
+		var productStatuses = dataAccessRequestStatus.productStatuses; 
+		for ( var i = 0; i < productStatuses.length; i++) {
+			if ( productStatuses[i] && productStatuses[i].expectedSize ) {
+				this.totalSize += parseInt( productStatuses[i].expectedSize );
+			}
+		}
 	}
 }
 
-// add DataAccessRequest methods to SimpleDataAccessRequest
+// Add DataAccessRequest methods to SimpleDataAccessRequest
 _.extend(SimpleDataAccessRequest, DataAccessRequest);
 
 return SimpleDataAccessRequest;
