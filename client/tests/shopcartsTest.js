@@ -25,7 +25,7 @@ define(['jquery', 'configuration', 'shopcart/model/shopcartCollection'],
 				QUnit.equal(shopcarts[0].id, "TPZ_SHP_01", "the first shopcart id is ok");
 				QUnit.ok(shopcarts[0].attributes.name ,"The default shopcart has a name attribute");
 				QUnit.ok(shopcarts[0].attributes.userId ,"The default shopcart has a user id attribute");
-				QUnit.ok(shopcarts.length==5 ,"There are 5 elts in the shopcart");
+				QUnit.ok(shopcarts.length==100 ,"There are 100 elts in the shopcart");
 			
 				QUnit.start();
 	    	});

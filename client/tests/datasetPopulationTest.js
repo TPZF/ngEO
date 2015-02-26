@@ -1,17 +1,19 @@
-define(['jquery','search/model/dataSetPopulation'], function ($, DataSetPopulation) {
+define(['jquery','search/model/dataSetPopulation'],
+		function ($, DataSetPopulation) {
 
 // Define the QUnit module and lifecycle.
 QUnit.module("DataSetPopulation");
 
 //load the datasets 
 QUnit.asyncTest("Check Received datasets", 8, function () {
-	var model = new DataSetPopulation();
+	var model = DataSetPopulation;
+	model.initialize();
 	model.fetch().done( function() {
 			var matrix = model.get('matrix');
 			QUnit.ok($.isArray(matrix),"Matrix retrieved");
 			
 			//check the criteria 
-			QUnit.ok(model.get('criterias').length == 3,"three criteria found");
+			QUnit.ok(model.get('criterias').length == 4,"four criterias found");
 			QUnit.equal(model.get('criterias')[0].title, "mission" , "mission criterion found");
 			QUnit.equal(model.get('criterias')[1].title, "sensor" , "sensor criterion found");
 			QUnit.equal(model.get('criterias')[2].title, "keyword" , "keyword criterion found");
