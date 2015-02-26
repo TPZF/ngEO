@@ -7,7 +7,10 @@
 	</div>	
 <% } else { %>	 		
 
-	<!-- 	display  download options -->
+	<!-- 	
+				display  download options. 
+				See (IICD-WC-WS)-(ngEO-14-ICD-ELC-075)-(Internal ICD Web Client - Web Server) issue 2.12 §4.4.3.1.1.2 for more information on the configuration of the downloadOptions 
+	-->
 	<form>			
 		<% _.each(model.get("downloadOptions"), function(option) { %>		
 			<% if (!option.cropProductSearchArea) { %>
@@ -17,11 +20,11 @@
 					<option value="" selected style="display: none;"></option>
 					<% } %>
 					<option value="None">None</option>
-					<% _.each(option.values, function(value) { %>
-						<% if ( model.get(option.argumentName) && (model.get(option.argumentName) == value.name) ) {  %>						
-							<option value="<%= value.name%>" selected><%=value.humanReadable%></option>
+					<% _.each(option.value, function(aValue) { %>
+						<% if ( model.get(option.argumentName) && (model.get(option.argumentName) == aValue.name) ) {  %>						
+							<option value="<%= aValue.name%>" selected><%=aValue.humanReadable%></option>
 						<% } else { %>	 
-							<option value="<%= value.name%>"><%=value.humanReadable%></option>		
+							<option value="<%= aValue.name%>"><%=aValue.humanReadable%></option>		
 						<% } %>	 
 					<% }); %>
 				</select>	
