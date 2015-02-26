@@ -69,22 +69,6 @@ var Dataset = Backbone.Model.extend({
 			}
 		}
 		return resp;
-	},
-	
-	/**
-	 * Get the default value name of a download option which is the first possible value.
-	 */
-	getDefaultDownloadOptionValue : function(optionName){
-		
-		var value;
-		
-		_.each(this.get('downloadOptions'), function(option){
-			if (option.argumentName == optionName){
-				value = option.values[0].name;
-			}
-		});
-		
-		return value;
 	}
 	
 });
