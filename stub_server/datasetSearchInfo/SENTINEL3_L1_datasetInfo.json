@@ -20,7 +20,7 @@
             {
                 "argumentName": "ProductFormat_S3_L1",
                 "description": "desired download format",
-                "values": [
+                "value": [
                     {
                         "name": "GeoTIFF",
                         "humanReadable": "GeoTiff",
@@ -31,7 +31,7 @@
             {
                 "argumentName": "Download mode_S3_L1",
                 "description": "wait until completion or download continuously",
-                "values": [
+                "value": [
                     {
                         "name": "DLcomplete",
                         "humanReadable": "Download on completion",

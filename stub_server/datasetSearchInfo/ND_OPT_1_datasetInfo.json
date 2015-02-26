@@ -24,7 +24,7 @@
                 "argumentName": "productFormat",
 				"caption": "Product format",
                 "description": "Desired download format",
-                "values": [
+                "value": [
                     {
                         "name": "GeoTIFF",
                         "humanReadable": "GeoTiff",
@@ -35,7 +35,7 @@
             {
                 "argumentName": "downloadMode",
                 "description": "Download mode",
-                "values": [
+                "value": [
                     {
                         "name": "DLcomplete",
                         "humanReadable": "Download on completion",
