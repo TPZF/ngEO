@@ -1,21 +1,20 @@
 <div id="inquiriesContent" class="widget-content ui-body-c">
-
 	<form action="submit">
 		<label for="inquiryType">Choose the inquiry type:</label>
 		<select name="inquiryType" id="inquiryType" data-mini="true" data-theme="c">
-		   <option value="None">...</option>
-		   <option value="Suggestion">Suggestion</option>
-		   <option value="Question">Question</option>
-		   <option value="Complaint">Complaint</option>
-		   <option value="Request for bulk order">Request for bulk order</option>
-		   <option value="Request on-demand media delivery">Request on-demand media delivery</option>
-		   <option value="Other">Other</option>
+		   <option value="-1" disabled selected>...</option>
+		   <option value="0">Suggestion</option>
+		   <option value="1">Question</option>
+		   <option value="2">Complaint</option>
+		   <option value="3">Request for bulk order</option>
+		   <option value="4">Request on-demand media delivery</option>
+		   <option value="5">Other</option>
 		</select>
 		
 		<label for="inquiryMessage">Enter the inquiry message:</label>
 		<textarea id="inquiryMessage" rows="10" data-theme="c"></textarea>
 	
-		<div class="popup-widget-footer">
+		<div class="popup-widget-footer" id="submitInquiryButtonContainer">
 			<button id="submitInquiry" data-role="button" data-mini="true" data-inline="true" data-theme="a">Submit</button>
 		</div>
 	
