@@ -23,35 +23,39 @@ define( function() {
 		computeExtent: function(feature) {
 			if (feature.bbox)
 				return;
-							
-			// Get the coordinates
-			var coords;
-			var numOuterRings = 1
+			
+			//list of array of coordinates from which we have to compute the extent bbox
+			var coordsList = [];
 			switch (feature.geometry.type) {
 				case "Point":
-					coords = feature.geometry.coordinates;
-					feature.bbox = [ coords[0], coords[1], coords[0], coords[1] ];
+					var pointCoords = feature.geometry.coordinates;
+					feature.bbox = [ pointCoords[0], pointCoords[1], pointCoords[0], pointCoords[1] ];
 					return;
 				case "MultiPoint":
-					coords = feature.geometry.coordinates;
+					coordsList.push(feature.geometry.coordinates);
 					break;
 				case "Polygon":
-					coords = feature.geometry.coordinates[0];
+					coordsList.push(feature.geometry.coordinates[0]);
 					break;
 				case "MultiPolygon":
-					numOuterRings = j;
-					coords = feature.geometry.coordinates[0][0];
+					var numOuterRings = feature.geometry.coordinates.length;
+					for ( var j = 0; j < numOuterRings; j++ ) {
+						coordsList.push(feature.geometry.coordinates[j][0]);
+					}
 					break;
 				case "LineString":
-					coords = feature.geometry.coordinates;
+					coordsList.push(feature.geometry.coordinates);
 					break;
 				case "MultiLineString":
-					numOuterRings = j;
-					coords = feature.geometry.coordinates[0];
+					var numOuterRings = feature.geometry.coordinates.length;
+					for ( var j = 0; j < numOuterRings; j++ ) {
+						coordsList.push(feature.geometry.coordinates[j]);
+					}
 					break;
 			}
 			
-			if (!coords)
+			//if there is nothing to compute then just return
+			if (coordsList.length == 0)
 				return;
 
 			
@@ -59,17 +63,9 @@ define( function() {
 			var minY = 10000;
 			var maxX = -10000;
 			var maxY = -10000
-			
-			for ( var j = 0; j < numOuterRings; j++ ) {
-				switch (feature.geometry.type) {
-					case "MultiPolygon":
-						coords = feature.geometry.coordinates[j][0];
-						break;
-					case "MultiLineString":
-						numOuterRings = j;
-						coords = feature.geometry.coordinates[j];
-						break;
-				}
+
+			for ( var j = 0; j < coordsList.length; j++ ) {
+				var coords = coordsList[j];
 				for ( var i = 0;  i < coords.length; i++ )	{				
 					minX = Math.min( minX, coords[i][0] );	
 					minY = Math.min( minY, coords[i][1] );	
