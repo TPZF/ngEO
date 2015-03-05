@@ -354,7 +354,7 @@ OpenLayersMapEngine.prototype.unsubscribe = function(name,callback)
 	case "mousemove":
 	case "click":
 	case "dblclick":
-		this.element.removeEventListener( name, callback, true );
+		this._map.events.unregister(name, undefined, callback, true);
 		break;
 	}
 }
