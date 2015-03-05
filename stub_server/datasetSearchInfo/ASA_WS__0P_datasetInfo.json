@@ -28,6 +28,7 @@
 			"id":"bbox",
 			"type":"String",
 			"possibleValues":[]
-		}]
+		}],
+		"validityEndDate": "01-06-2010T12:45:07:00.57Z"
 	}
 }
