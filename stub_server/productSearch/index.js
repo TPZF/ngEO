@@ -112,6 +112,16 @@ var setupProductUrl = function(featureCollection,id) {
 	}
 };
 
+/**
+* return a default bbox covering entire world by default
+*/
+var defaultSearchAreaBbox = function(){
+	var bbox = [-180,-90,180,90];
+	var defaultSearchArea = new terraformer.Polygon([ [ [bbox[0],bbox[1]],
+				[bbox[0],bbox[3]], [bbox[2],bbox[3]], [bbox[2],bbox[1]], [bbox[0],bbox[1]] ] ]);
+	return defaultSearchArea;
+};
+
 module.exports = function(req, res){
 
 	// Find the feature collection
@@ -136,7 +146,9 @@ module.exports = function(req, res){
 		return;
 	}
 	
-	var searchArea;
+	//by default the search area is entire world
+	var searchArea = defaultSearchAreaBbox();
+	
 	if ( req.query.bbox ) {
 		var bbox = req.query.bbox.split(',');
 		bbox = bbox.map( parseFloat );
