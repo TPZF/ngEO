@@ -22,20 +22,15 @@
 								<option value="" selected style="display: none;"></option>
 							<% } %>
 							<option value="None">None</option>
-							<% _.each(option.values, function(value) { %>
-								<option value="<%= value.name%>" <% if ( option.value && option.value == value.name) print('selected'); %> ><%=value.humanReadable%></option>
+							<% _.each(option.value, function(doValue) { %>
+								<option value="<%= doValue.name%>" <% if ( option._userSelectedValue && option._userSelectedValue == doValue.name) print('selected'); %> ><%=doValue.humanReadable%></option>
 							<% }); %>
 						</select>	
-					<% } %>
-				<% }); %>
-				
-				<% _.each(downloadOptions, function(option) { %>
-					<% if (option.cropProductSearchArea) { %>
+					<% } else { %>
 						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
-						<input type="checkbox" id="<%= option.argumentName %>" <% if ( option.value ) print('checked="checked"'); %> data-mini="true"/>					
-					<% } %>			
-				<% }); %>
-				
+						<input type="checkbox" id="<%= option.argumentName %>" <% if ( option._userSelectedValue ) print('checked="checked"'); %> data-mini="true"/>
+					<% }
+				}); %>
 			</form>
 
 		<% } %>

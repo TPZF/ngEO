@@ -161,7 +161,7 @@ var SearchCriteria = Backbone.Model.extend({
 
 						var attributeToDefine = _.findWhere(downloadOptions, {argumentName: p[0]});
 						if ( attributeToDefine ) {
-							attributeToDefine.value = (p[0] == "cropProduct" ? true : p[1]);
+							attributeToDefine._userSelectedValue = (p[0] == "cropProduct" ? true : p[1]);
 						}
 					}
 					// Force triggering since there is no set of 'downloadOptions'
@@ -246,7 +246,7 @@ var SearchCriteria = Backbone.Model.extend({
 		var downloadOptions = this.get('downloadOptions')[datasetId];
 		_.each(downloadOptions, function(option){
 			
-			if ( option.value ) {
+			if ( option._userSelectedValue ) {
 				
 				if (!downloadOptionsStr) {
 					// At least one download option has been defined by user
@@ -257,7 +257,7 @@ var SearchCriteria = Backbone.Model.extend({
 				}
 				
 				if ( !option.cropProductSearchArea ) {
-					downloadOptionsStr += option.argumentName + ':' + option.value;
+					downloadOptionsStr += option.argumentName + ':' + option._userSelectedValue;
 				} else {
 					downloadOptionsStr += option.argumentName + ':' + self.searchArea.toWKT(); 
 				}
@@ -287,8 +287,8 @@ var SearchCriteria = Backbone.Model.extend({
 		var downloadOptions = this.get('downloadOptions')[dataset.get("datasetId")];
 		_.each( downloadOptions, function(option){
 			
-			if ( option.value ) {
-				selectedOptions[option.argumentName] = option.value;
+			if ( option._userSelectedValue ) {
+				selectedOptions[option.argumentName] = option._userSelectedValue;
 			}
 		});
 		//console.log("Selected download options of dataset : " + this.dataset.attributes.datasetId + " : ");

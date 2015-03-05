@@ -36,11 +36,11 @@ var DownloadOptionsView = Backbone.View.extend({
 			var attributeToUpdate = _.findWhere( this.downloadOptions[this.dataset.get("datasetId")], { "argumentName": name } );
 			if ( value != "None" )
 			{
-				attributeToUpdate.value = value;
+				attributeToUpdate._userSelectedValue = value;
 			}
 			else
 			{
-				delete attributeToUpdate.value;
+				delete attributeToUpdate._userSelectedValue;
 			}
 		},
 		
@@ -50,9 +50,9 @@ var DownloadOptionsView = Backbone.View.extend({
 			var isChecked = $(event.target).is(':checked');
 			var attributeToUpdate = _.findWhere( this.downloadOptions[this.dataset.get("datasetId")], { "argumentName": name } );
 			if (isChecked) {
-				attributeToUpdate.value = true;
+				attributeToUpdate._userSelectedValue = true;
 			} else {
-				delete attributeToUpdate.value;
+				delete attributeToUpdate._userSelectedValue;
 			}
 			
 		}
