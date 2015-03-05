@@ -185,7 +185,7 @@ var SearchArea = function() {
 	this.empty = function() {
 		_feature.bbox = [ 0, 0, 0, 0 ];
 		_feature.geometry.coordinates = [[ [0,0] ]];
-		_mode == SearchArea.EMPTY;
+		_mode = SearchArea.EMPTY;
 		_updateFeature();
 	};
 	

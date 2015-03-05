@@ -202,7 +202,11 @@ var SearchCriteria = Backbone.Model.extend({
 		var params = "start=" + this.get("start").toISOString()  + "&" + 
 		"stop=" + this.get("stop").toISOString();
 
-		params += "&" + this.searchArea.getOpenSearchParameter( Configuration.get("search.geometryPrecision",2) );
+		var searchAreaParam = this.searchArea.getOpenSearchParameter( Configuration.get("search.geometryPrecision",2) );
+		//if user has no search area parameter (for exmaple, in polygon mode, there are no area defined by user)
+		//then do not provide search area criterion (issue NGEO-1723/NGEO-1394))		
+		if(searchAreaParam)
+			params += "&" + searchAreaParam
 		
 		//console.log("DatasetSearch module : addGeoTemporalParams : " + url);
 		return params;
