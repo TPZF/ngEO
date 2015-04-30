@@ -19,9 +19,13 @@ var _getKey = function(browseInfo) {
  */
 var _getBrowseInformation = function(feature) {
 	var eo = feature.properties.EarthObservation;
-	if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) return null;
+	if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) {
+		return null;
+	}
+
 	var browseInfo = eo.EarthObservationResult.eop_BrowseInformation;
-	if (!browseInfo) return null;
+	if (!browseInfo)
+		return null;
 	return browseInfo;
 };
 
@@ -36,22 +40,24 @@ return {
 	 addBrowse: function(feature,datasetId) {
 	 
 	 	var browseInfo = _getBrowseInformation(feature);
-		var key = _getKey(browseInfo);
-		if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId,browseInfo.eop_layer) ) {	
+	 	if ( browseInfo ) {
+			var key = _getKey(browseInfo);
+			if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId,browseInfo.eop_layer) ) {	
+			
+				var browseLayer = _browseLayerMap[key];
+				if (!browseLayer) {
+					browseLayer = _browseLayerMap[key] = Map.addLayer({
+							name: browseInfo.eop_layer,
+							type: "Browses",
+							visible: true
+						});
+				}
+				browseLayer.addBrowse(feature,browseInfo);
 		
-			var browseLayer = _browseLayerMap[key];
-			if (!browseLayer) {
-				browseLayer = _browseLayerMap[key] = Map.addLayer({
-						name: browseInfo.eop_layer,
-						type: "Browses",
-						visible: true
-					});
+			} else if ( !_browseAccessInformationMap[key] ) {
+				Logger.inform("You do not have enough permission to browse the layer " + browseInfo.eop_layer + ".");
+				_browseAccessInformationMap[key] = true;
 			}
-			browseLayer.addBrowse(feature,browseInfo);
-	
-		} else if ( !_browseAccessInformationMap[key] ) {
-			Logger.inform("You do not have enough permission to browse the layer " + browseInfo.eop_layer + ".");
-			_browseAccessInformationMap[key] = true;
 		}
 						
 	},
@@ -64,14 +70,16 @@ return {
 	removeBrowse: function(feature) {
 	
 		var browseInfo = _getBrowseInformation(feature);
-		var key = _getKey(browseInfo);
-		var browseLayer = _browseLayerMap[key];
-		if ( browseLayer ) {
-			browseLayer.removeBrowse(feature.id);
-			
-			if ( browseLayer.isEmpty() ) {
-				Map.removeLayer(browseLayer);
-				delete _browseLayerMap[key];
+		if ( browseInfo ) {
+			var key = _getKey(browseInfo);
+			var browseLayer = _browseLayerMap[key];
+			if ( browseLayer ) {
+				browseLayer.removeBrowse(feature.id);
+				
+				if ( browseLayer.isEmpty() ) {
+					Map.removeLayer(browseLayer);
+					delete _browseLayerMap[key];
+				}
 			}
 		}
 	}
