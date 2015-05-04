@@ -4,18 +4,16 @@ define( ['jquery', 'backbone', 'configuration', 'text!search/template/advancedCr
 		function($, Backbone, Configuration, advancedCriteria_template) {
 
 var AdvancedSearchView = Backbone.View.extend({
-
+	
 	id: "advancedSearchView",
 	
 	/** 
 	 * The model is the DatasetSearch (the search model containing search parameters)
-	 * the dataset property of DatasetSearch is the Dataset backbone model containing the advanced criteria 
+	 * The dataset property of DatasetSearch is the Dataset backbone model containing the advanced criteria 
 	 */
 	
-	initialize : function(options) {
+	initialize : function() {
 		this.listenTo( this.model, 'change:advancedAttributes', this.render );
-		this.dataset = options.dataset;
-		this.advancedAttributes = this.model.get("advancedAttributes")[this.dataset.get("datasetId")];
 	}, 
 	
 	events : {
@@ -41,10 +39,8 @@ var AdvancedSearchView = Backbone.View.extend({
 			var $input = $target.next();			
 			var value = $input.attr('value');
 			var name = $input.attr('name');
+			var newValue = this.model.get(name);
 			
-			var attributeToUpdate = _.findWhere( this.advancedAttributes, { id: name } );
-			var newValue = attributeToUpdate.value;
-
 			// Update the value
 			if ( $target.hasClass('ui-checkbox-off') ) {
 			
@@ -54,19 +50,19 @@ var AdvancedSearchView = Backbone.View.extend({
 					newValue += "," + value;
 				}
 				
-				// Update attribute with new value
-				attributeToUpdate.value = newValue;
+				// Set the new value
+				this.model.set(name, newValue);
 
 			} else if ( $target.hasClass('ui-checkbox-on') ) {
 			
 				var currentValues = newValue.split(',');
 				var currentValues = _.without( currentValues, value );
 				
-				// Set the new value or remove if empty
+				//set the new value or remove if empty
 				if ( currentValues.length == 0 ) {
-					delete attributeToUpdate.value;
+					this.model.unset(name);
 				} else {
-					attributeToUpdate.value = currentValues.join(',');
+					this.model.set(name, currentValues.join(','));
 				}
 			}
 		}		
@@ -83,16 +79,16 @@ var AdvancedSearchView = Backbone.View.extend({
 		var from = $from.val();
 		var to = $to.val();
 		
-		var attributeToUpdate = _.findWhere( this.advancedAttributes, { id: name } );
-		if ( from == $from.attr('min') && to == $to.attr('max') ) {
-			delete attributeToUpdate.value;
+		if ( from == $from.attr('min') 
+			 && to == $to.attr('max') ) {
+			 this.model.unset(name);
 		} else {
 			var value = '[' + from + ',' + to  + ']';
-			attributeToUpdate.value = value;
+			this.model.set(name, value);
 		}
 	},
 	
-	/** 
+	/**
 	 * Handler called after a slideStop and blur events on an input field a criterion.
 	 * handles range input changes and simple text field changes depending on the input id suffix
 	 */
@@ -102,20 +98,17 @@ var AdvancedSearchView = Backbone.View.extend({
 			name = name.replace(/_from|_to/,'');
 			this.updateRange(name);
 		} else {
-			var attributeToUpdate = _.findWhere( this.advancedAttributes, { id: name } );
 			var value = $(event.currentTarget).val();
-			attributeToUpdate.value = value;
+			this.model.set(name, value);
 		}
 		
 	},
 	
 	render: function(){
-
 		var criterionLabels = Configuration.get("search.advancedCriteriaLabels",{});
 		var content = _.template(advancedCriteria_template, {
-			advancedAttributes: this.model.get("advancedAttributes")[this.dataset.get("datasetId")],
-			criterionLabels: criterionLabels,
-			dataset: this.dataset
+			model: this.model,
+			criterionLabels: criterionLabels
 		});
 
 		

@@ -67,11 +67,9 @@ return {
 		standingOrderView.render();
 			
 		router.route(
-				"data-services-area/search/:datasetIds?:query", 
-				"search", function(datasetIds, query) {
+			"data-services-area/search/:datasetIds?:query", 
+			"search", function(datasetIds, query) {
 			
-			// Object containing the shared parameters for each dataset
-			var sharedParameters = JSON.parse(unescape(query));
 			// Variable used to count the number of fetched datasets
 			var datasetsToBeFetched = datasetIds.split(",").length;
 
@@ -83,8 +81,7 @@ return {
 			
 				var datasetId = dataset.get('datasetId');
 				if ( status == "SUCCESS" ) {
-					var currentSharedParameters = sharedParameters[datasetId];
-					DatasetSearch.populateModelfromURL( currentSharedParameters, datasetId );
+					DatasetSearch.populateModelfromURL( query, datasetId );
 					
 					// Resfreh the view
 					searchView.refresh();
@@ -125,7 +122,7 @@ return {
 		router.route(
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
-			
+						
 			// Show the page first
 			MenuBar.showPage("data-services-area");
 			
@@ -134,8 +131,8 @@ return {
 				
 				if ( status == "SUCCESS" ) {
 					
-					standingOrder.populateModelfromURL(query);
 					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
+					standingOrder.populateModelfromURL(query);
 					
 					// Resfreh the  view
 					standingOrderView.refresh();

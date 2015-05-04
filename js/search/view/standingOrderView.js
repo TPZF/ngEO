@@ -1,5 +1,3 @@
-
-
 define( ['jquery', 'backbone', 'configuration', 'logger', 'dataAccess/widget/dataAccessWidget',
          'search/view/schedulingOptionsView', 'search/view/searchView',
          'dataAccess/model/standingOrderDataAccessRequest', 'ui/sharePopup',
@@ -60,7 +58,9 @@ var StandingOrderView = SearchView.extend({
 		
 		StandingOrderDataAccessRequest.initialize();
 
-		var content = _.template(searchCriteria_template, { submitText: "Order" });
+		var content = _.template(searchCriteria_template, {
+			submitText: "Order"
+		});
 		this.$el.append(content);
 		
 		SearchView.prototype.render.apply(this);

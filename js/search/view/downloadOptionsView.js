@@ -6,20 +6,15 @@ var DownloadOptionsView = Backbone.View.extend({
 	/** 
 	 * The model is the DatasetSearch (the search model containing search parameters)
 	 * The dataset property of DatasetSearch is the Dataset backbone model containing the download options
-	 *
 	 * @param options
 	 *		<ul>
 	 *			<li>dataset : The dataset</li>
-	 *			<li>includeCollapsibleHeader : Boolean indicating if the template need to add collapsible header</li>
 	 *		</ul>
 	 */
 	id: "downloadOptionsView",
-	
-	initialize : function(options) {
+
+	initialize : function() {
 		this.listenTo( this.model, 'change:downloadOptions', this.render );
-		this.dataset = options.dataset;
-		this.downloadOptions = this.model.get("downloadOptions");
-		this.includeCollapsibleHeader = options.hasOwnProperty('includeCollapsibleHeader') ? options.includeCollapsibleHeader : true;
 	}, 
 	
 	events : {
@@ -31,28 +26,28 @@ var DownloadOptionsView = Backbone.View.extend({
 			//WEBC_FAT_12 Removed Download options checkbox
 			//In case of one choice is in the select box, the change event is not fired so the None is added 
 			//to allow changing the values.
-			var name = event.currentTarget.id;
 			var value = $(event.currentTarget).val();
-			var attributeToUpdate = _.findWhere( this.downloadOptions[this.dataset.get("datasetId")], { "argumentName": name } );
 			if ( value != "None" )
 			{
-				attributeToUpdate._userSelectedValue = value;
+				this.model.set( event.currentTarget.id, value );
 			}
 			else
 			{
-				delete attributeToUpdate._userSelectedValue;
+				this.model.unset( event.currentTarget.id );
 			}
 		},
 		
 		// For input checkbox, ie cropProductSearhArea
 		'change input': function(event) {
-			var name = event.currentTarget.id;
-			var isChecked = $(event.target).is(':checked');
-			var attributeToUpdate = _.findWhere( this.downloadOptions[this.dataset.get("datasetId")], { "argumentName": name } );
-			if (isChecked) {
-				attributeToUpdate._userSelectedValue = true;
-			} else {
-				delete attributeToUpdate._userSelectedValue;
+			//check the status of the label wrapping the checkbox since
+			//this label stores the checkbox status (cf jqm)
+			var labelSelector  = "#" + event.currentTarget.id + "_label";
+			var $targetLabel = $(labelSelector);
+			var checked = $targetLabel.hasClass('ui-checkbox-on');			
+			if (!checked){
+				this.model.set( event.currentTarget.id, true );
+			}else{
+				this.model.unset( event.currentTarget.id );
 			}
 			
 		}
@@ -61,11 +56,7 @@ var DownloadOptionsView = Backbone.View.extend({
 	
 	render: function(){
 
-		var content = _.template(downloadOptions_template, {
-			downloadOptions: this.model.get("downloadOptions")[this.dataset.get("datasetId")],
-			dataset: this.dataset,
-			includeCollapsibleHeader: this.includeCollapsibleHeader
-		});
+		var content = _.template(downloadOptions_template, this.model, { variable: 'model' });
 		this.$el.html(content);
 		this.$el.trigger('create');
 		return this;

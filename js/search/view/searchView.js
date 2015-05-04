@@ -9,53 +9,6 @@ define( ['jquery', 'backbone', 'search/view/spatialExtentView', 'search/view/tim
  */
 var SearchView = Backbone.View.extend({
 
-	initialize: function() {
-
-		this.listenTo(DataSetPopulation, 'select', this.onDatasetSelected );
-		this.listenTo(DataSetPopulation, 'unselect', this.onDatasetUnselected );
-
-		// Table containing the views which are dynamically added depending on selected datasets
-		this.datasetDependingViews = {};
-	},
-
-	/**
-	 *	Add advanced & download options block on dataset select
-	 */
-	onDatasetSelected: function(dataset) {
-
-		// Advanced search view
-		var advancedCriteriaView = new AdvancedSearchView({  
-			model : this.model,
-			dataset : dataset
-		});
-		this.$el.find("#sc-advanced-container").append(advancedCriteriaView.el);
-		advancedCriteriaView.render();
-
-		// Download options view
-		var downloadOptionsView = new DownloadOptionsView({
-			model : this.model,
-			dataset : dataset
-		});
-		this.$el.find("#sc-downloadOptions-container").append(downloadOptionsView.el);
-		downloadOptionsView.render();
-
-		// Store these views to be able to remove later
-		this.datasetDependingViews[dataset.get("datasetId")] = [ advancedCriteriaView, downloadOptionsView ];
-	},
-
-	/**
-	 *	Remove advanced & download options block on dataset unselect
-	 */
-	onDatasetUnselected: function(dataset) {
-
-		var datasetId = dataset.get("datasetId");
-		for ( var i=0; i<this.datasetDependingViews[datasetId].length; i++ ) {
-			var viewToRemove = this.datasetDependingViews[datasetId][i];
-			viewToRemove.remove();
-		}
-		delete this.datasetDependingViews[datasetId];
-	},
-
 	/**
 	 * Call to set the height of content when the view size is changed
 	 */
@@ -74,11 +27,8 @@ var SearchView = Backbone.View.extend({
 	 * Refresh the view : only for views that does not listen to model changes (for performance reasons)
 	 */
 	refresh: function() {
-		for ( var x in this.datasetDependingViews ) {
-			for ( var i; i<this.datasetDependingViews[x].length; i++ ) {
-				this.datasetDependingViews[x][i].render();
-			}
-		}
+		this.advancedCriteriaView.render();
+		this.downloadOptionsView.render();
 	},
 	
 	/**
@@ -100,6 +50,19 @@ var SearchView = Backbone.View.extend({
 			model : this.model
 		});
 		this.areaCriteriaView.render();
+
+		this.advancedCriteriaView = new AdvancedSearchView({
+			el : this.$el.find("#searchCriteria"), 
+			model : this.model
+		});
+		this.advancedCriteriaView.render();		
+		
+		//add download options view as a tab
+		this.downloadOptionsView = new DownloadOptionsView({
+			el : this.$el.find("#downloadOptions"), 
+			model : this.model
+		});
+		this.downloadOptionsView.render();
 		
 		// OpenSearch URL view
 		this.openSearchURLView = new OpenSearchURLView({
@@ -109,7 +72,7 @@ var SearchView = Backbone.View.extend({
 		this.openSearchURLView.render();
 		
 		this.$el.trigger('create');
-									
+		
 		return this;
 	}
 	

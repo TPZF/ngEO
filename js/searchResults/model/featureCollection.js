@@ -250,7 +250,7 @@ var FeatureCollection = function() {
 		}
 	};
 	
-	/** 
+	/**
 	 * Unselect all the already selected table items
 	 */
 	this.unselectAll =function() {
@@ -268,7 +268,7 @@ var FeatureCollection = function() {
 
 	};
 	
-	/** 
+	/**
 	 * Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
 	 */
@@ -285,7 +285,7 @@ var FeatureCollection = function() {
 		return productUrls;
 	};
 	
-	/** 
+	/**
 	 * The following method appends the download options using this convention ngEO product URI :
 	 * it appends the download options to the product url as follows: &ngEO_DO={param_1:value1,....,param_n:value_n}
 	 */
@@ -304,25 +304,22 @@ var FeatureCollection = function() {
 				}
 				
 				_.each(selectedDownloadOptions, function(optionValue, optionKey, list) {
+								
+					// The download option is not set in the url
+					if (url.indexOf("ngEO_DO={") != -1){//in that case the ngEO_DO={} is the last param according to the ICD
+						
+						var urlWithoutlastBaraket = url.substring(0, url.length-1);
+						urlWithoutlastBaraket += "," + optionKey + ":" + optionValue + "}";
+						url = urlWithoutlastBaraket;
 					
-					if ( optionValue )	{
-						//the download option is not set in the url
-						if (url.indexOf("ngEO_DO={") != -1){//in that case the ngEO_DO={} is the last param according to the ICD
-							
-							var urlWithoutlastBaraket = url.substring(0, url.length-1);
-							urlWithoutlastBaraket += "," + optionValue.argumentName + ":" + optionValue.value + "}";
-							url = urlWithoutlastBaraket;
+					} else { // There are no download options already added
 						
-						} else { //there is no download option already added
-							
-							if (url.indexOf("?") == -1){
-								url += "?";
-							} else { //there are parameters in the url
-								url += "&";
-							}
-							url += "ngEO_DO={" + optionValue.argumentName + ":" + optionValue.value + "}";
-						
+						if (url.indexOf("?") == -1){
+							url += "?";
+						} else {//there are parameters in the url
+							url += "&";
 						}
+						url += "ngEO_DO={" + optionKey + ":" + optionValue + "}";
 					}
 				});	
 				//console.log("product url updated = " + url);

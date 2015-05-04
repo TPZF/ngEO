@@ -1,41 +1,32 @@
 <!-- if the selected dataset has no download options display an information message to the user -->
 
-<% if ( includeCollapsibleHeader ) { %>
-<div data-role="collapsible" data-inset="false" data-mini="true">
-	<h3>Download Options : <%= dataset.get("datasetId") %></h3>
-<% } %>
-	<div class="downloadOptions">
-		<% if ( downloadOptions.length == 0 ) { %>
-			<div id="downloadOptionsMessage" class="widget-content ui-body-c ui-error-message">
-				<p><b>No download options available.</b></p>
-			</div>	
-		<% } else { %>
-			<!-- display  download options -->
-			<form>
-				<%
-				_.each(downloadOptions, function(option) {	%>
-					<% if (!option.cropProductSearchArea) { %>
-						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> :
-						</label>
-						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
-							<% if ( option.value == "@conflict" ) { %>
-								<option value="" selected style="display: none;"></option>
-							<% } %>
-							<option value="None">None</option>
-							<% _.each(option.value, function(doValue) { %>
-								<option value="<%= doValue.name%>" <% if ( option._userSelectedValue && option._userSelectedValue == doValue.name) print('selected'); %> ><%=doValue.humanReadable%></option>
-							<% }); %>
-						</select>	
-					<% } else { %>
-						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
-						<input type="checkbox" id="<%= option.argumentName %>" <% if ( option._userSelectedValue ) print('checked="checked"'); %> data-mini="true"/>
-					<% }
-				}); %>
-			</form>
+<% if ( _.size(model.get("downloadOptions")) == 0 ) { %>
+	<div id="downloadOptionsMessage" class="widget-content ui-body-c ui-error-message">
+		<p><b>No download options available.</b></p>
+	</div>	
+<% } else { %>
 
-		<% } %>
-	</div>
-<% if ( includeCollapsibleHeader ) { %>
-</div>
+	<!-- Display download options -->
+	<form>			
+		<% _.each(model.get("downloadOptions"), function(option) { %>
+			<% if (!option.cropProductSearchArea) { %>
+				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
+					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+					<option value="None">None</option>
+					<% _.each(option.values, function(value) { %>
+						<% if ( model.get(option.argumentName) == "@conflict" ) { %>
+							<option value="" selected style="display: none;"></option>
+						<% } else { %>
+							<option value="<%= value.name%>" <% if ( model.get(option.argumentName) && model.get(option.argumentName) == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
+						<% } %>
+					<% }); %>
+				</select>	
+			<% } else { %>
+				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
+				<input type="checkbox" id="<%= option.argumentName %>" <% if( model.get(option.argumentName) ) print('checked="checked"'); %> data-mini="true" />
+			<% } %>
+		<% }); %>
+	</form>
+
 <% } %>
 
