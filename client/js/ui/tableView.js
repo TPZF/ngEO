@@ -229,7 +229,7 @@ var TableView = Backbone.View.extend({
 				return;
 			if ( data.features.length == 0 ) {
 			  $row.next().remove();
-			  $( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
+			  $( '<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
 			} else {
 				rowData.totalNumChildren = data.properties.totalResults;
 				// HACK : do not use addFeatures but just the event in order to add element to the table and the map
