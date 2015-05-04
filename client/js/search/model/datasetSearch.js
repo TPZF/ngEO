@@ -5,6 +5,42 @@ define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation'
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
 
+// Helper function
+var _mergeAttributes = function( datasets, attrName, id ) {
+	var mergedAttributes = {};
+	var isFirst = true;
+	
+	_.each( datasets, function(dataset) {
+	
+		var attrs = dataset.get(attrName);
+		var attrMap = {};
+		if (attrs) {
+			for ( var i = 0; i < attrs.length; i++ ) {
+				attrMap[ attrs[i][id] ] = attrs[i];
+			}
+		}
+		
+		if ( isFirst ) {
+			mergedAttributes = attrMap;
+			isFirst = false;
+		} else {
+		
+			// Exclude attribute not in the map
+			for ( var x in mergedAttributes ) {
+				if ( !attrMap[x] ) {
+					delete mergedAttributes[x];
+				} else if ( !_.isEqual( attrMap[x], mergedAttributes[x] ) ) {
+					delete mergedAttributes[x];
+				}
+			}
+	
+		}
+				
+	});
+	
+	return mergedAttributes;
+};
+
 /**
  * This class manages the criteria for search
  */
@@ -40,9 +76,13 @@ var DataSetSearch = SearchCriteria.extend({
 		
 		// The number of selected datasets
 		this.numDatasets = 0;
+		
+		// Automatically load the dataset when the datasetId is changed
+		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged );
+		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged );
 	},
 	
-	/** 
+	/**
 	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
@@ -56,7 +96,7 @@ var DataSetSearch = SearchCriteria.extend({
 		if ( this.get('mode') != "Simple" ) {
 		
 			url += this.get('master') + "/search?";
-			url += this.getOpenSearchParameters(id);
+			url += this.getOpenSearchParameters();
 		
 			// Add interferometry specific parameters
 			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
@@ -64,14 +104,14 @@ var DataSetSearch = SearchCriteria.extend({
 			// Interferometry : only one dataset
 			var slaveUrl = baseUrl;
 			slaveUrl += this.slaves + "/search?";
-			slaveUrl += this.getOpenSearchParameters(id);
+			slaveUrl += this.getOpenSearchParameters();
 			url += "&with=" + encodeURIComponent(slaveUrl);
 		} else {
 			if (!id) {
 				id = this.datasetIds.join(',');
 			}
 			url += id + "/search?";
-			url += this.getOpenSearchParameters(id);
+			url += this.getOpenSearchParameters();
 		}
 		
 		url += "&format=json";
@@ -85,25 +125,15 @@ var DataSetSearch = SearchCriteria.extend({
 	getSharedSearchURL : function(){
 
 		var url = "#data-services-area/search/" +  this.datasetIds.join(',') + '?';
-		var sharedParameters = {};
-
-		// Build shared open search parameters url for each dataset
-		// since advanced&download options are independent between datasets
-		for ( var i=0; i<this.datasetIds.length; i++ ) {
-			var datasetId = this.datasetIds[i];
-			var osUrl = this.getOpenSearchParameters(datasetId);
-
-			// Correlation/Interferometry
-			if ( this.get('mode') != "Simple" ) {
-				// Add interferometry specific parameters
-				osUrl += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
-				osUrl += "&mode=" + this.get('mode');
-			}
-			// Store open search url for the given datasetId
-			sharedParameters[datasetId] = osUrl;
-		}
-
-		return "#data-services-area/search/" + this.datasetIds.join(',') + '?' + escape(JSON.stringify(sharedParameters));
+		url += this.getOpenSearchParameters();
+		// Correlation/Interferometry
+		if ( this.get('mode') != "Simple" ) {
+		
+			// Add interferometry specific parameters
+			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
+			url += "&mode=" + this.get('mode');
+		} 
+		return url;
 	},
 	
 	/**	
@@ -211,10 +241,9 @@ var DataSetSearch = SearchCriteria.extend({
 	},
 	
 	/**
-	 * @override
 	 * Call when the dataset selection is changed
 	 */
-	onDatasetSelectionChanged : function(dataset) {
+	onDatasetSelectionChanged : function() {
 		
 		// Recompute datasetIds parameter which is used in many places
 		this.datasetIds = [];
@@ -222,12 +251,18 @@ var DataSetSearch = SearchCriteria.extend({
 			this.datasetIds.push(x);
 		}
 		
-		// Use parent's onDatasetSelectionChanged implementation
-		SearchCriteria.prototype.onDatasetSelectionChanged.call(this, dataset);
-
+		//reset all the selected attributes and download options from the old selection
+		this.clearAdvancedAttributesAndDownloadOptions();
+	
 		// Recompute the date range
 		this.computeDateRange();
 		
+		// Recompute advanced attributes
+		this.set('advancedAttributes', _mergeAttributes( DatasetPopulation.selection, 'attributes', 'id' ) );
+		
+		// Recompute download options
+		this.set('downloadOptions', _mergeAttributes( DatasetPopulation.selection, 'downloadOptions', 'argumentName' ) );
+	
 		if (!this.get('dateRange'))
 			return;
 							

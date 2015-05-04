@@ -1,11 +1,11 @@
 
 
-define( ['jquery', 'backbone', 'configuration', 'logger', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
-         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/corrInterView', 'search/view/openSearchURLView', 'search/model/dataSetPopulation', 'search/view/searchView',
+define( ['jquery', 'backbone', 'configuration', 'logger', 'search/view/searchView', 'searchResults/model/searchResults', 'search/view/spatialExtentView',
+         'search/view/timeExtentView',  'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/corrInterView', 'search/view/openSearchURLView',
          'ui/sharePopup',
          'text!search/template/searchCriteriaContent_template.html'], 
-		function($, Backbone, Configuration, Logger, SearchResults, SpatialExtentView, TimeExtentView, 
-				 AdvancedSearchView, DownloadOptionsView, CorrInterView, OpenSearchURLView, DataSetPopulation, SearchView, SharePopup,
+		function($, Backbone, Configuration, Logger, SearchView, SearchResults, SpatialExtentView, TimeExtentView, 
+				 AdvancedSearchView, DownloadOptionsView, CorrInterView, OpenSearchURLView, SharePopup,
 				 searchCriteria_template) {
 
 /**

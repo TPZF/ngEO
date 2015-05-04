@@ -23,43 +23,25 @@ var DownloadOptionsWidget = function() {
 		}
 	});
 	
+	// Use a model to store the download options of selected products
+	var selectedDownloadOptions = new Backbone.Model();
+
+	var downloadOptionsView = new DownloadOptionsView({
+		model : selectedDownloadOptions,
+		el: element
+	});
+		
 	/**
 	 *	Open the popup
 	 */
 	this.open = function(featureCollection) {
 	
-		// Use a model to store the download options of selected products
-		var selectedDownloadOptions = new Backbone.Model({
-			downloadOptions: {}
-		});
-		//selectedDownloadOptions.get("downloadOptions")[featureCollection.dataset.get("datasetId")] = {};
-
-		var downloadOptionsView = new DownloadOptionsView({
-			model : selectedDownloadOptions,
-			dataset : featureCollection.dataset,
-			includeCollapsibleHeader : false,
-			el: element
-		});
-		var datasetId = featureCollection.dataset.get("datasetId");
-
 		// Update the selected download options model
-		//selectedDownloadOptions.attributes = featureCollection.getSelectedDownloadOptions();
+		selectedDownloadOptions.attributes = featureCollection.getSelectedDownloadOptions();
 		
 		// Fetch the available download options and then display the widget
 		featureCollection.fetchAvailableDownloadOptions( function(downloadOptions) {
-			// Deep clone of download options object, to use independently of dataset's one
-			selectedDownloadOptions.get('downloadOptions')[datasetId] = _.map(downloadOptions, _.clone);
-
-			// Fill the cloned object by parameters extracted from selected products
-			// TODO: MS: very complex, simplify the management..
-			var fcDownloadOptions = featureCollection.getSelectedDownloadOptions();
-			for ( var key in fcDownloadOptions )
-			{
-				var attributeToUpdate = _.findWhere( selectedDownloadOptions.get('downloadOptions')[datasetId], { "argumentName": key } );
-				if ( attributeToUpdate ) {
-					attributeToUpdate.value = fcDownloadOptions[key];
-				}
-			}
+			selectedDownloadOptions.set( 'downloadOptions', downloadOptions );
 			
 			downloadOptionsView.render();
 			
@@ -70,11 +52,11 @@ var DownloadOptionsWidget = function() {
 					<div id="downloadOptionsMessage"></div>\
 				</div>').trigger('create');
 				
-			// Called when 'Update' is clicked
+			// called when  'Update' is clicked
 			downloadOptionsView.$el.find('#downloadOptionsUpdate').click( function(event){
 				//update the product url of the selected products with the selected download options
 				//and display a message to the user.
-				$.when(featureCollection.updateProductUrls(selectedDownloadOptions.get('downloadOptions')[datasetId])).done(function(){
+				$.when(featureCollection.updateProductUrls(selectedDownloadOptions.attributes)).done(function(){
 					$("#downloadOptionsMessage").empty();
 					$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
 				});

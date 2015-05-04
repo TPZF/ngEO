@@ -1,88 +1,84 @@
-<div id="advanced-container-<%= dataset.get("datasetId") %>" data-role="collapsible" data-inset="false" data-mini="true">
-	<h3>Advanced : <%= dataset.get("datasetId") %></h3>
-	<div class="searchCriteria">
-		<!-- if the selected dataset has no advanced criteria display an information message to the user -->
-		<% if ( advancedAttributes.length == 0 ) { %>
-			<div class="widget-content ui-body-c ui-error-message">
-				<p><b>No advanced criteria available.</b></p>
-			</div>
-
-		<% } else { %>
-
-		<!-- display search criteria -->
-			<form>
-			<% _.each( advancedAttributes, function(criterion, i) { %>		
-				   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes -->
-				   <% 	var value = criterion.value;
-				   		if (criterion.type.toLowerCase() == 'list') { %> 
-
-							 <div data-role="fieldcontain">
-								<fieldset data-role="controlgroup">
-									
-									<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
-			
-									<% _.each(criterion.possibleValues, function(possibleValue) { %>
-									
-										<label>
-											<!-- select the check box if value is defined -->
-											<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue.possibleValue) != -1 ) print('checked="checked"'); %> />
-											<%=possibleValue.possibleValue%>
-										</label>
-										
-									<% }); %>
-									
-								</fieldset>
-							</div>
-						
-					<!-- the criterion is an integer within a range -->	
-					<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>			
-
-						<div data-role="fieldcontain">
-								<fieldset data-role="controlgroup">
-									<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
-
-									<% if ( value ) { %>
-										<label for="<%= criterion.id %>_from">from:</label>
-										<input type="range" id="<%= criterion.id %>_from" value="<%= value.substring(1, value.indexOf(',')) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
-										 
-										<label for="<%= criterion.id %>_to">to:</label>
-										<input type="range" id="<%= criterion.id %>_to" value="<%= value.substring(value.indexOf(',')+1,value.length-1) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
-									
-									<% } else { %>	
-										<label for="<%= criterion.id %>_from">from:</label>
-										<input type="range" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
-										
-										<label for="<%= criterion.id %>_to">to:</label>
-										<input type="range" id="<%= criterion.id %>_to"  value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
-									
-									<% } %>
-								</fieldset>
-						</div>
-
-					<!-- the criterion is an string -->
-					<% } else if (criterion.type.toLowerCase() == 'string') { %>	
-					
-						<div data-role="fieldcontain">
-							<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
-							<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
-						</div>
-
-					<!-- the criterion is an float -->	
-					<% } else if (criterion.type.toLowerCase() == 'float' || criterion.type.toLowerCase() == 'integer') { %>
-					
-						<div data-role="fieldcontain">
-							<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
-							<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
-						</div>
-					<% } else { %>
-						<div class="ui-error-message">
-							<p><b>ERROR: Invalid Criterion type <%= criterion.type %> for <%= criterion.id %> </b></p>
-						 </div>
-					<% } %>
-			
-					
-				<% }); %>
-				</form>
-		<% } %>
+<!-- if the selected dataset has no advanced criteria display an information message to the user -->
+<% if ( _.size( model.get("advancedAttributes") ) == 0 ) { %>
+	<div class="widget-content ui-body-c ui-error-message">
+		<p><b>No advanced criteria available.</b></p>
 	</div>
-</div>
+
+<% } else { %>
+
+<!-- display search criteria -->
+	<form>			
+
+	<% _.each( model.get("advancedAttributes"), function(criterion, i) { 
+			var value = model.get(criterion.id); %>
+	
+		   <!-- the criterion is an enumeration has multiple options so create a list of checkboxes  -->
+			<% if (criterion.type.toLowerCase() == 'list') { %> 
+
+					 <div data-role="fieldcontain">
+						<fieldset data-role="controlgroup">
+							
+							<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
+							<% _.each(criterion.possibleValues, function(possibleValue) { %>
+								<label>
+									<!-- select the check box if value is defined -->
+									<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue.possibleValue) != -1 ) print('checked="checked"'); %> />
+									<%=possibleValue.possibleValue%>
+								</label>
+							<% }); %>
+						</fieldset>
+					</div>
+
+			<!-- the criterion is an integer within a range  -->	
+			<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+
+				<div data-role="fieldcontain">
+						
+						<fieldset data-role="controlgroup">
+							
+							<legend><%= criterionLabels[criterion.id]||criterion.id %>:</legend>
+
+
+							<% if ( value ){ %>
+								<label for="<%= criterion.id %>_from">from:</label>
+								<input type="range" id="<%= criterion.id %>_from" value="<%= value.substring(1, value.indexOf(',')) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+								 
+								<label for="<%= criterion.id %>_to">to:</label>
+								<input type="range" id="<%= criterion.id %>_to" value="<%= value.substring(value.indexOf(',')+1,value.length-1) %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+							
+							<% } else { %>	
+								<label for="<%= criterion.id %>_from">from:</label>
+								<input type="range" id="<%= criterion.id %>_from" value="<%= criterion.rangeMinValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+								<label for="<%= criterion.id %>_to">to:</label>
+								<input type="range" id="<%= criterion.id %>_to"  value="<%= criterion.rangeMaxValue %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" data-highlight="true" data-mini="true"/>
+							
+							<% } %>
+						</fieldset>
+				</div>
+
+
+			<!-- the criterion is an string  -->	
+			<% } else if (criterion.type.toLowerCase() == 'string') { %>
+			
+				<div data-role="fieldcontain">
+					<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
+					<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
+				</div>
+
+			<!-- the criterion is an float  -->	
+			<% } else if (criterion.type.toLowerCase() == 'float' || criterion.type.toLowerCase() == 'integer') { %>	
+			
+				<div data-role="fieldcontain">
+					<label class="capitalize" for="<%= criterion.id %>"><%= criterionLabels[criterion.id]||criterion.id %>:</label>
+					<input type="number" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
+				</div>
+			<% } else { %>
+				<div class="ui-error-message">
+					<p><b>ERROR: Invalid Criterion type <%= criterion.type %> for <%= criterion.id %> </b></p>
+				 </div>
+			<% } %>
+	
+			
+		<% }); %>
+		</form>
+<% } %>

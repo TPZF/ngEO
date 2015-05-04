@@ -1,9 +1,5 @@
-  
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation', 'search/model/searchArea'], 
-		function($, Backbone, Configuration, DatasetPopulation, SearchArea) {
-
-// A constant
-var ONE_MONTH = 24 * 30 * 3600 * 1000;
+define( ['jquery', 'backbone', 'configuration', 'search/model/searchArea'], 
+		function($, Backbone, Configuration, SearchArea) {
 
 function pad(num, size) {
     var s = num+"";
@@ -42,6 +38,9 @@ Date.prototype.toISODateString = function() {
 	return this.getUTCFullYear() + "-" + pad(this.getUTCMonth()+1,2) + "-" + pad(this.getUTCDate(),2);
 };
 
+// A constant
+var ONE_MONTH = 24 * 30 * 3600 * 1000;
+
 /**
  * This backbone model holds the search criteria attributes
  * Used as a base class for DatasetSearch & StandingOrder
@@ -58,32 +57,52 @@ var SearchCriteria = Backbone.Model.extend({
 			downloadOptions: {}
 		}
 	},
-
+	
 	/**	
 	 * Constructor
 	 */
 	initialize : function() {
 		// The search area
 		this.searchArea = new SearchArea();
-
-		// Automatically load the dataset when the datasetId is changed
-		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged);
-		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged);
 	},
+	 
+	/** 
+	 * Remove all advanced attributes and download options
+	 * The option silent is set to true to avoid firing unused events.
+	 */ 
+	clearAdvancedAttributesAndDownloadOptions : function(){
+		
+		var self = this;			
+	
+		//remove selected search criteria
+		_.each(this.get('advancedAttributes'), function(attribute){
+			if (self.has(attribute.id)) {
+				self.unset(attribute.id, {silent: true});
+			}
+		});			
+
+		_.each(this.get('downloadOptions'), function(option){
+			if (self.has(option.argumentName)){
+				self.unset(option.argumentName, {silent: true});
+			}				
+		});
+			
+	},
+
 		
 	/**
-	 * Get the url without base url with all search criteria depending on dataset id
+	 * Get the url without base url with all search criteria
 	 */
-	getOpenSearchParameters : function(id){
+	getOpenSearchParameters : function(){
 		
 		//add area criteria if set
 		var params = this.addGeoTemporalParams();
 		
 		//always add the advanced criteria values selected and already set to the model
-		params = this.addAdvancedCriteria(params, id);
+		params = this.addAdvancedCriteria(params);
 
 		//add the download options values selected and already set to the model
-		params = this.addDownloadOptions(params, id);
+		params = this.addDownloadOptions(params);
 		
 		//console.log("DatasetSearch module : getCoreURL method : " + url);
 		
@@ -103,93 +122,84 @@ var SearchCriteria = Backbone.Model.extend({
 	/**
 	 * Populate the model with the parameters retrieved from the Shared URL
 	 */
-	populateModelfromURL : function(query, datasetId){
+	populateModelfromURL : function(query){
 			
 		var vars = query.split("&");
 		
 		// Force useExtent to false to avoid bug when setting the geometry
-	    this.set('useExtent', false);
+	    var attributes = { 'useExtent': false };
 		
 	    for (var i = 0; i < vars.length; i++) {
 	        
 	    	var pair = vars[i].split("=");
 			if (pair.length != 2) 
 				throw "Invalid OpenSearch URL : parameter " + vars[i] + "not correctly defined."
-	    	
-			var key = pair[0];
-	    	var value = pair[1];
-
-			switch (key) {
+	    		
+			switch (pair[0]) {
 				case "bbox": 
-					var coords = value.split(",");
+					var coords = pair[1].split(",");
 					if ( coords.length != 4 )
 						throw "Invalid OpenSearch URL : bbox parameter is not correct."
 					this.searchArea.setBBox({west : coords[0],south : coords[1],east : coords[2],north: coords[3]});
 					break;
 				case "geom":
 					// TODO : check polygon is correct
-					this.searchArea.setFromWKT(value);
+					this.searchArea.setFromWKT(pair[1]);
 					break;
 				case "start" : 
 					try {
-						this.set('start', Date.fromISOString(value));
+						attributes['start'] = Date.fromISOString(pair[1]);
 					} catch (err) {
 						throw "Invalid OpenSearch URL : start parameter is not correct."
 					}
 					break;
 				case "stop" : 
 					try {
-						this.set('stop', Date.fromISOString(value));
+					attributes['stop'] = Date.fromISOString(pair[1]);
 					} catch (err) {
 						throw "Invalid OpenSearch URL : stop parameter is not correct."
 					}
 					break;
 				
 				case "ngEO_DO":
-					var don = value.substr(1, value.length-2);
-
-					// Use this regex to avoid splitting crop product
-					// which has multiple "," in it
-					var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
-					parameters = don.split(commaNotBetweenParenthesisRe);
-
-					var downloadOptions = this.get('downloadOptions')[datasetId];
+					var don = pair[1].substr(1,pair[1].length-2);
+					var parameters = don.split(',');
 					for ( var n = 0; n < parameters.length; n++ ) {
 						var p = parameters[n].split(':');
 						if (p.length != 2) 
 							throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
+						if ( this.get('downloadOptions').hasOwnProperty(p[0]) ) {
+							attributes[p[0]] = this.get('downloadOptions')[p[0]].cropProductSearchArea ? true : p[1];
+						}
 
+						/*
+						<<<<<<< .courant
 						var attributeToDefine = _.findWhere(downloadOptions, {argumentName: p[0]});
 						if ( attributeToDefine ) {
 							attributeToDefine._userSelectedValue = (p[0] == "cropProduct" ? true : p[1]);
 						}
+						*/
 					}
-					// Force triggering since there is no set of 'downloadOptions'
-					this.trigger("change:downloadOptions");
 					break;
 					
 					
 				default :
-
-					if ( this.has(key) ) {
+					if ( this.has(pair[0]) ) {
 						// Interferometry parameters are stored directly on a model
-						this.set(key, value);
+						attributes[pair[0]] = pair[1];
 					} else {
-						// Check if Advanced attributes
-						var advancedAttributes = this.get('advancedAttributes')[datasetId];
-						var attributeToDefine = _.findWhere(advancedAttributes, {id: key});
-						// Set parameter if it exists in advanced attribute of the given dataset
-						// skip any other parameter
-						if ( attributeToDefine ) {
-							attributeToDefine.value = value;
+						// Set the parameters if there are advanced attributes of the model skip any other parameter
+						if ( this.get('advancedAttributes').hasOwnProperty(pair[0]) ) {
+							attributes[pair[0]] = pair[1];
 							// Force triggering since object doesn't do it automatically
 							this.trigger('change:advancedAttributes');
 						}
 					}
 					break;
 			}
-					
 	   	}
+				
+	    this.set(attributes);
 		
 		// Manual trigger of a change:searchArea event because SearchArea is not (yet?) a Backbone model
 		this.trigger('change:searchArea');
@@ -213,20 +223,22 @@ var SearchCriteria = Backbone.Model.extend({
 	},
 	
 	// Add advanced criteria to the given url
-	addAdvancedCriteria : function(url, datasetId) {
+	addAdvancedCriteria : function(url) {
 		
 		var self = this;
 		
-		// Get the advanced attributes corresponding to the datasetId
-		// And append only the modified values(which contain "value" attribute)
-		var advancedAttributes = this.get('advancedAttributes')[datasetId];
+		// Add the advanced criteria not set in the model ie not changed by the user
+		// with their default values from the dataset 
+		var advancedAttributes = this.get('advancedAttributes');
 		if (advancedAttributes) {
-			
+					
 			_.each(advancedAttributes, function(attribute){
 
-				if ( attribute.value ) {
-					url += '&' + attribute.id + '=' + attribute.value;
+				// Check if the avanced attribute has a value in the DatasetSearch
+				if ( self.has(attribute.id) ) {
+					url += '&' + attribute.id + '=' + self.get(attribute.id);
 				}
+				
 			});
 		}
 		
@@ -240,29 +252,28 @@ var SearchCriteria = Backbone.Model.extend({
 	 * 		to the url and returns the modified url.
 	 * otherwise : do not append "&ngEO_DO={} to the url 
 	 */
-	addDownloadOptions : function(url, datasetId){
+	addDownloadOptions : function(url){
 	
 		var self = this;
+		// Add the selected download options to the opensearch url		
 				
-		// Add the selected download options to the opensearch url
 		var downloadOptionsStr = null;
 		
-		var downloadOptions = this.get('downloadOptions')[datasetId];
-		_.each(downloadOptions, function(option){
+		_.each(this.get('downloadOptions'), function(option, index){
 			
-			if ( option._userSelectedValue ) {
+			if (_.has(self.attributes, option.argumentName)) {
 				
-				if (!downloadOptionsStr) {
+				if (!downloadOptionsStr){
 					// At least one download option has been defined by user
 					//	--> append "ngEO_DO" key to url
 					downloadOptionsStr = "&ngEO_DO={";
-				} else {
+				}else{
 					downloadOptionsStr += ",";
 				}
 				
-				if ( !option.cropProductSearchArea ) {
-					downloadOptionsStr += option.argumentName + ':' + option._userSelectedValue;
-				} else {
+				if ( !option.cropProductSearchArea ) {					
+					downloadOptionsStr += option.argumentName + ':' + self.attributes[option.argumentName];
+				} else if (self.attributes[option.argumentName]) {
 					downloadOptionsStr += option.argumentName + ':' + self.searchArea.toWKT(); 
 				}
 			}
@@ -283,16 +294,17 @@ var SearchCriteria = Backbone.Model.extend({
 	 * If the download options have been changed by the user, their are set as an attribute to the DatasetSearch
 	 * otherwise the default value is got from the dataset.
 	 */
-	getSelectedDownloadOptions : function(dataset) {
-
-		var selectedOptions = {};
+	getSelectedDownloadOptions : function() {
 		
-		// Add the options which has "value" property ie changed by the user
-		var downloadOptions = this.get('downloadOptions')[dataset.get("datasetId")];
-		_.each( downloadOptions, function(option){
+		var selectedOptions = {};
+		var self = this;
+		
+		// Add the options set to the model ie changed by the user with the selected value
+		// Add options not set in the model ie not changed by the user with their default values from the dataset 
+		_.each( this.get('downloadOptions'), function(option){
 			
-			if ( option._userSelectedValue ) {
-				selectedOptions[option.argumentName] = option._userSelectedValue;
+			if (_.has(self.attributes, option.argumentName)){
+				selectedOptions[option.argumentName] = self.attributes[option.argumentName] ;
 			}
 		});
 		//console.log("Selected download options of dataset : " + this.dataset.attributes.datasetId + " : ");
@@ -300,23 +312,6 @@ var SearchCriteria = Backbone.Model.extend({
 		
 		return selectedOptions;
 	},
-
-	/**
-	 *	Update advanced attributes & download options depending on dataset that has been changed
-	 *	Overrided by DatasetSearch & StandingOrder objects
-	 */
-	onDatasetSelectionChanged : function(dataset) {
-
-		var datasetId = dataset.get("datasetId");
-		if ( this.get("advancedAttributes")[datasetId] ) {
-			// Already exists --> remove it
-			delete this.get("advancedAttributes")[datasetId];
-			delete this.get("downloadOptions")[datasetId];
-		} else {
-			this.get("advancedAttributes")[datasetId] = _.map(dataset.get("attributes"), _.clone);
-			this.get('downloadOptions')[datasetId] = _.map(dataset.get("downloadOptions"), _.clone);
-		}
-	}
 	
 });
 
