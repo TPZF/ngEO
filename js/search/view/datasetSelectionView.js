@@ -209,8 +209,8 @@ var DatasetSelectionView = Backbone.View.extend({
 				if ( $elt.length == 0 ) {
 					 this.model.unselect( dataset.get('datasetId') )
 				} else {
-					$elt.find('.ui-li-icon').addClass('ui-icon-checkbox-on');
-					$elt.find('.ui-li-icon').removeClass('ui-icon-checkbox-off');
+					$elt.find('.ui-icon').addClass('ui-icon-checkbox-on');
+					$elt.find('.ui-icon').removeClass('ui-icon-checkbox-off');
 				}
 		}, this );
 	}
