@@ -11,11 +11,27 @@ var PanelManager = Backbone.View.extend({
 		Constructor
 	 */
 	initialize : function(options) {
-	
+		
+		/**
+		 *	Redraw the element, used for CHROME HACK
+		 */
+		jQuery.fn.redraw = function() {
+		    return this.hide(0, function() {
+		        $(this).show();
+		    });
+		};
+
 		this.$center = $(options.center);		
 	
 		var self = this;
 		this.centerResizedCallback = function() {
+			// CHROME HACK
+			var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+			if ( isChrome ) {
+				$('#statusBar').redraw();
+				$('#dateRangeSlider').redraw();
+				$('#bottomToolbar').redraw();
+			}
 			self.trigger('centerResized');
 		};
 		this.leftResizedCallback = function() {
@@ -113,7 +129,7 @@ var PanelManager = Backbone.View.extend({
 		
 		props[region] = 0;
 		this[region].$el.animate( props, duration );
-		
+
 		// Listen to size event on the panel
 		this.listenTo(this[region], 'sizeChanged', _.bind(this.updatePanelSize,this,region) );
 	},
@@ -129,7 +145,7 @@ var PanelManager = Backbone.View.extend({
 		if (region == 'bottom') {
 			this.left.$el.animate(props, duration, this.leftResizedCallback);
 		}
-		
+				
 		props[region] = -this.getSize( region );
 		this[region].$el.animate( props, duration, callback );
 		
