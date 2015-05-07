@@ -2,7 +2,7 @@
  * ShopcartWidget module
  */
 define( ["jquery", "shopcart/model/shopcartCollection", "shopcart/view/shopcartItemView", "ui/panelManager", "ui/widget"], 
-		function($, ShopcartCollection, ShopcartItemView, PanelManager) {
+		function($, ShopcartCollection, ShopcartItemView, PanelManager, ngeoWidget) {
 
 	
 	return {

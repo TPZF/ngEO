@@ -5,7 +5,7 @@
 
 
 define( [ "jquery", "configuration", 'shopcart/view/shopcartExportView', 'ui/widget'], 
-		function($, Configuration, ShopcartExportView) {
+		function($, Configuration, ShopcartExportView, ngeoWidget) {
 
 
 var ShopcartExportWidget = function() {

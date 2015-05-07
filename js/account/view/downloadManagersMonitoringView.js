@@ -1,8 +1,6 @@
-
-
 define( ['jquery', 'backbone', 'configuration', 'dataAccess/model/downloadManagers', 'text!account/template/downloadManagersMonitoringContent.html',
 	 'text!dataAccess/template/downloadManagerInstallContent.html', 'text!account/template/downloadManagersListContent.html', 'ui/widget'], 
-		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_content, downloadManagerInstall_template, downloadManagersList_template) {
+		function($, Backbone, Configuration, DownloadManagers, downloadManagersMonitoring_content, downloadManagerInstall_template, downloadManagersList_template, ngeoWidget) {
 
 var DownloadManagersMonitoringView = Backbone.View.extend({
 
@@ -20,10 +18,10 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		},
 
 		'click tbody tr' : function(event){
-			//allow a unique row selection
+			// Allow a unique row selection
 			$("tr").removeClass('dm_selected');
 			$(event.currentTarget).toggleClass('dm_selected');
-			// each row id follows this expression: row_id where id is the related download manager id
+			// Each row id follows this expression: row_id where id is the related download manager id
 			var dmID = $(event.currentTarget).attr('data-dmId');
 			var status = this.model.getDownloadManagerStatus(dmID);
 			
@@ -102,12 +100,12 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		
 		var self = this;
 		this.$stopDialog.find('button').click( function(event) {
-				var dmID = $('tr.dm_selected').attr('data-dmId');
-				self.$stopDialog.ngeowidget('hide');
-				var command = $(this).attr('name');
-				self.model.requestChangeStatus(dmID, command);
-				$("#stop_dm").button('disable');
-			});
+			var dmID = $('tr.dm_selected').attr('data-dmId');
+			self.$stopDialog.ngeowidget('hide');
+			var command = $(this).attr('name');
+			self.model.requestChangeStatus(dmID, command);
+			$("#stop_dm").button('disable');
+		});
 		
 		this.refreshSize();
 				
