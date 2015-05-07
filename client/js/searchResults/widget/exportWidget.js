@@ -5,7 +5,7 @@
 
 
 define( [ "jquery", "configuration", 'searchResults/view/exportView', 'search/model/datasetSearch', 'ui/widget'], 
-		function($, Configuration, ExportView, DataSetSearch) {
+		function($, Configuration, ExportView, DataSetSearch, ngeoWidget) {
 
 
 var ExportWidget = function(featureCollection) {

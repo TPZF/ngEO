@@ -1,7 +1,7 @@
 
 
 define( ['jquery', 'logger', 'backbone',  'text!account/template/nameShopcartTemplate.html', 'ui/widget'], 
-		function($, Logger, Backbone, nameShopcart_template) {
+		function($, Logger, Backbone, nameShopcart_template, ngeoWidget) {
 
 var CreateShopcartView = Backbone.View.extend({
 		
