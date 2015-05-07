@@ -12,14 +12,10 @@ function($) {
  * An element to block user interactions when opening a modal pop-up
  */
 var modalScreen = $('<div class="ui-popup-screen ui-overlay-a ui-screen-hidden"></div>').appendTo('.ui-page-active');
- 
+
+$._ngeoOpenedWidgets = [];
 	
 $.widget( "ngeo.ngeowidget", {
-
-	/**
-	 * The array of widgets
-	 */
-	_widgets : [],
 
 	// default options
 	options: {
@@ -81,7 +77,7 @@ $.widget( "ngeo.ngeowidget", {
 				.insertBefore(this.parentElement);
 			this.arrow.hide();
 		}
-		this._widgets.push(this);
+		$._ngeoOpenedWidgets.push(this);
 	},
 	
 	update: function() {
@@ -111,9 +107,9 @@ $.widget( "ngeo.ngeowidget", {
 	
 	show: function() {
 		// Automatically hide other popup
-		for ( var i=0; i < this._widgets.length; i++ ) {
-			if ( this._widgets[i] != this ) {
-				this._widgets[i].hide();
+		for ( var i=0; i < $._ngeoOpenedWidgets.length; i++ ) {
+			if ( $._ngeoOpenedWidgets[i] != this ) {
+				$._ngeoOpenedWidgets[i].hide();
 			}
 		}
 			
@@ -148,9 +144,9 @@ $.widget( "ngeo.ngeowidget", {
 	// revert other modifications here
 	_destroy: function() {
 		// Remove from widgets array
-		var index = this._widgets.indexOf(this);
+		var index = $._ngeoOpenedWidgets.indexOf(this);
 		if ( index >= 0 ) {
-			this._widgets.splice( this._widgets.indexOf(this), 1 );
+			$._ngeoOpenedWidgets.splice( $._ngeoOpenedWidgets.indexOf(this), 1 );
 		}
 		// Cleanup parent element
 		this.parentElement.children().not(this.element).remove();
