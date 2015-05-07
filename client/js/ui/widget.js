@@ -9,17 +9,18 @@ define( [ "jquery", "jquery.mobile" ],
 function($) {
 
 /**
- * The array of widgets
- */
-var _widgets = [];
-
-/**
  * An element to block user interactions when opening a modal pop-up
  */
 var modalScreen = $('<div class="ui-popup-screen ui-overlay-a ui-screen-hidden"></div>').appendTo('.ui-page-active');
  
 	
 $.widget( "ngeo.ngeowidget", {
+
+	/**
+	 * The array of widgets
+	 */
+	_widgets : [],
+
 	// default options
 	options: {
 		title: "",
@@ -80,7 +81,7 @@ $.widget( "ngeo.ngeowidget", {
 				.insertBefore(this.parentElement);
 			this.arrow.hide();
 		}
-		_widgets.push(this);
+		this._widgets.push(this);
 	},
 	
 	update: function() {
@@ -110,9 +111,9 @@ $.widget( "ngeo.ngeowidget", {
 	
 	show: function() {
 		// Automatically hide other popup
-		for ( var i=0; i < _widgets.length; i++ ) {
-			if ( _widgets[i] != this ) {
-				_widgets[i].hide();
+		for ( var i=0; i < this._widgets.length; i++ ) {
+			if ( this._widgets[i] != this ) {
+				this._widgets[i].hide();
 			}
 		}
 			
@@ -147,9 +148,9 @@ $.widget( "ngeo.ngeowidget", {
 	// revert other modifications here
 	_destroy: function() {
 		// Remove from widgets array
-		var index = _widgets.indexOf(this);
+		var index = this._widgets.indexOf(this);
 		if ( index >= 0 ) {
-			_widgets.splice( _widgets.indexOf(this), 1 );
+			this._widgets.splice( this._widgets.indexOf(this), 1 );
 		}
 		// Cleanup parent element
 		this.parentElement.children().not(this.element).remove();
