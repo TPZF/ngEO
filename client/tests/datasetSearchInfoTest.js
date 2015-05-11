@@ -18,7 +18,7 @@ QUnit.asyncTest("Check Received dataset Search Info : DownloadOptions & Advanced
 			var downloadOptions = dataset.attributes.downloadOptions;
 			QUnit.ok(downloadOptions[0].argumentName, "index 0 downloadOption argumentName found");
 			QUnit.ok(downloadOptions[0].description, "index 0 downloadOption description found");
-			QUnit.ok($.isArray(downloadOptions[0].values), "index 0 downloadOption values found");
+			QUnit.ok($.isArray(downloadOptions[0].value), "index 0 downloadOption values found");
 			QUnit.ok($.isArray(dataset.attributes.attributes), "Retrieved dataset advanced criteria");
 			
 			QUnit.start();
