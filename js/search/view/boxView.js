@@ -16,6 +16,16 @@ function isValidLat(lat) {
 	return lat >= -90 && lat <= 90;
 }
 
+/**
+* Will verify first if the value is a number or not,
+* if so then parse the value into float.
+* See issue NGEO-1370
+*/
+function filterFloat(value) {
+	if (isNaN(value))
+		return NaN;
+	return parseFloat(value);
+}
 
 /**
  * The BoxView manages the view to define the search area as a box.
@@ -66,10 +76,10 @@ var BoxView = Backbone.View.extend({
 		'blur input' : function(event){
 			
 			var bbox = {
-					west : parseFloat(this.$el.find("#west").val()),
-					south: parseFloat(this.$el.find("#south").val()),
-					east: parseFloat(this.$el.find("#east").val()),
-					north: parseFloat(this.$el.find("#north").val())
+					west : filterFloat(this.$el.find("#west").val()),
+					south: filterFloat(this.$el.find("#south").val()),
+					east: filterFloat(this.$el.find("#east").val()),
+					north: filterFloat(this.$el.find("#north").val())
 				};
 				
 			
@@ -146,10 +156,10 @@ var BoxView = Backbone.View.extend({
 		} else {
 	
 			var bbox = {
-				west : parseFloat( this.$el.find("#west").val()),
-				south: parseFloat( this.$el.find("#south").val()),
-				east: parseFloat( this.$el.find("#east").val()),
-				north: parseFloat( this.$el.find("#north").val())
+				west : filterFloat( this.$el.find("#west").val()),
+				south: filterFloat( this.$el.find("#south").val()),
+				east: filterFloat( this.$el.find("#east").val()),
+				north: filterFloat( this.$el.find("#north").val())
 			};
 			this.model.searchArea.setBBox(bbox);
 			this.parentView.updateSearchAreaLayer();
