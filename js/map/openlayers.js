@@ -196,12 +196,12 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			maxExtent.transform(this._map.displayProjection, this._map.projection);
 		}
 		olLayer = new OpenLayers.Layer.WMS(layer.name,
-					layer.baseUrl,
-					layer.params, {
-						maxExtent: maxExtent,
-						isBaseLayer: false,
-						opacity: layer.opacity || 1.0
-				   });
+			layer.baseUrl,
+			layer.params, {
+				maxExtent: maxExtent,
+				isBaseLayer: false,
+				opacity: layer.hasOwnProperty('opacity') ? layer.opacity : 1.0
+		});
 		break;
 	case "WMTS":
 		var config = {
@@ -213,6 +213,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 			style: layer.params.style,
 			isBaseLayer: false,
 			projection: layer.projection,
+			opacity: layer.hasOwnProperty('opacity') ? layer.opacity : 1.0,
 			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null)
 		};
 		
