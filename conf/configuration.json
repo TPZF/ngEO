@@ -242,7 +242,8 @@
 		"layers": [],
 		
 		"browseDisplay": {
-			"opacity": 0.7
+			"opacity": 0.0,
+			"crossOrigin": "use-credentials"
 		}
 	}
 }
