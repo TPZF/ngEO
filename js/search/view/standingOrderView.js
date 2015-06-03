@@ -65,7 +65,7 @@ var StandingOrderView = SearchView.extend({
 		
 		SearchView.prototype.render.apply(this);
 
-		this.$el.find('#sc-content').prepend('<div data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">\
+		this.$el.find('#sc-content').prepend('<div id="sc-schedlingOptions-container" data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">\
 												<h3>Scheduling Options</h3>\
 												<div id="schedulingOptions"></div>\
 											</div>');
@@ -77,7 +77,8 @@ var StandingOrderView = SearchView.extend({
 		});
 		this.schedulingOptionsView.render();
 
-		this.$el.trigger('create');								
+		this.$el.trigger('create');
+		this.$el.find('#sc-schedlingOptions-container h3 .ui-btn-inner').attr("data-help", Configuration.localConfig.contextHelp.schedulingOptions);
 		return this;
 	}
 	

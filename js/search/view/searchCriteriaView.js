@@ -72,6 +72,7 @@ var SearchCriteriaView = SearchView.extend({
 
 			}			
 			this.$el.find('#sc-content').trigger('create');
+			this.$el.find('#sc-corrinf-container h3 .ui-btn-inner').attr('data-help', Configuration.localConfig.contextHelp.interferometry);
 
 		},
 	},

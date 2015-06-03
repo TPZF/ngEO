@@ -5,7 +5,7 @@ define(["jquery", "configuration", "logger", "account/model/dataAccessRequestSta
         "text!../pages/account.html", "ui/tabs"], 
 
         function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
-        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_html) {
+        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_template) {
 	
 // Private variable : the different view of My Account page	
 var dmView;
@@ -45,7 +45,7 @@ return {
 	 */
 	
 	buildElement: function() {
-	
+		var account_html = _.template(account_template, Configuration.localConfig.contextHelp);
 		var acc = $(account_html);
 		acc.find('#tabs').tabs({ 
 			theme: "b",
