@@ -38,8 +38,8 @@ require.config({
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "ui/menubar", "logger", "backbone", "jquery.mobile", 'shopcart/model/shopcartCollection'] ,
-		function(require, $, Configuration, MenuBar, Logger, Backbone) {
+require( ["require", "jquery", "configuration", "ui/menubar", "ui/context-help", "logger", "backbone", "jquery.mobile", 'shopcart/model/shopcartCollection', 'ui/toolbar'],
+		function(require, $, Configuration, MenuBar, ContextHelp, Logger, Backbone) {
 		
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
@@ -63,6 +63,8 @@ $.when(doc_ready, Configuration.load())
 			// Initialize map
 			Map.initialize("map");
 			
+			$.mobile.activePage.find('#helpToolbar').toolbar({ onlyIcon: false });
+			ContextHelp($.mobile.activePage);
 		});
 		
 	})
