@@ -1,6 +1,6 @@
-define( ['jquery', 'backbone', 'search/view/spatialExtentView', 'search/view/timeExtentView',
+define( ['jquery', 'backbone', 'configuration', 'search/view/spatialExtentView', 'search/view/timeExtentView',
 		 'search/view/advancedSearchView', 'search/view/downloadOptionsView', 'search/view/openSearchURLView', 'search/model/dataSetPopulation'], 
-		function($, Backbone, SpatialExtentView, TimeExtentView, 
+		function($, Backbone, Configuration, SpatialExtentView, TimeExtentView, 
 				 AdvancedSearchView, DownloadOptionsView, OpenSearchURLView, DataSetPopulation) {
 
 /**
@@ -72,6 +72,13 @@ var SearchView = Backbone.View.extend({
 		this.openSearchURLView.render();
 		
 		this.$el.trigger('create');
+
+		// Init help attributes on created jqm composants
+		this.$el.find("#sc-date-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.date).end()
+				.find("#sc-area-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.area).end()
+				.find("#sc-advanced-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.advancedOptions).end()
+				.find("#sc-do-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.downloadOptions).end()
+				.find("#osUrl h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.openSearch);
 		
 		return this;
 	}

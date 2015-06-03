@@ -1,9 +1,8 @@
-
 define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults/dsa", "shopcart/dsa",
 		"map/widget/toolbarMap",
-		"text!../pages/data-services-area.html", "ui/context-help", "ui/panelManager", "ui/stackPanel", "ui/statusPanel", "ui/toolbar"], 
+		"text!../pages/data-services-area.html", "ui/panelManager", "ui/stackPanel", "ui/statusPanel", "ui/toolbar"], 
 	function($, Logger, UserPrefs, Map, SearchDSA, SearchResultsDSA, ShopcartDSA,
-			ToolBarMap, dataservicesarea, ContextHelp, PanelManager, StackPanel, StatusPanel ) {
+			ToolBarMap, dataservicesarea, PanelManager, StackPanel, StatusPanel ) {
 
 var panelManager;
 
@@ -15,7 +14,7 @@ return {
 	buildElement: function() {
 	
 		var dsa = $(dataservicesarea);
-		dsa.find('menu[type=toolbar]').toolbar({ onlyIcon: false });	
+		dsa.find('menu[type=toolbar]').toolbar({ onlyIcon: false });
 	
 		return dsa;
 	},
@@ -106,7 +105,6 @@ return {
 		
 		// Initialize toolbar and context help
 		ToolBarMap(element);
-		ContextHelp(element);
 		
 	},
 };

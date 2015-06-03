@@ -43,12 +43,15 @@ var placeTooltip = function (element) {
 };
 
 /**
- * Event handler to catch all click on elements in the page
+ * Handler to show help tooltip for elements containing "data-help" attribute
+ * Checks the target element and its parent
  */
 var onElementHelpClicked = function(event) {
-	if ( $(event.target).is('[data-help]') ) {
-		placeTooltip( event.target );
+	var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
+	if ( helpTarget ) {
+		placeTooltip( helpTarget );
 		event.stopPropagation();
+		event.preventDefault();
 		return false;
 	} else {
 		return true;

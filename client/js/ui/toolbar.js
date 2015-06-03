@@ -3,7 +3,7 @@
   */
 
 
-define( [ "jquery" ], 
+define( [ "jquery", 'ui/widget' ], 
 
 // The function to define the Widget module
 function($) {
