@@ -28,7 +28,7 @@ var ShopcartExportView = Backbone.View.extend({
 	render: function(){
 		this.$el.append(exportViewContent);
 		this.$el.trigger('create');
-		this.$el.find('#download').addClass('ui-disabled');
+		this.$el.find('#download-exported-shopcart').addClass('ui-disabled');
 
 		return this;
 	}
