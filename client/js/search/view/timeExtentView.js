@@ -116,11 +116,13 @@ var TimeExtentView = Backbone.View.extend({
 		this.$dateRangeSlider.dateRangeSlider({
 			boundsMaxLength: Configuration.localConfig.timeSlider.boundsMaxLength,
 			boundsMinLength: Configuration.localConfig.timeSlider.boundsMinLength,
-			bounds: { min : this.model.get("start"), 
+			bounds: {
+				min : this.model.get("start"), 
 				max : this.model.get("stop")
 			},
-			scaleBounds: { min : this.model.get("dateRange").start, 
-				max : this.model.get("dateRange").stop
+			scaleBounds: {
+				min : this.model.get("dateRange").start, 
+				max : this.model.get("dateRange").validityStop
 			},
 			change: $.proxy( this.onTimeSliderChanged, this )
 		});
