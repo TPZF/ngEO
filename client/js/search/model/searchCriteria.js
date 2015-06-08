@@ -19,19 +19,9 @@ Date.fromISOString = function(str) {
 			match[1] = match[3];
 			match[3] = tmp;
 		}
-		var date = new Date();
+		
+		var date = new Date(Date.UTC(match[1], match[2]-1, match[3], match[4] || 0, match[5] || 0, match[6] || 0))
 
-		// The order(year, date, month) is important, since if the current date is 31 and
-		// the month to be set contains only 30 days, "Date" object makes automatic conversion
-		// to the next month
-		// @see https://magelliumltd.atlassian.net/browse/NGEO-1736
-		date.setUTCFullYear(match[1]);
-		date.setUTCDate(match[3]);
-		date.setUTCMonth(match[2]-1);
-		date.setUTCHours(match[4] || 0);
-		date.setUTCMinutes(match[5] || 0);
-		date.setUTCSeconds(match[6] || 0);
-		date.setUTCMilliseconds(match[7] || 0);
 		return date;
 	} else {
 		throw "Invalid ISO date";
