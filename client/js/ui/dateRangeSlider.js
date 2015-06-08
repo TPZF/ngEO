@@ -1,10 +1,16 @@
 
 define(['jquery','jquery.mobile','externs/jquery.mousewheel'], function($) {
 
-// Helper function
+// Helper functions
 function getDaysBetween(date1,date2) {
 	return Math.floor(( date1 - date2 ) / 86400000);
 };
+
+function pad(num, size) {
+    var s = num+"";
+    while (s.length < size) s = "0" + s;
+    return s;
+}
 
 // For month representation
 var monthArray=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -83,6 +89,7 @@ $.widget( "ui.dateRangeSlider", {
 			
 		// Create a container for the scale bar, needed to manage scrolling
 		this.container = $('<div class="dateSlider-container"></div>').appendTo(this.element);
+		this.marginLeft = parseInt(this.container.css('marginLeft'));
 
 		// Create the scale bar
 		this._createScaleBar();
@@ -170,19 +177,8 @@ $.widget( "ui.dateRangeSlider", {
 			startYear = endYear - 6;
 		}
 		
-		this.minDate = new Date();
-		this.minDate.setUTCFullYear(startYear);
-		this.minDate.setUTCMonth(0);
-		this.minDate.setUTCDate(1);
-		this.minDate.setUTCHours(0);
-		this.minDate.setUTCMinutes(0);
-		this.minDate.setUTCSeconds(0);
-		this.minDate.setUTCMilliseconds(0);
-	
-		var maxDate = new Date();
-		maxDate.setUTCFullYear(endYear);
-		maxDate.setUTCMonth(12);
-		maxDate.setUTCDate(31);
+		this.minDate = new Date(Date.UTC(startYear, 0, 1, 0, 0, 0));
+		var maxDate = new Date(Date.UTC(endYear, 12, 31));
 		
 		// Compute the min/max days to limit the scale bar scrolling
 		this.maxDays = getDaysBetween( this.options.scaleBounds.max, this.minDate );
@@ -222,7 +218,7 @@ $.widget( "ui.dateRangeSlider", {
 		}
 		
 		this.dragBar.width( this.dragRightDays - this.dragLeftDays );
-		var leftPos = this.dragLeftDays + 30 - this.scalePosition;
+		var leftPos = this.dragLeftDays + this.marginLeft - this.scalePosition;
 		this.dragBar.css('left', leftPos );
 		
 		this._updateLabels();
@@ -264,7 +260,7 @@ $.widget( "ui.dateRangeSlider", {
 	
 	// Format a date
 	_formatDate: function(date) {
-		return date.getUTCDate() + "-" + monthArray[date.getUTCMonth()] + "-" + date.getUTCFullYear();
+		return pad(date.getUTCDate(), 2) + "-" + pad(monthArray[date.getUTCMonth()], 2) + "-" + date.getUTCFullYear();
 	},
 			
 	// Update date labels
@@ -276,8 +272,8 @@ $.widget( "ui.dateRangeSlider", {
 		this.endLabel.html( this._formatDate(bounds.max) );
 		
 		// Compute label position
-		var leftPos = this.dragLeftDays + 30 - this.scalePosition;
-		var rightPos = this.dragRightDays + 30 - this.scalePosition;
+		var leftPos = this.dragLeftDays + this.marginLeft - this.scalePosition;
+		var rightPos = this.dragRightDays + this.marginLeft - this.scalePosition;
 		
 		var startLeft = leftPos - this.startLabel.outerWidth()/2;
 		var endLeft = rightPos - this.endLabel.outerWidth()/2;
@@ -322,7 +318,7 @@ $.widget( "ui.dateRangeSlider", {
 			this.container.scrollLeft( this.scalePosition );
 		}
 
-		var leftPos = this.dragLeftDays + 30 - this.scalePosition;
+		var leftPos = this.dragLeftDays + this.marginLeft - this.scalePosition;
 		
 		this.dragBar.css('left', leftPos );
 		
