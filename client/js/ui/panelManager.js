@@ -31,6 +31,7 @@ var PanelManager = Backbone.View.extend({
 				$('#statusBar').redraw();
 				$('#dateRangeSlider').redraw();
 				$('#bottomToolbar').redraw();
+				$('#map').redraw();
 			}
 			self.trigger('centerResized');
 		};
