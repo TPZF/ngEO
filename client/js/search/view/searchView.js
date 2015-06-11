@@ -39,7 +39,7 @@ var SearchView = Backbone.View.extend({
 		// Create the views for each criteria : time, spatial and opensearch url view
 		this.dateCriteriaView = new TimeExtentView ({
 			el : this.$el.find("#date"), 
-			hasTimeSlider : true,
+			hasTimeSlider : this.model.name == "Search" ? true : false, // Standing order date doesn't have timeslider !
 			model : this.model
 		});
 		this.dateCriteriaView.render();
