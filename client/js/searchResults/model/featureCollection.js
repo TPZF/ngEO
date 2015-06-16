@@ -302,8 +302,11 @@ var FeatureCollection = function() {
 					var url = url.substring(0, url.indexOf("ngEO_DO={") - 1);
 					//console.log("product url removed download options  = " + url);
 				}
-				
-				_.each(selectedDownloadOptions, function(optionValue, optionKey, list) {
+
+				// HACK: Omit 'downloadOptions' from selecte cuz contains an array of possible values used for downloadOptionsView render
+				// but has nothing to do here.. to be improved
+				var validOptions = _.omit(selectedDownloadOptions, 'downloadOptions');
+				_.each(validOptions, function(optionValue, optionKey, list) {
 								
 					// The download option is not set in the url
 					if (url.indexOf("ngEO_DO={") != -1){//in that case the ngEO_DO={} is the last param according to the ICD
