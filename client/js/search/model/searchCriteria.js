@@ -20,7 +20,13 @@ Date.fromISOString = function(str) {
 			match[3] = tmp;
 		}
 		
-		var date = new Date(Date.UTC(match[1], match[2]-1, match[3], match[4] || 0, match[5] || 0, match[6] || 0))
+		// Need to cut the original precision to only first 3 digits since UTC constructor accepts milliseconds only in range between 0-999
+		// @see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/UTC
+		if ( match[7] && match.length > 3 ) {
+			match[7] = match[7].substr(0,3);
+		}
+
+		var date = new Date(Date.UTC(match[1], match[2]-1, match[3], match[4] || 0, match[5] || 0, match[6] || 0, match[7] || 0));
 
 		return date;
 	} else {
