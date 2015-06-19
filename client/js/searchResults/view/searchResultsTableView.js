@@ -70,7 +70,13 @@ var SearchResultsTableView = TableView.extend({
 			this.downloadOptionsButton.button('disable');
 			this.addToShopcart.button('disable');
 		} else {
-			this.retrieveProduct.button('enable');
+
+			// NGEO-1770: No retrieve button if selection contains at least one planned product
+			var hasPlanned = _.find( this.model.selection, function( feature ) {
+				return feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"
+			});
+			this.retrieveProduct.button( hasPlanned ? 'disable' : 'enable' );
+
 			if ( this.model.dataset && this.model.dataset.get('downloadOptions') && this.model.dataset.get('downloadOptions').length != 0 ) {
 				this.downloadOptionsButton.button('enable');
 			} else {
