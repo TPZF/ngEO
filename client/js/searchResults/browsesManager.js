@@ -40,7 +40,8 @@ return {
 	 addBrowse: function(feature,datasetId) {
 	 
 	 	var browseInfo = _getBrowseInformation(feature);
-	 	if ( browseInfo ) {
+	 	var isPlanned = (feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"); // NGEO-1775 : no browse for planned features
+	 	if ( browseInfo && !isPlanned ) {
 			var key = _getKey(browseInfo);
 			if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId,browseInfo.eop_layer) ) {	
 			
