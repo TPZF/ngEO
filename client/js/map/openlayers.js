@@ -147,7 +147,7 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 		});
 		break;
 	case "WMTS":
-		olLayer = new OpenLayers.Layer.WMTS({
+		var config = {
 			name: layer.name,
 			url: layer.baseUrl,
 			layer: layer.params.layer,
@@ -158,7 +158,17 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			projection: layer.projection,
 			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
 			wrapDateLine: true
-		});
+		};
+
+		_setupWMTS(config);
+
+		// Manage bbox(not really useful since background layer is generally covers a whole world, but just in case..)
+		if ( layer.bbox ) {
+			config.maxExtent = new OpenLayers.Bounds(layer.bbox);
+		}
+		
+		olLayer = new OpenLayers.Layer.WMTS(config);
+
 		break;
 	}
 	
