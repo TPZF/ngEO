@@ -157,7 +157,7 @@ var MapPopup = function(container) {
 		var hasPlanned = _.find( products, function( feature ) {
 			return feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"
 		});
-		element.find('#mpButtons [data-icon="save"]').button( hasPlanned ? 'disable' : 'enable' );
+		element.find('#mpButtons button[data-icon="save"]').button( hasPlanned ? 'disable' : 'enable' );
 		element.find('#mpText').html(content);
 	};
 
