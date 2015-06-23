@@ -1,5 +1,5 @@
 
-define(['map/handler', 'map/map', 'searchResults/model/searchResults'], function(Handler, Map, SearchResults) {
+define(['map/handler', 'map/map', 'map/utils', 'searchResults/model/searchResults'], function(Handler, Map, MapUtils, SearchResults) {
 	
 /**
  * Private variables
@@ -139,7 +139,9 @@ var getFeaturesFromPoint = function(lonlat) {
 		
 	for ( var j = 0; j < featureCollections.length; j++ ) {
 		for ( var i = 0; i < featureCollections[j].features.length; i++ ) {
-			var feature = featureCollections[j].features[i];
+			// Fix dateline to be able to pick dateline-crossing features
+			// since its original geometry isn't modified
+			var feature = MapUtils.fixDateLine( featureCollections[j].features[i] );
 			if ( pointInGeometry(lonlat,feature.geometry) ) {
 				feature._featureCollection = featureCollections[j];
 				features.push( feature );
