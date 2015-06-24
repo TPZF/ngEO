@@ -5,7 +5,7 @@
 define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPrefs", "map/browsesLayer", "map/utils"], 
 
 // The function to define the map module
-function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, Utils ) {
+function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, MapUtils ) {
 
 	/**
 	 * Inner class
@@ -14,7 +14,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 	/**
 	 * A basic static layer only for visualisation
 	 */
-	var Layer = function(params,engineLayer) {
+	var Layer = function(params, engineLayer) {
 	
 		// The parameters of layer (name, visibility, type...)
 		this.params = params;
@@ -29,11 +29,30 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			this.engineLayer = mapEngine.addLayer( this.params );
 		};
 	};
+
+	/**
+	 *	Tesselate great circle helper function
+	 *	NGEO-808: Fixes the rhumb line(constant azimuth) feature geometry to follow the great circles one
+	 *	@see http://it.mathworks.com/help/map/great-circles-rhumb-lines-and-small-circles.html
+	 *
+	 *	Also adds _origGeometry attribute on feature to be used on export
+	 */
+	var tesselateGreatCircle = function(params, feature) {
+		var needToBeTesselated = (params.greatCircle && !feature._origGeometry);
+		if (needToBeTesselated) {
+			// NGEO-1778: Store original geometry on feature, used on KML/GeoJSON/other export
+			feature._origGeometry = {
+				coordinates: feature.geometry.coordinates.slice(),
+				type: feature.geometry.type
+			};
+			MapUtils.tesselateGreatCircle( feature );
+		}
+	}
 	
 	/**
 	 * A feature layer to add dynamically new feature
 	 */
-	var FeatureLayer = function(params,engineLayer) {
+	var FeatureLayer = function(params, engineLayer) {
 		Layer.prototype.constructor.call(this,params,engineLayer);
 		
 		// The features
@@ -50,9 +69,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		};
 		this.addFeature = function(feature) {
 			if ( feature.geometry ) {
-				if (params.greatCircle) {
-					Utils.tesselateGreatCircle( feature );
-				}
+				tesselateGreatCircle(params, feature);
 				mapEngine.addFeature( this.engineLayer, feature );
 				this.features.push(feature);
 			}
@@ -70,9 +87,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			}
 		};
 		this.updateFeature = function(feature) {
-			if (params.greatCircle) {
-				Utils.tesselateGreatCircle( feature );
-			}
+			tesselateGreatCircle(params, feature);
 			mapEngine.updateFeature( this.engineLayer, feature );
 		};
 		this.changeEngine = function(mapEngine) {
@@ -326,7 +341,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		zoomToFeature: function(feature) {
 			// Zoom on the product in the carto
 			if (!feature.bbox) {
-				Utils.computeExtent(feature);
+				MapUtils.computeExtent(feature);
 			}
 			var extent = feature.bbox;
 			var width = extent[2] - extent[0];
@@ -345,9 +360,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		 */
 		getViewportExtent: function() {
 			var extent =  mapEngine.getViewportExtent();
-			extent[0] = Utils.normalizeLon( extent[0] );
+			extent[0] = MapUtils.normalizeLon( extent[0] );
 			extent[1] = Math.max( -90.0, extent[1] );
-			extent[2] = Utils.normalizeLon( extent[2] );
+			extent[2] = MapUtils.normalizeLon( extent[2] );
 			extent[3] = Math.min( 90.0, extent[3] );
 			return extent;
 		},

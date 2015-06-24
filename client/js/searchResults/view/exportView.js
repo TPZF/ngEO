@@ -28,7 +28,23 @@ var ExportView = Backbone.View.extend({
 			} else {
 				var format = $select.val().toLowerCase(); 
 				$download.removeClass('ui-disabled');
-				var blob = new Blob( [ GeoJsonConverter.convert(this.model.selection, format) ], { "type" : this.mediaTypes[format] });
+
+				// Export with original geometries, also remove other internal properties
+				var featureWithOrigGeometries = $.extend(true, [], this.model.selection);
+				$.each( featureWithOrigGeometries, function( index, feature ) {
+					if ( feature._origGeometry ) {
+						feature.geometry = feature._origGeometry;
+						delete feature._origGeometry;
+					}
+
+					// Remove internal properties
+					if ( feature._featureCollection )
+						delete feature._featureCollection;
+					if ( feature.properties.styleHint )
+						delete feature.properties.styleHint;
+				});
+				
+				var blob = new Blob( [ GeoJsonConverter.convert(featureWithOrigGeometries, format) ], { "type" : this.mediaTypes[format] });
 				$download.attr('download', 'export.' + format);
 				$download.attr('href', URL.createObjectURL(blob) );
 			}		
