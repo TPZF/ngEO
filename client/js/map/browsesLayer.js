@@ -16,11 +16,16 @@ function pad2(num) {
 var toWMTSTime = function(date) {
 	return date.getUTCFullYear() + "-" + pad2(date.getUTCMonth()+1) + "-" + pad2(date.getUTCDate()) + "T" + pad2(date.getUTCHours()) + ":" + pad2(date.getUTCMinutes()) + ":" + pad2(date.getUTCSeconds()) + "Z";
 };
+// Helper sorting functions for:
+//  - Browses
 var sortByTime = function(a,b) {
-			if ( a.time == b.time ) return 0;
-			if ( a.time < b.time ) return -1; else return 1;
-		};
-		
+	return new Date(a.time) - new Date(b.time);
+};
+//  - Features
+var sortFeatureByDate = function(a,b) {
+	return new Date(a.properties.EarthObservation.gml_endPosition) - new Date(b.properties.EarthObservation.gml_endPosition);
+}
+	
 var BrowsesLayer = function(params,mapEngine) {
 	this.params = params;
 	
@@ -29,16 +34,38 @@ var BrowsesLayer = function(params,mapEngine) {
 	// The array of browse layers
 	var browseLayers = [];
 	
-	
+	/**
+	 *	Update browse layer index AND update highlighted features z-index
+	 */
+	this.updateHighlightedIndex = function(highlighted) {
+
+		this.updateBrowseLayersIndex();
+
+		if ( highlighted ) {
+			highlighted.sort(sortFeatureByDate);
+			for ( var i = 0; i < highlighted.length; i++ ) {
+				var id = highlighted[i].id;
+				if (browseLayersMap.hasOwnProperty(id)) {
+				
+					// Get the browse layer structure from the map
+					var bl = browseLayersMap[ id ];
+					if ( bl ) {
+						mapEngine.setLayerIndex( bl.engineLayer, browseLayers.length + i + 100 );
+					}
+				}
+			}
+		}
+	};
+
 	/**
 	 * Update the browser layers indices
 	 */
-	var updateBroweLayersIndex = function() {
-	
-		// First sort the browe layer
+	this.updateBrowseLayersIndex = function() {
+		
+		// First sort the browse layer
 		browseLayers.sort( sortByTime );
 		
-		// Then modify the browe layer indices
+		// Then modify the browse layer indices
 		for ( var i = 0; i < browseLayers.length; i++ ) {
 			mapEngine.setLayerIndex( browseLayers[i].engineLayer, i+100 );
 		}
@@ -118,7 +145,7 @@ var BrowsesLayer = function(params,mapEngine) {
 			browseLayersMap[feature.id] = browseLayerDesc;
 			browseLayers.push( browseLayerDesc );
 			
-			updateBroweLayersIndex();
+			this.updateBrowseLayersIndex();
 		}
 	};
 

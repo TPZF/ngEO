@@ -29,6 +29,27 @@ var _getBrowseInformation = function(feature) {
 	return browseInfo;
 };
 
+/**
+ *	Creates a dictionary containing the array of features depending on index
+ *	Basically creates an object with keys(the same as _browseAccessInformationMap) with each key,
+ *	containing the array with features belonging to this key
+ */
+var _buildDicoByKey = function(features) {
+	var dico = {};
+	for ( var i=0; i<features.length; i++ ) {
+		var feature = features[i];
+		var browseInfo = _getBrowseInformation(feature);
+		if ( browseInfo ) {
+			var key = _getKey(browseInfo);
+			if ( !dico.hasOwnProperty(key) ) {
+				dico[key] = [];
+			}
+			dico[key].push(feature);
+		}
+	}
+	return dico;
+}
+
 return {
 	
 	/**
@@ -43,15 +64,15 @@ return {
 	 	var isPlanned = (feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"); // NGEO-1775 : no browse for planned features
 	 	if ( browseInfo && !isPlanned ) {
 			var key = _getKey(browseInfo);
-			if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId,browseInfo.eop_layer) ) {	
+			if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId, browseInfo.eop_layer) ) {	
 			
 				var browseLayer = _browseLayerMap[key];
 				if (!browseLayer) {
 					browseLayer = _browseLayerMap[key] = Map.addLayer({
-							name: browseInfo.eop_layer,
-							type: "Browses",
-							visible: true
-						});
+						name: browseInfo.eop_layer,
+						type: "Browses",
+						visible: true
+					});
 				}
 				browseLayer.addBrowse(feature,browseInfo);
 		
@@ -81,6 +102,24 @@ return {
 					Map.removeLayer(browseLayer);
 					delete _browseLayerMap[key];
 				}
+			}
+		}
+	},
+
+	/**
+	 *	Update order of browses rendering
+	 */
+	updateRenderOrder: function(highlightedFeatures) {
+		if ( highlightedFeatures ) {
+			// Each browse layer updates its highlighted features z-index
+			var dico = _buildDicoByKey(highlightedFeatures);
+			for ( var key in dico ) {
+				_browseLayerMap[key].updateHighlightedIndex( dico[key] );
+			}
+		} else {
+			// No highlighted features, just revert all browse layers to time-ordered z-index
+			for ( var key in _browseLayerMap ) {
+				_browseLayerMap[key].updateBrowseLayersIndex();
 			}
 		}
 	}

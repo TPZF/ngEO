@@ -4,7 +4,7 @@ define(["jquery", "logger", "searchResults/browsesManager", "map/map", "map/sele
 
 
 // Call when a feature is selected to synchronize the map
-var _onSelectFeatures = function(features,fc) {
+var _onSelectFeatures = function(features, fc) {
 	for ( var i = 0; i < features.length; i++ ) {
 		if ( fc.isHighlighted(features[i]) ) {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
@@ -17,7 +17,7 @@ var _onSelectFeatures = function(features,fc) {
 };
 
 // Call when a feature is unselected to synchronize the map
-var _onUnselectFeatures = function(features,fc) {
+var _onUnselectFeatures = function(features, fc) {
 	for ( var i = 0; i < features.length; i++ ) {
 		if ( fc.isHighlighted(features[i]) ) {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight" );
@@ -30,9 +30,9 @@ var _onUnselectFeatures = function(features,fc) {
 };
 
 // Call when a feature is highlighted to synchronize the map
-var _onHighlightFeatures = function(features,prevFeatures,fc) {
+var _onHighlightFeatures = function(features, prevFeatures, fc) {
 	
-	if ( prevFeatures ) {
+	if ( prevFeatures.length > 0 ) {
 		
 		for ( var i = 0; i < prevFeatures.length; i++ ) {
 
@@ -45,7 +45,7 @@ var _onHighlightFeatures = function(features,prevFeatures,fc) {
 		}
 	}
 	
-	if ( features ) {
+	if ( features.length > 0 ) {
 		for ( var i = 0; i < features.length; i++ ) {
 			if ( fc.isSelected(features[i]) ) {
 				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select" );
@@ -54,6 +54,10 @@ var _onHighlightFeatures = function(features,prevFeatures,fc) {
 			}
 			BrowsesManager.addBrowse(features[i],fc.getDatasetId(features[i]));
 		}
+
+		BrowsesManager.updateRenderOrder( features );
+	} else {
+		BrowsesManager.updateRenderOrder();
 	}
 };
 
