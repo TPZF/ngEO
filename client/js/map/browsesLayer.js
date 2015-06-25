@@ -1,13 +1,13 @@
 /**
-  * Browses layer module
-  */
+ * Browses layer module
+ */
 
 define( ["configuration", "map/utils"], 
+	function( Configuration, MapUtils ) {
 
-function( Configuration, MapUtils ) {
-
-function pad2(num) {
-    var s = num+"";
+// Helper function to format the numbers in range [0,9] by adding "0" before
+var pad2 = function(num) {
+    var s = num + "";
     if (s.length < 2) s = "0" + s;
     return s;
 }
@@ -16,60 +16,17 @@ function pad2(num) {
 var toWMTSTime = function(date) {
 	return date.getUTCFullYear() + "-" + pad2(date.getUTCMonth()+1) + "-" + pad2(date.getUTCDate()) + "T" + pad2(date.getUTCHours()) + ":" + pad2(date.getUTCMinutes()) + ":" + pad2(date.getUTCSeconds()) + "Z";
 };
-// Helper sorting functions for:
-//  - Browses
-var sortByTime = function(a,b) {
-	return new Date(a.time) - new Date(b.time);
-};
-//  - Features
-var sortFeatureByDate = function(a,b) {
-	return new Date(a.properties.EarthObservation.gml_endPosition) - new Date(b.properties.EarthObservation.gml_endPosition);
-}
-	
-var BrowsesLayer = function(params,mapEngine) {
+
+/**
+ *	Container of browses
+ */
+var BrowsesLayer = function(params, mapEngine) {
 	this.params = params;
 	
 	// A map between feature id and internal browse layer
 	var browseLayersMap = {};
 	// The array of browse layers
 	var browseLayers = [];
-	
-	/**
-	 *	Update browse layer index AND update highlighted features z-index
-	 */
-	this.updateHighlightedIndex = function(highlighted) {
-
-		this.updateBrowseLayersIndex();
-
-		if ( highlighted ) {
-			highlighted.sort(sortFeatureByDate);
-			for ( var i = 0; i < highlighted.length; i++ ) {
-				var id = highlighted[i].id;
-				if (browseLayersMap.hasOwnProperty(id)) {
-				
-					// Get the browse layer structure from the map
-					var bl = browseLayersMap[ id ];
-					if ( bl ) {
-						mapEngine.setLayerIndex( bl.engineLayer, browseLayers.length + i + 100 );
-					}
-				}
-			}
-		}
-	};
-
-	/**
-	 * Update the browser layers indices
-	 */
-	this.updateBrowseLayersIndex = function() {
-		
-		// First sort the browse layer
-		browseLayers.sort( sortByTime );
-		
-		// Then modify the browse layer indices
-		for ( var i = 0; i < browseLayers.length; i++ ) {
-			mapEngine.setLayerIndex( browseLayers[i].engineLayer, i+100 );
-		}
-	};
 	
 	/**
 	 * Change visibility of browse layers
@@ -96,7 +53,7 @@ var BrowsesLayer = function(params,mapEngine) {
 	/**
 	 * Add features to layer
 	 */
-	this.addBrowse = function(feature,eoBrowse) {
+	this.addBrowse = function(feature, eoBrowse) {
 		if (!browseLayersMap.hasOwnProperty(feature.id)) {
 			var eo = feature.properties.EarthObservation;
 			// Fix NGEO-1031 : remove milliseconds from date
@@ -144,8 +101,6 @@ var BrowsesLayer = function(params,mapEngine) {
 			
 			browseLayersMap[feature.id] = browseLayerDesc;
 			browseLayers.push( browseLayerDesc );
-			
-			this.updateBrowseLayersIndex();
 		}
 	};
 
@@ -183,6 +138,13 @@ var BrowsesLayer = function(params,mapEngine) {
 			browseLayers[i].engineLayer = mapEngine.addLayer( browseLayers[i].params );
 		}
 	};
+
+	/**
+	 *	Browses getter
+	 */
+	this.getBrowses = function() {
+		return browseLayers;
+	}
 };
 
 return BrowsesLayer;

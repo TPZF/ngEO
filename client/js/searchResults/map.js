@@ -29,6 +29,16 @@ var _onUnselectFeatures = function(features, fc) {
 	}
 };
 
+// Features to be highlighted
+var _featuresToHighlight = [];
+var waitTimeout = 10; // in ms
+// Helper debounce function which triggers updateRenderOrder method
+// after LAST highlight event has been triggered(in condition that it doesn't takes > waitTimeout)
+var _lazyRenderOrdering = _.debounce(function() {
+	BrowsesManager.updateRenderOrder( _featuresToHighlight );
+	_featuresToHighlight = [];
+}, waitTimeout);
+
 // Call when a feature is highlighted to synchronize the map
 var _onHighlightFeatures = function(features, prevFeatures, fc) {
 	
@@ -54,11 +64,11 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 			}
 			BrowsesManager.addBrowse(features[i],fc.getDatasetId(features[i]));
 		}
-
-		BrowsesManager.updateRenderOrder( features );
-	} else {
-		BrowsesManager.updateRenderOrder();
 	}
+
+	// Highlight all the highlighted features from all the collections
+	_featuresToHighlight = _featuresToHighlight.concat(features);
+	_lazyRenderOrdering();
 };
 
 // Connect with map feature picking

@@ -152,9 +152,9 @@ var getFeaturesFromPoint = function(lonlat) {
 	return features;
 };
 
- /** 
-  *	Test if a new selection is equal to the previous selection
-  */
+/** 
+ *	Test if a new selection is equal to the previous selection
+ */
 var isSelectionEqual = function( newSelection ) {
 	if ( pickedFeatures.length == newSelection.length) {
 		
@@ -168,6 +168,13 @@ var isSelectionEqual = function( newSelection ) {
 	else
 		return false;
 };
+
+/**
+ *	Helper function to sort features by date
+ */
+var sortFeatureByDate = function(a,b) {
+	return new Date(a.properties.EarthObservation.gml_endPosition) - new Date(b.properties.EarthObservation.gml_endPosition);
+}
 
 /**
  * Call when the user click on the map
@@ -194,6 +201,9 @@ var mapClickHandler = function(event)
 	if ( lonlat ) {
 		var features = getFeaturesFromPoint(lonlat);
 		
+		// Pre-sort by date the selection
+		features.sort(sortFeatureByDate);
+
 		inPicking = true;
 		
 		if ( isSelectionEqual(features) ) {

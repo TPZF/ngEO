@@ -1,6 +1,6 @@
 
-define(["jquery", "logger", "search/model/datasetAuthorizations", "map/map", "map/selectHandler"], 
-	function($, Logger, DatasetAuthorizations, Map, SelectHandler) {
+define(["jquery", "logger", "search/model/datasetAuthorizations", "map/map", "map/utils", "map/selectHandler"], 
+	function($, Logger, DatasetAuthorizations, Map, MapUtils, SelectHandler) {
 
 
 var _browseLayerMap = {};
@@ -50,6 +50,37 @@ var _buildDicoByKey = function(features) {
 	return dico;
 }
 
+// Helper function to sort BrowsesLayer by time
+var sortByTime = function(a,b) {
+	return new Date(a.time) - new Date(b.time);
+};
+
+// Helper function to sort features by date
+var sortFeatureByDate = function(a,b) {
+	return new Date(a.properties.EarthObservation.gml_endPosition) - new Date(b.properties.EarthObservation.gml_endPosition);
+}
+
+/**
+ *	Sort highlighted features on top of any other browse
+ */
+var sortHighlightedFeatures = function( highlightedFeatures, allBrowses ) {
+
+	var mapEngine = Map.getMapEngine();
+	// Sort them by date
+	highlightedFeatures.sort(sortFeatureByDate);
+	_.each( highlightedFeatures, function(feature, i) {
+		// Search for the given browse according to feature.id(could be multiple in case of shopcart)
+		var highlightedBrowses = _.filter( allBrowses, function(browse) {
+			return browse.params.name == feature.id;
+		});
+
+		// Finally set the layer index for the found browses to be on top of all other browses
+		_.each( highlightedBrowses, function(browse, j) {
+			mapEngine.setLayerIndex( browse.engineLayer, allBrowses.length + i + 100 );
+		});
+	});
+}
+
 return {
 	
 	/**
@@ -74,7 +105,7 @@ return {
 						visible: true
 					});
 				}
-				browseLayer.addBrowse(feature,browseInfo);
+				browseLayer.addBrowse(feature, browseInfo);
 		
 			} else if ( !_browseAccessInformationMap[key] ) {
 				Logger.inform("You do not have enough permission to browse the layer " + browseInfo.eop_layer + ".");
@@ -107,19 +138,32 @@ return {
 	},
 
 	/**
-	 *	Update order of browses rendering
+	 *	Update order of browses rendering depending on time attribute of each browse
+	 *	with highlighted features on top
+	 *
+	 *	@param highlightedFeatures
+	 *		Features that were highlighted
 	 */
 	updateRenderOrder: function(highlightedFeatures) {
-		if ( highlightedFeatures ) {
-			// Each browse layer updates its highlighted features z-index
-			var dico = _buildDicoByKey(highlightedFeatures);
-			for ( var key in dico ) {
-				_browseLayerMap[key].updateHighlightedIndex( dico[key] );
-			}
-		} else {
-			// No highlighted features, just revert all browse layers to time-ordered z-index
-			for ( var key in _browseLayerMap ) {
-				_browseLayerMap[key].updateBrowseLayersIndex();
+
+		// Extract all the browses for each feature collection and sort them by time
+		var allBrowses = [];
+		for ( var key in _browseLayerMap ) {
+			allBrowses = allBrowses.concat( _browseLayerMap[key].getBrowses() );
+		}
+		allBrowses.sort(sortByTime);
+
+		if (allBrowses.length > 0) {
+			var mapEngine = Map.getMapEngine();
+
+			// Then modify the browse layer indices
+			_.each( allBrowses, function(browse, i) {
+				mapEngine.setLayerIndex( browse.engineLayer, i+100 );
+			} );
+
+			// NGEOD-890: The highlighted features need to be shown over any other browse
+			if ( highlightedFeatures ) {
+				sortHighlightedFeatures( highlightedFeatures, allBrowses );
 			}
 		}
 	}
