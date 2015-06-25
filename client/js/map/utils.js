@@ -137,7 +137,7 @@ define( function() {
 					}
 					break;
 				case "LineString":
-					crossDateLine |= this.crossDateLine( geometry.coordinates[i][0]  );	
+					crossDateLine = this.crossDateLine( geometry.coordinates );
 					break;
 				case "MultiLineString":
 					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
