@@ -22,6 +22,7 @@ var SearchResultsView = Backbone.View.extend({
 		this.listenTo(this.model,'add:features', this.onAddFeatures );
 		this.listenTo(this.model,'error:features', function(searchUrl) {
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
+			this.$el.find('#resultsMessage').html("No product found");
 		});
 	},
 
