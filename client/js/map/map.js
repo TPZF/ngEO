@@ -42,7 +42,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		if (needToBeTesselated) {
 			// NGEO-1778: Store original geometry on feature, used on KML/GeoJSON/other export
 			feature._origGeometry = {
-				coordinates: feature.geometry.coordinates.slice(),
+				coordinates: $.extend(true, [], feature.geometry.coordinates),
 				type: feature.geometry.type
 			};
 			MapUtils.tesselateGreatCircle( feature );
