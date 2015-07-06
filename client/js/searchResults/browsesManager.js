@@ -158,7 +158,10 @@ return {
 
 			// Then modify the browse layer indices
 			_.each( allBrowses, function(browse, i) {
-				mapEngine.setLayerIndex( browse.engineLayer, i+100 );
+				// NGEO-1779: HACK use base layer index < 100 so the overlays/footprint layers are always over browses
+				// TODO: add zIndex management for footprint/overlay layers
+				// TODO: add management of "checked" layers(since they also must be over overlays/footprint layers)
+				mapEngine.setLayerIndex( browse.engineLayer, i );
 			} );
 
 			// NGEOD-890: The highlighted features need to be shown over any other browse
