@@ -8,17 +8,16 @@ define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation'
  */
 var _getProductDownloadOptions = function(feature) {
 	var downloadOptions = {};
-	if ( feature.properties && feature.properties.productUrl  ) {
-		var url = feature.properties.productUrl;
-
-		var idx = url.indexOf("ngEO_DO={");
+	var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+	if ( productUrl ) {
+		var idx = productUrl.indexOf("ngEO_DO={");
 		if ( idx >= 0 ) {
-			var str = url.substring(idx+9,url.length-1);
+			var str = productUrl.substring(idx+9,productUrl.length-1);
 			var kvs = str.split(',');
 			
 			for ( var n = 0; n < kvs.length; n++ ) {
 				var kv = kvs[n].split(':');
-				if ( kv.length == 2 ) {				
+				if ( kv.length == 2 ) {
 					downloadOptions[ kv[0] ] = kv[1];
 				}
 			}
@@ -278,8 +277,9 @@ var FeatureCollection = function() {
 		
 		for ( var i = 0; i < this.selection.length; i++ ) {			
 			var f = this.selection[i];
-			if ( f.properties && f.properties.productUrl ) {
-				productUrls.push( f.properties.productUrl );
+			var url = Configuration.getMappedProperty(f, "productUrl", null);
+			if ( url ) {
+				productUrls.push( url );
 			}
 		}
 		return productUrls;
@@ -292,14 +292,16 @@ var FeatureCollection = function() {
 	this.updateProductUrls = function(selectedDownloadOptions) {
 		
 		_.each(this.selection, function(feature){
-			if ( feature.properties && feature.properties.productUrl  ) {
-				var url = feature.properties.productUrl;
-				//console.log("product url initial = " + url);
+
+			var url = Configuration.getMappedProperty( feature, "productUrl", null);
+
+			if ( url ) {
+				console.log("product url initial = " + url);
 
 				//remove the already added download options : this fixes the already existing bug :
 				//when none is chosen the download option is not removed from the url
 				if (url.indexOf("ngEO_DO={") != -1) {
-					var url = url.substring(0, url.indexOf("ngEO_DO={") - 1);
+					url = url.substring(0, url.indexOf("ngEO_DO={") - 1);
 					//console.log("product url removed download options  = " + url);
 				}
 
@@ -326,7 +328,9 @@ var FeatureCollection = function() {
 					}
 				});	
 				//console.log("product url updated = " + url);
-				feature.properties.productUrl =  url;
+
+				Configuration.setMappedProperty(feature, "productUrl", url);
+
 			} 
 		});
 	};
@@ -374,7 +378,8 @@ var FeatureCollection = function() {
 		
 		// Otherwise extract the id from the feature
 		var re = /catalogue\/(\w+)\/search/;
-		var match = re.exec(feature.properties.productUrl);
+		var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+		var match = re.exec(productUrl);
 		if (match) {	
 			return match[1];
 		}

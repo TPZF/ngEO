@@ -1,8 +1,7 @@
 {
 	
     "datasetpopulationmatrix" : {
-    
-        "criteriaTitles" : ["mission","sensor", "keyword", "usableForInterferometry"], 
+        "criteriaTitles" :["mission","sensor", "keyword", "usableForInterferometry"], 
        
         "datasetPopulationValues" : [ 
 			[ "", "", "", "false", "ATS_TOA_1P", "100" ],
@@ -16,6 +15,12 @@
 			[ "S2", "OPT", "optical", "false", "ND_S2_1", "6"],
             [ "S2", "OPT", "land mapping", "false", "ND_S2_1", "6"], 
             [ "S2", "OPT", "reflectance", "false", "ND_S2_1", "6"],
+
+            ["ENVISAT-1","ASA","Envisat", "false","ENVISAT_ASA_IM__0P","1091"],
+            ["ENVISAT-1","ASA","Native","false","ENVISAT_ASA_IM__0P","1091"],
+            ["ENVISAT-1","ASA","IM","false","ENVISAT_ASA_IM__0P","1091"],
+            ["ENVISAT-1","ASA","ASA","false","ENVISAT_ASA_IM__0P","1091"],
+            ["ENVISAT-1","ASA","interferometry","true","ENVISAT_ASA_IM__0P","1"],
          
             [ "", "", "", "false", "LD_SENTINEL_1", "7"], 
             [ "S1", "SAR", "land mapping", "false", "LD_SENTINEL_1","7"],
@@ -43,7 +48,9 @@
 			
 			[ "", "", "", "false", "Invalid","0"],
 			
-		    [ "", "", "", "false", "DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME", "100" ]
+		    [ "", "", "", "false", "DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME", "100" ],
+            
+            [ "", "", "interferometry", "true", "ENVISAT_ASA_GM1_1P", "100" ]
        ]
     }
         

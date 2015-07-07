@@ -1,0 +1,62 @@
+{
+    "datasetSearchInfo": {
+        "attributes": [
+            {
+                "id": "optscp",
+                "possibleValues": [],
+                "type": "Float"
+            }
+        ],
+        "datasetId": "ENVISAT_ASA_IM__0P",
+        "description": "ENVISAT_ASA_IM__0P description",
+        "downloadOptions": [
+            {
+                "argumentName": "productFormat",
+                "caption": "Product format",
+                "description": "Desired download format",
+                "value": [
+                    {
+                        "name": "GeoTIFF",
+                        "humanReadable": "GeoTiff",
+                        "sizeFactor": "1.2"
+                    }
+                ]
+            },
+            {
+                "argumentName": "downloadMode",
+                "description": "Download mode",
+                "value": [
+                    {
+                        "name": "DLcomplete",
+                        "humanReadable": "Download on completion",
+                        "sizeFactor": "1"
+                    },
+                    {
+                        "name": "DLcontinuous",
+                        "humanReadable": "Download continuously",
+                        "sizeFactor": "1"
+                    }
+                ]
+            }
+        ],
+        "endDate": "2012-03-14T05:52:06Z",
+        "keywords": [
+            {
+                "keyword": "Envisat"
+            },
+            {
+                "keyword": "Native"
+            },
+            {
+                "keyword": "IM"
+            },
+            {
+                "keyword": "ASA"
+            },
+            {
+                "keyword": "interferometry"
+            }
+        ],
+        "startDate": "2011-01-01T00:53:31Z"
+    }
+}

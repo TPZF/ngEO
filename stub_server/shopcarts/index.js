@@ -9,7 +9,8 @@
 var uuid = require('node-uuid'),
 	fs = require('fs'),
 	http = require('http'),
-	path = require('path');
+	path = require('path'),
+	find = require('lodash.find');
 
 var shopcartContents = {};
 
@@ -107,8 +108,10 @@ var removeItem = function(shopcartContent,id) {
 };
 
 var findFeatureByProductUrl = function(features,url) {
-	for (var i=0; i < features.length; i++){
-		if (features[i].properties.productUrl == url){
+	for (var i=0; i < features.length; i++) {
+		var feature = features[i];
+		var productUrl = find(feature.properties.links, {'@rel': 'self'})['@href'];
+		if (productUrl == url){
 			return true;
 		}
 	}
@@ -251,10 +254,11 @@ module.exports = {
 							feature.properties.shopcartItemId = id;
 							shopcartContents[req.params.id].features.push(feature);
 							
+							var productUrl = find(feature.properties.links, {'@rel': 'self'})['@href'];
 							// Add to the response
-							response.shopCartItemAdding.push({"id" : id, "shopcartId" : req.params.id, "product" : feature.properties.productUrl});
+							response.shopCartItemAdding.push({"id" : id, "shopcartId" : req.params.id, "product" : productUrl});
 							
-							//console.log( req.params.id + ' : ' + shopcartContents[req.params.id].items.length );
+							//console.log( req.params.id + ' : ' + shopcartContents[req.params.id].features.length );
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
 								//save the new content of the shopcart 

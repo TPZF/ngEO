@@ -10,26 +10,48 @@ define( ['jquery', 'text!../conf/localConfiguration.json'], function($, localCon
 var removeComments = function(string)
 {
 	var starCommentRe = new RegExp("/\\\*(.|[\r\n])*?\\\*/", "g");
-	var slashCommentRe = new RegExp("[^:]//.*[\r\n]", "g");
+	var slashCommentRe = new RegExp("(^[\/]|[^:]\/)\/.*[\r|\n]", "g");
 	string = string.replace(slashCommentRe, "");
 	string = string.replace(starCommentRe, "");
 
 	return string;
-}
+};
 
 /**
- * Helper function to get a parameter from the configuration data
+ * Helper recursive function to get a parameter from the configuration data
  */
-var _get = function(object,path,defaultValue) {
-	var dotIndex = path.indexOf('.');
-	if ( dotIndex >= 0 ) {
-		var key = path.substr(0,dotIndex);
-		if ( object[key] ) {
-			return _get( object[key], path.substr(dotIndex+1), defaultValue );
+// var _get = function(object,path,defaultValue) {
+// 	var dotIndex = path.indexOf('.');
+// 	if ( dotIndex >= 0 ) {
+// 		var key = path.substr(0,dotIndex);
+// 		if ( object[key] ) {
+// 			return _get( object[key], path.substr(dotIndex+1), defaultValue );
+// 		}
+// 	} else {
+// 		var value = object[path];
+// 		if (typeof value != 'undefined') {
+// 			return value;
+// 		}
+// 	}
+	
+// 	return defaultValue;
+// };
+
+var _getValue = function(object, property, defaultValue) {
+	if ( object ) {
+		var value = null;
+		var kv = property.split("="); // Split by "=" to handle arrays
+		if ( kv.length == 2 ) {
+			// Array
+			value = _.find(object, function(item) {
+				return item[kv[0]] == kv[1];
+			});
+		} else {
+			// Object
+			value = object[property];
 		}
-	} else {
-		var value = object[path];
-		if (typeof value != 'undefined') {
+
+		if ( typeof value != 'undefined' ) {
 			return value;
 		}
 	}
@@ -90,7 +112,67 @@ var configuration = {
 	
 	// Get a configuration parameter
 	get: function(path,defaultValue) {
-		return this.data ? _get(this.data,path,defaultValue) : defaultValue;
+		return this.data ? this.getFromPath(this.data,path,defaultValue) : defaultValue;
+	},
+
+	/**
+	 *	Get mapped property for the given object
+	 *	Ex: with "propertyId": "path.in.the.object" defined in configuration.json
+	 *	and object = { path: { in: { the: { object: "someValue" } } } }
+	 *	By calling:
+	 *	>Configuration.getMappedProperty(object, "propertyId");
+	 *	You will get:
+	 *	>"someValue"
+	 *
+	 *	@param object
+	 *		Object from which you need to extract the property
+	 *	@param propertyId
+	 *		The property id which is defined in configuration.json in serverPropertyMapper object
+	 *	@param defaultValue
+	 *		The default value if the path wasn't found
+	 */
+	getMappedProperty: function(object, propertyId, defaultValue) {
+		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
+		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper."+propertyId);
+		if ( propertyPath )
+			return this.getFromPath(object, propertyPath, defaultValue);
+		else
+			return defaultValue;
+	},
+
+	/**
+	 *	Set mapped property
+	 *	@see getMappedProperty for more
+	 */
+	setMappedProperty: function(object, propertyId, value) {
+		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
+		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper."+propertyId);
+		if ( propertyPath ) {
+			var parentPath = propertyPath.substr(propertyPath, propertyPath.lastIndexOf("."));
+			var prop = propertyPath.substr(propertyPath.lastIndexOf(".") + 1);
+			var parentValue = this.getFromPath(object, parentPath, null)
+			if ( parentValue ) {
+				parentValue[prop] = value;
+			} else {
+				console.warn(parentPath + " doesn't exist");
+			}
+		} else {
+			console.warn(propertyId + " wasn't found in serverPropertyMapper");
+		}
+	},
+
+	/**
+	 *	Helper imperative function to get a parameter from the configuration data
+	 *	(much faster than recursive one...)
+	 */
+	getFromPath: function(object, path, defaultValue) {
+		var names = path.split('.');
+		var obj = object;
+		for ( var i = 0; obj && i < names.length-1; i++ ) {
+			obj = _getValue( obj, names[i] );
+		}
+
+		return _getValue( obj, names[names.length-1], defaultValue );
 	}
 };
 

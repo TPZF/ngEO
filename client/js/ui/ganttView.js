@@ -1,6 +1,6 @@
 define(
-		[ 'jquery', 'backbone', 'map/map'],
-	function($, Backbone, Map) {
+		[ 'jquery', 'backbone', 'configuration', 'map/map'],
+	function($, Backbone, Configuration, Map) {
 
 
 var monthDay=["31","28","31","30","31","30","31","31","30","31","30","31"];
@@ -69,17 +69,17 @@ var GanttView = Backbone.View.extend({
 		
 		this.$el.find('.gantt-data-panel').empty();
 	
-		var minDate = features[0].properties.EarthObservation.gml_beginPosition;
-		var maxDate = features[0].properties.EarthObservation.gml_endPosition;
+		var minDate = Configuration.getMappedProperty( features[0], "start" );
+		var maxDate = Configuration.getMappedProperty( features[0], "stop" );
 		
 		for ( var i = 1; i < features.length; i++ ) {
-		
-			if ( features[i].properties.EarthObservation.gml_beginPosition < minDate ) {
-				minDate = features[i].properties.EarthObservation.gml_beginPosition;
+			
+			if ( Configuration.getMappedProperty( features[i], "start" ) < minDate ) {
+				minDate = Configuration.getMappedProperty( features[i], "start" );
 			}
 			
-			if ( features[i].properties.EarthObservation.gml_endPosition > maxDate ) {
-				maxDate = features[i].properties.EarthObservation.gml_endPosition;
+			if ( Configuration.getMappedProperty( features[i], "stop" ) > maxDate ) {
+				maxDate = Configuration.getMappedProperty( features[i], "stop" );
 			}
 		}
 		
@@ -223,8 +223,8 @@ var GanttView = Backbone.View.extend({
 	 */
 	addBar: function( feature ) {
 
-		var start = Date.fromISOString(feature.properties.EarthObservation.gml_beginPosition);
-		var end = Date.fromISOString(feature.properties.EarthObservation.gml_endPosition);
+		var start = Date.fromISOString(Configuration.getMappedProperty( feature, "start" ));
+		var end = Date.fromISOString(Configuration.getMappedProperty( feature, "stop" ));
 	
 		var tooltip = "Id : " + feature.id + "&#13;";
 		tooltip += "Start : " + start.toISOString() + "&#13;";

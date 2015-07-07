@@ -135,14 +135,14 @@ var MapPopup = function(container) {
 				var columnDefs = Configuration.data.tableView.columnsDef;
 				for ( var i = 0; i < columnDefs.length; i++ ) {
 					if ( columnDefs[i].sTitle != 'Product' ) {
-						var value = getData( products[0], columnDefs[i].mData );
+						var value = Configuration.getFromPath(products[0], columnDefs[i].mData);
 						if ( value ) {
 							content += '<p>' + columnDefs[i].sTitle + ': ' + value + '</p>';
 						}
 					}
 				}
 			} else {
-				content += '<p>Date: ' + products[0].properties.EarthObservation.gml_beginPosition + '</p>';
+				content += '<p>Date: ' + Configuration.getMappedProperty(products[0], "start") + '</p>';
 			}
 		} else {
 			content = products.length + " products picked.<br>Click again to cycle through products.";
@@ -155,7 +155,7 @@ var MapPopup = function(container) {
 		}
 		// NGEO-1770: No retrieve button if selection contains at least one planned product
 		var hasPlanned = _.find( products, function( feature ) {
-			return feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"
+			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED";
 		});
 		element.find('#mpButtons button[data-icon="save"]').button( hasPlanned ? 'disable' : 'enable' );
 		element.find('#mpText').html(content);

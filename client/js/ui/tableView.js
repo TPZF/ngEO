@@ -1,23 +1,6 @@
 define(
-		[ 'jquery', 'backbone', 'map/map', 'text!ui/template/tableColumnsPopup.html'],
-	function($, Backbone, Map, tableColumnsPopupTemplate) {
-
-	
-/**
-	Get data from a path
- */
-var getData = function(product,path) {
-	var names = path.split('.');
-	var obj = product;
-	for ( var i = 0; obj && i < names.length-1; i++ ) {
-		obj = obj[ names[i] ];
-	}
-	if ( obj && obj.hasOwnProperty(names[names.length-1]) ) {
-		return obj[ names[names.length-1] ];
-	} else {
-		return "";
-	}
-};		
+		[ 'jquery', 'backbone', 'configuration', 'search/model/datasetSearch', 'map/map', 'text!ui/template/tableColumnsPopup.html'],
+	function($, Backbone, Configuration, DataSetSearch, Map, tableColumnsPopupTemplate) {
 
 /**
  * A view to display a table.
@@ -215,33 +198,45 @@ var TableView = Backbone.View.extend({
 		// If row is already loading, exit !
 		if ( rowData.isLoading )
 			return;
+
+		var interferometryUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
+		if ( interferometryUrl ) {
+			// Now load the data
+			rowData.isLoading = true;
+			var self = this;
+			$.ajax({
+				//url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
+				url:  interferometryUrl,// + "&count=10&startIndex=1&format=json",
+				dataType: 'json'
+					
+			}).done(function(data) {
+				rowData.isLoading = false;
+				if ( !rowData.isExpand )
+					return;
+				if ( data.features.length == 0 ) {
+				  $row.next().remove();
+				  $( '<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
+				} else {
+					rowData.totalNumChildren = data.properties.totalResults;
+
+					// Uncomment if the interferred features will have the same id... sort of hack
+					// think how to handle it within a cleaner way
+					// _.each(data.features, function(feature) {
+					// 	feature.id = feature.id+="_interf";
+					// });
+
+					// HACK : do not use addFeatures but just the event in order to add element to the table and the map
+					self.model.trigger('add:features', data.features, self.model, rowData);
+				}
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				rowData.isLoading = false;
+				if ( !rowData.isExpand )
+					return;	
+				$row.next().remove();
+				$( '<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">Error while loading</td></tr>' ).insertAfter( $row )
+			});
+		}
 			
-		// Now load the data
-		rowData.isLoading = true;
-		var self = this;
-		$.ajax({
-			url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
-			dataType: 'json'
-				
-		}).done(function(data) {
-			rowData.isLoading = false;
-			if ( !rowData.isExpand )
-				return;
-			if ( data.features.length == 0 ) {
-			  $row.next().remove();
-			  $( '<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">No data found</td></tr>' ).insertAfter( $row )
-			} else {
-				rowData.totalNumChildren = data.properties.totalResults;
-				// HACK : do not use addFeatures but just the event in order to add element to the table and the map
-				self.model.trigger('add:features',data.features,self.model,rowData);
-			}
-		}).fail(function(jqXHR, textStatus, errorThrown) {
-			rowData.isLoading = false;
-			if ( !rowData.isExpand )
-				return;	
-			$row.next().remove();
-			$( '<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Error while loading</td></tr>' ).insertAfter( $row )
-		});
 		
 	},
 	
@@ -342,20 +337,33 @@ var TableView = Backbone.View.extend({
 		{
 			var columns = this.columnDefs;
 			for ( var i=0; i < features.length; i++ ) {
-				if (features[i].properties.rel) {
+				var interferometryUrl = Configuration.getMappedProperty(features[i], "interferometryUrl", null);
+
+				if ( DataSetSearch.get("mode") != "Simple" ) {
 					this.hasExpandableRows = true;
 				}
+
+				var isExpandable = false;
+				var links = Configuration.getMappedProperty(features[i], "links", null);
+				if ( links ) {
+					// Currently, only interferometry rows are expandables
+					// TODO: update this method to detect graticules(not implemented yet)
+					isExpandable = _.find(links, function(link){
+						return link['@rel'] == "related" && link['@title'] == "interferometry";
+					});
+				}
+
 				var rowData = {
 					feature: features[i],
 					cellData: [],
-					isExpandable: features[i].properties.rel ? !parentRowData : false,
+					isExpandable: isExpandable ? !parentRowData : false,
 					isExpand: false,
 					children: [],
 					isLoading : false,
 					totalNumChildren: 0
 				};
 				for ( var j=0; j < columns.length; j++ ) {
-					var d = getData(features[i],columns[j].mData);
+					var d = Configuration.getFromPath(features[i], columns[j].mData);
 					rowData.cellData.push( d );
 					if (d) {
 						columns[j].numValidCell++;

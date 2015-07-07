@@ -4,6 +4,7 @@
 
 var fs = require('fs');
 var DOMParser = require('xmldom').DOMParser;
+var Configuration = require('../webClientConfigurationData/configuration');
 
 function convertToGeojsonPolygon(polygon) {
 	var inputCoordinates=polygon.split(/\s+/);
@@ -38,14 +39,15 @@ module.exports.parse = function(file,fc) {
 
 		// "Clone" feature
 		var feature = JSON.parse( JSON.stringify(fc.features[ i % fc.features.length ]) );
-		feature.properties.EarthObservation.gml_beginPosition = timeStart.textContent;
-		feature.properties.EarthObservation.gml_endPosition = timeStop.textContent;
-		feature.geometry.coordinates = convertToGeojsonPolygon(posList.textContent);
-		feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation = {
+
+		Configuration.setMappedProperty(feature, "start", timeStart.textContent);
+		Configuration.setMappedProperty(feature, "stop", timeStart.textContent);
+		Configuration.setMappedProperty(feature, "browseInformation", {
 			eop_type: "wmts",
 			eop_layer: "ESA.EECF.ERS_SAR_xS",
 			eop_url: 'http://brow01.v1.ngeo.eox.at/c/wmts/'
-		};
+		});
+		feature.geometry.coordinates = convertToGeojsonPolygon(posList.textContent);
 		featureCollection.features.push( feature ); 
 
 	}

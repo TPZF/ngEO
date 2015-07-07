@@ -7,10 +7,11 @@
   },
   "dependencies": {
     "express": "3.0.5",
-	"http-proxy": "0.8.0",
-	"xmldom": "",
-	"terraformer": "0.2.0",
-	"terraformer-wkt-parser": "",
-	"node-uuid" : ""
+    "http-proxy": "0.8.0",
+    "lodash.find": "^3.2.1",
+    "xmldom": "",
+    "terraformer": "0.2.0",
+    "terraformer-wkt-parser": "",
+    "node-uuid": ""
   }
 }

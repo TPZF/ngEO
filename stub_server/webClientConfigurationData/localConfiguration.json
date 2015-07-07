@@ -1,0 +1,23 @@
+{
+	"serverPropertyMapper" : {
+		"sensor": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName",
+		"mission": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName",
+		"start": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition",
+		"stop": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition",
+		"swath": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier.swathIdentifier",
+		"orbit": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection",
+		"pass": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber",
+		"productUrl": "properties.links.@rel=self.@href",
+		"productType": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType",
+		"productUri": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href",
+		"status": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status",
+		"azimuthAngle": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle",
+		"zenithAngle": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle",
+		"elevationAngle": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle",
+		"browseInformation": "properties.BrowseInformation",
+		"browseUrl": "properties.BrowseInformation.eop_url",
+		"browseType": "properties.BrowseInformation.eop_type",
+		"interferometryUrl": "properties.links.@title=interferometry.@href",
+		"links": "properties.links"
+	}
+}

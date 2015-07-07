@@ -73,15 +73,15 @@ var SearchResultsTableView = TableView.extend({
 
 			// NGEO-1770: No retrieve button if selection contains at least one planned product
 			var hasPlanned = _.find( this.model.selection, function( feature ) {
-				return feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"
+				return Configuration.getMappedProperty(feature, "status", null) == "PLANNED";
 			});
 			this.retrieveProduct.button( hasPlanned ? 'disable' : 'enable' );
 
-			if ( this.model.dataset && this.model.dataset.get('downloadOptions') && this.model.dataset.get('downloadOptions').length != 0 ) {
-				this.downloadOptionsButton.button('enable');
-			} else {
-				this.downloadOptionsButton.button('disable');
-			}
+			var hasDownloadOptions = (this.model.dataset
+										&& this.model.dataset.get('downloadOptions')
+										&& this.model.dataset.get('downloadOptions').length != 0
+									 );
+			this.downloadOptionsButton.button(hasDownloadOptions ? 'enable' : 'disable');
 			this.addToShopcart.button('enable');
 			
 			/*var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();

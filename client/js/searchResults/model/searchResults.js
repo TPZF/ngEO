@@ -10,7 +10,9 @@ var SearchResults = {
 	featureCollection : {
 	},
 	
-	/** Launch a search */
+	/**
+	 * Launch a search
+	 */
 	launch : function(searchCriteria) {
 		for ( var x in this.featureCollection ) {
 			var fc = this.featureCollection[x]
@@ -21,29 +23,33 @@ var SearchResults = {
 		this.trigger('launch');
 	},
 	
-	/** Get the product urls of the features */
+	/**
+	 * Get the product urls of the features
+	 */
 	getProductUrls : function(features) {
 		var productUrls = [];		
 		for ( var i = 0; i < features.length; i++ ) {			
 			var f = features[i];
-			if ( f.properties && f.properties.productUrl ) {
-				productUrls.push( f.properties.productUrl );
+			var productUrl = Configuration.getMappedProperty(f, "productUrl", null);
+			if ( productUrl ) {
+				productUrls.push( productUrl );
 			}
 		}
 		return productUrls;
 	},
 	
-	/** The direct download uses the eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl */
-	getDirectDownloadProductUrl : function(feature) {
-		
-		var eor = feature.properties.EarthObservation.EarthObservationResult;
-		if ( eor && eor.eop_ProductInformation && eor.eop_ProductInformation.eop_filename && eor.eop_ProductInformation.eop_filename != "" ) {
-			return eor.eop_ProductInformation.eop_filename;
-		}
-		return "";
+	/**
+	 * The direct download uses the
+	 *   OLD FORMAT: eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl
+	 *	 NEW FORMAT: mapped "productUri" instead of "productUrl"
+	 */
+	getDirectDownloadProductUrl : function(feature) {	
+		return Configuration.getMappedProperty(feature, "productUri", "");
 	},
 	
-	/**  Check whether the given feature has a direct download url supported by a browser */
+	/**
+	 * Check whether the given feature has a direct download url supported by a browser 
+	 */
 	isBrowserSupportedUrl : function(feature) {
 
 		var downloadUrl = this.getDirectDownloadProductUrl(feature);

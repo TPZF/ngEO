@@ -7,7 +7,9 @@ var fs = require('fs'),
 	terraformer = require('terraformer'),
 	wkt = require('terraformer-wkt-parser'),
 	wcsCoveragePaser = require('./wcsCoverageParser'),
-	eoliParser = require('./EOLIParser');
+	eoliParser = require('./EOLIParser'),
+	find = require('lodash.find')
+	conf = require('../webClientConfigurationData/configuration');
 
 /**
  * Store the feature collections for each datasets
@@ -29,6 +31,9 @@ fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, d
 });
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ASA_WS__0P']  = JSON.parse(data);
+});
+fs.readFile('./productSearch/ENVISAT_ASA_IM__0P_response.json', 'utf8', function (err, data) {
+	featureCollections['ENVISAT_ASA_IM__0P']  = JSON.parse(data);
 });
 fs.readFile('./productSearch/Sentinel2_response.json', 'utf8', function (err, data) {
 	featureCollections['Sentinel2']  = JSON.parse(data);
@@ -61,9 +66,9 @@ var initialized = false;
 /**
  * Time filter
  */
-var timeInsideFeature = function(feature,start,stop) {
-	var startFeature = feature.properties.EarthObservation.gml_beginPosition;
-	var stopFeature = feature.properties.EarthObservation.gml_endPosition;
+var timeInsideFeature = function(feature, start, stop) {
+	var startFeature = feature.properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition;
+	var stopFeature = feature.properties.EarthObservation.phenomenonTime.TimePeriod.endPosition;
 	//console.log(startFeature + ' ' + stopFeature);
 	
 	if ( stopFeature < start )
@@ -78,8 +83,8 @@ var timeInsideFeature = function(feature,start,stop) {
  * Time sorting
  */
 var sortBytTime = function(a,b) {
-	var starta = new Date(a.properties.EarthObservation.gml_beginPosition);
-	var startb = new Date(b.properties.EarthObservation.gml_beginPosition);
+	var starta = new Date(a.properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition);
+	var startb = new Date(b.properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition);
 	return startb - starta;
 };
 
@@ -100,15 +105,19 @@ var contains = function(g1,g2) {
 
 var findFeature = function(fc,id) {
 	for ( var i = 0; i < fc.features.length; i++ ) {
-		if ( fc.features[i].id == id )
+		// HACK: for new json format we check id with "&format=atom" as well
+		if ( fc.features[i].id == id || fc.features[i].id == (id+"&format=atom") ) {
 			return fc.features[i];
+		}
 	}
 };
 
 var setupProductUrl = function(featureCollection,id) {
 	for ( var i = 0; i < featureCollection.features.length; i++ )  {
 		var feature = featureCollection.features[i];
-		feature.properties.productUrl = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + feature.id;
+		var fid = feature.id;
+		var product = conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
+		//feature.properties.productUrl = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid;
 	}
 };
 
@@ -188,12 +197,18 @@ module.exports = function(req, res){
 	// Fix product download
 	for ( var i = 0; i < filterFeatures.length; i++ ) {
 		var feature = filterFeatures[i];
-		var eop = feature.properties.EarthObservation;
-		if ( eop && eop.EarthObservationResult.eop_ProductInformation
-			&& eop.EarthObservationResult.eop_ProductInformation.eop_filename ) {
-			eop.EarthObservationResult.eop_ProductInformation.eop_filename = eop.EarthObservationResult.eop_ProductInformation.eop_filename.replace('localhost:3000',req.headers.host);
+		var productUri = conf.getMappedProperty(feature, "productUri", null);
+		if ( productUri ) {
+			conf.setMappedProperty(feature, "productUri", productUri.replace('localhost:3000', req.headers.host));
 		}
-		feature.properties.rel = req.param('with');
+		
+		// OLD FORMAT
+		// var slaveUrl = req.param('with');
+		// feature.properties.rel = req.param('with');
+		
+		// NEW FORMAT
+		var slaveUrl = req.param('correlatedTo');
+		conf.setMappedProperty(feature, "interferometryUrl", slaveUrl);
 	}
 	
 	var count = req.query.count || 10;

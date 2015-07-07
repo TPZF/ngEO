@@ -1,6 +1,6 @@
 
-define(["jquery", "logger", "search/model/datasetAuthorizations", "map/map", "map/utils", "map/selectHandler"], 
-	function($, Logger, DatasetAuthorizations, Map, MapUtils, SelectHandler) {
+define(["jquery", "logger", "configuration", "search/model/datasetAuthorizations", "map/map", "map/utils", "map/selectHandler"], 
+	function($, Logger, Configuration, DatasetAuthorizations, Map, MapUtils, SelectHandler) {
 
 
 var _browseLayerMap = {};
@@ -12,21 +12,6 @@ var _browseAccessInformationMap = {};
 var _getKey = function(browseInfo) {
 	// Note : use filename if url not present because of some problems with WEBS
 	return (browseInfo.eop_url || browseInfo.eop_filename) + browseInfo.eop_layer;
-};
-
-/**
- * Retreive the browse infromation from a feature
- */
-var _getBrowseInformation = function(feature) {
-	var eo = feature.properties.EarthObservation;
-	if (!eo || !eo.EarthObservationResult || !eo.EarthObservationResult.eop_BrowseInformation) {
-		return null;
-	}
-
-	var browseInfo = eo.EarthObservationResult.eop_BrowseInformation;
-	if (!browseInfo)
-		return null;
-	return browseInfo;
 };
 
 /**
@@ -92,9 +77,9 @@ return {
 	 * @param datasetId		The parent dataset id
 	 */
 	 addBrowse: function(feature,datasetId) {
-	 
-	 	var browseInfo = _getBrowseInformation(feature);
-	 	var isPlanned = (feature.properties.EarthObservation.EarthObservationMetaData.eop_status == "PLANNED"); // NGEO-1775 : no browse for planned features
+ 	
+	 	var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
+	 	var isPlanned = (Configuration.getMappedProperty(feature, "status") == "PLANNED"); // NGEO-1775 : no browse for planned features
 	 	if ( browseInfo && !isPlanned ) {
 			var key = _getKey(browseInfo);
 			if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId, browseInfo.eop_layer) ) {	
@@ -124,7 +109,7 @@ return {
 	 */
 	removeBrowse: function(feature) {
 	
-		var browseInfo = _getBrowseInformation(feature);
+		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
 		if ( browseInfo ) {
 			var key = _getKey(browseInfo);
 			var browseLayer = _browseLayerMap[key];

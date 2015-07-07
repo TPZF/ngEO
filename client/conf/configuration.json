@@ -1,23 +1,45 @@
 {
+	// Old format(deprecated)
+	// "serverPropertyMapper" : {
+	// 	"sensor": "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName",
+	// 	"mission": "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName",
+	// 	"start": "properties.EarthObservation.gml_beginPosition",
+	// 	"stop": "properties.EarthObservation.gml_endPosition",
+	// 	"swath": "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier",
+	// 	"orbit": "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber",
+	// 	"pass": "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection",
+	// 	"product": "id",
+	// 	"productType": "properties.EarthObservation.EarthObservationMetaData.eop_productType",
+	//  "productUrl": "properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename",
+	//  "productUri": "properties.productUrl",
+	// 	"status": "properties.EarthObservation.EarthObservationMetaData.eop_status",
+	// 	"azimuthAngle": "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationAzimuthAngle",
+	// 	"zenithAngle": "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationZenithAngle",
+	// 	"elevationAngle": "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationElevationAngle",
+	//  "browseInformation": "properties.EarthObservation.EarthObservationResult.eop_BrowseInformation",
+	//	"browseUrl": "properties.BrowseInformation.eop_url",
+	//	"browseType": "properties.BrowseInformation.eop_type",
+	//	"interferometryUrl": "properties.rel"
+	// },
+	// New format
 	"tableView": {
 		"maxVisibleColumns": 10,
 		"columnsDef" : [
-			{"sTitle" : "Mission", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_platformShortName" },
-			{"sTitle" : "Sensor",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName"},
-			{"sTitle" : "Start", "mData" : "properties.EarthObservation.gml_beginPosition"}, 
-			{"sTitle" : "Stop", "mData" : "properties.EarthObservation.gml_endPosition"}, 
-			{"sTitle" : "Swath",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier"},
-			{"sTitle" : "Orbit",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber"},
-			{"sTitle" : "Pass", "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection"}, 
-			{"sTitle" : "Product", "mData" : "id" }, 
-			{"sTitle" : "Product Type", "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_productType"},
-			{"sTitle" : "Status",  "sContentPadding": "mmm", "mData" : "properties.EarthObservation.EarthObservationMetaData.eop_status"}, 
-			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationAzimuthAngle"},
-			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationZenithAngle"},
-			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_illuminationElevationAngle"},
-			{"sTitle" : "Test",  "sContentPadding": "mmm", "mData" : "properties.Test"}
+			{"sTitle" : "Mission", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName" },
+			{"sTitle" : "Sensor",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"},
+			{"sTitle" : "Start", "mData" : "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"}, 
+			{"sTitle" : "Stop", "mData" : "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"}, 
+			{"sTitle" : "Swath", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"},
+			{"sTitle" : "Orbit", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"},
+			{"sTitle" : "Pass", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"}, 
+			{"sTitle" : "Product", "mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href" }, 
+			{"sTitle" : "Product Type", "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"},
+			{"sTitle" : "Status",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"}, 
+			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle"},
+			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle"},
+			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"}
 		],
-		"directDownloadColumn" : -1
+		"directDownloadColumn" : 7
 	},
 	
 	"search": {

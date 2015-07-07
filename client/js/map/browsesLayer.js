@@ -57,9 +57,9 @@ var BrowsesLayer = function(params, mapEngine) {
 		if (!browseLayersMap.hasOwnProperty(feature.id)) {
 			var eo = feature.properties.EarthObservation;
 			// Fix NGEO-1031 : remove milliseconds from date
-			var begin = Date.fromISOString( eo.gml_beginPosition );
+			var begin = Date.fromISOString(Configuration.getMappedProperty( feature, "start" ));
 			begin.setUTCMilliseconds(0);
-			var end = Date.fromISOString( eo.gml_endPosition );
+			var end = Date.fromISOString(Configuration.getMappedProperty( feature, "stop" ));
 			end.setUTCMilliseconds(0);
 			
 			var params = {
@@ -94,7 +94,7 @@ var BrowsesLayer = function(params, mapEngine) {
 			};
 			
 			var browseLayerDesc = {
-				time:  eo.gml_endPosition,
+				time:  Configuration.getMappedProperty( feature, "stop" ),
 				params: config,
 				engineLayer: mapEngine.addLayer(config)
 			};

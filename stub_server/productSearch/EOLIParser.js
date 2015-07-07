@@ -2,7 +2,8 @@
  * Parse from EOLI
  */
 
-var fs = require('fs');
+var fs = require('fs'),
+	Configuration = require('../webClientConfigurationData/configuration');
 
 var dataSet2wmsLayers = { "ESA.EECF.SPOT_ESA_MULTI" : "urn:ogc:def:EOP:ESA:ESA.EECF.SPOT_ESA_MULTI",
 "ESA.EECF.SPOT_ESA_PAN" : "urn:ogc:def:EOP:ESA:ESA.EECF.SPOT_ESA_PAN",
@@ -85,15 +86,17 @@ module.exports.parse = function(file,fc) {
 		var feature = JSON.parse( JSON.stringify(fc.features[ i % fc.features.length ]) );
 		feature.id = i+1;
 		feature.geometry.coordinates = convertToGeojsonPolygon(footprintStr);
-		feature.properties.EarthObservation.gml_beginPosition = cells[startIndex].replace(' ','T') + '0Z';
-		feature.properties.EarthObservation.gml_endPosition = cells[stopIndex].replace(' ','T') + '0Z';
-		
+
+		Configuration.setMappedProperty(feature, "start", cells[startIndex].replace(' ','T') + '0Z');
+		Configuration.setMappedProperty(feature, "stop", cells[stopIndex].replace(' ','T') + '0Z');
+
 		var layer = dataSet2wmsLayers[ cells[collectionIndex] ];
-		feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation = {
+		Configuration.setMappedProperty(feature, "browseInformation", {
 			eop_type: "wms",
 			eop_layer: layer,
 			eop_url: "/wms2eos/servlets/wms"
-		};
+		});
+
 		featureCollection.features.push( feature ); 
 	}
 	

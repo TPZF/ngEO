@@ -7,14 +7,8 @@ define( ['jquery', 'logger', 'backbone', 'configuration', 'searchResults/model/f
 	
 	
 // Check if a feature is planned or not
-var isNotPlanned = function(properties) {
-
-	if (properties.EarthObservation && properties.EarthObservation.EarthObservationMetaData
-		&& properties.EarthObservation.EarthObservationMetaData.eop_status) {
-		return properties.EarthObservation.EarthObservationMetaData.eop_status != "PLANNED";
-	}
-	
-	return true;
+var isNotPlanned = function(feature) {
+	return Configuration.getMappedProperty(feature, "status") != "PLANNED";
 };
 
   // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
@@ -115,13 +109,14 @@ var Shopcart = Backbone.Model.extend({
 		var itemsToAdd = [];
 		var productUrls = [];
 		for (var i=0; i < features.length; i++) {
-		
-			if ( features[i].properties && features[i].properties.productUrl && isNotPlanned(features[i].properties) ) {
+			var feature = features[i];
+			var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+			if ( feature.properties && productUrl && isNotPlanned(feature) ) {
 				itemsToAdd.push({
 					shopcartId : this.id, 
-					product : features[i].properties.productUrl
+					product : productUrl
 				});
-				productUrls.push( features[i].properties.productUrl ); 
+				productUrls.push( productUrl ); 
 			}
 		}	
 

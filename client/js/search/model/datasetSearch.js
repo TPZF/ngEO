@@ -52,10 +52,10 @@ var DataSetSearch = SearchCriteria.extend({
 			useTimeSlider : true, //flag for displaying time slider or not
 			mode: "Simple",
 			// Correlation/Interferometry parameters
-			dDiff: 10,
-			sOverP: 25,
-			nBase: 5,
-			bSync: 5,
+			timeCover: [0,30],
+			spatialCover: 25,
+			baseline: [0,5],
+			burstSync: [0,100],
 			master: ""
 		}
     ),
@@ -88,10 +88,8 @@ var DataSetSearch = SearchCriteria.extend({
 	 */
 	getOpenSearchURL : function(id) {
 
-		var baseUrl = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
-		
-		var url = baseUrl;
-		
+		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
+				
 		// Correlation/Interferometry
 		if ( this.get('mode') != "Simple" ) {
 		
@@ -99,13 +97,8 @@ var DataSetSearch = SearchCriteria.extend({
 			url += this.getOpenSearchParameters();
 		
 			// Add interferometry specific parameters
-			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
+			url += this.getInterferometryParameters();
 			
-			// Interferometry : only one dataset
-			var slaveUrl = baseUrl;
-			slaveUrl += this.slaves + "/search?";
-			slaveUrl += this.getOpenSearchParameters();
-			url += "&with=" + encodeURIComponent(slaveUrl);
 		} else {
 			if (!id) {
 				id = this.datasetIds.join(',');
@@ -117,6 +110,23 @@ var DataSetSearch = SearchCriteria.extend({
 		url += "&format=json";
 		
 		return url;
+	},
+
+	/**
+	 *	Get interferometry/correlation parameters
+	 */
+	getInterferometryParameters : function() {
+		var interferometryParams = "&timeCover=[" + this.get('timeCover') + "]&spatialCover=" + this.get('spatialCover') + "]&baseline=[" + this.get('baseline') + "]&burstSync=[" + this.get('burstSync')+"]";
+		// Interferometry : only one dataset, correlation -> more than one(not implemented yet)
+		var slaveUrl = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
+		slaveUrl += this.slaves + "/search?";
+		slaveUrl += this.getOpenSearchParameters();
+
+		// slaveUrl can be just a datasetId(not openSearch url)
+		// slaveUrl = this.slaves;
+		interferometryParams += "&correlatedTo=" + encodeURIComponent(slaveUrl) + "&corFunction=inteferometry"; // OLD parameter: "with"
+
+		return interferometryParams;
 	},
 	
 	/**
@@ -130,8 +140,7 @@ var DataSetSearch = SearchCriteria.extend({
 		if ( this.get('mode') != "Simple" ) {
 		
 			// Add interferometry specific parameters
-			url += "&dDiff=" + this.get('dDiff') + "&sOverP=" + this.get('sOverP') + "&nBase=" + this.get('nBase') + "&bSync=" + this.get('bSync');
-			url += "&mode=" + this.get('mode');
+			url += this.getInterferometryParameters();
 		} 
 		return url;
 	},
