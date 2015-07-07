@@ -2,10 +2,10 @@
   * Map module
   */
 
-define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPrefs", "map/browsesLayer", "map/utils"], 
+define( [ "configuration", "map/openlayers", "map/globweb", "backbone", "userPrefs", "map/browsesLayer", "map/utils", "map/degreeConvertor"], 
 
 // The function to define the map module
-function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, MapUtils ) {
+function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPrefs, BrowsesLayer, MapUtils, DegreeConvertor ) {
 
 	/**
 	 * Inner class
@@ -141,6 +141,26 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			}
 		}
 	};
+
+	/**
+	 * Called when mouse is moved on map : update coordinates viewer
+	 */
+	var onMouseMove = function(event) {
+		var point = self.getLonLatFromEvent( event );
+		
+		if ( point )
+		{
+			var lon = DegreeConvertor.toDMS(point[0],true);
+			var lat = DegreeConvertor.toDMS(point[1],false);
+			
+			// Append zero before decimals < 10 to have the same width 
+			lon = lon.replace(/\b(\d{1})\b/g, '0$1');
+			lat = lat.replace(/\b(\d{1})\b/g, '0$1');
+			
+			$('#coordinatesViewer')
+				.html(  lat+ " " +lon  );
+		}
+	};
 	
 	/**
 	 * Configure the map engine : set background layer, adjust style, connect events, etc...
@@ -168,6 +188,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		mapEngine.subscribe("navigationModified", function() {
 			self.trigger("extent:change",self);
 		});
+
+		// Update coordinates viewer context on mouse move
+		mapEngine.subscribe("mousemove", onMouseMove);
 	};
 	
 	/**
@@ -408,6 +431,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 					previousHandler = this.handler;
 					this.handler.stop();
 				}
+
+				// Unsubscribe old on mouse move handler
+				mapEngine.unsubscribe("mousemove", onMouseMove);
 				
 				// Retrieve the current viewport extent
 				var extent = mapEngine.getViewportExtent();
