@@ -93,12 +93,6 @@
 		"warningMaximumSize": 10000
 	},
 	
-	"dataAccessRequestStatuses" : { 	   
-	   "messagefadeOutTime" : 2500,
-	   "collapseDAR" : true,
-	   "collapseProducts" : true
-	},
-	
 	"gazetteer" : {
 		"maxResults": 3,
 		"timeout": 5000,
