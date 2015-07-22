@@ -18,6 +18,7 @@
 		"browseUrl": "properties.BrowseInformation.eop_url",
 		"browseType": "properties.BrowseInformation.eop_type",
 		"interferometryUrl": "properties.links.@title=interferometry.@href",
-		"links": "properties.links"
+		"links": "properties.links",
+		"imageQualityReportURL" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.imageQualityReportURL"
 	}
 }
