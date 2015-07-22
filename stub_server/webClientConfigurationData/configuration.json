@@ -14,8 +14,7 @@
 			{"sTitle" : "Status",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"}, 
 			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle"},
 			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle"},
-			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"},
-			{"sTitle" : "QualityReportURL",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.imageQualityReportURL"}
+			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"}
 		],
 		"directDownloadColumn" : 7
 	},
