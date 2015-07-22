@@ -117,7 +117,9 @@ var setupProductUrl = function(featureCollection,id) {
 	for ( var i = 0; i < featureCollection.features.length; i++ )  {
 		var feature = featureCollection.features[i];
 		var fid = feature.id;
-		//conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
+		//here it is used by tfhe direct download
+		conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
+		//here will be used by the download manager
 		conf.setMappedProperty(feature, "productUrl", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
 	}
 };
