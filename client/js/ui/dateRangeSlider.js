@@ -98,20 +98,7 @@ $.widget( "ui.dateRangeSlider", {
 		this.scalePosition = this.container.scrollLeft();
 		
 		this.wheelTimeoutVar = null;
-		this.element.mousewheel( function(event,delta) {
-			 self._moveDrag(delta * self.options.wheelFactor);
-			 
-			 // Call change after a few milliseconds
-			 if ( self.options.change ) {
-				 if ( self.wheelTimeoutVar ) {
-					clearTimeout( self.wheelTimeoutVar );
-				}
-				self.wheelTimeoutVar = setTimeout( function() {
-					self.options.change( self._computeCurrentDate() );
-					self.wheelTimeoutVar = null;
-				}, self.options.wheelTimeout );
-			}
-		});
+		this.element.on("mousewheel", $.proxy(this._onMouseWheel, this));
 					
 		// Cache the container width
 		this.containerWidth = this.container.width();
@@ -141,6 +128,24 @@ $.widget( "ui.dateRangeSlider", {
 	_onArrowMouseUp: function() {
 		this.autoScaleDirection = 0;
 		this.options.change( this._computeCurrentDate() ); 
+	},
+
+	// On mouse wheel event handler
+	_onMouseWheel: function(event, delta) {
+
+		this._moveDrag(delta * this.options.wheelFactor);
+		
+		// Call change after a few milliseconds
+		if ( this.options.change ) {
+			if ( this.wheelTimeoutVar ) {
+				clearTimeout( this.wheelTimeoutVar );
+			}
+			var self = this;
+			this.wheelTimeoutVar = setTimeout( function() {
+				self.options.change( self._computeCurrentDate() );
+				self.wheelTimeoutVar = null;
+			}, this.options.wheelTimeout );
+		}
 	},
 	
 	// Update the drag bar position
@@ -362,6 +367,7 @@ $.widget( "ui.dateRangeSlider", {
 	// revert other modifications here
 	_destroy: function() {
 		this.element.empty();
+		this.element.off("mousewheel", $.proxy(this._onMouseWheel, this));
 	},
 
 	// _setOptions is called with a hash of all options that are changing
