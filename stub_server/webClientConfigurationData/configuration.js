@@ -78,10 +78,6 @@ var _set = function(object, path, value) {
 
 	// Finally set the value
 	temp[kvs[ kvs.length-1 ]] = value;
-
-	// HACK: interferometry
-	temp['@rel'] = "related";
-
 }
 
 module.exports = {
@@ -128,12 +124,11 @@ module.exports = {
 			if ( parentValue ) {
 				parentValue[prop] = value;
 			} else {
-				console.warn(parentPath + " doesn't exist");
-				console.log("Creating the tree of objects..");
+				//console.warn(parentPath + " doesn't exist");
 				_set(object, propertyPath, value);
 			}
 		} else {
-			console.warn(propertyId + " wasn't found in serverPropertyMapper");
+			//console.warn(propertyId + " wasn't found in serverPropertyMapper");
 		}
 	},
 
