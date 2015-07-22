@@ -74,6 +74,14 @@ module.exports.parse = function(file,fc) {
 	var stopIndex = columns.indexOf('Stop');
 	var collectionIndex = columns.indexOf('COLLECTION');
 	
+	var missionIndex = columns.indexOf('Mission');
+	var sensorIndex = columns.indexOf('Sensor');
+	var swathIndex = columns.indexOf('Swath');
+	var orbitIndex = columns.indexOf('Orbit');
+	var passIndex = columns.indexOf('Pass');
+	var statusIndex = columns.indexOf('Status');
+	var prodTypeIndex = columns.indexOf('PRODUCT_TYPE');
+
 	var featureCollection = {
 		type: "FeatureCollection",
 		features: []
@@ -96,6 +104,15 @@ module.exports.parse = function(file,fc) {
 			eop_layer: layer,
 			eop_url: "/wms2eos/servlets/wms"
 		});
+
+		Configuration.setMappedProperty(feature, "mission", cells[missionIndex]);
+		Configuration.setMappedProperty(feature, "sensor", cells[sensorIndex]);
+		Configuration.setMappedProperty(feature, "swath", cells[swathIndex]);
+		Configuration.setMappedProperty(feature, "orbit", cells[orbitIndex]);
+		Configuration.setMappedProperty(feature, "pass", cells[passIndex]);
+		Configuration.setMappedProperty(feature, "status", cells[statusIndex]);
+		Configuration.setMappedProperty(feature, "productType", cells[prodTypeIndex]);
+		Configuration.setMappedProperty(feature, "imageQualityReportURL", "http://www.eo.esa.int/mayqualityReportUrl"+i);
 
 		featureCollection.features.push( feature ); 
 	}

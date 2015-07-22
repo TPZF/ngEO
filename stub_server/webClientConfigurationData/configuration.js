@@ -135,6 +135,31 @@ module.exports = {
 		} else {
 			console.warn(propertyId + " wasn't found in serverPropertyMapper");
 		}
+	},
+
+	/**
+	* Transform the old featurecollection json data format to the new one according to the Work Order 
+	*/
+	toNewJsonFormat: function(featureCollection){
+
+
+		for (var i = 0 ; i < featureCollection.features.length ; i++){
+			var feature = featureCollection.features[i];
+
+			this.setMappedProperty(feature, "start", feature.properties.EarthObservation.gml_beginPosition);
+			this.setMappedProperty(feature, "stop", feature.properties.EarthObservation.gml_endPosition);
+			this.setMappedProperty(feature, "browseInformation", feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
+			this.setMappedProperty(feature, "mission", feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName);
+			this.setMappedProperty(feature, "sensor", feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName);
+			this.setMappedProperty(feature, "swath", feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier);
+			this.setMappedProperty(feature, "orbit", feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber);
+			this.setMappedProperty(feature, "pass", feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection);
+			this.setMappedProperty(feature, "status", feature.properties.EarthObservation.EarthObservationMetaData.eop_status);
+			this.setMappedProperty(feature, "productType", feature.properties.EarthObservation.EarthObservationMetaData.eop_productType);
+			this.setMappedProperty(feature, "imageQualityReportURL", feature.properties.EarthObservation.EarthObservationMetaData.eop_imageQualityReportURL);
+		}
+
+		return featureCollection;
 	}
 };
 

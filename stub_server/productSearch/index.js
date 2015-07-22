@@ -30,31 +30,31 @@ fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, d
 	featureCollections['ATS_TOA_1P']  = JSON.parse(data);
 });
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
-	featureCollections['ASA_WS__0P']  = JSON.parse(data);
+	featureCollections['ASA_WS__0P']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/ENVISAT_ASA_IM__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ENVISAT_ASA_IM__0P']  = JSON.parse(data);
 });
 fs.readFile('./productSearch/Sentinel2_response.json', 'utf8', function (err, data) {
-	featureCollections['Sentinel2']  = JSON.parse(data);
+	featureCollections['Sentinel2']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/Line_response.json', 'utf8', function (err, data) {
-	featureCollections['Line']  = JSON.parse(data);
+	featureCollections['Line']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/Crossing_response.json', 'utf8', function (err, data) {
-	featureCollections['Crossing']  = JSON.parse(data);
+	featureCollections['Crossing']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/Global_response.json', 'utf8', function (err, data) {
-	featureCollections['Global']  = JSON.parse(data);
+	featureCollections['Global']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/MultiLine_response.json', 'utf8', function (err, data) {
-	featureCollections['MultiLine']  = JSON.parse(data);
+	featureCollections['MultiLine']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/HalfOrbit_response.json', 'utf8', function (err, data) {
-	featureCollections['HalfOrbit']  = JSON.parse(data);
+	featureCollections['HalfOrbit']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/Correlation_response.json', 'utf8', function (err, data) {
-	featureCollections['Correlation']  = JSON.parse(data);
+	featureCollections['Correlation']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, data) {
 	featureCollections['DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME']  = JSON.parse(data);
@@ -78,6 +78,7 @@ var timeInsideFeature = function(feature, start, stop) {
 	else
 		return true;
 };
+
 
 /**
  * Time sorting

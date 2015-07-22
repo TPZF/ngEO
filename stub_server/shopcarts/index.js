@@ -10,7 +10,9 @@ var uuid = require('node-uuid'),
 	fs = require('fs'),
 	http = require('http'),
 	path = require('path'),
-	find = require('lodash.find');
+	find = require('lodash.find'),
+	Configuration = require('../webClientConfigurationData/configuration');
+
 
 var shopcartContents = {};
 
@@ -49,25 +51,25 @@ var shopcartConfigs = [
 
 
 fs.readFile('./shopcarts/TPZ_SHP_01_shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents["TPZ_SHP_01"]  = JSON.parse(data);
+	shopcartContents["TPZ_SHP_01"]  = Configuration.toNewJsonFormat(JSON.parse(data));
 });
 
 fs.readFile('./shopcarts/TPZ_SHP_02_shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents["TPZ_SHP_02"]  = JSON.parse(data);
+	shopcartContents["TPZ_SHP_02"]  = Configuration.toNewJsonFormat(JSON.parse(data));
 });
 
 fs.readFile('./shopcarts/TPZ_SHP_03_shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents["TPZ_SHP_03"]  = JSON.parse(data);
+	shopcartContents["TPZ_SHP_03"]  = Configuration.toNewJsonFormat(JSON.parse(data));
 });
 
 fs.readFile('./shopcarts/TPZ_SHP_04_shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents["TPZ_SHP_04"]  = JSON.parse(data);
+	shopcartContents["TPZ_SHP_04"]  = Configuration.toNewJsonFormat(JSON.parse(data));
 });
 
 fs.readFile('./shopcarts/TPZ_SHP_05_shopcartContent.json', 'utf8', function (err, data) {
-	shopcartContents["TPZ_SHP_05"]  = JSON.parse(data);
+	shopcartContents["TPZ_SHP_05"]  = Configuration.toNewJsonFormat(JSON.parse(data));
 	for ( var i = 6; i <= 100; i++ ) {
-		shopcartContents["TPZ_SHP_" + i]  = JSON.parse(data);
+		shopcartContents["TPZ_SHP_" + i]  = Configuration.toNewJsonFormat(JSON.parse(data));
 		shopcartConfigs.push({
                     "id" : "TPZ_SHP_" + i,
                     "name" : "Shopcart " + i,
