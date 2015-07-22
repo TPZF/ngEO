@@ -153,11 +153,12 @@ var MapPopup = function(container) {
 				}
 			}
 		}
-		// NGEO-1770: No retrieve button if selection contains at least one planned product
-		var hasPlanned = _.find( products, function( feature ) {
-			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED";
+		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist
+		var hasPlannedOrNoProductUrl = _.find( products, function( feature ) {
+			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED" || 
+					!Configuration.getMappedProperty(feature, "productUrl");
 		});
-		element.find('#mpButtons button[data-icon="save"]').button( hasPlanned ? 'disable' : 'enable' );
+		element.find('#mpButtons button[data-icon="save"]').button( hasPlannedOrNoProductUrl ? 'disable' : 'enable' );
 		element.find('#mpText').html(content);
 	};
 
