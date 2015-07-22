@@ -117,8 +117,8 @@ var setupProductUrl = function(featureCollection,id) {
 	for ( var i = 0; i < featureCollection.features.length; i++ )  {
 		var feature = featureCollection.features[i];
 		var fid = feature.id;
-		var product = conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
-		//feature.properties.productUrl = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid;
+		//conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
+		conf.setMappedProperty(feature, "productUrl", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
 	}
 };
 
@@ -210,6 +210,13 @@ module.exports = function(req, res){
 		// NEW FORMAT
 		var slaveUrl = req.param('correlatedTo');
 		conf.setMappedProperty(feature, "interferometryUrl", slaveUrl);
+
+		// Update @rel property for interferometry link
+		var links = conf.getMappedProperty(feature, "links");
+		var interferometryLink = find(links, function(link) {
+			return link['@title'] == "interferometry";
+		});
+		interferometryLink['@rel'] = "related";
 	}
 	
 	var count = req.query.count || 10;
