@@ -6,7 +6,7 @@
 			{"sTitle" : "Sensor",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"},
 			{"sTitle" : "Start", "mData" : "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"}, 
 			{"sTitle" : "Stop", "mData" : "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition"}, 
-			{"sTitle" : "Swath", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier"},
+			{"sTitle" : "Swath", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.swathIdentifier.swathIdentifier"},
 			{"sTitle" : "Orbit", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"},
 			{"sTitle" : "Pass", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"}, 
 			{"sTitle" : "Product", "mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href" }, 
@@ -14,7 +14,8 @@
 			{"sTitle" : "Status",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"}, 
 			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle"},
 			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle"},
-			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"}
+			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"},
+			{"sTitle" : "QualityReportURL",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.imageQualityReportURL"}
 		],
 		"directDownloadColumn" : 7
 	},
