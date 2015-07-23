@@ -5,6 +5,7 @@ define(["jquery", "logger", "userPrefs", "map/map", "search/dsa", "searchResults
 			ToolBarMap, dataservicesarea, PanelManager, StackPanel, StatusPanel ) {
 
 var panelManager;
+var toolbarMap;
 
 return {
 
@@ -43,6 +44,11 @@ return {
 		$dateRangeSlider.show();
 		if ( $dateRangeSlider.is(':ui-dateRangeSlider') ) {
 			$dateRangeSlider.dateRangeSlider('refresh');
+		}
+		
+		// Refresh layersWidget to update visibility state of layers
+		if ( toolbarMap ){
+			toolbarMap.layersWidget.refresh();
 		}
 
 		$('#searchToolbar').show();
@@ -104,7 +110,7 @@ return {
 		ShopcartDSA.initialize( element, router, panelManager );
 		
 		// Initialize toolbar and context help
-		ToolBarMap(element);
+		toolbarMap = new ToolBarMap(element);
 		
 	},
 };

@@ -1,14 +1,7 @@
 /**
-  * Layers widget module
-  */
-
-
-define( [ "map/map", "ui/widget" ], function(Map, ngeoWidget) {
-
-/**
- * The HTML element that contains the layer list
+ * Layers widget module
  */
-var container;
+define( [ "map/map", "ui/widget" ], function(Map, ngeoWidget) {
 
 /**
  * Callback called when a layer is checked
@@ -18,11 +11,43 @@ var layerCheckedCallback = function() {
 	$this.data('layer').setVisible($this.prop('checked'));
 };
 
+var LayersWidget = function(element) {
+
+	var $layersWidget = $('<div id="layersWidget"/>').appendTo(element);
+
+	// Build overlays panel
+	this.container = $("<fieldset data-role='controlgroup'></fieldset>");
+	
+	var layers = Map.layers;
+	for ( var i=0; i < layers.length; i++ ) {
+		this.buildHTML( layers[i] );
+	}
+	this.container.appendTo($layersWidget);
+	
+	var self = this;
+	// Callback when a layer is added on the map
+	Map.on('layerAdded', function(layer) {
+		self.buildHTML(layer);
+		$layersWidget.trigger('create');
+	});
+	
+	// Callback when a layer is removed from the map
+	Map.on('layerRemoved', function(layer) {
+		container.find('input').each( function() {
+			if ( $(this).data('layer') == layer ) {
+				$(this).parent().remove();
+			}
+		});
+		$layersWidget.trigger('create');
+	});
+
+	this.$el = $layersWidget;
+};
+
 /**
  * Build the HTML for a layer
  */
-var buildHTML = function(layer) {
-
+LayersWidget.prototype.buildHTML = function(layer) {
 	// Build the input
 	var input = $("<input data-theme='c' type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
 		.data('layer',layer);
@@ -33,42 +58,24 @@ var buildHTML = function(layer) {
 	// Build the label for input and add it to the group
 	$("<label data-mini='true'>" + layer.params.name + "</label>")
 		.prepend(input)
-		.appendTo(container);
+		.appendTo(this.container);
 };
 
-return function(dsa) {
-	dsa.append('<div id="layersWidget"/>');
-
-	// Build overlays panel
-	container = $("<fieldset data-role='controlgroup' />");
-	
+/**
+ *	Refresh visibility of layers
+ */
+LayersWidget.prototype.refresh = function() {
+	// Not the best solution ever.. satisfying for now
+	this.container.empty();
 	var layers = Map.layers;
 	for ( var i=0; i < layers.length; i++ ) {
-		buildHTML( layers[i] );
+		this.buildHTML( layers[i] );
 	}
-	container.appendTo("#layersWidget");
-	
-	// Callback when a layer is added on the map
-	Map.on('layerAdded', function(layer) {
-		buildHTML(layer);
-		$('#layersWidget').trigger('create');
-	});
-	
-	// Callback when a layer is removed from the map
-	Map.on('layerRemoved', function(layer) {
-		container.find('input').each( function() {
-			if ( $(this).data('layer') == layer ) {
-				$(this).parent().remove();
-			}
-		});
-		$('#layersWidget').trigger('create');
-	});
+	this.$el.trigger('create');
 
-	// Create widget
-	$("#layersWidget").ngeowidget({
-		activator: '#layers'
-	});
 };
+
+return LayersWidget;
 	
 });
 

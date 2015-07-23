@@ -5,7 +5,13 @@ var mode2D = true;
 
 return function (dsa) {
 		
-	LayersWidget(dsa);
+	this.layersWidget = new LayersWidget(dsa);
+
+	// Create widget
+	this.layersWidget.$el.ngeowidget({
+		activator: '#layers'
+	});
+
 	BackgroundWidget(dsa);
 	
 	$("#zoomIn").click( function() { Map.zoomIn(); } );

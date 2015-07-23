@@ -1,11 +1,11 @@
 
 define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "shopcart/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
-        "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView",
+        "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView", "account/view/wmsManagerView",
         "text!../pages/account.html", "ui/tabs"], 
 
         function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
-        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, account_template) {
+        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, WmsManagerView, account_template) {
 	
 // Private variable : the different view of My Account page	
 var dmView;
@@ -20,19 +20,29 @@ var refreshViewOnResize = _.debounce( function() { if (activeView.refreshSize)  
 
 // Function call when a tab is activated
 var onTabActivated = function($link) {
-	if ( $link.attr('href') == "#downloadManagersMonitoring" ) {
-		DownloadManagers.fetch();
-		activeView = dmView;
-	} else if ( $link.attr('href') == "#DARMonitoring" ) {
-		DataAccessRequestStatuses.fetch();
-		activeView = darView;
-	} else if ( $link.attr('href') == "#userPrefs" ) {
-		activeView = userPrefsView;
-	} else if ( $link.attr('href') == "#inquiries" ) {
-		activeView = inquiriesView;
-	} else if ( $link.attr('href') == "#shopcarts" ) {
-		ShopcartCollection.fetch();
-		activeView = shopcartManagerView;
+
+	switch ( $link.attr('href') ) {
+		case "#downloadManagersMonitoring":
+			DownloadManagers.fetch();
+			activeView = dmView;
+			break;
+		case "#DARMonitoring":
+			DataAccessRequestStatuses.fetch();
+			activeView = darView;
+			break;
+		case "#userPrefs":
+			activeView = userPrefsView;
+			break;
+		case "#inquiries":
+			activeView = inquiriesView;
+			break;
+		case "#shopcarts":
+			ShopcartCollection.fetch();
+			activeView = shopcartManagerView;
+			break;
+		case "#wmsManager":
+			activeView = wmsManagerView;
+			break;
 	}
 	
 	if (activeView.refreshSize) activeView.refreshSize();
@@ -58,7 +68,10 @@ return {
 	 * Called when the module main page is shown
 	 */
 	show: function() {
-		if (activeView.refreshSize) activeView.refreshSize();
+		if (activeView.refreshSize)
+			activeView.refreshSize();
+		// Refresh to update the visibility state of layers
+		wmsManagerView.refresh();
 	},	
 	
 	/**
@@ -66,7 +79,7 @@ return {
 	 * Called after buildElement
 	 */
 	initialize: function() {
-	
+		
 		$(window).resize( refreshViewOnResize );
 	
 		// Create the download managers monitoring view
@@ -101,6 +114,12 @@ return {
 		});	
 		userPrefsView.render();
 		
+		//Create wms manager view
+		wmsManagerView = new WmsManagerView({
+			el : "#wmsManager"
+		});
+		wmsManagerView.render();
+
 		// Fetch data for DM
 		DownloadManagers.fetch();
 		
