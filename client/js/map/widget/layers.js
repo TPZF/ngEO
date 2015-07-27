@@ -33,7 +33,7 @@ var LayersWidget = function(element) {
 	
 	// Callback when a layer is removed from the map
 	Map.on('layerRemoved', function(layer) {
-		container.find('input').each( function() {
+		self.container.find('input').each( function() {
 			if ( $(this).data('layer') == layer ) {
 				$(this).parent().remove();
 			}
