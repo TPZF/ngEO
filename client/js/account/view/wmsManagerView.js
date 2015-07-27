@@ -1,4 +1,4 @@
-define( ['jquery', 'logger', 'backbone', 'map/map', 'map/widget/layers', 'text!account/template/wmsManagerContent.html', 'text!account/template/wmsSearchPopupContent.html'], 
+define( ['jquery', 'logger', 'backbone', 'map/map', 'map/widget/layers', 'text!account/template/wmsManagerContent.html', 'text!account/template/wmsSearchPopupContent.html', "highchecktree"], 
 		function($, Logger, Backbone, Map, LayersWiget, wmsManager_template, wmsSearchPopup_template) {
 
 /**
@@ -15,6 +15,69 @@ var layerCheckedCallback = function() {
 };
 
 /**
+ *	Build highchecktree item for the given layer
+ *	@param layer
+ *		Could come from 3 cases:
+ *			<ul>
+ *				<li>WMS layer coming from configuration</li>
+ *				<li>Added by user within mapserver url(coming from "wmsCapabilitiesFormat.read")</li>
+ *				<li>Added by user within full wms request(coming from "createWmsLayerFromUrl")</li>
+ *			</ul>
+ *	@return
+ *		Item object for highCheckTree plugin
+ */
+var buildItem = function(layer) {
+	var params;
+	var isConfigurationLayer = layer.engineLayer;
+	if ( isConfigurationLayer ) {
+		// Already created layer by conf
+		params = layer.params;
+	} else if ( layer.baseUrl ) {
+		// WMS url added by user
+		params = layer;
+	} else if ( layer.name ) {
+		// Layers coming from get capabilities of mapserver
+		// Only layers with name attribute are accepted, otherwise it's just a group of layers
+		params = {
+			type: "WMS",
+			name: layer.title,
+			baseUrl: layer.baseUrl,
+			params: {
+				layers: layer.name
+			}
+		}
+	}
+
+	var label = params ? (params.title || params.name) : layer.title;
+	return {
+		item: {
+			id: label,
+			label: label,
+			checked: isConfigurationLayer,
+			layerDesc: params,
+			layer: isConfigurationLayer ? layer : null
+		}
+	};
+}
+
+/**
+ *	Creates highCheckTree structure from the given layers
+ */
+var buildHighCheckTreeData = function(layers) {
+	var data = []
+	_.each(layers, function(layer) {
+		var item = buildItem( layer );
+		if (layer.nestedLayers && layer.nestedLayers.length > 0) {
+			// Create children
+			item.children = buildHighCheckTreeData(layer.nestedLayers);
+		}
+		data.push(item);
+	});
+	
+	return data;
+}
+
+/**
  *	Create WMS layer from url
  */
 var createWmsLayerFromUrl = function(baseUrl) {
@@ -29,12 +92,12 @@ var createWmsLayerFromUrl = function(baseUrl) {
 	});
 
 	// TODO: Check SRS --> must be 4326 ?
-	// TODO: manage name
 
 	var wmsLayer = {
 		type: parsed['SERVICE'],
 		baseUrl: params[0],
 		name: parsed['LAYERS'],
+		title: parsed['LAYERS'], // TODO: manage name
 		params: {
 			layers: parsed['LAYERS'],
 			format: decodeURIComponent(parsed['FORMAT']),
@@ -44,6 +107,44 @@ var createWmsLayerFromUrl = function(baseUrl) {
 
 	return wmsLayer;
 };
+
+/**
+ *	Add a new tree
+ */
+var addToTrees = function($trees, baseUrl, data) {
+	// Initialize high check tree
+	$('<div>').appendTo($trees).highCheckTree({
+		data: data,
+		onCheck: function($li) {
+			var layerDesc = $li.data("layerDesc");
+			if ( layerDesc ) {
+
+				if ( !layerDesc.baseUrl ) {
+					// HACK: OpenLayers capabilities format doesn't contain base url.. so use from parameter for now
+					layerDesc.baseUrl = baseUrl;
+				}
+
+				// Store on $li to be able to remove later
+				$li.data("layer", Map.addLayer(layerDesc) );
+				
+			}
+		},
+		onUnCheck: function($li) {
+			var layer = $li.data("layer");
+			if ( layer ) {
+				Map.removeLayer(layer);
+			}
+		},
+		onAddLi: function($li, node) {
+			if (node.item.layerDesc) {
+				$li.data("layerDesc", node.item.layerDesc);
+			}
+			if ( node.item.layer ) {
+				$li.data("layer", node.item.layer);
+			}
+		}
+	});
+}
 
 /**
  *	WMS Manager view
@@ -68,6 +169,7 @@ var WmsManagerView = Backbone.View.extend({
 			});
 
 		$openedPopup.popup("open").trigger("create");
+		this.centerElement($openedPopup.closest('.ui-popup-container'));
 
 		var baseUrl;
 		var self = this;
@@ -89,7 +191,9 @@ var WmsManagerView = Backbone.View.extend({
 				if ( baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
 					// Single layer
 					var layer = createWmsLayerFromUrl(baseUrl);
-					Map.addLayer(layer);
+					var item = buildItem(layer);
+					addToTrees(self.$el.find("#trees"), null, [item]);
+
 					$openedPopup.popup("close");
 
 				} else {
@@ -101,36 +205,37 @@ var WmsManagerView = Backbone.View.extend({
 			}
 		};
 
-		// Back to mapserver search URL input view
-		var onBack = function() {
-			$openedPopup.find("#mapserverSearch").show().siblings().hide();
-			self.centerElement($openedPopup.closest('.ui-popup-container'));
-		};
+		// // Back to mapserver search URL input view
+		// var onBack = function() {
+		// 	$openedPopup.find("#mapserverSearch").show().siblings().hide();
+		// 	self.centerElement($openedPopup.closest('.ui-popup-container'));
+		// };
 
-		// Adds selected layers to selection
-		var onAddLayers = function() {
-			_.each( $openedPopup.find("input[type='checkbox']:checked"), function(checkedInput) {
+		// // Adds selected layers to selection
+		// var onAddLayers = function() {
+		// 	_.each( $openedPopup.find("input[type='checkbox']:checked"), function(checkedInput) {
 
-				var layer = $(checkedInput).prev().data("layer");
-            	var wmsLayer = {
-            		type: "WMS",
-            		baseUrl: baseUrl,
-            		name: layer.title,
-            		params: {
-            			layers: layer.name
-            		}
-            	}
-            	Map.addLayer(wmsLayer);
-			} );
+		// 		var layer = $(checkedInput).prev().data("layer");
+  //		   	var wmsLayer = {
+  //		   		type: "WMS",
+  //		   		baseUrl: baseUrl,
+  //		   		name: layer.title,
+  //		   		params: {
+  //		   			layers: layer.name
+  //		   		}
+  //		   	}
+  //		   	Map.addLayer(wmsLayer);
 
-			$openedPopup.popup("close");
-		};		
+		// 	} );
+
+		// 	$openedPopup.popup("close");
+		// };		
 
 		// Define callbacks for the given buttons
 		$openedPopup
-			.find('a[data-icon="search"]').click(onSearch).end()
-		 	.find("a[data-icon='back']").click(onBack).end()
-			.find("a[data-icon='add']").click(onAddLayers);
+			.find('a[data-icon="search"]').click(onSearch).end();
+		// 		.find("a[data-icon='back']").click(onBack).end()
+		// 		.find("a[data-icon='add']").click(onAddLayers);
 
 	},
 
@@ -149,48 +254,51 @@ var WmsManagerView = Backbone.View.extend({
 		// Launch search request to explore capabilities
 		var wmsCapabilitiesFormat = new OpenLayers.Format.WMSCapabilities();
 		$.ajax({
-	        type: "GET",
-	        url: baseUrl,
-	        data: {
-	            SERVICE: 'WMS',
-	            //VERSION: '1.1.0', // No need to negociate version, since the highest one will be returned
-	            //@see http://cite.opengeospatial.org/OGCTestData/wms/1.1.1/spec/wms1.1.1.html#basic_elements.version.negotiation
-	            REQUEST: 'GetCapabilities'
-	        },
-	        success: function(doc) {
+			type: "GET",
+			url: baseUrl,
+			data: {
+				SERVICE: 'WMS',
+				//VERSION: '1.1.0', // No need to negociate version, since the highest one will be returned
+				//@see http://cite.opengeospatial.org/OGCTestData/wms/1.1.1/spec/wms1.1.1.html#basic_elements.version.negotiation
+				REQUEST: 'GetCapabilities'
+			},
+			success: function(doc) {
 
-	            var c = wmsCapabilitiesFormat.read(doc);
-	            if (!c || !c.capability) {
-	                $openedPopup.find(".status").show().html("Error while parsing capabilities");
-	                return;
-	            }
+				var c = wmsCapabilitiesFormat.read(doc);
+				if (!c || !c.capability) {
+					$openedPopup.find(".status").show().html("Error while parsing capabilities");
+					return;
+				}
 
-				var $fieldset = $("<fieldset data-role='controlgroup'/>");
-				_.each( c.capability.layers, function(layer) {
-					$("<label data-mini='true'>" + layer.title + "<input data-theme='c' type='checkbox' /></label>").appendTo($fieldset).data("layer", layer);
-				});
+				addToTrees(self.$el.find("#trees"), baseUrl, buildHighCheckTreeData(c.capability.nestedLayers));
+				$openedPopup.popup("close");
 
-	            $openedPopup.find("#foundLayers").show().siblings().hide().end()
-	            	.find("#availableLayers").show().html($fieldset).trigger("create");
+				// var $fieldset = $("<fieldset data-role='controlgroup'/>");
+				// _.each( c.capability.layers, function(layer) {
+				// 	$("<label data-mini='true'>" + layer.title + "<input data-theme='c' type='checkbox' /></label>").appendTo($fieldset).data("layer", layer);
+				// });
 
-	            $openedPopup.find(".ui-controlgroup-controls").css({
-					'max-height': '500px',
-					'overflow-y': 'auto',
-					'min-width': '600px'
-				}).end();
+				// $openedPopup.find("#foundLayers").show().siblings().hide().end()
+				//	.find("#availableLayers").show().html($fieldset).trigger("create");
 
-				// Update parent position
-				self.centerElement($openedPopup.closest('.ui-popup-container'));
-	        },
-	        error: function(r) {
-	        	$openedPopup.find(".status").show().html("Error while searching on " + baseUrl);
-	        },
-	        complete: function() {
-	        	$.mobile.loading("hide", {
+				// $openedPopup.find(".ui-controlgroup-controls").css({
+				// 	'max-height': '500px',
+				// 	'overflow-y': 'auto',
+				// 	'min-width': '600px'
+				// }).end();
+
+				// // Update parent position
+				// self.centerElement($openedPopup.closest('.ui-popup-container'));
+			},
+			error: function(r) {
+				$openedPopup.find(".status").show().html("Error while searching on " + baseUrl);
+			},
+			complete: function() {
+				$.mobile.loading("hide", {
 					textVisible: false
 				});
 
-	        }
+			}
 		});
 	},
 
@@ -210,18 +318,15 @@ var WmsManagerView = Backbone.View.extend({
 	render: function(){
 		
 		this.$el.append(wmsManager_template);
-		this.layersWidget = new LayersWiget(this.$el.find('#wmsManagerContent'));
+		//this.layersWidget = new LayersWiget(this.$el.find('#wmsManagerContent'));
+
+		var data = buildHighCheckTreeData(_.filter(Map.layers, function(layer){
+			return layer.params.type == "WMS";
+		}));
+		addToTrees( this.$el.find("#trees"), null, data );
 		this.$el.trigger('create');
 
 		return this;
-	},
-
-	/**
-	 *	Refresh method to update layers visibility state
-	 */
-	refresh : function(){
-		this.$el.empty();
-		this.render();
 	}
 });
 

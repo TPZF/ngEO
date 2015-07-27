@@ -70,8 +70,6 @@ return {
 	show: function() {
 		if (activeView.refreshSize)
 			activeView.refreshSize();
-		// Refresh to update the visibility state of layers
-		wmsManagerView.refresh();
 	},	
 	
 	/**

@@ -45,11 +45,6 @@ return {
 		if ( $dateRangeSlider.is(':ui-dateRangeSlider') ) {
 			$dateRangeSlider.dateRangeSlider('refresh');
 		}
-		
-		// Refresh layersWidget to update visibility state of layers
-		if ( toolbarMap ){
-			toolbarMap.layersWidget.refresh();
-		}
 
 		$('#searchToolbar').show();
 		$('#mapToolbar').show();

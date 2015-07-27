@@ -2,16 +2,19 @@
 require.config({
      paths: {
         "jquery": "externs/jquery-1.8.3",
-		"jquery.mobile": "externs/jquery.mobile-1.2.0",
         //"jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min",
+		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+		//"jquery.mobile": "http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min",
 		//"jquery.mobile": "http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min",
 		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
 		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
 		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
 		"jquery.dataTables" : "externs/jquery.dataTables",
 		"jquery.autocomplete": "externs/jquery.auto-complete",
+		//"jquery.easings": "externs/easings",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
+        "highchecktree": "externs/highchecktree",
 		"text": "externs/text"
    },
 	shim: {
@@ -29,16 +32,27 @@ require.config({
         'jqm-datebox-datebox': {
             deps: ['jqm-datebox-core'],
             exports: 'jQuery'
+        },
+
+        'highchecktree' : {
+            deps: ['jquery'],
+            exports: 'jQuery'
         }
-               
+        /*,
+
+        'jquery.easings' : {
+        	deps: ['jquery'],
+        	exports: 'jQuery'
+        }*/
+        
 	}
-		
+	
   });
 
 /**
  * Main ngEO module
  */
-require( ["require", "jquery", "configuration", "ui/menubar", "ui/context-help", "logger", "backbone", "jquery.mobile", 'shopcart/model/shopcartCollection', 'ui/toolbar'],
+require( ["require", "jquery", "configuration", "ui/menubar", "ui/context-help", "logger", "backbone", "jquery.mobile", 'shopcart/model/shopcartCollection', 'ui/toolbar', 'highchecktree'],
 		function(require, $, Configuration, MenuBar, ContextHelp, Logger, Backbone) {
 		
 /** Use a defered object for document ready */
