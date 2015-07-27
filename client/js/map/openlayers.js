@@ -2,7 +2,7 @@
  * OpenLayers map engine
  */
 
-define( [ "configuration", "map/utils", "externs/OpenLayers.debug" ],
+define( [ "configuration", "map/utils", "externs/OpenLayers.min" ],
  
  function(Configuration,MapUtils) {
   

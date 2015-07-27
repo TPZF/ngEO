@@ -2,7 +2,7 @@
  * GeoJsonConverter based on OpenLayers
  */
 
-define( [ "externs/OpenLayers.debug" ], function() {
+define( [ "externs/OpenLayers.min" ], function() {
  
 // Use to convert to GeoJSON 
 var geoJsonFormat = new OpenLayers.Format.GeoJSON();
