@@ -56,7 +56,7 @@ LayersWidget.prototype.buildHTML = function(layer) {
 	input.change(layerCheckedCallback);
 	
 	// Build the label for input and add it to the group
-	$("<label data-mini='true'>" + layer.params.name + "</label>")
+	$("<label data-mini='true'>" + (layer.params.title ? layer.params.title: layer.params.name) + "</label>")
 		.prepend(input)
 		.appendTo(this.container);
 };

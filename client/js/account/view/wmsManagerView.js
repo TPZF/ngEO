@@ -58,13 +58,13 @@ var buildItem = function(layer) {
 			layer: isConfigurationLayer ? layer : null
 		}
 	};
-}
+};
 
 /**
  *	Creates highCheckTree structure from the given layers
  */
 var buildHighCheckTreeData = function(layers) {
-	var data = []
+	var data = [];
 	_.each(layers, function(layer) {
 		var item = buildItem( layer );
 		if (layer.nestedLayers && layer.nestedLayers.length > 0) {
@@ -75,7 +75,7 @@ var buildHighCheckTreeData = function(layers) {
 	});
 	
 	return data;
-}
+};
 
 /**
  *	Create WMS layer from url
@@ -150,7 +150,7 @@ var addToTrees = function($trees, baseUrl, data) {
 			}
 		}
 	});
-}
+};
 
 /**
  *	WMS Manager view
@@ -190,13 +190,15 @@ var WmsManagerView = Backbone.View.extend({
 			// Specific layer
 			// baseUrl = "http://demonstrator.telespazio.com/wmspub?LAYERS=GTOPO&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fjpeg&SRS=EPSG%3A4326&BBOX=90,0,112.5,22.5&WIDTH=256&HEIGHT=256"
 
-			baseUrl = $openedPopup.find("input[type='text']").val();
+			baseUrl = $openedPopup.find("input[name='wmsUrl']").val();
 			if ( baseUrl != "" ) {
 				$openedPopup.find(".status").hide();
 
 				if ( baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
 					// Single layer
 					var layer = createWmsLayerFromUrl(baseUrl);
+					// Override title by user defined
+					layer.title = $openedPopup.find("input[name='wmsLayerName']").val();
 					var item = buildItem(layer);
 					addToTrees(self.$el.find("#trees"), null, [item]);
 
@@ -275,8 +277,16 @@ var WmsManagerView = Backbone.View.extend({
 					$openedPopup.find(".status").show().html("Error while parsing capabilities");
 					return;
 				}
-
-				addToTrees(self.$el.find("#trees"), baseUrl, buildHighCheckTreeData(c.capability.nestedLayers));
+				
+				var tree = buildHighCheckTreeData(c.capability.nestedLayers)
+				addToTrees(self.$el.find("#trees"), baseUrl, [{
+					item: {
+						id: $openedPopup.find("input[name='wmsLayerName']").val(),
+						label: $openedPopup.find("input[name='wmsLayerName']").val(),
+						checked: false
+					},
+					children: tree
+				}]);
 				$openedPopup.popup("close");
 
 				// var $fieldset = $("<fieldset data-role='controlgroup'/>");
