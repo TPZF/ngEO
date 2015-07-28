@@ -29,7 +29,8 @@
             onUnCheck: null,       // an event will be triggered when the tree node was unchecked
             onLabelHoverOver: null,// an event will be triggered when mouse hover over the label
             onLabelHoverOut: null,  // an event will be triggered when mouse hover out the label
-            onAddLi: null           // an event will be triggered when li is added
+            onAddLi: null,           // an event will be triggered when li is added
+            onDeleteLi: null          // an event will be triggered when li must be deleted
         }, settings);
 
         var container = $(this), $tree = this;
@@ -54,7 +55,7 @@
                 }
 
                 var $li = $('<li rel="' + node.item.id + '"><div class="arrow ' + arrowClass + '"></div><div class="checkbox ' + checkClass + '"></div><label>' + 
-                            node.item.label + '</label></li>').appendTo(result);
+                            node.item.label + '</label><div style="display: none;" class="delete"></div></li>').appendTo(result);
                 if ( settings.onAddLi ) {
                     settings.onAddLi( $li, node );
                 }
@@ -115,6 +116,47 @@
 
                 $(this).removeClass('checked').addClass('half_checked');
             }
+        });
+        
+
+
+        container.off('mouseover', 'li').on('mouseover', 'li', function(event) {
+
+            if ( $(event.target).is('label') ) {
+                return;
+            }
+
+            $(event.target).find(' > .delete').show().end()
+            $(event.target).parent().not('.checktree').siblings('.delete').hide();
+        });
+
+        container.off('mouseleave', 'li').on('mouseleave', 'li', function(event) {
+            if ( $(event.target).is('label') ) {
+                return;
+            }
+            $(event.target).find(' > .delete').hide();
+        });
+
+        //delete node
+        container.off('click', '.delete').on('click', '.delete', function () {
+            console.log($(event.target).attr('rel'));
+            var $li = $(this).parent();           
+            if ( settings.onDeleteLi ) {
+                settings.onDeleteLi($li, false);
+            }
+
+            // Remove all childs
+            $(this).siblings('ul').find('.checkbox.checked').each(function () {
+                var $subli = $(this).parent();
+                if (settings.onDeleteLi) {
+                    settings.onDeleteLi($subli, false);
+                }
+            });
+
+            // Remove from DOM
+            $li.fadeOut(300, function(){
+                $(this).remove();
+            })
         });
                   
         //expand and collapse node
@@ -201,11 +243,16 @@
         container.off('mouseenter', 'label').on('mouseenter', 'label', function(){
             $(this).addClass("hover");
             if (settings.onLabelHoverOver) settings.onLabelHoverOver($(this).parent());
+            // HACK: mouseover doesn't always fires on li element when passing by label..
+            $(event.target).siblings('.delete').show();
         });
 
-         container.off('mouseleave', 'label').on('mouseleave', 'label', function(){
+         container.off('mouseleave', 'label').on('mouseleave', 'label', function(event){
             $(this).removeClass("hover");
             if (settings.onLabelHoverOut) settings.onLabelHoverOut($(this).parent());
+
+            // HACK: mouseleave doesn't always fires on li element when passing by label..
+            $(event.target).siblings('.delete').hide();
         });
     };
 })(jQuery);

@@ -11,7 +11,7 @@
 
 .checktree li {
   float: left;
-  padding: 3px 0px;
+  padding: 1px 0px;
   width: 100%;
 }
 
@@ -35,6 +35,17 @@
 .checktree li .collapsed {
   background: url(images/checktree_icon.png) no-repeat;
   background-position: 0px -22px;
+}
+
+.checktree li .delete {
+  background: url(images/checktree_icon.png) no-repeat;
+  background-position: -28px -22px;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+  margin: 3px 6px;
+  float: left;
+  display: none;
 }
 
 .checktree li .expanded {

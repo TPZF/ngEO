@@ -142,6 +142,12 @@ var addToTrees = function($trees, baseUrl, data) {
 			if ( node.item.layer ) {
 				$li.data("layer", node.item.layer);
 			}
+		},
+		onDeleteLi: function($li) {
+			var layer = $li.data("layer");
+			if ( layer ) {
+				Map.removeLayer(layer);
+			}
 		}
 	});
 }
