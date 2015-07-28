@@ -1,10 +1,92 @@
-define( ['jquery', 'logger', 'backbone', 'map/map', 'map/widget/layers', 'text!account/template/wmsManagerContent.html', 'text!account/template/wmsSearchPopupContent.html', "highchecktree"], 
-		function($, Logger, Backbone, Map, LayersWiget, wmsManager_template, wmsSearchPopup_template) {
+define( ['jquery', 'logger', 'backbone', 'configuration', 'map/map', 'userPrefs', 'text!account/template/wmsManagerContent.html', 'text!account/template/wmsSearchPopupContent.html', "highchecktree"], 
+		function($, Logger, Backbone, Configuration, Map, UserPrefs, wmsManager_template, wmsSearchPopup_template) {
 
 /**
  *	Private module variables
  */
 var $openedPopup;
+
+/**
+ *	OVER UGLY METHOD to make delete action on the object for the given key=value
+ */
+var nestedOp = function(theObject, key, value, action) {
+    var result = null;
+    if(theObject instanceof Array) {
+        for(var i = 0; i < theObject.length && result == null; i++) {
+            result = nestedOp(theObject[i], key, value, action);
+        }
+
+        // Remove the object from the array
+        if ( result && action == "delete" ) {
+        	theObject = theObject.splice(i-1, 1);
+        	result = false;
+        }
+    }
+    else
+    {
+        for(var prop in theObject) {
+
+            if (result != null)
+                break;
+
+            if(prop == key && theObject[prop] == value) {
+				if ( action == "delete" ) {
+					console.log("Deleting " + prop + ': ' + theObject[prop]);
+					theObject["toto"] = "YEAAAAAAH";
+					theObject = undefined;
+					return true;
+				}
+
+				if ( action == "get" ) {
+				    console.log(prop + ': ' + theObject[prop]);
+				    return theObject;
+				}
+            }
+
+            if(theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
+                result = nestedOp(theObject[prop], key, value, action);
+            }
+        }
+    }
+    return result;
+}
+
+// var findObjectById = function(root, prop, value, action) {
+//     if (root.nestedLayers) {
+//     	for ( var i=root.nestedLayers.length-1; i>=0; i-- ) {
+//     		var nLayer = root.nestedLayers[i];
+//     		for ( var key in nLayer ) {
+//     			if ( key == prop && nLayer[key] == value ) {
+//     				if ( action == "fetch" ) {
+//     					console.log("Fetching : ");
+//     					return nLayer;
+//     				} else {
+//     					console.log("Deleting : " + key);
+//     					delete nLayer;
+//     					break;
+//     				}
+//     			} else if ( key == "nestedLayers" ) {
+//     				return findObjectById( nLayer.nestedLayers, prop, value, action );
+//     			}
+//     		}
+//     	}
+//         // for (var k in root.nestedLayers) {
+//         //     if (root.nestedLayers[k][prop] == value) {
+//         //         if(action=="fetch") {
+//         //           return root.nestedLayers[k]; 
+//         //         }
+//         //         else 
+//         //         {
+//         //         	console.log("Deleting " + k);
+//         //            delete root.nestedLayers[k];
+//         //         }
+//         //     }
+//         //     else if (root.nestedLayers[k].nestedLayers.length) {
+//         //         return findObjectById(root.nestedLayers[k], prop, value, action);
+//         //     }
+//         // }
+//     }
+// }
 
 /**
  * Callback called when a layer is checked
@@ -148,6 +230,12 @@ var addToTrees = function($trees, baseUrl, data) {
 			if ( layer ) {
 				Map.removeLayer(layer);
 			}
+
+			var parentName = $li.closest('.checktree').find(' > li').attr("rel");
+			var wmsLayers = JSON.parse(UserPrefs.get("WMSLayers") || "[]");
+			var parentLayer = _.findWhere(wmsLayers, { name: parentName });
+			nestedOp(parentLayer.data, "title", $li.attr("rel"), "delete");
+			UserPrefs.save("WMSLayers", JSON.stringify(wmsLayers));
 		}
 	});
 };
@@ -194,20 +282,27 @@ var WmsManagerView = Backbone.View.extend({
 			if ( baseUrl != "" ) {
 				$openedPopup.find(".status").hide();
 
-				if ( baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
-					// Single layer
-					var layer = createWmsLayerFromUrl(baseUrl);
-					// Override title by user defined
-					layer.title = $openedPopup.find("input[name='wmsLayerName']").val();
-					var item = buildItem(layer);
-					addToTrees(self.$el.find("#trees"), null, [item]);
+				var name = $openedPopup.find("input[name='wmsLayerName']").val();
 
-					$openedPopup.popup("close");
+				self.addWMSLayer( name, baseUrl, {
+					onError: function(message) {
+						$openedPopup.find(".status").show().html(message);
+					},
+					onSuccess: function(layer) {
+						// Update user prefereneces
+						var wmsLayers = JSON.parse(UserPrefs.get('WMSLayers') || "[]");
+						wmsLayers.push({
+							name: $openedPopup.find("input[name='wmsLayerName']").val(),
+							baseUrl: baseUrl,
+							data: layer
+						});
+						UserPrefs.save('WMSLayers', JSON.stringify(wmsLayers));
+						
+						$openedPopup.popup("close");
+					}
+				} );
 
-				} else {
-					// Capabilities
-					self.exploreCapabilities(baseUrl);
-				}
+
 			} else {
 				$openedPopup.find(".status").show().html("Please enter the mapserver url");
 			}
@@ -220,15 +315,44 @@ var WmsManagerView = Backbone.View.extend({
 	},
 
 	/**
+	 *	Add WMS layer to GUI
+	 */
+	addWMSLayer: function(name, baseUrl, options) {
+		if ( baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
+			// Single layer
+			var layer = createWmsLayerFromUrl(baseUrl);
+			// Override title by user defined
+			layer.title = name;
+			var item = buildItem(layer);
+			addToTrees(this.$el.find("#trees"), null, [item]);
+
+			if ( options && options.onSuccess )
+				options.onSuccess(layer);
+
+		} else {
+
+			if ( options ) {
+				// Show loading
+				$.mobile.loading("show",{
+					text: "Loading mapserver layers..",
+					textVisible: true
+				});
+				options.onComplete = function() {
+					$.mobile.loading("hide", {
+						textVisible: false
+					});
+				}
+			}
+
+			// Capabilities
+			this.exploreCapabilities(name, baseUrl, options);
+		}
+	},
+
+	/**
 	 *	Explore capabilities of the given baseUrl
 	 */
-	exploreCapabilities: function(baseUrl) {
-
-		// Show loading
-		$.mobile.loading("show",{
-			text: "Loading mapserver layers..",
-			textVisible: true
-		});
+	exploreCapabilities: function(name, baseUrl, options) {
 
 		var self = this;
 		// Launch search request to explore capabilities
@@ -246,7 +370,8 @@ var WmsManagerView = Backbone.View.extend({
 
 				var c = wmsCapabilitiesFormat.read(doc);
 				if (!c || !c.capability) {
-					$openedPopup.find(".status").show().html("Error while parsing capabilities");
+					if ( options && options.onError )
+						options.onError("Error while parsing capabilities");
 					return;
 				}
 
@@ -254,22 +379,23 @@ var WmsManagerView = Backbone.View.extend({
 
 				addToTrees(self.$el.find("#trees"), baseUrl, [{
 					item: {
-						id: $openedPopup.find("input[name='wmsLayerName']").val(),
-						label: $openedPopup.find("input[name='wmsLayerName']").val(),
+						id: name,
+						label: name,
 						checked: false
 					},
 					children: tree
 				}]);
-				$openedPopup.popup("close");
+
+				if ( options && options.onSuccess )
+					options.onSuccess(c.capability.nestedLayers);
 			},
 			error: function(r) {
-				$openedPopup.find(".status").show().html("Error while searching on " + baseUrl);
+				if ( options && options.onError )
+					options.onError("Error while searching on " + baseUrl);
 			},
 			complete: function() {
-				$.mobile.loading("hide", {
-					textVisible: false
-				});
-
+				if ( options && options.onComplete )
+					options.onComplete();
 			}
 		});
 	},
@@ -295,6 +421,28 @@ var WmsManagerView = Backbone.View.extend({
 			return layer.params.type == "WMS";
 		}));
 		addToTrees( this.$el.find("#trees"), null, data );
+
+		var self = this;
+		var wmsLayers = JSON.parse(UserPrefs.get("WMSLayers") || "[]");
+		_.each(wmsLayers, function(layer) {
+			// Check if layer contains data coming from GetCapabilities
+			if ( _.isArray(layer.data) ) {
+				var tree = buildHighCheckTreeData(layer.data)
+
+				addToTrees(self.$el.find("#trees"), layer.baseUrl, [{
+					item: {
+						id: layer.name,
+						label: layer.name,
+						checked: false
+					},
+					children: tree
+				}]);
+			} else {
+				// Ordinary wms layer
+				self.addWMSLayer( layer.name, layer.baseUrl );
+			}
+		});
+
 		this.$el.trigger('create');
 
 		return this;
