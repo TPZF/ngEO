@@ -1,7 +1,7 @@
 
 
 define( ['jquery', 'backbone', 'text!search/template/corrInterContent.html', 
-         'jqm-datebox-calbox', 'ui/dateRangeSlider'], 
+         'jqm-datebox', 'ui/dateRangeSlider'], 
 		function($, Backbone, corrInterContent_template) {
 
 /**

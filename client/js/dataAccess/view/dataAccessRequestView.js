@@ -132,6 +132,7 @@ var DataAccessRequestView = Backbone.View.extend({
 	
 		//after the download managers are retrieved
 		//if no download manager is already registered : propose a link to the user to install one
+		//if (this.model.attributes.downloadmanagers != 0) {
 		if (this.model.attributes.downloadmanagers == 0) {
 			
 			var installContent = _.template(downloadManagerInstall_template, { downloadManagerInstallationLink : Configuration.data.downloadManager.downloadManagerInstallationLink,

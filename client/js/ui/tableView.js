@@ -140,7 +140,7 @@ var TableView = Backbone.View.extend({
 					.on('change', 'input', function(event) {
 						// Get the column to change
 						var i = $(this).data('index');
-						self.columnDefs[i].visible = $(this).attr('checked');
+						self.columnDefs[i].visible = $(this).is(':checked');
 						
 						// Rebuild the table with the new columns
 						self.buildTable();
@@ -648,9 +648,9 @@ var TableView = Backbone.View.extend({
 	 */
 	renderFooter: function() {
 		var footer = $('<div class="ui-grid-a"></div>')
-			.append('<div class="table-filter ui-block-a"><label>Search: <input data-mini="true" type="text"></label><button data-mini="true" data-inline="true" id="table-columns-button">Columns</button></div>');
+			.append('<div class="table-filter ui-block-a"><div style="display: inline-block; width: 234px;" data-inline="true" data-role="fieldcontain"><label>Search: <input data-mini="true" type="text"></label></div><button data-mini="true" data-inline="true" id="table-columns-button">Columns</button></div>');
 							
-		var $buttonContainer = $('<div class="ui-block-b table-rightButtons"></div>').appendTo(footer);
+		var $buttonContainer = $('<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>').appendTo(footer).find("[data-role='fieldcontain']");
 		
 		if ( this.renderButtons )
 			this.renderButtons($buttonContainer);

@@ -1,14 +1,10 @@
 
 require.config({
      paths: {
-        "jquery": "externs/jquery-1.8.3",
-        //"jquery": "//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min",
-		"jquery.mobile": "externs/jquery.mobile-1.2.0",
-		//"jquery.mobile": "http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min",
-		//"jquery.mobile": "http://code.jquery.com/mobile/1.2.0/jquery.mobile-1.2.0.min",
-		"jqm-datebox-calbox" : "externs/jqm-datebox-1.1.0.mode.calbox",
-		"jqm-datebox-datebox" : "externs/jqm-datebox-1.1.0.mode.datebox",
-		"jqm-datebox-core" : "externs/jqm-datebox-1.1.0.core",
+        "jquery": "externs/jquery-1.11.1.min",
+		"jquery.mobile": "externs/jquery.mobile-1.3.2.min",
+        // "jquery.mobile": "http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min",
+        "jqm-datebox": "externs/jqm-datebox-1.4.0",
 		"jquery.dataTables" : "externs/jquery.dataTables",
 		"jquery.autocomplete": "externs/jquery.auto-complete",
 		//"jquery.easings": "externs/easings",
@@ -19,18 +15,8 @@ require.config({
    },
 	shim: {
         
-        'jqm-datebox-core' : {
-        	 deps: ['jquery', 'jquery.mobile'],
-             exports: 'jQuery'
-        },
-        
-        'jqm-datebox-calbox': {
-            deps: ['jqm-datebox-core'],
-            exports: 'jQuery'
-        },
-        
-        'jqm-datebox-datebox': {
-            deps: ['jqm-datebox-core'],
+        'jqm-datebox' : {
+            deps: ['jquery', 'jquery.mobile'],
             exports: 'jQuery'
         },
 
@@ -57,6 +43,11 @@ require( ["require", "jquery", "configuration", "ui/menubar", "ui/context-help",
 		
 /** Use a defered object for document ready */
 var doc_ready = $.Deferred();
+
+// Remove history to avoid popups refreshing the page on close (related to migration of jqm from 1.2 to 1.3)
+// For more details see: http://stackoverflow.com/questions/11907944/closing-jquery-mobile-new-popup-cause-page-to-refresh-uselessly
+// TODO: find better solution
+$.mobile.popup.prototype.options.history = false;
 
 /** When the document is ready and configuration is loaded load the rest of the application */
 $.when(doc_ready, Configuration.load())

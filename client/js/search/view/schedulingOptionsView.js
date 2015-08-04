@@ -1,6 +1,6 @@
 define( ['jquery', 'backbone', 'configuration',
          'text!search/template/schedulingOptions_template.html', 
-         "jqm-datebox-calbox"], 
+         "jqm-datebox"], 
 		function($, Backbone, Configuration, schedulingOptions_template) {
 
 	/**

@@ -1,4 +1,4 @@
-define( ['jquery', 'backbone', 'configuration', 'text!hostedProcesses/template/hostedProcessConfigurationContent.html', "jqm-datebox-calbox"], 
+define( ['jquery', 'backbone', 'configuration', 'text!hostedProcesses/template/hostedProcessConfigurationContent.html', "jqm-datebox"], 
 		function($, Backbone, Configuration, hostedProcess_template) {
 
 /**

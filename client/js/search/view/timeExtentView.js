@@ -1,7 +1,7 @@
 
 
 define( ['jquery', 'backbone', 'configuration', 'searchResults/model/searchResults', 'text!search/template/dateCriteriaContent.html', 
-         'jqm-datebox-calbox', 'ui/dateRangeSlider'], 
+         'jqm-datebox', 'ui/dateRangeSlider'], 
 		function($, Backbone , Configuration, SearchResults, dateCriteria_template) {
 
 	/**
