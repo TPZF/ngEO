@@ -1,10 +1,9 @@
 <label for="masterD">Master: </label>
 <select id="masterD" data-mini="true">
 <% _.each( model.datasetIds, function(datasetId) { %>
-<option value="<%= datasetId %>"><%= datasetId %></option>
+	<option value="<%= datasetId %>"><%= datasetId %></option>
 <% }); %>
 </select>
-
 
 <label for="spatialCover"><b>Minimum Overlap %: </b></label>
 <input type="number" id="spatialCover" data-mini="true" value="<%= model.get('spatialCover') %>"/>
@@ -24,7 +23,7 @@
 
 <% if ( model.get('mode') == "Interferometry" ) { %>
  	<fieldset data-role="controlgroup">
-		<legend>Absolute Baseline Difference (m):</legend>
+		<legend><b>Absolute Baseline Difference (m):</b></legend>
 		<div data-role="fieldcontain">
 			<label for="baseline_from">Min:</label>
 			<input name="baseline_from" id="baseline_from" value="<%= model.get('baseline')[0] %>" type="number" data-mini="true" data-highlight="true" />
@@ -35,11 +34,13 @@
 		</div>
 	</fieldset>
 	
-	<div data-role="fieldcontain">
-			<legend><b>Burst synchronization (%):</b></legend>
-			<label for="burstSync_from">Min:</label>
-			<input name="burstSync_from" id="burstSync_from" min="0" max="100" value="<%= model.get('burstSync')[0] %>" type="range" data-mini="true" data-highlight="true" />
-			<label for="burstSync_to">Max:</label>
-			<input name="burstSync_to" id="burstSync_to" min="0" max="100" value="<%= model.get('burstSync')[1] %>" type="range" data-mini="true" data-highlight="true" />
+	<div data-role="fieldcontain" class="ui-hide-label">
+		<legend><b>Burst Synchronization (%):</b></legend>
+		<div style="margin-top: 5px" data-role="rangeslider" data-highlight="true" data-mini="true">
+		    <label class="capitalize" for="burstSync_from" class="ui-hidden-accessible">Burst synchronization (%):</label>
+		    <input type="range" name="burstSync_from" id="burstSync_from" min="0" max="100" value="<%= model.get('burstSync')[0] %>">
+		    <label class="capitalize" for="burstSync_from">Burst synchronization (%):</label>
+		    <input type="range" name="burstSync_to" id="burstSync_to" min="0" max="100" value="<%= model.get('burstSync')[1] %>">
+		</div>
 	</div>
 <% } %>
