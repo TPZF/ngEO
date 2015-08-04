@@ -18,7 +18,7 @@ var nestedOp = function(theObject, key, value, action) {
 
         // Remove the object from the array
         if ( result && action == "delete" ) {
-        	theObject = theObject.splice(i-1, 1);
+        	theObject.splice(i-1, 1);
         	result = false;
         }
     }
@@ -234,7 +234,11 @@ var addToTrees = function($trees, baseUrl, data) {
 			var parentName = $li.closest('.checktree').find(' > li').attr("rel");
 			var wmsLayers = JSON.parse(UserPrefs.get("WMSLayers") || "[]");
 			var parentLayer = _.findWhere(wmsLayers, { name: parentName });
-			nestedOp(parentLayer.data, "title", $li.attr("rel"), "delete");
+			if ( $li.attr("rel") == parentLayer.name ) {
+				wmsLayers.splice( wmsLayers.indexOf(parentLayer), 1 );
+			} else {
+				nestedOp(parentLayer.data, "title", $li.attr("rel"), "delete");
+			}
 			UserPrefs.save("WMSLayers", JSON.stringify(wmsLayers));
 		}
 	});
