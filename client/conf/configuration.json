@@ -41,6 +41,8 @@
 		],
 		"directDownloadColumn" : 7
 	},
+
+	"proxyUrl": "http://localhost:3000/proxy?url=",
 	
 	"search": {
 		"geometryPrecision": 2,

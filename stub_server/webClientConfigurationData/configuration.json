@@ -74,6 +74,8 @@
 			"cseop_wrsLongitudeGrid"	    	:"Track"
 		}
 	},
+
+	"proxyUrl": "http://localhost:3000/proxy?url=",
 	
 	"searchResults": {
 		"countPerPage": 100
@@ -247,6 +249,14 @@
 			"featureType": "states",
 			"featureNS": "http://www.openplans.org/topp",
 			"visible": false
+		},{
+			"id" : "BlueMarble_TPZ_WMS",
+			"name": "Blue Marble (TPZ-WMS)",
+			"type": "WMS",
+			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+			"params": {
+				"layers": "BlueMarble"
+			}
 		}],
 		
 		"browseDisplay": {

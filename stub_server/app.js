@@ -24,7 +24,9 @@ var express = require('express')
   , http = require('http')
   , path = require('path')
   , httpProxy = require('http-proxy')
-  , proxy = require('./proxy');
+  , proxy = require('./proxy')
+  , expressProxy = require('express-http-proxy')
+  , url = require('url');
 
 var app = express();
 
@@ -114,7 +116,20 @@ app.post('/ngeo/userInquiry', function(req,res) {
 //download helper interface
 app.get(/\/ngeo\/downloadHelper.*/, downloadHelper);
 
+// Custom proxy
+app.get('/proxy', function(req,res) {
+  var parsed = url.parse(req.url.slice(req.url.indexOf("url=")+4));
+  if ( parsed.path && parsed.host ) {
+    req.url = parsed.path;
+    expressProxy(parsed.host)(req,res);
+  } else {
+	// TODO: handle better error case
+    res.send(500);
+  }
+});
+
 // Setup some proxy route (to have access to WFS or GeoRSS services)
+// TODO: use custom proxy instead
 proxy.setup(app,[{ 
 	'method': 'post',
 	'host': 'demo.boundlessgeo.com',
@@ -125,10 +140,36 @@ proxy.setup(app,[{
 	'host': 'earthquake.usgs.gov',
 	'pattern': '/demoFeed',
 	'replace': '/earthquakes/catalogs/eqs7day-M5.xml'
-}]);
+  }]);
 	
 var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
-//app.use('/wms2eos', wms2eosProxy);
+app.use('/wms2eos', wms2eosProxy);
+
+/*
+ * Didn't work actually due to TPZ firewall most likely, to be tested better..
+ * <!> Need to update the version of http-proxy to 1.x instead of 0.8.0 <!>
+ * 
+ */
+// Create a proxy server with custom application logic
+//
+// var p = httpProxy.createProxyServer({});
+
+// //
+// // Create your custom server and just call `proxy.web()` to proxy
+// // a web request to the target passed in the options
+// // also you can use `proxy.ws()` to proxy a websockets request
+// //
+// var proxyServer = http.createServer(function(req, res) {
+//   // You can define here your custom logic to handle the request
+//   // and then proxy the request.
+
+//   var url = req.url.slice(req.url.indexOf("url=")+4);
+//   p.web(req, res, {
+//     target: url,
+//     port: 80
+//   });
+// });
+// proxyServer.listen(5050);
 
 
 http.createServer(app).listen(app.get('port'), function(){

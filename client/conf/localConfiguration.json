@@ -95,6 +95,6 @@
 		"shopcart": "View all the available shopcarts",
 		"inquiries": "Inquiry form",
 		"userPrefs": "Lists the last selected dataset and background layer",
-		"wmsManager": "Manage WMS overlay layers"
+		"layerManager": "Manage overlay layers"
 	}
 }
