@@ -13,45 +13,70 @@ var backbroundWidget;
  * Function to change the background when selected
  */
 var changeBackground = function() {
-	var val = parseInt( $(this).val() );
-	Map.setBackgroundLayer( Map.backgroundLayers[val] );
+	var layer =	$(this).closest('fieldset').find('input[name="background-choice"]:checked').data("layer")
+	Map.setBackgroundLayer( layer );
 	backbroundWidget.ngeowidget("hide");
 };
 
-
-return function(dsa) {
+var BackgroundWidget = function(dsa) {
+	// Add the background widget to the data services area
+	dsa.append('<div id="backgroundWidget"/>');
 	
-		// Add the background widget to the data services area
-		dsa.append('<div id="backgroundWidget"/>');
-		
-		// Build background layers panel 
-		var content = $('<fieldset data-role="controlgroup"></fieldset>');
-		var bgLayers = Map.backgroundLayers;
-		for ( var i=0; i < bgLayers.length; i++ ) {
-			// Add label
-			var label = $('<label data-mini="true">' + bgLayers[i].name + '</label>')
-				.appendTo(content);
-			
-			// Add radio button
-			var input = $('<input id="' + bgLayers[i].id + '" type="radio" data-theme="c" name="background-choice" value="' + i + '" />')
-				.appendTo(label);
+	// Build background layers panel 
+	this.container = $('<fieldset data-role="controlgroup"></fieldset>');
+	var bgLayers = Map.backgroundLayers;
+	for ( var i=0; i < bgLayers.length; i++ ) {
+		this.buildHtml(bgLayers[i]);
+	}
 
-			// Install callback when radio is clicked
-			input.change(changeBackground);
-		}
-
-		backbroundWidget = $("#backgroundWidget")
-			.append(content).ngeowidget({
-			activator: '#background'
+	backbroundWidget = $("#backgroundWidget")
+		.append(this.container).ngeowidget({
+		activator: '#background'
+	});
+	
+	var self = this;
+	Map.on('backgroundLayerAdded', function(layer) {
+		self.buildHtml(layer);
+		$(backgroundWidget).trigger("create");
+	})
+	Map.on('backgroundLayerRemoved', function(layer) {
+		self.container.find('input').each( function() {
+			if ( $(this).data('layer') == layer ) {
+				$(this).parent().remove();
+			}
 		});
-		
-		//var escapedName =  Map.getBackgroundLayer().id.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]()=>\|])/g, '\\$1');
-		// Select the background used from the preferences unless select the first one
-		var selector = '#' + Map.getBackgroundLayer().id;
-		//check the background layer radio box 
-		$(dsa).find(selector).attr('checked', true).checkboxradio("refresh");
+		$(backgroundWidget).trigger('create');
+	});
+	Map.on('backgroundLayerSelected', function(layer) {
+		var input = _.find(self.container.find('input'), function(input) {
+			return $(input).data("layer") == layer;
+		});
+		$(input).attr("checked", "checked").checkboxradio("refresh");
+	});
 
-	};
+	// Select the background used from the preferences unless select the first one
+	var selector = '#' + Map.getBackgroundLayer().id;
+	//check the background layer radio box 
+	$(dsa).find(selector).attr('checked', 'checked').checkboxradio("refresh");
+};
+
+/**
+ *	Build the HTML for background layer
+ */
+BackgroundWidget.prototype.buildHtml = function(layer) {
+	
+	// Add radio button + attribute callback on change
+	var input = $('<input id="' + layer.id + '" type="radio" data-theme="c" name="background-choice" />')
+		.data("layer", layer)
+		.change(changeBackground);
+
+	// Build the label for input and add it to the group
+	$('<label data-mini="true">' + layer.name + '</label>')
+		.prepend(input)
+		.appendTo(this.container);
+};
+
+return BackgroundWidget
 
 });
 

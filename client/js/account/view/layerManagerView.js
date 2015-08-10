@@ -223,6 +223,9 @@ var addToTrees = function($trees, baseUrl, data) {
 			if ( node.item.layer ) {
 				$li.data("layer", node.item.layer);
 			}
+
+			// TODO: KML cannot be a background layer
+			//$li.find('.optionCheckbox')
 		},
 		onDeleteLi: function($li) {
 			var layer = $li.data("layer");
@@ -239,6 +242,27 @@ var addToTrees = function($trees, baseUrl, data) {
 				nestedOp(parentLayer.data, "title", $li.attr("rel"), "delete");
 			}
 			UserPrefs.save("userLayers", JSON.stringify(userLayers));
+		},
+		options: {
+			"isBackground": function($li, isChecked) {
+				console.log("Becomes background");
+				var layer = $li.data("layer");
+				var layerDesc = $li.data("layerDesc");
+				if ( layer ) {
+					if ( isChecked ) {
+						Map.removeLayer(layer);
+						layerDesc.isBackground = true;
+						$li.data("layer", Map.addLayer(layerDesc));
+					} else {
+						Map.removeLayer(layer);
+						layerDesc.isBackground = undefined;
+						$li.data("layer", Map.addLayer(layerDesc));
+					}
+					$li.data("layerDesc", layerDesc);
+				} else {
+					console.warn("NO LAYER BUILDED");
+				}
+			}
 		}
 	});
 };

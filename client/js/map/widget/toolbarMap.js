@@ -12,7 +12,7 @@ return function (dsa) {
 		activator: '#layers'
 	});
 
-	BackgroundWidget(dsa);
+	new BackgroundWidget(dsa);
 	
 	$("#zoomIn").click( function() { Map.zoomIn(); } );
 	$("#zoomOut").click( function() { Map.zoomOut(); } );

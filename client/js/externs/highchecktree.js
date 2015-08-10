@@ -30,17 +30,18 @@
             onLabelHoverOver: null,// an event will be triggered when mouse hover over the label
             onLabelHoverOut: null,  // an event will be triggered when mouse hover out the label
             onAddLi: null,           // an event will be triggered when li is added
-            onDeleteLi: null          // an event will be triggered when li must be deleted
+            onDeleteLi: null,       // an event will be triggered when li must be deleted
+            options: {}             // Option checkboxes buttons
         }, settings);
 
         var container = $(this), $tree = this;
 
         //get children html tag string
         function getChildrenHtml(treesdata, result){
-            var len = treesdata.length, node, clen, arrowClass, checkedClass = ''
+            var len = treesdata.length, clen, arrowClass, checkedClass = '',
                         checkedChildren;
-            for(i = 0; i < len; i++){
-                node = treesdata[i];
+            $.each(treesdata, function(index, node) {//for(i = 0; i < len; i++){
+               
                 $.data($tree, node.item.id, node); //attach node data to node id
                 clen = node.children ? node.children.length : 0;
                 arrowClass = 'collapsed';
@@ -54,12 +55,35 @@
                     checkClass = checkedChildren.length === 0 ? '' : checkedChildren.length === clen ? 'checked' : 'half_checked'; 
                 }
 
-                var $li = $('<li rel="' + node.item.id + '"><div class="arrow ' + arrowClass + '"></div><div class="checkbox ' + checkClass + '"></div><label>' + 
-                            node.item.label + '</label><div style="display: none;" class="delete"></div></li>').appendTo(result);
+                var liContent = '<li rel="' + node.item.id + '">\
+                                    <div class="arrow ' + arrowClass + '"></div>\
+                                    <div id="baseCheckbox" class="checkbox ' + checkClass + '"></div>\
+                                    <label>' + node.item.label + '</label>\
+                                    <div style="display: none;" class="delete"></div>\
+                                    <div style="position: absolute; left: 500px;" class="options"></div>\
+                                </li>';
+
+                var $li = $(liContent).appendTo(result);
+
+                var $options = $li.find(".options");
+                for ( var x in settings.options ) {
+                    var optionCallback = settings.options[x];
+                    // var flip = '<select class="optionCheckbox" style="display: none;" name="flip-mini" style="width: 10em;" id="flip-mini" data-role="slider" data-mini="true">\
+                    //     <option value="off">Overlay</option>\
+                    //     <option value="on">Background</option>\
+                    // </select>';
+                    //$(flip).appendTo($options)
+                    $('<div style="display:none;" class="checkbox optionCheckbox"></div>').appendTo($options)
+                        .on('selectchange', function(event) {
+                            optionCallback($li, $(this).hasClass('checked'));
+                        });
+
+                }
+
                 if ( settings.onAddLi ) {
                     settings.onAddLi( $li, node );
                 }
-            }
+            });
         }
 
         //display children node with data source
@@ -81,7 +105,7 @@
         })();
         
          //bind select change to checkbox
-        container.off('selectchange', '.checkbox').on('selectchange', '.checkbox', function () {
+        container.off('selectchange', '#baseCheckbox').on('selectchange', '#baseCheckbox', function () {
             var $li = $(this).closest("li");
             if (settings.onPreCheck) {
                 if (!settings.onPreCheck($li)) {
@@ -90,7 +114,7 @@
             }
 
             var dataSource = $.data($tree, $li.attr('rel'));
-            var $all = $(this).siblings('ul').find('.checkbox');
+            var $all = $(this).siblings('ul').find('#baseCheckbox');
             var $checked = $all.filter('.checked');
 
             //all children checked
@@ -146,7 +170,7 @@
             }
 
             // Remove all childs
-            $(this).siblings('ul').find('.checkbox.checked').each(function () {
+            $(this).siblings('ul').find('#baseCheckbox.checked').each(function () {
                 var $subli = $(this).closest("li");
                 if (settings.onDeleteLi) {
                     settings.onDeleteLi($subli, false);
@@ -187,9 +211,14 @@
                 }
             }
         });
+    
+        container.off('click', '.optionCheckbox').on('click', '.optionCheckbox', function() {
+            $(this).removeClass('half_checked').toggleClass('checked');
+            $(this).trigger('selectchange');
+        });
 
         //check and uncheck node
-        container.off('click', '.checkbox').on('click', '.checkbox', function () {
+        container.off('click', '#baseCheckbox').on('click', '#baseCheckbox', function () {
             var $li = $(this).closest("li");
             var dataSource = $.data($tree, $li.attr('rel'));
             if (!$li.hasClass('updated')) {
@@ -209,8 +238,9 @@
                 if (settings.onCheck) {
                     settings.onCheck($li, true);
                 }
+                $li.find('.optionCheckbox').show();
 
-                $(this).siblings('ul').find('.checkbox').not('.checked').removeClass('half_checked').addClass('checked').each(function () {
+                $(this).siblings('ul').find('#baseCheckbox').not('.checked').removeClass('half_checked').addClass('checked').each(function () {
                     var $subli = $(this).closest("li");
                     $.data($tree, $subli.attr('rel')).item.checked = true;
                     if (settings.onCheck) {
@@ -222,8 +252,9 @@
                 if (settings.onUnCheck) {
                     settings.onUnCheck($li, true);
                 }
+                $li.find('.optionCheckbox').hide();
 
-                $(this).siblings('ul').find('.checkbox').filter('.checked').removeClass('half_checked').removeClass('checked').each(function () {
+                $(this).siblings('ul').find('#baseCheckbox').filter('.checked').removeClass('half_checked').removeClass('checked').each(function () {
                     var $subli = $(this).closest("li");
                     $.data($tree, $subli.attr('rel')).item.checked = false;
                     if (settings.onUnCheck) {
@@ -232,12 +263,12 @@
                 });
             }
 
-            $(this).parents('ul').siblings('.checkbox').trigger('selectchange');
+            $(this).parents('ul').siblings('#baseCheckbox').trigger('selectchange');
         });
 
         //click label also trigger check action
         container.off('click', 'label').on('click', 'label', function () {
-            $(this).prev('.checkbox').trigger('click');
+            $(this).prev('#baseCheckbox').trigger('click');
         });
 
         container.off('mouseenter', 'label').on('mouseenter', 'label', function(){

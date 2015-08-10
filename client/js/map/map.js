@@ -305,6 +305,7 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 			// Set the active background
 			mapEngine.setBackgroundLayer(layer);
 			UserPrefs.save('Background', layer.id);
+			this.trigger('backgroundLayerSelected', layer);
 		},
 		
 		/** get the selected background layer */
@@ -319,9 +320,13 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		 */
 		addLayer: function(params) {
 			var layer = buildLayer(params);			
-			if ( layer ) {
+			if ( !layer.params.isBackground ) {
 				self.layers.push( layer );
-				self.trigger('layerAdded',layer);
+				self.trigger('layerAdded', layer);
+				//console.log(layer.engineLayer.id + " added");
+			} else {
+				self.backgroundLayers.push(params);
+				self.trigger('backgroundLayerAdded', params);
 			}
 			
 			return layer;
@@ -333,20 +338,34 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 		 * @param layer The layer (as returned by addLayer)
 		 */
 		removeLayer: function(layer) {
-			var index = self.layers.indexOf(layer);
-			if ( index >= 0 ) {
-				if (layer.clear) {
-					layer.clear();
+			if ( !layer.params.isBackground ) {
+				//console.log("Try to remove" + layer.engineLayer.id);
+				var index = self.layers.indexOf(layer);
+				if ( index >= 0 ) {
+					if (layer.clear) {
+						layer.clear();
+					}
+					if (layer.engineLayer) {
+						mapEngine.removeLayer(layer.engineLayer);
+					}
+					self.layers.splice( index, 1 );
+					self.trigger('layerRemoved', layer);
+					return true;
 				}
-				if (layer.engineLayer) {
-					mapEngine.removeLayer(layer.engineLayer);
-				}
-				self.layers.splice( index, 1 );
-				self.trigger('layerRemoved',layer);
-				return true;
 			} else {
-				return false;
+				var index = self.backgroundLayers.indexOf(layer.params);
+				if ( index >= 0 ) {
+					self.backgroundLayers.splice(index, 1);
+					self.trigger('backgroundLayerRemoved', layer.params);
+					
+					// Check first one by default
+					if ( backgroundLayer == layer.params ) {
+						self.setBackgroundLayer( self.backgroundLayers[0] );
+					}
+				}
+				return true;
 			}
+			return false;
 		},	
 				
 		zoomIn: function() {
