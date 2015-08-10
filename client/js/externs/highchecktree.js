@@ -75,20 +75,20 @@
 
         //initialize the check tree with the input data
         (function initalCheckTree() {
-            var $treesHtml = $('<ul class="checktree">');
+            var $treesHtml = $('<ul style="position: relative" class="checktree">');
             getChildrenHtml(settings.data, $treesHtml);
             container.empty().append($treesHtml);
         })();
         
          //bind select change to checkbox
         container.off('selectchange', '.checkbox').on('selectchange', '.checkbox', function () {
+            var $li = $(this).closest("li");
             if (settings.onPreCheck) {
-                if (!settings.onPreCheck($(this).parent())) {
+                if (!settings.onPreCheck($li)) {
                     return;
                 }
             }
 
-            var $li = $(this).parent();
             var dataSource = $.data($tree, $li.attr('rel'));
             var $all = $(this).siblings('ul').find('.checkbox');
             var $checked = $all.filter('.checked');
@@ -127,7 +127,7 @@
             }
 
             $(event.target).find(' > .delete').show().end()
-            $(event.target).parent().not('.checktree').siblings('.delete').hide();
+            $(event.target).closest("ul").not('.checktree').siblings('.delete').hide();
         });
 
         container.off('mouseleave', 'li').on('mouseleave', 'li', function(event) {
@@ -140,14 +140,14 @@
         //delete node
         container.off('click', '.delete').on('click', '.delete', function () {
             console.log($(event.target).attr('rel'));
-            var $li = $(this).parent();           
+            var $li = $(this).closest("li");           
             if ( settings.onDeleteLi ) {
                 settings.onDeleteLi($li, false);
             }
 
             // Remove all childs
             $(this).siblings('ul').find('.checkbox.checked').each(function () {
-                var $subli = $(this).parent();
+                var $subli = $(this).closest("li");
                 if (settings.onDeleteLi) {
                     settings.onDeleteLi($subli, false);
                 }
@@ -165,7 +165,7 @@
                 return;
             }
 
-            var $li = $(this).parent();
+            var $li = $(this).closest("li");
             if (!$li.hasClass('updated')) {
                 updateChildrenNodes($li, $.data($tree, $li.attr('rel')), true);
                 $(this).removeClass('collapsed').addClass('expanded');
@@ -190,7 +190,7 @@
 
         //check and uncheck node
         container.off('click', '.checkbox').on('click', '.checkbox', function () {
-            var $li = $(this).parent();
+            var $li = $(this).closest("li");
             var dataSource = $.data($tree, $li.attr('rel'));
             if (!$li.hasClass('updated')) {
                 updateChildrenNodes($li, dataSource, false);
@@ -211,7 +211,7 @@
                 }
 
                 $(this).siblings('ul').find('.checkbox').not('.checked').removeClass('half_checked').addClass('checked').each(function () {
-                    var $subli = $(this).parent();
+                    var $subli = $(this).closest("li");
                     $.data($tree, $subli.attr('rel')).item.checked = true;
                     if (settings.onCheck) {
                         settings.onCheck($subli, false);
@@ -224,7 +224,7 @@
                 }
 
                 $(this).siblings('ul').find('.checkbox').filter('.checked').removeClass('half_checked').removeClass('checked').each(function () {
-                    var $subli = $(this).parent();
+                    var $subli = $(this).closest("li");
                     $.data($tree, $subli.attr('rel')).item.checked = false;
                     if (settings.onUnCheck) {
                         settings.onUnCheck($subli, false);
@@ -242,14 +242,14 @@
 
         container.off('mouseenter', 'label').on('mouseenter', 'label', function(){
             $(this).addClass("hover");
-            if (settings.onLabelHoverOver) settings.onLabelHoverOver($(this).parent());
+            if (settings.onLabelHoverOver) settings.onLabelHoverOver($(this).closest("li"));
             // HACK: mouseover doesn't always fires on li element when passing by label..
             $(event.target).siblings('.delete').show();
         });
 
          container.off('mouseleave', 'label').on('mouseleave', 'label', function(event){
             $(this).removeClass("hover");
-            if (settings.onLabelHoverOut) settings.onLabelHoverOut($(this).parent());
+            if (settings.onLabelHoverOut) settings.onLabelHoverOut($(this).closest("li"));
 
             // HACK: mouseleave doesn't always fires on li element when passing by label..
             $(event.target).siblings('.delete').hide();
