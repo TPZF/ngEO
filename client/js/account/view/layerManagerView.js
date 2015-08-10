@@ -1,5 +1,5 @@
-define( ['jquery', 'logger', 'backbone', 'configuration', 'map/map', 'userPrefs', 'text!account/template/layerManagerContent.html', 'text!account/template/wmsSearchPopupContent.html', "highchecktree"], 
-		function($, Logger, Backbone, Configuration, Map, UserPrefs, layerManager_template, wmsSearchPopup_template) {
+define( ['jquery', 'logger', 'backbone', 'configuration', 'map/map', 'userPrefs', 'text!account/template/layerManagerContent.html', 'text!account/template/layerSearchPopupContent.html', "highchecktree"], 
+		function($, Logger, Backbone, Configuration, Map, UserPrefs, layerManager_template, layerSearchPopup_template) {
 
 /**
  *	Private module variables
@@ -231,14 +231,14 @@ var addToTrees = function($trees, baseUrl, data) {
 			}
 
 			var parentName = $li.closest('.checktree').find(' > li').attr("rel");
-			var wmsLayers = JSON.parse(UserPrefs.get("WMSLayers") || "[]");
-			var parentLayer = _.findWhere(wmsLayers, { name: parentName });
+			var userLayers = JSON.parse(UserPrefs.get("userLayers") || "[]");
+			var parentLayer = _.findWhere(userLayers, { name: parentName });
 			if ( $li.attr("rel") == parentLayer.name ) {
-				wmsLayers.splice( wmsLayers.indexOf(parentLayer), 1 );
+				userLayers.splice( userLayers.indexOf(parentLayer), 1 );
 			} else {
 				nestedOp(parentLayer.data, "title", $li.attr("rel"), "delete");
 			}
-			UserPrefs.save("WMSLayers", JSON.stringify(wmsLayers));
+			UserPrefs.save("userLayers", JSON.stringify(userLayers));
 		}
 	});
 };
@@ -249,16 +249,17 @@ var addToTrees = function($trees, baseUrl, data) {
 var LayerManagerView = Backbone.View.extend({
 		
 	events :{
-		'click #searchWms' : 'searchWms',
+		'click #addLayer' : 'addLayer',
 	},
 
 	/**
-	 *	Search wms mapserver layers or specific layer
+	 *	Add user defined layer to map
+	 *	Could be: wms mapserver url, wms url of specific layer or url to KML layer
 	 */
-	searchWms: function(event){
+	addLayer: function(event){
 
 		// Create dynamic popup
-		$openedPopup = $(wmsSearchPopup_template).appendTo('.ui-page-active');
+		$openedPopup = $(layerSearchPopup_template).appendTo('.ui-page-active');
 		$openedPopup.popup()
 			.bind("popupafterclose", function(){
 				$(this).remove();
@@ -282,13 +283,13 @@ var LayerManagerView = Backbone.View.extend({
 
 			// KML
 			// baseUrl = "http://quakes.bgs.ac.uk/earthquakes/recent_world_events.kml"
-			baseUrl = $openedPopup.find("input[name='wmsUrl']").val();
+			baseUrl = $openedPopup.find("input[name='layerUrl']").val();
 
 			if ( baseUrl != "" ) {
 
 				$openedPopup.find(".status").hide();
 
-				var name = $openedPopup.find("input[name='wmsLayerName']").val();
+				var name = $openedPopup.find("input[name='layerName']").val();
 
 				if ( baseUrl.endsWith(".kml") ) {
 					// KML
@@ -311,13 +312,14 @@ var LayerManagerView = Backbone.View.extend({
 						},
 						onSuccess: function(layer) {
 							// Update user prefereneces
-							var wmsLayers = JSON.parse(UserPrefs.get('WMSLayers') || "[]");
-							wmsLayers.push({
-								name: $openedPopup.find("input[name='wmsLayerName']").val(),
+							var userLayers = JSON.parse(UserPrefs.get('userLayers') || "[]");
+							userLayers.push({
+								name: $openedPopup.find("input[name='layerName']").val(),
 								baseUrl: baseUrl,
 								data: layer
 							});
-							UserPrefs.save('WMSLayers', JSON.stringify(wmsLayers));
+							
+							UserPrefs.save('userLayers', JSON.stringify(userLayers));
 							
 							$openedPopup.popup("close");
 						}
@@ -432,22 +434,15 @@ var LayerManagerView = Backbone.View.extend({
 			'left':Math.abs((($(window).width() - $(element).outerWidth()) / 2) + $(window).scrollLeft())
 		});
 	},
-	
+
 	/**
-	 *	Render
+	 *	Add user layers
+	 *	Currently method use local storage, in long term in must be something more appropriated
 	 */
-	render: function(){
-		
-		this.$el.append(layerManager_template);
-
-		var data = buildHighCheckTreeData(_.filter(Map.layers, function(layer){
-			return layer.params.type == "WMS";
-		}));
-		addToTrees( this.$el.find("#trees"), null, data );
-
+	addUserLayers: function() {
 		var self = this;
-		var wmsLayers = JSON.parse(UserPrefs.get("WMSLayers") || "[]");
-		_.each(wmsLayers, function(layer) {
+		var userLayers = JSON.parse(UserPrefs.get("userLayers") || "[]");
+		_.each(userLayers, function(layer) {
 			// Check if layer contains data coming from GetCapabilities
 			if ( _.isArray(layer.data) ) {
 				var tree = buildHighCheckTreeData(layer.data)
@@ -461,10 +456,26 @@ var LayerManagerView = Backbone.View.extend({
 					children: tree
 				}]);
 			} else {
-				// Ordinary wms layer
+				// Ordinary WMS layer
 				self.addWMSLayer( layer.name, layer.baseUrl );
 			}
 		});
+	},
+	
+	/**
+	 *	Render
+	 */
+	render: function(){
+		
+		this.$el.append(layerManager_template);
+
+		// Add WMS/KML layers coming from configuration to GUI
+		var data = buildHighCheckTreeData(_.filter(Map.layers, function(layer){
+			return layer.params.type == "WMS" || layer.params.type == "KML";
+		}));
+		addToTrees( this.$el.find("#trees"), null, data );
+
+		this.addUserLayers();
 
 		this.$el.trigger('create');
 
