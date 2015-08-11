@@ -208,6 +208,10 @@ var addToTrees = function($trees, baseUrl, data) {
 				// Store on $li to be able to remove later
 				$li.data("layer", Map.addLayer(layerDesc) );
 				
+				// KML layers cannot be used as background
+				if ( layerDesc.type == "KML" ) {
+					$li.find("> .options").remove(); // A little bit radical..
+				}
 			}
 		},
 		onUnCheck: function($li) {
@@ -223,9 +227,6 @@ var addToTrees = function($trees, baseUrl, data) {
 			if ( node.item.layer ) {
 				$li.data("layer", node.item.layer);
 			}
-
-			// TODO: KML cannot be a background layer
-			//$li.find('.optionCheckbox')
 		},
 		onDeleteLi: function($li) {
 			var layer = $li.data("layer");
