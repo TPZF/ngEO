@@ -60,24 +60,27 @@
                                     <div id="baseCheckbox" class="checkbox ' + checkClass + '"></div>\
                                     <label>' + node.item.label + '</label>\
                                     <div style="display: none;" class="delete"></div>\
-                                    <div style="position: absolute; left: 500px;" class="options"></div>\
+                                    <div style="display: none; position: absolute; left: 500px;" class="options"></div>\
                                 </li>';
 
                 var $li = $(liContent).appendTo(result);
 
                 var $options = $li.find(".options");
-                for ( var x in settings.options ) {
-                    var optionCallback = settings.options[x];
-                    // var flip = '<select class="optionCheckbox" style="display: none;" name="flip-mini" style="width: 10em;" id="flip-mini" data-role="slider" data-mini="true">\
-                    //     <option value="off">Overlay</option>\
-                    //     <option value="on">Background</option>\
-                    // </select>';
-                    //$(flip).appendTo($options)
-                    $('<div style="display:none;" class="checkbox optionCheckbox"></div>').appendTo($options)
-                        .on('selectchange', function(event) {
-                            optionCallback($li, $(this).hasClass('checked'));
+                for ( var optionName in settings.options ) {
+                    var optionCallback = settings.options[optionName];
+                    //$('<div style="display:none;" class="checkbox optionCheckbox"></div>').appendTo($options)
+                    // TODO: Replace hardcoded Overlay/background by configurable options
+                    $('<div class="optionCheckbox">\
+                        <input data-role="none" id="switch_'+ optionName +"-"+ node.item.id.replace(/ /g,"-") +'" type="checkbox" name="switch1" class="switch" />\
+                        <label for="switch_'+ optionName +"-"+ node.item.id.replace(/ /g,"-") +'" >Overlay<label>\
+                    </div>').appendTo($options)
+                        .find('input').change(function(){
+                            var isChecked = $(this).is(":checked");
+                            $(this).next('label').html( isChecked ? 'Background' : 'Overlay' );
+                            optionCallback($li, isChecked);
                         });
 
+                    $(container).trigger('create');
                 }
 
                 if ( settings.onAddLi ) {
@@ -212,10 +215,10 @@
             }
         });
     
-        container.off('click', '.optionCheckbox').on('click', '.optionCheckbox', function() {
-            $(this).removeClass('half_checked').toggleClass('checked');
-            $(this).trigger('selectchange');
-        });
+        // container.off('click', '.optionCheckbox').on('click', '.optionCheckbox', function() {
+        //     $(this).removeClass('half_checked').toggleClass('checked');
+        //     $(this).trigger('selectchange');
+        // });
 
         //check and uncheck node
         container.off('click', '#baseCheckbox').on('click', '#baseCheckbox', function () {
@@ -238,7 +241,8 @@
                 if (settings.onCheck) {
                     settings.onCheck($li, true);
                 }
-                $li.find('.optionCheckbox').show();
+                if ( $li.data("layer") )
+                    $li.find('> .options').fadeIn();
 
                 $(this).siblings('ul').find('#baseCheckbox').not('.checked').removeClass('half_checked').addClass('checked').each(function () {
                     var $subli = $(this).closest("li");
@@ -246,13 +250,15 @@
                     if (settings.onCheck) {
                         settings.onCheck($subli, false);
                     }
+                    if ( $subli.data("layer") )
+                        $subli.find('.options').fadeIn();
                 });
             } else {
                 dataSource.item.checked = false;
                 if (settings.onUnCheck) {
                     settings.onUnCheck($li, true);
                 }
-                $li.find('.optionCheckbox').hide();
+                $li.find('.options').fadeOut();
 
                 $(this).siblings('ul').find('#baseCheckbox').filter('.checked').removeClass('half_checked').removeClass('checked').each(function () {
                     var $subli = $(this).closest("li");

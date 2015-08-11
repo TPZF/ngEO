@@ -1,0 +1,65 @@
+// Hide the original checkbox
+input.switch:empty
+{
+    margin-left: -999px;
+}
+
+input.switch:empty + label
+{
+  position: relative;
+  float: left;
+  line-height: 0.2em;
+  text-indent: 2em;
+  margin: 0.1em 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+// Insert before/after elements to create new checkbox
+//  before: container
+//  after: inner "ball"
+input.switch:empty + label:before, 
+input.switch:empty + label:after
+{
+  position: absolute;
+  display: block;
+  height: 0.9em;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  content: ' ';
+  width: 1.6em;
+  //background-color: #335ECC;
+  background-color: #438ABA;
+  border-radius: 0.3em;
+  box-shadow: inset 0 0.2em 0 rgba(0,0,0,0.3);
+  -webkit-transition: all 100ms ease-in;
+  transition: all 100ms ease-in;
+}
+
+// Switch button
+input.switch:empty + label:after
+{
+  width: 0.55em;
+  top: 0.15em;
+  height: 0.55em;
+  bottom: 0.1em;
+  margin-left: 0.15em;
+  background-color: #fff;
+  border-radius: 0.3em;
+  box-shadow: inset 0 -0.2em 0 rgba(0,0,0,0.2);
+}
+
+input.switch:checked + label:before
+{
+    //background-color: #393;
+}
+
+// Move check "ball" to right on checked
+input.switch:checked + label:after
+{
+     margin-left: 0.96em;
+}

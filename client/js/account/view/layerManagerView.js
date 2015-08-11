@@ -245,15 +245,16 @@ var addToTrees = function($trees, baseUrl, data) {
 		},
 		options: {
 			"isBackground": function($li, isChecked) {
-				console.log("Becomes background");
 				var layer = $li.data("layer");
 				var layerDesc = $li.data("layerDesc");
 				if ( layer ) {
 					if ( isChecked ) {
+						console.log("Becomes background");
 						Map.removeLayer(layer);
 						layerDesc.isBackground = true;
 						$li.data("layer", Map.addLayer(layerDesc));
 					} else {
+						console.log("Becomes overlay");
 						Map.removeLayer(layer);
 						layerDesc.isBackground = undefined;
 						$li.data("layer", Map.addLayer(layerDesc));
