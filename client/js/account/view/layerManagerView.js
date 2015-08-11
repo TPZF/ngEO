@@ -265,12 +265,27 @@ var addToTrees = function($trees, baseUrl, data) {
 						console.warn("NO LAYER BUILDED");
 					}
 				},
-				labelOn: "Overlay",
-				labelOff: "Background",
+				labelOn: "Background",
+				labelOff: "Overlay",
 				type: "switch"
 			}
 		}
 	});
+};
+
+/**
+ *	Save layer to user prefs
+ */
+var saveLayer = function(layer, name, baseUrl) {
+	// Update user prefereneces
+	var userLayers = JSON.parse(UserPrefs.get('userLayers') || "[]");
+	userLayers.push({
+		name: name,
+		baseUrl: baseUrl,
+		data: layer
+	});
+	
+	UserPrefs.save('userLayers', JSON.stringify(userLayers));
 };
 
 /**
@@ -279,14 +294,14 @@ var addToTrees = function($trees, baseUrl, data) {
 var LayerManagerView = Backbone.View.extend({
 		
 	events :{
-		'click #addLayer' : 'addLayer',
+		'click #addLayer' : 'onAdd',
 	},
 
 	/**
-	 *	Add user defined layer to map
+	 *	Open popup to add layer to map
 	 *	Could be: wms mapserver url, wms url of specific layer or url to KML layer
 	 */
-	addLayer: function(event){
+	onAdd: function(event){
 
 		// Create dynamic popup
 		$openedPopup = $(layerSearchPopup_template).appendTo('.ui-page-active');
@@ -318,45 +333,20 @@ var LayerManagerView = Backbone.View.extend({
 			if ( baseUrl != "" ) {
 
 				$openedPopup.find(".status").hide();
-
 				var name = $openedPopup.find("input[name='layerName']").val();
-
-				if ( baseUrl.endsWith(".kml") ) {
-					// KML
-					var kmlDesc = {
-						// Use proxy URL to avoid CORS problem
-						location: Configuration.get("proxyUrl") + baseUrl,
-						name: name,
-						type: "KML",
-						visible: true
-					};
-					var item = buildItem(kmlDesc);
-					addToTrees(self.$el.find("#trees"), null, [item]);
-					$openedPopup.popup("close");
-
-				} else {
-					// WMS
-					self.addWMSLayer( name, baseUrl, {
-						onError: function(message) {
-							$openedPopup.find(".status").show().html(message);
-						},
-						onSuccess: function(layer) {
-							// Update user prefereneces
-							var userLayers = JSON.parse(UserPrefs.get('userLayers') || "[]");
-							userLayers.push({
-								name: $openedPopup.find("input[name='layerName']").val(),
-								baseUrl: baseUrl,
-								data: layer
-							});
-							
-							UserPrefs.save('userLayers', JSON.stringify(userLayers));
-							
-							$openedPopup.popup("close");
-						}
-					} );
-				}
-
-
+				var layer = {
+					name: name,
+					baseUrl: baseUrl
+				};
+				self.addLayer( layer, {
+					onError: function(message) {
+						$openedPopup.find(".status").show().html(message);
+					},
+					onSuccess: function(layer) {
+						saveLayer(layer, name, baseUrl);
+						$openedPopup.popup("close");
+					}
+				});
 
 			} else {
 				$openedPopup.find(".status").show().html("Please enter the mapserver or KML url");
@@ -370,14 +360,30 @@ var LayerManagerView = Backbone.View.extend({
 	},
 
 	/**
-	 *	Add WMS layer to GUI
+	 *	Add WMS/KML layer to GUI
 	 */
-	addWMSLayer: function(name, baseUrl, options) {
-		if ( baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
-			// Single layer
-			var layer = createWmsLayerFromUrl(baseUrl);
+	addLayer: function(layer, options) {
+		if ( layer.baseUrl.endsWith(".kml") ) {
+			// KML
+			var kmlDesc = {
+				// Use proxy URL to avoid CORS problem
+				location: Configuration.get("proxyUrl") + layer.baseUrl,
+				name: layer.name,
+				type: "KML",
+				visible: true
+			};
+
+			var item = buildItem(kmlDesc);
+			addToTrees(this.$el.find("#trees"), null, [item]);
+
+			if ( options && options.onSuccess )
+				options.onSuccess(kmlDesc);
+
+		} else if ( layer.baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
+			// WMS single url
+			var layer = createWmsLayerFromUrl(layer.baseUrl);
 			// Override title by user defined
-			layer.title = name;
+			layer.title = layer.name;
 			var item = buildItem(layer);
 			addToTrees(this.$el.find("#trees"), null, [item]);
 
@@ -385,7 +391,7 @@ var LayerManagerView = Backbone.View.extend({
 				options.onSuccess(layer);
 
 		} else {
-
+			// WMS mapserver url
 			if ( options ) {
 				// Show loading
 				$.mobile.loading("show",{
@@ -399,22 +405,22 @@ var LayerManagerView = Backbone.View.extend({
 				}
 			}
 
-			// Capabilities
-			this.exploreCapabilities(name, baseUrl, options);
+			// Add all layers coming from GetCapabilities request
+			this.exploreCapabilities(layer, options);
 		}
 	},
 
 	/**
 	 *	Explore capabilities of the given baseUrl
 	 */
-	exploreCapabilities: function(name, baseUrl, options) {
+	exploreCapabilities: function(layer, options) {
 
 		var self = this;
 		// Launch search request to explore capabilities
 		var wmsCapabilitiesFormat = new OpenLayers.Format.WMSCapabilities();
 		$.ajax({
 			type: "GET",
-			url: baseUrl,
+			url: layer.baseUrl,
 			data: {
 				SERVICE: 'WMS',
 				//VERSION: '1.1.0', // No need to negociate version, since the highest one will be returned
@@ -432,10 +438,10 @@ var LayerManagerView = Backbone.View.extend({
 
 				var tree = buildHighCheckTreeData(c.capability.nestedLayers)
 
-				addToTrees(self.$el.find("#trees"), baseUrl, [{
+				addToTrees(self.$el.find("#trees"), layer.baseUrl, [{
 					item: {
-						id: name,
-						label: name,
+						id: layer.name,
+						label: layer.name,
 						checked: false
 					},
 					children: tree
@@ -446,7 +452,7 @@ var LayerManagerView = Backbone.View.extend({
 			},
 			error: function(r) {
 				if ( options && options.onError )
-					options.onError("Error while searching on " + baseUrl);
+					options.onError("Error while searching on " + layer.baseUrl);
 			},
 			complete: function() {
 				if ( options && options.onComplete )
@@ -485,9 +491,11 @@ var LayerManagerView = Backbone.View.extend({
 					},
 					children: tree
 				}]);
+			} else if ( layer.data.type == "WMS" || layer.data.type == "KML" ) {
+				// Ordinary WMS/KML layer
+				self.addLayer( layer );
 			} else {
-				// Ordinary WMS layer
-				self.addWMSLayer( layer.name, layer.baseUrl );
+				console.warn("Can't handle layer");
 			}
 		});
 	},
