@@ -244,25 +244,30 @@ var addToTrees = function($trees, baseUrl, data) {
 			UserPrefs.save("userLayers", JSON.stringify(userLayers));
 		},
 		options: {
-			"isBackground": function($li, isChecked) {
-				var layer = $li.data("layer");
-				var layerDesc = $li.data("layerDesc");
-				if ( layer ) {
-					if ( isChecked ) {
-						console.log("Becomes background");
-						Map.removeLayer(layer);
-						layerDesc.isBackground = true;
-						$li.data("layer", Map.addLayer(layerDesc));
+			"isBackground": {
+				callback: function($li, isChecked) {
+					var layer = $li.data("layer");
+					var layerDesc = $li.data("layerDesc");
+					if ( layer ) {
+						if ( isChecked ) {
+							console.log("Becomes background");
+							Map.removeLayer(layer);
+							layerDesc.isBackground = true;
+							$li.data("layer", Map.addLayer(layerDesc));
+						} else {
+							console.log("Becomes overlay");
+							Map.removeLayer(layer);
+							layerDesc.isBackground = undefined;
+							$li.data("layer", Map.addLayer(layerDesc));
+						}
+						$li.data("layerDesc", layerDesc);
 					} else {
-						console.log("Becomes overlay");
-						Map.removeLayer(layer);
-						layerDesc.isBackground = undefined;
-						$li.data("layer", Map.addLayer(layerDesc));
+						console.warn("NO LAYER BUILDED");
 					}
-					$li.data("layerDesc", layerDesc);
-				} else {
-					console.warn("NO LAYER BUILDED");
-				}
+				},
+				labelOn: "Overlay",
+				labelOff: "Background",
+				type: "switch"
 			}
 		}
 	});

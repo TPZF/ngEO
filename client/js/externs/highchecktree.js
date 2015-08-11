@@ -55,30 +55,35 @@
                     checkClass = checkedChildren.length === 0 ? '' : checkedChildren.length === clen ? 'checked' : 'half_checked'; 
                 }
 
-                var liContent = '<li rel="' + node.item.id + '">\
-                                    <div class="arrow ' + arrowClass + '"></div>\
-                                    <div id="baseCheckbox" class="checkbox ' + checkClass + '"></div>\
-                                    <label>' + node.item.label + '</label>\
-                                    <div style="display: none;" class="delete"></div>\
-                                    <div style="display: none; position: absolute; left: 500px;" class="options"></div>\
+                var liContent = '<li style⁼position: relative;" rel="' + node.item.id + '">\
+                                    <span class="itemContent">\
+                                        <div class="arrow ' + arrowClass + '"></div>\
+                                        <div id="baseCheckbox" class="checkbox ' + checkClass + '"></div>\
+                                        <label>' + node.item.label + '</label>\
+                                        <div class="delete"></div>\
+                                    </span>\
+                                    <span class="options"></span>\
                                 </li>';
 
                 var $li = $(liContent).appendTo(result);
 
                 var $options = $li.find(".options");
                 for ( var optionName in settings.options ) {
-                    var optionCallback = settings.options[optionName];
+                    var optionsSettings = settings.options[optionName];
                     //$('<div style="display:none;" class="checkbox optionCheckbox"></div>').appendTo($options)
-                    // TODO: Replace hardcoded Overlay/background by configurable options
-                    $('<div class="optionCheckbox">\
-                        <input data-role="none" id="switch_'+ optionName +"-"+ node.item.id.replace(/ /g,"-") +'" type="checkbox" name="switch1" class="switch" />\
-                        <label for="switch_'+ optionName +"-"+ node.item.id.replace(/ /g,"-") +'" >Overlay<label>\
-                    </div>').appendTo($options)
-                        .find('input').change(function(){
-                            var isChecked = $(this).is(":checked");
-                            $(this).next('label').html( isChecked ? 'Background' : 'Overlay' );
-                            optionCallback($li, isChecked);
-                        });
+                    if ( optionsSettings.type == "switch" ) {
+                        $('<div class="optionCheckbox">\
+                            <input data-role="none" id="switch_'+ optionName +"-"+ node.item.id.replace(/ /g,"-") +'" type="checkbox" name="switch1" class="switch" />\
+                            <label for="switch_'+ optionName +"-"+ node.item.id.replace(/ /g,"-") +'" >'+ optionsSettings.labelOff +'<label>\
+                        </div>').appendTo($options)
+                            .find('input').change(function(){
+                                var isChecked = $(this).is(":checked");
+                                $(this).next('label').html( isChecked ? optionsSettings.labelOn : optionsSettings.labelOff );
+                                optionsSettings.callback($li, isChecked);
+                            });
+                    } else {
+                        console.warn( optionsSettings.type +" not implemented yet..");
+                    }
 
                     $(container).trigger('create');
                 }
@@ -94,7 +99,7 @@
             if(data.children && data.children.length>0){
               var $innerHtml = isExpanded ? $('<ul>') : $('<ul style="display:none;">');
                 getChildrenHtml(data.children, $innerHtml);
-                $li.append($innerHtml);
+                $li.find('span:first').append($innerHtml);
             }
             
             $li.addClass('updated');
@@ -145,23 +150,13 @@
             }
         });
         
-
-
         container.off('mouseover', 'li').on('mouseover', 'li', function(event) {
-
-            if ( $(event.target).is('label') ) {
-                return;
-            }
-
-            $(event.target).find(' > .delete').show().end()
-            $(event.target).closest("ul").not('.checktree').siblings('.delete').hide();
+            event.stopPropagation();
+            $(this).addClass("liHovered");
         });
 
-        container.off('mouseleave', 'li').on('mouseleave', 'li', function(event) {
-            if ( $(event.target).is('label') ) {
-                return;
-            }
-            $(event.target).find(' > .delete').hide();
+        container.off('mouseout', 'li').on('mouseout', 'li', function(event) {
+            $(this).removeClass("liHovered");
         });
 
         //delete node
@@ -214,11 +209,6 @@
                 }
             }
         });
-    
-        // container.off('click', '.optionCheckbox').on('click', '.optionCheckbox', function() {
-        //     $(this).removeClass('half_checked').toggleClass('checked');
-        //     $(this).trigger('selectchange');
-        // });
 
         //check and uncheck node
         container.off('click', '#baseCheckbox').on('click', '#baseCheckbox', function () {
@@ -242,7 +232,9 @@
                     settings.onCheck($li, true);
                 }
                 if ( $li.data("layer") )
-                    $li.find('> .options').fadeIn();
+                    $li.find('> .options').animate({
+                        opacity: 1
+                    });
 
                 $(this).siblings('ul').find('#baseCheckbox').not('.checked').removeClass('half_checked').addClass('checked').each(function () {
                     var $subli = $(this).closest("li");
@@ -251,14 +243,18 @@
                         settings.onCheck($subli, false);
                     }
                     if ( $subli.data("layer") )
-                        $subli.find('.options').fadeIn();
+                        $subli.find('.options').animate({
+                            opacity: 1
+                        });
                 });
             } else {
                 dataSource.item.checked = false;
                 if (settings.onUnCheck) {
                     settings.onUnCheck($li, true);
                 }
-                $li.find('.options').fadeOut();
+                $li.find('.options').animate({
+                    opacity: 0
+                });
 
                 $(this).siblings('ul').find('#baseCheckbox').filter('.checked').removeClass('half_checked').removeClass('checked').each(function () {
                     var $subli = $(this).closest("li");
@@ -280,16 +276,11 @@
         container.off('mouseenter', 'label').on('mouseenter', 'label', function(){
             $(this).addClass("hover");
             if (settings.onLabelHoverOver) settings.onLabelHoverOver($(this).closest("li"));
-            // HACK: mouseover doesn't always fires on li element when passing by label..
-            $(event.target).siblings('.delete').show();
         });
 
          container.off('mouseleave', 'label').on('mouseleave', 'label', function(event){
             $(this).removeClass("hover");
             if (settings.onLabelHoverOut) settings.onLabelHoverOut($(this).closest("li"));
-
-            // HACK: mouseleave doesn't always fires on li element when passing by label..
-            $(event.target).siblings('.delete').hide();
         });
     };
 })(jQuery);
