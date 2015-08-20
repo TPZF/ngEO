@@ -2,8 +2,8 @@
 // TODO: move require config to separate config file
 require.config({
      paths: {
-        "jquery": "../bower_components/jquery/dist/jquery.min",
-		"jquery.mobile": "../bower_components/jquery-mobile-bower/js/jquery.mobile-1.3.2.min",
+        "jquery": "externs/jquery-1.11.1.min",
+		"jquery.mobile": "externs/jquery.mobile-1.3.2.min",
         // "jquery.mobile": "http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min",
         "jqm-datebox": "externs/jqm-datebox-1.4.0",
 		"jquery.dataTables" : "externs/jquery.dataTables",
