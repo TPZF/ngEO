@@ -30,7 +30,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	},
 	
 	/**
-	 * reorder all the DARs'statuses in an array of objects each object has the following properties:
+	 * Reorder all the DARs'statuses in an array of objects each object has the following properties:
 	 * "downloadManagerName" : download manager name
 	 * "dlManagerId" : download manager id
 	 * "DARs" : array of assignment data access request statuses to the DM.
@@ -64,9 +64,11 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 
 	},
 	
-	/** get the json object containing all the DARs relative to one download manager 
+	/**
+	 * Get the json object containing all the DARs relative to one download manager 
 	 * the result is returned as an array to still be compliant with the getOrderedStatuses
-	 * result which is an array */
+	 * result which is an array
+	 */
 	getFilterOrderedStatuses : function (dmID){
 		
 		var foundStatus = null;
@@ -86,13 +88,14 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		 return resultArray;
 	},
 	
-	/** get a DAR status index in the model array given its id 
+	/** 
+	 * Get a DAR status index in the model array given its id 
 	 * used by requestChangeStatus to update the DAR status after a successful DAR
-	 * status change request submission*/
+	 * status change request submission
+	 */
 	getDARStatusIndex : function (id) {
 	
 		var index = null;
-		
 		_.each(this.get("dataAccessRequestStatuses"), function(dar, i) {
 			if (dar.ID == id){
 				index =  i;
@@ -103,46 +106,26 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	},
 	
 	/** 
-	 * products do have statuses 0, 1, 2 or 3, however DARs can have also statuses 4 and 5
-	 * this method returns the friendly readable status string from the configuration 
+	 * Products do have statuses 0, 1, 2 or 3, however DARs can have also statuses 4 and 5
+	 * this method returns the friendly readable status string from local configuration if it possible
 	 */
 	getStatusReadableString : function (status){
-		  
-		  var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
-		  
-		  switch (status){
-		  
-		  	  case validStatusesConfig.validatedStatus.value:
-		  		 return validStatusesConfig.validatedStatus.status;
-				 break;
-			 
-			  case validStatusesConfig.bulkOrderStatus.value:
-				  return validStatusesConfig.bulkOrderStatus.status;
-				  break;
-				  
-			  case validStatusesConfig.inProgressStatus.value:
-				  return validStatusesConfig.inProgressStatus.status;;
-				  break;
-			
-			  case validStatusesConfig.pausedStatus.value:
-				  return validStatusesConfig.pausedStatus.status;;
-				  break;
-				  
-			  case validStatusesConfig.completedStatus.value:
-				  return validStatusesConfig.completedStatus.status;;
-				  break;	 
-				  
-			  case validStatusesConfig.cancelledStatus.value:
-				  return validStatusesConfig.cancelledStatus.status;
-				  break;
 
-		   		default :
-		   		  return status;
-		   		  break;
-		  }	
+		if ( !isNaN(parseInt(status)) ) {
+			// Status is an integer, try to find user-friendly translation
+			var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
+			for ( var x in validStatusesConfig ) {
+				if ( validStatusesConfig[x].value == parseInt(status) ) {
+					return validStatusesConfig[x].status;
+				}
+			}
+		}
+		return status;
 	},
 	
-	/** Find the dataAccessRequestStatus json object given the DAR id (simple DAR or STO) */
+	/** 
+	 * Find the dataAccessRequestStatus json object given the DAR id (simple DAR or STO)
+	 */
 	getDARStatusById : function(id){
 		
 		var foundStatus = null;
@@ -157,7 +140,9 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 		 return foundStatus;
 	},
 	
-	/** Submit the change status request to the server */
+	/**
+	 * Submit the change status request to the server
+	 */
 	requestChangeStatus : function(darID, newStatus){
 		
 		var darStatus = this.getDARStatusById(darID);
