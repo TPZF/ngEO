@@ -80,14 +80,7 @@ var StandingOrderDataAccessRequest = {
 		var datasetId = standingOrder.dataset.get("datasetId");
 		var url = "#data-services-area/sto/" + datasetId + '?';
 		
-		// Add area criteria 
-		url += standingOrder.searchArea.getOpenSearchParameter();
-
-		// Always add the advanced criteria values selected and already set to the model
-		url = standingOrder.addAdvancedCriteria(url, datasetId);
-
-		// Add the download options values selected and already set to the model
-		url = standingOrder.addDownloadOptions(url, datasetId);
+		url += standingOrder.getOpenSearchParameters();
 		
 		// Get the scheduling object either the STO is TimeDriven or Data-Driven
 		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;
