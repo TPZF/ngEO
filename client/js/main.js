@@ -49,6 +49,8 @@ var doc_ready = $.Deferred();
 // For more details see: http://stackoverflow.com/questions/11907944/closing-jquery-mobile-new-popup-cause-page-to-refresh-uselessly
 // TODO: find better solution
 $.mobile.popup.prototype.options.history = false;
+// Set it to false, to avoid breaking the route by Backbone
+$.mobile.hashListeningEnabled = false;
 
 /** When the document is ready and configuration is loaded load the rest of the application */
 $.when(doc_ready, Configuration.load())
