@@ -128,13 +128,15 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 	case "OSM":
 		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png", {
 			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true
+			wrapDateLine: true,
+			attribution: layer.attribution
 		});
 		break;
 	case "WMS":
 		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params, {
 			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true
+			wrapDateLine: true,
+			attribution: layer.attribution
 		});
 		break;
 	case "BING":
@@ -143,7 +145,8 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			key: layer.key, 
 			type: layer.imageSet,
 			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true
+			wrapDateLine: true,
+			attribution: layer.attribution
 		});
 		break;
 	case "WMTS":
@@ -157,7 +160,8 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			isBaseLayer: true,
 			projection: layer.projection,
 			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true
+			wrapDateLine: true,
+			attribution: layer.attribution
 		};
 
 		_setupWMTS(config);
