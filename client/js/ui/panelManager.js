@@ -29,7 +29,8 @@ var PanelManager = Backbone.View.extend({
 			var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
 			if ( isChrome ) {
 				$('#statusBar').redraw();
-				$('#dateRangeSlider').redraw();
+				if ( $('#dateRangeSlider').is(':visible') )
+					$('#dateRangeSlider').redraw();
 				$('#bottomToolbar').redraw();
 				$('#map').redraw();
 			}

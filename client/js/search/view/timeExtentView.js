@@ -125,7 +125,7 @@ var TimeExtentView = Backbone.View.extend({
 				max : this.model.get("dateRange").validityStop
 			},
 			change: $.proxy( this.onTimeSliderChanged, this )
-		});
+		}).show();
 		
 	},
 	

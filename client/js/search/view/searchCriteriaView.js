@@ -114,6 +114,10 @@ var SearchCriteriaView = SearchView.extend({
 	 */
 	onShow: function() {
 		this.updateSelectMode();
+		if ( this.model.get("useTimeSlider") ) {
+			$('#dateRangeSlider').show(); // Assuming that there is only one slider on page
+			//this.dateCriteriaView.addTimeSlider();
+		}
 		SearchView.prototype.onShow.apply(this);
 	},
 	
