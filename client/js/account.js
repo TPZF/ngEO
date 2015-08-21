@@ -1,10 +1,10 @@
 
-define(["jquery", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
+define(["jquery", "backbone", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
         "dataAccess/model/downloadManagers", "shopcart/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
         "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView", "account/view/layerManagerView",
         "text!../pages/account.html", "ui/tabs"], 
 
-        function($, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
+        function($, Backbone, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
         		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, LayerManagerView, account_template) {
 	
 // Private variable : the different view of My Account page	
