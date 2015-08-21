@@ -117,8 +117,8 @@ return {
 				DataSetPopulation.select(id);
 			} );
 		});
-		
-		//Route standing order url
+
+		// Route standing order url
 		router.route(
 				"data-services-area/sto/:datasetId?:query", 
 				"sto", function(datasetId, query) {		
@@ -134,7 +134,7 @@ return {
 					StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 					standingOrder.populateModelfromURL(query);
 					
-					// Resfreh the  view
+					// Refresh the view
 					standingOrderView.refresh();
 
 					// Show standing order panel
