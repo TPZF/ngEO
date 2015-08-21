@@ -14,13 +14,13 @@
                 },
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0032",
-                    "productStatus": 1,
+                    "productStatus": "1",
                     "percentageCompleted": "100",
                     "expectedSize": "1000"
                 },
                 {
                     "productURL": "https: //S2PF/XXXXXXXXXXXX0026",
-                    "productStatus": 3,
+                    "productStatus": "3",
                     "percentageCompleted": "50",
                     "expectedSize": "1000"
                 }
