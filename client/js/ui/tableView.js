@@ -657,6 +657,13 @@ var TableView = Backbone.View.extend({
 		
 
 		this.$el.append( footer );
+	},
+
+	/**
+	 *	Refresh method
+	 */
+	refresh: function() {
+		this.updateFixedHeader();
 	}
 });
 
