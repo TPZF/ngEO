@@ -126,27 +126,16 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 	var olLayer;
 	switch (layer.type.toUpperCase()) {
 	case "OSM":
-		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png", {
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true,
-			attribution: layer.attribution
-		});
+		olLayer = new OpenLayers.Layer.OSM(layer.name,layer.baseUrl+"/${z}/${x}/${y}.png");
 		break;
 	case "WMS":
-		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params, {
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true,
-			attribution: layer.attribution
-		});
+		olLayer = new OpenLayers.Layer.WMS(layer.name,layer.baseUrl,layer.params);
 		break;
 	case "BING":
 		olLayer = new OpenLayers.Layer.Bing({ 
 			name: layer.name, 
 			key: layer.key, 
-			type: layer.imageSet,
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true,
-			attribution: layer.attribution
+			type: layer.imageSet
 		});
 		break;
 	case "WMTS":
@@ -158,10 +147,7 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 			format: layer.params.format,
 			style: layer.params.style,
 			isBaseLayer: true,
-			projection: layer.projection,
-			transitionEffect: Configuration.get('map.openlayers.transitionEffect',null),
-			wrapDateLine: true,
-			attribution: layer.attribution
+			projection: layer.projection
 		};
 
 		_setupWMTS(config);
@@ -177,6 +163,12 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 	}
 	
 	if (olLayer) {
+		// Set common options
+		olLayer.attribution = layer.attribution;
+		olLayer.wrapDateLine = true;
+		olLayer.transitionEffect = Configuration.get('map.openlayers.transitionEffect',null);
+
+		// Finally add to map
 		this._map.addLayer(olLayer);
 		this._map.setBaseLayer(olLayer);
 	}
@@ -311,10 +303,15 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 	}
 	
 	if (olLayer) {
+
+		// Set common options
+		olLayer.attribution = layer.attribution;
 		if (layer.style && this._styles[layer.style]) {
 			olLayer.styleMap = this._styles[layer.style];
 		}
 		olLayer.setVisibility(layer.visible);
+
+		// Finally add to map
 		this._map.addLayer(olLayer);
 	}
 	

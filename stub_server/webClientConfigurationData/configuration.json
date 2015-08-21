@@ -237,11 +237,13 @@
 			"name": "Earthquake Feed (GeoRSS)",
 			"type": "GeoRSS",
 			"location": "data/eqs7day-M5.xml",
+			"attribution": "XML attribution",
 			"visible": false
 		}, {
 			"name": "USGS Real-time Earthquakes (KML)",
 			"type": "KML",
 			"location": "data/earthquake.kml",
+			"attribution": "KML attribution",
 			"visible": false
 		}, {
 			"name": "States (WFS)",
@@ -249,12 +251,14 @@
 			"baseUrl": "/demoWFS",
 			"featureType": "states",
 			"featureNS": "http://www.openplans.org/topp",
+			"attribution": "WFS attribution",
 			"visible": false
 		},{
 			"id" : "BlueMarble_TPZ_WMS",
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+			"attribution": "Telespazio France",
 			"params": {
 				"layers": "BlueMarble"
 			}

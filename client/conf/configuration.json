@@ -177,6 +177,7 @@
 			"name": "Blue Marble (TPZ-WMS)",
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
+			"attribution": "Telespazio France",
 			"params": {
 				"layers": "BlueMarble"
 			}
