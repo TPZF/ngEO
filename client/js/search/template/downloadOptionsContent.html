@@ -14,7 +14,8 @@
 			<% if (!option.cropProductSearchArea) { %>
 				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
 					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
-					<option value="None">None</option>
+					<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
+					<!-- <option value="None">None</option> -->
 					<% _.each(option.value, function(value) { %>
 						<% if ( model.get(option.argumentName) == "@conflict" ) { %>
 							<option value="" selected style="display: none;"></option>
