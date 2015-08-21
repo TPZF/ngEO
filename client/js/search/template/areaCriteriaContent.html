@@ -1,15 +1,15 @@
 <fieldset id="toolsChoice" data-role="controlgroup" data-type="horizontal" data-mini="true">
 				     
-	<input type="radio" name="radio-area-criteria" id="radio-bbox" value="bbox" data-theme="c" checked="checked">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-bbox" value="bbox" data-theme="c" checked="checked">
 	<label for="radio-bbox" id="radio-bbox-label" data-corners="false">Box</label>
 	
-	<input type="radio" name="radio-area-criteria" id="radio-polygon" value="polygon" data-theme="c">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-polygon" value="polygon" data-theme="c">
 	<label for="radio-polygon" id="radio-polygon-label" data-corners="false">Polygon</label>
 			         	
-	<input type="radio" name="radio-area-criteria" id="radio-gazetteer" data-theme="c" value="gazetteer">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-gazetteer" data-theme="c" value="gazetteer">
 	<label for="radio-gazetteer" id="radio-gazetteer-label" data-corners="false">Gazetteer</label>
 	
-	<input type="radio" name="radio-area-criteria" id="radio-import" data-theme="c" value="import">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-import" data-theme="c" value="import">
 	<label for="radio-import" id="radio-import-label" data-corners="false">Import</label>
 	    	
 </fieldset>
