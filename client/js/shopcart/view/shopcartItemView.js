@@ -1,7 +1,7 @@
 define(
-		[ 'jquery', 'ui/tableView', 'configuration', 'searchResults/widget/downloadOptionsWidget',
+		[ 'jquery', 'ui/tableView', 'configuration', 'dataAccess/model/simpleDataAccessRequest', 'dataAccess/widget/dataAccessWidget', 'searchResults/widget/downloadOptionsWidget',
 		  'shopcart/widget/shopcartExportWidget' ],
-	function($, TableView, Configuration, DownloadOptionsWidget, ShopcartExportWidget) {
+	function($, TableView, Configuration, SimpleDataAccessRequest, DataAccessWidget, DownloadOptionsWidget, ShopcartExportWidget) {
 
 		
 /**
@@ -24,11 +24,14 @@ var ShopcartItemView = TableView.extend({
 		if ( this.model.selection.length > 0 ) {
 			this.deleteButton.button('enable');
 			if ( this.model.getSelectionDatasetIds().length == 1 ) {
+				this.retrieveProduct.button('enable');
 				this.downloadOptionsButton.button('enable');
 			} else {
+				this.retrieveProduct.button('disable');
 				this.downloadOptionsButton.button('disable');
 			}
 		} else {
+			this.retrieveProduct.button('disable');
 			this.deleteButton.button('disable');
 			this.downloadOptionsButton.button('disable');
 		}
@@ -49,6 +52,25 @@ var ShopcartItemView = TableView.extend({
 	renderButtons: function($buttonContainer) {
 		var self = this;
 		
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
+		this.retrieveProduct.button();
+		this.retrieveProduct.button('disable');
+		
+		//create a simpleDataAccessRequest and assign a download manager
+		var self = this;
+		this.retrieveProduct.click(function() {
+
+			if ( self.model.downloadAccess ) {
+				SimpleDataAccessRequest.initialize();
+				SimpleDataAccessRequest.setProducts( self.model.selection );
+				
+				DataAccessWidget.open(SimpleDataAccessRequest);
+			} else {
+				Logger.inform("Cannot download the product : missing permissions.");
+			}
+
+		});
+
 		//add button to the widget footer in order to download products
 		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
 		this.downloadOptionsButton.button();
