@@ -143,7 +143,7 @@ module.exports = {
 
 			this.setMappedProperty(feature, "start", feature.properties.EarthObservation.gml_beginPosition);
 			this.setMappedProperty(feature, "stop", feature.properties.EarthObservation.gml_endPosition);
-			this.setMappedProperty(feature, "browseInformation", feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation);
+			this.setMappedProperty(feature, "browseInformation", feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation);
 			this.setMappedProperty(feature, "mission", feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName);
 			this.setMappedProperty(feature, "sensor", feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName);
 			this.setMappedProperty(feature, "swath", feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier);
