@@ -25,8 +25,14 @@ GlobWebMapEngine = function( parentElement )
 		canvas.width = parentElement.clientWidth;
 		canvas.height = parentElement.clientHeight;
 		parentElement.appendChild(canvas);
-		
 		this.canvas = canvas;
+		
+		// Create element to show attributions
+		var attributions = document.createElement('div');
+		attributions.id = "attributions";
+		attributions.className = "olControlAttribution"; // Use existing openlayers CSS rules
+		parentElement.appendChild(attributions)
+		this.attributions = attributions;
 	
 		// Create the globe
 		var globe = new GlobWeb.Globe({ canvas: canvas, 
@@ -34,6 +40,9 @@ GlobWebMapEngine = function( parentElement )
 			continuousRendering: Configuration.get('map.globweb.continuousRendering',false) 
 		});
 		
+		// Add attribution handler
+		new GlobWeb.AttributionHandler( globe, {element: 'attributions'});
+
 		var elevationParams = Configuration.get('map.globweb.elevationLayer');
 		if (elevationParams) {
 			var elevationLayer = new GlobWeb.WCSElevationLayer(elevationParams);
@@ -72,7 +81,9 @@ GlobWebMapEngine = function( parentElement )
 	catch (err)
 	{
 		parentElement.removeChild(canvas);
+		parentElement.removeChild(attributions);
 		this.canvas = null;
+		this.attributions = null;
 		console.log("WebGL cannot be initialized.")
 		throw 'WebGLNotFound';
 	}
@@ -120,7 +131,13 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 		gwLayer = new GlobWeb.OSMLayer(layer);
 		break;
 	case "WMS":
-		gwLayer = new GlobWeb.WMSLayer( $.extend({ name: layer.name, baseUrl: layer.baseUrl, crossOrigin: layer.crossOrigin}, layer.params) );
+		gwLayer = new GlobWeb.WMSLayer( $.extend({
+			name: layer.name,
+			baseUrl: layer.baseUrl,
+			crossOrigin: layer.crossOrigin,
+			attribution: layer.attribution
+		},
+		layer.params) );
 		break;
 	case "BING":
 		gwLayer = new GlobWeb.BingLayer(layer);
@@ -193,6 +210,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 		gwLayer = new GlobWeb.VectorLayer({
 			name: layer.name,
 			visible: layer.visible,
+			attribution: layer.attribution,
 			style: new GlobWeb.FeatureStyle({ iconUrl: '../images/point.png', pointMaxSize: 40000 })
 		});
 		GeojsonConverter.load( layer, $.proxy(gwLayer.addFeatureCollection, gwLayer) );
@@ -427,6 +445,7 @@ GlobWebMapEngine.prototype.destroy = function()
 	this.globe.dispose();
 	
 	this.parentElement.removeChild(this.canvas);
+	this.parentElement.removeChild(this.attributions);
 	if (this.stats) {
 		this.parentElement.removeChild(this.stats);
 	}
@@ -436,6 +455,7 @@ GlobWebMapEngine.prototype.destroy = function()
 	this.globe = null;
 	this.parentElement = null;
 	this.canvas = null;
+	this.attributions = null;
 	this.navigation = null;
 }
 
