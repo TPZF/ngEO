@@ -82,7 +82,8 @@ var PanelManager = Backbone.View.extend({
 	restore: function() {
 		if ( this._centerState ) {
 			this.bottom.$el.show();
-			if ( this.bottom.activeView.refresh ) {
+
+			if ( this.bottom.activeView && this.bottom.activeView.refresh ) {
 				this.bottom.activeView.refresh();
 			}
 			this.left.$el.show();
