@@ -151,12 +151,14 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 			return;
 		}
 		
-		var request = { DataAccessRequestStatus : { 
-			                ID : darID,
-			                type : darStatus.type,
-			                status : newStatus, 
-			                dlManagerId : darStatus.dlManagerId}
-					};
+		var request = {
+			DataAccessRequestStatus : { 
+				ID : darID,
+			    type : darStatus.type,
+			    status : newStatus, 
+			    dlManagerId : darStatus.dlManagerId
+			}
+		};
 		//console.log ("change Status request");
 		//console.log (request);
 		var self = this;

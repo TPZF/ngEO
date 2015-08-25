@@ -67,8 +67,10 @@ define(
 				}
 			},
 			
-			/** Call back method called after a DAR status change response received from the server.  
-			 * The method changes the DAR icon and the status of the buttons according to the new changed status of the DAR */
+			/**
+			 * Call back method called after a DAR status change response received from the server.  
+			 * The method changes the DAR icon and the status of the buttons according to the new changed status of the DAR
+			 */
 			updateDARStatusView : function(args){
 
 				var darId = args[1];
@@ -180,9 +182,11 @@ define(
 				$content.css('max-height',height);
 			},
 	
-			/** Display the list of DMs assigned to Data Access Requests in the left side and the list of 
+			/** 
+			 * Display the list of DMs assigned to Data Access Requests in the left side and the list of 
 			 * Data access request in the right side.
-			 * By default all the DARS are displayed.  */
+			 * By default all the DARS are displayed.
+			 */
 			render : function() {
 	
 				//orderedStatuses is the model for the monitoring view, it wrappes the DataAccessRequestStatuses model
