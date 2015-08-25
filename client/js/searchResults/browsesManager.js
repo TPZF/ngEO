@@ -78,9 +78,10 @@ return {
 	 */
 	 addBrowse: function(feature,datasetId) {
  	
-	 	var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
+	 	var browseInfo = Configuration.getMappedProperty(feature, "browseInformation", null);
 	 	var isPlanned = (Configuration.getMappedProperty(feature, "status") == "PLANNED"); // NGEO-1775 : no browse for planned features
-	 	if ( browseInfo && !isPlanned ) {
+	 	// NB: NGEO-1812: Use isEmptyObject to check that browseInfo exists AND not empty (server sends the response not inline with ICD)
+	 	if ( !$.isEmptyObject(browseInfo) && !isPlanned ) {
 			var key = _getKey(browseInfo);
 			if ( DatasetAuthorizations.hasBrowseAuthorization(datasetId, browseInfo.eop_layer) ) {	
 			
