@@ -144,13 +144,20 @@ var buildItem = function(layer) {
 /**
  *	Creates highCheckTree structure from the given layers
  */
-var buildHighCheckTreeData = function(layers) {
+var buildHighCheckTreeData = function(layers, baseUrl) {
 	var data = [];
 	_.each(layers, function(layer) {
 		var item = buildItem( layer );
+
+		if ( item.item.layerDesc && !item.item.layerDesc.baseUrl ) {
+			// Update baseUrl for layers coming from GetCapabilities
+			// NB: layerDesc doesn't exist for layer which serves only to group WMS layers
+			item.item.layerDesc.baseUrl = baseUrl;
+		}
+
 		if (layer.nestedLayers && layer.nestedLayers.length > 0) {
 			// Create children
-			item.children = buildHighCheckTreeData(layer.nestedLayers);
+			item.children = buildHighCheckTreeData(layer.nestedLayers, baseUrl);
 		}
 		data.push(item);
 	});
@@ -192,18 +199,13 @@ var createWmsLayerFromUrl = function(baseUrl) {
 /**
  *	Add a new data to trees
  */
-var addToTrees = function($trees, baseUrl, data) {
+var addToTrees = function($trees, data) {
 	// Initialize high check tree
 	$('<div>').appendTo($trees).highCheckTree({
 		data: data,
 		onCheck: function($li) {
 			var layerDesc = $li.data("layerDesc");
 			if ( layerDesc ) {
-
-				if ( !layerDesc.baseUrl ) {
-					// HACK: OpenLayers capabilities format doesn't contain base url.. so use from parameter for now
-					layerDesc.baseUrl = baseUrl;
-				}
 
 				// Store on $li to be able to remove later
 				$li.data("layer", Map.addLayer(layerDesc) );
@@ -375,7 +377,7 @@ var LayerManagerView = Backbone.View.extend({
 			};
 
 			var item = buildItem(kmlDesc);
-			addToTrees(this.$el.find("#trees"), null, [item]);
+			addToTrees(this.$el.find("#trees"), [item]);
 
 			if ( options && options.onSuccess )
 				options.onSuccess(kmlDesc);
@@ -386,7 +388,7 @@ var LayerManagerView = Backbone.View.extend({
 			// Override title by user defined
 			layer.title = layer.name;
 			var item = buildItem(layer);
-			addToTrees(this.$el.find("#trees"), null, [item]);
+			addToTrees(this.$el.find("#trees"), [item]);
 
 			if ( options && options.onSuccess )
 				options.onSuccess(layer);
@@ -437,9 +439,9 @@ var LayerManagerView = Backbone.View.extend({
 					return;
 				}
 
-				var tree = buildHighCheckTreeData(c.capability.nestedLayers)
+				var tree = buildHighCheckTreeData(c.capability.nestedLayers, layer.baseUrl);
 
-				addToTrees(self.$el.find("#trees"), layer.baseUrl, [{
+				addToTrees(self.$el.find("#trees"), [{
 					item: {
 						id: layer.name,
 						label: layer.name,
@@ -482,9 +484,9 @@ var LayerManagerView = Backbone.View.extend({
 		_.each(userLayers, function(layer) {
 			// Check if layer contains data coming from GetCapabilities
 			if ( _.isArray(layer.data) ) {
-				var tree = buildHighCheckTreeData(layer.data)
+				var tree = buildHighCheckTreeData(layer.data, layer.baseUrl);
 
-				addToTrees(self.$el.find("#trees"), layer.baseUrl, [{
+				addToTrees(self.$el.find("#trees"), [{
 					item: {
 						id: layer.name,
 						label: layer.name,
@@ -512,7 +514,7 @@ var LayerManagerView = Backbone.View.extend({
 		var data = buildHighCheckTreeData(_.filter(Map.layers, function(layer){
 			return layer.params.type == "WMS" || layer.params.type == "KML";
 		}));
-		addToTrees( this.$el.find("#trees"), null, data );
+		addToTrees( this.$el.find("#trees"), data );
 
 		this.addUserLayers();
 
