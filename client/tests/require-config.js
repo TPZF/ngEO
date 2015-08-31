@@ -9,8 +9,8 @@
 
 var require = {
      paths: {
-        "jquery": "externs/jquery-1.8.3.min",
-		"jquery.mobile": "externs/jquery.mobile-1.2.0",
+        "jquery": "externs/jquery-1.11.1.min",
+        "jquery.mobile": "externs/jquery.mobile-1.3.2.min",
         "underscore": "externs/underscore",
 		"backbone": "externs/backbone",
 		"text": "externs/text"

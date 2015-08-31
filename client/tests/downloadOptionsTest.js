@@ -4,17 +4,18 @@ define(['jquery', 'configuration', 'searchResults/model/featureCollection'],
 	    // Define the QUnit module and lifecycle.
 	    QUnit.module("DownloadOptions", {
 	    	setup: function() {
-	
+				stop();
 	    		Configuration.url = Configuration.baseServerUrl +"/webClientConfigurationData";
-	    		Configuration.load().done();
+	    		Configuration.load().done(function() {
+	    			start();
+	    		});
 	    	}
 	    });
     
 	
     
     	QUnit.test("Download options assignement", function () {
-    					
-				// Create a dummy feature
+   				// Create a dummy feature
 				var feature = {
 					properties: {
 						"links" : [{
@@ -47,34 +48,33 @@ define(['jquery', 'configuration', 'searchResults/model/featureCollection'],
 					downloadMode: "OnCompletion"
 				});
 				
-				var produUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+				var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
 				//QUnit.equal( feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename, "http://dummy?downloadMode=OnCompletion" );
 				//TODO : si le product url contient déjà un ? . C'est bizarre car on dans la réponse du nouveau format json, on a déjà un ?
-				QUnit.equal( produUrl, "http://dummy?ngEO_DO={downloadMode:OnCompletion}" );
+				QUnit.equal( productUrl, "http://dummy?ngEO_DO={downloadMode:OnCompletion}" );
 				
 				fc.updateProductUrls({
 					downloadMode: "Continously"
 				});
 				
-
-				produUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-				QUnit.equal( produUrl, "http://dummy?ngEO_DO={downloadMode:Continously}" );
-			
+				productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+				QUnit.equal( productUrl, "http://dummy?ngEO_DO={downloadMode:Continously}" );
+		
 				fc.updateProductUrls({
 					downloadMode: "Continously",
 					type: "PNG"
 				});
 				
-				produUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-				QUnit.equal( produUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:PNG}" );
+				productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+				QUnit.equal( productUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:PNG}" );
 		
 				fc.updateProductUrls({
 					downloadMode: "Continously",
 					type: "JPEG"
 				});
 				
-				produUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-				QUnit.equal( produUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:JPEG}" );
+				productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+				QUnit.equal( productUrl, "http://dummy?ngEO_DO={downloadMode:Continously,type:JPEG}" );
 				
 				fc.unselect( feature );
 				fc.features = [];
