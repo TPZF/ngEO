@@ -18,27 +18,33 @@ var DownloadManagers = Backbone.Model.extend({
 		this.listenTo(this,"error",this.onError);
 	},
 
-	/** Call when the model cannot be fetched from the server */
+	/**
+	 * Call when the model cannot be fetched from the server
+	 */
 	onError : function(model,response) {
 		if (response.status == 0) {
 			location.reload();
 		}
 	},
 	
-	/** get a download manager user friendly name given its id */
+	/**
+	 * Get a download manager user friendly name given its id
+	 */
 	getDownloadManagerName : function (id) {
 		var dm = _.findWhere( this.get("downloadmanagers"), {downloadManagerId: id} );
 		return dm ? dm.downloadManagerFriendlyName : id;
 	},
 
-	/** get a download manager status given its id */
+	/**
+	 * Get a download manager status given its id
+	 */
 	getDownloadManagerStatus : function (id) {
 		var dm = _.findWhere( this.get("downloadmanagers"), {downloadManagerId: id} );
 		return dm ? dm.status : null;
 	},
 	
 	/** 
-		Submit the DM change status request to the server.
+	 * Submit the DM change status request to the server.
 	 */
 	requestChangeStatus : function(dmID, newStatus){
 	
