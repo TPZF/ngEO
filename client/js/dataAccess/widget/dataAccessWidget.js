@@ -3,11 +3,10 @@
   * Used to assign a download manager/product processing to a data access request
   */
 define( [ "jquery", "configuration", 'dataAccess/view/dataAccessRequestView', 'dataAccess/model/downloadManagers', 'ui/widget' ], 
-		function($,Configuration, DataAccessRequestView, DownloadManagers, ngeoWidget) {
+	function($, Configuration, DataAccessRequestView, DownloadManagers, ngeoWidget) {
 
 
 var DataAccessWidget = function() {
-
 	
 	var parentElement = $('<div id="dataAccessPopup">');
 	var element = $('<div id="dataAccessPopupContent"></div>'); 
@@ -19,22 +18,24 @@ var DataAccessWidget = function() {
 	});
 	
 	var dataAccessRequestView = new DataAccessRequestView({
-				model : DownloadManagers,
-				el: element
-			});
+		model : DownloadManagers,
+		el: element
+	});
 
 	/**
-		Open the popup
+	 *	Open the popup
+	 *	@param request
+	 *		The request to be used by widget: could be SimpleDataAccessRequest or StandingOrderDataAccessRequest
 	 */
 	this.open = function(request) {
 
-		// Load DownloadManagers and then build and open the pop-up
-		DownloadManagers.fetch().done(function() {
-		
+		// Load the available download managers: even if fetch has failed
+		DownloadManagers.fetch().complete(function() {
+			// Build the given request
 			dataAccessRequestView.setRequest(request);
 			dataAccessRequestView.render();
-			
-			//Open the popup
+
+			// Open the popup
 			parentElement.ngeowidget("show");
 		});
 	};
