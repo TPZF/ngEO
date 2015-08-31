@@ -13,7 +13,10 @@ module.exports = function(req, res){
 		res.sendfile('./downloadManagers/downloadManagerDisableResponse.json');
 
 	} else{
+		// Error case
+		//res.status(404).sendfile('./downloadManagers/downloadManagersConfig-error.json');
 		
+		// Success case
 		res.sendfile('./downloadManagers/downloadManagersConfig-' + user.getId() + '.json');	
 	}
 };

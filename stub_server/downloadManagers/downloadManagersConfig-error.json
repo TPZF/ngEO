@@ -1,0 +1,7 @@
+{
+    "error" : {
+        "code" : "WC-WS-06",
+        "message" : "No Download Manager for the specified user",
+        "stackTrace" : "  at Terradue.NgEO.WebServer.WebClientInterfaces.DownloadManagers.DownloadManagersService.Get (Terradue.NgEO.WebServer.WebClientInterfaces.DownloadManagers.GetDownloadManagersRequest request) [0x00000] in <filename unknown>:0 "
+    }
+}
