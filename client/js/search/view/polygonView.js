@@ -22,10 +22,13 @@ var PolygonView = Backbone.View.extend({
 		'click #drawpolygon': function(event) {
 			this.$el.find('#polygonTextError').hide();
 			var self = this;
+			$button = $(event.target);
+			$button.attr("disabled", "disabled").button("refresh");
 			PolygonHandler.start({
 				layer: this.parentView.searchAreaLayer,
 				feature: this.model.searchArea.getFeature(),
 				stop: function() {
+					$button.removeAttr("disabled").button("refresh");
 					self.$el.find('#polygontext').val( self.model.searchArea.getPolygonText() ).keyup();
 					self.model.searchArea.setMode( 1 );
 				}

@@ -53,6 +53,8 @@ var BoxView = Backbone.View.extend({
 		'click #drawbbox': function(event) {
 			this.model.set('useExtent',false);
 			var self = this;
+			var $button = $(event.target);
+			$button.attr("disabled", "disabled").button("refresh");
 			RectangleHandler.start({
 				layer: this.parentView.searchAreaLayer,
 				feature: this.model.searchArea.getFeature(),
@@ -67,6 +69,8 @@ var BoxView = Backbone.View.extend({
 					self.$el.find("#south").val( bbox.south );
 					self.$el.find("#east").val( bbox.east );
 					self.$el.find("#north").val( bbox.north );
+
+					$button.removeAttr("disabled").button("refresh");
 				}
 			});
 		},
