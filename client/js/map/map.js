@@ -86,9 +86,9 @@ function(Configuration, OpenLayersMapEngine, GlobWebMapEngine, Backbone, UserPre
 				mapEngine.modifyFeatureStyle( this.engineLayer, features[i], style );
 			}
 		};
-		this.updateFeature = function(feature) {
+		this.updateFeature = function(feature, customFixDateLine) {
 			tesselateGreatCircle(params, feature);
-			mapEngine.updateFeature( this.engineLayer, feature );
+			mapEngine.updateFeature( this.engineLayer, feature, customFixDateLine );
 		};
 		this.changeEngine = function(mapEngine) {
 			this.engineLayer = mapEngine.addLayer( this.params );

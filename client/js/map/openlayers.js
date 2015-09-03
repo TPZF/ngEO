@@ -505,11 +505,16 @@ OpenLayersMapEngine.prototype.blockNavigation = function(flag)
 /**
  * Update a feature
  */
-OpenLayersMapEngine.prototype.updateFeature = function(layer,feature)
+OpenLayersMapEngine.prototype.updateFeature = function(layer, feature, customFixDateLine)
 {
+	if ( customFixDateLine ) {
+		feature = customFixDateLine(feature);
+	} else {
+		feature = MapUtils.fixDateLine(feature);
+	}
 	var olFeature = layer.getFeatureByFid(feature.id);
 	layer.removeFeatures( olFeature );
-	layer.addFeatures( this._geoJsonFormat.read( MapUtils.fixDateLine(feature) ) );
+	layer.addFeatures( this._geoJsonFormat.read( feature ) );
 }
 
 /**

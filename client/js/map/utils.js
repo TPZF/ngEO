@@ -16,40 +16,36 @@ define( function() {
 				lon += 360;
 			return lon;
 		},
-				
+		
 		/**
-		 * Compute the bbox of a feature
+		 * Compute the bbox of a geometry
 		 */
-		computeExtent: function(feature) {
-			if (feature.bbox)
-				return;
-			
+		computeBbox: function(geometry) {
 			//list of array of coordinates from which we have to compute the extent bbox
 			var coordsList = [];
-			switch (feature.geometry.type) {
+			switch (geometry.type) {
 				case "Point":
-					var pointCoords = feature.geometry.coordinates;
-					feature.bbox = [ pointCoords[0], pointCoords[1], pointCoords[0], pointCoords[1] ];
-					return;
+					var pointCoords = geometry.coordinates;
+					return [ pointCoords[0], pointCoords[1], pointCoords[0], pointCoords[1] ];
 				case "MultiPoint":
-					coordsList.push(feature.geometry.coordinates);
+					coordsList.push(geometry.coordinates);
 					break;
 				case "Polygon":
-					coordsList.push(feature.geometry.coordinates[0]);
+					coordsList.push(geometry.coordinates[0]);
 					break;
 				case "MultiPolygon":
-					var numOuterRings = feature.geometry.coordinates.length;
+					var numOuterRings = geometry.coordinates.length;
 					for ( var j = 0; j < numOuterRings; j++ ) {
-						coordsList.push(feature.geometry.coordinates[j][0]);
+						coordsList.push(geometry.coordinates[j][0]);
 					}
 					break;
 				case "LineString":
-					coordsList.push(feature.geometry.coordinates);
+					coordsList.push(geometry.coordinates);
 					break;
 				case "MultiLineString":
-					var numOuterRings = feature.geometry.coordinates.length;
+					var numOuterRings = geometry.coordinates.length;
 					for ( var j = 0; j < numOuterRings; j++ ) {
-						coordsList.push(feature.geometry.coordinates[j]);
+						coordsList.push(geometry.coordinates[j]);
 					}
 					break;
 			}
@@ -66,15 +62,23 @@ define( function() {
 
 			for ( var j = 0; j < coordsList.length; j++ ) {
 				var coords = coordsList[j];
-				for ( var i = 0;  i < coords.length; i++ )	{				
+				for ( var i = 0;  i < coords.length; i++ )	{		
 					minX = Math.min( minX, coords[i][0] );	
 					minY = Math.min( minY, coords[i][1] );	
 					maxX = Math.max( maxX, coords[i][0] );	
 					maxY = Math.max( maxY, coords[i][1] );	
 				}
 			}
-			
-			feature.bbox = [ minX, minY, maxX, maxY ];
+			return [minX, minY, maxX, maxY];
+		},
+				
+		/**
+		 * Compute the bbox of a feature and set it as a property
+		 */
+		computeExtent: function(feature) {
+			if (feature.bbox)
+				return;
+			feature.bbox = this.computeBbox(feature.geometry);
 		},
 		
 		/**
@@ -146,46 +150,8 @@ define( function() {
 					break;
 			}	
 			
-			if ( crossDateLine  ) {
-			
-				var featureCopy = {
-					id: feature.id,
-					type: "Feature",
-					geometry: {
-					},
-					properties: feature.properties
-				};
-				switch (geometry.type) {
-					case "Polygon":
-						var out = this.fixDateLineCoords( geometry.coordinates[0] );
-						featureCopy.geometry.type = "MultiPolygon";
-						featureCopy.geometry.coordinates = [ [out[0]], [out[1]] ];
-						break;
-					case "MultiPolygon":
-						var dateLineCoords = [];
-						for ( var i = 0; i < geometry.coordinates.length; i++ ) {
-							var out = this.fixDateLineCoords( geometry.coordinates[i][0] );
-							dateLineCoords.push( [out[0]], [out[1]] );
-						}
-						featureCopy.geometry.type = "MultiPolygon";
-						featureCopy.geometry.coordinates = dateLineCoords;
-						break;
-					case "LineString":
-						featureCopy.geometry.type = "MultiLineString";
-						featureCopy.geometry.coordinates = this.fixDateLineCoords( geometry.coordinates );
-						break;
-					case "MultiLineString":
-						var dateLineCoords = [];
-						for ( var i = 0; i < geometry.coordinates.length; i++ ) {
-							var out = this.fixDateLineCoords( geometry.coordinates[i] );
-							dateLineCoords.push( out[0], out[1] );
-						}
-						featureCopy.geometry.type = "MultiLineString";
-						featureCopy.geometry.coordinates = dateLineCoords;
-						break;
-				}
-
-				return featureCopy;
+			if ( crossDateLine ) {
+				return this.splitFeature(feature);
 			}
 			else
 			{
@@ -193,11 +159,59 @@ define( function() {
 			}
 			
 		},
+
+		/**
+		 *	Splits feature's geometry into MultiPolygon which fixes the date line issue
+		 *	
+		 *	@return
+		 *		New feature with splitted geometry
+		 */
+		splitFeature: function(feature) {
+			var geometry = feature.geometry;
+			var featureCopy = {
+				id: feature.id,
+				type: "Feature",
+				geometry: {
+				},
+				properties: feature.properties
+			};
+			switch (geometry.type) {
+				case "Polygon":
+					var out = this.fixDateLineCoords( geometry.coordinates[0] );
+					featureCopy.geometry.type = "MultiPolygon";
+					featureCopy.geometry.coordinates = [ [out[0]], [out[1]] ];
+					break;
+				case "MultiPolygon":
+					var dateLineCoords = [];
+					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+						var out = this.fixDateLineCoords( geometry.coordinates[i][0] );
+						dateLineCoords.push( [out[0]], [out[1]] );
+					}
+					featureCopy.geometry.type = "MultiPolygon";
+					featureCopy.geometry.coordinates = dateLineCoords;
+					break;
+				case "LineString":
+					featureCopy.geometry.type = "MultiLineString";
+					featureCopy.geometry.coordinates = this.fixDateLineCoords( geometry.coordinates );
+					break;
+				case "MultiLineString":
+					var dateLineCoords = [];
+					for ( var i = 0; i < geometry.coordinates.length; i++ ) {
+						var out = this.fixDateLineCoords( geometry.coordinates[i] );
+						dateLineCoords.push( out[0], out[1] );
+					}
+					featureCopy.geometry.type = "MultiLineString";
+					featureCopy.geometry.coordinates = dateLineCoords;
+					break;
+			}
+
+			return featureCopy;
+		},
 		
 		/**
 		 * Fix date line on coordinates
 		 */
-		fixDateLineCoords: function(coords, output) {
+		fixDateLineCoords: function(coords) {
 					
 			var posc = [];		
 			var negc = [];
