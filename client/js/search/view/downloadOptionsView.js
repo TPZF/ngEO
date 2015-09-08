@@ -38,7 +38,6 @@ var DownloadOptionsView = Backbone.View.extend({
 
 			var self = this;
 
-			this.update 
 			// Update model according to preconditions of each download option
 			_.each(this.model.get("downloadOptions"), function(option) {
 				if ( self.hasValidPreconditions( option )) {
