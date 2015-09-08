@@ -16,31 +16,63 @@
                 "keyword": "high resolution"
             }
         ],
-        "downloadOptions": [
+        "downloadOptions" : [
             {
-                "argumentName": "ProductFormat_S2_L1",
-                "description": "desired download format",
-                "value": [
+                "argumentName" : "ProductFormat",
+                "description" : "desired download format",
+                "caption" : "human readable caption",
+                "value" : [
                     {
-                        "name": "GeoTIFF",
-                        "humanReadable": "GeoTiff",
-                        "sizeFactor": "1.2"
+                        "name" : "GeoTIFF",
+                        "humanReadable" : "GeoTiff",
+                        "sizeFactor" : "1.2"
+                    }, {
+                        "name" : "JP2",
+                        "humanReadable" : "JP2",
+                        "sizeFactor" : "1.2"
+                    }, {
+                        "name" : "PNG",
+                        "humanReadable" : "PNG",
+                        "sizeFactor" : "1.2"
                     }
                 ]
-            },
-            {
-                "argumentName": "Download mode_S2_L1",
-                "description": "wait until completion or download continuously",
-                "value": [
+            }, {
+                "argumentName" : "Download mode_S2_L1",
+                "description" : "wait until completion or download continuously",
+                "preConditions" : [
                     {
-                        "name": "DLcomplete",
-                        "humanReadable": "Download on completion",
-                        "sizeFactor": "1"
-                    },
+                        "parentDownloadOption" : "ProductFormat",
+                        "parentDownloadValue" : "GeoTIFF"
+                    }, {
+                        "parentDownloadOption" : "ProductFormat",
+                        "parentDownloadValue" : "JP2"
+                    }
+                ],
+                "value" : [
                     {
-                        "name": "DLcontinuous",
-                        "humanReadable": "Download continuously",
-                        "sizeFactor": "1"
+                        "name" : "DLcomplete",
+                        "humanReadable" : "Download on completion",
+                        "sizeFactor" : "1"
+                    }, {
+                        "name" : "DLjp2",
+                        "humanReadable" : "Test option depending on JP2",
+                        "sizeFactor" : "1",
+                        "preConditions" : [
+                            {
+                                "parentDownloadOption" : "ProductFormat",
+                                "parentDownloadValue" : "JP2"
+                            }
+                        ]
+                    }, {
+                        "name" : "DLcontinuous",
+                        "humanReadable" : "Download continuously",
+                        "sizeFactor" : "1",
+                        "preConditions" : [
+                            {
+                                "parentDownloadOption" : "ProductFormat",
+                                "parentDownloadValue" : "GeoTIFF"
+                            }
+                        ]
                     }
                 ]
             }

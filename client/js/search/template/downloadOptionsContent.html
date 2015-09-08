@@ -9,26 +9,28 @@
 	<!-- Display  download options. 
 		See (IICD-WC-WS)-(ngEO-14-ICD-ELC-075)-(Internal ICD Web Client - Web Server) issue 2.12 §4.4.3.1.1.2 for more information on the configuration of the downloadOptions
 	-->
-	<form>			
-		<% _.each(model.get("downloadOptions"), function(option) { %>
-			<% if (!option.cropProductSearchArea) { %>
-				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
-					<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
-					<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
-					<!-- <option value="None">None</option> -->
-					<% _.each(option.value, function(value) { %>
-						<% if ( model.get(option.argumentName) == "@conflict" ) { %>
-							<option value="" selected style="display: none;"></option>
-						<% } else { %>
-							<option value="<%= value.name%>" <% if ( model.get(option.argumentName) && model.get(option.argumentName) == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
-						<% } %>
-					<% }); %>
-				</select>	
-			<% } else { %>
-				<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
-				<input type="checkbox" id="<%= option.argumentName %>" <% if( model.get(option.argumentName) ) print('checked="checked"'); %> data-mini="true" />
-			<% } %>
-		<% }); %>
+	<form>
+		<% _.each(model.get("downloadOptions"), function(option) {
+			if ( hasValidPreconditions( option ) ) {
+				if (!option.cropProductSearchArea) { %>
+					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
+						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+						<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
+						<!-- <option value="None">None</option> -->
+						<% _.each(option.value, function(value) { %>
+							<% if ( model.get(option.argumentName) == "@conflict" || !hasValidPreconditions(value) ) { %>
+								<option value="" style="display: none;"></option>
+							<% } else { %>
+								<option value="<%= value.name%>" <% if ( model.get(option.argumentName) && model.get(option.argumentName) == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
+							<% } %>
+						<% }); %>
+					</select>
+				<% } else { %>
+					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
+					<input type="checkbox" id="<%= option.argumentName %>" <% if( model.get(option.argumentName) ) print('checked="checked"'); %> data-mini="true" />
+				<% }
+			}
+		}); %>
 	</form>
 
 <% } %>
