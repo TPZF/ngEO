@@ -35,12 +35,14 @@ var StandingOrder = SearchCriteria.extend({
 	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
-	getOpenSearchURL : function(){
+	getOpenSearchURL : function(options){
 
 		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
 		url += this.getDatasetPath() + "/search?";
 		url += this.getOpenSearchParameters();
-		url += "&format=json";
+
+		var format = (options && options.hasOwnProperty("format")) ? options.format : "json";
+		url += "&format="+format;
 		
 		return url;
 	},

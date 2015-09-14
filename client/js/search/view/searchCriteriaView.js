@@ -37,6 +37,7 @@ var SearchCriteriaView = SearchView.extend({
 		// To share a search
 		"click #share" : function() {
 			SharePopup.open({
+				openSearchUrl: this.model.getOpenSearchURL({ format: "atom" }),
 				url: Configuration.serverHostName + (window.location.pathname) + this.model.getSharedSearchURL(),
 				positionTo: this.$el.find('#share')[0]
 			});

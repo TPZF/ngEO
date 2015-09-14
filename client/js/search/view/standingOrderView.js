@@ -37,6 +37,7 @@ var StandingOrderView = SearchView.extend({
 		"click #share" : function() {
 
 			SharePopup.open({
+				openSearchUrl: this.model.getOpenSearchURL({ format: "atom" }),
 				url: Configuration.serverHostName + (window.location.pathname) + StandingOrderDataAccessRequest.getSharedURL(this.model),
 				positionTo: this.$el.find('#share')[0]
 			});

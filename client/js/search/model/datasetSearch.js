@@ -86,8 +86,7 @@ var DataSetSearch = SearchCriteria.extend({
 	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
-	getOpenSearchURL : function(id) {
-
+	getOpenSearchURL : function(options) {
 		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
 				
 		// Correlation/Interferometry
@@ -100,14 +99,13 @@ var DataSetSearch = SearchCriteria.extend({
 			url += this.getInterferometryParameters();
 			
 		} else {
-			if (!id) {
-				id = this.datasetIds.join(',');
-			}
+			var id = (options && options.hasOwnProperty('id')) ? options.id : this.datasetIds.join(',');
 			url += id + "/search?";
 			url += this.getOpenSearchParameters();
 		}
 		
-		url += "&format=json";
+		var format = (options && options.hasOwnProperty("format")) ? options.format : "json";
+		url += "&format="+format;
 		
 		return url;
 	},
@@ -127,22 +125,6 @@ var DataSetSearch = SearchCriteria.extend({
 		interferometryParams += "&correlatedTo=" + encodeURIComponent(slaveUrl) + "&corFunction=inteferometry"; // OLD parameter: "with"
 
 		return interferometryParams;
-	},
-	
-	/**
-	 * Get the shared search URL
-	 */
-	getSharedSearchURL : function(){
-
-		var url = "#data-services-area/search/" +  this.datasetIds.join(',') + '?';
-		url += this.getOpenSearchParameters();
-		// Correlation/Interferometry
-		if ( this.get('mode') != "Simple" ) {
-		
-			// Add interferometry specific parameters
-			url += this.getInterferometryParameters();
-		} 
-		return url;
 	},
 	
 	/**	
