@@ -58,8 +58,14 @@ app.get('/ngeo/datasetSearchInfo/:id', datasetSearchInfo);
 //product search interface
 app.get('/ngeo/catalogue/:datasetId/search', productSearch);
 
-//download managers and download manager status change interfaces 
-app.get(/\/ngeo\/downloadManagers.*/, downloadManagers);
+//download managers list interface
+app.get('/ngeo/downloadManagers', downloadManagers.list);
+
+//download manager status change interface
+app.get('/ngeo/downloadManagers/:id/changeStatus', downloadManagers.changeStatus);
+
+//download manager download installer interface
+app.get('/ngeo/downloadManagerInstall/:id', downloadManagers.downloadInstaller);
 
 //simple DAR interface
 app.put('/ngeo/simpleDataAccessRequest', simpleDataAccessRequest);
