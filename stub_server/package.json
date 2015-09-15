@@ -14,5 +14,8 @@
     "terraformer": "0.2.0",
     "terraformer-wkt-parser": "",
     "node-uuid": ""
+  },
+  "devDependencies": {
+    "winston": "^1.0.1"
   }
 }

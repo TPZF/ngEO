@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -6,27 +5,28 @@
 // Change the working directory
 process.chdir(__dirname);
 
-var express = require('express')
-  , webClientConfigurationData = require('./webClientConfigurationData')
-  , datasetPopulationMatrix = require('./datasetPopulationMatrix')
-  , datasetSearchInfo = require('./datasetSearchInfo')
-  , productSearch = require('./productSearch')
-  , downloadManagers = require('./downloadManagers')
-  , simpleDataAccessRequest = require('./simpleDataAccessRequest')
-  , hostedProcessDataAccessRequest = require('./hostedProcessDataAccessRequest')
-  , standingOrderDataAccessRequest = require('./standingOrderDataAccessRequest')
-  , downloadStatuses = require('./dataAccessRequestStatus')
-  , downloadHelper = require('./downloadHelper')
-  , shopcarts = require('./shopcarts')
-  , datasetAuthorization = require('./datasetAuthorization')
-  , hostedProcesses = require('./hostedProcesses')
-  , user = require('./user')
-  , http = require('http')
-  , path = require('path')
-  , httpProxy = require('http-proxy')
-  , proxy = require('./proxy')
-  , expressProxy = require('express-http-proxy')
-  , url = require('url');
+var express = require('express'),
+    webClientConfigurationData = require('./webClientConfigurationData'),
+    datasetPopulationMatrix = require('./datasetPopulationMatrix'),
+    datasetSearchInfo = require('./datasetSearchInfo'),
+    productSearch = require('./productSearch'),
+    downloadManagers = require('./downloadManagers'),
+    simpleDataAccessRequest = require('./simpleDataAccessRequest'),
+    hostedProcessDataAccessRequest = require('./hostedProcessDataAccessRequest'),
+    standingOrderDataAccessRequest = require('./standingOrderDataAccessRequest'),
+    downloadStatuses = require('./dataAccessRequestStatus'),
+    downloadHelper = require('./downloadHelper'),
+    shopcarts = require('./shopcarts'),
+    datasetAuthorization = require('./datasetAuthorization'),
+    hostedProcesses = require('./hostedProcesses'),
+    user = require('./user'),
+    http = require('http'),
+    path = require('path'),
+    httpProxy = require('http-proxy'),
+    proxy = require('./proxy'),
+    expressProxy = require('express-http-proxy'),
+    url = require('url'),
+    logger = require('./utils/logger');
 
 var app = express();
 
@@ -179,5 +179,5 @@ app.use('/wms2eos', wms2eosProxy);
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+  logger.info("Express server listening on port " + app.get('port'));
 });

@@ -7,6 +7,7 @@
  */
 
 var user = require('../user');
+var logger = require('../utils/logger');
 
 module.exports = {
   	
@@ -37,6 +38,7 @@ module.exports = {
 	 *	Download the installer
 	 */
 	downloadInstaller: function(req, res) {
+		logger.debug("Download installer " + req.param.id);
 		// Send a fake file just for simulation
 		res.sendfile('./downloadManagers/downloadManagerDisableResponse.json');
 	}
