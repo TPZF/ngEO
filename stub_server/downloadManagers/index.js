@@ -37,7 +37,6 @@ module.exports = {
 	 *	Download the installer
 	 */
 	downloadInstaller: function(req, res) {
-		console.log("GET INSTALLER " + req.params.id);
 		// Send a fake file just for simulation
 		res.sendfile('./downloadManagers/downloadManagerDisableResponse.json');
 	}
