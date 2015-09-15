@@ -1,6 +1,6 @@
 <div class="ui-error-message widget-content ui-body-c">
 	<p><b>To install a Download Manager click on the following buttons : </b></p>
 	<% _.each( downloadManagerInstallationLink, function(value,key) { %>
-		<a data-mini='true' data-inline='true' data-theme='a' data-role='button' href='<%= value %>'><%= key %> Download Manager</a>
+		<a data-mini='true' data-inline='true' data-theme='a' data-role='button' data-ajax="false" href='<%= value %>'><%= key %> Download Manager</a>
 	<% }); %>
 </div>
