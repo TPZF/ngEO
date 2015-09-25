@@ -3,13 +3,14 @@ export WEBC_VERSION=2.10
 export WEBC_RELEASE=SNAPSHOT20141017
 
 # Build the WebClient first : minificaiton, combination
-cd ../build
-./build.sh
+cd ..
+rm -rf output-opt
+brunch build --production
 
 # Build the tar from the optimized sources
-cd ../packaging
+cd ./packaging
 mkdir esa-webclient-ngeo
-mv ../build/output ./esa-webclient-ngeo/webclient
+mv ../output-opt ./esa-webclient-ngeo/webclient
 tar czf esa-webclient-ngeo.tar.gz esa-webclient-ngeo
 rm -rf esa-webclient-ngeo
 mv esa-webclient-ngeo.tar.gz ~/rpmbuild/SOURCES
@@ -18,7 +19,6 @@ mv esa-webclient-ngeo.tar.gz ~/rpmbuild/SOURCES
 rpmbuild -ba esa-webclient-ngeo.spec
 
 # Build the tar from the server
-cd ../packaging
 mkdir esa-webclient-testserver-ngeo
 cp -r ../stub_server ./esa-webclient-testserver-ngeo/webclient-testserver
 tar czf esa-webclient-testserver-ngeo.tar.gz esa-webclient-testserver-ngeo
