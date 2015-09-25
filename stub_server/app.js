@@ -36,8 +36,8 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  app.use('/client-dev',express.static(path.join(__dirname, '../client')));
-  app.use('/client-opt',express.static(path.join(__dirname, '../build/output')));
+  app.use('/client-dev',express.static(path.join(__dirname, '../output-dev')));
+  app.use('/client-opt',express.static(path.join(__dirname, '../output-opt')));
   app.use('/client',express.static(path.join(__dirname, '../webclient')));
   app.use('/ngeo/files',express.static(path.join(__dirname, 'files')));
 });
