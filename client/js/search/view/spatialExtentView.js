@@ -1,42 +1,43 @@
-
-
-define( ['jquery', 'backbone', 'map/map', "search/view/boxView", "search/view/polygonView", "search/view/gazetteerView", "search/view/importView",
-         'text!search/template/areaCriteriaContent.html'], 
-		function($, Backbone, Map, BoxView, PolygonView, GazetteerView, ImportView, areaCriteria_template) {
+var Map = require('map/map');
+var BoxView = require('search/view/boxView');
+var PolygonView = require('search/view/polygonView');
+var GazetteerView = require('search/view/gazetteerView');
+var ImportView = require('search/view/importView');
+var areaCriteria_template = require('search/template/areaCriteriaContent');
 
 /**
  * The SpatialExtentView manages the different views to define the search area (or zone of interest).
  */
 var SpatialExtentView = Backbone.View.extend({
-	
+
 	// Constructor
-	initialize : function(options) {
-	
+	initialize: function(options) {
+
 		this.searchAreaLayer = null;
 		this.mode = "bbox";
-		
+
 		// Listen when the searchArea has changed to update the view
-		this.model.on("change:searchArea",  this.onModelChanged, this);		
+		this.model.on("change:searchArea", this.onModelChanged, this);
 	},
-	
+
 	// Events
-	events :{
-		'change #toolsChoice' : function(event) {
+	events: {
+		'change #toolsChoice': function(event) {
 			var val = $(event.currentTarget).find('input:radio:checked').val();
-			
+
 			this.tools[this.mode].close();
 			this.tools[val].open();
-			
+
 			this.mode = val;
 		}
 	},
-	
+
 	/**
 	 * Update the search area layer
 	 */
 	updateSearchAreaLayer: function() {
 		// Create the layer if not already done
-		if ( !this.searchAreaLayer ) {
+		if (!this.searchAreaLayer) {
 			// Create a layer for the search area
 			var searchAreaParams = {
 				name: this.model.name + " Area",
@@ -45,32 +46,32 @@ var SpatialExtentView = Backbone.View.extend({
 				style: "search-area",
 				greatCircle: false
 			};
-			this.searchAreaLayer = Map.addLayer( searchAreaParams  );
-			this.searchAreaLayer.addFeature( this.model.searchArea.getFeature() );
+			this.searchAreaLayer = Map.addLayer(searchAreaParams);
+			this.searchAreaLayer.addFeature(this.model.searchArea.getFeature());
 		} else {
-			this.searchAreaLayer.updateFeature( this.model.searchArea.getFeature()  );
+			this.searchAreaLayer.updateFeature(this.model.searchArea.getFeature());
 		}
-		
+
 		// TODO maybe a 'smart' zoomTo is needed?
 		//Map.zoomTo( this.model.searchArea.getFeature().bbox );
 	},
-	
+
 	// Called when model has changed from outside the view, i.e. when a search URL is given by the user
 	onModelChanged: function() {
-		if ( this.model.searchArea.getMode() == 0 ) {
+		if (this.model.searchArea.getMode() == 0) {
 			this.tools['bbox'].updateFromModel();
 			this.$el.find('#radio-bbox-label').trigger('click');
-		} else if ( this.model.searchArea.getMode() == 1 ) {
+		} else if (this.model.searchArea.getMode() == 1) {
 			this.tools['polygon'].updateFromModel();
-			this.$el.find('#radio-polygon-label').trigger('click'); 
+			this.$el.find('#radio-polygon-label').trigger('click');
 		}
 	},
-		
-	// Build the view
-	render: function(){
 
-		this.$el.append(_.template(areaCriteria_template, this.model));
-		
+	// Build the view
+	render: function() {
+
+		this.$el.append(areaCriteria_template(this.model));
+
 		// Create the view for the different tools
 		this.tools = {
 			'bbox': new BoxView({
@@ -94,24 +95,22 @@ var SpatialExtentView = Backbone.View.extend({
 				el: this.$el.find('#import').get(0)
 			})
 		};
-		
+
 		// Close all the tools except the current one
-		for ( var t in this.tools ) {
-			if ( this.tools.hasOwnProperty(t) ) {
-				if ( t != this.mode ) {
+		for (var t in this.tools) {
+			if (this.tools.hasOwnProperty(t)) {
+				if (t != this.mode) {
 					this.tools[t].close();
 				}
 			}
 		}
-		
+
 		// Open the current tools
 		this.tools[this.mode].open();
-		
+
 		return this;
 	},
-	
-});
-
-return SpatialExtentView;
 
 });
+
+module.exports = SpatialExtentView;

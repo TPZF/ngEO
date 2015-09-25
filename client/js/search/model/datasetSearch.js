@@ -1,43 +1,44 @@
-  
-define( ['jquery', 'backbone', 'configuration', 'search/model/dataSetPopulation', 'search/model/searchCriteria'], 
-		function($, Backbone, Configuration, DatasetPopulation, SearchCriteria) {
+var Configuration = require('configuration');
+var DatasetPopulation = require('search/model/dataSetPopulation');
+var SearchCriteria = require('search/model/searchCriteria');
+
 
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
 
 // Helper function
-var _mergeAttributes = function( datasets, attrName, id ) {
+var _mergeAttributes = function(datasets, attrName, id) {
 	var mergedAttributes = {};
 	var isFirst = true;
-	
-	_.each( datasets, function(dataset) {
-	
+
+	_.each(datasets, function(dataset) {
+
 		var attrs = dataset.get(attrName);
 		var attrMap = {};
 		if (attrs) {
-			for ( var i = 0; i < attrs.length; i++ ) {
-				attrMap[ attrs[i][id] ] = attrs[i];
+			for (var i = 0; i < attrs.length; i++) {
+				attrMap[attrs[i][id]] = attrs[i];
 			}
 		}
-		
-		if ( isFirst ) {
+
+		if (isFirst) {
 			mergedAttributes = attrMap;
 			isFirst = false;
 		} else {
-		
+
 			// Exclude attribute not in the map
-			for ( var x in mergedAttributes ) {
-				if ( !attrMap[x] ) {
+			for (var x in mergedAttributes) {
+				if (!attrMap[x]) {
 					delete mergedAttributes[x];
-				} else if ( !_.isEqual( attrMap[x], mergedAttributes[x] ) ) {
+				} else if (!_.isEqual(attrMap[x], mergedAttributes[x])) {
 					delete mergedAttributes[x];
 				}
 			}
-	
+
 		}
-				
+
 	});
-	
+
 	return mergedAttributes;
 };
 
@@ -45,76 +46,76 @@ var _mergeAttributes = function( datasets, attrName, id ) {
  * This class manages the criteria for search
  */
 var DataSetSearch = SearchCriteria.extend({
-	
+
 	// Extend SearchCriteria defaults
-	defaults: _.extend({}, SearchCriteria.prototype.defaults.call(this),
-        {
-			useTimeSlider : true, //flag for displaying time slider or not
-			mode: "Simple",
-			// Correlation/Interferometry parameters
-			timeCover: [0,30],
-			spatialCover: 25,
-			baseline: [0,5],
-			burstSync: [0,100],
-			master: ""
-		}
-    ),
-	
+	defaults: _.extend({}, SearchCriteria.prototype.defaults.call(this), {
+		useTimeSlider: true, //flag for displaying time slider or not
+		mode: "Simple",
+		// Correlation/Interferometry parameters
+		timeCover: [0, 30],
+		spatialCover: 25,
+		baseline: [0, 5],
+		burstSync: [0, 100],
+		master: ""
+	}),
+
 	name: "Search",
-	
+
 	/**
 	 * Constructor
 	 */
-	initialize : function() {
+	initialize: function() {
 		SearchCriteria.prototype.initialize.apply(this, arguments);
-		
+
 		// The array of selected dataset Ids
 		this.datasetIds = [];
-		
+
 		// The array of slaves
 		this.slaves = [];
-		
+
 		// The number of selected datasets
 		this.numDatasets = 0;
-		
+
 		// Automatically load the dataset when the datasetId is changed
-		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged );
-		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged );
+		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged);
+		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged);
 	},
-	
+
 	/**
 	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
-	getOpenSearchURL : function(options) {
+
+	getOpenSearchURL: function(options) {
+
 		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
-				
+
 		// Correlation/Interferometry
-		if ( this.get('mode') != "Simple" ) {
-		
+		if (this.get('mode') != "Simple") {
+
 			url += this.get('master') + "/search?";
 			url += this.getOpenSearchParameters();
-		
+
 			// Add interferometry specific parameters
 			url += this.getInterferometryParameters();
-			
+
 		} else {
 			var id = (options && options.hasOwnProperty('id')) ? options.id : this.datasetIds.join(',');
 			url += id + "/search?";
 			url += this.getOpenSearchParameters();
 		}
-		
+
 		var format = (options && options.hasOwnProperty("format")) ? options.format : "json";
-		url += "&format="+format;
-		
+		url += "&format=" + format;
+
 		return url;
 	},
 
 	/**
 	 *	Get interferometry/correlation parameters
 	 */
-	getInterferometryParameters : function() {
-		var interferometryParams = "&timeCover=[" + this.get('timeCover') + "]&spatialCover=" + this.get('spatialCover') + "]&baseline=[" + this.get('baseline') + "]&burstSync=[" + this.get('burstSync')+"]";
+	getInterferometryParameters: function() {
+		var interferometryParams = "&timeCover=[" + this.get('timeCover') + "]&spatialCover=" + this.get('spatialCover') + "]&baseline=[" + this.get('baseline') + "]&burstSync=[" + this.get('burstSync') + "]";
 		// Interferometry : only one dataset, correlation -> more than one(not implemented yet)
 		var slaveUrl = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
 		slaveUrl += this.slaves + "/search?";
@@ -126,20 +127,21 @@ var DataSetSearch = SearchCriteria.extend({
 
 		return interferometryParams;
 	},
-	
+
+
 	/**	
 	 * Get the dataset path to build URLs
 	 */
 	getDatasetPath: function() {
 		return this.get('mode') == "Simple" ? this.datasetIds.join(',') : this.get('master');
 	},
-	
+
 	/**
 	 * Compute the available date range from the selected datasets
 	 */
 	computeDateRange: function() {
 		var dateRange = null;
-		_.each( DatasetPopulation.selection, function(dataset) {
+		_.each(DatasetPopulation.selection, function(dataset) {
 			if (!dateRange) {
 				dateRange = {
 					start: dataset.get('startDate'),
@@ -147,165 +149,163 @@ var DataSetSearch = SearchCriteria.extend({
 					validityStop: dataset.get('validityEndDate')
 				};
 			} else {
-				if ( dataset.get('startDate') < dateRange.start ) {
+				if (dataset.get('startDate') < dateRange.start) {
 					dateRange.start = dataset.get('startDate');
 				}
-				if ( dataset.get('endDate') > dateRange.stop ) {
+				if (dataset.get('endDate') > dateRange.stop) {
 					dateRange.stop = dataset.get('endDate');
 				}
-				if ( dataset.get('validityEndDate') > dateRange.validityStop ) {
+				if (dataset.get('validityEndDate') > dateRange.validityStop) {
 					dateRange.validityStop = dataset.get('validityEndDate');
 				}
 			}
 		});
-		
+
 		this.set('dateRange', dateRange);
 	},
-	
+
 	/**
 	 * Set the master dataset for correlation/interferoemtry
 	 */
 	setMaster: function(val) {
 		var i = this.datasetIds.indexOf(val);
-		if ( i >= 0 ) {
+		if (i >= 0) {
 			this.slaves = this.datasetIds.slice(0);
-			this.slaves.splice(i,1);
-			this.set('master', val );
+			this.slaves.splice(i, 1);
+			this.set('master', val);
 		}
 	},
-	
-	
+
+
 	/**
 	 * Set the mode for search : Simple, Correlation, Interferometry
 	 */
 	setMode: function(val) {
-	
-		if ( val != 'Simple' ) {
-			
+
+		if (val != 'Simple') {
+
 			this.slaves = this.datasetIds.slice(0);
 			var master = this.slaves.shift();
-			
+
 			// Take into account the case of interferometry/correlation on a single dataset
-			if ( this.slaves.length == 0 ) {
-				this.slaves.push( master );
+			if (this.slaves.length == 0) {
+				this.slaves.push(master);
 			}
-			
-			this.set('master',master);
-			
+
+			this.set('master', master);
+
 		} else {
-		
-			this.set('master','');
+
+			this.set('master', '');
 			this.slaves = "";
-			
+
 		}
-		
-		this.set('mode',val);
+
+		this.set('mode', val);
 	},
-	
+
 	/**
 	 * Check if interferometry is supported
 	 */
-	isInterferometrySupported : function() {
-		
-		if ( this.datasetIds.length == 0 ) {
+	isInterferometrySupported: function() {
+
+		if (this.datasetIds.length == 0) {
 			return false;
 		}
-		
-		if ( this.datasetIds.length > 2 ) {
+
+		if (this.datasetIds.length > 2) {
 			return false;
 		}
-		
-		for ( var x in DatasetPopulation.selection ) {
+
+		for (var x in DatasetPopulation.selection) {
 			var dataset = DatasetPopulation.selection[x];
 			/* Old method to check if a dataset supports interferometry
 			if ( !dataset.hasKeyword('interferometry') ) {
 				return false;
 			}*/
-			
+
 			// New method... use the criteria 'usableForInterferometry'
-			if ( !DatasetPopulation.usableForInterferometry(x) ) {
+			if (!DatasetPopulation.usableForInterferometry(x)) {
 				return false;
 			}
 		}
-		
+
 		return true;
 	},
-	
+
 	/**
 	 * Call when the dataset selection is changed
 	 */
-	onDatasetSelectionChanged : function() {
-		
+	onDatasetSelectionChanged: function() {
+
 		// Recompute datasetIds parameter which is used in many places
 		this.datasetIds = [];
-		for ( var x in DatasetPopulation.selection ) {
+		for (var x in DatasetPopulation.selection) {
 			this.datasetIds.push(x);
 		}
-		
+
 		//reset all the selected attributes and download options from the old selection
 		this.clearAdvancedAttributesAndDownloadOptions();
-	
+
 		// Recompute the date range
 		this.computeDateRange();
-		
+
 		// Recompute advanced attributes
-		this.set('advancedAttributes', _mergeAttributes( DatasetPopulation.selection, 'attributes', 'id' ) );
-		
+		this.set('advancedAttributes', _mergeAttributes(DatasetPopulation.selection, 'attributes', 'id'));
+
 		// Recompute download options
-		this.set('downloadOptions', _mergeAttributes( DatasetPopulation.selection, 'downloadOptions', 'argumentName' ) );
-	
+		this.set('downloadOptions', _mergeAttributes(DatasetPopulation.selection, 'downloadOptions', 'argumentName'));
+
 		if (!this.get('dateRange'))
 			return;
-							
+
 		// Compute a search time range from the dataset extent
 		// The stop date is the dataset stop date
 		var start = this.get('start');
 		var stop = this.get('stop');
 		var rangeStart = this.get('dateRange').start;
 		var rangeStop = this.get('dateRange').stop;
-		
-		if ( stop > rangeStop || start < rangeStart ) {
-		
+
+		if (stop > rangeStop || start < rangeStart) {
+
 			// Stop is current date, or dataset stop
 			stop = new Date();
-			if ( stop < rangeStart ) {
-				stop = new Date( rangeStart.getTime() + ONE_MONTH );
-			} 
-			
-			if ( stop > rangeStop ) {
-				stop = new Date( rangeStop.getTime() );
+			if (stop < rangeStart) {
+				stop = new Date(rangeStart.getTime() + ONE_MONTH);
 			}
-						
+
+			if (stop > rangeStop) {
+				stop = new Date(rangeStop.getTime());
+			}
+
 			// The start date is set to one month before the stop date (or the dataset start date if less than one month before)
 			var diff = (rangeStop - rangeStart);
-			if ( diff > ONE_MONTH ) {
-				start = new Date( stop.getTime() - ONE_MONTH );
+			if (diff > ONE_MONTH) {
+				start = new Date(stop.getTime() - ONE_MONTH);
 			} else {
-				start = new Date(rangeStart.getTime() );
+				start = new Date(rangeStart.getTime());
 			}
-								
+
 			// Reset start time
 			start.setUTCHours(0);
 			start.setUTCMinutes(0);
 			start.setUTCSeconds(0);
 			start.setUTCMilliseconds(0);
-			
+
 			// Reset stop time
 			stop.setUTCHours(23);
 			stop.setUTCMinutes(59);
 			stop.setUTCSeconds(59);
 			stop.setUTCMilliseconds(999);
-			
+
 			this.set({
 				start: start,
 				stop: stop
-			}); 
-		} 
-	
+			});
+		}
+
 	}
-	
-});
-
-return new DataSetSearch();
 
 });
+
+module.exports = new DataSetSearch();

@@ -1,6 +1,8 @@
-define( ['jquery', 'backbone', 'configuration', 'hostedProcesses/view/hostedProcessConfigurationView', 'dataAccess/model/standingOrderDataAccessRequest',
-		'text!hostedProcesses/template/hostedProcessesListContent.html', 'ui/widget'], 
-		function($, Backbone, Configuration, HostedProcessConfigurationView, StandingOrderDataAccessRequest, hostedProcessesList_template) {
+var Configuration = require('configuration');
+var HostedProcessConfigurationView = require('hostedProcesses/view/hostedProcessConfigurationView');
+var StandingOrderDataAccessRequest = require('dataAccess/model/standingOrderDataAccessRequest');
+require('ui/widget');
+var hostedProcessesList_template = require('hostedProcesses/template/hostedProcessesListContent');
 
 /**
  * This view handles the displaying of hosted processes
@@ -8,12 +10,11 @@ define( ['jquery', 'backbone', 'configuration', 'hostedProcesses/view/hostedProc
 var SelectHostedProcessView = Backbone.View.extend({
 
 	id: "hostedProcessView",
-	initialize : function(options){
+	initialize: function(options) {
 		this.request = options.request;
 	},
 	events: {
-		"click #configureHostedProcess" : function()
-		{
+		"click #configureHostedProcess": function() {
 			$("#serverMessage").empty();
 
 			var selectedHostedProcessIndex = this.$el.find('.selected').data("value");
@@ -38,8 +39,7 @@ var SelectHostedProcessView = Backbone.View.extend({
 			element.trigger('create');
 			element.ngeowidget("show");
 		},
-		"click .hostedProcess" : function(event)
-		{
+		"click .hostedProcess": function(event) {
 			var $selectedHostedProcess = $(event.target).closest('.hostedProcess');
 
 			// Set hostedProcessId and reinit parameters
@@ -52,21 +52,17 @@ var SelectHostedProcessView = Backbone.View.extend({
 				.toggleClass('selected');
 
 			var configureBtn = this.$el.find('#configureHostedProcess');
-			if ( this.$el.find('.selected').length > 0 )
-			{
+			if (this.$el.find('.selected').length > 0) {
 				configureBtn.removeAttr('disabled');
-			}
-			else
-			{
-				configureBtn.attr('disabled','disabled');
+			} else {
+				configureBtn.attr('disabled', 'disabled');
 			}
 			configureBtn.button("refresh");
 		}
 	},
 
-	render : function()
-	{
-		var content = _.template(hostedProcessesList_template, {
+	render: function() {
+		var content = hostedProcessesList_template({
 			hostedProcesses: this.model.get('hostedProcess')
 		});
 
@@ -77,17 +73,18 @@ var SelectHostedProcessView = Backbone.View.extend({
 	/**
 	 *	Check if hosted process parameters are filled, handle EOProductURL type
 	 */
-	validateParameters: function()
-	{
+	validateParameters: function() {
 		var self = this;
-		var hostedProcess = _.find(this.model.get('hostedProcess'), function(hp){ return hp.hostedProcessId == self.request.hostedProcessId; });
-		for ( var i=0; i<hostedProcess.parameter.length; i++ )
-		{
+		var hostedProcess = _.find(this.model.get('hostedProcess'), function(hp) {
+			return hp.hostedProcessId == self.request.hostedProcessId;
+		});
+		for (var i = 0; i < hostedProcess.parameter.length; i++) {
 			var parameter = hostedProcess.parameter[i];
-			var parameterFilled = _.where(this.request.parameters, {name: parameter.name}).length > 0;
-			if ( parameter.type != "EOProductURL" )
-			{
-				if ( !parameterFilled )
+			var parameterFilled = _.where(this.request.parameters, {
+				name: parameter.name
+			}).length > 0;
+			if (parameter.type != "EOProductURL") {
+				if (!parameterFilled)
 					return false;
 			}
 			/*else
@@ -119,6 +116,4 @@ var SelectHostedProcessView = Backbone.View.extend({
 	}
 });
 
-return SelectHostedProcessView;
-
-});
+module.exports = SelectHostedProcessView;

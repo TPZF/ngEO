@@ -1,10 +1,12 @@
+var Map = require('map/map');
+var LayersWidget = require('map/widget/layers');
+var BackgroundWidget = require('map/widget/background');
 
-define(['jquery', 'map/map', "map/widget/layers", "map/widget/background"], function($, Map, LayersWidget, BackgroundWidget) {
 
 var mode2D = true;
 
-return function (dsa) {
-		
+module.exports = function(dsa) {
+
 	this.layersWidget = new LayersWidget(dsa);
 
 	// Create widget
@@ -13,12 +15,18 @@ return function (dsa) {
 	});
 
 	new BackgroundWidget(dsa);
-	
-	$("#zoomIn").click( function() { Map.zoomIn(); } );
-	$("#zoomOut").click( function() { Map.zoomOut(); } );
-	$("#home").click( function() { Map.zoomToMaxExtent(); } );
-	
-	$("#switch").click( function() {
+
+	$("#zoomIn").click(function() {
+		Map.zoomIn();
+	});
+	$("#zoomOut").click(function() {
+		Map.zoomOut();
+	});
+	$("#home").click(function() {
+		Map.zoomToMaxExtent();
+	});
+
+	$("#switch").click(function() {
 		mode2D = !mode2D;
 		if (!Map.switchMapEngine(mode2D ? '2d' : '3d')) {
 			// Create a pop-up to warn the user
@@ -28,26 +36,24 @@ return function (dsa) {
 				.popup('open');
 			mode2D = true;
 			// Switch back to 2D
-			Map.switchMapEngine('2d'); 
+			Map.switchMapEngine('2d');
 		}
 	});
 
 	// TEMPO : use draw button to launch drawing, useful for testing
-/*	dsa.find("#draw").click( function(event) {
-		var $this = $(this);
-		$this.toggleClass('toggle');
-		mapEngine = Map.getMapEngine();
-		if ( $this.hasClass('toggle') ) {
-			RectangleHandler.start({
-				stop: function() {
-					$this.toggleClass('toggle');
-				}
-			});
-		} else {
-			RectangleHandler.stop();
-		}
-	});*/
+	/*	dsa.find("#draw").click( function(event) {
+			var $this = $(this);
+			$this.toggleClass('toggle');
+			mapEngine = Map.getMapEngine();
+			if ( $this.hasClass('toggle') ) {
+				RectangleHandler.start({
+					stop: function() {
+						$this.toggleClass('toggle');
+					}
+				});
+			} else {
+				RectangleHandler.stop();
+			}
+		});*/
 
 };
-
-});

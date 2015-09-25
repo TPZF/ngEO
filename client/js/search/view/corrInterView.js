@@ -1,8 +1,6 @@
-
-
-define( ['jquery', 'backbone', 'text!search/template/corrInterContent.html', 
-         'jqm-datebox', 'ui/dateRangeSlider'], 
-		function($, Backbone, corrInterContent_template) {
+//require('jqm-datebox');
+//require('ui/dateRangeSlider');
+var corrInterContent_template = require('search/template/corrInterContent');
 
 /**
  * The backbone model is DatasetSearch
@@ -10,11 +8,11 @@ define( ['jquery', 'backbone', 'text!search/template/corrInterContent.html',
 var CorrInterView = Backbone.View.extend({
 
 	// Events
-	events: {		
+	events: {
 		"change #masterD": function(event) {
-			this.model.setMaster( $(event.currentTarget).val() );
+			this.model.setMaster($(event.currentTarget).val());
 		},
-		
+
 		// Update model from sliders		
 		"slidestop input": 'updateModel',
 		// Update model from classic input on blur
@@ -24,11 +22,11 @@ var CorrInterView = Backbone.View.extend({
 	// Update model properties from input
 	updateModel: function(event) {
 		var name = event.currentTarget.id;
-		if ( name.match(/_from|_to/) ) {
-			name = name.replace(/_from|_to/,'');
+		if (name.match(/_from|_to/)) {
+			name = name.replace(/_from|_to/, '');
 			this.updateRange(name);
 		} else {
-			this.model.set( name, $(event.currentTarget).val() );
+			this.model.set(name, $(event.currentTarget).val());
 		}
 	},
 
@@ -36,21 +34,21 @@ var CorrInterView = Backbone.View.extend({
 	updateRange: function(name) {
 		var $from = this.$el.find('#' + name + '_from');
 		var $to = this.$el.find('#' + name + '_to');
-		
+
 		var value = [$from.val(), $to.val()];
 		this.model.set(name, value);
 	},
-	
+
 	// Render the corr/infer view
 	render: function() {
-		var content = _.template(corrInterContent_template, this.model, { variable: 'model' });
+		var content = corrInterContent_template(this.model, {
+			variable: 'model'
+		});
 		this.$el.html(content);
 
 		return this;
 	}
-		
-});
-
-return CorrInterView;
 
 });
+
+module.exports = CorrInterView;

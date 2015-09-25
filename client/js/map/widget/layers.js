@@ -1,7 +1,9 @@
 /**
  * Layers widget module
  */
-define( [ "map/map", "ui/widget" ], function(Map, ngeoWidget) {
+
+var Map = require('map/map');
+var ngeoWidget = require('ui/widget');
 
 /**
  * Callback called when a layer is checked
@@ -17,24 +19,24 @@ var LayersWidget = function(element) {
 
 	// Build overlays panel
 	this.container = $("<fieldset data-role='controlgroup'></fieldset>");
-	
+
 	var layers = Map.layers;
-	for ( var i=0; i < layers.length; i++ ) {
-		this.buildHTML( layers[i] );
+	for (var i = 0; i < layers.length; i++) {
+		this.buildHTML(layers[i]);
 	}
 	this.container.appendTo($layersWidget);
-	
+
 	var self = this;
 	// Callback when a layer is added on the map
 	Map.on('layerAdded', function(layer) {
 		self.buildHTML(layer);
 		$layersWidget.trigger('create');
 	});
-	
+
 	// Callback when a layer is removed from the map
 	Map.on('layerRemoved', function(layer) {
-		self.container.find('input').each( function() {
-			if ( $(this).data('layer') == layer ) {
+		self.container.find('input').each(function() {
+			if ($(this).data('layer') == layer) {
 				$(this).parent().remove();
 			}
 		});
@@ -50,13 +52,13 @@ var LayersWidget = function(element) {
 LayersWidget.prototype.buildHTML = function(layer) {
 	// Build the input
 	var input = $("<input data-theme='c' type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
-		.data('layer',layer);
-	
+		.data('layer', layer);
+
 	// Callback called when the input is changed
 	input.change(layerCheckedCallback);
-	
+
 	// Build the label for input and add it to the group
-	$("<label data-mini='true'>" + (layer.params.title ? layer.params.title: layer.params.name) + "</label>")
+	$("<label data-mini='true'>" + (layer.params.title ? layer.params.title : layer.params.name) + "</label>")
 		.prepend(input)
 		.appendTo(this.container);
 };
@@ -68,18 +70,11 @@ LayersWidget.prototype.refresh = function() {
 	// Not the best solution ever.. satisfying for now
 	this.container.empty();
 	var layers = Map.layers;
-	for ( var i=0; i < layers.length; i++ ) {
-		this.buildHTML( layers[i] );
+	for (var i = 0; i < layers.length; i++) {
+		this.buildHTML(layers[i]);
 	}
 	this.$el.trigger('create');
 
 };
 
-return LayersWidget;
-	
-});
-
-
-
-
-
+module.exports = LayersWidget;

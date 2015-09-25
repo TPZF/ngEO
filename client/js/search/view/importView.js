@@ -1,7 +1,4 @@
-
-
-define( ['jquery', 'backbone', 'map/layerImport'], 
-		function($, Backbone, LayerImport) {
+var LayerImport = require('map/layerImport');
 
 /**
  * The ImportView manages the view to define the search area using an imported layer.
@@ -10,27 +7,27 @@ define( ['jquery', 'backbone', 'map/layerImport'],
 var ImportView = Backbone.View.extend({
 
 	// The model is a DatasetSearch
-	
+
 	// Constructor
-	initialize : function(options) {
+	initialize: function(options) {
 		this.importedLayer = null;
 		this.parentView = options.parentView;
-		
+
 		// Setup the drop area for import
 		if (!LayerImport.isSupported()) {
 			$('#import').html('<p class="ui-error-message"><b>Import is not supported by your browser.</b></p>');
 		} else {
-			LayerImport.addDropArea( this.$el.find('#dropZone').get(0), $.proxy(this.onFileLoaded,this) );
+			LayerImport.addDropArea(this.$el.find('#dropZone').get(0), $.proxy(this.onFileLoaded, this));
 		}
 	},
-	
-	events :{
-		
+
+	events: {
+
 	},
-	
+
 	open: function() {
 		// Restore the imported layer as search area
-		if ( this.importedLayer ) {
+		if (this.importedLayer) {
 			this.model.searchArea.setFromLayer(this.importedLayer);
 		} else {
 			this.model.searchArea.empty();
@@ -39,26 +36,24 @@ var ImportView = Backbone.View.extend({
 		this.parentView.updateSearchAreaLayer();
 		this.$el.show();
 	},
-	
+
 	close: function() {
 		this.$el.hide();
-	},	
+	},
 
-	
+
 	// Callback called when a file is loaded
-	onFileLoaded: function(layer,file) {
+	onFileLoaded: function(layer, file) {
 		this.importedLayer = layer;
 		var res = this.model.searchArea.setFromLayer(layer);
 		if (!res.valid) {
-			$('#importMessage').html('Failed to import ' + file.name + ' : ' + res.message + '.' );
+			$('#importMessage').html('Failed to import ' + file.name + ' : ' + res.message + '.');
 		} else {
 			$('#importMessage').html("File sucessfully imported : " + file.name);
 			this.parentView.updateSearchAreaLayer();
-		}		
+		}
 	},
-	
-});
-
-return ImportView;
 
 });
+
+module.exports = ImportView;

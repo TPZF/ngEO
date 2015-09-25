@@ -2,8 +2,8 @@
  * Browses layer module
  */
 
-define( ["configuration", "map/utils"], 
-	function( Configuration, MapUtils ) {
+var Configuration = require('configuration');
+var MapUtils = require('map/utils');
 
 // Helper function to format the numbers in range [0,9] by adding "0" before
 var pad2 = function(num) {
@@ -147,9 +147,7 @@ var BrowsesLayer = function(params, mapEngine) {
 	}
 };
 
-return BrowsesLayer;
-
-});
+module.exports = BrowsesLayer;
 
 
 

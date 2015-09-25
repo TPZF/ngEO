@@ -1,9 +1,5 @@
-
-define(["backbone"], 
-	function(Backbone) {
-
 var globalEvents = {};
-_.extend(globalEvents, Backbone.Events);
-return globalEvents;
 
-});
+_.extend(globalEvents, Backbone.Events);
+
+module.exports = globalEvents;

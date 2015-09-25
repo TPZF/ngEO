@@ -1,5 +1,5 @@
-define( ['jquery', 'backbone', 'configuration', 'text!search/template/downloadOptionsContent.html'], 
-		function($, Backbone, Configuration, downloadOptions_template) {
+var Configuration = require('configuration');
+var downloadOptions_template = require('search/template/downloadOptionsContent');
 
 var DownloadOptionsView = Backbone.View.extend({
 
@@ -13,41 +13,40 @@ var DownloadOptionsView = Backbone.View.extend({
 	 */
 	id: "downloadOptionsView",
 
-	initialize : function() {
-		this.listenTo( this.model, 'change:downloadOptions', this.onChangeDownloadOptions );
+	initialize: function() {
+		this.listenTo(this.model, 'change:downloadOptions', this.onChangeDownloadOptions);
 	},
-	
-	events : {
-		
+
+	events: {
+
 		//for every option modified by a select element, set in the DatasetSearch the option
 		//with the selected value.
-		'change select' : function(event){
+		'change select': function(event) {
 			var option = {};
 			//WEBC_FAT_12 Removed Download options checkbox
 			//In case of one choice is in the select box, the change event is not fired so the None is added 
 			//to allow changing the values. --> OBSOLETE WITH NGEO-1811 .. wait for final decision about "None" to remove it
 			var value = $(event.currentTarget).val();
-			if ( value != "None" )
-			{
-				this.model.set( event.currentTarget.id, value );
-			}
-			else
-			{
-				this.model.unset( event.currentTarget.id );
+			if (value != "None") {
+				this.model.set(event.currentTarget.id, value);
+			} else {
+				this.model.unset(event.currentTarget.id);
 			}
 
 			var self = this;
 
 			// Update model according to preconditions of each download option
 			_.each(this.model.get("downloadOptions"), function(option) {
-				if ( self.hasValidPreconditions( option )) {
+				if (self.hasValidPreconditions(option)) {
 					// cropProductSearchArea doesn't have any value
-					if ( !option.cropProductSearchArea ) {
-						var selectedValue = self.model.get( option.argumentName );
-						if ( selectedValue ) {
+					if (!option.cropProductSearchArea) {
+						var selectedValue = self.model.get(option.argumentName);
+						if (selectedValue) {
 							// Option has already the value set, but which doesn't respect the precondition anymore
-							var valueObject = _.findWhere(option.value, { name: selectedValue });
-							if ( !self.hasValidPreconditions( valueObject ) ) {
+							var valueObject = _.findWhere(option.value, {
+								name: selectedValue
+							});
+							if (!self.hasValidPreconditions(valueObject)) {
 								self.model.set(option.argumentName, self.getValidValue(option).name);
 							}
 						} else {
@@ -57,23 +56,23 @@ var DownloadOptionsView = Backbone.View.extend({
 					}
 				} else {
 					// Precondition isn't respected anymore, so we unset it from model
-					self.model.unset( option.argumentName );
+					self.model.unset(option.argumentName);
 				}
 			});
 			this.render();
 		},
-		
+
 		// For input checkbox, ie cropProductSearchArea
 		'change input': function(event) {
 			//check the status of the label wrapping the checkbox since
 			//this label stores the checkbox status (cf jqm)
-			var labelSelector  = "#" + event.currentTarget.id + "_label";
+			var labelSelector = "#" + event.currentTarget.id + "_label";
 			var $targetLabel = $(labelSelector);
-			var checked = $targetLabel.hasClass('ui-checkbox-on');			
+			var checked = $targetLabel.hasClass('ui-checkbox-on');
 			if (!checked) {
-				this.model.set( event.currentTarget.id, true );
+				this.model.set(event.currentTarget.id, true);
 			} else {
-				this.model.unset( event.currentTarget.id );
+				this.model.unset(event.currentTarget.id);
 			}
 		}
 	},
@@ -86,8 +85,8 @@ var DownloadOptionsView = Backbone.View.extend({
 		var self = this;
 		// Update model according to new download options
 		_.each(this.model.get("downloadOptions"), function(option) {
-			if ( !option.cropProductSearchArea ) {
-				if ( self.hasValidPreconditions( option ) ) {
+			if (!option.cropProductSearchArea) {
+				if (self.hasValidPreconditions(option)) {
 					self.model.set(option.argumentName, self.getValidValue(option).name);
 				}
 			}
@@ -103,9 +102,9 @@ var DownloadOptionsView = Backbone.View.extend({
 	getValidValue: function(option) {
 		var self = this;
 
-		for ( var i=0; i<option.value.length; i++ ) {
+		for (var i = 0; i < option.value.length; i++) {
 			var value = option.value[i];
-			if ( self.hasValidPreconditions(value) ) {
+			if (self.hasValidPreconditions(value)) {
 				return value;
 			}
 		}
@@ -123,21 +122,21 @@ var DownloadOptionsView = Backbone.View.extend({
 	 */
 	hasValidPreconditions: function(param) {
 
-		if ( !param.preConditions )
+		if (!param.preConditions)
 			return true;
 
 		var self = this;
 		var res = false;
-		_.each( param.preConditions, function(precondition) {
+		_.each(param.preConditions, function(precondition) {
 			//console.log(model.get(precondition.parentDownloadOption) + " = " + precondition.parentDownloadValue);
 			res |= (self.model.get(precondition.parentDownloadOption) == precondition.parentDownloadValue);
-		} );
+		});
 		return res;
 	},
-	
-	render: function(){
 
-		var content = _.template(downloadOptions_template, {
+	render: function() {
+
+		var content = downloadOptions_template({
 			model: this.model,
 			hasValidPreconditions: this.hasValidPreconditions
 		});
@@ -146,9 +145,7 @@ var DownloadOptionsView = Backbone.View.extend({
 		this.$el.trigger('create');
 		return this;
 	}
-		
-});
-
-return DownloadOptionsView;
 
 });
+
+module.exports = DownloadOptionsView;

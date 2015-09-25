@@ -1,14 +1,13 @@
 /**
-  * Configuration module
-  */
-  
-define( ['jquery', 'text!../conf/localConfiguration.json'], function($, localConfiguration) {
+ * Configuration module
+ */
+
+//var localConfiguration = require('../conf/localConfiguration.json');
 
 /**
  * Helper function to remove comments from the JSON file
  */
-var removeComments = function(string)
-{
+var removeComments = function(string) {
 	var starCommentRe = new RegExp("/\\\*(.|[\r\n])*?\\\*/", "g");
 	var slashCommentRe = new RegExp("(^[\/]|[^:]\/)\/.*[\r|\n]", "g");
 	string = string.replace(slashCommentRe, "");
@@ -20,28 +19,11 @@ var removeComments = function(string)
 /**
  * Helper recursive function to get a parameter from the configuration data
  */
-// var _get = function(object,path,defaultValue) {
-// 	var dotIndex = path.indexOf('.');
-// 	if ( dotIndex >= 0 ) {
-// 		var key = path.substr(0,dotIndex);
-// 		if ( object[key] ) {
-// 			return _get( object[key], path.substr(dotIndex+1), defaultValue );
-// 		}
-// 	} else {
-// 		var value = object[path];
-// 		if (typeof value != 'undefined') {
-// 			return value;
-// 		}
-// 	}
-	
-// 	return defaultValue;
-// };
-
 var _getValue = function(object, property, defaultValue) {
-	if ( object ) {
+	if (object) {
 		var value = null;
 		var kv = property.split("="); // Split by "=" to handle arrays
-		if ( kv.length == 2 ) {
+		if (kv.length == 2) {
 			// Array
 			value = _.find(object, function(item) {
 				return item[kv[0]] == kv[1];
@@ -51,68 +33,98 @@ var _getValue = function(object, property, defaultValue) {
 			value = object[property];
 		}
 
-		if ( typeof value != 'undefined' ) {
+		if (typeof value != 'undefined') {
 			return value;
 		}
 	}
-	
+
 	return defaultValue;
+};
+
+var loadLocalJson = function(fileToLoad, callback) {
+	var xobj = new XMLHttpRequest();
+	xobj.overrideMimeType("application/json");
+	xobj.open('GET', fileToLoad, false);
+	var response;
+	xobj.onreadystatechange = function() {
+		if (xobj.readyState == 4 && xobj.status == "200") {
+			// Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
+			response = callback(xobj.responseText);
+		}
+	};
+	xobj.send(null);
+	return response;
+};
+
+var onLoad = function(response) {
+	return JSON.parse(response);
 };
 
 var configuration = {
 
 	// The base url to retreive the configuration
-	url : '../conf/configuration.json',
-	
+	url: '../conf/configuration.json',
+
 	// The base server url
-	baseServerUrl : '/ngeo',
-	
+	baseServerUrl: '/ngeo',
+
 	// The  server host name
-	serverHostName : window.location.protocol + '//' + window.location.host,
-	
+	serverHostName: window.location.protocol + '//' + window.location.host,
+
 	//the local configuration is got from requirejs.config module config
 	//set in main.js
-	localConfig : JSON.parse(localConfiguration),
-		
+	//localConfig: JSON.parse(localConfiguration)
+	localConfig: null,
+
 	// Load configuration data from the server
 	load: function() {
-	
+
 		var externalData = {};
-		
 		return $.when(
 			$.ajax({
-				  url: this.url,
-				  dataType: 'json',
-				  // Remove comments from JSON file
-				  dataFilter: function(data) {
-					var dataWoComments = removeComments(data);
-					return dataWoComments;
-				  },
-				  success: function(data) {
-					configuration.data = data;
-					$.extend(true,configuration.data,externalData);
-				  },
-				  error: function(jqXHR, textStatus, errorThrown) {
-					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
-				  }
+				url: "../conf/localConfiguration.json",
+				dataType: 'json',
+				// Remove comments from JSON file
+				success: function(data) {
+					configuration.localConfig = data;
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log("Local configuration not found " + textStatus + ' ' + errorThrown);
+				}
 			}),
 			$.ajax({
-				  url: this.baseServerUrl + "/webClientConfigurationData",
-				  dataType: 'json',
-				  success: function(data) {
-					externalData = data;
-					$.extend(true,configuration.data,externalData);
-				  },
-				  error: function(jqXHR, textStatus, errorThrown) {
+				url: this.url,
+				dataType: 'json',
+				// Remove comments from JSON file
+				dataFilter: function(data) {
+					var dataWoComments = removeComments(data);
+					return dataWoComments;
+				},
+				success: function(data) {
+					configuration.data = data;
+					$.extend(true, configuration.data, externalData);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
 					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
-				  }
+				}
+			}),
+			$.ajax({
+				url: this.baseServerUrl + "/webClientConfigurationData",
+				dataType: 'json',
+				success: function(data) {
+					externalData = data;
+					$.extend(true, configuration.data, externalData);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
+				}
 			})
 		);
 	},
-	
+
 	// Get a configuration parameter
-	get: function(path,defaultValue) {
-		return this.data ? this.getFromPath(this.data,path,defaultValue) : defaultValue;
+	get: function(path, defaultValue) {
+		return this.data ? this.getFromPath(this.data, path, defaultValue) : defaultValue;
 	},
 
 	/**
@@ -133,8 +145,8 @@ var configuration = {
 	 */
 	getMappedProperty: function(object, propertyId, defaultValue) {
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
-		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper."+propertyId);
-		if ( propertyPath )
+		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
+		if (propertyPath)
 			return this.getFromPath(object, propertyPath, defaultValue);
 		else
 			return defaultValue;
@@ -146,12 +158,12 @@ var configuration = {
 	 */
 	setMappedProperty: function(object, propertyId, value) {
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
-		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper."+propertyId);
-		if ( propertyPath ) {
+		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
+		if (propertyPath) {
 			var parentPath = propertyPath.substr(propertyPath, propertyPath.lastIndexOf("."));
 			var prop = propertyPath.substr(propertyPath.lastIndexOf(".") + 1);
 			var parentValue = this.getFromPath(object, parentPath, null)
-			if ( parentValue ) {
+			if (parentValue) {
 				parentValue[prop] = value;
 			} else {
 				console.warn(parentPath + " doesn't exist");
@@ -168,17 +180,12 @@ var configuration = {
 	getFromPath: function(object, path, defaultValue) {
 		var names = path.split('.');
 		var obj = object;
-		for ( var i = 0; obj && i < names.length-1; i++ ) {
-			obj = _getValue( obj, names[i] );
+		for (var i = 0; obj && i < names.length - 1; i++) {
+			obj = _getValue(obj, names[i]);
 		}
 
-		return _getValue( obj, names[names.length-1], defaultValue );
+		return _getValue(obj, names[names.length - 1], defaultValue);
 	}
 };
 
-return configuration;
-
-});
-
-
-
+module.exports = configuration;

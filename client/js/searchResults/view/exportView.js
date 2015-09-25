@@ -1,74 +1,75 @@
+var Configuration = require('configuration');
+var GeoJsonConverter = require('map/geojsonconverter');
+var exportViewContent_template = require('searchResults/template/exportViewContent');
 
 
-define( ['jquery', 'backbone', 'configuration', 'map/geojsonconverter',
-          'text!searchResults/template/exportViewContent.html'], 
-		function($, Backbone, Configuration, GeoJsonConverter, exportViewContent) {
-
-	/** TODO TO BE IMPLEMENTED */ 
+/** TODO TO BE IMPLEMENTED */
 var ExportView = Backbone.View.extend({
 
 	/** the model is the DatasetSearch (the search model containing search parameters)
 	/* the dataset property of DatasetSearch is the Dataset backbone model containing the download options
 	 */
-	 
-	 mediaTypes : {
+
+	mediaTypes: {
 		'kml': 'application/vnd.google-earth.kml+xml',
 		'gml': 'application/gml+xml',
 		'geojson': 'application/json'
-	 },
-	
-	events : {
-		
-		'change #export-format' : function(event){
+	},
+
+	events: {
+
+		'change #export-format': function(event) {
 			var $download = this.$el.find('#download');
 			var $select = $(event.currentTarget);
-			
-			if ( $select.val() == '' ) {
+
+			if ($select.val() == '') {
 				$download.addClass('ui-disabled');
 			} else {
-				var format = $select.val().toLowerCase(); 
+				var format = $select.val().toLowerCase();
 				$download.removeClass('ui-disabled');
 
 				// Export with original geometries, also remove other internal properties
 				var featureWithOrigGeometries = $.extend(true, [], this.model.selection);
-				$.each( featureWithOrigGeometries, function( index, feature ) {
-					if ( feature._origGeometry ) {
+				$.each(featureWithOrigGeometries, function(index, feature) {
+					if (feature._origGeometry) {
 						feature.geometry = feature._origGeometry;
 						delete feature._origGeometry;
 					}
 
 					// Remove internal properties
-					if ( feature._featureCollection )
+					if (feature._featureCollection)
 						delete feature._featureCollection;
-					if ( feature.properties.styleHint )
+					if (feature.properties.styleHint)
 						delete feature.properties.styleHint;
 				});
-				
-				var blob = new Blob( [ GeoJsonConverter.convert(featureWithOrigGeometries, format) ], { "type" : this.mediaTypes[format] });
+
+				var blob = new Blob([GeoJsonConverter.convert(featureWithOrigGeometries, format)], {
+					"type": this.mediaTypes[format]
+				});
 				$download.attr('download', 'export.' + format);
-				$download.attr('href', URL.createObjectURL(blob) );
-			}		
+				$download.attr('href', URL.createObjectURL(blob));
+			}
 		},
-		
+
 	},
-		
-	render: function(){
-	
+
+	render: function() {
+
 		// Check for blob support
 		var blob = null;
 		if (window.Blob) {
 			// For Safari 5.1, test if we can create Blob.
 			try {
 				blob = new Blob();
-			} catch(err) {
+			} catch (err) {
 				blob = null;
 			}
 		}
-		
+
 		if (!blob) {
 			this.$el.append('<p class="ui-error-message"><b>Export is not supported in your browser</b></p>');
 		} else {
-			this.$el.append(exportViewContent);
+			this.$el.append(exportViewContent_template());
 			this.$el.trigger('create');
 			this.$el.find('#download').addClass('ui-disabled');
 		}
@@ -77,6 +78,4 @@ var ExportView = Backbone.View.extend({
 
 });
 
-return ExportView;
-
-});
+module.exports = ExportView;

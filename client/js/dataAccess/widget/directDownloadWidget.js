@@ -1,6 +1,6 @@
-
-define( [ "jquery", "backbone", "configuration", "dataAccess/model/downloadManagers", "text!dataAccess/template/directDownloadWidgetContent.html"], 
-		function($, Backbone, Configuration, DownloadManagers, directDownload_Content  ) {
+var Configuration = require('configuration');
+var DownloadManagers = require('dataAccess/model/downloadManagers');
+var directDownload_template = require('dataAccess/template/directDownloadWidgetContent');
 
 
 var DirectDownloadWidget = function(url) {
@@ -12,27 +12,36 @@ var DirectDownloadWidget = function(url) {
 	 *	Open the popup
 	 */
 	this.open = function(event) {
-	
-		
+
+
 		parentElement.bind({
-			popupafterclose : function(event, ui) {
+			popupafterclose: function(event, ui) {
 				parentElement.remove();
 			}
 		});
-				
+
 		// Create the content
-		if (DownloadManagers.get('downloadmanagers').length >= 1){
-			parentElement.html(_.template(directDownload_Content, {url : url, downloadHelperUrl : Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')}));
+		if (DownloadManagers.get('downloadmanagers').length >= 1) {
+			parentElement.html(directDownload_template({
+				url: url,
+				downloadHelperUrl: Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')
+			}));
 		} else {
-			parentElement.html(_.template(directDownload_Content, {url : url, downloadHelperUrl : false}));
-			
+			parentElement.html(directDownload_template({
+				url: url,
+				downloadHelperUrl: false
+			}));
+
 			// Try to fetch again  the download manages to display the special link
-			DownloadManagers.fetch().done(function() { 
-				parentElement.html(_.template(directDownload_Content, {url : url, downloadHelperUrl : Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')}));
-				parentElement.trigger('create');				
+			DownloadManagers.fetch().done(function() {
+				parentElement.html(directDownload_template({
+					url: url,
+					downloadHelperUrl: Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')
+				}));
+				parentElement.trigger('create');
 			});
 		}
-		
+
 		parentElement.trigger('create');
 
 		parentElement.popup();
@@ -40,11 +49,11 @@ var DirectDownloadWidget = function(url) {
 			x: event.pageX,
 			y: event.pageY,
 			positionTo: "origin"
-		}); 
-		
+		});
+
 	};
 
-		
+
 	/**
 	 *	For the moment not used since the popup can be 
 	 *	closed by clicking out side its content.
@@ -54,11 +63,4 @@ var DirectDownloadWidget = function(url) {
 	};
 };
 
-return DirectDownloadWidget;
-
-});
-
-
-
-
-
+module.exports = DirectDownloadWidget;

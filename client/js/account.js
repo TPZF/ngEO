@@ -1,12 +1,19 @@
+var Configuration = require('configuration');
+var Logger = require('logger');
+var DataAccessRequestStatuses = require('account/model/dataAccessRequestStatuses');
+var DownloadManagers = require('dataAccess/model/downloadManagers');
+var ShopcartCollection = require('shopcart/model/shopcartCollection');
+var DataAccessRequestMonitoringView = require('account/view/dataAccessRequestMonitoringView');
+var DownloadManagersMonitoringView = require('account/view/downloadManagersMonitoringView');
+var ShopcartManagerView = require('account/view/shopcartManagerView');
+var InquiriesView = require('account/view/inquiriesView');
+var UserPrefsView = require('account/view/userPrefsView');
+var LayerManagerView = require('account/view/layerManagerView');
+var account_template = require('../pages/account');
+require('ui/tabs');
 
-define(["jquery", "backbone", "configuration", "logger", "account/model/dataAccessRequestStatuses", 
-        "dataAccess/model/downloadManagers", "shopcart/model/shopcartCollection", "account/view/dataAccessRequestMonitoringView", 
-        "account/view/downloadManagersMonitoringView", "account/view/shopcartManagerView", "account/view/inquiriesView", "account/view/userPrefsView", "account/view/layerManagerView",
-        "text!../pages/account.html", "ui/tabs"], 
 
-        function($, Backbone, Configuration, Logger, DataAccessRequestStatuses, DownloadManagers, ShopcartCollection,
-        		DataAccessRequestMonitoringView, DownloadManagersMonitoringView, ShopcartManagerView, InquiriesView, UserPrefsView, LayerManagerView, account_template) {
-	
+
 // Private variable : the different view of My Account page	
 var dmView;
 var darView;
@@ -16,12 +23,14 @@ var shopcartManagerView;
 
 var activeView;
 
-var refreshViewOnResize = _.debounce( function() { if (activeView.refreshSize)  activeView.refreshSize(); }, 300 );
+var refreshViewOnResize = _.debounce(function() {
+	if (activeView.refreshSize) activeView.refreshSize();
+}, 300);
 
 // Function call when a tab is activated
 var onTabActivated = function($link) {
 
-	switch ( $link.attr('href') ) {
+	switch ($link.attr('href')) {
 		case "#downloadManagersMonitoring":
 			DownloadManagers.fetch();
 			activeView = dmView;
@@ -44,93 +53,93 @@ var onTabActivated = function($link) {
 			activeView = layerManagerView;
 			break;
 	}
-	
+
 	if (activeView.refreshSize) activeView.refreshSize();
 };
 
-return {
+module.exports = {
 
 	/**
 	 * Build the root element of the module and return it
 	 */
-	
+
 	buildElement: function() {
-		var account_html = _.template(account_template, Configuration.localConfig.contextHelp);
+		var account_html = account_template(Configuration.localConfig.contextHelp);
 		var acc = $(account_html);
-		acc.find('#tabs').tabs({ 
+		acc.find('#tabs').tabs({
 			theme: "b",
 			activate: onTabActivated
 		});
 		return acc;
 	},
-	
+
 	/**
 	 * Called when the module main page is shown
 	 */
 	show: function() {
 		if (activeView.refreshSize)
 			activeView.refreshSize();
-	},	
-	
+	},
+
 	/**
 	 * Initialize the module.
 	 * Called after buildElement
 	 */
 	initialize: function() {
-		
-		$(window).resize( refreshViewOnResize );
-	
+
+		$(window).resize(refreshViewOnResize);
+
 		// Create the download managers monitoring view
 		dmView = new DownloadManagersMonitoringView({
-			model : DownloadManagers,
-			el : "#downloadManagersMonitoring"
-		});	
+			model: DownloadManagers,
+			el: "#downloadManagersMonitoring"
+		});
 		dmView.render();
-				
+
 		// Create the view to monitor data access requests
 		darView = new DataAccessRequestMonitoringView({
-							model : DataAccessRequestStatuses,
-							el : "#DARMonitoring"
-						});
-		
+			model: DataAccessRequestStatuses,
+			el: "#DARMonitoring"
+		});
+
 		//Create the shopcart manager view 
 		shopcartManagerView = new ShopcartManagerView({
-			model : ShopcartCollection,
-			el : "#shopcarts"
+			model: ShopcartCollection,
+			el: "#shopcarts"
 		});
-		
+
 		//Create the inquiries View
 		inquiriesView = new InquiriesView({
 			//model : inquiery,
-			el : "#inquiries"
+			el: "#inquiries"
 		});
 		inquiriesView.render();
-		
+
 		//Create the user prefs View
 		userPrefsView = new UserPrefsView({
-			el : "#userPrefs"
-		});	
+			el: "#userPrefs"
+		});
 		userPrefsView.render();
-		
+
 		//Create wms manager view
 		layerManagerView = new LayerManagerView({
-			el : "#layerManager"
+			el: "#layerManager"
 		});
 		layerManagerView.render();
 
 		// Fetch data for DM
 		DownloadManagers.fetch();
-		
-		DataAccessRequestStatuses.set({collapseDAR : Configuration.data.dataAccessRequestStatuses.collapseDAR,
-			collapseProducts : Configuration.data.dataAccessRequestStatuses.collapseProducts});
-			
+
+		DataAccessRequestStatuses.set({
+			collapseDAR: Configuration.data.dataAccessRequestStatuses.collapseDAR,
+			collapseProducts: Configuration.data.dataAccessRequestStatuses.collapseProducts
+		});
+
 		// Fetch DAR : maybe not needed right now
 		DataAccessRequestStatuses.fetch();
-		
+
 		// The first active is download manager monitoring
 		activeView = dmView;
 	}
-		
-};
 
-});
+};

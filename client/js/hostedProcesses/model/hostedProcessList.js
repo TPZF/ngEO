@@ -1,21 +1,19 @@
-define( ['jquery', 'backbone', 'configuration'], function($, Backbone, Configuration) {
+var Configuration = require('configuration');
 
 /**
-  *	Hosted process list
-  */
+ *	Hosted process list
+ */
 var HostedProcessList = Backbone.Model.extend({
-	
-	defaults:{
-		hostedProcesses : []
+
+	defaults: {
+		hostedProcesses: []
 	},
-	
+
 	// Constructor : initialize the url from the configuration
-	initialize : function () {
+	initialize: function() {
 		// The base url to retreive the hosted process list
 		this.url = Configuration.baseServerUrl + '/hostedProcesses';
 	}
 });
 
-return HostedProcessList;
-
-});
+module.exports = HostedProcessList;

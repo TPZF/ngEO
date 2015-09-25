@@ -1,11 +1,13 @@
-
-define(["jquery", "globalEvents", "ui/menubar", "map/map", "searchResults/map",  
-        "shopcart/model/shopcartCollection", "shopcart/model/shopcart", 
- 		 "shopcart/view/shopcartItemView", "account/view/createShopcartView"], 
-	function($, GlobalEvents, MenuBar, Map, SearchResultsMap, ShopcartCollection, Shopcart, ShopcartTableView, CreateShopcartView) {
-
+var GlobalEvents = require('globalEvents');
+var MenuBar = require('ui/menubar');
+var Map = require('map/map');
+var SearchResultsMap = require('searchResults/map');
+var ShopcartCollection = require('shopcart/model/shopcartCollection');
+var Shopcart = require('shopcart/model/shopcart');
+var ShopcartTableView = require('shopcart/view/shopcartItemView');
+var CreateShopcartView = require('account/view/createShopcartView');
 	
-return {
+module.exports =  {
 		
 	/**
 	 * Initialize the shopcart component for data-services-area.
@@ -126,5 +128,3 @@ return {
 		
 	},
 };
-
-});

@@ -1,10 +1,11 @@
-define( ['jquery', 'backbone', 'configuration', 'logger', 'dataAccess/widget/dataAccessWidget',
-         'search/view/schedulingOptionsView', 'search/view/searchView',
-         'dataAccess/model/standingOrderDataAccessRequest', 'ui/sharePopup',
-         'text!search/template/searchCriteriaContent_template.html'], 
-		function($, Backbone, Configuration, Logger, DataAccessWidget,
-				 SchedulingOptionsView, SearchView, StandingOrderDataAccessRequest, SharePopup,
-				 searchCriteria_template) {
+var Configuration = require('configuration');
+var Logger = require('logger');
+var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
+var SchedulingOptionsView = require('search/view/schedulingOptionsView');
+var SearchView = require('search/view/searchView');
+var StandingOrderDataAccessRequest = require('dataAccess/model/standingOrderDataAccessRequest');
+var SharePopup = require('ui/sharePopup');
+var searchCriteria_template = require('search/template/searchCriteriaContent_template');
 
 /**
  * The model for this view is a backbone model : StandingOrder 
@@ -16,28 +17,30 @@ var StandingOrderView = SearchView.extend({
 	 */
 	id: "standingOrderView",
 
-	events: {		
+	events: {
 		// Click on search
 		"click .scSubmit": function(event) {
-		
+
 			// reset request
 			StandingOrderDataAccessRequest.initialize();
 
 			//set open search url
 			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
-						
+
 			//set selected download options
 			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
 
-			DataAccessWidget.open( StandingOrderDataAccessRequest );
+			DataAccessWidget.open(StandingOrderDataAccessRequest);
 
 		},
-					
+
 		// To share a search
-		"click #share" : function() {
+		"click #share": function() {
 
 			SharePopup.open({
-				openSearchUrl: this.model.getOpenSearchURL({ format: "atom" }),
+				openSearchUrl: this.model.getOpenSearchURL({
+					format: "atom"
+				}),
 				url: Configuration.serverHostName + (window.location.pathname) + StandingOrderDataAccessRequest.getSharedURL(this.model),
 				positionTo: this.$el.find('#share')[0]
 			});
@@ -57,19 +60,19 @@ var StandingOrderView = SearchView.extend({
 		this.schedulingOptionsView.render();
 		SearchView.prototype.refresh.apply(this);
 	},
-		
+
 	/**
 	 * Render the view
 	 */
-	render: function(){
-		
+	render: function() {
+
 		StandingOrderDataAccessRequest.initialize();
 
-		var content = _.template(searchCriteria_template, {
+		var content = searchCriteria_template({
 			submitText: "Order"
 		});
 		this.$el.append(content);
-		
+
 		SearchView.prototype.render.apply(this);
 
 		this.$el.find('#sc-content').prepend('<div id="sc-schedlingOptions-container" data-role="collapsible" data-inset="false" data-mini="true" data-collapsed="false">\
@@ -78,9 +81,9 @@ var StandingOrderView = SearchView.extend({
 											</div>');
 
 		this.schedulingOptionsView = new SchedulingOptionsView({
-			el : this.$el.find('#schedulingOptions'),
-			request : StandingOrderDataAccessRequest,
-			model : this.model
+			el: this.$el.find('#schedulingOptions'),
+			request: StandingOrderDataAccessRequest,
+			model: this.model
 		});
 		this.schedulingOptionsView.render();
 
@@ -88,9 +91,7 @@ var StandingOrderView = SearchView.extend({
 		this.$el.find('#sc-schedlingOptions-container h3 .ui-btn-inner').attr("data-help", Configuration.localConfig.contextHelp.schedulingOptions);
 		return this;
 	}
-	
-});
-
-return StandingOrderView;
 
 });
+
+module.exports = StandingOrderView;

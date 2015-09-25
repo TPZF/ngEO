@@ -1,84 +1,90 @@
 /**
-  * Download managers model 
-  * The DownloadManagers is a singleton to be used for DAR and Download managers 
-  * assignment and monitoring 
-  */
+ * Download managers model 
+ * The DownloadManagers is a singleton to be used for DAR and Download managers 
+ * assignment and monitoring 
+ */
 
-define( ['jquery', 'backbone', 'configuration', 'logger'], function($, Backbone, Configuration, Logger) {
+var Configuration = require('configuration');
+var SearchResults = require('logger');
+var Logger = require('dataAccess/model/dataAccessRequest');
 
 var DownloadManagers = Backbone.Model.extend({
-	
-	defaults:{
-		downloadmanagers : []
+
+	defaults: {
+		downloadmanagers: []
 	},
 
-	initialize : function(){
+	initialize: function() {
 		// The base url to retreive the download managers list
 		this.url = Configuration.baseServerUrl + '/downloadManagers';
-		this.listenTo(this,"error",this.onError);
+		this.listenTo(this, "error", this.onError);
 	},
 
 	/**
 	 * Call when the model cannot be fetched from the server
 	 */
-	onError : function(model,response) {
+	onError: function(model, response) {
 		if (response.status == 0) {
 			location.reload();
 		}
 	},
-	
+
 	/**
 	 * Get a download manager user friendly name given its id
 	 */
-	getDownloadManagerName : function (id) {
-		var dm = _.findWhere( this.get("downloadmanagers"), {downloadManagerId: id} );
+	getDownloadManagerName: function(id) {
+		var dm = _.findWhere(this.get("downloadmanagers"), {
+			downloadManagerId: id
+		});
 		return dm ? dm.downloadManagerFriendlyName : id;
 	},
 
 	/**
 	 * Get a download manager status given its id
 	 */
-	getDownloadManagerStatus : function (id) {
-		var dm = _.findWhere( this.get("downloadmanagers"), {downloadManagerId: id} );
+	getDownloadManagerStatus: function(id) {
+		var dm = _.findWhere(this.get("downloadmanagers"), {
+			downloadManagerId: id
+		});
 		return dm ? dm.status : null;
 	},
-	
+
 	/** 
 	 * Submit the DM change status request to the server.
 	 */
-	requestChangeStatus : function(dmID, newStatus){
-	
-		var dm = _.findWhere( this.get("downloadmanagers"), {downloadManagerId: dmID} );
+	requestChangeStatus: function(dmID, newStatus) {
+
+		var dm = _.findWhere(this.get("downloadmanagers"), {
+			downloadManagerId: dmID
+		});
 		if (!dm)
 			return;
-		
+
 		var self = this;
 		var dmChangeStatusURL = self.url + '/' + dmID + '/changeStatus?new_status=' + newStatus;
 		var prevStatus = dm.status;
 		dm.status = "STOPPING";
-	
+
 		return $.ajax({
-		  url: dmChangeStatusURL,
-		  type : 'GET',
-		  dataType: 'json'
+				url: dmChangeStatusURL,
+				type: 'GET',
+				dataType: 'json'
 			})
 			.done(function(data) {
 				dm.status = "STOPPED";
 				self.trigger("status:change");
-			 })
+			})
 			.fail(function(jqXHR, textStatus, errorThrown) {
-				if (jqXHR.status == 0 ) {
+				if (jqXHR.status == 0) {
 					location.reload();
-			 	 } else {			
+				} else {
 					Logger.error("Cannot change downloand manager status request :" + textStatus + ' ' + errorThrown);
 					// restore previous status
 					dm.status = prevStatus;
 				}
-			 });
+			});
 	}
 
 });
 
-return new DownloadManagers();
-
-});
+module.exports = new DownloadManagers();

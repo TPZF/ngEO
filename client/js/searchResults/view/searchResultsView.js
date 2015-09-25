@@ -1,9 +1,7 @@
-define(
-		[ 'jquery', 'logger', 'backbone', 'search/model/datasetSearch',
-          'text!searchResults/template/searchResultsViewContent.html' ],
-	function($, Logger, Backbone, DatasetSearch, searchResultsViewContent ) {
+var Logger = require('logger');
+var DatasetSearch = require('search/model/datasetSearch');
+var searchResultsViewContent_template = require('searchResults/template/searchResultsViewContent');
 
-	
 /**
  * The view for search results
  * The model of this view is FeatureCollection
@@ -11,16 +9,16 @@ define(
 var SearchResultsView = Backbone.View.extend({
 
 	id: 'resultsBar',
-	
+
 	/**
 	 * Constructor
 	 */
-	initialize : function() {
-	
-		this.listenTo(this.model,'startLoading', this.onStartLoading );
-		this.listenTo(this.model,'reset:features', this.onResetFeatures );
-		this.listenTo(this.model,'add:features', this.onAddFeatures );
-		this.listenTo(this.model,'error:features', function(searchUrl) {
+	initialize: function() {
+
+		this.listenTo(this.model, 'startLoading', this.onStartLoading);
+		this.listenTo(this.model, 'reset:features', this.onResetFeatures);
+		this.listenTo(this.model, 'add:features', this.onAddFeatures);
+		this.listenTo(this.model, 'error:features', function(searchUrl) {
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
 			this.$el.find('#resultsMessage').html("No product found");
 		});
@@ -29,80 +27,86 @@ var SearchResultsView = Backbone.View.extend({
 	/**
 	 * Manage events on the view
 	 */
-	events : {
+	events: {
 		// Manage paging through buttons
 		'click #paging_first': function() {
 			this.model.changePage(1);
-		},	
+		},
 		'click #paging_last': function() {
-			this.model.changePage( this.model.lastPage );
-		},	
+			this.model.changePage(this.model.lastPage);
+		},
 		'click #paging_next': function() {
-			this.model.changePage( this.model.currentPage + 1 );
-		},	
+			this.model.changePage(this.model.currentPage + 1);
+		},
 		'click #paging_prev': function() {
-			this.model.changePage( this.model.currentPage - 1 );
+			this.model.changePage(this.model.currentPage - 1);
 		}
 	},
-	
+
 	/**
 	 * Called when the model start loading
 	 */
 	onStartLoading: function() {
-		
+
 		this.$el.find('#paging a').addClass('ui-disabled');
 
 		var $resultsMessage = this.$el.find('#resultsMessage');
-		$resultsMessage.html( "Searching..." );
-	
+		$resultsMessage.html("Searching...");
+
 		// Pulsate animation when searching
 		var fadeOutOptions = {
 			duration: 300,
 			easing: "linear",
 			complete: function() {
-				$(this).animate({opacity:1.0},fadeInOptions);
+				$(this).animate({
+					opacity: 1.0
+				}, fadeInOptions);
 			}
 		};
 		var fadeInOptions = {
 			duration: 300,
 			easing: "linear",
 			complete: function() {
-				$(this).animate({opacity:0.2},fadeOutOptions);
+				$(this).animate({
+					opacity: 0.2
+				}, fadeOutOptions);
 			}
 		};
-		$resultsMessage.animate({opacity:0.2},fadeOutOptions);
+		$resultsMessage.animate({
+			opacity: 0.2
+		}, fadeOutOptions);
 		$resultsMessage.show();
 	},
 
 	/**
 	 * Called when features are added
 	 */
-	onAddFeatures: function(features) {		
-			
+	onAddFeatures: function(features) {
+
 		var $resultsMessage = this.$el.find('#resultsMessage');
 		$resultsMessage.stop(true);
-		$resultsMessage.css('opacity',1.0);
+		$resultsMessage.css('opacity', 1.0);
 		$resultsMessage.show();
-		
-		if ( this.model.totalResults > 0 ) {
-			var startIndex = 1 + (this.model.currentPage-1) * this.model.countPerPage;
-			$resultsMessage.html( 'Showing ' + startIndex + ' to ' + (startIndex + features.length - 1) + " of " + this.model.totalResults + " products." );
-			
+
+		if (this.model.totalResults > 0) {
+			var startIndex = 1 + (this.model.currentPage - 1) * this.model.countPerPage;
+			$resultsMessage.html('Showing ' + startIndex + ' to ' + (startIndex + features.length - 1) + " of " + this.model.totalResults + " products.");
+
 			// Updage paging button according to the current page
 			this.$el.find('#paging a').removeClass('ui-disabled');
-			if ( this.model.currentPage == 1 ) {
+			if (this.model.currentPage == 1) {
 				this.$el.find('#paging_prev').addClass('ui-disabled');
 				this.$el.find('#paging_first').addClass('ui-disabled');
-			} 
-			if ( this.model.currentPage == this.model.lastPage ) {
+			}
+			if (this.model.currentPage == this.model.lastPage) {
 				this.$el.find('#paging_next').addClass('ui-disabled');
 				this.$el.find('#paging_last').addClass('ui-disabled');
 			}
-		} else if ( this.model.totalResults == 0 ) {
+		} else if (this.model.totalResults == 0) {
 			this.$el.find('#paging a').addClass('ui-disabled');
-			$resultsMessage.html( 'No product found.' );
+			$resultsMessage.html('No product found.');
 		} else {
-			$resultsMessage.html( 'No search done.' );
+			$resultsMessage.html('No search done.');
 		}
 	},
 
@@ -110,29 +114,29 @@ var SearchResultsView = Backbone.View.extend({
 	 * Called when the model is reset
 	 */
 	onResetFeatures: function() {
-			
+
 		this.$el.find('#paging a').addClass('ui-disabled');
 		var $resultsMessage = this.$el.find('#resultsMessage');
 		$resultsMessage.hide();
 	},
-	
+
 	/**
 	 * Render the view
 	 */
-	render : function() {
-	
+	render: function() {
+
 		this.$el
 			//.addClass('ui-grid-c')
-			.html(searchResultsViewContent);
+			.html(searchResultsViewContent_template());
 		this.$el.trigger('create');
-		
+
 		// Set the dataset
-		if ( DatasetSearch.get('mode') == "Simple" ) {
-			this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id ).attr("title", this.model.id);
+		if (DatasetSearch.get('mode') == "Simple") {
+			this.$el.find('#datasetMessage').html('Dataset : ' + this.model.id).attr("title", this.model.id);
 		} else {
 			var datasetName = DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(',');
- 			this.$el.find('#datasetMessage').html('Dataset : ' + datasetName).attr("title", datasetName);
-			
+			this.$el.find('#datasetMessage').html('Dataset : ' + datasetName).attr("title", datasetName);
+
 			// Update message when master has changed
 			DatasetSearch.on('change:master', function() {
 				var datasetName = DatasetSearch.get('master') + ' with ' + DatasetSearch.slaves.join(',');
@@ -145,6 +149,4 @@ var SearchResultsView = Backbone.View.extend({
 	}
 });
 
-return SearchResultsView;
-
-});
+module.exports = SearchResultsView;

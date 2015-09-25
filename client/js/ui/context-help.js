@@ -1,6 +1,7 @@
 
-define(["jquery.mobile"], 
-	function() {
+/*
+* define(["jquery.mobile"]
+*/
 	
 /**
  * The tooltip used to display context help
@@ -58,7 +59,7 @@ var onElementHelpClicked = function(event) {
 	}
 };
 
-return function(element) {
+module.exports = function(element) {
 
 	// Add the tooltip element
 	tooltip = $('<div class="ui-popup-container ui-popup-active">\
@@ -93,5 +94,3 @@ return function(element) {
 		
 	});
 };
-
-});

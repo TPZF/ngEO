@@ -1,8 +1,10 @@
 /**
-  * Background widget module
-  */
+ * Background widget module
+ */
 
-define( [ "map/map", "userPrefs", "ui/widget" ], function(Map, UserPrefs, ngeoWidget) {
+var Map = require('map/map');
+var UserPrefs = require('userPrefs');
+var ngeoWidget = require('ui/widget');
 
 /**
  * The background widget
@@ -13,35 +15,35 @@ var backbroundWidget;
  * Function to change the background when selected
  */
 var changeBackground = function() {
-	var layer =	$(this).closest('fieldset').find('input[name="background-choice"]:checked').data("layer")
-	Map.setBackgroundLayer( layer );
+	var layer = $(this).closest('fieldset').find('input[name="background-choice"]:checked').data("layer")
+	Map.setBackgroundLayer(layer);
 	backbroundWidget.ngeowidget("hide");
 };
 
 var BackgroundWidget = function(dsa) {
 	// Add the background widget to the data services area
 	dsa.append('<div id="backgroundWidget"/>');
-	
+
 	// Build background layers panel 
 	this.container = $('<fieldset data-role="controlgroup"></fieldset>');
 	var bgLayers = Map.backgroundLayers;
-	for ( var i=0; i < bgLayers.length; i++ ) {
+	for (var i = 0; i < bgLayers.length; i++) {
 		this.buildHtml(bgLayers[i]);
 	}
 
 	backbroundWidget = $("#backgroundWidget")
 		.append(this.container).ngeowidget({
-		activator: '#background'
-	});
-	
+			activator: '#background'
+		});
+
 	var self = this;
 	Map.on('backgroundLayerAdded', function(layer) {
 		self.buildHtml(layer);
 		$(backgroundWidget).trigger("create");
 	})
 	Map.on('backgroundLayerRemoved', function(layer) {
-		self.container.find('input').each( function() {
-			if ( $(this).data('layer') == layer ) {
+		self.container.find('input').each(function() {
+			if ($(this).data('layer') == layer) {
 				$(this).parent().remove();
 			}
 		});
@@ -64,7 +66,7 @@ var BackgroundWidget = function(dsa) {
  *	Build the HTML for background layer
  */
 BackgroundWidget.prototype.buildHtml = function(layer) {
-	
+
 	// Add radio button + attribute callback on change
 	var input = $('<input id="' + layer.id + '" type="radio" data-theme="c" name="background-choice" />')
 		.data("layer", layer)
@@ -76,11 +78,4 @@ BackgroundWidget.prototype.buildHtml = function(layer) {
 		.appendTo(this.container);
 };
 
-return BackgroundWidget
-
-});
-
-
-
-
-
+module.exports = BackgroundWidget

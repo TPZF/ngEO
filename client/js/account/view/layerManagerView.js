@@ -1,5 +1,10 @@
-define( ['jquery', 'logger', 'backbone', 'configuration', 'map/map', 'userPrefs', 'text!account/template/layerManagerContent.html', 'text!account/template/layerSearchPopupContent.html', "highchecktree"], 
-		function($, Logger, Backbone, Configuration, Map, UserPrefs, layerManager_template, layerSearchPopup_template) {
+var Logger = require('logger');
+var Configuration = require('configuration');
+var Map = require('map/map');
+var UserPrefs = require('userPrefs');
+//require('highchecktree');
+var layerManager_template = require('account/template/layerManagerContent');
+var layerSearchPopup_template = require('account/template/layerSearchPopupContent');
 
 /**
  *	Private module variables
@@ -10,44 +15,42 @@ var $openedPopup;
  *	OVER UGLY METHOD to make delete action on the object for the given key=value
  */
 var nestedOp = function(theObject, key, value, action) {
-    var result = null;
-    if(theObject instanceof Array) {
-        for(var i = 0; i < theObject.length && result == null; i++) {
-            result = nestedOp(theObject[i], key, value, action);
-        }
+	var result = null;
+	if (theObject instanceof Array) {
+		for (var i = 0; i < theObject.length && result == null; i++) {
+			result = nestedOp(theObject[i], key, value, action);
+		}
 
-        // Remove the object from the array
-        if ( result && action == "delete" ) {
-        	theObject.splice(i-1, 1);
-        	result = false;
-        }
-    }
-    else
-    {
-        for(var prop in theObject) {
+		// Remove the object from the array
+		if (result && action == "delete") {
+			theObject.splice(i - 1, 1);
+			result = false;
+		}
+	} else {
+		for (var prop in theObject) {
 
-            if (result != null)
-                break;
+			if (result != null)
+				break;
 
-            if(prop == key && theObject[prop] == value) {
-				if ( action == "delete" ) {
+			if (prop == key && theObject[prop] == value) {
+				if (action == "delete") {
 					console.log("Deleting " + prop + ': ' + theObject[prop]);
 					theObject = undefined;
 					return true;
 				}
 
-				if ( action == "get" ) {
-				    console.log(prop + ': ' + theObject[prop]);
-				    return theObject;
+				if (action == "get") {
+					console.log(prop + ': ' + theObject[prop]);
+					return theObject;
 				}
-            }
+			}
 
-            if(theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
-                result = nestedOp(theObject[prop], key, value, action);
-            }
-        }
-    }
-    return result;
+			if (theObject[prop] instanceof Object || theObject[prop] instanceof Array) {
+				result = nestedOp(theObject[prop], key, value, action);
+			}
+		}
+	}
+	return result;
 }
 
 // var findObjectById = function(root, prop, value, action) {
@@ -110,13 +113,13 @@ var layerCheckedCallback = function() {
 var buildItem = function(layer) {
 	var params;
 	var isConfigurationLayer = layer.engineLayer;
-	if ( isConfigurationLayer ) {
+	if (isConfigurationLayer) {
 		// Already created layer by conf
 		params = layer.params;
-	} else if ( layer.baseUrl || layer.type == "KML" ) {
+	} else if (layer.baseUrl || layer.type == "KML") {
 		// WMS/KML url added by user
 		params = layer;
-	} else if ( layer.name ) {
+	} else if (layer.name) {
 		// Layers coming from get capabilities of mapserver
 		// Only layers with name attribute are accepted, otherwise it's just a group of layers
 		params = {
@@ -147,9 +150,9 @@ var buildItem = function(layer) {
 var buildHighCheckTreeData = function(layers, baseUrl) {
 	var data = [];
 	_.each(layers, function(layer) {
-		var item = buildItem( layer );
+		var item = buildItem(layer);
 
-		if ( item.item.layerDesc && !item.item.layerDesc.baseUrl ) {
+		if (item.item.layerDesc && !item.item.layerDesc.baseUrl) {
 			// Update baseUrl for layers coming from GetCapabilities
 			// NB: layerDesc doesn't exist for layer which serves only to group WMS layers
 			item.item.layerDesc.baseUrl = baseUrl;
@@ -161,7 +164,7 @@ var buildHighCheckTreeData = function(layers, baseUrl) {
 		}
 		data.push(item);
 	});
-	
+
 	return data;
 };
 
@@ -175,8 +178,8 @@ var createWmsLayerFromUrl = function(baseUrl) {
 
 	_.each(params, function(param) {
 		var kv = param.split("=");
-		if ( kv.length == 2 )
-			parsed[ kv[0].toUpperCase() ] = kv[1];
+		if (kv.length == 2)
+			parsed[kv[0].toUpperCase()] = kv[1];
 	});
 
 	// TODO: Check SRS --> must be 4326 ?
@@ -205,20 +208,20 @@ var addToTrees = function($trees, data) {
 		data: data,
 		onCheck: function($li) {
 			var layerDesc = $li.data("layerDesc");
-			if ( layerDesc ) {
+			if (layerDesc) {
 
 				// Store on $li to be able to remove later
-				$li.data("layer", Map.addLayer(layerDesc) );
-				
+				$li.data("layer", Map.addLayer(layerDesc));
+
 				// KML layers cannot be used as background
-				if ( layerDesc.type == "KML" ) {
+				if (layerDesc.type == "KML") {
 					$li.find("> .options").remove(); // A little bit radical..
 				}
 			}
 		},
 		onUnCheck: function($li) {
 			var layer = $li.data("layer");
-			if ( layer ) {
+			if (layer) {
 				Map.removeLayer(layer);
 			}
 		},
@@ -226,21 +229,23 @@ var addToTrees = function($trees, data) {
 			if (node.item.layerDesc) {
 				$li.data("layerDesc", node.item.layerDesc);
 			}
-			if ( node.item.layer ) {
+			if (node.item.layer) {
 				$li.data("layer", node.item.layer);
 			}
 		},
 		onDeleteLi: function($li) {
 			var layer = $li.data("layer");
-			if ( layer ) {
+			if (layer) {
 				Map.removeLayer(layer);
 			}
 
 			var parentName = $li.closest('.checktree').find(' > li').attr("rel");
 			var userLayers = JSON.parse(UserPrefs.get("userLayers") || "[]");
-			var parentLayer = _.findWhere(userLayers, { name: parentName });
-			if ( $li.attr("rel") == parentLayer.name ) {
-				userLayers.splice( userLayers.indexOf(parentLayer), 1 );
+			var parentLayer = _.findWhere(userLayers, {
+				name: parentName
+			});
+			if ($li.attr("rel") == parentLayer.name) {
+				userLayers.splice(userLayers.indexOf(parentLayer), 1);
 			} else {
 				nestedOp(parentLayer.data, "title", $li.attr("rel"), "delete");
 			}
@@ -251,8 +256,8 @@ var addToTrees = function($trees, data) {
 				callback: function($li, isChecked) {
 					var layer = $li.data("layer");
 					var layerDesc = $li.data("layerDesc");
-					if ( layer ) {
-						if ( isChecked ) {
+					if (layer) {
+						if (isChecked) {
 							console.log("Becomes background");
 							Map.removeLayer(layer);
 							layerDesc.isBackground = true;
@@ -287,7 +292,7 @@ var saveLayer = function(layer, name, baseUrl) {
 		baseUrl: baseUrl,
 		data: layer
 	});
-	
+
 	UserPrefs.save('userLayers', JSON.stringify(userLayers));
 };
 
@@ -295,21 +300,21 @@ var saveLayer = function(layer, name, baseUrl) {
  *	Layer manager view
  */
 var LayerManagerView = Backbone.View.extend({
-		
-	events :{
-		'click #addLayer' : 'onAdd',
+
+	events: {
+		'click #addLayer': 'onAdd',
 	},
 
 	/**
 	 *	Open popup to add layer to map
 	 *	Could be: wms mapserver url, wms url of specific layer or url to KML layer
 	 */
-	onAdd: function(event){
+	onAdd: function(event) {
 
 		// Create dynamic popup
-		$openedPopup = $(layerSearchPopup_template).appendTo('.ui-page-active');
+		$openedPopup = $(layerSearchPopup_template()).appendTo('.ui-page-active');
 		$openedPopup.popup()
-			.bind("popupafterclose", function(){
+			.bind("popupafterclose", function() {
 				$(this).remove();
 			});
 
@@ -319,7 +324,7 @@ var LayerManagerView = Backbone.View.extend({
 		var baseUrl;
 		var self = this;
 		// On search callback
-		var onSearch = function(){
+		var onSearch = function() {
 			// Just some examples
 			// Mapserver
 			// baseUrl = "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi";
@@ -333,7 +338,7 @@ var LayerManagerView = Backbone.View.extend({
 			// baseUrl = "http://quakes.bgs.ac.uk/earthquakes/recent_world_events.kml"
 			baseUrl = $openedPopup.find("input[name='layerUrl']").val();
 
-			if ( baseUrl != "" ) {
+			if (baseUrl != "") {
 
 				$openedPopup.find(".status").hide();
 				var name = $openedPopup.find("input[name='layerName']").val();
@@ -341,7 +346,7 @@ var LayerManagerView = Backbone.View.extend({
 					name: name,
 					baseUrl: baseUrl
 				};
-				self.addLayer( layer, {
+				self.addLayer(layer, {
 					onError: function(message) {
 						$openedPopup.find(".status").show().html(message);
 					},
@@ -354,7 +359,7 @@ var LayerManagerView = Backbone.View.extend({
 			} else {
 				$openedPopup.find(".status").show().html("Please enter the mapserver or KML url");
 			}
-		};	
+		};
 
 		// Define callbacks for the given buttons
 		$openedPopup
@@ -366,7 +371,7 @@ var LayerManagerView = Backbone.View.extend({
 	 *	Add WMS/KML layer to GUI
 	 */
 	addLayer: function(layer, options) {
-		if ( layer.baseUrl.endsWith(".kml") ) {
+		if (layer.baseUrl.endsWith(".kml")) {
 			// KML
 			var kmlDesc = {
 				// Use proxy URL to avoid CORS problem
@@ -379,10 +384,10 @@ var LayerManagerView = Backbone.View.extend({
 			var item = buildItem(kmlDesc);
 			addToTrees(this.$el.find("#trees"), [item]);
 
-			if ( options && options.onSuccess )
+			if (options && options.onSuccess)
 				options.onSuccess(kmlDesc);
 
-		} else if ( layer.baseUrl.toUpperCase().indexOf("LAYERS=") > 0 ) {
+		} else if (layer.baseUrl.toUpperCase().indexOf("LAYERS=") > 0) {
 			// WMS single url
 			var layer = createWmsLayerFromUrl(layer.baseUrl);
 			// Override title by user defined
@@ -390,14 +395,14 @@ var LayerManagerView = Backbone.View.extend({
 			var item = buildItem(layer);
 			addToTrees(this.$el.find("#trees"), [item]);
 
-			if ( options && options.onSuccess )
+			if (options && options.onSuccess)
 				options.onSuccess(layer);
 
 		} else {
 			// WMS mapserver url
-			if ( options ) {
+			if (options) {
 				// Show loading
-				$.mobile.loading("show",{
+				$.mobile.loading("show", {
 					text: "Loading mapserver layers..",
 					textVisible: true
 				});
@@ -434,7 +439,7 @@ var LayerManagerView = Backbone.View.extend({
 
 				var c = wmsCapabilitiesFormat.read(doc);
 				if (!c || !c.capability) {
-					if ( options && options.onError )
+					if (options && options.onError)
 						options.onError("Error while parsing capabilities");
 					return;
 				}
@@ -450,15 +455,15 @@ var LayerManagerView = Backbone.View.extend({
 					children: tree
 				}]);
 
-				if ( options && options.onSuccess )
+				if (options && options.onSuccess)
 					options.onSuccess(c.capability.nestedLayers);
 			},
 			error: function(r) {
-				if ( options && options.onError )
+				if (options && options.onError)
 					options.onError("Error while searching on " + layer.baseUrl);
 			},
 			complete: function() {
-				if ( options && options.onComplete )
+				if (options && options.onComplete)
 					options.onComplete();
 			}
 		});
@@ -469,8 +474,8 @@ var LayerManagerView = Backbone.View.extend({
 	 */
 	centerElement: function(element) {
 		$(element).css({
-			'top':Math.abs((($(window).height() - $(element).outerHeight()) / 2) + $(window).scrollTop()),
-			'left':Math.abs((($(window).width() - $(element).outerWidth()) / 2) + $(window).scrollLeft())
+			'top': Math.abs((($(window).height() - $(element).outerHeight()) / 2) + $(window).scrollTop()),
+			'left': Math.abs((($(window).width() - $(element).outerWidth()) / 2) + $(window).scrollLeft())
 		});
 	},
 
@@ -483,7 +488,7 @@ var LayerManagerView = Backbone.View.extend({
 		var userLayers = JSON.parse(UserPrefs.get("userLayers") || "[]");
 		_.each(userLayers, function(layer) {
 			// Check if layer contains data coming from GetCapabilities
-			if ( _.isArray(layer.data) ) {
+			if (_.isArray(layer.data)) {
 				var tree = buildHighCheckTreeData(layer.data, layer.baseUrl);
 
 				addToTrees(self.$el.find("#trees"), [{
@@ -494,27 +499,27 @@ var LayerManagerView = Backbone.View.extend({
 					},
 					children: tree
 				}]);
-			} else if ( layer.data.type == "WMS" || layer.data.type == "KML" ) {
+			} else if (layer.data.type == "WMS" || layer.data.type == "KML") {
 				// Ordinary WMS/KML layer
-				self.addLayer( layer );
+				self.addLayer(layer);
 			} else {
 				console.warn("Can't handle layer");
 			}
 		});
 	},
-	
+
 	/**
 	 *	Render
 	 */
-	render: function(){
-		
-		this.$el.append(layerManager_template);
+	render: function() {
+
+		this.$el.append(layerManager_template());
 
 		// Add WMS/KML layers coming from configuration to GUI
-		var data = buildHighCheckTreeData(_.filter(Map.layers, function(layer){
+		var data = buildHighCheckTreeData(_.filter(Map.layers, function(layer) {
 			return layer.params.type == "WMS" || layer.params.type == "KML";
 		}));
-		addToTrees( this.$el.find("#trees"), data );
+		addToTrees(this.$el.find("#trees"), data);
 
 		this.addUserLayers();
 
@@ -524,6 +529,4 @@ var LayerManagerView = Backbone.View.extend({
 	}
 });
 
-return LayerManagerView;
-
-});
+module.exports = LayerManagerView;

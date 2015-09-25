@@ -1,11 +1,15 @@
 /**
-  * MapPopup module
-  */
+ * MapPopup module
+ */
 
-
-define( [ "jquery", "globalEvents", "logger", "configuration", "map/map", "dataAccess/model/simpleDataAccessRequest", "dataAccess/widget/dataAccessWidget", 
-          "searchResults/model/searchResults", "map/utils" ], 
-	function($, GlobalEvents, Logger, Configuration, Map, SimpleDataAccessRequest, DataAccessWidget, SearchResults, Utils) {
+var GlobalEvents = require('globalEvents');
+var Logger = require('logger');
+var Configuration = require('configuration');
+var Map = require('map/map');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
+var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
+var SearchResults = require('searchResults/model/searchResults');
+var Utils = require('map/utils');
 
 
 var MapPopup = function(container) {
@@ -20,18 +24,18 @@ var MapPopup = function(container) {
 	var isOpened = false;
 
 	element = $('<div class="widget-content ui-body-c mapPopup"><div id="mpText"></div><div id="mpButtons" data-mini="true" data-role="controlgroup" data-type="horizontal"></div></div>');
-	
+
 	// Wrap with the parent div for widget
 	element.wrap("<div id='mapPopup' class='widget'></div>");
 	parentElement = element.parent();
-	
+
 	// Add buttons for some simple actions
-	
+
 	// Info
 	var btn = $("<button id='info' data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Information</button>")
-		.appendTo( element.find('#mpButtons') )
-		.click( function() {
-			if ( $(this).parent().hasClass('ui-btn-active') ) {
+		.appendTo(element.find('#mpButtons'))
+		.click(function() {
+			if ($(this).parent().hasClass('ui-btn-active')) {
 				buildContent(false);
 				$(this).parent().removeClass('ui-btn-active ui-focus');
 			} else {
@@ -39,17 +43,17 @@ var MapPopup = function(container) {
 				$(this).parent().addClass('ui-btn-active');
 			}
 		});
-		
+
 	// Select
 	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
-		.appendTo( element.find('#mpButtons') )
-		.click( function() {
-			
-			for (var i=0;i<products.length;i++){
+		.appendTo(element.find('#mpButtons'))
+		.click(function() {
+
+			for (var i = 0; i < products.length; i++) {
 				var p = products[i];
-				if (p._featureCollection.isSelected(p)){
+				if (p._featureCollection.isSelected(p)) {
 					p._featureCollection.unselect(p);
-				}else{
+				} else {
 					p._featureCollection.select(p);
 				}
 			}
@@ -57,67 +61,67 @@ var MapPopup = function(container) {
 
 	// DAR
 	var btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
-		.appendTo( element.find('#mpButtons') )
-		.click( function() {
-		
+		.appendTo(element.find('#mpButtons'))
+		.click(function() {
+
 			var allowedProducts = [];
-			for ( var i = 0; i < products.length; i++ ) {
-				if ( products[i]._featureCollection.downloadAccess ) {
-					allowedProducts.push( products[i] );
+			for (var i = 0; i < products.length; i++) {
+				if (products[i]._featureCollection.downloadAccess) {
+					allowedProducts.push(products[i]);
 				}
 			}
-						
-			if ( allowedProducts.length > 0 ) {
+
+			if (allowedProducts.length > 0) {
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts( allowedProducts );
-			
+				SimpleDataAccessRequest.setProducts(allowedProducts);
+
 				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
 				Logger.inform("Cannot download product : missing permissions.");
 			}
-			
+
 		});
-		
+
 	// Shopcart
 	var btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
-		.appendTo( element.find('#mpButtons') )
-		.click( function() {
-			GlobalEvents.trigger('addToShopcart', products );
+		.appendTo(element.find('#mpButtons'))
+		.click(function() {
+			GlobalEvents.trigger('addToShopcart', products);
 		});
-	
+
 	parentElement.appendTo(container);
 	parentElement.trigger("create");
-	
+
 	parentElement.hide();
 
 	var self = this;
-	Map.on('pickedFeatures', function(highlightedFeatures,event) {
-		if ( highlightedFeatures.length == 0 ) {
+	Map.on('pickedFeatures', function(highlightedFeatures, event) {
+		if (highlightedFeatures.length == 0) {
 			self.close();
 		} else {
-			self.open(highlightedFeatures,event);
+			self.open(highlightedFeatures, event);
 		}
 	});
-		
+
 	/*Map.on('extent:change', function() {
 		self.close();
 	});*/
-	
+
 	/**
 	 * Private methods
 	 */
-					
+
 	/**
 		Get data from a path
 	 */
-	var getData = function(product,path) {
+	var getData = function(product, path) {
 		var names = path.split('.');
 		var obj = product;
-		for ( var i = 0; obj && i < names.length-1; i++ ) {
-			obj = obj[ names[i] ];
+		for (var i = 0; obj && i < names.length - 1; i++) {
+			obj = obj[names[i]];
 		}
-		if ( obj && obj.hasOwnProperty(names[names.length-1]) ) {
-			return obj[ names[names.length-1] ];
+		if (obj && obj.hasOwnProperty(names[names.length - 1])) {
+			return obj[names[names.length - 1]];
 		} else {
 			return "";
 		}
@@ -129,14 +133,14 @@ var MapPopup = function(container) {
 	var buildContent = function(adv) {
 		var content;
 
-		if ( products.length == 1 ) {
+		if (products.length == 1) {
 			content = '<p><b>Product: ' + products[0].id + '</b></p>';
-			if ( adv ) {
+			if (adv) {
 				var columnDefs = Configuration.data.tableView.columnsDef;
-				for ( var i = 0; i < columnDefs.length; i++ ) {
-					if ( columnDefs[i].sTitle != 'Product' ) {
+				for (var i = 0; i < columnDefs.length; i++) {
+					if (columnDefs[i].sTitle != 'Product') {
 						var value = Configuration.getFromPath(products[0], columnDefs[i].mData);
-						if ( value ) {
+						if (value) {
 							content += '<p>' + columnDefs[i].sTitle + ': ' + value + '</p>';
 						}
 					}
@@ -146,62 +150,55 @@ var MapPopup = function(container) {
 			}
 		} else {
 			content = products.length + " products picked.<br>Click again to cycle through products.";
-			if ( adv ) {
+			if (adv) {
 				content += "<p>Products:</p>";
-				for ( var i = 0; i < products.length; i++ ) {
+				for (var i = 0; i < products.length; i++) {
 					content += "<p>" + products[i].id + "</p>";
 				}
 			}
 		}
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist
-		var hasPlannedOrNoProductUrl = _.find( products, function( feature ) {
-			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED" || 
-					!Configuration.getMappedProperty(feature, "productUrl");
+		var hasPlannedOrNoProductUrl = _.find(products, function(feature) {
+			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED" ||
+				!Configuration.getMappedProperty(feature, "productUrl");
 		});
-		element.find('#mpButtons button[data-icon="save"]').button( hasPlannedOrNoProductUrl ? 'disable' : 'enable' );
+		element.find('#mpButtons button[data-icon="save"]').button(hasPlannedOrNoProductUrl ? 'disable' : 'enable');
 		element.find('#mpText').html(content);
 	};
 
-			
+
 	/**
 		Open the popup
 	 */
-	this.open = function(highlightedFeatures,event) {
-	
+	this.open = function(highlightedFeatures, event) {
+
 		products = highlightedFeatures;
-		
+
 		// Clean-up previou state
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
-		
+
 		buildContent(false);
 
 		parentElement.fadeIn();
-		
+
 		isOpened = true;
 	};
-	
-		
+
+
 	/**
 		Close the popup
 	 */
 	this.close = function() {
-	
-		if ( isOpened ) {
-			parentElement.fadeOut();	
+
+		if (isOpened) {
+			parentElement.fadeOut();
 			isOpened = false;
 		}
-		
+
 	};
-	
-	SearchResults.on('reset:features', this.close, this );
-	
+
+	SearchResults.on('reset:features', this.close, this);
+
 };
 
-return MapPopup;
-
-});
-
-
-
-
-
+module.exports = MapPopup;
