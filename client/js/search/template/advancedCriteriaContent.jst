@@ -13,6 +13,7 @@
 			var value = model.get(criterion.id); 
 			var label = criterionLabels[criterion.id] || criterion.id; %>
 		   <!-- The criterion is an enumeration has multiple options so create a list of checkboxes  -->
+		   <!-- NGEO-1862 possibleValues contains now a list of String which are the direct value to display instead of ojbect mapped with the string possibleValue -->
 			<% if (criterion.type.toLowerCase() == 'list') { %> 
 
 					 <div data-role="fieldcontain">
@@ -21,8 +22,8 @@
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
 								<label>
 									<!-- select the check box if value is defined -->
-									<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue.possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue.possibleValue) != -1 ) print('checked="checked"'); %> />
-									<%= possibleValue.possibleValue %>
+									<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue) != -1 ) print('checked="checked"'); %> />
+									<%= possibleValue %>
 								</label>
 							<% }); %>
 						</fieldset>
