@@ -9,8 +9,9 @@ var MenuBar = require('ui/menubar');
 var ContextHelp = require('ui/context-help');
 var Logger = require('logger');
 
-var App = {
-	init: function init() {
+module.exports = {
+
+	initialize: function init() {
 		/** Use a defered object for document ready */
 		var doc_ready = $.Deferred();
 
@@ -62,5 +63,3 @@ var App = {
 	}
 
 };
-
-module.exports = App;
