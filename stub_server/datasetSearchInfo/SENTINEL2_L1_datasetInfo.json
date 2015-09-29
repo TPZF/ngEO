@@ -2,133 +2,91 @@
     "datasetSearchInfo": {
         "datasetId": "SENTINEL2_L1",
         "description": "All L1 products for the S2 mission",
-        "keywords": [
-            {
-                "keyword": "optical"
-            },
-            {
-                "keyword": "reflectance"
-            },
-            {
-                "keyword": "land"
-            },
-            {
-                "keyword": "high resolution"
-            }
-        ],
-        "downloadOptions" : [
-            {
-                "argumentName" : "ProductFormat",
-                "description" : "desired download format",
-                "caption" : "human readable caption",
-                "value" : [
-                    {
-                        "name" : "GeoTIFF",
-                        "humanReadable" : "GeoTiff",
-                        "sizeFactor" : "1.2"
-                    }, {
-                        "name" : "JP2",
-                        "humanReadable" : "JP2",
-                        "sizeFactor" : "1.2"
-                    }, {
-                        "name" : "PNG",
-                        "humanReadable" : "PNG",
-                        "sizeFactor" : "1.2"
-                    }
-                ]
+        "keywords": [{
+            "keyword": "optical"
+        }, {
+            "keyword": "reflectance"
+        }, {
+            "keyword": "land"
+        }, {
+            "keyword": "high resolution"
+        }],
+        "downloadOptions": [{
+            "argumentName": "ProductFormat",
+            "description": "desired download format",
+            "caption": "human readable caption",
+            "value": [{
+                "name": "GeoTIFF",
+                "humanReadable": "GeoTiff",
+                "sizeFactor": "1.2"
             }, {
-                "argumentName" : "Download mode_S2_L1",
-                "description" : "wait until completion or download continuously",
-                "preConditions" : [
-                    {
-                        "parentDownloadOption" : "ProductFormat",
-                        "parentDownloadValue" : "GeoTIFF"
-                    }, {
-                        "parentDownloadOption" : "ProductFormat",
-                        "parentDownloadValue" : "JP2"
-                    }
-                ],
-                "value" : [
-                    {
-                        "name" : "DLcomplete",
-                        "humanReadable" : "Download on completion",
-                        "sizeFactor" : "1"
-                    }, {
-                        "name" : "DLjp2",
-                        "humanReadable" : "Test option depending on JP2",
-                        "sizeFactor" : "1",
-                        "preConditions" : [
-                            {
-                                "parentDownloadOption" : "ProductFormat",
-                                "parentDownloadValue" : "JP2"
-                            }
-                        ]
-                    }, {
-                        "name" : "DLcontinuous",
-                        "humanReadable" : "Download continuously",
-                        "sizeFactor" : "1",
-                        "preConditions" : [
-                            {
-                                "parentDownloadOption" : "ProductFormat",
-                                "parentDownloadValue" : "GeoTIFF"
-                            }
-                        ]
-                    }
-                ]
-            }
-        ],
-        "attributes": [
-             {
+                "name": "JP2",
+                "humanReadable": "JP2",
+                "sizeFactor": "1.2"
+            }, {
+                "name": "PNG",
+                "humanReadable": "PNG",
+                "sizeFactor": "1.2"
+            }]
+        }, {
+            "argumentName": "Download mode_S2_L1",
+            "description": "wait until completion or download continuously",
+            "preConditions": [{
+                "parentDownloadOption": "ProductFormat",
+                "parentDownloadValue": "GeoTIFF"
+            }, {
+                "parentDownloadOption": "ProductFormat",
+                "parentDownloadValue": "JP2"
+            }],
+            "value": [{
+                "name": "DLcomplete",
+                "humanReadable": "Download on completion",
+                "sizeFactor": "1"
+            }, {
+                "name": "DLjp2",
+                "humanReadable": "Test option depending on JP2",
+                "sizeFactor": "1",
+                "preConditions": [{
+                    "parentDownloadOption": "ProductFormat",
+                    "parentDownloadValue": "JP2"
+                }]
+            }, {
+                "name": "DLcontinuous",
+                "humanReadable": "Download continuously",
+                "sizeFactor": "1",
+                "preConditions": [{
+                    "parentDownloadOption": "ProductFormat",
+                    "parentDownloadValue": "GeoTIFF"
+                }]
+            }]
+        }],
+        "attributes": [{
                 "id": "pass",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Ascending"
-                    },
-                    {
-                        "possibleValue": "Descending"
-                    }
-                ]
+                "possibleValues": ["Ascending", "Descending"]
             },
-            
+
             {
                 "id": "status",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Archived"
-                    },
-                    {
-                        "possibleValue": "Aquired"
-                    },
-                    {
-                        "possibleValue": "Planned"
-                    },
-                    {
-                        "possibleValue": "Cancelled"
-                    }
-                ]
+                "possibleValues": ["Archived", "Aquired", "Planned", "Cancelled"]
             },
-            
+
             {
                 "id": "granule",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "yes"
-                    },
-                    {
-                        "possibleValue": "no"
-                    }
-                ]
-            },
-            {
+                "possibleValues": [{
+                    "possibleValue": "yes"
+                }, {
+                    "possibleValue": "no"
+                }]
+            }, {
                 "id": "orbit",
                 "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "70000"
             },
-            
+
             {
                 "id": "track",
                 "type": "Integer",
@@ -136,7 +94,7 @@
                 "rangeMaxValue": "501"
             }
         ],
-     	"startDate": "2010-06-01T12:45:07:00.57Z",
+        "startDate": "2010-06-01T12:45:07:00.57Z",
         "endDate": "2010-08-01T11:35:38:00.57Z"
     }
 }

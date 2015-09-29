@@ -2,124 +2,76 @@
     "datasetSearchInfo": {
         "datasetId": "ND_SAR_1",
         "description": "All L1 products for the S1 mission",
-        "keywords": [
-            {
-                "keyword": "optical"
-            },
-            {
-                "keyword": "reflectance"
-            },
-            {
-                "keyword": "land"
-            },
-            {
-                "keyword": "high resolution"
-            },
-            {
-                "keyword": "interferometry"
-            }
-        ],
-        "downloadOptions": [
-            {
-                "argumentName": "productFormat",
-                "description": "desired download format",
-                "value": [
-                    {
-                        "name": "GeoTIFF",
-                        "humanReadable": "GeoTiff",
-                        "sizeFactor": "1.2"
-                    }
-                ]
-            },
-            {
-                "argumentName": "downloadMode",
-                "description": "wait until completion or download continuously",
-                "value": [
-                    {
-                        "name": "DLcomplete",
-                        "humanReadable": "Download on completion",
-                        "sizeFactor": "1"
-                    },
-                    {
-                        "name": "DLcontinuous",
-                        "humanReadable": "Download continuously",
-                        "sizeFactor": "1"
-                    }
-                ]
-            }
-        ],
+        "keywords": [{
+            "keyword": "optical"
+        }, {
+            "keyword": "reflectance"
+        }, {
+            "keyword": "land"
+        }, {
+            "keyword": "high resolution"
+        }, {
+            "keyword": "interferometry"
+        }],
+        "downloadOptions": [{
+            "argumentName": "productFormat",
+            "description": "desired download format",
+            "value": [{
+                "name": "GeoTIFF",
+                "humanReadable": "GeoTiff",
+                "sizeFactor": "1.2"
+            }]
+        }, {
+            "argumentName": "downloadMode",
+            "description": "wait until completion or download continuously",
+            "value": [{
+                "name": "DLcomplete",
+                "humanReadable": "Download on completion",
+                "sizeFactor": "1"
+            }, {
+                "name": "DLcontinuous",
+                "humanReadable": "Download continuously",
+                "sizeFactor": "1"
+            }]
+        }],
         "attributes": [
-             
-              {
+
+            {
                 "id": "satellite",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Sentinel-1A"
-                    },
-                    {
-                        "possibleValue": "Sentinel-1B"
-                    }
-                ]
+                "possibleValues": ["Sentinel-1A", "Sentinel-1B"]
             },
-             
-             {
+
+            {
                 "id": "pass",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Ascending"
-                    },
-                    {
-                        "possibleValue": "Descending"
-                    }
-                ]
+                "possibleValues": ["Ascending", "Descending"]
             },
-            
+
             {
                 "id": "orbit",
                 "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "70000"
             },
-            
+
             {
                 "id": "track",
                 "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "501"
             },
-            
+
             {
                 "id": "status",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Archived"
-                    },
-                    {
-                        "possibleValue": "Aquired"
-                    },
-                    {
-                        "possibleValue": "Planned"
-                    },
-                    {
-                        "possibleValue": "Cancelled"
-                    }
-                ]
+                "possibleValues": ["Archived", "Aquired", "Planned", "Cancelled"]
             },
-            
+
             {
                 "id": "daynight flag",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "night"
-                    },
-                    {
-                        "possibleValue": "day"
-                    }
-                ]
+                "possibleValues": ["night", "day"]
             }
         ],
         "startDate": "17-01-2008T15:58:07:00.57Z",

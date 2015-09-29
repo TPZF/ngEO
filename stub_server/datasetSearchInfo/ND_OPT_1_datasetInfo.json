@@ -58,14 +58,7 @@
             {
                 "id": "pass",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Ascending"
-                    },
-                    {
-                        "possibleValue": "Descending"
-                    }
-                ]
+                "possibleValues": [ "Ascending", "Descending"]
             },
             
             {
@@ -85,33 +78,13 @@
             {
                 "id": "cseop_status",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Archived"
-                    },
-                    {
-                        "possibleValue": "Aquired"
-                    },
-                    {
-                        "possibleValue": "Planned"
-                    },
-                    {
-                        "possibleValue": "Cancelled"
-                    }
-                ]
+                "possibleValues": ["Archived", "Aquired", "Planned", "Cancelled"]
             },
             
             {
                 "id": "daynight flag",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "night"
-                    },
-                    {
-                        "possibleValue": "day"
-                    }
-                ]
+                "possibleValues": ["night","day"]
             }
         ],
         "startDate": "2007-06-01T12:45:07:00.57Z",

@@ -2,98 +2,50 @@
     "datasetSearchInfo": {
         "datasetId": "SENTINEL3_L2",
         "description": "All L2 products for the S3 mission",
-        "keywords": [
-            {
-                "keyword": "optical"
-            },
-            {
-                "keyword": "reflectance"
-            },
-            {
-                "keyword": "land"
-            },
-            {
-                "keyword": "high resolution"
-            }
-        ],
-        "downloadOptions": [
-            {
-                "argumentName": "ProductFormat_S3_L2",
-                "description": "desired download format",
-                "value": [
-                    {
-                        "name": "GeoTIFF",
-                        "humanReadable": "GeoTiff",
-                        "sizeFactor": "1.2"
-                    }
-                ]
-            },
-            {
-                "argumentName": "Download mode_S3_L2",
-                "description": "wait until completion or download continuously",
-                "value": [
-                    {
-                        "name": "DLcomplete",
-                        "humanReadable": "Download on completion",
-                        "sizeFactor": "1"
-                    },
-                    {
-                        "name": "DLcontinuous",
-                        "humanReadable": "Download continuously",
-                        "sizeFactor": "1"
-                    }
-                ]
-            }
-        ],
-        "attributes": [
-             {
+        "keywords": [{
+            "keyword": "optical"
+        }, {
+            "keyword": "reflectance"
+        }, {
+            "keyword": "land"
+        }, {
+            "keyword": "high resolution"
+        }],
+        "downloadOptions": [{
+            "argumentName": "ProductFormat_S3_L2",
+            "description": "desired download format",
+            "value": [{
+                "name": "GeoTIFF",
+                "humanReadable": "GeoTiff",
+                "sizeFactor": "1.2"
+            }]
+        }, {
+            "argumentName": "Download mode_S3_L2",
+            "description": "wait until completion or download continuously",
+            "value": [{
+                "name": "DLcomplete",
+                "humanReadable": "Download on completion",
+                "sizeFactor": "1"
+            }, {
+                "name": "DLcontinuous",
+                "humanReadable": "Download continuously",
+                "sizeFactor": "1"
+            }]
+        }],
+        "attributes": [{
                 "id": "pass",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Ascending"
-                    },
-                    {
-                        "possibleValue": "Descending"
-                    }
-                ]
+                "possibleValues": ["Ascending", "Descending"]
             },
-          
+
             {
                 "id": "sensor",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "OLCI"
-                    },
-                    {
-                        "possibleValue": "SLSTR"
-                    },
-                    {
-                        "possibleValue": "SRAL"
-                    },
-                    {
-                        "possibleValue": "MWR"
-                    }
-                ]
-            },
-            {
+                "possibleValues": ["OLCI", "SLSTR", "SRAL", "MWR"]
+            }, {
                 "id": "status",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Archived"
-                    },
-                    {
-                        "possibleValue": "Aquired"
-                    },
-                    {
-                        "possibleValue": "Planned"
-                    },
-                    {
-                        "possibleValue": "Cancelled"
-                    }
-                ]
+                "possibleValues": ["Archived", "Aquired", "Planned", "Cancelled"]
             }
         ],
         "startDate": "01-06-2010T12:45:07:00.57Z",

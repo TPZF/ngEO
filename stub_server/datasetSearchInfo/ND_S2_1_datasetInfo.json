@@ -2,110 +2,69 @@
     "datasetSearchInfo": {
         "datasetId": "ND_S2_1",
         "description": "All L1 products for the S2 mission",
-        "keywords": [
-            {
-                "keyword": "optical"
-            },
-            {
-                "keyword": "reflectance"
-            },
-            {
-                "keyword": "land"
-            },
-            {
-                "keyword": "high resolution"
-            }
-        ],
-        "downloadOptions": [
-            {
-                "argumentName": "ProductFormat_ND_S2",
-                "description": "desired download format",
-                "value": [
-                    {
-                        "name": "GeoTIFF",
-                        "humanReadable": "GeoTiff",
-                        "sizeFactor": "1.2"
-                    }
-                ]
-            },
-            {
-                "argumentName": "Download mode_ND_S2",
-                "description": "wait until completion or download continuously",
-                "value": [
-                    {
-                        "name": "DLcomplete",
-                        "humanReadable": "Download on completion",
-                        "sizeFactor": "1"
-                    },
-                    {
-                        "name": "DLcontinuous",
-                        "humanReadable": "Download continuously",
-                        "sizeFactor": "1"
-                    }
-                ]
-            }
-        ],
-        "attributes": [
-             {
+        "keywords": [{
+            "keyword": "optical"
+        }, {
+            "keyword": "reflectance"
+        }, {
+            "keyword": "land"
+        }, {
+            "keyword": "high resolution"
+        }],
+        "downloadOptions": [{
+            "argumentName": "ProductFormat_ND_S2",
+            "description": "desired download format",
+            "value": [{
+                "name": "GeoTIFF",
+                "humanReadable": "GeoTiff",
+                "sizeFactor": "1.2"
+            }]
+        }, {
+            "argumentName": "Download mode_ND_S2",
+            "description": "wait until completion or download continuously",
+            "value": [{
+                "name": "DLcomplete",
+                "humanReadable": "Download on completion",
+                "sizeFactor": "1"
+            }, {
+                "name": "DLcontinuous",
+                "humanReadable": "Download continuously",
+                "sizeFactor": "1"
+            }]
+        }],
+        "attributes": [{
                 "id": "pass",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Ascending"
-                    },
-                    {
-                        "possibleValue": "Descending"
-                    }
-                ]
+                "possibleValues": ["Ascending", "Descending"]
             },
-            
+
             {
                 "id": "orbit",
                 "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "70000"
             },
-            
+
             {
                 "id": "track",
                 "type": "Integer",
                 "rangeMinValue": "1",
                 "rangeMaxValue": "501"
             },
-            
+
             {
                 "id": "status",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "Archived"
-                    },
-                    {
-                        "possibleValue": "Aquired"
-                    },
-                    {
-                        "possibleValue": "Planned"
-                    },
-                    {
-                        "possibleValue": "Cancelled"
-                    }
-                ]
+                "possibleValues": ["Archived", "Aquired", "Planned", "Cancelled"]
             },
-            
+
             {
                 "id": "daynight flag",
                 "type": "List",
-                "possibleValues": [
-                    {
-                        "possibleValue": "night"
-                    },
-                    {
-                        "possibleValue": "day"
-                    }
-                ]
+                "possibleValues": ["night", "day"]
             }
         ],
-       	"startDate": "27-12-2012T12:45:07:00.57Z",
+        "startDate": "27-12-2012T12:45:07:00.57Z",
         "endDate": "31-07-2019T21:30:45:00.57Z"
     }
 }
