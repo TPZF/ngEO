@@ -8,12 +8,13 @@ module.exports = config:
       sourceMaps: false
       plugins: autoReload: enabled: false
       paths:
+        watched: ['client','vendor','bower_components']
         public: 'output-opt' # in optimisation mode, the output is on folder 'output-opt' wher files are uglified
   files:
     javascripts:
       joinTo:
-        'js/libraries.min.js': /^(bower_components|vendor)/
-        'js/main-ngeo.min.js': /^client[\\\/]js[\\\/](?!(map|data\-services\-area\.js|account\.js))/
+        'js/libraries.js': /^(bower_components|vendor)/
+        'js/main-ngeo.js': /^client[\\\/]js[\\\/](?!(map|data\-services\-area\.js|account\.js))/
         'js/map/map.js': /^client[\\\/]js[\\\/]map/
         'js/data-services-area.js': /^client[\\\/]js[\\\/]data\-services\-area\.js/
         'js/account.js': /^client[\\\/]js[\\\/]account\.js/
