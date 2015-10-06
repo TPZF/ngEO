@@ -7,6 +7,8 @@ var Configuration = require('configuration');
 var GeojsonConverter = require('map/geojsonconverter');
 //require('GlobWeb.min');
 
+var baseZIndex = 365; // "Magic number" to make WMS/WMTS always on top
+
 /**
  * GlobeWeb Map Engine constructor
  * parentElement : the parent element div for the map
@@ -16,6 +18,7 @@ GlobWebMapEngine = function(parentElement) {
 	this.features = {};
 	this.styles = {};
 	this.parentElement = parentElement;
+	this.nbAddedOverlays = 0;
 
 	try {
 		// Create the canvas element
@@ -236,6 +239,13 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 			gwLayer.style = this.styles[layer.style]['default'];
 			gwLayer.styleMap = this.styles[layer.style];
 		}
+		
+		// NGEO-1779: Set zIndex to be always on top for overlay WMS/WMTS
+		if ( layer.type.toUpperCase() == "WMS" || layer.type.toUpperCase() == "WMTS" ) {
+			gwLayer.zIndex = baseZIndex + this.nbAddedOverlays;
+			this.nbAddedOverlays++;
+		}
+
 		gwLayer.visible(layer.visible);
 		this.globe.addLayer(gwLayer);
 	}
@@ -248,6 +258,9 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
  */
 GlobWebMapEngine.prototype.removeLayer = function(gwLayer) {
 	this.globe.removeLayer(gwLayer);
+	if ( gwLayer instanceof GlobWeb.WMTSLayer || gwLayer instanceof GlobWeb.WMSLayer ) {
+		this.nbAddedOverlays--;
+	}
 }
 
 /**

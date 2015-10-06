@@ -126,6 +126,7 @@ var buildItem = function(layer) {
 			type: "WMS",
 			name: layer.title,
 			baseUrl: layer.baseUrl,
+			visible: true,
 			params: {
 				layers: layer.name
 			}

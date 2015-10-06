@@ -259,6 +259,7 @@
 			"type": "WMS",
 			"baseUrl": "http://demonstrator.telespazio.com/wmspub",
 			"attribution": "Telespazio France",
+			"visible": false,
 			"params": {
 				"layers": "BlueMarble"
 			}
