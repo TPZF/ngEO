@@ -106,6 +106,9 @@ module.exports = {
 		}
 	},
 
+	/**
+	 *	Check if array of coordinates crossing the dateline
+	 */
 	crossDateLine: function(coords) {
 		var posc = [];
 		var negc = [];
@@ -133,9 +136,14 @@ module.exports = {
 				crossDateLine = this.crossDateLine(geometry.coordinates[0]);
 				break;
 			case "MultiPolygon":
+				var allCoords = [];
 				for (var i = 0; i < geometry.coordinates.length; i++) {
 					crossDateLine |= this.crossDateLine(geometry.coordinates[i][0]);
+					allCoords = allCoords.concat(geometry.coordinates[i][0]);
 				}
+				// NGEO-1863: Check if dataline is crossed between polygons
+				// NB: Sometimes server splits polygon crossing dateline
+				crossDateLine |= this.crossDateLine(allCoords);
 				break;
 			case "LineString":
 				crossDateLine = this.crossDateLine(geometry.coordinates);
