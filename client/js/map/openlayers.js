@@ -296,6 +296,10 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 		case "JSON":
 		case "GEOJSON":
 			olLayer = new OpenLayers.Layer.Vector(layer.name, {
+				// Use "canvas" renderer since "SVG" has a bug while rendering features crossing the dateline
+				// Pros: no more bug. Cons: Less performant
+				// @see https://github.com/openlayers/openlayers/issues/668
+				renderers: ['Canvas', 'VML'],
 				projection: "EPSG:4326"
 			});
 			if (layer.data) {
