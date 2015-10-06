@@ -210,6 +210,10 @@ module.exports = {
 				break;
 		}
 
+		// Copy intern 3D property too..
+		if ( geometry._bucket )
+		 	featureCopy.geometry._bucket = geometry._bucket;
+		
 		return featureCopy;
 	},
 
