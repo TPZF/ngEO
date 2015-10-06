@@ -1,18 +1,3 @@
-/* Palette */
-@background-color: #0f0f0f;
-//@background-color: #325E8F;
-@text-color: #ffffff;
-@active-color: #2489ce;
-@border-color: lighten(@background-color,80%);
-
-
-/* Layout */
-@font-size: 14px;
-@header-height: 48px;
-
-/* Width to avoid warping the elements on next line while resizing the window */
-@base-width: 1190px;
-
 /**
  * Main body definition (no longer needed because of jquery-mobile?)
  */
@@ -42,6 +27,7 @@ html, body {
 	font-size : 12px;
 }
 
+@import "variables.less";
 @import "mixins.less";
 @import "menubar.less";
 @import "map.less";

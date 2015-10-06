@@ -27,12 +27,13 @@ module.exports = config:
           'vendor/jqm-datebox-1.4.0.js',
           'vendor/underscore.js',
           'vendor/backbone.js']
-    stylesheets: joinTo: 
-      'css/main.css': /^client[\\\/]css[\\\/]main\.less$/
-      'css/home.css': /^client[\\\/]css[\\\/]home\.less$/
-      'css/help.css': /^client[\\\/]css[\\\/]help\.less$/
-      'css/userManual.css': /^client[\\\/]css[\\\/]userManual\.less$/
-      'css/vendor.css': /^(bower_components|vendor)[\\\/]/
+    stylesheets:
+      joinTo: 
+        'css/main.css': /^client[\\\/]css[\\\/]main\.less$/
+        'css/home.css': /^client[\\\/]css[\\\/]home\.less$/
+        'css/help.css': /^client[\\\/]css[\\\/]help\.less$/
+        'css/userManual.css': /^client[\\\/]css[\\\/]userManual\.less$/
+        'css/vendor.css': /^(bower_components|vendor)[\\\/]/
     templates:
       defaultExtension: 'jst'
       joinTo: 

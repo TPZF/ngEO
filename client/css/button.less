@@ -1,23 +1,6 @@
-/* basic button variables */
-@button_color: @background-color;
-@border_radius: 0.5em;
-@button_padding: 0.55em 2em;
- 
-/* color variables set relative to @button_color. You probably don't need to change these. */
-@hover_background_color: lighten(@button_color, 20%);
-@border_color: lighten(@button_color, 20%);
- 
-@normal_background_top: lighten(@button_color, 20%);
-@normal_background_bottom: darken(@button_color, 10%);
- 
-@hover_background_top: lighten(@normal_background_top,10%);
-@hover_background_bottom: lighten(@normal_background_bottom,10%);   
- 
-@active_background_top: @normal_background_bottom;
-@active_background_bottom: @normal_background_top;   
+@import "variables.less";
+@import "mixins.less";
 
-
- 
 .button {
 display: inline-block;
 outline: none;
