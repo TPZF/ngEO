@@ -149,6 +149,18 @@
 				"layers": "BlueMarble"
 			}
 		}, {
+			"id" : "imposm-fr_WMTS_TPZ",
+			"name": "imposm-fr (WMTS)",
+			"type": "WMTS",
+			"projection": "EPSG:4326",
+			"baseUrl": "http://demonstrator.telespazio.com/mapcache/wmts/",
+			"attribution": "Telespazio France",
+			"params": {
+				"layer": "imposm-fr",
+				"format": "image/png",
+				"matrixSet": "WGS84"
+			}
+		}, {
 			"id" : "BingRoad",
 			"name": "Bing Road",
 			"type": "Bing",

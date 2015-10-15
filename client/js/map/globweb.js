@@ -142,6 +142,17 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 				},
 				layer.params));
 			break;
+		case "WMTS":
+			gwLayer = new GlobWeb.WMTSLayer($.extend({
+					name: layer.name,
+					baseUrl: layer.baseUrl,
+					crossOrigin: layer.crossOrigin,
+					attribution: layer.attribution,
+					layer: layer.params.layer,
+					matrixSet: layer.params.matrixSet
+				},
+				layer.params));
+			break;
 		case "BING":
 			gwLayer = new GlobWeb.BingLayer(layer);
 			break;
