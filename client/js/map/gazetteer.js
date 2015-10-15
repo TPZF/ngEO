@@ -20,7 +20,7 @@ module.exports = {
 	 */
 	query: function(options) {
 
-		var queryUrl = 'http://nominatim.openstreetmap.org/search?';
+		var queryUrl = 'https://nominatim.openstreetmap.org/search?';
 		queryUrl += 'q=' + encodeURIComponent(options.query);
 		queryUrl += '&format=json';
 		if (Configuration.data.gazetteer.outputPolygon) {
