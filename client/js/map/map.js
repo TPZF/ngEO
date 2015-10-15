@@ -307,9 +307,10 @@ module.exports = {
 		// Store background layer
 		backgroundLayer = layer;
 		// Set the active background
-		mapEngine.setBackgroundLayer(layer);
+		var engineLayer = mapEngine.setBackgroundLayer(layer);
 		UserPrefs.save('Background', layer.id);
 		this.trigger('backgroundLayerSelected', layer);
+		return engineLayer;
 	},
 
 	/** get the selected background layer */
@@ -323,12 +324,14 @@ module.exports = {
 	 * @param layerDesc	The layer description
 	 */
 	addLayer: function(params) {
-		var layer = buildLayer(params);
-		if (!layer.params.isBackground) {
+		var layer;
+		if (!params.isBackground) {
+			layer = buildLayer(params);
 			self.layers.push(layer);
 			self.trigger('layerAdded', layer);
 			//console.log(layer.engineLayer.id + " added");
 		} else {
+			layer = this.setBackgroundLayer(params);
 			self.backgroundLayers.push(params);
 			self.trigger('backgroundLayerAdded', params);
 		}
@@ -341,10 +344,11 @@ module.exports = {
 	 *
 	 * @param layer The layer (as returned by addLayer)
 	 */
-	removeLayer: function(layer) {
-		if (!layer.params.isBackground) {
+	removeLayer: function(layerDesc) {
+		if (!layerDesc.isBackground) {
 			//console.log("Try to remove" + layer.engineLayer.id);
-			var index = self.layers.indexOf(layer);
+			var index = self.layers.indexOf(layerDesc);
+			var layer = self.layers[index];
 			if (index >= 0) {
 				if (layer.clear) {
 					layer.clear();
@@ -357,15 +361,16 @@ module.exports = {
 				return true;
 			}
 		} else {
-			var index = self.backgroundLayers.indexOf(layer.params);
+			var index = self.backgroundLayers.indexOf(layerDesc);
+			var layer = self.backgroundLayers[index];
 			if (index >= 0) {
 				self.backgroundLayers.splice(index, 1);
-				self.trigger('backgroundLayerRemoved', layer.params);
 
 				// Check first one by default
-				if (backgroundLayer == layer.params) {
+				if (backgroundLayer == layer) {
 					self.setBackgroundLayer(self.backgroundLayers[0]);
 				}
+				self.trigger('backgroundLayerRemoved', layer);
 			}
 			return true;
 		}

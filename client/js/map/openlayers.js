@@ -76,8 +76,8 @@ OpenLayersMapEngine = function(element) {
 			,
 		autoUpdateSize: false,
 		resolutions: resolutions,
-		fallThrough: true
-
+		fallThrough: true,
+		//tileManager: null
 	});
 
 	// Create the converter for GeoJSON format
@@ -175,6 +175,7 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 		this._map.addLayer(olLayer);
 		this._map.setBaseLayer(olLayer);
 	}
+	return olLayer;
 }
 
 /**

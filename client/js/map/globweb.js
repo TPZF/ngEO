@@ -162,6 +162,8 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 		this.globe.setBaseImagery(gwLayer);
 
 	this.$loading.show();
+
+	return gwLayer;
 }
 
 /**

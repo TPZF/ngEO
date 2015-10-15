@@ -53,7 +53,7 @@ var BackgroundWidget = function(dsa) {
 		var input = _.find(self.container.find('input'), function(input) {
 			return $(input).data("layer") == layer;
 		});
-		$(input).attr("checked", "checked").checkboxradio("refresh");
+		$(input).prop("checked", true).checkboxradio("refresh");
 	});
 
 	// Select the background used from the preferences unless select the first one
@@ -68,13 +68,15 @@ var BackgroundWidget = function(dsa) {
 BackgroundWidget.prototype.buildHtml = function(layer) {
 
 	// Add radio button + attribute callback on change
-	var input = $('<input id="' + layer.id + '" type="radio" data-theme="c" name="background-choice" />')
+	var isChecked = layer.visible ? 'checked="checked"' : "";
+	var id = layer.id ? layer.id : layer.name.replace(/\s+/g,"_");
+	var input = $('<input id="' + id + '" type="radio" data-theme="c" name="background-choice" '+ isChecked +' />')
 		.data("layer", layer)
 		.change(changeBackground);
 
 	// Build the label for input and add it to the group
-	$('<label data-mini="true">' + layer.name + '</label>')
-		.prepend(input)
+	$('<label for="'+id+'" data-mini="true">' + layer.name + '</label>')
+		.append(input)
 		.appendTo(this.container);
 };
 

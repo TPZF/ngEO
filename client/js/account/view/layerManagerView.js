@@ -265,7 +265,7 @@ var addToTrees = function($trees, data) {
 							$li.data("layer", Map.addLayer(layerDesc));
 						} else {
 							console.log("Becomes overlay");
-							Map.removeLayer(layer);
+							Map.removeLayer(layerDesc);
 							layerDesc.isBackground = undefined;
 							$li.data("layer", Map.addLayer(layerDesc));
 						}
