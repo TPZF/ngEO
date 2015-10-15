@@ -126,7 +126,7 @@ var buildItem = function(layer) {
 			type: "WMS",
 			name: layer.title,
 			baseUrl: layer.baseUrl,
-			visible: true,
+			visible: false,
 			params: {
 				layers: layer.name
 			}
@@ -222,8 +222,9 @@ var addToTrees = function($trees, data) {
 		},
 		onUnCheck: function($li) {
 			var layer = $li.data("layer");
-			if (layer) {
-				Map.removeLayer(layer);
+			var layerDesc = $li.data("layerDesc");
+			if (layerDesc) {
+				Map.removeLayer(layerDesc);
 			}
 		},
 		onAddLi: function($li, node) {
@@ -236,8 +237,9 @@ var addToTrees = function($trees, data) {
 		},
 		onDeleteLi: function($li) {
 			var layer = $li.data("layer");
-			if (layer) {
-				Map.removeLayer(layer);
+			var layerDesc = $li.data("layerDesc");
+			if (layerDesc) {
+				Map.removeLayer(layerDesc);
 			}
 
 			var parentName = $li.closest('.checktree').find(' > li').attr("rel");
@@ -260,7 +262,7 @@ var addToTrees = function($trees, data) {
 					if (layer) {
 						if (isChecked) {
 							console.log("Becomes background");
-							Map.removeLayer(layer);
+							Map.removeLayer(layerDesc);
 							layerDesc.isBackground = true;
 							$li.data("layer", Map.addLayer(layerDesc));
 						} else {

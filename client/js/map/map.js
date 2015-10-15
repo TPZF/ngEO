@@ -331,7 +331,8 @@ module.exports = {
 			self.trigger('layerAdded', layer);
 			//console.log(layer.engineLayer.id + " added");
 		} else {
-			layer = this.setBackgroundLayer(params);
+			if (params.visible)
+				layer = this.setBackgroundLayer(params);
 			self.backgroundLayers.push(params);
 			self.trigger('backgroundLayerAdded', params);
 		}
@@ -347,15 +348,15 @@ module.exports = {
 	removeLayer: function(layerDesc) {
 		if (!layerDesc.isBackground) {
 			//console.log("Try to remove" + layer.engineLayer.id);
-			var index = self.layers.indexOf(layerDesc);
-			var layer = self.layers[index];
-			if (index >= 0) {
+			var layer = _.findWhere(self.layers, {params: layerDesc});
+			if (layer) {
 				if (layer.clear) {
 					layer.clear();
 				}
 				if (layer.engineLayer) {
 					mapEngine.removeLayer(layer.engineLayer);
 				}
+				var index = self.layers.indexOf(layer);
 				self.layers.splice(index, 1);
 				self.trigger('layerRemoved', layer);
 				return true;
