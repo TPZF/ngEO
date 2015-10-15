@@ -33,5 +33,12 @@
 		}); %>
 	</form>
 
+	<% if (updateCallback) { %>
+		<div class="popup-widget-footer">
+			<button id="downloadOptionsUpdate" data-role="button" data-mini="true" data-inline="true" data-theme="a">Update</button>
+			<div id="downloadOptionsMessage"></div>
+		</div>
+	<% } %>
+
 <% } %>
 

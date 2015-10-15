@@ -1,20 +1,23 @@
 var Configuration = require('configuration');
 var downloadOptions_template = require('search/template/downloadOptionsContent');
 
+/** 
+ * The model is the DatasetSearch (the search model containing search parameters)
+ * The dataset property of DatasetSearch is the Dataset backbone model containing the download options
+ */
 var DownloadOptionsView = Backbone.View.extend({
 
-	/** 
-	 * The model is the DatasetSearch (the search model containing search parameters)
-	 * The dataset property of DatasetSearch is the Dataset backbone model containing the download options
-	 * @param options
-	 *		<ul>
-	 *			<li>dataset : The dataset</li>
-	 *		</ul>
-	 */
 	id: "downloadOptionsView",
 
-	initialize: function() {
+	/**
+	 *	@param options
+	 *		<ul>
+	 *			<li>updateCallback: {Function} If defined adds "Update" button to interface. The callback must be a deffered object.</li>
+	 *		</ul>
+	 */
+	initialize: function(options) {
 		this.listenTo(this.model, 'change:downloadOptions', this.onChangeDownloadOptions);
+		this.updateCallback = options.hasOwnProperty('onUpdate') ? options.onUpdate : null;
 	},
 
 	events: {
@@ -74,6 +77,18 @@ var DownloadOptionsView = Backbone.View.extend({
 			} else {
 				this.model.unset(event.currentTarget.id);
 			}
+		},
+		
+		// On update "event" handler
+		'click #downloadOptionsUpdate': function(event) {
+			if (this.updateCallback) {
+				console.log("Update called");
+				var self = this;
+				this.updateCallback().done(function() {
+					self.$el.find("#downloadOptionsMessage").empty();
+					self.$el.find("#downloadOptionsMessage").append("<p>Download options updated.<p>");
+				});	
+			} 
 		}
 	},
 
@@ -138,7 +153,8 @@ var DownloadOptionsView = Backbone.View.extend({
 
 		var content = downloadOptions_template({
 			model: this.model,
-			hasValidPreconditions: this.hasValidPreconditions
+			hasValidPreconditions: this.hasValidPreconditions,
+			updateCallback: this.updateCallback != null
 		});
 
 		this.$el.html(content);

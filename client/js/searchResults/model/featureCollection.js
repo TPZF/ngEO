@@ -298,7 +298,7 @@ var FeatureCollection = function() {
 			var url = Configuration.getMappedProperty(feature, "productUrl", null);
 
 			if (url) {
-				console.log("product url initial = " + url);
+				// console.log("product url initial = " + url);
 
 				//remove the already added download options : this fixes the already existing bug :
 				//when none is chosen the download option is not removed from the url

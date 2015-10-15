@@ -27,11 +27,6 @@ var DownloadOptionsWidget = function() {
 	// Use a model to store the download options of selected products
 	var selectedDownloadOptions = new Backbone.Model();
 
-	var downloadOptionsView = new DownloadOptionsView({
-		model: selectedDownloadOptions,
-		el: element
-	});
-
 	/**
 	 *	Open the popup
 	 */
@@ -44,24 +39,15 @@ var DownloadOptionsWidget = function() {
 		featureCollection.fetchAvailableDownloadOptions(function(downloadOptions) {
 			selectedDownloadOptions.set('downloadOptions', downloadOptions);
 
-			downloadOptionsView.render();
-
-			downloadOptionsView.$el.append('\
-				<div class="popup-widget-footer">\
-					<button id="downloadOptionsUpdate" data-role="button" data-mini="true"\
-							data-inline="true" data-theme="a">Update</button>\
-					<div id="downloadOptionsMessage"></div>\
-				</div>').trigger('create');
-
-			// called when  'Update' is clicked
-			downloadOptionsView.$el.find('#downloadOptionsUpdate').click(function(event) {
-				//update the product url of the selected products with the selected download options
-				//and display a message to the user.
-				$.when(featureCollection.updateProductUrls(selectedDownloadOptions.attributes)).done(function() {
-					$("#downloadOptionsMessage").empty();
-					$("#downloadOptionsMessage").append("<p>Download options updated.<p>");
-				});
+			var downloadOptionsView = new DownloadOptionsView({
+				model: selectedDownloadOptions,
+				el: element,
+				updateCallback: function(event) {
+					// Update the product url of the selected products with the selected download options
+					return $.when(featureCollection.updateProductUrls(selectedDownloadOptions.attributes));
+				}
 			});
+			downloadOptionsView.render();
 
 			// Trigger jqm styling
 			parentElement.ngeowidget("show");
