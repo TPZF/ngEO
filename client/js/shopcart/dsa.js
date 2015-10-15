@@ -1,10 +1,9 @@
 var GlobalEvents = require('globalEvents');
 var MenuBar = require('ui/menubar');
-var Map = require('map/map');
-var SearchResultsMap = require('searchResults/map');
 var ShopcartCollection = require('shopcart/model/shopcartCollection');
 var Shopcart = require('shopcart/model/shopcart');
-var ShopcartTableView = require('shopcart/view/shopcartItemView');
+var ShopcartTableView = require('shopcart/view/shopcartTableView');
+var ShopcartView = require('shopcart/view/shopcartView');
 var CreateShopcartView = require('account/view/createShopcartView');
 	
 module.exports =  {
@@ -17,35 +16,38 @@ module.exports =  {
 	 */
 	initialize: function(element, router, panelManager) {
 
+		// Create shopcart view
+		var shopcartView = new ShopcartView({
+			model: ShopcartCollection.getCurrent(),
+			collection: ShopcartCollection
+		});
+		$('#statusBar').append(shopcartView.$el);
+		shopcartView.render();
+		
 		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
-		panelManager.bottom.addView( tableView );
-	
+		panelManager.bottom.addView( tableView );		
+		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
+			tableView.setShopcart(shopcart);
+			shopcartStatus.model = shopcart.featureCollection;
+		});
+		tableView.render();
+
+		// Add shopcartView&tableView as a status to bottom bar
 		var shopcartStatus = {
 			activator: '#shopcart',
-			$el: $('#shopcartStatus'),
+			$el: shopcartView.$el,
 			views: [tableView],
-			viewActivators: [ $('#shopcartStatus').find('#tableCB') ],
+			viewActivators: [ shopcartView.$el.find('#tableCB') ],
 			model: ShopcartCollection.getCurrent()
 		};
-		
 		// Add shopcart status to panel
 		panelManager.bottom.addStatus(shopcartStatus);	
 		
-		// Change model on table when the shopcart is changed
-		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
-			shopcartStatus.model = shopcart.featureCollection;
-			tableView.setShopcart(shopcart);
-			shopcart.loadContent();
-		});
-
-		
-		tableView.render();
-		
-		// load the shopcart collection to display the current shopcart in the data services area
+		// Load the shopcart collection to display the current shopcart in the data services area
 		ShopcartCollection.fetch();
 	
-		//Route for share shopcart
+		// Define route for share shopcart
 		router.route(
 				"data-services-area/shopcart/:shopcartId", 
 				"shopcart", function(shopcartId) {		
@@ -53,7 +55,10 @@ module.exports =  {
 			MenuBar.showPage("data-services-area");
 			
 			// Create a shared shopcart and load its content to be displayed
-			var shareShopcart = new Shopcart({ id: shopcartId, name: "Share Shopcart " + shopcartId, isShared: true });
+			var shareShopcart = new Shopcart({
+				id: shopcartId, name: "Share Shopcart " + shopcartId,
+				isShared: true
+			});
 			ShopcartCollection.setCurrent( shareShopcart );
 			
 			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
@@ -65,44 +70,6 @@ module.exports =  {
 				$("#shopcart").trigger('click');
 				panelManager.bottom.showTable();
 			});
-		});
-		
-		
-		// Connect shopcart with Map		
-		var shopcartLayer = Map.addLayer({
-			name: "Shopcart Footprints",
-			type: "Feature",
-			visible: true,
-			style: "shopcart-footprint"
-		});
-		
-		var updateNumberOfItems = function() {
-			var numItems = ShopcartCollection.getCurrent().featureCollection.features.length;
-			$('#shopcartMessage').html( ShopcartCollection.getCurrent().get('name') + ' : ' + numItems + ' items' );
-		};
-		
-		// Manage display of shopcart footprints
-		ShopcartCollection.on('change:current', function( current, prevCurrent ) {
-			if ( prevCurrent ) {
-				prevCurrent.featureCollection.off('add:features', updateNumberOfItems );
-				prevCurrent.featureCollection.off('remove:features', updateNumberOfItems );
-				prevCurrent.off('change:name', updateNumberOfItems);
-				
-				SearchResultsMap.removeFeatureCollection( prevCurrent.featureCollection, { keepLayer: true } );
-			}
-			
-			updateNumberOfItems();
-			
-			shopcartLayer.clear();
-			
-			SearchResultsMap.addFeatureCollection( current.featureCollection, {
-				layer: shopcartLayer,
-				hasBrowse: false
-			});
-			
-			current.on('change:name', updateNumberOfItems);
-			current.featureCollection.on('add:features', updateNumberOfItems );
-			current.featureCollection.on('remove:features', updateNumberOfItems );
 		});
 		
 		// Subscribe add to shopcart
@@ -123,8 +90,7 @@ module.exports =  {
 			} else {
 				ShopcartCollection.getCurrent().addItems( features );
 			}
-
-		})
+		});
 		
 	},
 };

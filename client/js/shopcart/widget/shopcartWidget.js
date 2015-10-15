@@ -3,7 +3,7 @@
  */
 
 var ShopcartCollection = require('shopcart/model/shopcartCollection');
-var ShopcartItemView = require('shopcart/view/shopcartItemView');
+var ShopcartTableView = require('shopcart/view/shopcartItemView');
 var PanelManager = require('ui/panelManager');
 var ngeoWidget = require('ui/widget');
 
@@ -13,27 +13,27 @@ module.exports = {
 	create: function() {
 
 		// Create the shopcart content view
-		var shopcartItemView = new ShopcartItemView();
+		var shopcartTableView = new ShopcartTableView();
 
 		// Add the shopcart table to the bottom panel 
 		PanelManager.addPanelContent({
-			element: shopcartItemView.$el,
+			element: shopcartTableView.$el,
 			position: 'bottom',
 			activator: '#shopcart',
-			show: $.proxy(shopcartItemView.onShow, shopcartItemView),
-			hide: $.proxy(shopcartItemView.onHide, shopcartItemView)
+			show: $.proxy(shopcartTableView.onShow, shopcartTableView),
+			hide: $.proxy(shopcartTableView.onHide, shopcartTableView)
 		});
 
 		// Manage panel size
-		shopcartItemView.$el.on('panel:show', $.proxy(shopcartItemView.onShow, shopcartItemView));
-		shopcartItemView.$el.on('panel:hide', $.proxy(shopcartItemView.onHide, shopcartItemView));
+		shopcartTableView.$el.on('panel:show', $.proxy(shopcartTableView.onShow, shopcartItemView));
+		shopcartTableView.$el.on('panel:hide', $.proxy(shopcartTableView.onHide, shopcartItemView));
 		shopcartItemView.on("sizeChanged", function() {
 			PanelManager.updatePanelSize('bottom');
 		});
 
-		shopcartItemView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setShopcart);
+		shopcartTableView.listenTo(ShopcartCollection, 'change:current', shopcartItemView.setShopcart);
 
-		shopcartItemView.render();
+		shopcartTableView.render();
 
 		// Manage error on shopcart collection fetch
 		// Desactive the shopcart widget : cannot access to shopcart !
@@ -48,7 +48,7 @@ module.exports = {
 		// load the shopcart collection to display the current shopcart in the data services area
 		ShopcartCollection.fetch();
 
-		return shopcartItemView.$el;
+		return shopcartTableView.$el;
 	},
 
 	/**
@@ -56,7 +56,7 @@ module.exports = {
 	 * @returns
 	 */
 	updateView: function() {
-		shopcartItemView.onShow();
+		shopcartTableView.onShow();
 	}
 
 };
