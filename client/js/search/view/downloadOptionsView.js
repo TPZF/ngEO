@@ -17,7 +17,7 @@ var DownloadOptionsView = Backbone.View.extend({
 	 */
 	initialize: function(options) {
 		this.listenTo(this.model, 'change:downloadOptions', this.onChangeDownloadOptions);
-		this.updateCallback = options.hasOwnProperty('onUpdate') ? options.onUpdate : null;
+		this.updateCallback = options.hasOwnProperty('updateCallback') ? options.updateCallback : null;
 	},
 
 	events: {
