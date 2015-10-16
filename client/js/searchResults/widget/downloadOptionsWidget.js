@@ -38,6 +38,19 @@ var DownloadOptionsWidget = function() {
 		// Fetch the available download options and then display the widget
 		featureCollection.fetchAvailableDownloadOptions(function(downloadOptions) {
 			selectedDownloadOptions.set('downloadOptions', downloadOptions);
+			
+			// Update download options model for checked products
+			// Need to do this cuz for two reasons:
+			//  1) NGEO-1884: take the same properties as in search panel (DatasetSearch)
+			//  2) downloadOptionsView checks preconditions depending on properties set on model
+			for ( var i=0; i<downloadOptions.length; i++ ) {
+				var downloadOption = downloadOptions[i];
+				if ( DataSetSearch.get(downloadOption.argumentName) ) {
+					selectedDownloadOptions.set(downloadOption.argumentName, DataSetSearch.get(downloadOption.argumentName)); // 1)
+				} else {
+					selectedDownloadOptions.set(downloadOption.argumentName, downloadOption.value[0].name); // 2) Take the first value
+				}
+			}
 
 			var downloadOptionsView = new DownloadOptionsView({
 				model: selectedDownloadOptions,
