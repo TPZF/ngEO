@@ -345,11 +345,13 @@ module.exports = {
 	 *
 	 * @param layer The layer (as returned by addLayer)
 	 */
-	removeLayer: function(layerDesc) {
-		if (!layerDesc.isBackground) {
+	removeLayer: function(layer) {
+		if (!layer.params.isBackground) {
 			//console.log("Try to remove" + layer.engineLayer.id);
-			var layer = _.findWhere(self.layers, {params: layerDesc});
-			if (layer) {
+			//var layer = _.findWhere(self.layers, {params: layerDesc});
+			var index = self.layers.indexOf(layer);
+			if (index >= 0) {
+				var layer = self.layers[index];
 				if (layer.clear) {
 					layer.clear();
 				}
@@ -362,13 +364,14 @@ module.exports = {
 				return true;
 			}
 		} else {
-			var index = self.backgroundLayers.indexOf(layerDesc);
+			var index = self.backgroundLayers.indexOf(layer.params);
+			// var index = self.backgroundLayers.indexOf(layerDesc);
 			var layer = self.backgroundLayers[index];
 			if (index >= 0) {
 				self.backgroundLayers.splice(index, 1);
 
 				// Check first one by default
-				if (backgroundLayer == layer) {
+				if (backgroundLayer == layer.params) {
 					self.setBackgroundLayer(self.backgroundLayers[0]);
 				}
 				self.trigger('backgroundLayerRemoved', layer);

@@ -223,8 +223,8 @@ var addToTrees = function($trees, data) {
 		onUnCheck: function($li) {
 			var layer = $li.data("layer");
 			var layerDesc = $li.data("layerDesc");
-			if (layerDesc) {
-				Map.removeLayer(layerDesc);
+			if (layer) {
+				Map.removeLayer(layer);
 			}
 		},
 		onAddLi: function($li, node) {
@@ -238,8 +238,8 @@ var addToTrees = function($trees, data) {
 		onDeleteLi: function($li) {
 			var layer = $li.data("layer");
 			var layerDesc = $li.data("layerDesc");
-			if (layerDesc) {
-				Map.removeLayer(layerDesc);
+			if (layer) {
+				Map.removeLayer(layer);
 			}
 
 			var parentName = $li.closest('.checktree').find(' > li').attr("rel");
@@ -262,12 +262,12 @@ var addToTrees = function($trees, data) {
 					if (layer) {
 						if (isChecked) {
 							console.log("Becomes background");
-							Map.removeLayer(layerDesc);
+							Map.removeLayer(layer);
 							layerDesc.isBackground = true;
 							$li.data("layer", Map.addLayer(layerDesc));
 						} else {
 							console.log("Becomes overlay");
-							Map.removeLayer(layerDesc);
+							Map.removeLayer(layer);
 							layerDesc.isBackground = undefined;
 							$li.data("layer", Map.addLayer(layerDesc));
 						}
