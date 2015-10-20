@@ -27,7 +27,7 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	featureCollections['landsat'] = wcsCoveragePaser.parse('./productSearch/landsat_coverage.xml',inputFeatureCollection);
 });
 fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, data) {
-	featureCollections['ATS_TOA_1P']  = JSON.parse(data);
+	featureCollections['ATS_TOA_1P']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ASA_WS__0P']  = conf.toNewJsonFormat(JSON.parse(data));

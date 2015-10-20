@@ -147,8 +147,10 @@ module.exports = {
 			this.setMappedProperty(feature, "mission", feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName);
 			this.setMappedProperty(feature, "sensor", feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName);
 			this.setMappedProperty(feature, "swath", feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier);
-			this.setMappedProperty(feature, "orbit", feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber);
-			this.setMappedProperty(feature, "pass", feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection);
+			if ( feature.properties.EarthObservation.EarthObservationEquipment.Acquisition ) {
+				this.setMappedProperty(feature, "orbit", feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitNumber);
+				this.setMappedProperty(feature, "pass", feature.properties.EarthObservation.EarthObservationEquipment.Acquisition.eop_orbitDirection);
+			}
 			this.setMappedProperty(feature, "status", feature.properties.EarthObservation.EarthObservationMetaData.eop_status);
 			this.setMappedProperty(feature, "productType", feature.properties.EarthObservation.EarthObservationMetaData.eop_productType);
 			this.setMappedProperty(feature, "imageQualityReportURL", feature.properties.EarthObservation.EarthObservationMetaData.eop_imageQualityReportURL);
