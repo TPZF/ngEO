@@ -28,7 +28,6 @@ $.widget("ngeo.toolbar", {
 	_build: function(elements) {
 
 		// Wrap the image with a div to display both image and text below, and then add class for button styling
-		// Wrap the image with a div to display both image and text below, and then add class for button styling
 		elements
 			.addClass('tb-elt');
 

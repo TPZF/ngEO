@@ -116,6 +116,5 @@ module.exports = {
 
 		// Initialize toolbar and context help
 		toolbarMap = new ToolBarMap(element);
-
-	},
+	}
 };

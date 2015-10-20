@@ -10,6 +10,43 @@ var GanttView = require('ui/ganttView');
 // Private variable
 var _views = {};
 
+// Private variables used for "swipe"-effect
+var dragging = false;
+var dx = 0; // Delta x needed between events (could probable replace dragging boolean)
+var leftPos = 0; // Current position of beginning of scrollable element
+var $bottomToolbar = null;
+
+/**
+ *	Computes total <command> width (icons containing dataset names)
+ */
+var computeCommandWidth = function() {
+	var twidth=0;
+	$bottomToolbar.children().each(function() {
+		twidth += $(this).outerWidth( true );
+	});
+	return twidth;
+}
+
+/**
+ *	Clamp the given position to not overflow the borders of available datasets
+ */
+var clampPos = function(pos) {
+
+	var tdiff = computeCommandWidth() - $bottomToolbar.width();
+	if ( pos > tdiff )
+		pos = tdiff;
+	if ( pos < 0 )
+		pos = 0;
+	return pos;
+}
+
+/*
+ * Scroll-left with the given delta
+ */
+var dragTo = function(delta) {
+	leftPos += delta;
+	$bottomToolbar.scrollLeft( clampPos(leftPos) );
+}
 
 module.exports = {
 
@@ -20,6 +57,8 @@ module.exports = {
 	 * @param router 	The data-services-area router
 	 */
 	initialize: function(element, router, panelManager) {
+
+		$bottomToolbar = $('#bottomToolbar');
 
 		// Create the results table view
 		var tableView = new SearchResultsTableView();
@@ -42,13 +81,17 @@ module.exports = {
 			$('#statusBar').append(searchResultsView.$el);
 			searchResultsView.render();
 
-			// update the toolbar
-			$('#bottomToolbar')
+			// Update the toolbar
+			$bottomToolbar
 				.append('<command id="result' + fc.id + '" label="' + fc.id + '" class="result" />')
 				.toolbar('refresh');
-			$('#dateRangeSlider').css('left', $('#bottomToolbar').outerWidth());
-			var slider = $("#dateRangeSlider").data("dateRangeSlider");
-			if (slider) slider.refresh();
+
+			// Update the daterange slider
+			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");
+			if (slider) {
+				$('#dateRangeSlider').css('left', $bottomToolbar.outerWidth());
+				slider.refresh();
+			}
 
 			// Add to status bar
 			panelManager.bottom.addStatus({
@@ -69,6 +112,8 @@ module.exports = {
 			// Activate the new result
 			$('#result' + fc.id).click();
 
+			// Show user which dataset is currently selected
+			dragTo($bottomToolbar.find('command:last').position().left);
 		});
 
 		// Call when a feature collection is removed
@@ -84,9 +129,11 @@ module.exports = {
 			$('#bottomToolbar command:last-child').click();
 
 			// Update the daterange slider
-			$('#dateRangeSlider').css('left', $('#bottomToolbar').outerWidth());
-			var slider = $("#dateRangeSlider").data("dateRangeSlider");
-			if (slider) slider.refresh();
+			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");
+			if (slider) {
+				$('#dateRangeSlider').css('left', $bottomToolbar.outerWidth());
+				slider.refresh();
+			}
 
 			// Remove the view
 			_views[fc.id].remove();
@@ -94,7 +141,9 @@ module.exports = {
 
 			// Remove feature collection from the map
 			SearchResultsMap.removeFeatureCollection(fc);
-
+			
+			// Show user which dataset is currently selected
+			dragTo($bottomToolbar.find('command:last').position().left);
 		});
 
 		// Initialize the default handler
@@ -111,6 +160,49 @@ module.exports = {
 			if ($('#shopcart').hasClass('toggle')) {
 				$('#shopcart').next().click();
 			}
+		});
+		
+		this.initSwipeEffect();
+
+		// Scroll through the datasets with mouse wheel
+		$bottomToolbar.mousewheel( function(event, delta) {
+			 dragTo(delta * 10);
+		});
+	},
+
+	/**
+	 *	Swipe-effect: click & drag to swipe though available datasets
+	 */
+	initSwipeEffect: function() {
+		// "Swipe"-effect
+		$bottomToolbar.on('mousedown', function(event) {
+			// Apply swiping only if scroll is activated
+			if ( $bottomToolbar.outerWidth() >= parseInt($bottomToolbar.css('max-width')) ) {
+				dragging = true;
+				_lastX = event.clientX;
+			}
+		});
+
+		$bottomToolbar.on('mousemove', function(event) {
+			if ( dragging ) {
+				event.preventDefault();
+				dx = _lastX - event.clientX;		
+				dragTo(dx);
+				_lastX = event.clientX;
+			}
+		});
+
+		$('#map').on('mouseup', function(event) {
+			if ( dragging ) {
+				event.preventDefault();
+
+				leftPos = clampPos($bottomToolbar.scrollLeft() + (dx * 10));
+				$bottomToolbar.stop().animate({
+					'scrollLeft': leftPos
+				}, Math.abs(dx * 30), "easeOutQuad");
+				dragging = false;
+			}
+			dx = 0;
 		});
 	}
 };
