@@ -41,8 +41,8 @@ var CorrInterView = Backbone.View.extend({
 
 	// Render the corr/infer view
 	render: function() {
-		var content = corrInterContent_template(this.model, {
-			variable: 'model'
+		var content = corrInterContent_template({
+			model: this.model
 		});
 		this.$el.html(content);
 
