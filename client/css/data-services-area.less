@@ -32,10 +32,12 @@ menu[type=toolbar] {
 
 // Search toolbar
 #bottomToolbar {
-	bottom: @statusBar-height;
-	/* Make it scrollable */
-	max-width: 350px;
-  	overflow-x: auto;
+	bottom: 0px;
+	width: 100%;
+	// Needed to swipe-effect
+	max-width: 100%;
+	text-align: left;
+  	overflow-x: hidden;
   	overflow-y: hidden;
   	white-space: nowrap;
 }
@@ -80,20 +82,21 @@ menu[type=toolbar] {
 	background-image: url(../images/help.png); 
 }
 
+@statusBar-height: 38px;
+@statusBar-bottom: 50px;
+
 /**
  * The date range slider
  */
 #dateRangeSlider {
 	z-index: 1005;
-	bottom: @statusBar-height;
-	left: 100px;
-	right: 0;
+	bottom: @statusBar-bottom + @statusBar-height;
+	left: 0px;
+	right: 0px;
 	background: @widget-background-color; 
 	position: absolute;
 	//width: 100%;
 }
-
-@statusBar-height: 38px;
 
 /**
  * The status bar
@@ -102,7 +105,7 @@ menu[type=toolbar] {
 	position: absolute;
 	z-index: 1005;
 	left: 0px;
-	bottom: 0px;
+	bottom: @statusBar-bottom;
 	width: 100%;
 	height: @statusBar-height;
 	color: white;

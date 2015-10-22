@@ -83,13 +83,12 @@ module.exports = {
 
 			// Update the toolbar
 			$bottomToolbar
-				.append('<command id="result' + fc.id + '" label="' + fc.id + '" class="result" />')
+				.append('<command id="result' + fc.id + '" title="'+ fc.id +'" label="' + fc.id + '" class="result" />')
 				.toolbar('refresh');
 
 			// Update the daterange slider
 			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");
 			if (slider) {
-				$('#dateRangeSlider').css('left', $bottomToolbar.outerWidth());
 				slider.refresh();
 			}
 
@@ -131,7 +130,6 @@ module.exports = {
 			// Update the daterange slider
 			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");
 			if (slider) {
-				$('#dateRangeSlider').css('left', $bottomToolbar.outerWidth());
 				slider.refresh();
 			}
 
