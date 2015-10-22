@@ -76,7 +76,7 @@
             },
             
             {
-                "id": "cseop_status",
+                "id": "status",
                 "type": "List",
                 "possibleValues": ["Archived", "Aquired", "Planned", "Cancelled"]
             },
