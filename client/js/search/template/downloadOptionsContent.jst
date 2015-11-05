@@ -17,8 +17,13 @@
 						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
 						<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
 						<!-- <option value="None">None</option> -->
+
+						<!-- NGEO-1916: Add empty field in case of conflict between the selected products -->
+						<% if ( model.get(option.argumentName) == "@conflict" ) { %>
+							<option value="@conflict" selected>???</option>
+						<% } %>
 						<% _.each(option.value, function(value) { %>
-							<% if ( model.get(option.argumentName) == "@conflict" || !hasValidPreconditions(value) ) { %>
+							<% if ( !hasValidPreconditions(value) ) { %>
 								<option value="" style="display: none;"></option>
 							<% } else { %>
 								<option value="<%= value.name%>" <% if ( model.get(option.argumentName) && model.get(option.argumentName) == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>

@@ -39,19 +39,19 @@ var DownloadOptionsWidget = function() {
 		featureCollection.fetchAvailableDownloadOptions(function(downloadOptions) {
 			selectedDownloadOptions.set('downloadOptions', downloadOptions);
 			
-			// Update download options model for checked products
-			// Need to do this cuz for two reasons:
-			//  1) NGEO-1884: take the same properties as in search panel (DatasetSearch)
-			//  2) downloadOptionsView checks preconditions depending on properties set on model
+			// Stub_server HACK: Nominally, the getSelectedDownloadOptions must extract the ngEO_DO from productUrl, so no need to set downloadOptions
+			// Since our stub currently doesn't have ngEO_DO on productUrl, force the the client to set:
+			//	Two options:
+			//		1) Set as @conflict
+			//		2) Same as DataSetSearch : could bring to confusion..
 			for ( var i=0; i<downloadOptions.length; i++ ) {
 				var downloadOption = downloadOptions[i];
-				if ( DataSetSearch.get(downloadOption.argumentName) ) {
-					selectedDownloadOptions.set(downloadOption.argumentName, DataSetSearch.get(downloadOption.argumentName)); // 1)
-				} else {
-					selectedDownloadOptions.set(downloadOption.argumentName, downloadOption.value[0].name); // 2) Take the first value
+				if ( !selectedDownloadOptions.get(downloadOption.argumentName) ) {
+					selectedDownloadOptions.set(downloadOption.argumentName, "@conflict"); // 1)
+//					selectedDownloadOptions.set(downloadOption.argumentName, DataSetSearch.get(downloadOption.argumentName)); // 2)
 				}
 			}
-
+			
 			var downloadOptionsView = new DownloadOptionsView({
 				model: selectedDownloadOptions,
 				el: element,

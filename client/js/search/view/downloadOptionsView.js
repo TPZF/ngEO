@@ -45,15 +45,17 @@ var DownloadOptionsView = Backbone.View.extend({
 					if (!option.cropProductSearchArea) {
 						var selectedValue = self.model.get(option.argumentName);
 						if (selectedValue) {
-							// Option has already the value set, but which doesn't respect the precondition anymore
+							// Option has already the value set
+							// Check that set value respects it own preconditions
 							var valueObject = _.findWhere(option.value, {
 								name: selectedValue
 							});
-							if (!self.hasValidPreconditions(valueObject)) {
+							// Set valid value only in case when preconditions aren't respected and selected value is not in conflict
+							if ( !self.hasValidPreconditions(valueObject) && selectedValue != "@conflict" ) {
 								self.model.set(option.argumentName, self.getValidValue(option).name);
 							}
 						} else {
-							// Precondition is now respected for the given option, update model with valid value
+							// Option respects the preconditions, update model with a valid value
 							self.model.set(option.argumentName, self.getValidValue(option).name);
 						}
 					}
@@ -82,7 +84,6 @@ var DownloadOptionsView = Backbone.View.extend({
 		// On update "event" handler
 		'click #downloadOptionsUpdate': function(event) {
 			if (this.updateCallback) {
-				console.log("Update called");
 				var self = this;
 				this.updateCallback().done(function() {
 					self.$el.find("#downloadOptionsMessage").empty();
@@ -158,6 +159,12 @@ var DownloadOptionsView = Backbone.View.extend({
 		});
 
 		this.$el.html(content);
+		// Grey "Update" button in case if conflict options is selected
+		if ( this.$el.find('option[value="@conflict"]').is(":selected") )
+		{
+			this.$el.find("#downloadOptionsUpdate").attr("disabled", "disabled");
+		}
+
 		this.$el.trigger('create');
 		return this;
 	}
