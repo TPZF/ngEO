@@ -79,7 +79,7 @@ var TimeExtentView = Backbone.View.extend({
 
 			// Filter keyDates which aren't in range
 			var startDate = dateRange.start;
-			var stopDate = dateRange.validityStop;
+			var stopDate = dateRange.stop;
 			var i = keyDates.length;
 			while (i--) {
 				var keyDate = new Date(keyDates[i][0]);
@@ -123,7 +123,7 @@ var TimeExtentView = Backbone.View.extend({
 			},
 			scaleBounds: {
 				min: this.model.get("dateRange").start,
-				max: this.model.get("dateRange").validityStop
+				max: this.model.get("dateRange").stop
 			},
 			change: $.proxy(this.onTimeSliderChanged, this)
 		}).show();

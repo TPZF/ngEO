@@ -145,8 +145,8 @@ var DataSetSearch = SearchCriteria.extend({
 			if (!dateRange) {
 				dateRange = {
 					start: dataset.get('startDate'),
-					stop: dataset.get('endDate'),
-					validityStop: dataset.get('validityEndDate')
+					stop: dataset.get('endDate')
+					//validityStop: dataset.get('validityEndDate')
 				};
 			} else {
 				if (dataset.get('startDate') < dateRange.start) {
@@ -155,9 +155,10 @@ var DataSetSearch = SearchCriteria.extend({
 				if (dataset.get('endDate') > dateRange.stop) {
 					dateRange.stop = dataset.get('endDate');
 				}
-				if (dataset.get('validityEndDate') > dateRange.validityStop) {
-					dateRange.validityStop = dataset.get('validityEndDate');
-				}
+				// NGEO-1919: validityStop never used anymore
+				// if (dataset.get('validityEndDate') > dateRange.validityStop) {
+				// 	dateRange.validityStop = dataset.get('validityEndDate');
+				// }
 			}
 		});
 
