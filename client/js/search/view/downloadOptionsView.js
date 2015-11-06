@@ -50,8 +50,8 @@ var DownloadOptionsView = Backbone.View.extend({
 							var valueObject = _.findWhere(option.value, {
 								name: selectedValue
 							});
-							// Set valid value only in case when preconditions aren't respected and selected value is not in conflict
-							if ( !self.hasValidPreconditions(valueObject) && selectedValue != "@conflict" ) {
+							// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
+							if ( selectedValue != "@conflict" && !self.hasValidPreconditions(valueObject) ) {
 								self.model.set(option.argumentName, self.getValidValue(option).name);
 							}
 						} else {

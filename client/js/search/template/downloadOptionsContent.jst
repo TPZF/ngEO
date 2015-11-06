@@ -18,7 +18,7 @@
 						<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
 						<!-- <option value="None">None</option> -->
 
-						<!-- NGEO-1916: Add empty field in case of conflict between the selected products -->
+						<!-- NGEO-1916: Add "???" field in case of conflict between the selected products -->
 						<% if ( model.get(option.argumentName) == "@conflict" ) { %>
 							<option value="@conflict" selected>???</option>
 						<% } %>
