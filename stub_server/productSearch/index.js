@@ -9,7 +9,8 @@ var fs = require('fs'),
 	wcsCoveragePaser = require('./wcsCoverageParser'),
 	eoliParser = require('./EOLIParser'),
 	find = require('lodash.find')
-	conf = require('../webClientConfigurationData/configuration');
+	conf = require('../webClientConfigurationData/configuration'),
+	logger = require('../utils/logger');
 
 /**
  * Store the feature collections for each datasets
@@ -26,14 +27,23 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	featureCollections['default'] = wcsCoveragePaser.parse('./productSearch/sar_coverage.xml',inputFeatureCollection);
 	featureCollections['landsat'] = wcsCoveragePaser.parse('./productSearch/landsat_coverage.xml',inputFeatureCollection);
 });
+// New json format
+fs.readFile('./productSearch/S2MSI1A_response.json', 'utf8', function(err, data) {
+	featureCollections['S2MSI1A']  = JSON.parse(data);
+});
+fs.readFile('./productSearch/S1_SAR_EW_DUAL_POL_response.json', 'utf8', function(err, data) {
+	featureCollections['S1_SAR_EW_DUAL_POL']  = JSON.parse(data);
+});
+fs.readFile('./productSearch/ENVISAT_ASA_IM__0P_response.json', 'utf8', function (err, data) {
+	featureCollections['ENVISAT_ASA_IM__0P']  = JSON.parse(data);
+});
+
+// Old json format
 fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, data) {
 	featureCollections['ATS_TOA_1P']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/ASA_WS__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ASA_WS__0P']  = conf.toNewJsonFormat(JSON.parse(data));
-});
-fs.readFile('./productSearch/ENVISAT_ASA_IM__0P_response.json', 'utf8', function (err, data) {
-	featureCollections['ENVISAT_ASA_IM__0P']  = JSON.parse(data);
 });
 fs.readFile('./productSearch/Sentinel2_response.json', 'utf8', function (err, data) {
 	featureCollections['Sentinel2']  = conf.toNewJsonFormat(JSON.parse(data));
@@ -147,6 +157,7 @@ module.exports = function(req, res){
 	if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ){
 		fcId = req.param('datasetId');
 	}
+	logger.debug("Search on : " + fcId);
 	
 	var featureCollection = featureCollections[fcId];
 	

@@ -1,0 +1,25 @@
+{
+    "datasetSearchInfo": {
+        "attributes": [
+            {
+                "caption": "pgrpi",
+                "id": "pgrpi",
+                "type": "String"
+            }
+        ],
+        "caption": "S2MSI1A",
+        "datasetId": "S2MSI1A",
+        "description": "S2MSI1A",
+        "downloadOptions": [],
+        "endDate": "2015-06-20T21:23:44Z",
+        "keywords": [
+            {
+                "keyword": "key 1"
+            },
+            {
+                "keyword": "key 2"
+            }
+        ],
+        "startDate": "2015-06-20T00:42:42Z"
+    }
+}

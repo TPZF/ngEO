@@ -16,6 +16,9 @@
             [ "S2", "OPT", "land mapping", "false", "ND_S2_1", "6"], 
             [ "S2", "OPT", "reflectance", "false", "ND_S2_1", "6"],
 
+            [ "Sentinel-2", "MSI", "key 1", "true", "S2MSI1A", "45408" ],
+            [ "Sentinel-1", "SAR", "", "false", "S1_SAR_EW_DUAL_POL", "860" ],
+
             ["ENVISAT-1","ASA","Envisat", "false","ENVISAT_ASA_IM__0P","1091"],
             ["ENVISAT-1","ASA","Native","false","ENVISAT_ASA_IM__0P","1091"],
             ["ENVISAT-1","ASA","IM","false","ENVISAT_ASA_IM__0P","1091"],

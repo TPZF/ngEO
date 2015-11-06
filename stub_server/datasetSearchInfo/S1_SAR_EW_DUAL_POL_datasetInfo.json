@@ -1,0 +1,124 @@
+{
+    "datasetSearchInfo": {
+        "attributes": [
+            {
+                "caption": "sarpc",
+                "id": "sarpc",
+                "possibleValues": [
+                    "HH, HV",
+                    "VV, VH"
+                ],
+                "type": "List"
+            },
+            {
+                "caption": "wlog",
+                "id": "wlog",
+                "rangeMaxValue": "162",
+                "rangeMinValue": "15",
+                "type": "Integer"
+            },
+            {
+                "caption": "on",
+                "id": "on",
+                "rangeMaxValue": "6884",
+                "rangeMinValue": "6683",
+                "type": "Integer"
+            },
+            {
+                "caption": "si",
+                "id": "si",
+                "possibleValues": [
+                    "EW"
+                ],
+                "type": "List"
+            },
+            {
+                "caption": "psi",
+                "id": "psi",
+                "possibleValues": [
+                    "A",
+                    "C"
+                ],
+                "type": "List"
+            },
+            {
+                "caption": "status",
+                "id": "status",
+                "possibleValues": [
+                    "ARCHIVED"
+                ],
+                "type": "List"
+            },
+            {
+                "caption": "tl",
+                "id": "tl",
+                "possibleValues": [
+                    "NRT-3h Fast-24h"
+                ],
+                "type": "List"
+            }
+        ],
+        "caption": "S1 SAR EW Dual Polarization",
+        "datasetId": "S1_SAR_EW_DUAL_POL",
+        "description": "S1_SAR_EW_DUAL_POL desc",
+        "downloadOptions": [
+            {
+                "argumentName": "processing",
+                "caption": "Processing",
+                "description": "Processing level",
+                "value": [
+                    {
+                        "humanReadable": "raw",
+                        "name": "RAW",
+                        "sizeFactor": "1"
+                    },
+                    {
+                        "humanReadable": "slc",
+                        "name": "SLC",
+                        "sizeFactor": "1"
+                    },
+                    {
+                        "humanReadable": "grd",
+                        "name": "GRD",
+                        "sizeFactor": "1"
+                    },
+                    {
+                        "humanReadable": "ocn",
+                        "name": "OCN",
+                        "sizeFactor": "1"
+                    }
+                ]
+            },
+            {
+                "argumentName": "resolution",
+                "caption": "Res.(HR_MR)",
+                "description": "Sensor resolution",
+                "preConditions": [
+                    {
+                        "parentDownloadOption": "processing",
+                        "parentDownloadValue": "GRD"
+                    }
+                ],
+                "value": [
+                    {
+                        "humanReadable": "mr",
+                        "name": "MR",
+                        "sizeFactor": "1"
+                    },
+                    {
+                        "humanReadable": "hr",
+                        "name": "HR",
+                        "sizeFactor": "1"
+                    }
+                ]
+            }
+        ],
+        "endDate": "2015-07-19T19:28:53Z",
+        "keywords": [
+            {
+                "keyword": ""
+            }
+        ],
+        "startDate": "2015-07-06T00:37:30Z"
+    }
+}
