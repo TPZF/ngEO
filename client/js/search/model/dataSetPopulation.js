@@ -130,17 +130,7 @@ var DataSetPopulation = Backbone.Model.extend({
 		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
 		var criterias = [];
 
-		// Special treatment for name : remove it as a criteria and push it at end in the matrix
-		var nameIndex = criteriaTitles.indexOf('name');
-		if (nameIndex >= 0) {
-			criteriaTitles.splice(nameIndex, 1);
-			for (var n = 0; n < matrix.length; n++) {
-				var row = matrix[n];
-				row.push(row[nameIndex]);
-				row.splice(nameIndex, 1);
-			}
-		}
-
+		
 		// See NGEOD-434
 		// usableForInterferometry is stored in the criteria titles
 		var usableForInterferomtryIndex = criteriaTitles.indexOf('usableForInterferometry');
@@ -148,6 +138,18 @@ var DataSetPopulation = Backbone.Model.extend({
 			for (var n = 0; n < matrix.length; n++) {
 				var row = matrix[n];
 				this._usableForInterferomtry[row[row.length - 2]] = row[usableForInterferomtryIndex] == "true";
+			}
+		}
+		
+		// Special treatment for name : remove it as a criteria and push it at end in the matrix
+		// <!> Modifies criteriaTitles length so must be executed after usableForInterferometry detection <!>
+		var nameIndex = criteriaTitles.indexOf('name');
+		if (nameIndex >= 0) {
+			criteriaTitles.splice(nameIndex, 1);
+			for (var n = 0; n < matrix.length; n++) {
+				var row = matrix[n];
+				row.push(row[nameIndex]);
+				row.splice(nameIndex, 1);
 			}
 		}
 
