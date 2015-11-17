@@ -102,9 +102,6 @@ module.exports = {
 						// Refresh the view
 						searchView.refresh();
 
-						// And launch the search!
-						SearchResults.launch(DatasetSearch);
-
 					} else {
 
 						Logger.error('Cannot load the dataset ' + datasetId + '.<br> The search cannot be shared.');
@@ -116,6 +113,10 @@ module.exports = {
 					// to initialize
 					if (--datasetsToBeFetched == 0) {
 						DataSetPopulation.off("datasetFetch", onFetch);
+
+						// And launch the search!
+						SearchResults.launch(DatasetSearch);
+						
 						// Show search panel
 						$('#search').click();
 					}
