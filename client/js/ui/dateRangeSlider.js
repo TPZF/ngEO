@@ -184,10 +184,13 @@ $.widget("ui.dateRangeSlider", {
 		var startYear = parseInt(this.options.scaleBounds.min.getUTCFullYear());
 		var endYear = parseInt(this.options.scaleBounds.max.getUTCFullYear());
 
-		// HACK : try to have the time slider big enough for the screen
-		if (endYear - startYear < 6) {
-			startYear = endYear - 6;
-		}
+		// // HACK : try to have the time slider big enough for the screen
+		// if (endYear - startYear < 6) {
+		// 	startYear = endYear - 6;
+		// }
+		// Even a better HACK : currently not handle dynamically the startYear
+		// --> some problems when dataset has been checked/unchecked, so put a const year
+		startYear = 1978;
 
 		this.minDate = new Date(Date.UTC(startYear, 0, 1, 0, 0, 0));
 		var maxDate = new Date(Date.UTC(endYear, 12, 31));
@@ -285,6 +288,8 @@ $.widget("ui.dateRangeSlider", {
 		this.startLabel.html(this._formatDate(bounds.min));
 		this.endLabel.html(this._formatDate(bounds.max));
 
+		//console.log("Updating to [" + bounds.min + " " + bounds.max +" ]");
+
 		// Compute label position
 		var leftPos = this.dragLeftDays + this.marginLeft - this.scalePosition;
 		var rightPos = this.dragRightDays + this.marginLeft - this.scalePosition;
@@ -308,6 +313,7 @@ $.widget("ui.dateRangeSlider", {
 
 	// Move the drag given the days number
 	_moveDrag: function(days) {
+
 		if (this.dragLeftDays + days <= this.minDays) {
 			this.dragRightDays += this.minDays - this.dragLeftDays;
 			this.dragLeftDays = this.minDays;
