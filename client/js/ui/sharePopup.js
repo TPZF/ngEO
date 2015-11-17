@@ -38,7 +38,6 @@ module.exports = {
 		$("#twitter").attr('href', 'http://twitter.com/intent/tweet?status=' + encodeURIComponent(url));
 		$("#email").attr('href', 'mailto:?body=' + encodeURIComponent(url));
 		$("#raw").attr('href', url);
-		$("#osAtomUrl").attr('href', options.openSearchUrl);
 
 		$popup.popup('open', options);
 	}

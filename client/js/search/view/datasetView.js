@@ -4,6 +4,7 @@ var DownloadOptionsView = require('search/view/downloadOptionsView');
 var OpenSearchURLView = require('search/view/openSearchURLView');
 var datasetSearchContent_template = require('search/template/datasetSearchContent_template');
 var DataSetPopulation = require('search/model/dataSetPopulation');
+var DataSetSearch = require('search/model/datasetSearch');
 
 /**
  * Dataset view containing the options related to selected dataset:
@@ -21,6 +22,25 @@ var DatasetView = Backbone.View.extend({
         this.advancedCriteriaView.render();
         this.downloadOptionsView.render();
         this.$el.trigger("create");
+    },
+
+    /**
+     *  Appends ATOM url button to HTML header (after jqm transformation)
+     */
+    appendAtomUrl: function() {
+        var self = this;
+        var osAtomUrlBtn = '<div title="Atom feed" class="osAtomUrl"><div class="tb-icon"></div></div>';
+        // Append Open Search Atom url invoker to accordion's header
+        $(osAtomUrlBtn).appendTo(this.$el.find('.ui-collapsible-heading > a > span'))
+            .click(function(event) {
+                event.stopPropagation();
+                // Generate link on fly since the DownloadOptions is not (yet) a backbone model
+                var atomUrl = DataSetSearch.getOpenSearchURL({
+                    id: self.dataset.get("datasetId"),
+                    format: "atom"
+                });
+                window.open(atomUrl);
+            });
     },
 
     /**
@@ -56,6 +76,11 @@ var DatasetView = Backbone.View.extend({
         // this.openSearchURLView.render();
 
         this.$el.trigger("create");
+
+        // Since the html has been created, append atom feed button to header
+        this.appendAtomUrl();
+
+        // Update help labels
         this.$el
             .find("#sc-advanced-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.advancedOptions).end()
             .find("#sc-do-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.downloadOptions).end();

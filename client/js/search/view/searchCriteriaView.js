@@ -38,8 +38,8 @@ var SearchCriteriaView = SearchView.extend({
 			model: this.model,
 			dataset: dataset
 		});
-		datasetView.render();
 		this.$el.find(".datasetSearch").append( datasetView.el );
+		datasetView.render();
 		this.$el.trigger("create");
 		// Store the view to be able to remove later
 		this.datasetDependingViews[dataset.get("datasetId")] = datasetView;
