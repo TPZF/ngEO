@@ -238,10 +238,14 @@ var FeatureCollection = function() {
 
 	/**
 	 * Select all the items of the table which are not selected
+	 *
+	 * @param filteredFeatures
+	 *		Features to select: used if features were filtered by table view
 	 */
-	this.selectAll = function() {
+	this.selectAll = function(filteredFeatures) {
 
-		var selected = _.difference(this.features, this.selection);
+		// Use filtered features if defined otherwise select all present features
+		var selected = _.difference( filteredFeatures ? filteredFeatures : this.features, this.selection );
 		for (var i = 0; i < selected.length; i++) {
 			this.selection.push(selected[i]);
 		}

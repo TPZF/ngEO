@@ -114,17 +114,20 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					this.model.select(data.feature);
 				} else {
-					this.model.selectAll();
-					$target.removeClass('ui-icon-checkbox-off');
-					$target.addClass('ui-icon-checkbox-on');
+					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
+					this.model.selectAll(filteredFeatures);
+					$target
+						.removeClass('ui-icon-checkbox-off')
+						.addClass('ui-icon-checkbox-on');
 				}
 			} else {
 				if (data) {
 					this.model.unselect(data.feature);
 				} else {
 					this.model.unselectAll();
-					$target.removeClass('ui-icon-checkbox-on');
-					$target.addClass('ui-icon-checkbox-off');
+					$target
+						.removeClass('ui-icon-checkbox-on')
+						.addClass('ui-icon-checkbox-off');
 				}
 			}
 		},
@@ -240,7 +243,6 @@ var TableView = Backbone.View.extend({
 
 	},
 
-
 	/**
 	 * Close a row
 	 */
@@ -278,7 +280,9 @@ var TableView = Backbone.View.extend({
 			for (var i = 0; i < features.length; i++) {
 
 				var $row = this._getRowFromFeature(features[i]);
-				$row.addClass('row_selected');
+				if ( $row ) {
+					$row.addClass('row_selected');
+				}
 			}
 		}
 	},
