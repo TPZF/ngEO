@@ -2,13 +2,10 @@ var Configuration = require('configuration');
 var Logger = require('logger');
 var SearchView = require('search/view/searchView');
 var SearchResults = require('searchResults/model/searchResults');
-var SpatialExtentView = require('search/view/spatialExtentView');
-var TimeExtentView = require('search/view/timeExtentView');
-var AdvancedSearchView = require('search/view/advancedSearchView');
-var DownloadOptionsView = require('search/view/downloadOptionsView');
 var CorrInterView = require('search/view/corrInterView');
-var OpenSearchURLView = require('search/view/openSearchURLView');
+var DatasetView = require('search/view/datasetView');
 var SharePopup = require('ui/sharePopup');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 var searchCriteria_template = require('search/template/searchCriteriaContent_template');
 
 
@@ -21,6 +18,38 @@ var SearchCriteriaView = SearchView.extend({
 	 * Id for view div container
 	 */
 	id: "datasetSearchCriteria",
+
+	initialize: function() {
+		this.listenTo(DataSetPopulation, 'select', this.onDatasetSelected );
+		this.listenTo(DataSetPopulation, 'unselect', this.onDatasetUnselected );
+
+		// Table containing the views which are dynamically added depending on selected datasets
+		this.datasetDependingViews = {};
+	},
+
+	refresh: function() {
+		for ( var x in this.datasetDependingViews ) {
+			this.datasetDependingViews[x].refresh();
+		}
+	},
+
+	onDatasetSelected: function(dataset) {
+		var datasetView = new DatasetView({
+			model: this.model,
+			dataset: dataset
+		});
+		datasetView.render();
+		this.$el.find(".datasetSearch").append( datasetView.el );
+		this.$el.trigger("create");
+		// Store the view to be able to remove later
+		this.datasetDependingViews[dataset.get("datasetId")] = datasetView;
+	},
+
+	onDatasetUnselected: function(dataset) {
+		var datasetId = dataset.get("datasetId");
+		this.datasetDependingViews[datasetId].remove();
+		delete this.datasetDependingViews[datasetId];
+	},
 
 	events: {
 		// Click on search

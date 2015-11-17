@@ -80,7 +80,7 @@ var StandingOrderDataAccessRequest = {
 		var datasetId = standingOrder.dataset.get("datasetId");
 		var url = "#data-services-area/sto/" + datasetId + '?';
 
-		url += standingOrder.getOpenSearchParameters();
+		url += standingOrder.getOpenSearchParameters(datasetId);
 
 		// Get the scheduling object either the STO is TimeDriven or Data-Driven
 		var options = this.timeDriven ? this.getSchedulingOptions().TimeDriven : this.getSchedulingOptions().DataDriven;

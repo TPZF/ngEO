@@ -1,17 +1,21 @@
 <!-- if the selected dataset has no download options display an information message to the user -->
 
-<% if ( _.size(model.get("downloadOptions")) == 0 ) { %>
+<% if ( model.collection.length == 0 ) { %>
 	<div id="downloadOptionsMessage" class="widget-content ui-body-c ui-error-message">
 		<p><b>No download options available.</b></p>
 	</div>	
 <% } else { %>
 
-	<!-- Display  download options. 
+	<!--
+		Display  download options. 
 		See (IICD-WC-WS)-(ngEO-14-ICD-ELC-075)-(Internal ICD Web Client - Web Server) issue 2.12 §4.4.3.1.1.2 for more information on the configuration of the downloadOptions
 	-->
 	<form>
-		<% _.each(model.get("downloadOptions"), function(option) {
-			if ( hasValidPreconditions( option ) ) {
+		<% _.each(model.collection, function(option) { 
+			var selectedValue = model.attributes[option.argumentName];
+			%>
+			<span value="<%= selectedValue %>"></span>
+			<% if ( model.hasValidPreconditions( option ) ) {
 				if (!option.cropProductSearchArea) { %>
 					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
 						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
@@ -19,20 +23,20 @@
 						<!-- <option value="None">None</option> -->
 
 						<!-- NGEO-1916: Add "???" field in case of conflict between the selected products -->
-						<% if ( model.get(option.argumentName) == "@conflict" ) { %>
+						<% if ( selectedValue == "@conflict" ) { %>
 							<option value="@conflict" selected>???</option>
 						<% } %>
 						<% _.each(option.value, function(value) { %>
-							<% if ( !hasValidPreconditions(value) ) { %>
+							<% if ( !model.hasValidPreconditions(value) ) { %>
 								<option value="" style="display: none;"></option>
 							<% } else { %>
-								<option value="<%= value.name%>" <% if ( model.get(option.argumentName) && model.get(option.argumentName) == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
+								<option value="<%= value.name%>" <% if ( selectedValue == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
 							<% } %>
 						<% }); %>
 					</select>
 				<% } else { %>
 					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
-					<input type="checkbox" id="<%= option.argumentName %>" <% if( model.get(option.argumentName) ) print('checked="checked"'); %> data-mini="true" />
+					<input type="checkbox" id="<%= option.argumentName %>" <% if( selectedValue ) print('checked="checked"'); %> data-mini="true" />
 				<% }
 			}
 		}); %>

@@ -25,7 +25,7 @@ module.exports = config:
           'vendor/jquery.auto-complete.js',
           'vendor/jquery.imagesloaded.js',
           'vendor/jqm-datebox-1.4.0.js',
-          'vendor/underscore.js',
+          'vendor/lodash.js',
           'vendor/backbone.js']
     stylesheets:
       joinTo: 

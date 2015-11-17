@@ -17,11 +17,7 @@ var StandingOrder = SearchCriteria.extend({
 	initialize: function() {
 
 		SearchCriteria.prototype.initialize.apply(this, arguments);
-
 		this.dataset = undefined;
-
-		this.listenTo(DatasetPopulation, 'select', this.onDatasetSelectionChanged);
-		this.listenTo(DatasetPopulation, 'unselect', this.onDatasetSelectionChanged);
 	},
 
 	/**	
@@ -32,15 +28,27 @@ var StandingOrder = SearchCriteria.extend({
 	},
 
 	/**
+ 	 *	Populate model from URL only if dataset is defined
+	 *	TODO: use SearchCriteria's method everytime : in other words,
+	 *	this method mustn't be called if dataset isn't defined
+	 */
+	populateModelfromURL : function(query) {
+		if ( this.dataset ) {
+			SearchCriteria.prototype.populateModelfromURL.call(this, query, this.dataset.get("datasetId"));
+		}
+	},
+
+	/**
 	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
 	 */
-
 	getOpenSearchURL: function(options) {
 
 		var url = Configuration.serverHostName + Configuration.baseServerUrl + "/catalogue/";
 		url += this.getDatasetPath() + "/search?";
-		url += this.getOpenSearchParameters();
+		// TODO: should never happen.. check this more deeply
+		if ( this.dataset )
+			url += this.getOpenSearchParameters(this.dataset.get("datasetId"));
 
 		var format = (options && options.hasOwnProperty("format")) ? options.format : "json";
 		url += "&format=" + format;
@@ -48,36 +56,32 @@ var StandingOrder = SearchCriteria.extend({
 		return url;
 	},
 
+	/**
+	 *	Get selected download options for the selected dataset if exists
+	 */
+	getSelectedDownloadOptions : function() {
+		if ( this.dataset ) {
+			return SearchCriteria.prototype.getSelectedDownloadOptions.call(this, this.dataset);
+		} else {
+			return {};
+		}
+	},
+
 	/** 
 	 * Load the information for the selected dataset from the server
 	 * unless if no dataset is selected set the dataset to undefined
 	 */
-	onDatasetSelectionChanged: function() {
+	onDatasetSelectionChanged: function(dataset) {
 
-		// Clear current attributes and download options
-		this.clearAdvancedAttributesAndDownloadOptions();
+		// Use parent's onDatasetSelectionChanged implementation
+		SearchCriteria.prototype.onDatasetSelectionChanged.call(this, dataset);
 
 		// Get the dataset : only one for standing order
 		var datasets = _.values(DatasetPopulation.selection);
-		if (datasets.length > 0) {
-
+		if (datasets.length == 1) {
 			this.dataset = datasets[0];
-
-			// Recompute advanced attributes
-			this.set('advancedAttributes', _.indexBy(this.dataset.get('attributes'), 'id'));
-
-			// Recompute download options
-			this.set('downloadOptions', _.indexBy(this.dataset.get('downloadOptions'), 'argumentName'));
-
 		} else {
-
 			this.dataset = undefined;
-
-			// Reset advanced attributes
-			this.set('advancedAttributes', {});
-
-			// Reset download options
-			this.set('downloadOptions', {});
 		}
 
 	}

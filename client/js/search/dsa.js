@@ -72,13 +72,19 @@ module.exports = {
 		searchView.render();
 		standingOrderView.render();
 
+		// Route search shared url
 		router.route(
-			"data-services-area/search/:datasetIds?:query",
+			"data-services-area/search?:query",
 			"search",
-			function(datasetIds, query) {
+			function(query) {
+				// Query contains osParameters={...}, substr starting from "{"
+				var sharedParameters = JSON.parse(query.substr(query.indexOf("{")));
+
+				// Build dataset ids ta
+				var datasetIds = _.keys(_.omit(sharedParameters, "commonCriteria"));
 
 				// Variable used to count the number of fetched datasets
-				var datasetsToBeFetched = datasetIds.split(",").length;
+				var datasetsToBeFetched = datasetIds.length;
 
 				// Show the page first
 				MenuBar.showPage("data-services-area");
@@ -88,15 +94,13 @@ module.exports = {
 
 					var datasetId = dataset.get('datasetId');
 					if (status == "SUCCESS") {
-						DatasetSearch.populateModelfromURL(query, datasetId);
 
-						// Resfreh the view
+						// Update datasetsearch from common criterias containing date&area + adv&do options of the given dataset
+						var currentSharedParameters = sharedParameters['commonCriteria'] + "&" + sharedParameters[datasetId];
+						DatasetSearch.populateModelfromURL(currentSharedParameters, datasetId);
+
+						// Refresh the view
 						searchView.refresh();
-
-						// Show search panel only if not already opened
-						if (!$('#search').hasClass('toggle')) {
-							$('#search').click();
-						}
 
 						// And launch the search!
 						SearchResults.launch(DatasetSearch);
@@ -112,20 +116,22 @@ module.exports = {
 					// to initialize
 					if (--datasetsToBeFetched == 0) {
 						DataSetPopulation.off("datasetFetch", onFetch);
+						// Show search panel
+						$('#search').click();
 					}
 				}
 
-				//set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
-				//and not overwrite the start/stop dates 
+				// Set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
+				// and not overwrite the start/stop dates 
 				DataSetPopulation.on("datasetFetch", onFetch);
 
 				// Select & fetch all shared datasets
-				_.each(datasetIds.split(","), function(id) {
+				_.each(datasetIds, function(id) {
 					DataSetPopulation.select(id);
 				});
 			});
 
-		// Route standing order url
+		// Route standing order shared url
 		router.route(
 			"data-services-area/sto/:datasetId?:query",
 			"sto",
@@ -139,8 +145,8 @@ module.exports = {
 
 					if (status == "SUCCESS") {
 
-						StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 						standingOrder.populateModelfromURL(query);
+						StandingOrderDataAccessRequest.populateModelfromURL(query, standingOrder);
 
 						// Refresh the view
 						standingOrderView.refresh();

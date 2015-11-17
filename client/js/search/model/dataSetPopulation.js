@@ -196,6 +196,17 @@ var DataSetPopulation = Backbone.Model.extend({
 	},
 
 	/**
+	 *	Get user-friendly name for the given datasetId
+	 */
+	getFriendlyName: function(datasetId) {
+		var idIndex = this.get('criterias').length;
+		var nameIndex = this.get('criterias').length + 2;
+
+		var datasetRow = _.find(this.get('matrix'), function(row) { return row[idIndex] == datasetId } )
+		return datasetRow[nameIndex] ? datasetRow[nameIndex] : datasetRow[idIndex];
+	},
+
+	/**
 	 * Return the datasets filtered by the given filter
 	 */
 	filterDatasets: function(criteriaFilter) {

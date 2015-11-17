@@ -1,5 +1,5 @@
 <!-- If the selected dataset has no advanced criteria display an information message to the user -->
-<% if ( _.size( model.get("advancedAttributes") ) == 0 ) { %>
+<% if ( advancedAttributes.length == 0 ) { %>
 	<div class="widget-content ui-body-c ui-error-message">
 		<p><b>No advanced criteria available.</b></p>
 	</div>
@@ -9,11 +9,11 @@
 	<!-- Display search criteria -->
 	<form>			
 
-	<% _.each( model.get("advancedAttributes"), function(criterion, i) { 
-			var value = model.get(criterion.id); 
+	<% _.each( advancedAttributes, function(criterion, i) { 
+			var value = criterion.value;
 			var label = criterionLabels[criterion.id] || criterion.id; %>
 		   <!-- The criterion is an enumeration has multiple options so create a list of checkboxes  -->
-		   <!-- NGEO-1862 possibleValues contains now a list of String which are the direct value to display instead of ojbect mapped with the string possibleValue -->
+		   <!-- NGEO-1862 possibleValues contains now a list of String which are the direct value to display instead of object mapped with the string possibleValue -->
 			<% if (criterion.type.toLowerCase() == 'list') { %> 
 
 					 <div data-role="fieldcontain">

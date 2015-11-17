@@ -4,7 +4,9 @@ var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var SchedulingOptionsView = require('search/view/schedulingOptionsView');
 var SearchView = require('search/view/searchView');
 var StandingOrderDataAccessRequest = require('dataAccess/model/standingOrderDataAccessRequest');
+var DatasetView = require('search/view/datasetView');
 var SharePopup = require('ui/sharePopup');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 var searchCriteria_template = require('search/template/searchCriteriaContent_template');
 
 /**
@@ -16,6 +18,32 @@ var StandingOrderView = SearchView.extend({
 	 * Id for view div container
 	 */
 	id: "standingOrderView",
+
+	initialize: function() {
+		this.listenTo(DataSetPopulation, 'select', this.onDatasetChanged );
+		this.listenTo(DataSetPopulation, 'unselect', this.onDatasetChanged );
+	},
+
+	refresh: function() {
+		if ( this.datasetView )
+			this.datasetView.refresh();
+	},
+
+	onDatasetChanged: function(dataset) {
+		if ( this.model.dataset ) {
+			this.datasetView = new DatasetView({
+				model: this.model,
+				dataset: this.model.dataset
+			});
+			this.datasetView.render();
+			this.$el.find(".datasetSearch").append( this.datasetView.el );
+			this.$el.trigger("create");
+		} else if ( this.datasetView ) {
+			var datasetId = dataset.get("datasetId");
+			this.datasetView.remove();
+			this.datasetView = null;
+		}
+	},
 
 	events: {
 		// Click on search
@@ -58,7 +86,8 @@ var StandingOrderView = SearchView.extend({
 	 */
 	refresh: function() {
 		this.schedulingOptionsView.render();
-		SearchView.prototype.refresh.apply(this);
+		if ( this.datasetView )
+			this.datasetView.refresh();
 	},
 
 	/**

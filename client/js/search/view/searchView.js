@@ -1,15 +1,11 @@
 var Configuration = require('configuration');
 var SpatialExtentView = require('search/view/spatialExtentView');
 var TimeExtentView = require('search/view/timeExtentView');
-var AdvancedSearchView = require('search/view/advancedSearchView');
-var DownloadOptionsView = require('search/view/downloadOptionsView');
-var OpenSearchURLView = require('search/view/openSearchURLView');
 var DataSetPopulation = require('search/model/dataSetPopulation');
-
 
 /**
  * Basic search view designed to contain the common parts between StandingOrder or SearchCriteriaView
- * So the backbone for this view can be : DatasetSearch or StandingOrder respectively
+ * So the backbone model for this view can be : DatasetSearch or StandingOrder respectively
  */
 var SearchView = Backbone.View.extend({
 
@@ -25,14 +21,6 @@ var SearchView = Backbone.View.extend({
 	 */
 	onShow: function() {
 		this.updateContentHeight();
-	},
-
-	/**
-	 * Refresh the view : only for views that does not listen to model changes (for performance reasons)
-	 */
-	refresh: function() {
-		this.advancedCriteriaView.render();
-		this.downloadOptionsView.render();
 	},
 
 	/**
@@ -55,34 +43,11 @@ var SearchView = Backbone.View.extend({
 		});
 		this.areaCriteriaView.render();
 
-		this.advancedCriteriaView = new AdvancedSearchView({
-			el: this.$el.find("#searchCriteria"),
-			model: this.model
-		});
-		this.advancedCriteriaView.render();
-
-		//add download options view as a tab
-		this.downloadOptionsView = new DownloadOptionsView({
-			el: this.$el.find("#downloadOptions"),
-			model: this.model
-		});
-		this.downloadOptionsView.render();
-
-		// OpenSearch URL view
-		this.openSearchURLView = new OpenSearchURLView({
-			el: this.$el.find("#osUrl"),
-			model: this.model
-		});
-		this.openSearchURLView.render();
-
 		this.$el.trigger('create');
 
 		// Init help attributes on created jqm composants
 		this.$el.find("#sc-date-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.date).end()
 			.find("#sc-area-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.area).end()
-			.find("#sc-advanced-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.advancedOptions).end()
-			.find("#sc-do-container h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.downloadOptions).end()
-			.find("#osUrl h3 .ui-btn-inner").attr("data-help", Configuration.localConfig.contextHelp.openSearch);
 
 		return this;
 	}
