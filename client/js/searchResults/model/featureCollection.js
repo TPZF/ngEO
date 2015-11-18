@@ -339,6 +339,7 @@ var FeatureCollection = function() {
 
 			}
 		});
+		this.trigger("updateFeatures");
 	};
 
 	/** 

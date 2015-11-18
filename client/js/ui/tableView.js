@@ -181,11 +181,30 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "highlightFeatures", this.highlightFeature);
+			// NB: Not used actually but could be really useful for : NGEOP-132
+			//this.listenTo(this.model, "updateFeatures", this.updateFeature);
 
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
 			}
 		}
+	},
+
+	updateFeature: function() {
+
+		// Update celldata
+		for ( var i=0; i<this.rowsData.length; i++ ) {
+			var rData = this.rowsData[i];
+			var feature = rData.feature;
+
+			rData.cellData = [];
+			for (var j = 0; j < this.columnDefs.length; j++) {
+				var d = Configuration.getFromPath(feature, this.columnDefs[j].mData);
+				rData.cellData.push(d);
+			}
+		}
+		this.buildTable();
+		this.buildTableContent();
 	},
 
 	/**
@@ -489,10 +508,18 @@ var TableView = Backbone.View.extend({
 					classes = this.columnDefs[j].getClasses(rowData.feature);
 				}
 
+				var cellDataColumn = rowData.cellData[j];
 				if (classes) {
-					$row.append('<td class="' + classes + '">' + rowData.cellData[j] + '</td>');
+					if ( classes == "downloadOptions" ) {
+						var doIndex = cellDataColumn.indexOf("ngEO_DO");
+						if ( doIndex >= 0 )
+							cellDataColumn = cellDataColumn.substr( doIndex+8 );
+						else
+							cellDataColumn = "No download options";
+					}
+					$row.append('<td class="' + classes + '">' + cellDataColumn + '</td>');
 				} else {
-					$row.append('<td>' + rowData.cellData[j] + '</td>');
+					$row.append('<td>' + cellDataColumn + '</td>');
 				}
 			}
 		}

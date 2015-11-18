@@ -31,6 +31,16 @@ var SearchResultsTableView = TableView.extend({
 				return SearchResults.isBrowserSupportedUrl(feature) ? "ui-direct-download" : "";
 			};
 		}
+		
+		// NB: NGEOP-132: Could be useful to show download options if user-friendly way
+		/*
+			var downloadOptionsColumn = _.findWhere(this.columnDefs, {sTitle: "Download options"});
+			if (downloadOptionsColumn) {
+				downloadOptionsColumn.getClasses = function(feature) {
+					return "downloadOptions";
+				};
+			}
+		*/
 	},
 
 	/**
