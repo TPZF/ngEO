@@ -1,6 +1,9 @@
 @import "mixins.less";
 
-///////////////////   			 tabs root elements styling : used for error messages styling		//////////////////////////////////
+/****************************/
+/*			Tabs root		*/
+/*		(error messages)	*/
+/****************************/
 
 //make the shared url for search fit inside its container 
 #sharedUrlText {
@@ -20,7 +23,7 @@
 
 // Smaller label
 #sc-content label, .ui-controlgroup-label {
-	font-size: 14px;
+	font-size: 13px;
 }
 #sc-footer {
 	border-top: 1px solid #ccc;
@@ -34,7 +37,19 @@
 	text-transform: capitalize;
 }
 
-///////////////////   			 Area criteria styling 		//////////////////////////////////
+/************************************/
+/*			Time criteria			*/
+/************************************/
+
+// Override input clear
+.ui-input-datebox .ui-input-clear {
+	right: 0px;
+}
+
+/************************************/
+/*			Area criteria			*/
+/*	(advanced & download options)	*/
+/************************************/
 
 #dropZone {
 	.dropZoneStyle;
@@ -45,22 +60,39 @@
 }
 
 
-///////////////////   			 Advanced search criteria and Download options styling  		//////////////////////////////////
+/************************************/
+/*			Dataset view			*/
+/*	(advanced & download options)	*/
+/************************************/
 
+.sc-dataset-container {
+	.optionsLabel {
+		font-size: 13px;
+		font-weight: bold;
+	}
 
+	#searchCriteria {
 
-//enlarge the input of the slider in order to display
-//big orbit numbers since in Chrome the field does not fit to the number length
-//filter the inputs which have a min attribute
-#searchCriteria input[data-type="range"]{
-	width : 45px;
+		margin: 1em 0px;
+
+		//enlarge the input of the slider in order to display
+		//big orbit numbers since in Chrome the field does not fit to the number length
+		//filter the inputs which have a min attribute
+		input[data-type="range"]{
+			width : 45px;
+		}
+	}
+
+	#downloadOptions {
+		margin: 1em 0px;
+
+		// Add some margin for checkbox use when cropProductSearchArea is true
+		.ui-checkbox {
+			margin-top: 0.6em;
+		}
+	}
 }
 
-
-// Add some margin for checkbox use when cropProductSearchArea is true
-#downloadOptions .ui-checkbox {
-	margin-top: 0.6em;
-}
 
 
 #polygonTextError {
