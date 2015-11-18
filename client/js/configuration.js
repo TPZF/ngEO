@@ -2,8 +2,6 @@
  * Configuration module
  */
 
-//var localConfiguration = require('../conf/localConfiguration.json');
-
 /**
  * Helper function to remove comments from the JSON file
  */
@@ -41,25 +39,6 @@ var _getValue = function(object, property, defaultValue) {
 	return defaultValue;
 };
 
-var loadLocalJson = function(fileToLoad, callback) {
-	var xobj = new XMLHttpRequest();
-	xobj.overrideMimeType("application/json");
-	xobj.open('GET', fileToLoad, false);
-	var response;
-	xobj.onreadystatechange = function() {
-		if (xobj.readyState == 4 && xobj.status == "200") {
-			// Required use of an anonymous callback as .open will NOT return a value but simply returns undefined in asynchronous mode
-			response = callback(xobj.responseText);
-		}
-	};
-	xobj.send(null);
-	return response;
-};
-
-var onLoad = function(response) {
-	return JSON.parse(response);
-};
-
 var configuration = {
 
 	// The base url to retreive the configuration
@@ -68,23 +47,20 @@ var configuration = {
 	// The base server url
 	baseServerUrl: '/ngeo',
 
-	// The  server host name
+	// The server host name
 	serverHostName: window.location.protocol + '//' + window.location.host,
 
-	//the local configuration is got from requirejs.config module config
-	//set in main.js
-	//localConfig: JSON.parse(localConfiguration)
+	// Local configuration
 	localConfig: null,
 
-	// Load configuration data from the server
+	// Load configurations
 	load: function() {
-
 		var externalData = {};
 		return $.when(
+			// Local configuration
 			$.ajax({
 				url: "../conf/localConfiguration.json",
 				dataType: 'json',
-				// Remove comments from JSON file
 				success: function(data) {
 					configuration.localConfig = data;
 				},
@@ -92,34 +68,47 @@ var configuration = {
 					console.log("Local configuration not found " + textStatus + ' ' + errorThrown);
 				}
 			}),
-			$.ajax({
-				url: this.url,
-				dataType: 'json',
-				// Remove comments from JSON file
-				dataFilter: function(data) {
-					var dataWoComments = removeComments(data);
-					return dataWoComments;
-				},
-				success: function(data) {
-					configuration.data = data;
-					$.extend(true, configuration.data, externalData);
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
-				}
-			}),
-			$.ajax({
-				url: this.baseServerUrl + "/webClientConfigurationData",
-				dataType: 'json',
-				success: function(data) {
-					externalData = data;
-					$.extend(true, configuration.data, externalData);
-				},
-				error: function(jqXHR, textStatus, errorThrown) {
-					console.log("Configuration not found " + textStatus + ' ' + errorThrown);
-				}
+			// Server configuration
+			$.when(
+				$.ajax({
+					url: this.url,
+					dataType: 'text',
+					success: function(data) {
+						configuration.setConfigurationData(data);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log("Configuration not found " + textStatus + ' ' + errorThrown);
+					}
+				}),
+				$.ajax({
+					url: this.baseServerUrl + "/webClientConfigurationData",
+					dataType: 'text',
+					success: function(data) {
+						externalData = data;
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						console.log("Configuration not found " + textStatus + ' ' + errorThrown);
+					}
+				})
+			).then(function(){
+				configuration.buildServerConfiguration(externalData);
 			})
 		);
+	},
+
+	setConfigurationData: function(configurationData) {
+		configuration.data = JSON.parse(removeComments(configurationData));
+	},
+
+	/**
+	 *	Build server configuration
+	 */
+	buildServerConfiguration: function(externalData) {
+		// Remove comments 
+		externalData = JSON.parse(removeComments(externalData));
+
+		// Merge configurations with priority to configuration coming from server
+		$.extend(true, configuration.data, externalData);
 	},
 
 	// Get a configuration parameter
