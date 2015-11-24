@@ -37,6 +37,12 @@
 
 /* Dataset view on header btn */
 .sc-dataset-container {
+
+	/* FF hack to align header with osAtomUrl */
+	.ui-collapsible-heading-toggle > .ui-btn-inner {
+		white-space: normal;
+	}
+
 	.osAtomUrl {
 		float: right;
 		cursor: pointer;
