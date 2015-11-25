@@ -174,6 +174,12 @@ OpenLayersMapEngine.prototype.setBackgroundLayer = function(layer) {
 		// Finally add to map
 		this._map.addLayer(olLayer);
 		this._map.setBaseLayer(olLayer);
+
+		// Fix wrong TILEMATRIX identifier for (at least) WMTS layer when it has been set on initialization
+		// FIXME: Check if there is no better way to handle it..
+		if ( olLayer.updateMatrixProperties ) {
+			olLayer.updateMatrixProperties();
+		}
 	}
 	return olLayer;
 }
@@ -438,7 +444,7 @@ OpenLayersMapEngine.prototype.zoomToExtent = function(extent) {
 	var bounds = new OpenLayers.Bounds(extent[0], extent[1], extent[2], extent[3]);
 	bounds.transform(this._map.displayProjection, this._map.projection);
 	var center = bounds.getCenterLonLat();
-	this._map.setCenter(center, this._map.getZoomForExtent(bounds, true)); //Math.max(3,this._map.getZoomForExtent(bounds, true)) );
+	this._map.setCenter(center, this._map.getZoomForExtent(bounds, true));
 }
 
 
