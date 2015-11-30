@@ -162,14 +162,20 @@ var DataAccessRequestView = Backbone.View.extend({
 		var self = this;
 		hostedProcessList.fetch()
 			.done(function() {
-				self.selectHostedProcessView = new SelectHostedProcessView({
-					model: hostedProcessList,
-					el: self.$el.find("#hostedProcesses"),
-					request: self.request
-				});
+				if ( hostedProcessList.get("hostedProcess").length > 0 ) {
+					self.selectHostedProcessView = new SelectHostedProcessView({
+						model: hostedProcessList,
+						el: self.$el.find("#hostedProcesses"),
+						request: self.request
+					});
 
-				self.selectHostedProcessView.render();
-				self.$el.find("#hostedProcesses").trigger('create');
+					self.selectHostedProcessView.render();
+					self.$el.find("#hostedProcesses").trigger('create');
+				} else {
+					// NGEO-1942: hide panel when no product processing is available
+					self.$el.find("#productProcessingContainer").remove();
+					self.$el.trigger("create");
+				}
 			})
 			.fail(function() {
 				self.$el.find("#hostedProcesses").html('No product processing available.');
