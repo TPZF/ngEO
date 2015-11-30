@@ -27,7 +27,7 @@ $.widget("ui.dateRangeSlider", {
 		bounds: null,
 		boundsMaxLength: 180, // 3 months
 		boundsMinLength: 10, // 10 days
-		wheelFactor: 10,
+		wheelFactor: 7,
 		wheelTimeout: 1000,
 
 		// events
@@ -45,7 +45,7 @@ $.widget("ui.dateRangeSlider", {
 		$('<div class="dateSlider-rightArrow"></div>')
 			.appendTo(this.element)
 			.mousedown(function(event) {
-				self.autoScaleDirection = 10;
+				self.autoScaleDirection = this.options.wheelFactor;
 				setTimeout($.proxy(self._autoScaleScroll, self), 50);
 			})
 			.mouseup($.proxy(this._onArrowMouseUp, this));
@@ -53,7 +53,7 @@ $.widget("ui.dateRangeSlider", {
 		$('<div class="dateSlider-leftArrow"></div>')
 			.appendTo(this.element)
 			.mousedown(function(event) {
-				self.autoScaleDirection = -10;
+				self.autoScaleDirection = -this.options.wheelFactor;
 				setTimeout($.proxy(self._autoScaleScroll, self), 50);
 			})
 			.mouseup($.proxy(this._onArrowMouseUp, this));
@@ -366,7 +366,7 @@ $.widget("ui.dateRangeSlider", {
 			event.data.lastX = event.pageX;
 			this.autoScaleDirection = 0.0;
 		} else {
-			this.autoScaleDirection = rightBlock ? 10 : -10;
+			this.autoScaleDirection = rightBlock ? this.options.wheelFactor : -this.options.wheelFactor;
 			setTimeout($.proxy(this._autoScaleScroll, this), 50);
 		}
 	},
