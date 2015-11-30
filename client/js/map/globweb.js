@@ -77,8 +77,12 @@ GlobWebMapEngine = function(parentElement) {
 		var navigation = new GlobWeb.Navigation(globe, {
 			mouse: {
 				zoomOnDblClick: true
-			}
+			},
+			zoomDuration: Configuration.get('map.globweb.zoomDuration', 500)
 		});
+		
+		// Used for debug
+		// globe.addLayer(new GlobWeb.TileWireframeLayer({outline: true}));
 
 		this.globe = globe;
 		this.navigation = navigation;
