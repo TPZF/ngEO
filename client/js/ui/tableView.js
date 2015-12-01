@@ -677,10 +677,16 @@ var TableView = Backbone.View.extend({
 	 * Render footer
 	 */
 	renderFooter: function() {
-		var footer = $('<div class="ui-grid-a"></div>')
-			.append('<div class="table-filter ui-block-a"><div style="display: inline-block; width: 234px;" data-inline="true" data-role="fieldcontain"><label>Search: <input data-mini="true" type="text"></label></div><button data-mini="true" data-inline="true" id="table-columns-button">Columns</button></div>');
-
-		var $buttonContainer = $('<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>').appendTo(footer).find("[data-role='fieldcontain']");
+		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
+			.append('<div class="table-filter ui-block-a">\
+						<div data-role="fieldcontain" style="display: inline-block; width: 351px;" data-inline="true">\
+							<label for="filterTableInput">Filter table:</label>\
+							<input id="filterTableInput" style="display: inline-block; width: 72%;" data-mini="true" type="text"/>\
+						</div>\
+						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
+					</div>\
+					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
+		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
 
 		if (this.renderButtons)
 			this.renderButtons($buttonContainer);
