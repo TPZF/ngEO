@@ -44,6 +44,12 @@ var DataSetSearch = SearchCriteria.extend({
 	/**
 	 * Create the openSearch url. 
 	 * The url contains spatial, temporal and search criteria parameters.
+	 *
+	 * @param options
+	 *		<ul>
+	 *			<li>format: atom or json</li>
+	 *			<li>id: datasetId (optional, otherwise datasetIds will be used --> TODO: Explore this)</li>
+	 *		</ul>
 	 */
 	getOpenSearchURL: function(options) {
 
