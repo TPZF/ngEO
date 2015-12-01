@@ -106,7 +106,7 @@
 		"projection": "EPSG:4326",
 		
 		"openlayers": {
-			"restrictedExtent": [-360,-100,360,100],
+			"restrictedExtent": [-360,-85,360,85],
 			"transitionEffect": "resize"
 		},
 		
@@ -161,6 +161,30 @@
 				"matrixSet": "WGS84"
 			}
 		}, {
+			"id" : "EOX",
+			"name": "EOX (WMTS)",
+			"type": "WMTS",
+			"projection": "EPSG:4326",
+			"baseUrl": "https://c.tiles.maps.eox.at/wmts",
+			"attribution": "EOX",
+			"params": {
+				"layer": "terrain-light",
+				"format": "image/png",
+				"matrixSet": "WGS84"
+			}
+		}, {
+			"id" : "EOX",
+			"name": "EOX Mercator(WMTS)",
+			"type": "WMTS",
+			"projection": "EPSG:3857",
+			"baseUrl": "https://c.tiles.maps.eox.at/wmts",
+			"attribution": "EOX",
+			"params": {
+				"layer": "terrain-light_3857",
+				"format": "image/png",
+				"matrixSet": "g"
+			}
+		}, {
 			"id" : "BingRoad",
 			"name": "Bing Road",
 			"type": "Bing",
@@ -191,7 +215,63 @@
 				"format": "image/png"
 			},
 			"projection": "EPSG:4326"
-	   }],
+	   }, {
+			"id" : "Projection test",
+			"name": "Projection test",
+			"type": "WMS",
+			"baseUrl": "http://maps.ngdc.noaa.gov/arcgis/services/web_mercator/multibeam/MapServer/WmsServer",
+			"attribution": "ngdc",
+			"params": {
+				"layers": "Multibeam Bathymetric Surveys"
+			},
+			"projection": "EPSG:3857"
+		}, {
+			"id" : "terrain-4326-WMS",
+			"name": "EOX 4326(WMS)",
+			"type": "WMS",
+			"baseUrl": "https://c.tiles.maps.eox.at/wms",
+			"attribution": "EOX",
+			"visible": false,
+			"params": {
+				"layers": "terrain"
+			},
+			"projection": "EPSG:4326"
+		}, {
+			"id" : "terrain-3857-WMS",
+			"name": "EOX 3857(WMS)",
+			"type": "WMS",
+			"baseUrl": "https://c.tiles.maps.eox.at/wms",
+			"attribution": "EOX",
+			"visible": false,
+			"params": {
+				"layers": "terrain_3857"
+			},
+			"projection": "EPSG:3857"
+		}, {
+			"id" : "terrain-4326-WMTS",
+			"name": "EOX 4326(WMTS)",
+			"type": "WMTS",
+			"baseUrl": "https://c.tiles.maps.eox.at/wmts",
+			"attribution": "EOX",
+			"visible": false,
+			"params": {
+				"layer": "terrain",
+				"matrixSet": "WGS84"
+			},
+			"projection": "EPSG:4326"
+		}, {
+			"id" : "terrain-3857-WMTS",
+			"name": "EOX 3857(WMTS)",
+			"type": "WMTS",
+			"baseUrl": "https://c.tiles.maps.eox.at/wmts",
+			"attribution": "EOX",
+			"visible": false,
+			"params": {
+				"layer": "terrain_3857",
+				"matrixSet": "g"
+			},
+			"projection": "EPSG:3857"
+		}],
 	
 		"styles": {
 			"results-footprint" : {
@@ -279,7 +359,7 @@
 		
 		"browseDisplay": {
 			"opacity": 0.7,
-			"crossOrigin": "use-credentials"
+			"crossOrigin": "anonymous"
 		}
 	}
 }
