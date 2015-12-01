@@ -13,7 +13,6 @@ var downloadManagerInstall_template = require('dataAccess/template/downloadManag
  * It handles hosted process configuration as well.
  * 
  * The attribute request is the request to be submitted.
- * 
  */
 var DataAccessRequestView = Backbone.View.extend({
 
@@ -27,8 +26,8 @@ var DataAccessRequestView = Backbone.View.extend({
 				var dmId = this.request.downloadLocation.DownloadManagerId = this.$el.find("#downloadManagersList").val();
 				var dir = this.request.downloadLocation.DownloadDirectory = this.$el.find("#downloadDirectory").val();
 
-				//disable the DMs list to avoid choosing a different DM once the
-				//validation request has been submitted
+				// Disable the DMs list to avoid choosing a different DM once the
+				// validation request has been submitted
 				this.$el.find('#downloadManagersList').selectmenu('disable');
 				this.$el.find('#downloadDirectory').textinput('disable');
 
@@ -65,31 +64,34 @@ var DataAccessRequestView = Backbone.View.extend({
 		}
 	},
 
-	/** change the button status to disabled in case the requests are not valid */
+	/** 
+	 * Change the button status to disabled in case the requests are not valid
+	 */
 	onFailure: function() {
 		$("#validateRequest").button('disable');
 		// TODO : improve message according to the failure ?
-		//NGEO 782 : fixed failure response message content
+		// NGEO 782 : fixed failure response message content
 		$("#serverMessage").html("Invalid server response");
 	},
 
-	/** change the button text to highlight the request stage "Confirmation" 
-	 * update the button text in the jqm span for button text to make the
-	 * button text updated*/
+	/** 
+	 * Change the button text to highlight the request stage "Confirmation" 
+	 * Update the button text in the jqm span for button text to make the
+	 * button text updated
+	 */
 	onValidationSuccess: function(serverMessage, configMessage) {
 		$("#validateRequest").html("Confirm");
 		$("#downloadManagersFooter .ui-btn-text").html("Confirm");
 
 		var message = '<p>' + configMessage + '</p><p>' + serverMessage + '</p>';
-
 		// Display the estimated size and a warning message if the size exceeds a thresold (REQ)
 		if (this.request.totalSize) {
-			message += "<p> Estimated Size : " + this.request.totalSize + " bytes.<p>";
+			message += "<p> Estimated Size : " + filesize(this.request.totalSize) + ".<p>";
 			if (this.request.totalSize > Configuration.get('simpleDataAccessRequest.warningMaximumSize', 1e9)) {
 				message += "<p>WARNING : The amount of data to download is huge.</p><p>Are you sure you want to confirm your request?</p>";
 			}
 		}
-		//NGEO 782 : fixed failure response message content
+		// NGEO 782 : fixed failure response message content
 		$("#serverMessage").html(message);
 	},
 
@@ -100,7 +102,7 @@ var DataAccessRequestView = Backbone.View.extend({
 		// Disable the confirm button
 		$("#validateRequest").button('disable');
 		// Display the message
-		//NGEO 782 : fixed failure response message content
+		// NGEO 782 : fixed failure response message content
 		$("#serverMessage").html('<p>' + configMessage + '</p><p>' + serverMessage + '</p>');
 
 		// NGEO-900 : close widget when finished
@@ -133,11 +135,10 @@ var DataAccessRequestView = Backbone.View.extend({
 	 */
 	render: function() {
 
-		//after the download managers are retrieved
-		//if no download manager is already registered : propose a link to the user to install one
-		//if (this.model.attributes.downloadmanagers != 0) {
+		// After the download managers are retrieved
+		// if (this.model.attributes.downloadmanagers != 0) {
 		if (this.model.attributes.downloadmanagers == 0) {
-
+			// No download manager is already registered : propose a link to the user to install one
 			var installContent = downloadManagerInstall_template({
 				downloadManagerInstallationLink: Configuration.data.downloadManager.downloadManagerInstallationLink,
 				downloadmanagers: this.model.get('downloadmanagers')
@@ -145,6 +146,7 @@ var DataAccessRequestView = Backbone.View.extend({
 			this.$el.html("<p class='ui-error-message'><b>No download manager has been registered.<br>In order to download products, you need to install a download manager.</b></p>" + installContent);
 
 		} else {
+			// Render the registered download managers
 			var content = downloadManagersList_template(this.model.attributes);
 			this.$el.html(content);
 
@@ -156,9 +158,7 @@ var DataAccessRequestView = Backbone.View.extend({
 		}
 
 		// Create hosted process list
-		// Make it singleton ?
 		var hostedProcessList = new HostedProcessList();
-
 		var self = this;
 		hostedProcessList.fetch()
 			.done(function() {
@@ -182,7 +182,7 @@ var DataAccessRequestView = Backbone.View.extend({
 			});
 
 		this.$el.find("#dataAccessSpecificMessage").append(this.request.getSpecificMessage());
-		//Trigger JQM styling
+		// Trigger JQM styling
 		this.$el.trigger('create');
 
 		return this;

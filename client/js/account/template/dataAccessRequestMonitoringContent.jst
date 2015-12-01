@@ -39,7 +39,7 @@
 							<th>ProductURL</th>
 							<th>Status</th>
 							<th>%</th>
-							<th>Size (Bytes)</th>
+							<th>Size</th>
 						</thead>
 						<% _.each(dar.productStatuses, function(productStatus, i) { %>
 						<tbody>
@@ -47,7 +47,7 @@
 								<td><%= productStatus.productURL %></td>
 								<td><%= model.getStatusReadableString (productStatus.productStatus) %></td>
 								<td><%= productStatus.percentageCompleted %></td>
-								<td><%= productStatus.expectedSize %></td>
+								<td><%= filesize(productStatus.expectedSize) %></td>
 							</tr>
 						</tbody>
 
