@@ -234,6 +234,8 @@ module.exports = {
 	 * Add items to shopcart
 	 */
 	addItems: function(req,res) {
+
+		logger.debug( "Inserting " + req.params.id );
 		//add shopcart items : post of shopcart items
 		if (req.params.id && req.body.shopCartItemAdding) {
 			var response = {
