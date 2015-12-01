@@ -153,11 +153,9 @@ var FeatureCollection = function() {
 
 	// Reset the results
 	this.reset = function() {
-		// reset highlight/select
-		this.trigger("highlightFeatures", [], this.highlights, this);
-		this.trigger("unselectFeatures", this.selection, this);
-		this.highlights = [];
-		this.selection = [];
+		// Reset all highlighted/selected features
+		this.resetHighlighted();
+		this.resetSelected();
 
 		_url = "";
 		// reset the cache
@@ -175,11 +173,10 @@ var FeatureCollection = function() {
 		if (page >= 1 && page <= this.lastPage) {
 			this.currentPage = page;
 			this.features.length = 0;
-			// reset highlight/select
-			this.trigger("highlightFeatures", [], this.highlights, this);
-			this.trigger("unselectFeatures", this.selection, this);
-			this.highlights = [];
-			this.selection = [];
+			// Reset all highlighted/selected features
+			this.resetHighlighted();
+			this.resetSelected();
+
 			this.trigger('reset:features', this);
 			if (_pageCache[this.currentPage]) {
 				this.addFeatures(_pageCache[this.currentPage]);
@@ -211,6 +208,18 @@ var FeatureCollection = function() {
 	// Check if a feature is highlighted
 	this.isHighlighted = function(feature) {
 		return this.highlights.indexOf(feature) >= 0;
+	};
+
+	// Reset all highlighted features
+	this.resetHighlighted = function() {
+		this.trigger("highlightFeatures", [], this.highlights, this);
+		this.highlights = [];
+	};
+
+	// Reset all selected features
+	this.resetSelected = function() {
+		this.trigger("unselectFeatures", this.selection, this);
+		this.selection = [];
 	};
 
 	// Highlight a feature, only one can be highlight at a time
@@ -259,18 +268,8 @@ var FeatureCollection = function() {
 	 * Unselect all the already selected table items
 	 */
 	this.unselectAll = function() {
-
-		//this.setSelection([]);
-		var oldSelection = [];
-		//copy the selected items
-		for (var i = 0; i < this.selection.length; i++) {
-			oldSelection.push(this.selection[i])
-		}
-		this.selection = []
-		if (oldSelection.length != 0) {
-			this.trigger("unselectFeatures", oldSelection, this);
-		}
-
+		this.trigger("unselectFeatures", this.selection, this);
+		this.selection = [];
 	};
 
 	/**
