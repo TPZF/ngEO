@@ -1,5 +1,5 @@
 
-<label data-mini="true">Start :
+<label data-mini="true">Subscription Start Date :
 <input name="startDateSTO" id="startDateSTO"
 	type="text" data-role="datebox" data-mini="true" data-theme="c"
 	value="<%= startDate.toISODateString() %>"
@@ -7,7 +7,7 @@
    "useTodayButton": true, "themeDate":"c", "themeDatePick":"a", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' />
 </label> 
 
-<label data-mini="true">Stop :
+<label data-mini="true">Subscription Stop Date :
 <input name="endDateSTO" id="endDateSTO"
 	type="text" data-role="datebox" data-mini="true" data-theme="c"
 	value="<%= endDate.toISODateString() %>"
@@ -23,7 +23,7 @@
 	<% } else { %>	 
 		<input id="data-driven-input" type="radio" name="STOType" data-mini="true">
 	<% } %>	 
-	<label for="data-driven-input" id="data-driven-label" data-mini="true" data-corners="false">Data-Driven Order</label>         	
+	<label for="data-driven-input" id="data-driven-label" data-mini="true" data-corners="false">Data-Driven Subscription</label>         	
 </div>
 
   <div class="ui-block-b"> 
@@ -33,7 +33,7 @@
 		<input id="time-driven-input" type="radio" name="STOType" data-mini="true">	
 	<% } %>	 
 	
-	<label for="time-driven-input" id="time-driven-label" data-mini="true" data-corners="false">Time-Driven Order</label>         	
+	<label for="time-driven-input" id="time-driven-label" data-mini="true" data-corners="false">Time-Driven Subscription</label>         	
 </div>
 
 </div>
@@ -41,12 +41,12 @@
 <div id="timeDrivenParams" class="widget-content">
 
 <div data-role="fieldcontain">
-	<label id="repeatPeriodLabel" for="repeatPeriod" data-mini="true">Shifting Period (in days) : </label>
+	<label id="repeatPeriodLabel" for="repeatPeriod" data-mini="true">Repetition Period (in days) : </label>
 	<input type="number" name="repeatPeriod" id="repeatPeriodInput" data-mini="true" value="<%= repeatPeriod %>">
 </div>
 
 <div data-role="fieldcontain">
-	<label id="applyShiftLabel" for="applyShiftCheckBox" data-mini="true">Apply shifting to search filter time period</label>
+	<label id="applyShiftLabel" for="applyShiftCheckBox" data-mini="true">Shift Acquisition Date criteria at every repetition</label>
 	<% if (slideAcquisitionTime == true) {  %>
 		<input type="checkbox" name="applyShiftCheckBox" id="applyShiftCheckBox" data-mini="true" checked>		
 	<% } else { %>

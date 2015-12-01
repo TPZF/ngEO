@@ -98,7 +98,7 @@ var StandingOrderView = SearchView.extend({
 		StandingOrderDataAccessRequest.initialize();
 
 		var content = searchCriteria_template({
-			submitText: "Order"
+			submitText: "Subscribe"
 		});
 		this.$el.append(content);
 
