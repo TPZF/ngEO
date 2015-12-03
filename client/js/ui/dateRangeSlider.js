@@ -45,7 +45,7 @@ $.widget("ui.dateRangeSlider", {
 		$('<div class="dateSlider-rightArrow"></div>')
 			.appendTo(this.element)
 			.mousedown(function(event) {
-				self.autoScaleDirection = this.options.wheelFactor;
+				self.autoScaleDirection = self.options.wheelFactor;
 				setTimeout($.proxy(self._autoScaleScroll, self), 50);
 			})
 			.mouseup($.proxy(this._onArrowMouseUp, this));
@@ -53,7 +53,7 @@ $.widget("ui.dateRangeSlider", {
 		$('<div class="dateSlider-leftArrow"></div>')
 			.appendTo(this.element)
 			.mousedown(function(event) {
-				self.autoScaleDirection = -this.options.wheelFactor;
+				self.autoScaleDirection = -self.options.wheelFactor;
 				setTimeout($.proxy(self._autoScaleScroll, self), 50);
 			})
 			.mouseup($.proxy(this._onArrowMouseUp, this));
