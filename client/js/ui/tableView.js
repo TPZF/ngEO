@@ -294,7 +294,7 @@ var TableView = Backbone.View.extend({
 		// Remove previous highlighted rows
 		this.$table.find('.row_selected').removeClass('row_selected');
 
-		if (features) {
+		if (features.length > 0) {
 			var rows = this.$table.find("tbody tr");
 			for (var i = 0; i < features.length; i++) {
 
@@ -303,7 +303,28 @@ var TableView = Backbone.View.extend({
 					$row.addClass('row_selected');
 				}
 			}
+
+			// NGEO-1941: Scroll to the most recent highlighted product in table
+			var mostRecentFeature = _.max(features, function(f) {
+				return new Date(Configuration.getMappedProperty(f, "start"));
+			});
+
+			var $mostRecentRow = this._getRowFromFeature(mostRecentFeature);
+			var rowTop = $mostRecentRow.position().top;
+			var isVisibleInContent = (rowTop > 0 && rowTop < this.$el.find(".table-content").height());
+			if ( !isVisibleInContent ) {
+				// Scroll only if not already visiblle in table content
+				this.$el.find(".table-content").animate({
+	                scrollTop: rowTop - this.$el.find(".table-content tbody").position().top - 90 // "90" magic number to place in "center"
+	            }, {
+					duration: 500,
+					easing: "easeOutQuad"
+	            });
+			}
+
 		}
+
+
 	},
 
 	/**
