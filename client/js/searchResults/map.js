@@ -3,17 +3,32 @@ var BrowsesManager = require('searchResults/browsesManager');
 var Map = require('map/map');
 var SelectHandler = require('map/selectHandler');
 
+/**
+ *	Update the array of selected/highlighted features
+ *	which need to update its render order
+ */
+var _updateFeaturesWithBrowse = function(features) {
+	var beforeLen = _featuresWithBrowse.length;
+	_featuresWithBrowse = _.union(_featuresWithBrowse, features);
+	if ( _featuresWithBrowse.length != beforeLen ) {
+		_lazyRenderOrdering();
+	}
+
+}
+
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
 	for (var i = 0; i < features.length; i++) {
-		if (fc.isHighlighted(features[i])) {
-			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select");
+		var feature = features[i];
+		if (fc.isHighlighted(feature)) {
+			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
 		} else {
-			fc._footprintLayer.modifyFeaturesStyle([features[i]], "select");
+			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 		}
 
-		BrowsesManager.addBrowse(features[i], fc.getDatasetId(features[i]));
+		BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 	}
+	_updateFeaturesWithBrowse(features);
 };
 
 // Call when a feature is unselected to synchronize the map
@@ -23,20 +38,19 @@ var _onUnselectFeatures = function(features, fc) {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight");
 		} else {
 			fc._footprintLayer.modifyFeaturesStyle([features[i]], "default");
-
 			BrowsesManager.removeBrowse(features[i]);
 		}
 	}
 };
 
-// Features to be highlighted
-var _featuresToHighlight = [];
+// Selected or highlighted features with browse
+var _featuresWithBrowse = [];
 var waitTimeout = 10; // in ms
 // Helper debounce function which triggers updateRenderOrder method
-// after LAST highlight event has been triggered(in condition that it doesn't takes > waitTimeout)
+// after LAST highlight/select event has been triggered(in condition that it doesn't takes > waitTimeout)
 var _lazyRenderOrdering = _.debounce(function() {
-	BrowsesManager.updateRenderOrder(_featuresToHighlight);
-	_featuresToHighlight = [];
+	BrowsesManager.updateRenderOrder(_featuresWithBrowse);
+	_featuresWithBrowse = [];
 }, waitTimeout);
 
 // Call when a feature is highlighted to synchronize the map
@@ -44,6 +58,7 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 
 	if (prevFeatures.length > 0) {
 
+		// Set to default the footprint of previously selected features
 		for (var i = 0; i < prevFeatures.length; i++) {
 
 			if (fc.isSelected(prevFeatures[i])) {
@@ -56,19 +71,18 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 	}
 
 	if (features.length > 0) {
+		// Highlight currently selected features
 		for (var i = 0; i < features.length; i++) {
-			if (fc.isSelected(features[i])) {
-				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight-select");
+			var feature = features[i];
+			if (fc.isSelected(feature)) {
+				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
 			} else {
-				fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight");
+				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
 			}
-			BrowsesManager.addBrowse(features[i], fc.getDatasetId(features[i]));
+			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 		}
 	}
-
-	// Highlight all the highlighted features from all the collections
-	_featuresToHighlight = _featuresToHighlight.concat(features);
-	_lazyRenderOrdering();
+	_updateFeaturesWithBrowse(features);
 };
 
 // Connect with map feature picking
