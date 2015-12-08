@@ -54,6 +54,9 @@ fs.readFile('./productSearch/Line_response.json', 'utf8', function (err, data) {
 fs.readFile('./productSearch/Crossing_response.json', 'utf8', function (err, data) {
 	featureCollections['Crossing']  = conf.toNewJsonFormat(JSON.parse(data));
 });
+fs.readFile('./productSearch/Browses_response.json', 'utf8', function (err, data) {
+	featureCollections['Browses']  = conf.toNewJsonFormat(JSON.parse(data));
+});
 fs.readFile('./productSearch/Global_response.json', 'utf8', function (err, data) {
 	featureCollections['Global']  = conf.toNewJsonFormat(JSON.parse(data));
 });

@@ -46,6 +46,8 @@
 			[ "", "", "MultiLine", "", "false", "MultiLine","1"],
 		
 			[ "", "", "Crossing", "", "false", "Crossing","2"],
+
+            [ "", "", "Browses", "", "false", "Browses","4"],
 			
  			[ "", "", "HalfOrbit", "", "false", "HalfOrbit","0"],
 			
