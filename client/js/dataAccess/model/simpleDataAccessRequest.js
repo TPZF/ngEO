@@ -10,6 +10,8 @@
 
    url: Configuration.baseServerUrl + "/simpleDataAccessRequest",
 
+   name: null,
+
    rejectedProductsNB: 0, //nb of products checked but not having a url 
 
    productURLs: [],
@@ -24,6 +26,7 @@
      this.rejectedProductsNB = 0;
      this.productURLs = [];
      this.hostedProcessId = null;
+     this.name = null;
    },
 
    /**
@@ -49,7 +52,8 @@
            requestStage: this.requestStage,
            hostedProcessId: this.hostedProcessId,
            downloadLocation: this.downloadLocation,
-           parameter: params
+           parameter: params,
+           name: this.name
          }
        };
      } else {
@@ -59,7 +63,8 @@
          SimpleDataAccessRequest: {
            requestStage: this.requestStage,
            downloadLocation: this.downloadLocation,
-           productURLs: []
+           productURLs: [],
+           name: this.name
          }
        };
        // Add create bulk order if needed

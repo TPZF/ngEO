@@ -30,12 +30,15 @@ var StandingOrderDataAccessRequest = {
 
 	SchedulingOptions: {},
 
+	name: null,
+
 	resetRequest: function() {
 
 		this.OpenSearchURL = "";
 		this.DownloadOptions = {};
 		this.SchedulingOptions = {};
 		this.hostedProcessId = null;
+		this.name = null;
 
 	},
 
@@ -51,6 +54,7 @@ var StandingOrderDataAccessRequest = {
 				DownloadOptions: this.DownloadOptions,
 				SchedulingOptions: this.getSchedulingOptions(),
 				downloadLocation: this.downloadLocation,
+				name: this.name
 			}
 		};
 

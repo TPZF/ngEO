@@ -2,7 +2,7 @@ var Configuration = require('configuration');
 var HostedProcessList = require('hostedProcesses/model/hostedProcessList');
 var SelectHostedProcessView = require('hostedProcesses/view/selectHostedProcessesView');
 
-var downloadManagersList_template = require('dataAccess/template/downloadManagersListContent');
+var downloadManagersList_template = require('dataAccess/template/dataAccessRequestViewContent');
 var downloadManagerInstall_template = require('dataAccess/template/downloadManagerInstallContent');
 
 
@@ -29,7 +29,8 @@ var DataAccessRequestView = Backbone.View.extend({
 				// Disable the DMs list to avoid choosing a different DM once the
 				// validation request has been submitted
 				this.$el.find('#downloadManagersList').selectmenu('disable');
-				this.$el.find('#downloadDirectory').textinput('disable');
+				this.$el.find('#downloadDirectory').textinput('disable').end()
+					.find("#darName").textinput('disable');
 
 				// Submit the request
 				this.request.submit();
@@ -44,6 +45,10 @@ var DataAccessRequestView = Backbone.View.extend({
 			} else {
 				$("#serverMessage").html('<p style="color: red;">Please, configure the product processing parameters first</p>');
 			}
+		},
+
+		'change #darName' : function(event) {
+			this.request.name = $(event.target).val();
 		}
 	},
 
