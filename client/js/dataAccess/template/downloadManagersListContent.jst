@@ -1,8 +1,9 @@
 
-<div id="dataAccessSpecificMessage">
-</div>
 
-<div id="downloadManagerStatusMessage"></div>
+<div data-role="fieldcontain">
+	<label style="font-size: 14px" for="darName">Name :</label>
+	<input placeholder="Enter optional name" type="text" id="darName" />
+</div>
 
 <div data-role="collapsible-set">
 	<div data-role="collapsible" data-content-theme="c" data-collapsed="false">
@@ -34,9 +35,13 @@
 
 <div id="downloadManagersFooter" class="popup-widget-footer">
 	
+	<div id="dataAccessSpecificMessage"></div>
+
+	<hr style="border: 0; height: 1px; background-color: #949494; width: 20%;">
+	<div id="serverMessage"></div>
+	
 	<button id="validateRequest" data-role="button" data-mini="true" data-inline="true" data-theme="a" >Validate</button>
 
-	<div id="serverMessage"></div>
 
 </div>	
 	
