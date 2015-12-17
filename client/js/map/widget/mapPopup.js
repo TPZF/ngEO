@@ -22,8 +22,13 @@ var MapPopup = function(container) {
 	var arrow;
 	var products = null;
 	var isOpened = false;
+	var advancedActivated = false;
 
-	element = $('<div class="widget-content ui-body-c mapPopup"><div id="mpText"></div><div id="mpButtons" data-mini="true" data-role="controlgroup" data-type="horizontal"></div></div>');
+	element = $(
+		'<div class="widget-content ui-body-c mapPopup">\
+			<div id="mpText"></div>\
+			<div id="mpButtons" data-mini="true" data-role="controlgroup" data-type="horizontal"></div>\
+		</div>');
 
 	// Wrap with the parent div for widget
 	element.wrap("<div id='mapPopup' class='widget'></div>");
@@ -36,18 +41,27 @@ var MapPopup = function(container) {
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
 			if ($(this).parent().hasClass('ui-btn-active')) {
-				buildContent(false);
+				advancedActivated = false;
+				buildContent(advancedActivated);
 				$(this).parent().removeClass('ui-btn-active ui-focus');
 			} else {
-				buildContent(true);
+				advancedActivated = true;
+				buildContent(advancedActivated);
 				$(this).parent().addClass('ui-btn-active');
 			}
 		});
 
 	// Select
-	var btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
+	btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
+			
+			// Update button's layout
+			if ($(this).parent().hasClass('ui-btn-active')) {
+				$(this).parent().removeClass('ui-btn-active ui-focus');
+			} else {
+				$(this).parent().addClass('ui-btn-active');
+			}
 
 			for (var i = 0; i < products.length; i++) {
 				var p = products[i];
@@ -60,7 +74,7 @@ var MapPopup = function(container) {
 		});
 
 	// DAR
-	var btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
+	btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
 
@@ -83,7 +97,7 @@ var MapPopup = function(container) {
 		});
 
 	// Shopcart
-	var btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
+	btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
 			GlobalEvents.trigger('addToShopcart', products);
@@ -163,6 +177,9 @@ var MapPopup = function(container) {
 				!Configuration.getMappedProperty(feature, "productUrl");
 		});
 		element.find('#mpButtons button[data-icon="save"]').button(hasPlannedOrNoProductUrl ? 'disable' : 'enable');
+		if ( advancedActivated ) {
+			element.find('#mpButtons button[data-icon="info"]').parent().addClass('ui-btn-active');
+		}
 		element.find('#mpText').html(content);
 	};
 
@@ -177,7 +194,7 @@ var MapPopup = function(container) {
 		// Clean-up previou state
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
 
-		buildContent(false);
+		buildContent(advancedActivated);
 
 		parentElement.fadeIn();
 
