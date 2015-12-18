@@ -177,20 +177,19 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 			data: JSON.stringify(request),
 			success: function(data) {
 
-				//If the server sends back a message get it in order to be displayed
+				// If the server sends back a message get it in order to be displayed
 				var message = "";
 				if (data.dataAccessRequestStatus.message) {
 					message = data.dataAccessRequestStatus.message;
 				}
 
 				if (data.dataAccessRequestStatus.status == newStatus) {
-					self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(darID)].status = newStatus;
-					//notify that the DAR status has been successfully changed
-					self.trigger('DARStatusChanged', ['SUCCESS', darID, newStatus, 'Status changed to ' + self.getStatusReadableString(newStatus) + ' : ' + message]);
-
+					var darStatus = self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(darID)];
+					darStatus.status = newStatus;
+					// Notify that the DAR status has been successfully changed
+					self.trigger('update:status', darStatus, message)
 				} else {
-					self.trigger('DARStatusChanged', ['ERROR', darID, newStatus, 'ERROR : ' + message]);
-
+					self.trigger('error:statusUpdate', changeStatusURL);
 				}
 			},
 
@@ -198,9 +197,50 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 				if (jqXHR.status == 0) {
 					location.reload();
 				} else {
-					console.log("ERROR when posting Change status Request :" + textStatus + ' ' + errorThrown);
-					//notify that the download manager status change has Failed
-					self.trigger('DARStatusChanged', ['ERROR', darID, newStatus, "ERROR when trying to change status : " + textStatus + ' ' + errorThrown]);
+					console.log("ERROR while updating status :" + textStatus + ' ' + errorThrown);
+					// Notify that the download manager status change has Failed
+					self.trigger('error:statusUpdate', changeStatusURL);
+				}
+			}
+		});
+	},
+
+	/**
+	 *	Reassign the given dars to a new download manager
+	 */
+	reassignDownloadManager : function( selectedDarIds, dmId ) {
+
+		// Create request
+		var request = {
+			"DarIdList": selectedDarIds,
+			"DataAccessRequestStatus": {
+				"status": "3",
+				"dlManagerId": dmId
+			}
+		};
+		var self = this;
+		$.ajax({
+			url: this.url,
+			type: "POST",
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(request),
+			success: function(response) {
+				// Update each dar
+				for ( var i=0; i<response.length; i++ ) {
+					var updatedDar = response[i];
+					var darStatus = self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(updatedDar.id)]
+					darStatus.status = updatedDar.status;
+					darStatus.dlManagerId = updatedDar.dlManagerId;
+					self.trigger("update:status", darStatus, updatedDar.message);
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				if (jqXHR.status == 0) {
+					location.reload();
+				} else {
+					console.log("ERROR while updating status :" + textStatus + ' ' + errorThrown);
+					self.trigger("error:statusUpdate", request);
 				}
 			}
 		});

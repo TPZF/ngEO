@@ -1,0 +1,11 @@
+<div style="text-align: center;" id="reassignDownloadManagerPopup" data-transition="flip" data-theme="c" class="ui-content" data-role="popup" position-to="window" data-dismissible="false" data-overlay-theme="a">
+    <label>Choose new download manager :
+        <select id="downloadManagersList" data-mini="true" data-theme="c">
+        <% _.each(downloadmanagers, function( downloadManager ) { %>
+            <option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></option>
+        <% }); %>
+        </select>
+    </label>
+    <a class="submit" data-mini='true' data-inline='true' data-theme='a' data-role='button' >OK</a>
+    <a class="cancel" data-mini='true' data-inline='true' data-theme='a' data-role='button' >Cancel</a>
+</div>

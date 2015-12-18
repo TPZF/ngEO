@@ -1,16 +1,20 @@
 			
-			<% var total =0 %> 
-			<% _.each(orderedStatusesToDisplay, function(newStatus) { %> 
-			<% total += newStatus.DARs.length %> 
-			<% }); %>
+<%
+var total = 0; 
+ _.each(orderedStatusesToDisplay, function(newStatus) {
+	total += newStatus.DARs.length
+});
+%>
 			
-			<h4>Data Access Requests : <%= total %></h4>
-			
-			<% _.each(orderedStatusesToDisplay, function(newStatus) { %> 
-				<%_.each(newStatus.DARs, function(dar) { %>
-			<div id="<%= dar.ID %>" data-role="collapsible"
-				data-collapsed="<%= model.attributes.collapseDAR %>" data-inset="true" data-theme="a"
-				data-content-theme="c" data-mini="true">
+<h4>Data Access Requests : <%= total %></h4>
+	
+<% _.each(orderedStatusesToDisplay, function(newStatus) {
+	_.each(newStatus.DARs, function(dar) { %>
+
+		<div style="width: 100%; text-align: right;">
+			<span class="checkDar ui-icon ui-icon-checkbox-off"></span>
+			<div id="<%= dar.ID %>" class="darStatus" data-role="collapsible"
+				data-collapsed="<%= model.attributes.collapseDAR %>" data-inset="true" data-theme="a" data-content-theme="c" data-mini="true">
 				<h4><%= dar.type %> : <%= dar.ID %></h4>
 
 				<table cellpadding="0" cellspacing="0" border="0">
@@ -30,47 +34,50 @@
 					</tbody>
 				</table>
 
-				<div data-role="collapsible" data-collapsed="<%= model.attributes.collapseProducts %>" data-mini="true"
-					data-inset="true" data-theme="d" data-content-theme="d">
+				<div data-role="collapsible" data-collapsed="<%= model.attributes.collapseProducts %>" data-mini="true"	data-inset="true" data-theme="d" data-content-theme="d">
 					<h4>Products</h4>
 					<% if (dar.productStatuses) { %>
-					<table cellpadding="0" cellspacing="0" border="0">
-						<thead>
-							<th>ProductURL</th>
-							<th>Status</th>
-							<th>%</th>
-							<th>Size</th>
-						</thead>
-						<% _.each(dar.productStatuses, function(productStatus, i) { %>
-						<tbody>
-							<tr>
-								<td><%= productStatus.productURL %></td>
-								<td><%= model.getStatusReadableString (productStatus.productStatus) %></td>
-								<td><%= productStatus.percentageCompleted %></td>
-								<td><%= filesize(productStatus.expectedSize) %></td>
-							</tr>
-						</tbody>
+						<table cellpadding="0" cellspacing="0" border="0">
+							<thead>
+								<th>ProductURL</th>
+								<th>Status</th>
+								<th>%</th>
+								<th>Size</th>
+							</thead>
 
-						<% }); %>
-					</table>
+							<% _.each(dar.productStatuses, function(productStatus, i) { %>
+								<tbody>
+									<tr>
+										<td><%= productStatus.productURL %></td>
+										<td><%= model.getStatusReadableString (productStatus.productStatus) %></td>
+										<td><%= productStatus.percentageCompleted %></td>
+										<td><%= filesize(productStatus.expectedSize) %></td>
+									</tr>
+								</tbody>
+							<% }); %>
+						</table>
 
-					<% } else { %> <label data-mini="true"> No Products
-						available </label> <% } %>
+					<% } else { %>
+						<label data-mini="true"> No Products available </label>
+					<% } %>
 				</div>
 
 				<div class="popup-widget-footer">
 				
 					<div id="serverDARMonitoringResponse_<%= dar.ID %>" class="ui-message"></div>
 					
-					<button id="pause_<%= dar.ID %>" data-role="button" data-mini="true"
-						data-inline="true" data-theme="a">Pause</button>
-					<button id="stop_<%= dar.ID %>" data-role="button" data-mini="true" data-inline="true" data-theme="a">Stop
-						definitively</button>
-				
-					
-				
-				</div>					
+					<button id="pause_<%= dar.ID %>" data-role="button" data-mini="true" data-inline="true" data-theme="a" class="pauseResumeButton">Pause</button>
+					<button id="stop_<%= dar.ID %>" data-role="button" data-mini="true" data-inline="true" data-theme="a" class="stopDownloadButton">Stop definitively</button>
+				</div>
+			</div>
 		</div>
-		<% }); %> 
-		
-		<% }); %>
+	<% }); %> 
+
+<% }); %>
+
+<div class="ui-disabled" id="darFooterButtons">
+	<button id="pauseAll" data-position-to="window" data-mini="true" data-inline="true" data-theme="a" >Pause</button>
+	<button id="resumeAll" data-position-to="window" data-mini="true" data-inline="true" data-theme="a">Resume</button>
+	<button id="stopAll" data-position-to="window" data-mini="true" data-inline="true" data-theme="a">Stop</button>
+	<button id="reassignDM" data-position-to="window" data-mini="true" data-inline="true" data-theme="a" >Re-assign download managers</button>
+</div>

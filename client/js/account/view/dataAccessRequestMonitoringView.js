@@ -1,42 +1,166 @@
 var Configuration = require('configuration');
 var accountDARs_template = require('account/template/accountDARsContent');
 var DAR_monitoring_template = require('account/template/dataAccessRequestMonitoringContent');
+var darFilter_template = require('account/template/darMonitoringFilterContent');
+
+var DownloadManagers = require('dataAccess/model/downloadManagers');
+var reassingDownloadPopup_template = require('account/template/reassignDownloadPopupContent');
+
+var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
+
+// Animation timeout callbacks
+var timeouts = {};
 
 var DataAccessRequestMonitoringView = Backbone.View.extend({
 
 	initialize: function() {
-		this.model.on("DARStatusChanged", this.updateDARStatusView, this);
+		this.model.on("update:status", this.updateStatus, this);
+		this.model.on("error:statusUpdate", function(request) {
+			// TODO !
+		});
 
 		this.model.on("sync", this.render, this);
 		this.model.on("error", this.error, this);
 	},
 
 	events: {
-		'click button': function(event) {
-			var buttonId = event.currentTarget.id;
-			//console.log($('#'+ event.currentTarget.id));
-			//the stop and pause buttons ids follow expressions stop_id and pause_id 
-			//where is is the related dar id
-			var darId = buttonId.substring(buttonId.indexOf('_') + 1, buttonId.length);
-			var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
 
-			if (buttonId.indexOf(Configuration.localConfig.dataAccessRequestStatuses.stopButtonSuffix) == 0) { //stop button is clicked
-				this.model.requestChangeStatus(darId, validStatusesConfig.cancelledStatus.value);
-
-			} else if (buttonId.indexOf(Configuration.localConfig.dataAccessRequestStatuses.pauseButtonSuffix) == 0) { //pause button triggered to pause and resume actions
-				// if the DAR is processing changed it to paused else if it is paused changed it to processing
-				if (this.model.getDARStatusById(darId).status == validStatusesConfig.inProgressStatus.value) {
-					this.model.requestChangeStatus(darId, validStatusesConfig.pausedStatus.value);
-				} else if (this.model.getDARStatusById(darId).status == validStatusesConfig.pausedStatus.value) {
-					this.model.requestChangeStatus(darId, validStatusesConfig.inProgressStatus.value);
-				} else {
-					//not supported case : should not happen !
-				}
+		// Pause/Unpause the given DAR handler
+		'click .pauseResumeButton' : function(event) {
+			var dar = $(event.currentTarget).closest('.darStatus').data("DAR");
+			
+			// Toggle status : processing/paused
+			if (dar.status == validStatusesConfig.inProgressStatus.value) {
+				this.model.requestChangeStatus(dar.ID, validStatusesConfig.pausedStatus.value);
+			} else if (dar.status == validStatusesConfig.pausedStatus.value) {
+				this.model.requestChangeStatus(dar.ID, validStatusesConfig.inProgressStatus.value);
 			} else {
 				//not supported case : should not happen !
+				console.warn("Not supported status : " + status);
 			}
 		},
 
+		// Stop the given DAR event handler
+		'click .stopDownloadButton' : function(event) {
+			var darId = $(event.currentTarget).closest('.darStatus').data("DAR").ID;
+			
+			// Stop the given dar
+			this.model.requestChangeStatus(darId, validStatusesConfig.cancelledStatus.value);
+		},
+
+		// Reassign button
+		'click #reassignDM' : function(event){
+			var $button = $(event.currentTarget);
+
+			// if ( $button.text() == "OK" ) {
+
+				// Reassign dars
+				var self = this;
+				var selectedDarIds = [];
+				this.$el.find('.ui-icon-checkbox-on').each(function(input) {
+					var dar = $(this).next('.darStatus').data("DAR");
+					selectedDarIds.push( dar.ID );
+				});
+
+				if ( selectedDarIds.length ) {
+
+					// Open download manager list
+					$openedPopup = $(reassingDownloadPopup_template( DownloadManagers.attributes )).appendTo('.ui-page-active');
+					$openedPopup.popup()
+						.bind("popupafterclose", function() {
+							$(this).remove();
+						});
+
+					$openedPopup.popup("open").trigger("create");
+
+					// Center it
+					// TODO: reuse code from layerManagerView ! Refactor it..
+					var popupContainer = $openedPopup.closest('.ui-popup-container');
+					$(popupContainer).css({
+						'top': Math.abs((($(window).height() - $(popupContainer).outerHeight()) / 2) + $(window).scrollTop()),
+						'left': Math.abs((($(window).width() - $(popupContainer).outerWidth()) / 2) + $(window).scrollLeft())
+					});
+
+					// Define callbacks for the given buttons
+					$openedPopup
+						.find('.submit').click(function(){
+							// Send request
+							self.model.reassignDownloadManager( selectedDarIds, $openedPopup.find("select").val() );
+							$openedPopup.popup("close");
+						}).end()
+						.find(".cancel").click(function(){
+							//console.log("Cancel");
+							$openedPopup.popup("close");
+						});
+				}
+
+				// this.$el.find('.checkDar').css({
+				// 	// visibility: "hidden",
+				// 	width: "0px"
+				// 	//opacity: 0
+				// });
+				// $button.html("Re-assign download managers").button("refresh");
+			// } else {
+				// Show checkboxes to allow user to select dars which must be re-assigned
+				// this.$el.find('.checkDar').removeClass('ui-icon-checkbox-on').addClass('ui-icon-checkbox-off').css({
+				// 	// visibility: "visible",
+				// 	width: "18px"
+				// 	//opacity: 1
+				// });
+				// $button.html("OK").button("refresh");
+			// }
+		},
+
+		// Pause all checked DAR statuses
+		'click #pauseAll' : function(){
+			var self = this;
+			this.$el.find('.ui-icon-checkbox-on').each(function(input) {
+				var dar = $(this).next('.darStatus').data("DAR");
+				if ( dar.status == validStatusesConfig.inProgressStatus.value ) {
+					self.model.requestChangeStatus(dar.ID, validStatusesConfig.pausedStatus.value);
+				}
+			});
+		},
+
+		// Resume all DAR checked statuses
+		'click #resumeAll' : function(){
+			var self = this;
+			this.$el.find('.ui-icon-checkbox-on').each(function(input) {
+				var dar = $(this).next('.darStatus').data("DAR");
+				if ( dar.status == validStatusesConfig.pausedStatus.value ) {
+					self.model.requestChangeStatus(dar.ID, validStatusesConfig.inProgressStatus.value);
+				}
+			});
+		},
+
+		// Stop all DAR checked statuses
+		'click #stopAll' : function(){
+			var self = this;
+			this.$el.find('.ui-icon-checkbox-on').each(function(input) {
+				var dar = $(this).next('.darStatus').data("DAR");
+				if ( dar.status != validStatusesConfig.cancelledStatus.value ) {
+					self.model.requestChangeStatus(dar.ID, validStatusesConfig.cancelledStatus.value);
+				}
+			});
+		},
+
+		// Update checked dar needed to reassign
+		'click .checkDar' : function(event) {
+			var $button = $(event.currentTarget);
+			if ( $button.hasClass('ui-icon-checkbox-off') ) {
+				$button.removeClass('ui-icon-checkbox-off').addClass('ui-icon-checkbox-on');
+			} else {
+				$button.removeClass('ui-icon-checkbox-on').addClass('ui-icon-checkbox-off');
+			}
+
+			if ( this.$el.find('.ui-icon-checkbox-on').length == 0 ) {
+				this.$el.find("#darFooterButtons").addClass("ui-disabled");
+			} else {
+				this.$el.find("#darFooterButtons").removeClass("ui-disabled");
+			}
+		},
+
+		// Filter statuses by download manager
 		'click li': function(event) {
 			//console.log($('#'+ event.currentTarget.id));
 			var target = $('#' + event.currentTarget.id);
@@ -45,10 +169,8 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 			if (target.hasClass('ui-btn-active')) {
 				target.removeClass('ui-btn-active');
 				this.selectedDownloadManagertId = undefined;
-				//no Download manager is selected so get the whole list of DARs
+				// No Download manager is selected so get the whole list of DARs
 				this.orderedStatuses.orderedStatusesToDisplay = this.model.getOrderedStatuses();
-				//empty the tab content and the redraw the whole list since no DM is selected 
-				$("#DARMonitoring").empty();
 				this.render();
 
 			} else {
@@ -69,72 +191,61 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 	 * Call back method called after a DAR status change response received from the server.  
 	 * The method changes the DAR icon and the status of the buttons according to the new changed status of the DAR
 	 */
-	updateDARStatusView: function(args) {
+	updateStatus: function(darStatus, message) {
+		var darDiv = $("#darsDiv div[id='" + darStatus.ID + "']");
 
-		var darId = args[1];
-		var messageEltId = "#serverDARMonitoringResponse_" + darId;
-		this.showMessage(args[3], messageEltId);
+		// Update download manager id
+		darDiv.find("tbody tr:eq(0) td:eq(2)").html(darStatus.dlManagerId);
 
-		if (args[0] == 'SUCCESS') {
+		var messageEltId = "#serverDARMonitoringResponse_" + darStatus.ID;
+		this.showMessage("Status changed to " + this.model.getStatusReadableString(darStatus.status) + " : " + message, messageEltId);
 
-			var selector = "div[id='" + darId + "']";
-			//					console.log("selector");
-			//					console.log(selector);	
-			var darDiv = $("#darsDiv").find(selector);
-			var collapsibleHeader = darDiv.find(".ui-btn-inner:eq(0)");
-			var pauseButton = darDiv.find("button[id='pause_" + darId + "']");
-			var stopButton = darDiv.find("button[id='stop_" + darId + "']");
-			var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
+		var collapsibleHeader = darDiv.find(".ui-btn-inner:eq(0)");
+		var pauseButton = darDiv.find("button[id='pause_" + darStatus.ID + "']");
+		var stopButton = darDiv.find("button[id='stop_" + darStatus.ID + "']");
 
-			//remove the old status string
-			darDiv.find("tbody tr:eq(0) td:eq(1)").empty();
+		// Update status and icon
+		switch (darStatus.status) {
 
-			switch (args[2]) {
+			case validStatusesConfig.inProgressStatus.value:
+				// Cancelled or Paused -> InProgress
+				collapsibleHeader.find(".statusIcon").removeClass("ui-icon-cancelled ui-icon-paused").addClass("ui-icon-processing");
+				pauseButton.html("Pause").button('enable').button("refresh");
+				stopButton.button('enable');
+				darDiv.find("tbody tr:eq(0) td:eq(1)").html(validStatusesConfig.inProgressStatus.status);
+				break;
 
-				case validStatusesConfig.inProgressStatus.value: //processing triggered by clicking on resume
+			case validStatusesConfig.pausedStatus.value:
+				// Cancelled or InProgress -> Paused
+				collapsibleHeader.find(".statusIcon").removeClass("ui-icon-cancelled ui-icon-processing").addClass("ui-icon-paused");
+				pauseButton.html("Resume").button('enable').button("refresh");
+				stopButton.button('enable');
+				darDiv.find("tbody tr:eq(0) td:eq(1)").html(validStatusesConfig.pausedStatus.status);
+				break;
 
-					collapsibleHeader.find("span .ui-icon-paused").remove();
-					collapsibleHeader.append('<span class="ui-icon-processing ui-icon ui-shadow">&nbsp;</span>');
-					pauseButton.html("Pause");
-					//update the text in the span added by JQM to make the change effective
-					pauseButton.prev().find(".ui-btn-text").html("Pause");
-					darDiv.find("tbody tr:eq(0) td:eq(1)").append(validStatusesConfig.inProgressStatus.status);
-					break;
-
-				case validStatusesConfig.pausedStatus.value: // paused triggered by clicking on pause and the old status was processing
-
-					collapsibleHeader.find("span .ui-icon-processing").remove();
-					collapsibleHeader.append('<span class="ui-icon-paused ui-icon ui-shadow">&nbsp;</span>');
-					pauseButton.html("Resume");
-					//update the text in the span added by JQM to make the change effective
-					pauseButton.prev().find(".ui-btn-text").html("Resume");
-					darDiv.find("tbody tr:eq(0) td:eq(1)").append(validStatusesConfig.pausedStatus.status);
-					break;
-
-				case validStatusesConfig.cancelledStatus.value: // cancelled triggered by clicking on stop 
-					//definitively and the old status was processing or paused
-					collapsibleHeader.find("span .ui-icon-processing").remove();
-					collapsibleHeader.find("span .ui-icon-paused").remove();
-					collapsibleHeader.append('<span class="ui-icon-cancelled ui-icon ui-shadow">&nbsp;</span>');
-					pauseButton.button('disable');
-					stopButton.button('disable');
-					darDiv.find("tbody tr:eq(0) td:eq(1)").append(validStatusesConfig.cancelledStatus.status);
-					break;
-					//Unknown Status
-				default:
-					iconCell.append('<span class="ui-icon-unknown ui-icon ui-shadow">&nbsp;</span>');
-					pauseButton.button('disable');
-					stopButton.button('disable');
-					darDiv.find("tbody tr:eq(0) td:eq(1)").append("unkown");
-					break;
-			}
+			case validStatusesConfig.cancelledStatus.value:
+				// InProgress or Paused -> Cancelled
+				collapsibleHeader.find(".statusIcon").removeClass("ui-icon-processing ui-icon-paused").addClass("ui-icon-cancelled");
+				pauseButton.button('disable');
+				stopButton.button('disable');
+				darDiv.find("tbody tr:eq(0) td:eq(1)").html(validStatusesConfig.cancelledStatus.status);
+				break;
+			default: // Unknown status
+				collapsibleHeader.find(".statusIcon").removeClass('ui-icon-processing ui-icon-paused ui-icon-cancelled').addClass('ui-icon-unknown');
+				pauseButton.button('disable');
+				stopButton.button('disable');
+				darDiv.find("tbody tr:eq(0) td:eq(1)").html("unknown");
+				break;
 		}
+		this.$el.find("#dmsDiv").html(darFilter_template(this.model)).trigger("create");
 	},
 
-	/** display a notification message inside the given elementId */
+	/** 
+	 * Display a notification message inside the given elementId
+	 */
 	showMessage: function(message, elementId) {
-		if (this.timeOut) {
-			clearTimeout(this.timeOut);
+		if (timeouts[elementId]) {
+			clearTimeout(timeouts[elementId]);
 		}
 		$(elementId)
 			.empty()
@@ -142,16 +253,18 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 			.slideDown();
 
 		// Hide status message after a given time
-		this.timeOut = setTimeout(function() {
+		timeouts[elementId] = setTimeout(function() {
 			$(elementId).slideUp();
 		}, Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
 	},
 
-	/** update the list of selected data access statuses when a download manager has been selected. */
+	/** 
+	 * Update the list of selected data access statuses when a download manager has been selected.
+	 */
 	updateView: function() {
-		$("#darsDiv").empty();
+		//this.$el.find("#dmsDiv").html(darFilter_template(this.model));
 		var darsContent = DAR_monitoring_template(this.orderedStatuses);
-		$("#darsDiv").append(darsContent);
+		this.$el.find("#darsDiv").html(darsContent);
 		this.$el.trigger('create');
 		this.setUpStatusIcons();
 	},
@@ -195,33 +308,40 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 			model: this.model
 		};
 
-		this.$el.empty();
 		var mainContent = accountDARs_template(this.model);
-		this.$el.append(mainContent);
+		this.$el.html(mainContent);
+
+		this.$el.find("#dmsDiv").html(darFilter_template(this.model));
+
 		var darsContent = DAR_monitoring_template(this.orderedStatuses);
-		$("#darsDiv").append(darsContent);
+		// var darsWidth = $('#darsDiv').width();
+		// var slidingContent = '<div style="transition: all 0.2s; width: '+ (darsWidth*2) +'px; white-space: nowrap;" id="slidingContent">\
+		// 	<div id="statuses" style="float: left; width: '+ darsWidth +'px;" class="slidingStep">'+ darsContent +'</div>\
+		// 	<div id="dmSelection" style="float: left; width: '+ darsWidth +'px;" class="slidingStep">' + reassingDownloadPopup_template( DownloadManagers.attributes ) +'</div>\
+		// </div>';
+		this.$el.find("#darsDiv").html(darsContent);
 		this.$el.trigger('create');
 		this.setUpStatusIcons();
 		this.refreshSize();
 		return this;
 	},
 
-	/** assign the correct status icon and update the buttons status for each data access request 
-	 * depending on the DAR status. */
+	/**
+	 * Assign the correct status icon and update the buttons status for each data access request 
+	 * depending on the DAR status.
+	 */
 	setUpStatusIcons: function() {
 
-		var validStatusesConfig = Configuration.localConfig.dataAccessRequestStatuses.validStatuses;
 		var self = this;
 
 		_.each(this.orderedStatuses.orderedStatusesToDisplay, function(orderedStatus) {
-
 			_.each(orderedStatus.DARs, function(darStatus, i) {
 
-				//select the DAR element
+				// Select the DAR element
 				var selector = "div[id='" + darStatus.ID + "']";
 				//					console.log("selector");
 				//					console.log(selector);	
-				var darDiv = $("#darsDiv").find(selector);
+				var darDiv = $("#darsDiv").find(selector).data("DAR", darStatus);
 				var collapsibleHeader = darDiv.find(".ui-btn-inner:eq(0)");
 				var pauseButton = darDiv.find("button[id='pause_" + darStatus.ID + "']");
 				var stopButton = darDiv.find("button[id='stop_" + darStatus.ID + "']");
@@ -230,34 +350,32 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 
 				switch (darStatus.status) {
 
-					//processing
+					// Processing
 					case validStatusesConfig.inProgressStatus.value:
-						collapsibleHeader.append('<span class="ui-icon-processing ui-icon .ui-shadow">&nbsp;</span>');
+						collapsibleHeader.append('<span class="statusIcon ui-icon-processing ui-icon .ui-shadow">&nbsp;</span>');
 						break;
 
-						//paused 
+						// Paused 
 					case validStatusesConfig.pausedStatus.value:
-						collapsibleHeader.append('<span class="ui-icon-paused ui-icon .ui-shadow">&nbsp;</span>');
-						pauseButton.html("Resume");
-						//update the text in the span added by JQM to make the change effective
-						pauseButton.prev().find(".ui-btn-text").html("Resume");
+						collapsibleHeader.append('<span class="statusIcon ui-icon-paused ui-icon .ui-shadow">&nbsp;</span>');
+						pauseButton.html("Resume").button("refresh");
 						break;
 
-						//completed
+						// Completed
 					case validStatusesConfig.completedStatus.value:
-						collapsibleHeader.append('<span class="ui-icon-completed ui-icon .ui-shadow">&nbsp;</span>');
+						collapsibleHeader.append('<span class="statusIcon ui-icon-completed ui-icon .ui-shadow">&nbsp;</span>');
 						pauseButton.button('disable');
 						stopButton.button('disable');
 						break;
 
-						//Cancelled
+						// Cancelled
 					case validStatusesConfig.cancelledStatus.value:
-						collapsibleHeader.append('<span class="ui-icon-cancelled ui-icon .ui-shadow">&nbsp;</span>');
+						collapsibleHeader.append('<span class="statusIcon ui-icon-cancelled ui-icon .ui-shadow">&nbsp;</span>');
 						pauseButton.button('disable');
 						stopButton.button('disable');
 						break;
 
-						//Unknown Status
+						// Unknown Status
 					default:
 						collapsibleHeader.append('<span class="ui-icon-unknown ui-icon .ui-shadow">&nbsp;</span>');
 						pauseButton.button('disable');
