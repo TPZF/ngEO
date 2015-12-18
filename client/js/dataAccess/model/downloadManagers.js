@@ -63,7 +63,6 @@ var DownloadManagers = Backbone.Model.extend({
 		var self = this;
 		var dmChangeStatusURL = self.url + '/' + dmID + '/changeStatus?new_status=' + newStatus;
 		var prevStatus = dm.status;
-		dm.status = "STOPPING";
 
 		return $.ajax({
 				url: dmChangeStatusURL,
@@ -71,7 +70,7 @@ var DownloadManagers = Backbone.Model.extend({
 				dataType: 'json'
 			})
 			.done(function(data) {
-				dm.status = "STOPPED";
+				dm.status = data.status;
 				self.trigger("status:change");
 			})
 			.fail(function(jqXHR, textStatus, errorThrown) {
