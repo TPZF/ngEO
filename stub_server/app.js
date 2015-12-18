@@ -78,6 +78,7 @@ app.put('/ngeo/hostedProcessDataAccessRequest', hostedProcessDataAccessRequest);
 
 //data access statuses interface
 app.get('/ngeo/dataAccessRequestStatus', downloadStatuses);
+app.post('/ngeo/dataAccessRequestStatus', downloadStatuses);
 
 //data access statuses interface
 app.post('/ngeo/dataAccessRequestStatus/:id', downloadStatuses);
@@ -149,7 +150,7 @@ proxy.setup(app,[{
   }]);
 	
 var wms2eosProxy = httpProxy.createServer(80, 'wms2eos.eo.esa.int');
-app.use('/wms2eos', wms2eosProxy);
+//app.use('/wms2eos', wms2eosProxy);
 
 /*
  * Didn't work actually due to TPZ firewall most likely, to be tested better..
