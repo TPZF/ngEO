@@ -4,7 +4,7 @@
 }
 
 
-/** set the titles for download managers and DARS section in the centre*/
+/* Set the titles for download managers and DARS section in the centre */
 #dataAccessMonitoringContent h4 {
 	text-align : center;
 }
@@ -14,18 +14,25 @@
 	overflow : auto;
 }
 
-/** set the font of download managers list items */  
+/* Set the font of download managers list items */  
 #dmsDiv li {
 	font-size : 12px;
 }
 
 #darsDiv {
+	overflow-x: hidden;
+	overflow-y : auto;
 	max-height : 500px;
 	width : 70%;
-	overflow : auto;
 	text-align : center;
+
+	/* Add space for checkbox before */
+	.ui-collapsible {
+		width: 96%;
+		display: inline-block;
+	}
 }
-/** style the text of the DAR collapsible */
+/* Style the text of the DAR collapsible */
 .ui-collapsible-heading .ui-btn-text{
 	font-size : 13px;
 }
