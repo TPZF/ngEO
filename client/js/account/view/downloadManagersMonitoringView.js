@@ -2,7 +2,7 @@ var Configuration = require('configuration');
 var DownloadManagers = require('dataAccess/model/downloadManagers');
 var downloadManagersMonitoring_template = require('account/template/downloadManagersMonitoringContent');
 var downloadManagerInstall_template = require('dataAccess/template/downloadManagerInstallContent');
-var downloadManagersList_template = require('account/template/downloadManagersListContent');
+var downloadManagersList_template = require('account/template/downloadManagersTableContent');
 var ngeoWidget = require('ui/widget');
 
 var DownloadManagersMonitoringView = Backbone.View.extend({
