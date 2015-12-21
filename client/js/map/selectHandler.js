@@ -1,3 +1,4 @@
+var Configuration = require('configuration');
 var Handler = require('map/handler');
 var Map = require('map/map');
 var MapUtils = require('map/utils');
@@ -161,7 +162,7 @@ var isSelectionEqual = function(newSelection) {
  *	Helper function to sort features by date
  */
 var sortFeatureByDate = function(a, b) {
-	return new Date(a.properties.EarthObservation.gml_endPosition) - new Date(b.properties.EarthObservation.gml_endPosition);
+	return new Date(Configuration.getMappedProperty(b, "start")) - new Date(Configuration.getMappedProperty(a, "start"));
 }
 
 /**
