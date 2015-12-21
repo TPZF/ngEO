@@ -152,12 +152,7 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 			} else {
 				$button.removeClass('ui-icon-checkbox-on').addClass('ui-icon-checkbox-off');
 			}
-
-			if ( this.$el.find('.ui-icon-checkbox-on').length == 0 ) {
-				this.$el.find("#darFooterButtons").addClass("ui-disabled");
-			} else {
-				this.$el.find("#darFooterButtons").removeClass("ui-disabled");
-			}
+			this.updateFooterButtonsState();
 		},
 
 		// Filter statuses by download manager
@@ -185,6 +180,37 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 				this.updateView();
 			}
 		}
+	},
+
+	/**
+	 *	Update footer buttons enabled/disabled layout according to dar statuses
+	 */
+	updateFooterButtonsState: function() {
+		// Update global disabled/enabled state
+		if ( this.$el.find('.ui-icon-checkbox-on').length == 0 ) {
+			this.$el.find("#darFooterButtons").addClass("ui-disabled");
+		} else {
+			this.$el.find("#darFooterButtons").removeClass("ui-disabled");
+		}
+
+		// Update each button state depending on checked dars
+		var checkedDars = this.$el.find('.ui-icon-checkbox-on').next('.darStatus');
+		var enableStop = _.find(checkedDars, function(dar) {
+			return $(dar).data("DAR").status == validStatusesConfig.inProgressStatus.value || $(dar).data("DAR").status == validStatusesConfig.pausedStatus.value;
+		});
+		var enablePause = _.find(checkedDars, function(dar) {
+			return $(dar).data("DAR").status == validStatusesConfig.inProgressStatus.value;
+		});
+		var enableResume = _.find(checkedDars, function(dar) {
+			return $(dar).data("DAR").status == validStatusesConfig.pausedStatus.value;
+		});
+		var enableReassign = _.find(checkedDars, function(dar) {
+			return $(dar).data("DAR").status != validStatusesConfig.completedStatus.value;
+		});
+		this.$el.find('#stopAll').button(enableStop ? 'enable' : 'disable').button('refresh');
+		this.$el.find('#resumeAll').button(enableResume ? 'enable' : 'disable').button('refresh');
+		this.$el.find('#pauseAll').button(enablePause ? 'enable' : 'disable').button('refresh');
+		this.$el.find('#reassignDM').button(enableReassign ? 'enable' : 'disable').button('refresh');
 	},
 
 	/**
@@ -238,6 +264,7 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 				break;
 		}
 		this.$el.find("#dmsDiv").html(darFilter_template(this.model)).trigger("create");
+		this.updateFooterButtonsState();
 	},
 
 	/** 
@@ -269,6 +296,9 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 		this.setUpStatusIcons();
 	},
 
+	/**
+	 *	Error callback
+	 */
 	error: function(model, xhr) {
 		if (xhr.status == 404) {
 			// This is normal, the user has no download managers so just render it.
