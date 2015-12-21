@@ -65,32 +65,22 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 				if ( selectedDarIds.length ) {
 
 					// Open download manager list
-					$openedPopup = $(reassingDownloadPopup_template( DownloadManagers.attributes )).appendTo('.ui-page-active');
-					$openedPopup.popup()
-						.bind("popupafterclose", function() {
-							$(this).remove();
-						});
-
-					$openedPopup.popup("open").trigger("create");
-
-					// Center it
-					// TODO: reuse code from layerManagerView ! Refactor it..
-					var popupContainer = $openedPopup.closest('.ui-popup-container');
-					$(popupContainer).css({
-						'top': Math.abs((($(window).height() - $(popupContainer).outerHeight()) / 2) + $(window).scrollTop()),
-						'left': Math.abs((($(window).width() - $(popupContainer).outerWidth()) / 2) + $(window).scrollLeft())
-					});
-
+					var $openedPopup =
+						$(reassingDownloadPopup_template( DownloadManagers.attributes ))
+							.appendTo('.ui-page-active')
+							.ngeowidget({
+								title: "Select new download manager",
+								hide: function() {
+									$openedPopup.ngeowidget("destroy").remove();
+								}
+							}).ngeowidget("show");
+					
 					// Define callbacks for the given buttons
 					$openedPopup
 						.find('.submit').click(function(){
 							// Send request
 							self.model.reassignDownloadManager( selectedDarIds, $openedPopup.find("select").val() );
-							$openedPopup.popup("close");
-						}).end()
-						.find(".cancel").click(function(){
-							//console.log("Cancel");
-							$openedPopup.popup("close");
+							$openedPopup.ngeowidget("hide");
 						});
 				}
 
