@@ -120,9 +120,8 @@ module.exports = {
 
 			// WARNING : order of removal is important !
 
-			// Update the toolbar
-			$('#result' + fc.id)
-				.remove();
+			// Update the status bar
+			panelManager.bottom.removeStatus('#result' + fc.id);
 
 			// Activate the last
 			$('#bottomToolbar command:last-child').click();
