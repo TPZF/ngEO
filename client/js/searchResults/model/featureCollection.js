@@ -226,10 +226,11 @@ var FeatureCollection = function() {
 	this.highlight = function(features) {
 
 		if (features.length != 0 || this.highlights.length != 0) {
-			// Event for highlight
-			this.trigger("highlightFeatures", features, this.highlights, this);
+			var prevHighlights = this.highlights;
 			// Copy highlighted items
 			this.highlights = features.slice(0);
+			// Event for highlight
+			this.trigger("highlightFeatures", features, prevHighlights, this);
 		}
 	};
 
