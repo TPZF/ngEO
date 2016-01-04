@@ -1,5 +1,14 @@
+var Configuration = require('configuration');
+var Map = require('map/map');
+
 /**
- * The StatusPanel manages panel for the status bar
+ * The StatusPanel composed by statuses representing feature collection(dataset in other words)
+ *
+ * Each status could contain views:
+ *	<ul>
+ *		<li>Table view : Results table with metadata (instanciated by SearchResultsTableView)</li>
+ *		<li>Gantt view : Temporal apperance of products</li>
+ *	</ul>
  */
 var StatusPanel = Backbone.View.extend({
 
@@ -12,6 +21,23 @@ var StatusPanel = Backbone.View.extend({
 		this.classes = options.classes;
 		this.activeStatus = null;
 		this.activeView = null;
+		
+		// When a product has been picked, select the status with the most recent product
+		Map.on('pickedFeatures', function(pickedFeatures) {
+			var recentFeatureCollection = null;
+			var maxDate = new Date("1980-01-01");
+			for ( var i=0; i<pickedFeatures.length; i++ ) {
+				var feature = pickedFeatures[i];
+				var currentMaxDate = new Date(Configuration.getMappedProperty(feature, "start"));
+				if (maxDate < currentMaxDate){
+					maxDate = currentMaxDate;
+					recentFeatureCollection = feature._featureCollection.id;
+				}
+			}
+			if ( recentFeatureCollection ) {
+				$('#result' + recentFeatureCollection).click();
+			}
+		})
 	},
 
 	// Only used by shared shopcart. Should be removed later?
@@ -67,7 +93,7 @@ var StatusPanel = Backbone.View.extend({
 			// Reset the views
 			for (var i = 0; i < this.activeStatus.views.length; i++) {
 				this.activeStatus.views[i].setModel(null);
-				this.activeStatus.viewActivators[i].attr("checked", false).checkboxradio("refresh");
+				this.activeStatus.viewActivators[i].prop("checked", false).checkboxradio("refresh");
 			}
 		}
 
@@ -85,10 +111,10 @@ var StatusPanel = Backbone.View.extend({
 
 			var index = status.views.indexOf(this.activeView);
 			if (index >= 0) {
-				status.viewActivators[index].attr("checked", true).checkboxradio("refresh");
+				status.viewActivators[index].prop("checked", true).checkboxradio("refresh");
 			} else {
 				this.toggleView(status.views[0]);
-				status.viewActivators[0].attr("checked", true).checkboxradio("refresh");
+				status.viewActivators[0].prop("checked", true).checkboxradio("refresh");
 			}
 		}
 
@@ -97,7 +123,7 @@ var StatusPanel = Backbone.View.extend({
 
 
 	/**
-	 *
+	 *	Add status to panel
 	 */
 	addStatus: function(status) {
 
@@ -109,7 +135,7 @@ var StatusPanel = Backbone.View.extend({
 				self.toggleView(view);
 
 				if (!self.activeView) {
-					$(this).attr("checked", false).checkboxradio("refresh");
+					$(this).prop("checked", false).checkboxradio("refresh");
 				}
 			});
 		});
@@ -127,6 +153,13 @@ var StatusPanel = Backbone.View.extend({
 		} else {
 			status.$el.hide();
 		}
+	},
+
+	/**
+	 *	Remove status from panel
+	 */
+	removeStatus: function(activatorId) {
+		$(activatorId).remove();
 	}
 
 });
