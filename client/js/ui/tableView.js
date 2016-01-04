@@ -306,25 +306,34 @@ var TableView = Backbone.View.extend({
 
 			// NGEO-1941: Scroll to the most recent highlighted product in table
 			var mostRecentFeature = _.max(features, function(f) {
-				return new Date(Configuration.getMappedProperty(f, "start"));
+				return new Date(Configuration.getMappedProperty(f, "stop"));
 			});
 
 			var $mostRecentRow = this._getRowFromFeature(mostRecentFeature);
-			var rowTop = $mostRecentRow.position().top;
-			var isVisibleInContent = (rowTop > 0 && rowTop < this.$el.find(".table-content").height());
-			if ( !isVisibleInContent ) {
-				// Scroll only if not already visiblle in table content
-				this.$el.find(".table-content").animate({
-	                scrollTop: rowTop - this.$el.find(".table-content tbody").position().top - 90 // "90" magic number to place in "center"
-	            }, {
-					duration: 500,
-					easing: "easeOutQuad"
-	            });
+			if ( $mostRecentRow ) {
+				this._scrollTo($mostRecentRow);
 			}
 
 		}
+	},
 
-
+	/**
+	 *	Scroll table elt to the given $row
+	 *	Check if the the selected row isn't already visible btw
+	 */
+	_scrollTo: function($row) {
+		var rowTop = $row.position().top;
+		var offset = $row.height() / 2; // Take a half-height as an offset on both sides (top/bottom)
+		var isVisibleInContent = (rowTop > offset && rowTop < this.$el.find(".table-content").height() - offset);
+		if ( !isVisibleInContent ) {
+			// Scroll only if not already visible in table content
+			this.$el.find(".table-content").animate({
+				scrollTop: rowTop - this.$el.find(".table-content tbody").position().top - 90 // "90" magic number to place in "center"
+			}, {
+				duration: 500,
+				easing: "easeOutQuad"
+			});
+		}
 	},
 
 	/**
@@ -623,6 +632,15 @@ var TableView = Backbone.View.extend({
 		if (this.rowsData.length > 0) {
 			this.updateFixedHeader();
 		}
+		
+		// Scroll to the most recent product if selected
+		var selectedRows = this.$table.find('.row_selected');
+		var mostRecentRow = _.max(selectedRows, function(row) {
+			var feature = $(row).data('internal').feature;
+			return new Date(Configuration.getMappedProperty(feature, "stop"));
+		});
+		this._scrollTo($(mostRecentRow));
+
 		this.visible = true;
 	},
 
