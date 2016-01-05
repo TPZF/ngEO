@@ -1,5 +1,5 @@
 
-	<label>Start Date :
+	<label>Acquisition Start Date :
 	<input name="From" class="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(model.attributes.start.toISODateString()) %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.start.toISODateString()) %>", 
 		  "themeDate":"c", "themeDatePick":"a", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'  /></label>
@@ -12,7 +12,7 @@
 <!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
 <!-- </div> -->
 
-	<label>End Date :
+	<label>Acquisition End Date :
 	<input name="toDate" class="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(model.attributes.stop.toISODateString()) %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.stop.toISODateString()) %>", 
 	   	"themeDate":"c", "themeDatePick":"a", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'></label>
