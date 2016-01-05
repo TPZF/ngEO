@@ -26,5 +26,9 @@
 		<button data-role='button' data-inline='true' data-mini='true' class="scSubmit" ><%= submitText %></button>
 	</div>
 	<button data-role='button' data-inline='true' data-mini='true' id="share">Share</button>
+	<!-- NGEO-1971 : add special button to import criteria from search panel -->
+	<% if (submitText == "Subscribe") { %>
+		<button title="Import criteria from search panel" data-role='button' data-inline='true' data-mini='true' class="scImport" >Get Criteria</button>
+	<% } %>
 </div>
 

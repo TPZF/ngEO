@@ -1,5 +1,4 @@
 var Configuration = require('configuration');
-var Logger = require('logger');
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var SchedulingOptionsView = require('search/view/schedulingOptionsView');
 var SearchView = require('search/view/searchView');
@@ -8,6 +7,7 @@ var DatasetView = require('search/view/datasetView');
 var SharePopup = require('ui/sharePopup');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var searchCriteria_template = require('search/template/searchCriteriaContent_template');
+var DatasetSearch = require('search/model/datasetSearch');
 
 /**
  * The model for this view is a backbone model : StandingOrder 
@@ -22,11 +22,6 @@ var StandingOrderView = SearchView.extend({
 	initialize: function() {
 		this.listenTo(DataSetPopulation, 'select', this.onDatasetChanged );
 		this.listenTo(DataSetPopulation, 'unselect', this.onDatasetChanged );
-	},
-
-	refresh: function() {
-		if ( this.datasetView )
-			this.datasetView.refresh();
 	},
 
 	onDatasetChanged: function(dataset) {
@@ -49,17 +44,45 @@ var StandingOrderView = SearchView.extend({
 		// Click on search
 		"click .scSubmit": function(event) {
 
-			// reset request
+			// Reset request
 			StandingOrderDataAccessRequest.initialize();
 
-			//set open search url
+			// Set open search url
 			StandingOrderDataAccessRequest.OpenSearchURL = this.model.getOpenSearchURL();
 
-			//set selected download options
+			// Set selected download options
 			StandingOrderDataAccessRequest.DownloadOptions = this.model.getSelectedDownloadOptions();
 
 			DataAccessWidget.open(StandingOrderDataAccessRequest);
 
+		},
+
+		// Click on import : import settings from search criteria
+		"click .scImport": function() {
+			console.log(DatasetSearch);
+			console.log(this.model);
+			// Import attributes from DatasetSearch
+			this.model.set({
+				"start": DatasetSearch.get("start"),
+				"stop": DatasetSearch.get("stop"),
+				"useExtent": DatasetSearch.get("useExtent"),
+				"advancedAttributes":  DatasetSearch.get("advancedAttributes"),
+			});
+			// NB: Can't use the line below since it doesn't fires "change" events for nested models
+			// this.model.set(DatasetSearch.attributes);
+			// .. so do the manual merge of download options (which is the only nested model)
+			var searchDO = DatasetSearch.get("downloadOptions")[this.model.dataset.get("datasetId")];
+			this.model.get("downloadOptions")[this.model.dataset.get("datasetId")].updateFrom(searchDO);
+
+			// and search area which isn't included in attributes of model
+			this.model.searchArea.setFromWKT( DatasetSearch.searchArea.toWKT() );
+			this.model.searchArea.setMode( DatasetSearch.searchArea.getMode() ); // Set mode as well since WKT is always a polygon
+			// Update search area only if model doesn't use extent (since layer is removed when extent is used...)
+			if ( !this.model.get("useExtent") ) {
+				this.model.trigger('change:searchArea');
+			}
+
+			this.refresh();
 		},
 
 		// To share a search

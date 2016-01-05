@@ -21,6 +21,15 @@ var DownloadOptions = function(downloadOptions, options) {
 };
 
 /**
+ *  Update download options with the given options
+ *	TODO: improve it
+ */
+DownloadOptions.prototype.updateFrom = function(downloadOptions) {
+    this.collection = _.clone(downloadOptions.collection);
+    this.attributes = _.clone(downloadOptions.attributes);
+};
+
+/**
  *  Set the attribute to the given value
  *  When null, delete the attribute from attributes
  */
