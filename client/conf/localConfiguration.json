@@ -1,4 +1,5 @@
 {
+	"version": 2.25,
 	"serverPropertyMapper" : {
 		"start": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition",
 		"stop": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition",
