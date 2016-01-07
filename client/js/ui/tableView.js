@@ -621,7 +621,7 @@ var TableView = Backbone.View.extend({
 			this.$table.find('thead').show();
 
 			var colWidths = this.$table.find("tr:first").children().map(function() {
-				return $(this).width();
+				return $(this).outerWidth();
 			});
 
 			var $colgroup = $("<colgroup></colgroup>");
