@@ -292,54 +292,50 @@ var FeatureCollection = function() {
 	};
 
 	/**
-	 * The following method appends the download options using this convention ngEO product URI :
-	 * it appends the download options to the product url as follows: &ngEO_DO={param_1:value1,....,param_n:value_n}
+	 *	Update feature url property according to the given download options
+	 *
+	 *  The following method appends the download options using this convention ngEO product URI :
+	 *		ngEO_DO={param_1:value1,....,param_n:value_n}
 	 */
-	this.updateProductUrls = function(selectedDownloadOptions) {
+	this.updateProductUrl = function(feature, urlProperty, downloadOptions) {
 
+		var url = Configuration.getMappedProperty(feature, urlProperty, null);
+		if (url) {
+			// console.log("product url initial = " + url);
+
+			// Remove the already added download options : this fixes the already existing bug :
+			// When none is chosen the download option is not removed from the url
+			if (url.indexOf("ngEO_DO={") != -1) {
+				url = url.substring(0, url.indexOf("ngEO_DO={") - 1);
+				//console.log("product url removed download options  = " + url);
+			}
+
+			if (url.indexOf("?") == -1) {
+				// First parameter
+				url += "?";
+			} else {
+				// Otherwise
+				url += "&";
+			}
+			url += "ngEO_DO="+JSON.stringify(downloadOptions).replace(/\"/g,""); // No "" by spec
+			Configuration.setMappedProperty(feature, urlProperty, url);
+			//console.log("product url updated = " + url);
+		}
+	};
+
+	/**
+	 * Update download options in product url/uri for the current selection
+	 */
+	this.updateDownloadOptions = function(downloadOptions) {
+
+		var self = this;
 		_.each(this.selection, function(feature) {
 
-			var url = Configuration.getMappedProperty(feature, "productUrl", null);
-
-			if (url) {
-				// console.log("product url initial = " + url);
-
-				//remove the already added download options : this fixes the already existing bug :
-				//when none is chosen the download option is not removed from the url
-				if (url.indexOf("ngEO_DO={") != -1) {
-					url = url.substring(0, url.indexOf("ngEO_DO={") - 1);
-					//console.log("product url removed download options  = " + url);
-				}
-
-				// HACK: Omit 'downloadOptions' from selecte cuz contains an array of possible values used for downloadOptionsView render
-				// but has nothing to do here.. to be improved
-				var validOptions = _.omit(selectedDownloadOptions, 'downloadOptions');
-				_.each(validOptions, function(optionValue, optionKey, list) {
-
-					// The download option is not set in the url
-					if (url.indexOf("ngEO_DO={") != -1) { //in that case the ngEO_DO={} is the last param according to the ICD
-
-						var urlWithoutlastBaraket = url.substring(0, url.length - 1);
-						urlWithoutlastBaraket += "," + optionKey + ":" + optionValue + "}";
-						url = urlWithoutlastBaraket;
-
-					} else { // There are no download options already added
-
-						if (url.indexOf("?") == -1) {
-							url += "?";
-						} else { //there are parameters in the url
-							url += "&";
-						}
-						url += "ngEO_DO={" + optionKey + ":" + optionValue + "}";
-					}
-				});
-				//console.log("product url updated = " + url);
-
-				Configuration.setMappedProperty(feature, "productUrl", url);
-
-			}
+			self.updateProductUrl(feature, "productUrl", downloadOptions);
+			// NGEO-1972: Update productUri (metadata report) as well...
+			self.updateProductUrl(feature, "productUri", downloadOptions);
 		});
-		this.trigger("updateProductUrl", this.selection);
+		this.trigger("update:downloadOptions", this.selection);
 	};
 
 	/** 

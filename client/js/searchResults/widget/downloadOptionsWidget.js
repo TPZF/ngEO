@@ -65,7 +65,7 @@ var DownloadOptionsWidget = function() {
 				updateCallback: function(event) {
 					// Update the product url of the selected products with the selected download options
 					var attributes = widgetDownloadOptions.getAttributes();
-					return $.when(featureCollection.updateProductUrls(attributes));
+					return $.when(featureCollection.updateDownloadOptions(attributes));
 				}
 			});
 			downloadOptionsView.render();
