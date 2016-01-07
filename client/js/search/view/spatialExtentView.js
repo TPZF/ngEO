@@ -7,6 +7,7 @@ var areaCriteria_template = require('search/template/areaCriteriaContent');
 
 /**
  * The SpatialExtentView manages the different views to define the search area (or zone of interest).
+ * The model of this view is DatasetSearch or StandingOrder
  */
 var SpatialExtentView = Backbone.View.extend({
 
