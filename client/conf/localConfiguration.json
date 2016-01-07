@@ -10,7 +10,9 @@
 		"browseUrl": "properties.BrowseInformation.eop_url",
 		"browseType": "properties.BrowseInformation.eop_type",
 		"interferometryUrl": "properties.links.@title=interferometry.@href",
-		"links": "properties.links"
+		"links": "properties.links",
+		"sensorType": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.sensorType",
+		"sensor": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
 	},
 	"directDownload" : {
 		"productColumnIndex" : 7

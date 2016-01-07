@@ -148,26 +148,31 @@ var MapPopup = function(container) {
 		var content;
 
 		if (products.length == 1) {
-			content = '<p><b>Product: ' + products[0].id + '</b></p>';
+			var product = products[0];
+			// Build product title according to NGEO-1969
+			var productTitle = Configuration.getMappedProperty(product, "sensor") + " / "
+							+ Configuration.getMappedProperty(product, "sensorType") + " / "
+							+ Configuration.getMappedProperty(product, "productType")
+			content = '<p><b>' + productTitle + '</b></p>';
 			if (adv) {
 				var columnDefs = Configuration.data.tableView.columnsDef;
 				for (var i = 0; i < columnDefs.length; i++) {
 					if (columnDefs[i].sTitle != 'Product') {
-						var value = Configuration.getFromPath(products[0], columnDefs[i].mData);
+						var value = Configuration.getFromPath(product, columnDefs[i].mData);
 						if (value) {
 							content += '<p>' + columnDefs[i].sTitle + ': ' + value + '</p>';
 						}
 					}
 				}
 			} else {
-				content += '<p>Date: ' + Configuration.getMappedProperty(products[0], "start") + '</p>';
+				content += '<p>Date: ' + Configuration.getMappedProperty(product, "start") + '</p>';
 			}
 		} else {
 			content = products.length + " products picked.<br>Click again to cycle through products.";
 			if (adv) {
 				content += "<p>Products:</p>";
 				for (var i = 0; i < products.length; i++) {
-					content += "<p>" + products[i].id + "</p>";
+					content += "<p title='"+ products[i].id +"'>" + products[i].id + "</p>";
 				}
 			}
 		}
