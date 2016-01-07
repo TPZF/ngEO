@@ -70,7 +70,7 @@ var TableView = Backbone.View.extend({
 			var $cell = $(event.currentTarget);
 			$cell.siblings("th").removeClass('sorting_asc').removeClass('sorting_desc');
 
-			if ($cell.find('.table-view-chekbox').length > 0)
+			if ($cell.find('.table-view-checkbox').length > 0)
 				return;
 
 			if ($cell.hasClass('sorting_asc')) {
@@ -104,7 +104,7 @@ var TableView = Backbone.View.extend({
 		},
 
 		// Called when the user clicks on the checkbox of the dataTables
-		'click .table-view-chekbox': function(event) {
+		'click .table-view-checkbox': function(event) {
 			// retreive the position of the selected row
 			var $target = $(event.currentTarget);
 			var $row = $target.closest('tr');
@@ -364,7 +364,7 @@ var TableView = Backbone.View.extend({
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
 			if ($row) {
-				$row.find('.table-view-chekbox')
+				$row.find('.table-view-checkbox')
 					.toggleClass('ui-icon-checkbox-off')
 					.toggleClass('ui-icon-checkbox-on');
 			}
@@ -538,11 +538,11 @@ var TableView = Backbone.View.extend({
 
 		var visibilityClass = 'ui-icon-checkbox-off'; // By default
 		// Take into account the previous state of input
-		if ($row.find(".table-view-chekbox").length > 0 && $row.find(".table-view-chekbox").hasClass("ui-icon-checkbox-on")) {
+		if ($row.find(".table-view-checkbox").length > 0 && $row.find(".table-view-checkbox").hasClass("ui-icon-checkbox-on")) {
 			visibilityClass = 'ui-icon-checkbox-on';
 		}
 
-		content += '<td><span class="table-view-chekbox ui-icon '+ visibilityClass +'"></span></td>';
+		content += '<td><span class="table-view-checkbox ui-icon '+ visibilityClass +'"></span></td>';
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
 			if (this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0) {
@@ -699,7 +699,7 @@ var TableView = Backbone.View.extend({
 		if (this.hasExpandableRows) {
 			$row.append('<th></th>');
 		}
-		$row.append('<th><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></th>');
+		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
 				$row.append('<th>' + columns[j].sTitle + '</th>');
