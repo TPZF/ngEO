@@ -199,14 +199,15 @@ var TableView = Backbone.View.extend({
 			var $row = this._getRowFromFeature(feature);
 			var rowData = $row.data("internal");
 			rowData.cellData.length = 0;
-			// var downloadOptionsColumn = _.findWhere(this.columnDefs, {sTitle: "Download options"});
-			// if ( downloadOptionsColumn ) {
-			// 	rowData.cellData[downloadOptionsColumn] = Configuration.getFromPath(feature, this.columnDefs[downloadOptionsColumn].mData);
-			// }
+
+			var tdOffset = 1; // Since first <td> could be + and checkbox
+			if ( rowData.cellData.isExpandable ) {
+				tdOffset++;
+			}
 			for (var j = 0; j < this.columnDefs.length; j++) {
 				var d = Configuration.getFromPath(feature, this.columnDefs[j].mData);
 				rowData.cellData.push(d);
-				$($row.find("td").get(j+1)).html(d); // j+1 cuz first td is a checkbox..
+				$($row.find("td").get(j + tdOffset)).html(d);
 			}
 
 			this._updateRow(rowData, $row);
