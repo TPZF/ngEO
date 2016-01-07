@@ -339,7 +339,7 @@ var FeatureCollection = function() {
 
 			}
 		});
-		this.trigger("updateFeatures");
+		this.trigger("updateProductUrl", this.selection);
 	};
 
 	/** 

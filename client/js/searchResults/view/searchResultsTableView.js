@@ -32,15 +32,14 @@ var SearchResultsTableView = TableView.extend({
 			};
 		}
 		
-		// NB: NGEOP-132: Could be useful to show download options if user-friendly way
-		/*
-			var downloadOptionsColumn = _.findWhere(this.columnDefs, {sTitle: "Download options"});
-			if (downloadOptionsColumn) {
-				downloadOptionsColumn.getClasses = function(feature) {
-					return "downloadOptions";
-				};
-			}
-		*/
+		// NGEO-1972: Class used to show download options in a user-friendly way
+		var downloadOptionsColumn = _.findWhere(this.columnDefs, {sTitle: "Download options"});
+		if (downloadOptionsColumn) {
+			downloadOptionsColumn.getClasses = function(feature) {
+				return "downloadOptions";
+			};
+		}
+
 	},
 
 	/**

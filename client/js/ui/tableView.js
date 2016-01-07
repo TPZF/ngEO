@@ -181,30 +181,37 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "highlightFeatures", this.highlightFeature);
-			// NB: Not used actually but could be really useful for : NGEOP-132
-			//this.listenTo(this.model, "updateFeatures", this.updateFeature);
+			this.listenTo(this.model, "updateProductUrl", this.updateRows);
 
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
 			}
 		}
 	},
+	
+	/**
+	 *	Update rows of given features
+	 */
+	updateRows: function(features) {
 
-	updateFeature: function() {
-
-		// Update celldata
-		for ( var i=0; i<this.rowsData.length; i++ ) {
-			var rData = this.rowsData[i];
-			var feature = rData.feature;
-
-			rData.cellData = [];
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			var $row = this._getRowFromFeature(feature);
+			var rowData = $row.data("internal");
+			rowData.cellData.length = 0;
+			// var downloadOptionsColumn = _.findWhere(this.columnDefs, {sTitle: "Download options"});
+			// if ( downloadOptionsColumn ) {
+			// 	rowData.cellData[downloadOptionsColumn] = Configuration.getFromPath(feature, this.columnDefs[downloadOptionsColumn].mData);
+			// }
 			for (var j = 0; j < this.columnDefs.length; j++) {
 				var d = Configuration.getFromPath(feature, this.columnDefs[j].mData);
-				rData.cellData.push(d);
+				rowData.cellData.push(d);
+				$($row.find("td").get(j+1)).html(d); // j+1 cuz first td is a checkbox..
 			}
+
+			this._updateRow(rowData, $row);
 		}
-		this.buildTable();
-		this.buildTableContent();
+		this.updateFixedHeader();
 	},
 
 	/**
@@ -510,25 +517,32 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 * Create a row given rowData
+	 *	Update the existing row with the given rowData
 	 */
-	_createRow: function(rowData, $body) {
-		var $row = $('<tr></tr>');
+	_updateRow: function(rowData, $row) {
 
-		// Magnage expand
+		var content = '';
+		// Manage expand
 		if (this.hasExpandableRows) {
 
 			if (rowData.isExpandable) {
 				if (rowData.isExpand) {
-					$row.append('<td><span class="table-view-expand ui-icon ui-icon-minus "></span></td>');
+					content += '<td><span class="table-view-expand ui-icon ui-icon-minus "></span></td>';
 				} else {
-					$row.append('<td><span class="table-view-expand ui-icon ui-icon-plus "></span></td>');
+					content += '<td><span class="table-view-expand ui-icon ui-icon-plus "></span></td>';
 				}
 			} else {
-				$row.append('<td></td>');
+				content += '<td></td>';
 			}
 		}
-		$row.append('<td><span class="table-view-chekbox ui-icon ui-icon-checkbox-off "></span></td>');
+
+		var visibilityClass = 'ui-icon-checkbox-off'; // By default
+		// Take into account the previous state of input
+		if ($row.find(".table-view-chekbox").length > 0 && $row.find(".table-view-chekbox").hasClass("ui-icon-checkbox-on")) {
+			visibilityClass = 'ui-icon-checkbox-on';
+		}
+
+		content += '<td><span class="table-view-chekbox ui-icon '+ visibilityClass +'"></span></td>';
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
 			if (this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0) {
@@ -547,13 +561,21 @@ var TableView = Backbone.View.extend({
 						else
 							cellDataColumn = "No download options";
 					}
-					$row.append('<td class="' + classes + '">' + cellDataColumn + '</td>');
+					content += '<td class="' + classes + '">' + cellDataColumn + '</td>';
 				} else {
-					$row.append('<td>' + cellDataColumn + '</td>');
+					content += '<td>' + cellDataColumn + '</td>';
 				}
 			}
 		}
+		$row.html(content);
+	},
 
+	/**
+	 * Create a row given rowData
+	 */
+	_createRow: function(rowData, $body) {
+		var $row = $('<tr></tr>');
+		this._updateRow(rowData, $row);
 		$row = $row.appendTo($body);
 		$row.data('internal', rowData);
 		this.feature2row[rowData.feature.id] = $row;
@@ -634,12 +656,14 @@ var TableView = Backbone.View.extend({
 		}
 		
 		// Scroll to the most recent product if selected
-		var selectedRows = this.$table.find('.row_selected');
-		var mostRecentRow = _.max(selectedRows, function(row) {
-			var feature = $(row).data('internal').feature;
-			return new Date(Configuration.getMappedProperty(feature, "stop"));
-		});
-		this._scrollTo($(mostRecentRow));
+		var selectedRows = this.$el.find('.row_selected');
+		if ( selectedRows.length ) {
+			var mostRecentRow = _.max(selectedRows, function(row) {
+				var feature = $(row).data('internal').feature;
+				return new Date(Configuration.getMappedProperty(feature, "stop"));
+			});
+			this._scrollTo($(mostRecentRow));
+		}
 
 		this.visible = true;
 	},

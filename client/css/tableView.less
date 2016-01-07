@@ -16,7 +16,7 @@
 // Scroll body with fixed header
 .table-content {
 	width: 100%;
-	height: 200px;
+	height: 191px;
 	overflow-y: auto;
 	border-top: 1px solid @table-border-color;
 }
@@ -42,10 +42,15 @@
 	border-right: 0px solid @table-border-color;
 }
 
-// add border for bottom
-/*.table-header {
-	border-bottom: 1px solid @table-border-color;
-}*/
+.table-header {
+	// add border for bottom
+	/*border-bottom: 1px solid @table-border-color;*/
+	
+	// Set constant header height
+	th {
+		height: 31px;
+	}
+}
 
 /**
  * Style for body
