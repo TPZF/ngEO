@@ -141,6 +141,7 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 			gwLayer = new GlobWeb.WMSLayer($.extend({
 					name: layer.name,
 					baseUrl: layer.baseUrl,
+					projection: layer.projection,
 					crossOrigin: layer.crossOrigin,
 					attribution: layer.attribution
 				},
@@ -150,10 +151,12 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 			gwLayer = new GlobWeb.WMTSLayer($.extend({
 					name: layer.name,
 					baseUrl: layer.baseUrl,
+					projection: layer.projection,
 					crossOrigin: layer.crossOrigin,
 					attribution: layer.attribution,
 					layer: layer.params.layer,
-					matrixSet: layer.params.matrixSet
+					matrixSet: layer.params.matrixSet,
+					startLevel: 0
 				},
 				layer.params));
 			break;
