@@ -44,7 +44,7 @@ var StatusPanel = Backbone.View.extend({
 	showTable: function() {
 		this.activeStatus.tableView.show();
 		this.regionManager.show(this.region, 400);
-		this.activeStatus.$el.find('#tableCB').attr('checked', true).checkboxradio('refresh');
+		this.activeStatus.$el.find('#tableCB').prop('checked', 'checked').checkboxradio('refresh');
 	},
 
 	/**

@@ -59,7 +59,7 @@ var BackgroundWidget = function(dsa) {
 	// Select the background used from the preferences unless select the first one
 	var selector = '#' + Map.getBackgroundLayer().id;
 	//check the background layer radio box 
-	$(dsa).find(selector).attr('checked', 'checked').checkboxradio("refresh");
+	$(dsa).find(selector).prop('checked', 'checked').checkboxradio("refresh");
 };
 
 /**
