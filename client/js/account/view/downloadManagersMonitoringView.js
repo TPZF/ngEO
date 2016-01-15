@@ -17,7 +17,7 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 
 		// Call when user clicks on a a button
 		'click #stop_dm': function(event) {
-			this.$stopDialog.ngeowidget('show');
+			this.$stopDialog.ngeowidget("show").find("#stopImmediately").prop("checked", "checked").checkboxradio("refresh");
 		},
 
 		'click tbody tr': function(event) {
@@ -93,7 +93,6 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		this.buildDownloadManagersTable();
 
 		$("#stop_dm").button('disable');
-
 		this.$stopDialog = this.$el.find('#stopDMDialog')
 			.appendTo('.ui-page-active')
 			.ngeowidget({
@@ -103,12 +102,21 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		this.$stopDialog.ngeowidget('hide');
 
 		var self = this;
-		this.$stopDialog.find('button').click(function(event) {
+		this.$stopDialog.find('button.confirm').click(function(event) {
 			var dmID = $('tr.dm_selected').attr('data-dmId');
+			if ( self.$stopDialog.find("#stopImmediately").is(":checked") ) {
+				command = "STOP_IMMEDIATELY";
+			} else {
+				command = "STOP";
+			}
+
 			self.$stopDialog.ngeowidget('hide');
-			var command = $(this).attr('name');
 			self.model.requestChangeStatus(dmID, command);
 			$("#stop_dm").button('disable');
+		});
+		
+		this.$stopDialog.find('button.cancel').click(function(event) {
+			self.$stopDialog.ngeowidget('hide');
 		});
 
 		this.refreshSize();

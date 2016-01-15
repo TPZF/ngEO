@@ -7,10 +7,13 @@
 	<button id="stop_dm" data-mini="true" data-inline="true" data-theme="a">Stop</button>
 
 	<div id="stopDMDialog">
-		Do you want to stop the download manager immediately, without waiting for current downloads to finish?
+        You’re about to stop the selected Download Manager, do you wish to continue?
+		<!--Do you want to stop the download manager immediately, without waiting for current downloads to finish?-->
 		<div id="stopDMDialogButtons">
-			<button name="STOP_IMMEDIATELY" data-mini="true" data-inline="true" data-theme="a">Yes</button>
-			<button name="STOP" data-mini="true" data-inline="true" data-theme="a">No</button>
+            <label for="stopImmediately">Let current downloads finish</label>
+            <input id="stopImmediately" type="checkbox" data-mini="true" data-theme="d" checked="checked" />
+			<button class="confirm" data-mini="true" data-inline="true" data-theme="a">OK</button>
+			<button class="cancel" data-mini="true" data-inline="true" data-theme="a">Cancel</button>
 		</div>
 	</div>
 </div>
