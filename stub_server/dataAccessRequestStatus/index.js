@@ -34,7 +34,7 @@ module.exports = function(req, res){
                     "id": modifiedDar.ID,
                     "name": "Friendly name " + modifiedDar.ID,
                     "type": modifiedDar.type,
-                    "status": 0, // Consider that update has been succesfull
+                    "status": req.body.DataAccessRequestStatus.status,
                     "message": "status changed successfully",
                     "dlManagerId": req.body.DataAccessRequestStatus.dlManagerId
                 }

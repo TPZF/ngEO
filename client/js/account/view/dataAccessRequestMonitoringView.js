@@ -56,13 +56,13 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 
 				// Reassign dars
 				var self = this;
-				var selectedDarIds = [];
+				var selectedDars = [];
 				this.$el.find('.ui-icon-checkbox-on').each(function(input) {
 					var dar = $(this).next('.darStatus').data("DAR");
-					selectedDarIds.push( dar.ID );
+					selectedDars.push( dar );
 				});
 
-				if ( selectedDarIds.length ) {
+				if ( selectedDars.length ) {
 
 					// Open download manager list
 					var $openedPopup =
@@ -79,7 +79,7 @@ var DataAccessRequestMonitoringView = Backbone.View.extend({
 					$openedPopup
 						.find('.submit').click(function(){
 							// Send request
-							self.model.reassignDownloadManager( selectedDarIds, $openedPopup.find("select").val() );
+							self.model.reassignDownloadManager( selectedDars, $openedPopup.find("select").val() );
 							$openedPopup.ngeowidget("hide");
 						});
 				}

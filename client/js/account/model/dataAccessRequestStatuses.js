@@ -208,42 +208,47 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 	/**
 	 *	Reassign the given dars to a new download manager
 	 */
-	reassignDownloadManager : function( selectedDarIds, dmId ) {
+	reassignDownloadManager : function( selectedDars, dmId ) {
 
-		// Create request
-		var request = {
-			"DarIdList": selectedDarIds,
-			"DataAccessRequestStatus": {
-				"status": "3",
-				"dlManagerId": dmId
-			}
-		};
-		var self = this;
-		$.ajax({
-			url: this.url,
-			type: "POST",
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(request),
-			success: function(response) {
-				// Update each dar
-				for ( var i=0; i<response.length; i++ ) {
-					var updatedDar = response[i];
-					var darStatus = self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(updatedDar.id)]
-					darStatus.status = updatedDar.status;
-					darStatus.dlManagerId = updatedDar.dlManagerId;
-					self.trigger("update:status", darStatus, updatedDar.message);
+		var groupedDars = _.groupBy(selectedDars, "status")
+		for ( var status in groupedDars ) {
+			var darIdList = _.map( groupedDars[status], function(a) { console.log(a); return a.ID } )
+
+			// Create request
+			var request = {
+				"DarIdList": darIdList,
+				"DataAccessRequestStatus": {
+					"status": String(status),
+					"dlManagerId": dmId
 				}
-			},
-			error: function(jqXHR, textStatus, errorThrown) {
-				if (jqXHR.status == 0) {
-					location.reload();
-				} else {
-					console.log("ERROR while updating status :" + textStatus + ' ' + errorThrown);
-					self.trigger("error:statusUpdate", request);
+			};
+			var self = this;
+			$.ajax({
+				url: this.url,
+				type: "POST",
+				dataType: 'json',
+				contentType: 'application/json',
+				data: JSON.stringify(request),
+				success: function(response) {
+					// Update each dar
+					for ( var i=0; i<response.length; i++ ) {
+						var updatedDar = response[i];
+						var darStatus = self.get("dataAccessRequestStatuses")[self.getDARStatusIndex(updatedDar.id)]
+						darStatus.status = parseInt(updatedDar.status); // TODO: clairify the type of status (string or int) ?
+						darStatus.dlManagerId = updatedDar.dlManagerId;
+						self.trigger("update:status", darStatus, updatedDar.message);
+					}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					if (jqXHR.status == 0) {
+						location.reload();
+					} else {
+						console.log("ERROR while updating status :" + textStatus + ' ' + errorThrown);
+						self.trigger("error:statusUpdate", request);
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 
 });
