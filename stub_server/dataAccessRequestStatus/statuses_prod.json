@@ -1,0 +1,215 @@
+{
+    "dataAccessRequestStatuses": [
+        {
+            "ID": "ffd046b0-baa5-45aa-86cb-8e37ef97495d",
+            "name": "Friendly name",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "941",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI0/search?start=2015-06-20T12:48:43.000Z&stop=2015-06-20T12:48:43.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "3f46e38d-6664-47e8-b924-ec0fe15e9d48",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "941",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI0/search?start=2015-06-20T09:23:10.000Z&stop=2015-06-20T09:23:10.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "a90c771e-ad7b-4ccc-a09a-86f8944f1c03",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "0",
+                    "percentageCompleted": "0",
+                    "productStatus": "0",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150719T032739_20150719T032847_006874_009474&ngEO_DO={processing:RAW,test:t1}&format=atom"
+                }
+            ],
+            "status": 3,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "316ab1b9-b26b-47cb-9863-2be1f3a6d625",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "944",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T11:00:44.000Z&stop=2015-06-20T11:00:44.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "33da9e38-9920-4c66-a055-378bcd771c8d",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "944",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T11:00:44.000Z&stop=2015-06-20T11:00:44.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "8aa7e873-3043-4e4a-aba0-31209097149f",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "944",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T09:23:10.000Z&stop=2015-06-20T09:23:10.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "f56554a2-7ad4-42ff-a396-045175ef287e",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "945",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T12:48:43.000Z&stop=2015-06-20T12:48:43.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "fbf6d078-1bf3-4d4e-adb9-a3b739751e0f",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "0",
+                    "percentageCompleted": "0",
+                    "productStatus": "0",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150717T020056_20150717T020204_006844_009394&ngEO_DO={processing:RAW,test:t1}&format=atom"
+                }
+            ],
+            "status": 3,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "f32c8a81-e225-4357-b80a-de9828ddf150",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "376432552",
+                    "percentageCompleted": "0",
+                    "productStatus": "0",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150718T024454_20150718T024549_006859_009400&ngEO_DO={processing:RAW,test:t1}&format=atom"
+                }
+            ],
+            "status": 3,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "2731b900-8006-4b4e-87d6-0dad8b8f5ee4",
+            "dlManagerId": "81389e2ac2424681549b5a143f364931",
+            "productStatuses": [
+                {
+                    "expectedSize": "466803951",
+                    "percentageCompleted": "0",
+                    "productStatus": "0",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150717T020056_20150717T020204_006844_009394&ngEO_DO={processing:RAW,test:t1}&format=atom"
+                }
+            ],
+            "status": 3,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "b4f80ddd-b8bb-4579-a729-764ee1738904",
+            "dlManagerId": "12fb567426e84ca4727185c049f7427b",
+            "productStatuses": [
+                {
+                    "expectedSize": "0",
+                    "percentageCompleted": "0",
+                    "productStatus": "0",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150713T023317_20150713T023429_006786_0091F1&ngEO_DO={processing:RAW,test:t1}&format=atom"
+                }
+            ],
+            "status": 0,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "11403a64-47cb-4603-978c-0dc786884eae",
+            "dlManagerId": "12fb567426e84ca4727185c049f7427b",
+            "productStatuses": [
+                {
+                    "expectedSize": "0",
+                    "percentageCompleted": "0",
+                    "productStatus": "0",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150712T192107_20150712T192216_006782_0091CB&ngEO_DO={processing:RAW,test:t1}&format=atom"
+                }
+            ],
+            "status": 0,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "a75a42f6-019e-426d-8caa-0af12435296f",
+            "dlManagerId": "12fb567426e84ca4727185c049f7427b",
+            "productStatuses": [
+                {
+                    "expectedSize": "941",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI0/search?start=2015-06-20T12:48:43.000Z&stop=2015-06-20T12:48:43.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "c1c564c4-9a45-44db-87d0-94ecde2c01dd",
+            "dlManagerId": "12fb567426e84ca4727185c049f7427b",
+            "productStatuses": [
+                {
+                    "expectedSize": "941",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI0/search?start=2015-06-20T14:25:56.000Z&stop=2015-06-20T14:25:56.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        },
+        {
+            "ID": "14fd14cb-c384-4eff-bb55-7e8f53ee32ce",
+            "dlManagerId": "12fb567426e84ca4727185c049f7427b",
+            "productStatuses": [
+                {
+                    "expectedSize": "942",
+                    "percentageCompleted": "100",
+                    "productStatus": "2",
+                    "productURL": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI0/search?start=2015-06-20T14:05:53.000Z&stop=2015-06-20T14:05:53.000Z&format=atom"
+                }
+            ],
+            "status": 2,
+            "type": "Simple Data Access Request"
+        }
+    ]
+}

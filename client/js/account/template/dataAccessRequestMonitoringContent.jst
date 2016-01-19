@@ -15,7 +15,9 @@ var total = 0;
 			<span class="checkDar ui-icon ui-icon-checkbox-off"></span>
 			<div id="<%= dar.ID %>" class="darStatus" data-role="collapsible"
 				data-collapsed="<%= model.attributes.collapseDAR %>" data-inset="true" data-theme="a" data-content-theme="c" data-mini="true">
-				<h4><%= dar.type %> : <%= dar.ID %></h4>
+				<!-- Name seems to be mandatory but just in case take ID if name doesn't exist -->
+				<% var darName = (dar.name ? dar.name : dar.ID) %>
+				<h4><%= dar.type %> : <%= darName %></h4>
 
 				<table cellpadding="0" cellspacing="0" border="0">
 					<thead>

@@ -4,7 +4,8 @@
  */
  
 var fs = require('fs'),
-    find = require('lodash.find');
+    find = require('lodash.find'),
+    logger = require('../utils/logger');
 
 module.exports = function(req, res){
  //if post request to change the status send back the DataAccessRequestStatus
@@ -22,7 +23,7 @@ module.exports = function(req, res){
 
     if ( req.body.DarIdList ) {
         // Reassign dar download manager ids
-        fs.readFile('./dataAccessRequestStatus/statuses.json', 'utf8', function (err, data) {
+        fs.readFile('./dataAccessRequestStatus/statuses_prod.json', 'utf8', function (err, data) {
             var initialStatuses = JSON.parse(data);
             var response = [];
             for ( var i=0; i<req.body.DarIdList.length; i++ ) {
@@ -43,7 +44,7 @@ module.exports = function(req, res){
             res.send(response);
         });
     } else {
-        res.sendfile('./dataAccessRequestStatus/statuses.json');
+        res.sendfile('./dataAccessRequestStatus/statuses_prod.json');
     }
 
   }

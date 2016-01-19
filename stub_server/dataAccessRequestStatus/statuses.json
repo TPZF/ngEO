@@ -4,6 +4,7 @@
             "ID": "DAR_00000011075",
             "type": "Simple Data Access Request",
             "status": 0,
+            "name": "Friendly name",
             "dlManagerId": "DM_01",
             "productStatuses": [
                 {
@@ -27,7 +28,7 @@
             ]
         },
         {
-            "ID": "DAR_00000011076",
+            "ID": "DAR_00000011076 (name doesn't exist)",
             "type": "Standing Order Data Access Request",
             "status": 1,
             "dlManagerId": "DM_02"
@@ -35,7 +36,7 @@
         {
             "ID": "DAR_00000011077",
             "type": "Standing Order Data Access Request",
-            "status": 3,
+            "status": 2,
             "dlManagerId": "DM_02"
         },
         {
