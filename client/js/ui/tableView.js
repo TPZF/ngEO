@@ -558,7 +558,7 @@ var TableView = Backbone.View.extend({
 					if ( classes == "downloadOptions" ) {
 						var doIndex = cellDataColumn.indexOf("ngEO_DO");
 						if ( doIndex >= 0 )
-							cellDataColumn = cellDataColumn.substr( doIndex+8 );
+							cellDataColumn = cellDataColumn.substr( doIndex+8 ).replace(/,(\w)/g,", $1"); // Just add whitespace between properties
 						else
 							cellDataColumn = "No download options";
 					}
@@ -620,19 +620,17 @@ var TableView = Backbone.View.extend({
 			this.$headerTable.find('colgroup').remove();
 
 			this.$table.find('thead').show();
-
+			
+			var maxColWidth = 500;
 			var colWidths = this.$table.find("tr:first").children().map(function() {
-				return $(this).outerWidth();
+				return ($(this).outerWidth() > maxColWidth) ? maxColWidth : $(this).outerWidth();
 			});
 
+			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
-			this.$table.find("tr:eq(0)").children().each(function(i) {
-				$colgroup.append("<col>");
-			});
-
-			$colgroup.children().each(function(i) {
-				$(this).css("width", colWidths[i] + 'px');
-			});
+			for ( var i=0; i<colWidths.length; i++ ) {
+				$colgroup.append("<col width=" + colWidths[i] + ">");
+			}
 
 			// Copy table COLGROUP to grid head and grid foot
 			$colgroup

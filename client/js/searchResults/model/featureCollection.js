@@ -4,6 +4,7 @@
 
 var Configuration = require('configuration');
 var DataSetPopulation = require('search/model/dataSetPopulation');
+var DataSetSearch = require('search/model/datasetSearch');
 
 /**
  * Extract the download options from the product url
@@ -298,6 +299,14 @@ var FeatureCollection = function() {
 	 *		ngEO_DO={param_1:value1,....,param_n:value_n}
 	 */
 	this.updateProductUrl = function(feature, urlProperty, downloadOptions) {
+		
+		// CropProduct must be a WKT and not a boolean
+		var buildCropProduct = function(key, value) {
+			if ( key == "cropProduct" && value === true ) {
+				value = DataSetSearch.searchArea.toWKT();
+			}
+			return value;
+		};
 
 		var url = Configuration.getMappedProperty(feature, urlProperty, null);
 		if (url) {
@@ -317,7 +326,7 @@ var FeatureCollection = function() {
 				// Otherwise
 				url += "&";
 			}
-			url += "ngEO_DO="+JSON.stringify(downloadOptions).replace(/\"/g,""); // No "" by spec
+			url += "ngEO_DO="+JSON.stringify(downloadOptions, buildCropProduct).replace(/\"/g,""); // No "" by spec
 			Configuration.setMappedProperty(feature, urlProperty, url);
 			//console.log("product url updated = " + url);
 		}

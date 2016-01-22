@@ -52,10 +52,14 @@ var DownloadOptionsWidget = function() {
 			var fcDownloadOptions = featureCollection.getSelectedDownloadOptions();
 			for ( var i=0; i<datasetDownloadOptions.length; i++ ){
 				var key = datasetDownloadOptions[i].argumentName;
-				if ( fcDownloadOptions[key] ) {
-					widgetDownloadOptions.attributes[key] = fcDownloadOptions[key];
+				if ( key == "cropProduct" ) {
+					widgetDownloadOptions.attributes[key] = true; // HACK: Set true by default
 				} else {
-					widgetDownloadOptions.attributes[key] = "@conflict";
+					if ( fcDownloadOptions[key] ) {
+						widgetDownloadOptions.attributes[key] = fcDownloadOptions[key];
+					} else {
+						widgetDownloadOptions.attributes[key] = "@conflict";
+					}
 				}
 			}
 			
