@@ -73,8 +73,19 @@ fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, d
 	featureCollections['DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME']  = JSON.parse(data);
 });
 
-var initialized = false;
+// Graticules related files
+var graticules;
+var dummyProperties;
 
+// Use UTM grid as graticules base for test
+fs.readFile('./productSearch/utm.json', 'utf8', function(err, data) {
+	graticules = JSON.parse(data);
+});
+fs.readFile('./productSearch/dummyProperties.json', 'utf8', function(err, data) {
+	dummyProperties = JSON.parse(data);
+});
+
+var initialized = false;
 
 /**
  * Time filter
@@ -120,7 +131,7 @@ var contains = function(g1,g2) {
 var findFeature = function(fc,id) {
 	for ( var i = 0; i < fc.features.length; i++ ) {
 		// HACK: for new json format we check id with "&format=atom" as well
-		if ( fc.features[i].id == id || fc.features[i].id == (id+"&format=atom") ) {
+		if ( fc.features[i].id == decodeURIComponent(id) || fc.features[i].id.indexOf(decodeURIComponent(id)+"&format=atom") >= 0 ) {
 			return fc.features[i];
 		}
 	}
@@ -131,9 +142,9 @@ var setupProductUrl = function(featureCollection,id) {
 		var feature = featureCollection.features[i];
 		var fid = feature.id;
 		//here it is used by tfhe direct download
-		conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
+		conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid));
 		//here will be used by the download manager
-		conf.setMappedProperty(feature, "productUrl", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + fid);
+		conf.setMappedProperty(feature, "productUrl", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid));
 	}
 };
 
@@ -168,7 +179,24 @@ module.exports = function(req, res){
 	
 	// Find with id or not
 	if ( req.query.id ) {
-		res.send( findFeature(featureCollection,req.query.id) );
+		var feature = findFeature(featureCollection, req.query.id);
+
+		// Graticules request
+		// TODO: this code is here cuz productUrl comes with "id=" (see setupProductUrl method) -> refactor it to no more use of "id"
+		if ( req.query.enableSourceproduct ) {
+			var instersectedFeatures = [];
+			// Send only intersected graticules as "sources"
+			for ( var i=0; i<graticules.features.length; i++ ) {
+				graticule = graticules.features[i];
+				if ( new terraformer.Primitive(feature.geometry).intersects( new terraformer.Primitive(graticule.geometry) ) ) {
+					graticule.properties = dummyProperties;
+					graticule.id = "graticule_" + i;
+					instersectedFeatures.push( graticule );
+				}
+			}
+			feature.properties.sources = instersectedFeatures;
+		}
+		res.send( feature );
 		return;
 	}
 	

@@ -3,6 +3,43 @@ var DataSetSearch = require('search/model/datasetSearch');
 var Map = require('map/map');
 var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 
+/**
+ *	Get nested objects containing the given key
+ *		@param options
+ *			<ul>
+ *			    <li>val : Filter by value</li>
+ *			    <li>firstFound : Boolean indicating if you need to return the first found object</li>
+ *			<ul>
+ */
+var _getObjects = function(obj, key, options) {
+	if ( options ) {
+		var val = options.hasOwnProperty("val") ? options.val : null;
+		var firstFound = options.firstFound ? options.firstFound : false;
+	}
+
+	var objects = [];
+	for (var i in obj) {
+		if (!obj.hasOwnProperty(i))
+			continue;
+		if ( i == key && (val == undefined || obj[i] == val) ) {
+			if ( firstFound )
+				return obj;
+			objects.push(obj);
+		}
+
+		if (typeof obj[i] == 'object') {
+			var foundObjects = _getObjects(obj[i], key, options);
+			if ( !_.isArray(foundObjects) && firstFound ){
+				return foundObjects;
+			}
+			else
+			{
+				objects = objects.concat(foundObjects);
+			}
+		}
+	}
+	return objects;
+}
 
 /**
  * A view to display a table.
@@ -229,21 +266,36 @@ var TableView = Backbone.View.extend({
 		if (rowData.isLoading)
 			return;
 
-		var interferometryUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
-		if (interferometryUrl) {
+		var expandUrl = null;
+		if (DataSetSearch.get("mode") != "Simple") {
+			// Interferometric search
+			expandUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
+		} else /* if () */ { // TODO: fill this if when it will be clear
+			// Granules search
+			expandUrl = _getObjects(rowData.feature, "@rel", { val: "self", firstFound: true } )["@href"] + "&enableSourceproduct=true&startIndex=0&count=100";
+		}
+		if (expandUrl) {
 			// Now load the data
 			rowData.isLoading = true;
 			var self = this;
 			$.ajax({
 				//url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
-				url: interferometryUrl, // + "&count=10&startIndex=1&format=json",
+				url: expandUrl, // + "&count=10&startIndex=1&format=json",
 				dataType: 'json'
 
 			}).done(function(data) {
+				var features = null;
+				if (DataSetSearch.get("mode") != "Simple") {
+					features = data.features;
+				} else {
+					features = _getObjects(data, "sources", { firstFound: true }).sources;
+				}
+
 				rowData.isLoading = false;
-				if (!rowData.isExpand)
+				if ( !rowData.isExpand || !features )
 					return;
-				if (data.features.length == 0) {
+				
+				if (features.length == 0) {
 					$row.next().remove();
 					$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
 				} else {
@@ -256,7 +308,7 @@ var TableView = Backbone.View.extend({
 					// });
 
 					// HACK : do not use addFeatures but just the event in order to add element to the table and the map
-					self.model.trigger('add:features', data.features, self.model, rowData);
+					self.model.trigger('add:features', features, self.model, rowData);
 				}
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				rowData.isLoading = false;
@@ -397,9 +449,11 @@ var TableView = Backbone.View.extend({
 		if (features.length > 0) {
 			var columns = this.columnDefs;
 			for (var i = 0; i < features.length; i++) {
+				// TODO: use this variable to check if interferometry is used
 				var interferometryUrl = Configuration.getMappedProperty(features[i], "interferometryUrl", null);
 
-				if (DataSetSearch.get("mode") != "Simple") {
+				// Interferometric mode or S2 containing virtual products (HACK: update it when it will be clear, for now use id of model)
+				if (DataSetSearch.get("mode") != "Simple" || model.id.indexOf("S2") >= 0) {
 					this.hasExpandableRows = true;
 				}
 
@@ -411,6 +465,7 @@ var TableView = Backbone.View.extend({
 					isExpandable = _.find(links, function(link) {
 						return link['@rel'] == "related" && link['@title'] == "interferometry";
 					});
+					isExpandable |= (model.id.indexOf("S2") >= 0);
 				}
 
 				var rowData = {
@@ -554,7 +609,7 @@ var TableView = Backbone.View.extend({
 				}
 
 				var cellDataColumn = rowData.cellData[j];
-				if (classes) {
+				if (classes && cellDataColumn) {
 					if ( classes == "downloadOptions" ) {
 						var doIndex = cellDataColumn.indexOf("ngEO_DO");
 						if ( doIndex >= 0 )

@@ -1,0 +1,128 @@
+{
+    "BrowseInformation": {
+        "eop_layer": "EW_S1A_GRD",
+        "eop_referenceSystemIdentifier": {
+            "@nil": "true"
+        },
+        "eop_subtype": {
+            "@nil": "true"
+        },
+        "eop_type": "wmts",
+        "eop_url": "https://ngeopro.magellium.fr:443/c/wmts?LAYER=EW_S1A_GRD"
+    },
+    "EarthObservation": {
+        "@id": "313008",
+        "featureOfInterest": {
+            "Footprint": {
+                "@id": "313012",
+                "multiExtentOf": {
+                    "MultiSurface": {
+                        "@id": "313013",
+                        "@srsName": "EPSG:4326",
+                        "surfaceMembers": {
+                            "Polygon": {
+                                "@id": "313014",
+                                "exterior": {
+                                    "LinearRing": {
+                                        "posList": "73.291199 118.368515 69.692810 116.334000 68.779823 126.544693 72.244957 130.472794 73.291199 118.368515"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "metaDataProperty": {
+            "EarthObservationMetaData": {
+                "acquisitionType": "NOMINAL",
+                "identifier": "S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE",
+                "productType": "N/A",
+                "status": "ARCHIVED"
+            }
+        },
+        "observedProperty": {
+            "@nil": "true",
+            "@nilReason": "inapplicable"
+        },
+        "phenomenonTime": {
+            "TimePeriod": {
+                "@id": "313009",
+                "beginPosition": "2015-07-14T22:36:09.73Z",
+                "endPosition": "2015-07-14T22:37:10.55Z"
+            }
+        },
+        "procedure": {
+            "EarthObservationEquipment": {
+                "@id": "313011",
+                "acquisitionParameters": {
+                    "Acquisition": {
+                        "completionTimeFromAscendingNode": {
+                            "#text": "1816837",
+                            "@uom": "msec"
+                        },
+                        "orbitDirection": "DESCENDING",
+                        "orbitNumber": "6813",
+                        "polarisationChannels": "HH, HV",
+                        "polarisationMode": "D",
+                        "startTimeFromAscendingNode": {
+                            "#text": "1756013",
+                            "@uom": "msec"
+                        },
+                        "wrsLongitudeGrid": {
+                            "#text": "91",
+                            "@codeSpace": ""
+                        }
+                    }
+                },
+                "instrument": {
+                    "Instrument": {
+                        "shortName": "SAR"
+                    }
+                },
+                "platform": {
+                    "Platform": {
+                        "serialIdentifier": "A",
+                        "shortName": "Sentinel-1"
+                    }
+                },
+                "sensor": {
+                    "Sensor": {
+                        "operationalMode": {
+                            "#text": "EW_DP",
+                            "@codeSpace": "urn:eop:SEN1:sensorMode"
+                        },
+                        "sensorType": "RADAR",
+                        "swathIdentifier": "EW"
+                    }
+                }
+            }
+        },
+        "result": {
+            "EarthObservationResult": {
+                "@id": "313015",
+                "product": {
+                    "ProductInformation": {
+                        "fileName": {
+                            "ServiceReference": {
+                                "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE",
+                                "RequestMessage": null
+                            }
+                        },
+                        "size": {
+                            "#text": "430271552",
+                            "@uom": "Bytes"
+                        },
+                        "timeliness": "Fast-24h"
+                    }
+                }
+            }
+        },
+        "resultTime": {
+            "TimeInstant": {
+                "@id": "313010",
+                "timePosition": "2015-07-15T20:22:06.4Z"
+            }
+        }
+    }
+}
