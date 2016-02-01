@@ -77,8 +77,21 @@ var BrowsesLayer = function(params, mapEngine) {
 				params.styles = "ellipsoid";
 			} else {
 				// Default is WMTS
+				var mapProjection = Configuration.get('map.projection', "EPSG:4326");
+				var wmtsMap = Configuration.get('browseDisplay.wmtsParameters', {
+					"EPSG:4326": {
+						"params" : {
+							"matrixSet": "WGS84"
+						}
+					},
+					"EPSG:3857": {
+						"params": {
+							"matrixSet": "g"
+						}
+					}
+				});
+				params.matrixSet = wmtsMap[mapProjection].params.matrixSet;
 				params.layer = eoBrowse.eop_layer || "TEST_SAR";
-				params.matrixSet = "WGS84";
 			}
 			
 			MapUtils.computeExtent(feature);

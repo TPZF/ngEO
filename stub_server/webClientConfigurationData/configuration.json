@@ -227,6 +227,17 @@
 			},
 			"projection": "EPSG:3857"
 		}, {
+			"id" : "Projection test 2",
+			"name": "Projection test 2",
+			"type": "WMTS",
+			"baseUrl": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/WMTS?",
+			"attribution": "ngdc",
+			"params": {
+				"layers": "World_Imagery",
+				"matrixSet": "GoogleMapsCompatible"
+			},
+			"projection": "EPSG:3857"
+		}, {
 			"id" : "terrain-4326-WMS",
 			"name": "EOX 4326(WMS)",
 			"type": "WMS",
@@ -270,6 +281,18 @@
 			"params": {
 				"layer": "terrain_3857",
 				"matrixSet": "g"
+			},
+			"projection": "EPSG:3857"
+		}, {
+			"id" : "Test-3857-WMTS",
+			"name": "Test(WMTS)",
+			"type": "WMTS",
+			"baseUrl": "http://basemap.nationalmap.gov/arcgis/rest/services/USGSHydroNHD/MapServer/WMTS?",
+			"attribution": "statkart",
+			"visible": false,
+			"params": {
+				"layer": "USGSHydroNHD",
+				"matrixSet": "GoogleMapsCompatible"
 			},
 			"projection": "EPSG:3857"
 		}],
@@ -360,7 +383,19 @@
 		
 		"browseDisplay": {
 			"opacity": 0.7,
-			"crossOrigin": "anonymous"
+			"crossOrigin": "anonymous",
+			"wmtsParameters": {
+				"EPSG:4326": {
+					"params" : {
+						"matrixSet": "WGS84"
+					}
+				},
+				"EPSG:3857": {
+					"params": {
+						"matrixSet": "g"
+					}
+				}
+			}
 		}
 	}
 }
