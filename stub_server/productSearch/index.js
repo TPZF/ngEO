@@ -128,7 +128,7 @@ var contains = function(g1,g2) {
 	return false;
 }
 
-var findFeature = function(fc,id) {
+var findFeature = function(fc, id) {
 	for ( var i = 0; i < fc.features.length; i++ ) {
 		// HACK: for new json format we check id with "&format=atom" as well
 		if ( fc.features[i].id == decodeURIComponent(id) || fc.features[i].id.indexOf(decodeURIComponent(id)+"&format=atom") >= 0 ) {
@@ -137,24 +137,49 @@ var findFeature = function(fc,id) {
 	}
 };
 
-var setupProductUrl = function(featureCollection,id) {
+/**
+ *	Setup product url to simulate server's behaviour
+ *	Basically adds two type of urls:
+ *		- productUri & productUrl : to download product from the same domain (localhost:3000)*
+ *		- virtualUrl : to be able to retrieve granules
+ */
+var setupProductUrl = function(featureCollection, id) {
 	for ( var i = 0; i < featureCollection.features.length; i++ )  {
 		var feature = featureCollection.features[i];
 		var fid = feature.id;
-		//here it is used by tfhe direct download
-		conf.setMappedProperty(feature, "productUri", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid));
-		//here will be used by the download manager
-		conf.setMappedProperty(feature, "productUrl", "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid));
+		var dummyUrlWithId = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid);
+		// Here it is used by the direct download
+		conf.setMappedProperty(feature, "productUri", dummyUrlWithId);
+		// Here will be used by the download manager
+		conf.setMappedProperty(feature, "productUrl", dummyUrlWithId);
+		
+		if ( !conf.getMappedProperty(feature, "virtualProductUrl", null) ) {
+			// Add virtual product url only for Sentinel-2 products
+			var links = conf.getMappedProperty(feature, "links");
+			if ( id.indexOf("S2") >= 0 ) {
+				links.push({
+					"@title": "Virtual Product Components",
+					"@href": dummyUrlWithId + "&enableSourceproduct=true"
+				});
+			}
+		}
 	}
 };
 
 /**
-* return a default bbox covering entire world by default
-*/
+ * Return a default bbox covering entire world by default
+ */
 var defaultSearchAreaBbox = function(){
 	var bbox = [-180,-90,180,90];
-	var defaultSearchArea = new terraformer.Polygon([ [ [bbox[0],bbox[1]],
-				[bbox[0],bbox[3]], [bbox[2],bbox[3]], [bbox[2],bbox[1]], [bbox[0],bbox[1]] ] ]);
+	var defaultSearchArea = new terraformer.Polygon([
+		[
+			[bbox[0],bbox[1]],
+			[bbox[0],bbox[3]],
+			[bbox[2],bbox[3]],
+			[bbox[2],bbox[1]],
+			[bbox[0],bbox[1]]
+		]
+	]);
 	return defaultSearchArea;
 };
 
@@ -194,7 +219,7 @@ module.exports = function(req, res){
 					instersectedFeatures.push( graticule );
 				}
 			}
-			feature.properties.sources = instersectedFeatures;
+			feature.properties.source = instersectedFeatures;
 		}
 		res.send( feature );
 		return;

@@ -272,7 +272,7 @@ var TableView = Backbone.View.extend({
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
 		} else /* if () */ { // TODO: fill this if when it will be clear
 			// Granules search
-			expandUrl = _getObjects(rowData.feature, "@rel", { val: "self", firstFound: true } )["@href"] + "&enableSourceproduct=true&startIndex=0&count=100";
+			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null) + "&startIndex=0&count=100";
 		}
 		if (expandUrl) {
 			// Now load the data
@@ -288,7 +288,7 @@ var TableView = Backbone.View.extend({
 				if (DataSetSearch.get("mode") != "Simple") {
 					features = data.features;
 				} else {
-					features = _getObjects(data, "sources", { firstFound: true }).sources;
+					features = _getObjects(data, "source", { firstFound: true }).source;
 				}
 
 				rowData.isLoading = false;
@@ -448,24 +448,19 @@ var TableView = Backbone.View.extend({
 
 		if (features.length > 0) {
 			var columns = this.columnDefs;
-			for (var i = 0; i < features.length; i++) {
-				// TODO: use this variable to check if interferometry is used
-				var interferometryUrl = Configuration.getMappedProperty(features[i], "interferometryUrl", null);
-
-				// Interferometric mode or S2 containing virtual products (HACK: update it when it will be clear, for now use id of model)
-				if (DataSetSearch.get("mode") != "Simple" || model.id.indexOf("S2") >= 0) {
-					this.hasExpandableRows = true;
-				}
+			
+			var hasGraticules = false;
+			for (var i = 0; i < features.length; i++) {				
 
 				var isExpandable = false;
 				var links = Configuration.getMappedProperty(features[i], "links", null);
 				if (links) {
-					// Currently, only interferometry rows are expandables
-					// TODO: update this method to detect graticules(not implemented yet)
-					isExpandable = _.find(links, function(link) {
+					// Is interferometric search
+					isExpandable = Boolean(_.find(links, function(link) {
 						return link['@rel'] == "related" && link['@title'] == "interferometry";
-					});
-					isExpandable |= (model.id.indexOf("S2") >= 0);
+					}));
+					hasGraticules |= Boolean(Configuration.getMappedProperty(features[i], "virtualProductUrl", null));
+					isExpandable |= hasGraticules;
 				}
 
 				var rowData = {
@@ -490,6 +485,11 @@ var TableView = Backbone.View.extend({
 				} else {
 					this.rowsData.push(rowData);
 				}
+			}
+
+			// Interferometric mode or dataset containins graticules
+			if (DataSetSearch.get("mode") != "Simple" || hasGraticules) {
+				this.hasExpandableRows = true;
 			}
 
 			this.visibleRowsData = this.rowsData.slice(0);

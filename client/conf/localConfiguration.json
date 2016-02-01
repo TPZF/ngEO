@@ -11,6 +11,7 @@
 		"browseUrl": "properties.BrowseInformation.eop_url",
 		"browseType": "properties.BrowseInformation.eop_type",
 		"interferometryUrl": "properties.links.@title=interferometry.@href",
+		"virtualProductUrl": "properties.links.@title=Virtual Product Components.@href",
 		"links": "properties.links",
 		"sensorType": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.sensorType",
 		"sensor": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
