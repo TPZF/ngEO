@@ -260,7 +260,11 @@ var TableView = Backbone.View.extend({
 		var rowData = $row.data('internal');
 
 		// First add a row for loading
-		$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">Loading...</td></tr>').insertAfter($row)
+		$('<tr>\
+			<td></td>\
+			<td></td>\
+			<td colspan="' + this.columnDefs.length + '">Loading...</td>\
+		</tr>').insertAfter($row);
 
 		// If row is already loading, exit !
 		if (rowData.isLoading)
@@ -270,7 +274,7 @@ var TableView = Backbone.View.extend({
 		if (DataSetSearch.get("mode") != "Simple") {
 			// Interferometric search
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
-		} else /* if () */ { // TODO: fill this if when it will be clear
+		} else {
 			// Granules search
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null) + "&startIndex=0&count=100";
 		}
@@ -284,6 +288,7 @@ var TableView = Backbone.View.extend({
 				dataType: 'json'
 
 			}).done(function(data) {
+				$row.next().remove();
 				var features = null;
 				if (DataSetSearch.get("mode") != "Simple") {
 					features = data.features;
@@ -296,7 +301,6 @@ var TableView = Backbone.View.extend({
 					return;
 				
 				if (features.length == 0) {
-					$row.next().remove();
 					$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
 				} else {
 					rowData.totalNumChildren = data.properties.totalResults;
@@ -494,7 +498,10 @@ var TableView = Backbone.View.extend({
 
 			this.visibleRowsData = this.rowsData.slice(0);
 
-			this.buildTable();
+			if ( !parentRowData ) {
+				// No need to rebuild all the table of the data has been added to parent
+				this.buildTable();
+			}
 			this.buildTableContent();
 		}
 	},

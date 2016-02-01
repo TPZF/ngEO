@@ -131,7 +131,7 @@ var contains = function(g1,g2) {
 var findFeature = function(fc, id) {
 	for ( var i = 0; i < fc.features.length; i++ ) {
 		// HACK: for new json format we check id with "&format=atom" as well
-		if ( fc.features[i].id == decodeURIComponent(id) || fc.features[i].id.indexOf(decodeURIComponent(id)+"&format=atom") >= 0 ) {
+		if ( fc.features[i].id == id || fc.features[i].id.indexOf(id + "&format=atom") >= 0 ) {
 			return fc.features[i];
 		}
 	}
@@ -147,11 +147,14 @@ var setupProductUrl = function(featureCollection, id) {
 	for ( var i = 0; i < featureCollection.features.length; i++ )  {
 		var feature = featureCollection.features[i];
 		var fid = feature.id;
-		var dummyUrlWithId = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid);
+		// var dummyUrlWithId = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid);
+		
+		var localhost = "http://localhost:3000";
 		// Here it is used by the direct download
-		conf.setMappedProperty(feature, "productUri", dummyUrlWithId);
+		conf.setMappedProperty(feature, "productUri", conf.getMappedProperty(feature, "productUri").replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
+
 		// Here will be used by the download manager
-		conf.setMappedProperty(feature, "productUrl", dummyUrlWithId);
+		conf.setMappedProperty(feature, "productUrl", conf.getMappedProperty(feature, "productUrl").replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
 		
 		if ( !conf.getMappedProperty(feature, "virtualProductUrl", null) ) {
 			// Add virtual product url only for Sentinel-2 products
@@ -159,7 +162,7 @@ var setupProductUrl = function(featureCollection, id) {
 			if ( id.indexOf("S2") >= 0 ) {
 				links.push({
 					"@title": "Virtual Product Components",
-					"@href": dummyUrlWithId + "&enableSourceproduct=true"
+					"@href": conf.getMappedProperty(feature, "productUrl") + "&enableSourceproduct=true&id=" + encodeURIComponent(fid) // Add id to be able to retrieve feature afterwards..
 				});
 			}
 		}
@@ -207,7 +210,7 @@ module.exports = function(req, res){
 		var feature = findFeature(featureCollection, req.query.id);
 
 		// Graticules request
-		// TODO: this code is here cuz productUrl comes with "id=" (see setupProductUrl method) -> refactor it to no more use of "id"
+		// This code is here cuz productUrl comes with "id=" (see setupProductUrl method) -> refactor it to no more use of "id"
 		if ( req.query.enableSourceproduct ) {
 			var instersectedFeatures = [];
 			// Send only intersected graticules as "sources"
