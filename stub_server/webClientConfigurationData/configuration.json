@@ -10,6 +10,7 @@
 			{"sTitle" : "Orbit", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitDirection"},
 			{"sTitle" : "Pass", "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.orbitNumber"}, 
 			{"sTitle" : "Product", "mData" : "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href" }, 
+			{"sTitle" : "Download options", "mData": "properties.links.@rel=self.@href" },
 			{"sTitle" : "Status",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"}, 
 			{"sTitle" : "Product Type", "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"},
 			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle"},
