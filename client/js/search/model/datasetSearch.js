@@ -125,7 +125,7 @@ var DataSetSearch = SearchCriteria.extend({
 
 		// slaveUrl can be just a datasetId(not openSearch url)
 		// slaveUrl = this.slaves;
-		interferometryParams += "&correlatedTo=" + encodeURIComponent(slaveUrl) + "&corFunction=inteferometry"; // OLD parameter: "with"
+		interferometryParams += "&correlatedTo=" + encodeURIComponent(slaveUrl) + "&corFunction=interferometry"; // OLD parameter: "with"
 
 		return interferometryParams;
 	},
