@@ -196,26 +196,56 @@ var TableView = Backbone.View.extend({
 		
 		// First pagination draft (only "more" button)
 		'click .loadMore' : function(event) {
-			var rowData = $(event.currentTarget).data("rowData");
+			var rowData = $(event.currentTarget).data("internal");
+			// If row is already loading, exit !
+			if (rowData.isLoading)
+				return;
+
+			// TODO: handle interferometric search as well
 			var expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
-			var self = this;
+			this.loadChildren(rowData, expandUrl + "&startIndex=" + (rowData.children.length+1) + "&count=" + Configuration.get('expandSearch.countPerPage', 100));
+		}
+	},
+
+	/**
+	 *	Load children data for the given row with the given url
+	 */
+	loadChildren: function(rowData, url) {
+
+		// Add "Loading"
+		var cleanedId = rowData.feature.id.replace(/\W/g,'_'); 
+		// Find element after which add 'loading'
+		var $el = this.$el.find(".child_of_" + cleanedId + ":last");
+		if ( !$el.length ) {
+			// No childs --> add after row
+			$el = this._getRowFromFeature(rowData.feature);
+		}
+
+		$('<tr>\
+			<td></td>\
+			<td></td>\
+			<td colspan="' + this.columnDefs.length + '">Loading...</td>\
+		</tr>').insertAfter($el);
+
+		if (url) {
+			// Now load the data
 			rowData.isLoading = true;
+			var self = this;
 			$.ajax({
-				type: "GET",
-				url: expandUrl + "&startIndex=" + (rowData.children.length+1) + "&count=2",
-				success: function(data) {
-					self.handleExpandedData(rowData, data);
-				},
-				error: function() {
-					console.error("ERROR on pagination");
-				}
+				url: url,
+				dataType: 'json'
+			}).done(function(data) {
+				$el.next().remove();
+				self.handleExpandedData(rowData, data);
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				rowData.isLoading = false;
 				if (!rowData.isExpanded)
 					return;
+				$el.next().remove();
 				$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">Error while loading</td></tr>').insertAfter($row)
 			});
 		}
+
 	},
 
 	/**
@@ -232,20 +262,17 @@ var TableView = Backbone.View.extend({
 		if ( !parentRowData.isExpanded || !data.features )
 			return;
 		
-		if (data.features.length == 0) {
-			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
-		} else {
-			parentRowData.totalNumChildren = data.properties.totalResults;
+		
+		parentRowData.totalNumChildren = data.properties.totalResults;
 
-			// Uncomment if the interferred features will have the same id... sort of hack
-			// think how to handle it within a cleaner way
-			// _.each(data.features, function(feature) {
-			// 	feature.id = feature.id+="_interf";
-			// });
+		// Uncomment if the interferred features will have the same id... sort of hack
+		// think how to handle it within a cleaner way
+		// _.each(data.features, function(feature) {
+		// 	feature.id = feature.id+="_interf";
+		// });
 
-			// HACK : do not use addFeatures but just the event in order to add element to the table and the map
-			this.model.trigger('add:features', data.features, this.model, parentRowData);
-		}
+		// HACK : do not use addFeatures but just the event in order to add element to the table and the map
+		this.model.trigger('add:features', data.features, this.model, parentRowData);
 	},
 
 	/**
@@ -312,13 +339,6 @@ var TableView = Backbone.View.extend({
 
 		var rowData = $row.data('internal');
 
-		// First add a row for loading
-		$('<tr>\
-			<td></td>\
-			<td></td>\
-			<td colspan="' + this.columnDefs.length + '">Loading...</td>\
-		</tr>').insertAfter($row);
-
 		// If row is already loading, exit !
 		if (rowData.isLoading)
 			return;
@@ -331,28 +351,8 @@ var TableView = Backbone.View.extend({
 			// Granules search
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
 		}
-		if (expandUrl) {
-			// Now load the data
-			rowData.isLoading = true;
-			var self = this;
-			$.ajax({
-				//url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
-				url: expandUrl + "&count=2&startIndex=1&format=json",
-				dataType: 'json'
 
-			}).done(function(data) {
-				$row.next().remove();
-				self.handleExpandedData(rowData, data);
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				rowData.isLoading = false;
-				if (!rowData.isExpanded)
-					return;
-				$row.next().remove();
-				$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">Error while loading</td></tr>').insertAfter($row)
-			});
-		}
-
-
+		this.loadChildren(rowData, expandUrl + "&count="+ Configuration.get('expandSearch.countPerPage', 100) + "&startIndex=1&format=json");
 	},
 
 	/**
@@ -534,6 +534,9 @@ var TableView = Backbone.View.extend({
 				this.buildTable();
 			}
 			this.buildTableContent();
+		} else {
+			var $row = this._getRowFromFeature(parentRowData.feature);
+			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
 		}
 	},
 
@@ -668,8 +671,8 @@ var TableView = Backbone.View.extend({
 	/**
 	 * Create a row given rowData
 	 */
-	_createRow: function(rowData, $body) {
-		var $row = $('<tr></tr>');
+	_createRow: function(rowData, $body, className) {
+		var $row = $('<tr '+ (className ? 'class="'+ className + '"' : "") +'></tr>');
 		this._updateRow(rowData, $row);
 		$row = $row.appendTo($body);
 		$row.data('internal', rowData);
@@ -684,7 +687,7 @@ var TableView = Backbone.View.extend({
 			.appendTo($body)
 			.trigger("create")
 			.find('a')
-				.data("rowData", rowData);
+				.data("internal", rowData);
 	},
 
 	/**
@@ -702,9 +705,10 @@ var TableView = Backbone.View.extend({
 			this._createRow(rowData, $body);
 
 			if (rowData.isExpanded) {
+				var cleanedId = rowData.feature.id.replace(/\W/g,'_'); 
 				if ( rowData.children.length > 0 ) {
 					for (var n = 0; n < rowData.children.length; n++) {
-						this._createRow(rowData.children[n], $body);
+						this._createRow(rowData.children[n], $body, "child_of_"+cleanedId);
 					}
 
 					if ( rowData.totalNumChildren != rowData.children.length ) {
