@@ -132,8 +132,8 @@ var TableView = Backbone.View.extend({
 				.closest('tr');
 
 			var rowData = $row.data('internal');
-			rowData.isExpand = !rowData.isExpand;
-			if (rowData.isExpand) {
+			rowData.isExpanded = !rowData.isExpanded;
+			if (rowData.isExpanded) {
 				this.expandRow($row);
 			} else {
 				this.closeRow($row);
@@ -192,6 +192,59 @@ var TableView = Backbone.View.extend({
 				.popup('open', {
 					positionTo: this.$el.find('#table-columns-button')
 				});
+		},
+		
+		// First pagination draft (only "more" button)
+		'click .loadMore' : function(event) {
+			var rowData = $(event.currentTarget).data("rowData");
+			var expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
+			var self = this;
+			rowData.isLoading = true;
+			$.ajax({
+				type: "GET",
+				url: expandUrl + "&startIndex=" + (rowData.children.length+1) + "&count=2",
+				success: function(data) {
+					self.handleExpandedData(rowData, data);
+				},
+				error: function() {
+					console.error("ERROR on pagination");
+				}
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				rowData.isLoading = false;
+				if (!rowData.isExpanded)
+					return;
+				$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">Error while loading</td></tr>').insertAfter($row)
+			});
+		}
+	},
+
+	/**
+	 *	Handle expanded data
+	 *	Expanded data could be a graticules or interferometry
+	 */
+	handleExpandedData: function(parentRowData, data) {
+		if (DataSetSearch.get("mode") == "Simple") {
+			// Graticules : extract from source property
+			data = _getObjects(data, "source", { firstFound: true }).source;
+		}
+
+		parentRowData.isLoading = false;
+		if ( !parentRowData.isExpanded || !data.features )
+			return;
+		
+		if (data.features.length == 0) {
+			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
+		} else {
+			parentRowData.totalNumChildren = data.properties.totalResults;
+
+			// Uncomment if the interferred features will have the same id... sort of hack
+			// think how to handle it within a cleaner way
+			// _.each(data.features, function(feature) {
+			// 	feature.id = feature.id+="_interf";
+			// });
+
+			// HACK : do not use addFeatures but just the event in order to add element to the table and the map
+			this.model.trigger('add:features', data.features, this.model, parentRowData);
 		}
 	},
 
@@ -276,7 +329,7 @@ var TableView = Backbone.View.extend({
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
 		} else {
 			// Granules search
-			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null) + "&startIndex=0&count=100";
+			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
 		}
 		if (expandUrl) {
 			// Now load the data
@@ -284,39 +337,15 @@ var TableView = Backbone.View.extend({
 			var self = this;
 			$.ajax({
 				//url: rowData.feature.properties.rel + "&count=10&startIndex=1&format=json",
-				url: expandUrl, // + "&count=10&startIndex=1&format=json",
+				url: expandUrl + "&count=2&startIndex=1&format=json",
 				dataType: 'json'
 
 			}).done(function(data) {
 				$row.next().remove();
-				var features = null;
-				if (DataSetSearch.get("mode") != "Simple") {
-					features = data.features;
-				} else {
-					features = _getObjects(data, "source", { firstFound: true }).source;
-				}
-
-				rowData.isLoading = false;
-				if ( !rowData.isExpand || !features )
-					return;
-				
-				if (features.length == 0) {
-					$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
-				} else {
-					rowData.totalNumChildren = data.properties.totalResults;
-
-					// Uncomment if the interferred features will have the same id... sort of hack
-					// think how to handle it within a cleaner way
-					// _.each(data.features, function(feature) {
-					// 	feature.id = feature.id+="_interf";
-					// });
-
-					// HACK : do not use addFeatures but just the event in order to add element to the table and the map
-					self.model.trigger('add:features', features, self.model, rowData);
-				}
+				self.handleExpandedData(rowData, data);
 			}).fail(function(jqXHR, textStatus, errorThrown) {
 				rowData.isLoading = false;
-				if (!rowData.isExpand)
+				if (!rowData.isExpanded)
 					return;
 				$row.next().remove();
 				$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">Error while loading</td></tr>').insertAfter($row)
@@ -471,7 +500,9 @@ var TableView = Backbone.View.extend({
 					feature: features[i],
 					cellData: [],
 					isExpandable: isExpandable ? !parentRowData : false,
-					isExpand: false,
+					isExpanded: false,
+					hasGraticules: hasGraticules,
+					isCheckable: (parentRowData && parentRowData.hasGraticules ? false : true),
 					children: [],
 					isLoading: false,
 					totalNumChildren: 0
@@ -589,7 +620,7 @@ var TableView = Backbone.View.extend({
 		if (this.hasExpandableRows) {
 
 			if (rowData.isExpandable) {
-				if (rowData.isExpand) {
+				if (rowData.isExpanded) {
 					content += '<td><span class="table-view-expand ui-icon ui-icon-minus "></span></td>';
 				} else {
 					content += '<td><span class="table-view-expand ui-icon ui-icon-plus "></span></td>';
@@ -599,13 +630,14 @@ var TableView = Backbone.View.extend({
 			}
 		}
 
-		var visibilityClass = 'ui-icon-checkbox-off'; // By default
+		var checkedClass = 'ui-icon-checkbox-off'; // By default
 		// Take into account the previous state of input
 		if ($row.find(".table-view-checkbox").length > 0 && $row.find(".table-view-checkbox").hasClass("ui-icon-checkbox-on")) {
-			visibilityClass = 'ui-icon-checkbox-on';
+			checkedClass = 'ui-icon-checkbox-on';
 		}
 
-		content += '<td><span class="table-view-checkbox ui-icon '+ visibilityClass +'"></span></td>';
+		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
+		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
 			if (this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0) {
@@ -645,6 +677,17 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
+	 *	Create pagination for children elements
+	 */
+	_createPagination: function(rowData, $body) {
+		$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '"><a class="loadMore" data-iconpos="notext" data-icon="plus" data-role="button" data-mini="true" data-inline="true">Load more</a></td></tr>')
+			.appendTo($body)
+			.trigger("create")
+			.find('a')
+				.data("rowData", rowData);
+	},
+
+	/**
 	 * Build table content from data
 	 */
 	buildTableContent: function() {
@@ -655,14 +698,21 @@ var TableView = Backbone.View.extend({
 
 		for (var i = 0; i < this.visibleRowsData.length; i++) {
 
-			this._createRow(this.visibleRowsData[i], $body);
+			var rowData = this.visibleRowsData[i];
+			this._createRow(rowData, $body);
 
-			if (this.visibleRowsData[i].isExpand) {
+			if (rowData.isExpanded) {
+				if ( rowData.children.length > 0 ) {
+					for (var n = 0; n < rowData.children.length; n++) {
+						this._createRow(rowData.children[n], $body);
+					}
 
-				for (var n = 0; n < this.visibleRowsData[i].children.length; n++) {
-					this._createRow(this.visibleRowsData[i].children[n], $body);
+					if ( rowData.totalNumChildren != rowData.children.length ) {
+						this._createPagination( rowData, $body );
+					}
+				} else {
+					$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').appendTo($body);
 				}
-
 			}
 
 		}
@@ -683,9 +733,10 @@ var TableView = Backbone.View.extend({
 
 			this.$table.find('thead').show();
 			
-			var maxColWidth = 500;
+//			var maxColWidth = 700;
 			var colWidths = this.$table.find("tr:first").children().map(function() {
-				return ($(this).outerWidth() > maxColWidth) ? maxColWidth : $(this).outerWidth();
+//				return ($(this).outerWidth() > maxColWidth) ? maxColWidth : $(this).outerWidth();
+				return $(this).outerWidth();
 			});
 
 			// Create COLGROUP

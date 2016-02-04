@@ -60,8 +60,16 @@
     font-size: 12px;
     text-align: center;
 	border-right: 1px solid @table-border-color;
-	word-wrap: break-word;
-	max-width: 390px; /* Symbolic width to apply colgroup width, doesn't work otherwise... */
+
+	/* Break long lines --> update height : Not forget to uncomment maxColWidth in tableView */
+	//word-wrap: break-word;
+	//max-width: 590px; /* Symbolic width to apply colgroup width, doesn't work otherwise... */
+	//height: 30px;
+
+	/* Constant height --> ellipsis : I prefer this one */
+	white-space: nowrap;
+	overflow-x: hidden;
+  	text-overflow: ellipsis;
 }
 
 .table-view td:last-child {
