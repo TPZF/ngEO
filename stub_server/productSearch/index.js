@@ -148,7 +148,7 @@ var setupProductUrl = function(featureCollection, id) {
 		var feature = featureCollection.features[i];
 		var fid = feature.id;
 		// var dummyUrlWithId = "http://localhost:3000/ngeo/catalogue/" + id + "/search?id=" + encodeURIComponent(fid);
-		
+
 		var localhost = "http://localhost:3000";
 		// Here it is used by the direct download
 		conf.setMappedProperty(feature, "productUri", conf.getMappedProperty(feature, "productUri").replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
@@ -186,6 +186,24 @@ var defaultSearchAreaBbox = function(){
 	return defaultSearchArea;
 };
 
+/**
+ *	Create response according to pagination parameters
+ */
+var paginateFeatures = function(req, features) {
+	var count = req.query.count || 10;
+	var startIndex = req.query.startIndex || 1;
+	startIndex = parseInt(startIndex);
+	count = parseInt(count);
+	var response = {
+		type: 'FeatureCollection',
+		properties: {
+			totalResults : features.length
+		},
+		features: features.slice(startIndex-1, startIndex-1+count)
+	};
+	return response;
+}
+
 module.exports = function(req, res){
 
 	// Find the feature collection
@@ -212,19 +230,19 @@ module.exports = function(req, res){
 		// Graticules request
 		// This code is here cuz productUrl comes with "id=" (see setupProductUrl method) -> refactor it to no more use of "id"
 		if ( req.query.enableSourceproduct ) {
-			var instersectedFeatures = [];
+			var intersectedFeatures = [];
 			// Send only intersected graticules as "sources"
 			for ( var i=0; i<graticules.features.length; i++ ) {
 				graticule = graticules.features[i];
 				if ( new terraformer.Primitive(feature.geometry).intersects( new terraformer.Primitive(graticule.geometry) ) ) {
 					graticule.properties = dummyProperties;
 					graticule.id = "graticule_" + i;
-					instersectedFeatures.push( graticule );
+					intersectedFeatures.push( graticule );
 				}
 			}
-			feature.properties.source = instersectedFeatures;
+			feature.properties.source = paginateFeatures(req, intersectedFeatures);
+			res.send( feature );
 		}
-		res.send( feature );
 		return;
 	}
 	
@@ -291,17 +309,7 @@ module.exports = function(req, res){
 		interferometryLink['@rel'] = "related";
 	}
 	
-	var count = req.query.count || 10;
-	var startIndex = req.query.startIndex || 1;
-	startIndex = parseInt(startIndex);
-	count = parseInt(count);
-	var response = {
-		type: 'FeatureCollection',
-		properties: {
-			totalResults : filterFeatures.length
-		},
-		features: filterFeatures.slice(startIndex-1,startIndex-1+count)
-	};
+	var response = paginateFeatures(req, filterFeatures);
 	setTimeout( function() { res.send(response); }, 1000 );
 	
 };
