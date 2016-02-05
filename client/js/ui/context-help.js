@@ -22,6 +22,7 @@ var startContent = "Click on interfaces element for context help.";
  * Place the tooltip for context help
  */
 var placeTooltip = function (element) {
+	tooltip.show();
 	// Two cases : tooltip is attached to an element or not
 	if (!element) {
 		// Center the tooltip
@@ -44,13 +45,36 @@ var placeTooltip = function (element) {
 };
 
 /**
+ *	Lazy hide function which debounces after 500ms
+ *	Hides tooltip depending on hide boolean
+ */
+var lazyHide = _.debounce(function(hide) {
+	if ( hide ) {
+		tooltip.hide();
+	} else {
+		lazyHide(hide);
+	}
+}, 500)
+
+/**
  * Handler to show help tooltip for elements containing "data-help" attribute
  * Checks the target element and its parent
  */
 var onElementHelpClicked = function(event) {
+	event.stopPropagation();
+	event.preventDefault();
+	return false;
+};
+
+/**
+ * Handler to show help tooltip for elements containing "data-help" attribute
+ * Checks the target element and its parent
+ */
+var onElementHelpOver = function(event) {
 	var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
 	if ( helpTarget ) {
 		placeTooltip( helpTarget );
+		lazyHide(false);
 		event.stopPropagation();
 		event.preventDefault();
 		return false;
@@ -65,12 +89,21 @@ module.exports = function(element) {
 	tooltip = $('<div class="ui-popup-container ui-popup-active">\
 					<div class="ui-popup ui-overlay-shadow ui-corner-all ui-body-e"><p></p>\
 					</div></div>').appendTo(element);
-					
 	// Increment the z-index, 1100 is for widget and popup, 1101 for icons in the popup (close button)
 	// So 1102 is used for context help tooltip to be always above
 	tooltip.css("z-index", 1102 );
 	tooltip.hide();
 	
+	var hideTooltip = function(event) {
+		if ( $(event.target).parent().hasClass('ui-popup') || $(event.target).is('[data-help]') ) {
+			// Do not hide tooltip while the mouse is over tooltip or help
+			lazyHide(false);
+		} else {
+			// Hide it otherwise
+			lazyHide(true);
+		}
+	}
+
 	// Setup behavioir when the context help button is clicked
 	$("#help").click( function() {
 		var $this = $(this);
@@ -80,6 +113,8 @@ module.exports = function(element) {
 			$('[data-help]').css({ 
 				cursor: 'inherit'
 			});
+			$('[data-help]').off("mouseover", onElementHelpOver);
+			$('body').off("mousemove", hideTooltip)
 			$('body').get(0).removeEventListener("click", onElementHelpClicked, true );
 		} else {
 			tooltip.show();
@@ -88,6 +123,8 @@ module.exports = function(element) {
 				cursor: 'help',
 				'pointer-events': 'auto'
 			});
+			$('[data-help]').on("mouseover", onElementHelpOver);
+			$('body').on("mousemove", hideTooltip);
 			$('body').get(0).addEventListener("click", onElementHelpClicked, true );
 			$this.addClass('toggle');
 		}
