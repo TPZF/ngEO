@@ -2,6 +2,8 @@ var Configuration = require('configuration');
 var DataSetSearch = require('search/model/datasetSearch');
 var Map = require('map/map');
 var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
+var FeatureCollection = require('searchResults/model/featureCollection');
+var SearchResultsMap = require('searchResults/map');
 
 /**
  *	Get nested objects containing the given key
@@ -93,10 +95,20 @@ var TableView = Backbone.View.extend({
 				return; // Nothing to do
 			}
 
-			if (this.model.highlight) {
-				var data = $row.data('internal');
-				if (data && data.feature) {
-					this.model.highlight([data.feature]);
+			var fc = this.model;
+			var data = $row.data('internal');
+			if ( data ) {
+				// Very very very ugly hack... to sync map with highlighted elements in table
+				// TODO: move children feature colleciton into model ?
+				if ( data.parent ) {
+					fc = data.parent.childFc;
+					this.model.highlight([]);
+				} else if ( data.childFc ) {
+					data.childFc.highlight([]);
+				}
+
+				if (fc.highlight && data.feature) {
+					fc.highlight([data.feature]);
 				}
 			}
 		},
@@ -193,86 +205,34 @@ var TableView = Backbone.View.extend({
 					positionTo: this.$el.find('#table-columns-button')
 				});
 		},
+
+		// Next/Prev pagination
+		'click .paging_first': function(event) {
+			var rowData = $(event.target).closest('.paging').data("internal");
+			rowData.childFc.changePage(1);
+		},
+		'click .paging_last': function(event) {
+			var rowData = $(event.target).closest('.paging').data("internal");
+			rowData.childFc.changePage(rowData.childFc.lastPage);
+		},
+		'click .paging_next': function(event) {
+			var rowData = $(event.target).closest('.paging').data("internal");
+			rowData.childFc.changePage( rowData.childFc.currentPage + 1 );
+		},
+		'click .paging_prev': function(event) {
+			var rowData = $(event.target).closest('.paging').data("internal");
+			rowData.childFc.changePage( rowData.childFc.currentPage - 1 );
+		},
 		
-		// First pagination draft (only "more" button)
+		// Incremental pagination
 		'click .loadMore' : function(event) {
-			var rowData = $(event.currentTarget).data("internal");
+			var rowData = $(event.currentTarget).closest('.paging').data("internal");
 			// If row is already loading, exit !
-			if (rowData.isLoading)
+			if (rowData.childFc.isLoading)
 				return;
 
-			// TODO: handle interferometric search as well
-			var expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
-			this.loadChildren(rowData, expandUrl + "&startIndex=" + (rowData.children.length+1) + "&count=" + Configuration.get('expandSearch.countPerPage', 100));
+			rowData.childFc.appendPage( rowData.childFc.currentPage + 1 );
 		}
-	},
-
-	/**
-	 *	Load children data for the given row with the given url
-	 */
-	loadChildren: function(rowData, url) {
-
-		// Add "Loading"
-		var cleanedId = rowData.feature.id.replace(/\W/g,'_'); 
-		// Find element after which add 'loading'
-		var $el = this.$el.find(".child_of_" + cleanedId + ":last");
-		if ( !$el.length ) {
-			// No childs --> add after row
-			$el = this._getRowFromFeature(rowData.feature);
-		}
-
-		$('<tr>\
-			<td></td>\
-			<td></td>\
-			<td colspan="' + this.columnDefs.length + '">Loading...</td>\
-		</tr>').insertAfter($el);
-
-		if (url) {
-			// Now load the data
-			rowData.isLoading = true;
-			var self = this;
-			$.ajax({
-				url: url,
-				dataType: 'json'
-			}).done(function(data) {
-				$el.next().remove();
-				self.handleExpandedData(rowData, data);
-			}).fail(function(jqXHR, textStatus, errorThrown) {
-				rowData.isLoading = false;
-				if (!rowData.isExpanded)
-					return;
-				$el.next().remove();
-				$('<tr><td></td><td></td><td colspan="' + self.columnDefs.length + '">Error while loading</td></tr>').insertAfter($row)
-			});
-		}
-
-	},
-
-	/**
-	 *	Handle expanded data
-	 *	Expanded data could be a graticules or interferometry
-	 */
-	handleExpandedData: function(parentRowData, data) {
-		if (DataSetSearch.get("mode") == "Simple") {
-			// Graticules : extract from source property
-			data = _getObjects(data, "source", { firstFound: true }).source;
-		}
-
-		parentRowData.isLoading = false;
-		if ( !parentRowData.isExpanded || !data.features )
-			return;
-		
-		
-		parentRowData.totalNumChildren = data.properties.totalResults;
-
-		// Uncomment if the interferred features will have the same id... sort of hack
-		// think how to handle it within a cleaner way
-		// _.each(data.features, function(feature) {
-		// 	feature.id = feature.id+="_interf";
-		// });
-
-		// HACK : do not use addFeatures but just the event in order to add element to the table and the map
-		this.model.trigger('add:features', data.features, this.model, parentRowData);
 	},
 
 	/**
@@ -352,7 +312,9 @@ var TableView = Backbone.View.extend({
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
 		}
 
-		this.loadChildren(rowData, expandUrl + "&count="+ Configuration.get('expandSearch.countPerPage', 100) + "&startIndex=1&format=json");
+		this.createChildrenFeatureCollection(rowData);
+		// Launch search
+		rowData.childFc.search(expandUrl);
 	},
 
 	/**
@@ -365,15 +327,19 @@ var TableView = Backbone.View.extend({
 		if (rowData.isLoading) {
 			$row.next().remove();
 		} else {
-			var features = [];
-			for (var i = 0; i < rowData.children.length; i++) {
-				features.push(rowData.children[i].feature);
+
+			if ( rowData.childFc ) {
+				// Add feature collection to the map
+				SearchResultsMap.removeFeatureCollection(rowData.childFc, {
+					layerName: "Child Result",
+					style: "results-footprint",
+					hasBrowse: true
+				});
 			}
-			var newSelection = _.difference(this.model.selection, features);
-			this.model.setSelection(newSelection);
-			this.model.trigger('remove:features', features, this.model);
+
 			rowData.children.length = 0;
-			this.buildTableContent();
+			$row.nextAll('.child_of_'+ rowData.childFc.id).remove();
+			$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
 		}
 	},
 
@@ -385,6 +351,8 @@ var TableView = Backbone.View.extend({
 		if (!this.$table) return;
 
 		// Remove previous highlighted rows
+		// FIXME: in case when child feature AND parent feature are highlighted
+		// one of fc will disable the highlight of another one.. (use _.debounce principe ?)
 		this.$table.find('.row_selected').removeClass('row_selected');
 
 		if (features.length > 0) {
@@ -503,9 +471,9 @@ var TableView = Backbone.View.extend({
 					isExpanded: false,
 					hasGraticules: hasGraticules,
 					isCheckable: (parentRowData && parentRowData.hasGraticules ? false : true),
+					childFc: null,
 					children: [],
-					isLoading: false,
-					totalNumChildren: 0
+					isLoading: false
 				};
 				for (var j = 0; j < columns.length; j++) {
 					var d = Configuration.getFromPath(features[i], columns[j].mData);
@@ -517,6 +485,7 @@ var TableView = Backbone.View.extend({
 
 				if (parentRowData) {
 					parentRowData.children.push(rowData);
+					rowData.parent = parentRowData;
 				} else {
 					this.rowsData.push(rowData);
 				}
@@ -530,10 +499,13 @@ var TableView = Backbone.View.extend({
 			this.visibleRowsData = this.rowsData.slice(0);
 
 			if ( !parentRowData ) {
-				// No need to rebuild all the table of the data has been added to parent
 				this.buildTable();
+				this.buildTableContent();
+			} else {
+				// Update children only
+				var $row = this._getRowFromFeature(parentRowData.feature);
+				this.updateChildren(parentRowData, $row);
 			}
-			this.buildTableContent();
 		} else {
 			var $row = this._getRowFromFeature(parentRowData.feature);
 			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
@@ -614,6 +586,101 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
+	 *	Create children feature collection for the given row data
+	 *	TODO: move this logic to FeatureCollection model ?
+	 */
+	createChildrenFeatureCollection: function(rowData) {
+		var childrenCollection = new FeatureCollection();
+		var cleanedId = rowData.feature.id.replace(/\W/g,'_'); // Id without special characters
+		childrenCollection.id = cleanedId;
+		childrenCollection.countPerPage = Configuration.get('expandSearch.countPerPage', 100);
+		childrenCollection.parse = function(data) {
+			if (DataSetSearch.get("mode") == "Simple") {
+				// Graticules : extract from source property
+				return _getObjects(data, "source", { firstFound: true }).source;
+			}
+			return data;
+		}
+		var $el;
+
+		// Add "loading" label on start
+		this.listenTo(childrenCollection, 'startLoading', function(fc) {
+			// Find element after which add 'loading'
+			$el = this.$el.find(".child_of_"+ childrenCollection.id + ":last");
+			if ( !$el.length ) {
+				// No childs --> add after current row
+				$el = this._getRowFromFeature(rowData.feature);
+			}
+
+			$('<tr class="loadingChildren">\
+				<td></td>\
+				<td></td>\
+				<td colspan="' + this.columnDefs.length + '">Loading...</td>\
+			</tr>').insertAfter($el);
+			rowData.isLoading = true;
+		});
+
+		// Add features to table
+		this.listenTo(childrenCollection, 'add:features', function(features) {
+			$el.next('.loadingChildren').remove();
+			rowData.isLoading = false;
+			if ( !rowData.isExpanded || !features )
+				return;
+			this.addData(features, this.model, rowData);
+		});
+
+		// Add "error message"
+		this.listenTo(childrenCollection, 'error:features', function(url) {
+			rowData.isLoading = false;
+			if ( !rowData.isExpanded )
+				return;
+			$el.next('.loadingChildren').remove();
+			$('<tr>\
+				<td></td>\
+				<td></td>\
+				<td colspan="' + this.columnDefs.length + '">Error while loading</td>\
+			</tr>').insertAfter($row);
+		});
+
+		// Reset features
+		this.listenTo(childrenCollection, 'reset:features', function(fc) {
+			rowData.children.length = 0;
+		});
+		this.listenTo(childrenCollection, "highlightFeatures", this.highlightFeature);
+
+		// Attach to rowData
+		rowData.childFc = childrenCollection;
+
+		// Add feature collection to the map (listens to add:features, reset:features etc...)
+		SearchResultsMap.addFeatureCollection(childrenCollection, {
+			layerName: "Child Result",
+			style: "results-footprint",
+			hasBrowse: true
+		});
+	},
+
+	/**
+	 *	Upate child (expanded) view
+	 */
+	updateChildren: function(rowData, $row) {
+		$row.nextAll('.child_of_'+ rowData.childFc.id).remove();
+		$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
+
+		if ( rowData.children.length > 0 ) {
+			for (var n = 0; n < rowData.children.length; n++) {
+				this._createRow(rowData.children[n], $row, {
+					className: "child_of_"+ rowData.childFc.id,
+					isChild: true
+				});
+			}
+
+			this._createPagination( rowData, $row );
+		} else {
+			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row);
+		}
+	},
+
+	/**
 	 *	Update the existing row with the given rowData
 	 */
 	_updateRow: function(rowData, $row) {
@@ -671,10 +738,22 @@ var TableView = Backbone.View.extend({
 	/**
 	 * Create a row given rowData
 	 */
-	_createRow: function(rowData, $body, className) {
+	_createRow: function(rowData, $body, options) {
+		// Update from options
+		var className = null;
+		var isChild = false;
+		if ( options ) {
+			className = options.className;
+			isChild = options.isChild;
+		}
+
 		var $row = $('<tr '+ (className ? 'class="'+ className + '"' : "") +'></tr>');
 		this._updateRow(rowData, $row);
-		$row = $row.appendTo($body);
+		if ( isChild ) {
+			$row = $row.insertAfter($body);
+		} else {
+			$row = $row.appendTo($body);
+		}
 		$row.data('internal', rowData);
 		this.feature2row[rowData.feature.id] = $row;
 	},
@@ -683,11 +762,51 @@ var TableView = Backbone.View.extend({
 	 *	Create pagination for children elements
 	 */
 	_createPagination: function(rowData, $body) {
-		$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '"><a class="loadMore" data-iconpos="notext" data-icon="plus" data-role="button" data-mini="true" data-inline="true">Load more</a></td></tr>')
-			.appendTo($body)
-			.trigger("create")
-			.find('a')
-				.data("internal", rowData);
+
+		var $lastChild = $body.nextAll('.child_of_'+ rowData.childFc.id +':last');
+		// Incremental pagination
+		// if ( rowData.childFc.currentPage != rowData.childFc.lastPage ) {
+		// 	$('<tr class="paging_child_of_'+ rowData.childFc.id +'"><td></td><td></td>\
+		// 		<td colspan="' + this.columnDefs.length + '">\
+		// 			<div class="paging">\
+		// 				<a class="loadMore" data-iconpos="notext" data-icon="plus" data-role="button" data-mini="true" data-inline="true">Load more</a>\
+		// 			</div>\
+		// 		</td>\
+		// 	   </tr>')
+		// 		.insertAfter($lastChild)
+		// 		.trigger("create")
+		// 		.find('.paging')
+		// 			.data("internal", rowData);
+		// }
+		
+		// Next/Prev pagination
+		if ( rowData.childFc.totalResults > rowData.childFc.countPerPage ) {
+
+			var $pagination = $('<tr class="paging_child_of_'+ rowData.childFc.id +'"><td></td><td></td>\
+				<td colspan="' + this.columnDefs.length + '">\
+					<div class="paging" data-role="controlgroup" data-type="horizontal" data-mini="true">\
+						<a class="paging_first" data-role="button">First</a>\
+						<a class="paging_prev" data-role="button">Previous</a>\
+						<a class="paging_next" data-role="button">Next</a>\
+						<a class="paging_last" data-role="button">Last</a>\
+					</div>\
+				</td>\
+			   </tr>')
+				.insertAfter($lastChild)
+				.trigger("create")
+				.find('.paging')
+					.data("internal", rowData);
+
+			var startIndex = 1 + (rowData.childFc.currentPage - 1) * rowData.childFc.countPerPage;
+			if ( rowData.childFc.currentPage == 1 ) {
+				$pagination.find('.paging_prev').addClass('ui-disabled');
+				$pagination.find('.paging_first').addClass('ui-disabled');
+			}
+			if ( rowData.childFc.currentPage == rowData.childFc.lastPage ) {
+				$pagination.find('.paging_next').addClass('ui-disabled');
+				$pagination.find('.paging_last').addClass('ui-disabled');
+			}
+		}
 	},
 
 	/**
@@ -705,18 +824,7 @@ var TableView = Backbone.View.extend({
 			this._createRow(rowData, $body);
 
 			if (rowData.isExpanded) {
-				var cleanedId = rowData.feature.id.replace(/\W/g,'_'); 
-				if ( rowData.children.length > 0 ) {
-					for (var n = 0; n < rowData.children.length; n++) {
-						this._createRow(rowData.children[n], $body, "child_of_"+cleanedId);
-					}
-
-					if ( rowData.totalNumChildren != rowData.children.length ) {
-						this._createPagination( rowData, $body );
-					}
-				} else {
-					$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').appendTo($body);
-				}
+				this.updateChildren(rowData, $body);
 			}
 
 		}

@@ -84,6 +84,10 @@ var FeatureCollection = function() {
 			dataType: 'json'
 
 		}).done(function(data) {
+
+			if ( self.parse )
+				data = self.parse(data);
+
 			// Update data if a new launch has not been done, the launch is new if the url has changed
 			// TODO : improve the mechanism?
 			if (_url == currentUrl) {
@@ -187,6 +191,13 @@ var FeatureCollection = function() {
 			}
 		}
 	};
+
+	// Append the given page to existing results
+	this.appendPage = function(page) {
+		this.currentPage = page;
+		this.trigger('startLoading', this);
+		_fetch(1 + (this.currentPage - 1) * this.countPerPage, _url);
+	},
 
 	// Set the selection, replace the previous one
 	this.setSelection = function(features) {
