@@ -61,9 +61,15 @@ var lazyHide = _.debounce(function(hide) {
  * Checks the target element and its parent
  */
 var onElementHelpClicked = function(event) {
-	event.stopPropagation();
-	event.preventDefault();
-	return false;
+	var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
+	if ( helpTarget ) {
+		placeTooltip( helpTarget );
+		event.stopPropagation();
+		event.preventDefault();
+		return false;
+	} else {
+		return true;
+	}
 };
 
 /**
@@ -86,7 +92,7 @@ var onElementHelpOver = function(event) {
 module.exports = function(element) {
 
 	// Add the tooltip element
-	tooltip = $('<div class="ui-popup-container ui-popup-active">\
+	tooltip = $('<div class="helpTooltip ui-popup-container ui-popup-active">\
 					<div class="ui-popup ui-overlay-shadow ui-corner-all ui-body-e"><p></p>\
 					</div></div>').appendTo(element);
 	// Increment the z-index, 1100 is for widget and popup, 1101 for icons in the popup (close button)
@@ -95,7 +101,7 @@ module.exports = function(element) {
 	tooltip.hide();
 	
 	var hideTooltip = function(event) {
-		if ( $(event.target).parent().hasClass('ui-popup') || $(event.target).is('[data-help]') ) {
+		if ( $(event.target).closest('.helpTooltip').length || $(event.target).is('[data-help]') ) {
 			// Do not hide tooltip while the mouse is over tooltip or help
 			lazyHide(false);
 		} else {
