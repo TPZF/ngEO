@@ -507,8 +507,10 @@ var TableView = Backbone.View.extend({
 				this.updateChildren(parentRowData, $row);
 			}
 		} else {
-			var $row = this._getRowFromFeature(parentRowData.feature);
-			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row)
+			if ( parentRowData ) {
+				var $row = this._getRowFromFeature(parentRowData.feature);
+				$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row);
+			}
 		}
 	},
 
