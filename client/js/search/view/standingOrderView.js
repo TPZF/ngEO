@@ -20,6 +20,7 @@ var StandingOrderView = SearchView.extend({
 	id: "standingOrderView",
 
 	initialize: function() {
+		SearchView.prototype.initialize.apply(this);
 		this.listenTo(DataSetPopulation, 'select', this.onDatasetChanged );
 		this.listenTo(DataSetPopulation, 'unselect', this.onDatasetChanged );
 	},

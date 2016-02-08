@@ -9,6 +9,11 @@ var DataSetPopulation = require('search/model/dataSetPopulation');
  */
 var SearchView = Backbone.View.extend({
 
+	initialize: function() {
+		this.dateCriteriaView = null;
+		this.areaCriteriaView = null;
+	},
+
 	/**
 	 * Call to set the height of content when the view size is changed
 	 */
@@ -21,6 +26,18 @@ var SearchView = Backbone.View.extend({
 	 */
 	onShow: function() {
 		this.updateContentHeight();
+		if ( this.areaCriteriaView.searchAreaLayer ) {
+			this.areaCriteriaView.searchAreaLayer.setVisible(true);
+		}
+	},
+
+	/**
+	 *	Call when the view is hidden
+	 */
+	onHide: function() {
+		if ( this.areaCriteriaView.searchAreaLayer ) {
+			this.areaCriteriaView.searchAreaLayer.setVisible(false);
+		}
 	},
 
 	/**

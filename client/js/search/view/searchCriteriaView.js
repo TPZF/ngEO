@@ -20,6 +20,7 @@ var SearchCriteriaView = SearchView.extend({
 	id: "datasetSearchCriteria",
 
 	initialize: function() {
+		SearchView.prototype.initialize.apply(this);
 		this.listenTo(DataSetPopulation, 'select', this.onDatasetSelected );
 		this.listenTo(DataSetPopulation, 'unselect', this.onDatasetUnselected );
 
