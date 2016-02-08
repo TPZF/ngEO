@@ -19,7 +19,7 @@ var _buildWMTSResolution = function() {
 		}
 		return resolutions;
 	} else {
-		console.log("WMTS : no resolution exists for this projection  : " + _projection);
+		//console.log("WMTS : no resolution exists for this projection  : " + _projection);
 		return null;
 	}
 };
@@ -32,9 +32,12 @@ var _setupWMTS = function(config) {
 	if (_projection == "EPSG:4326") {
 		config.tileFullExtent = new OpenLayers.Bounds(-180, -90, 180, 90);
 		config.tileOrigin = new OpenLayers.LonLat(-180, 90);
-	} else {
+	} else if ( _projection == "EPSG:3857" ) {
+		config.tileFullExtent = new OpenLayers.Bounds(-20037508.34278925, -20037508.34278925, 20037508.34278925, 20037508.34278925);
+		config.tileOrigin = new OpenLayers.LonLat( -20037508.34278925, 20037508.34278925 );
+	} /* else {
 		console.log("WMTS : no setup exists for this projection  : " + _projection);
-	}
+	} */
 }
 
 /**
@@ -62,7 +65,8 @@ OpenLayersMapEngine = function(element) {
 
 	// Create the map
 	this._map = new OpenLayers.Map(this.element, {
-		controls: [new OpenLayers.Control.Navigation({
+		controls: [
+			new OpenLayers.Control.Navigation({
 				zoomWheelEnabled: true
 			}),
 			new OpenLayers.Control.Attribution()
@@ -70,14 +74,12 @@ OpenLayersMapEngine = function(element) {
 		projection: mapProjection,
 		displayProjection: displayProjection,
 		restrictedExtent: restrictedExtent,
-		theme: null
+		theme: null,
 			// NEVER USE fractionnal zoom right now, break the WMTS display as overlay
-			//,fractionalZoom: true
-			,
+			// fractionalZoom: true,
 		autoUpdateSize: false,
 		resolutions: resolutions,
-		fallThrough: true,
-		//tileManager: null
+		fallThrough: true
 	});
 
 	// Create the converter for GeoJSON format
@@ -245,7 +247,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 
 			// Manage bbox
 			if (layer.bbox) {
-				config.maxExtent = new OpenLayers.Bounds(layer.bbox);
+				config.maxExtent = new OpenLayers.Bounds(layer.bbox).transform(self._map.displayProjection, self._map.projection);
 			}
 			olLayer = new OpenLayers.Layer.WMTS(config);
 			break;
