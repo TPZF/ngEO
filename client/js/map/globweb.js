@@ -156,7 +156,7 @@ GlobWebMapEngine.prototype.setBackgroundLayer = function(layer) {
 					attribution: layer.attribution,
 					layer: layer.params.layer,
 					matrixSet: layer.params.matrixSet,
-					startLevel: 0
+					startLevel: layer.projection == "EPSG:4326" ? 1 : 0
 				},
 				layer.params));
 			break;
