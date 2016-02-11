@@ -247,7 +247,7 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 
 			// Manage bbox
 			if (layer.bbox) {
-				config.maxExtent = new OpenLayers.Bounds(layer.bbox).transform(self._map.displayProjection, self._map.projection);
+				config.maxExtent = new OpenLayers.Bounds(layer.bbox).transform(this._map.displayProjection, this._map.projection);
 			}
 			olLayer = new OpenLayers.Layer.WMTS(config);
 			break;
