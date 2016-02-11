@@ -143,6 +143,7 @@ var BoxView = Backbone.View.extend({
 		// Remove the search area layer when using extent
 		if (this.parentView.searchAreaLayer) {
 			Map.removeLayer(this.parentView.searchAreaLayer);
+			this.parentView.searchAreaLayer = null;
 		}
 		this.$el.find("input").addClass("ui-disabled");
 	},
