@@ -151,10 +151,16 @@ var setupProductUrl = function(featureCollection, id) {
 
 		var localhost = "http://localhost:3000";
 		// Here it is used by the direct download
-		conf.setMappedProperty(feature, "productUri", conf.getMappedProperty(feature, "productUri").replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
+		var productUri = conf.getMappedProperty(feature, "productUri");
+		if ( productUri ) {
+			conf.setMappedProperty(feature, "productUri", productUri.replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
+		}
 
-		// Here will be used by the download manager
-		conf.setMappedProperty(feature, "productUrl", conf.getMappedProperty(feature, "productUrl").replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
+		var productUrl = conf.getMappedProperty(feature, "productUrl");
+		if ( productUrl ) {
+			// Here will be used by the download manager
+			conf.setMappedProperty(feature, "productUrl", productUrl.replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
+		}
 		
 		if ( !conf.getMappedProperty(feature, "virtualProductUrl", null) ) {
 			// Add virtual product url only for Sentinel-2 products
@@ -241,7 +247,7 @@ module.exports = function(req, res){
 				}
 			}
 			feature.properties.source = paginateFeatures(req, intersectedFeatures);
-			res.send( feature );
+			setTimeout( function() { res.send( feature ); }, 1000 );
 		}
 		return;
 	}
