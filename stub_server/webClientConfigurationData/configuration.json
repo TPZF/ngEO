@@ -13,9 +13,9 @@
 			{"sTitle" : "Download options", "mData": "properties.links.@rel=self.@href" },
 			{"sTitle" : "Status",  "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status"}, 
 			{"sTitle" : "Product Type", "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"},
-			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle"},
-			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle"},
-			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle"}
+			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#text"},
+			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#text"},
+			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#text"}
 		],
 		"directDownloadColumn" : 7
 	},
@@ -81,6 +81,9 @@
 	"searchResults": {
 		"countPerPage": 100
 	},
+	"expandSearch": {
+		"countPerPage": 100
+	},
 
 	"keyDates" : [["2015-04-25", "Super date"]],
 	
@@ -103,11 +106,9 @@
 	},
 	
 	"map": {
-	
 		"projection": "EPSG:4326",
-		
 		"openlayers": {
-			"restrictedExtent": [-360,-85,360,85],
+			"restrictedExtent": [-360,-85.59715335516817,360,85.59715335516817],
 			"transitionEffect": "resize"
 		},
 		
