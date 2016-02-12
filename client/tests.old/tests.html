@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>ngEO Web Client Test Runner</title>
+        <link rel="stylesheet" href="qunit/qunit.css" />
+
+        <!-- QUnit includes -->
+        <script src="qunit/qunit.js"></script>
+
+        <!-- librairies from extrenals vendor/COTS -->
+        <script src="/client-dev/js/libraries.js"></script>
+        <!-- js containing template html to be used on the fly -->
+        <script src="/client-dev/js/main-templates.js"></script>
+        <!-- js linked to the management of the map -->
+        <script src="/client-dev/js/map/map.js"></script>
+        <!-- js linked to the management of the dsa -->
+        <script src="/client-dev/js/data-services-area.js"></script>
+        <!-- js linked to the management of account -->
+        <script src="/client-dev/js/account.js"></script>
+        <!-- js containing the main -->
+        <script src="/client-dev/js/main-ngeo.js"></script>
+        <!-- <script>require('main').initialize()</script> -->
+
+        <!-- Load RequireJS & the testsuite -->
+        <!-- <script src="require-config.js"></script>
+        <script src="./require.js" data-main="testsuite.js"></script> -->
+        <script src="testsuite.js"></script>
+    </head>
+
+    <body>
+        <div id="qunit"></div>
+		
+		<div id="qunit-fixture">
+			<!-- Menu Bar -->
+			<header data-enhance="false">
+				<h1>ngEO</h1>
+				<p>The next generation user services for earth observation.</p>
+				<nav data-default="#data-services-area">
+                    <a href="../index.html" data-ajax="false">Home</a>
+                    <a href="#data-services-area" data-ajax="false" data-nowrap="true" data-module="data-services-area">Data Services Area</a>
+                    <a href="#account" data-ajax="false" data-module="account">My account</a>
+                    <a href="help.html" data-ajax="false">User Guide</a>
+					<!-- <a data-role="button" data-mini="true" data-inline="true" data-icon="gear" class="ui-btn-right" href="#">Login</a> -->
+				</nav>
+			</header>
+
+			<!-- Map -->
+			<div id="mapContainer">
+
+				<div id="data-services-area">
+					<div id="toolbar">
+					</div>
+				</div>
+				
+				<div id="about" style="display:none;">
+					<h2>About ngEO</h2>
+					<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+					<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+				</div>
+				
+				<div id="account" style="display:none;">
+					<h2>My Account</h2>
+					<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+					<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+				</div>
+			
+				<div id="support" style="display:none;">
+					<h2>Support</h2>
+					<p>Mauris eleifend est et turpis. Duis id erat. Suspendisse potenti. Aliquam vulputate, pede vel vehicula accumsan, mi neque rutrum erat, eu congue orci lorem eget lorem. Vestibulum non ante. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Fusce sodales. Quisque eu urna vel enim commodo pellentesque. Praesent eu risus hendrerit ligula tempus pretium. Curabitur lorem enim, pretium nec, feugiat nec, luctus a, lacus.</p>
+					<p>Duis cursus. Maecenas ligula eros, blandit nec, pharetra at, semper at, magna. Nullam ac lacus. Nulla facilisi. Praesent viverra justo vitae neque. Praesent blandit adipiscing velit. Suspendisse potenti. Donec mattis, pede vel pharetra blandit, magna ligula faucibus eros, id euismod lacus dolor eget odio. Nam scelerisque. Donec non libero sed nulla mattis commodo. Ut sagittis. Donec nisi lectus, feugiat porttitor, tempor ac, tempor vitae, pede. Aenean vehicula velit eu tellus interdum rutrum. Maecenas commodo. Pellentesque nec elit. Fusce in lacus. Vivamus a libero vitae lectus hendrerit hendrerit.</p>
+				</div>
+					
+			</div>	
+			
+		</div>
+    </body>
+</html>

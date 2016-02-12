@@ -1,0 +1,66 @@
+(function () {
+
+    // Defer Qunit so RequireJS can work its magic and resolve all modules.
+    QUnit.config.autostart = false;
+
+    console.log("launched");
+    var MenuBar = require('ui/menubar');
+    //console.log(require('configurationTest'));
+    QUnit.start();
+ //    // Configure RequireJS so it resolves relative module paths from the `src`
+	// // folder.
+ //    require.config({
+ //        baseUrl: "../js",
+ //    });
+
+	// A list of all QUnit test Modules.  Make sure you include the `.js` 
+	// extension so RequireJS resolves them as relative paths rather than using
+	// the `baseUrl` value supplied above.
+	var testModules = [
+		"configurationTest.js",
+		"datasetPopulationTest.js",
+		"simpleDataAccessRequestTest.js",
+		"downloadManagersTest.js",
+		"standingOrderDataAccessRequestTest.js",
+		"searchResultsTest.js",
+		"dataAccessRequestStatusesTest.js",
+		"datasetSearchInfoTest.js",
+		"datasetSearchTest.js",
+		"downloadOptionsTest.js",
+		"tableViewTest.js",
+		"shopcartsTest.js" 
+	];
+
+    // Define the QUnit module and lifecycle.
+    QUnit.module("MenuBar", {
+        setup: function() {
+            // Initialize the menu bar
+            MenuBar.initialize('header nav');
+        }
+    });
+
+    // just check that data services area is visible at beginning
+    QUnit.asyncTest("Check default state", 2, function () {
+        setTimeout( function() {
+            ok( $('#data-services-area').is(':visible') );
+            ok( $('a[href="#data-services-area"]').hasClass('active') );
+            QUnit.start();
+        }, 1000 );
+    });
+
+    // just check what happens when a menu item is clicked
+    QUnit.asyncTest("Check click on menu item", 4, function () {
+        $('a[href="#about"]').click();
+        setTimeout( function() {
+            ok( $('#about').is(':visible') );
+            ok( !$('#data-services-area').is(':visible') );
+            ok( $('a[href="#about"]').hasClass('active') );
+            ok( !$('a[href="#data-services-area"]').hasClass('active') );
+            QUnit.start();
+        }, 1000 );
+    });
+	
+ //    // Resolve all testModules and then start the Test Runner.
+	// require(testModules, QUnit.start);
+}());
+
