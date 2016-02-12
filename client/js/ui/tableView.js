@@ -310,6 +310,8 @@ var TableView = Backbone.View.extend({
 		} else {
 			// Granules search
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
+			// Update WEBS response from atom to json
+			expandUrl = expandUrl.replace("/format=atom/g", "format=json");
 		}
 
 		this.createChildrenFeatureCollection(rowData);
@@ -593,7 +595,7 @@ var TableView = Backbone.View.extend({
 	 */
 	createChildrenFeatureCollection: function(rowData) {
 		var childrenCollection = new FeatureCollection();
-		var cleanedId = rowData.feature.id.replace(/\W/g,'_'); // Id without special characters
+		var cleanedId = String(rowData.feature.id).replace(/\W/g,'_'); // Id without special characters
 		childrenCollection.id = cleanedId;
 		childrenCollection.countPerPage = Configuration.get('expandSearch.countPerPage', 100);
 		childrenCollection.parse = function(data) {
@@ -665,8 +667,8 @@ var TableView = Backbone.View.extend({
 	 *	Upate child (expanded) view
 	 */
 	updateChildren: function(rowData, $row) {
-		$row.nextAll('.child_of_'+ rowData.childFc.id).remove();
-		$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
+		$row.siblings('.child_of_'+ rowData.childFc.id).remove();
+		$row.siblings('.paging_child_of_'+ rowData.childFc.id).remove();
 
 		if ( rowData.children.length > 0 ) {
 			for (var n = 0; n < rowData.children.length; n++) {
