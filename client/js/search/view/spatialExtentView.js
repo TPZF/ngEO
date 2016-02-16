@@ -59,12 +59,14 @@ var SpatialExtentView = Backbone.View.extend({
 
 	// Called when model has changed from outside the view, i.e. when a search URL is given by the user
 	onModelChanged: function() {
-		if (this.model.searchArea.getMode() == 0) {
-			this.tools['bbox'].updateFromModel();
-			this.$el.find('#radio-bbox-label').trigger('click');
-		} else if (this.model.searchArea.getMode() == 1) {
-			this.tools['polygon'].updateFromModel();
-			this.$el.find('#radio-polygon-label').trigger('click');
+		if ( this.model.searchArea ) {
+			if (this.model.searchArea.getMode() == 0) {
+				this.tools['bbox'].updateFromModel();
+				this.$el.find('#radio-bbox-label').trigger('click');
+			} else if (this.model.searchArea.getMode() == 1) {
+				this.tools['polygon'].updateFromModel();
+				this.$el.find('#radio-polygon-label').trigger('click');
+			}
 		}
 	},
 

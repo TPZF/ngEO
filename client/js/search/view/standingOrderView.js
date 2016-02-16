@@ -60,8 +60,7 @@ var StandingOrderView = SearchView.extend({
 
 		// Click on import : import settings from search criteria
 		"click .scImport": function() {
-			console.log(DatasetSearch);
-			console.log(this.model);
+
 			// Import attributes from DatasetSearch
 			this.model.set({
 				"start": DatasetSearch.get("start"),
@@ -78,11 +77,7 @@ var StandingOrderView = SearchView.extend({
 			// and search area which isn't included in attributes of model
 			this.model.searchArea.setFromWKT( DatasetSearch.searchArea.toWKT() );
 			this.model.searchArea.setMode( DatasetSearch.searchArea.getMode() ); // Set mode as well since WKT is always a polygon
-			// Update search area only if model doesn't use extent (since layer is removed when extent is used...)
-			if ( !this.model.get("useExtent") ) {
-				this.model.trigger('change:searchArea');
-			}
-
+			this.model.trigger('change:searchArea');
 			this.refresh();
 		},
 

@@ -126,6 +126,16 @@ var BoxView = Backbone.View.extend({
 		this.$el.find("#south").val(bbox.south);
 		this.$el.find("#east").val(bbox.east);
 		this.$el.find("#north").val(bbox.north);
+		
+		// Update useExtent according to model
+		// Used when clicked on "Get Criteria" importing the layer from gazetter
+		// FIXME: find better solution..
+		var mapExtent = Map.getViewportExtent();
+		if ( mapExtent[0] != bbox.west || mapExtent[1] != bbox.south || mapExtent[2] != bbox.east || mapExtent[3] != bbox.north ) {
+			this.model.set('useExtent', false);
+		} else {
+			this.model.set('useExtent', true);
+		}
 	},
 
 	// Change the use extent
@@ -151,6 +161,7 @@ var BoxView = Backbone.View.extend({
 	deactivateUseExtent: function() {
 		Map.off("extent:change", this.synchronizeWithMapExtent, this);
 		if (this.parentView.searchAreaLayer) {
+			this.parentView.searchAreaLayer.clear(); // Remove all features before adding new layer
 			this.parentView.searchAreaLayer = Map.addLayer(this.parentView.searchAreaLayer.params);
 		}
 		this.parentView.updateSearchAreaLayer();
