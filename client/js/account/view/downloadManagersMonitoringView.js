@@ -105,9 +105,9 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		this.$stopDialog.find('button.confirm').click(function(event) {
 			var dmID = $('tr.dm_selected').attr('data-dmId');
 			if ( self.$stopDialog.find("#stopImmediately").is(":checked") ) {
-				command = "STOP_IMMEDIATELY";
-			} else {
 				command = "STOP";
+			} else {
+				command = "STOP_IMMEDIATELY";
 			}
 
 			self.$stopDialog.ngeowidget('hide');
