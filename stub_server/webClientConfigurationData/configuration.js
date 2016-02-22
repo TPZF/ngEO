@@ -154,6 +154,7 @@ module.exports = {
 			this.setMappedProperty(feature, "status", feature.properties.EarthObservation.EarthObservationMetaData.eop_status);
 			this.setMappedProperty(feature, "productType", feature.properties.EarthObservation.EarthObservationMetaData.eop_productType);
 			this.setMappedProperty(feature, "imageQualityReportURL", feature.properties.EarthObservation.EarthObservationMetaData.eop_imageQualityReportURL);
+			this.setMappedProperty(feature, "links", []);
 		}
 
 		return featureCollection;

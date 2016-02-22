@@ -47,6 +47,7 @@ module.exports.parse = function(file,fc) {
 			eop_layer: "ESA.EECF.ERS_SAR_xS",
 			eop_url: 'http://brow01.v1.ngeo.eox.at/c/wmts/'
 		});
+		Configuration.setMappedProperty(feature, "links", []);
 		feature.geometry.coordinates = convertToGeojsonPolygon(posList.textContent);
 		featureCollection.features.push( feature ); 
 
