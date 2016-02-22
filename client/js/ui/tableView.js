@@ -160,8 +160,11 @@ var TableView = Backbone.View.extend({
 			var data = $row.data('internal');
 
 			if ($target.hasClass('ui-icon-checkbox-off')) {
+				// Chose model between Dataset & children
+				// HUGE problem with multiple feature collections cuz this view depends on model
 				if (data) {
-					this.model.select(data.feature);
+					var model = data.parent ? data.parent.childFc : this.model;
+					model.select(data.feature);
 				} else {
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
@@ -171,7 +174,8 @@ var TableView = Backbone.View.extend({
 				}
 			} else {
 				if (data) {
-					this.model.unselect(data.feature);
+					var model = data.parent ? data.parent.childFc : this.model;
+					model.unselect(data.feature);
 				} else {
 					this.model.unselectAll();
 					$target
@@ -310,8 +314,8 @@ var TableView = Backbone.View.extend({
 		} else {
 			// Granules search
 			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
-			// Update WEBS response from atom to json
-			expandUrl = expandUrl.replace("/format=atom/g", "format=json");
+			// HACK: Update WEBS response from atom to json : to be fixed by WEBS later
+			expandUrl = expandUrl.replace("format=atom", "format=json");
 		}
 
 		this.createChildrenFeatureCollection(rowData);
@@ -598,13 +602,6 @@ var TableView = Backbone.View.extend({
 		var cleanedId = String(rowData.feature.id).replace(/\W/g,'_'); // Id without special characters
 		childrenCollection.id = cleanedId;
 		childrenCollection.countPerPage = Configuration.get('expandSearch.countPerPage', 100);
-		childrenCollection.parse = function(data) {
-			if (DataSetSearch.get("mode") == "Simple") {
-				// Graticules : extract from source property
-				return _getObjects(data, "source", { firstFound: true }).source;
-			}
-			return data;
-		}
 		var $el;
 
 		// Add "loading" label on start
@@ -630,6 +627,13 @@ var TableView = Backbone.View.extend({
 			rowData.isLoading = false;
 			if ( !rowData.isExpanded || !features )
 				return;
+
+			// HACK: currently server returns the same id for all children so we modify it to be unique
+			for ( var i=0; i < features.length; i++ ) {
+				var feature = features[i];
+				feature.id = feature.id + i;
+			}
+
 			this.addData(features, this.model, rowData);
 		});
 
@@ -651,6 +655,7 @@ var TableView = Backbone.View.extend({
 			rowData.children.length = 0;
 		});
 		this.listenTo(childrenCollection, "highlightFeatures", this.highlightFeature);
+		this.listenTo(childrenCollection, "selectFeatures", this.toggleSelection);
 
 		// Attach to rowData
 		rowData.childFc = childrenCollection;
@@ -730,9 +735,9 @@ var TableView = Backbone.View.extend({
 						else
 							cellDataColumn = "No download options";
 					}
-					content += '<td class="' + classes + '">' + cellDataColumn + '</td>';
+					content += '<td title="'+ cellDataColumn +'" class="' + classes + '">' + cellDataColumn + '</td>';
 				} else {
-					content += '<td>' + cellDataColumn + '</td>';
+					content += '<td title="'+ cellDataColumn +'">' + cellDataColumn + '</td>';
 				}
 			}
 		}
