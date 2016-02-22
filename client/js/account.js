@@ -6,7 +6,7 @@ var ShopcartCollection = require('shopcart/model/shopcartCollection');
 var DataAccessRequestMonitoringView = require('account/view/dataAccessRequestMonitoringView');
 var DownloadManagersMonitoringView = require('account/view/downloadManagersMonitoringView');
 var ShopcartManagerView = require('account/view/shopcartManagerView');
-var InquiriesView = require('account/view/inquiriesView');
+// var InquiriesView = require('account/view/inquiriesView');
 var UserPrefsView = require('account/view/userPrefsView');
 var LayerManagerView = require('account/view/layerManagerView');
 var account_template = require('../pages/account');
@@ -17,7 +17,7 @@ require('ui/tabs');
 // Private variable : the different view of My Account page	
 var dmView;
 var darView;
-var inquiriesView;
+// var inquiriesView;
 var userPrefsView;
 var shopcartManagerView;
 
@@ -42,9 +42,9 @@ var onTabActivated = function($link) {
 		case "#userPrefs":
 			activeView = userPrefsView;
 			break;
-		case "#inquiries":
-			activeView = inquiriesView;
-			break;
+		// case "#inquiries":
+		// 	activeView = inquiriesView;
+		// 	break;
 		case "#shopcarts":
 			ShopcartCollection.fetch();
 			activeView = shopcartManagerView;
@@ -108,12 +108,13 @@ module.exports = {
 			el: "#shopcarts"
 		});
 
-		//Create the inquiries View
-		inquiriesView = new InquiriesView({
-			//model : inquiery,
-			el: "#inquiries"
-		});
-		inquiriesView.render();
+		// NGEO-1967: Replace inquiries view by "Contact Us" link
+		// //Create the inquiries View
+		// inquiriesView = new InquiriesView({
+		// 	//model : inquiery,
+		// 	el: "#inquiries"
+		// });
+		// inquiriesView.render();
 
 		//Create the user prefs View
 		userPrefsView = new UserPrefsView({

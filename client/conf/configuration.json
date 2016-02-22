@@ -42,6 +42,7 @@
 		"directDownloadColumn" : 7
 	},
 
+	"mailto" : "EOSupport@copernicus.esa.int",
 	"proxyUrl": "http://localhost:3000/proxy?url=",
 	
 	"search": {

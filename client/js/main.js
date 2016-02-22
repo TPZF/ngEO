@@ -35,6 +35,10 @@ module.exports = {
 		/** When the document is ready and configuration is loaded load the rest of the application */
 		$.when(doc_ready, Configuration.load())
 			.done(function() {
+
+				// Update mailto coordinates
+				$("body .contactUs").attr("href", "mailto:" + Configuration.get("mailto"));
+
 				var Map = require('map/map');
 				$.mobile.loading("show");
 
