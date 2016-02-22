@@ -19,7 +19,7 @@ var DataAccessRequestView = Backbone.View.extend({
 	events: {
 		'click #validateRequest': function(event) {
 
-			var hpIsSelected = this.selectHostedProcessView.$el.find('.selected').length > 0;
+			var hpIsSelected = this.selectHostedProcessView && this.selectHostedProcessView.$el.find('.selected').length > 0;
 			if (!hpIsSelected || this.selectHostedProcessView.validateParameters()) {
 				// No hosted process selected or selected one have valide parameters
 				$("#serverMessage").empty();
