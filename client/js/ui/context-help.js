@@ -19,6 +19,11 @@ var topMargin = 10;
 var startContent = "Mouse over interface elements for context help.";
 
 /**
+ * Current state of help component
+ */
+var helpActivated = false;
+
+/**
  * Place the tooltip for context help
  */
 var placeTooltip = function (element) {
@@ -65,9 +70,11 @@ var onElementHelpClicked = function(event) {
 	// var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
 	// if ( helpTarget ) {
 	// 	placeTooltip(helpTarget);
-	var helpTarget = $(event.target).is('[data-help]') ? $(event.target) : $(event.target).closest('[data-help]');
-	if ( helpTarget && !helpTarget.is("#help") ) {
-		placeTooltip( helpTarget );
+	if ( helpActivated && !$(event.target).closest('#help').length ) {
+		var helpTarget = $(event.target).is('[data-help]') ? $(event.target) : $(event.target).closest('[data-help]');
+		if ( helpTarget.length ) {
+			placeTooltip( helpTarget );
+		}
 		event.stopPropagation();
 		event.preventDefault();
 		return false;
@@ -134,6 +141,7 @@ module.exports = function(element) {
 			$('body').get(0).addEventListener("click", onElementHelpClicked, true );
 			$this.addClass('toggle');
 		}
+		helpActivated = !helpActivated;
 		
 	});
 };
