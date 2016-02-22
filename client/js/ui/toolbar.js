@@ -39,10 +39,14 @@ $.widget("ngeo.toolbar", {
 			var $this = $(this);
 			var contextHelp = $this.data('help');
 			if (contextHelp) {
+				// Add it the current element
+				$this.attr('data-help', contextHelp);
+
+				// OLD code to store data-help on tb-icon, discarded by NGEO-2003
 				// Add it to the lowest element
-				$this.find('.tb-icon').attr('data-help', contextHelp);
+				// $this.find('.tb-icon').attr('data-help', contextHelp);
 				// Remove it from the container, not needed anymore
-				$this.removeAttr('data-help');
+				// $this.removeAttr('data-help');
 			}
 		});
 

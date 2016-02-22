@@ -16,7 +16,7 @@ var topMargin = 10;
 /**
  * Margin used by tooltip
  */
-var startContent = "Click on interfaces element for context help.";
+var startContent = "Mouse over interface elements for context help.";
 
 /**
  * Place the tooltip for context help
@@ -37,7 +37,7 @@ var placeTooltip = function (element) {
 		var $element = $(element);
 		tooltip.find('p').html( $element.data('help') );
 		var offset = {
-			top: $element.offset().top + $element.outerHeight() + topMargin,
+			top: $element.offset().top + $element.outerHeight(),
 			left: $element.offset().left + $element.outerWidth()/2 - tooltip.outerWidth()/2
 		};
 		tooltip.offset(offset);
@@ -61,8 +61,12 @@ var lazyHide = _.debounce(function(hide) {
  * Checks the target element and its parent
  */
 var onElementHelpClicked = function(event) {
-	var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
-	if ( helpTarget ) {
+	// OLD code to store data-help on tb-icon, discarded by NGEO-2003
+	// var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
+	// if ( helpTarget ) {
+	// 	placeTooltip(helpTarget);
+	var helpTarget = $(event.target).is('[data-help]') ? $(event.target) : $(event.target).closest('[data-help]');
+	if ( helpTarget && !helpTarget.is("#help") ) {
 		placeTooltip( helpTarget );
 		event.stopPropagation();
 		event.preventDefault();
@@ -77,7 +81,8 @@ var onElementHelpClicked = function(event) {
  * Checks the target element and its parent
  */
 var onElementHelpOver = function(event) {
-	var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
+	//var helpTarget = $(event.target).is('[data-help]') ? event.target : $(event.target.parentElement).is('[data-help]') ? event.target.parentElement : null;
+	var helpTarget = $(event.target).is('[data-help]') ? $(event.target) : $(event.target).closest('[data-help]');
 	if ( helpTarget ) {
 		placeTooltip( helpTarget );
 		lazyHide(false);
@@ -101,7 +106,7 @@ module.exports = function(element) {
 	tooltip.hide();
 	
 	var hideTooltip = function(event) {
-		if ( $(event.target).closest('.helpTooltip').length || $(event.target).is('[data-help]') ) {
+		if ( $(event.target).closest('.helpTooltip').length || $(event.target).is('[data-help]') || $(event.target).closest('[data-help]').length ) {
 			// Do not hide tooltip while the mouse is over tooltip or help
 			lazyHide(false);
 		} else {
@@ -116,19 +121,14 @@ module.exports = function(element) {
 		if ( $this.hasClass('toggle') ) {
 			tooltip.hide();
 			$this.removeClass('toggle');
-			$('[data-help]').css({ 
-				cursor: 'inherit'
-			});
+			$('[data-help]').removeClass('helpActivated');
 			$('[data-help]').off("mouseover", onElementHelpOver);
 			$('body').off("mousemove", hideTooltip)
 			$('body').get(0).removeEventListener("click", onElementHelpClicked, true );
 		} else {
 			tooltip.show();
 			placeTooltip();
-			$('[data-help]').css({ 
-				cursor: 'help',
-				'pointer-events': 'auto'
-			});
+			$('[data-help]').addClass('helpActivated');
 			$('[data-help]').on("mouseover", onElementHelpOver);
 			$('body').on("mousemove", hideTooltip);
 			$('body').get(0).addEventListener("click", onElementHelpClicked, true );
