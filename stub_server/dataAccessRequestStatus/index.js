@@ -32,10 +32,10 @@ module.exports = function(req, res){
                     return status.ID == darId;
                 } );
                 var dar = {
-                    "id": modifiedDar.ID,
+                    "ID": modifiedDar.ID,
                     "name": "Friendly name " + modifiedDar.ID,
                     "type": modifiedDar.type,
-                    "status": req.body.DataAccessRequestStatus.status,
+                    "status": parseInt(req.body.DataAccessRequestStatus.status),
                     "message": "status changed successfully",
                     "dlManagerId": req.body.DataAccessRequestStatus.dlManagerId
                 }
