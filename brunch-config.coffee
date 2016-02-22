@@ -18,6 +18,7 @@ module.exports = config:
         'js/map/map.js': /^client[\\\/]js[\\\/]map/
         'js/data-services-area.js': /^client[\\\/]js[\\\/]data\-services\-area\.js/
         'js/account.js': /^client[\\\/]js[\\\/]account\.js/
+        'js/home.js': /^client[\\\/]js[\\\/]home\.js|configuration\.js/
       order: 
         before:[
           'vendor/jquery-1.11.1.js',
