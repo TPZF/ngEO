@@ -43,6 +43,7 @@ var _getObjects = function(obj, key, options) {
 	return objects;
 }
 
+var _allHighlights = [];
 /**
  * A view to display a table.
  * The model contains a feature collection
@@ -68,6 +69,16 @@ var TableView = Backbone.View.extend({
 		this.feature2row = {};
 
 		this.maxVisibleColumns = 10;
+		var self = this;
+
+		/**
+		 *	This code just temporary serves to trigger highlight on ALL the feature collections
+		 *	TODO: Replace the mecanism by something more sexy..
+		 */
+		this.triggerHighlightFeature = _.debounce(function(){
+			this.highlightFeature(_allHighlights);
+			_allHighlights = [];
+		}, 10);
 	},
 
 	/**
@@ -255,13 +266,17 @@ var TableView = Backbone.View.extend({
 
 		this.model = model;
 
+		var self = this;
 		if (this.model) {
 			this.listenTo(this.model, "reset:features", this.clear);
 			this.listenTo(this.model, "add:features", this.addData);
 			this.listenTo(this.model, "remove:features", this.removeData);
 			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
-			this.listenTo(this.model, "highlightFeatures", this.highlightFeature);
+			this.listenTo(this.model, "highlightFeatures", function(features){
+				_allHighlights = _allHighlights.concat(features);
+				self.triggerHighlightFeature();
+			});
 			this.listenTo(this.model, "update:downloadOptions", this.updateRows);
 
 			if (this.model.features.length > 0) {
@@ -357,8 +372,6 @@ var TableView = Backbone.View.extend({
 		if (!this.$table) return;
 
 		// Remove previous highlighted rows
-		// FIXME: in case when child feature AND parent feature are highlighted
-		// one of fc will disable the highlight of another one.. (use _.debounce principe ?)
 		this.$table.find('.row_selected').removeClass('row_selected');
 
 		if (features.length > 0) {
@@ -654,7 +667,11 @@ var TableView = Backbone.View.extend({
 		this.listenTo(childrenCollection, 'reset:features', function(fc) {
 			rowData.children.length = 0;
 		});
-		this.listenTo(childrenCollection, "highlightFeatures", this.highlightFeature);
+		var self = this;
+		this.listenTo(childrenCollection, "highlightFeatures", function(features) {
+			_allHighlights = _allHighlights.concat(features);
+			self.triggerHighlightFeature();
+		});
 		this.listenTo(childrenCollection, "selectFeatures", this.toggleSelection);
 
 		// Attach to rowData
