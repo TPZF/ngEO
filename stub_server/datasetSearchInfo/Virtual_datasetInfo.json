@@ -1,0 +1,25 @@
+{
+    "datasetSearchInfo": {
+        "attributes": [
+            {
+                "caption": "pgrpi",
+                "id": "pgrpi",
+                "type": "String"
+            }
+        ],
+        "caption": "Virtual",
+        "datasetId": "Virtual",
+        "description": "Dataset containing Virtual products(granules) cominig from MAG preprod server",
+        "downloadOptions": [],
+        "endDate": "2022-06-20T21:23:44Z",
+        "keywords": [
+            {
+                "keyword": "key 1"
+            },
+            {
+                "keyword": "key 2"
+            }
+        ],
+        "startDate": "2015-06-20T00:42:42Z"
+    }
+}

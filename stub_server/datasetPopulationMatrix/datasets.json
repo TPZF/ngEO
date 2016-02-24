@@ -17,6 +17,7 @@
             [ "S2", "OPT", "ND_S2_1", "reflectance", "false", "ND_S2_1", "6"],
 
             [ "Sentinel-2", "MSI", "S2MSI1A", "key 1", "true", "S2MSI1A", "45408" ],
+            [ "Virtual", "MSI", "Virtual", "key 1", "true", "Virtual", "45408" ],
             [ "Sentinel-1", "SAR", "S1_SAR_EW_DUAL_POL", "", "false", "S1_SAR_EW_DUAL_POL", "860" ],
 
             ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "Envisat", "false", "ENVISAT_ASA_IM__0P", "1091"],
