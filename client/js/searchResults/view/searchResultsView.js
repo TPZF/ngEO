@@ -20,7 +20,7 @@ var SearchResultsView = Backbone.View.extend({
 		this.listenTo(this.model, 'add:features', this.onAddFeatures);
 		this.listenTo(this.model, 'error:features', function(searchUrl) {
 			Logger.error('An error occured when retrieving the products with the search url :<br>' + searchUrl);
-			this.$el.find('#resultsMessage').html("No product found");
+			this.$el.find('#resultsMessage').removeClass("pulsating").html("No product found");
 		});
 	},
 
@@ -52,29 +52,7 @@ var SearchResultsView = Backbone.View.extend({
 
 		var $resultsMessage = this.$el.find('#resultsMessage');
 		$resultsMessage.html("Searching...");
-
-		// Pulsate animation when searching
-		var fadeOutOptions = {
-			duration: 300,
-			easing: "linear",
-			complete: function() {
-				$(this).animate({
-					opacity: 1.0
-				}, fadeInOptions);
-			}
-		};
-		var fadeInOptions = {
-			duration: 300,
-			easing: "linear",
-			complete: function() {
-				$(this).animate({
-					opacity: 0.2
-				}, fadeOutOptions);
-			}
-		};
-		$resultsMessage.animate({
-			opacity: 0.2
-		}, fadeOutOptions);
+		$resultsMessage.addClass("pulsating")
 		$resultsMessage.show();
 	},
 
@@ -84,9 +62,7 @@ var SearchResultsView = Backbone.View.extend({
 	onAddFeatures: function(features) {
 
 		var $resultsMessage = this.$el.find('#resultsMessage');
-		$resultsMessage.stop(true);
-		$resultsMessage.css('opacity', 1.0);
-		$resultsMessage.show();
+		$resultsMessage.removeClass("pulsating");
 
 		if (this.model.totalResults > 0) {
 			var startIndex = 1 + (this.model.currentPage - 1) * this.model.countPerPage;

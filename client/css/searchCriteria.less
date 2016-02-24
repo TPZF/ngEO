@@ -37,6 +37,22 @@
 	text-transform: capitalize;
 }
 
+// Animate pulsating elements
+.pulsating {
+  animation: fadeAnimation 0.6s infinite;
+  -webkit-animation: fadeAnimation 0.6s infinite;
+}
+
+@-webkit-keyframes fadeAnimation {
+  0%,100%   { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeAnimation {
+  0%,100%   { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+
 /************************************/
 /*			Time criteria			*/
 /************************************/
