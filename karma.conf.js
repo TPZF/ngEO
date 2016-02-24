@@ -36,31 +36,10 @@ module.exports = function(config) {
       'vendor/*.js',
       'client/js/**/*.js',
 
-      // JSON fixture to serve json in tests
-      // TODO: find a better solution:
-      // * Use stub_server as a mock, disable Same-origin-policy in browser ?
-      // * Mock every ajax request ?
-      {
-        pattern:  'client/conf/*.json',
-        watched:  true,
-        served:   true,
-        included: true
-      },
-      {
-        pattern:  'stub_server/webClientConfigurationData/*.json',
-        watched:  true,
-        served:   true,
-        included: true
-      },
-      {
-        pattern:  'stub_server/downloadManagers/*.json',
-        watched:  true,
-        served:   true,
-        included: true
-      },
+      // Mocks
+      'stub_server/**/*.json',
 
       'client/tests/**/*.js'
-
     ],
 
     // List of files to exclude
@@ -72,9 +51,7 @@ module.exports = function(config) {
     preprocessors: {
        '**/client/js/**/*.js': ['coverage'],
        'client/js/**/*.js': ['commonjs'],
-       'client/conf/*.json': ['html2js'],
-       'stub_server/downloadManagers/*.json': ['html2js'],
-       'stub_server/webClientConfigurationData/*.json': ['html2js']
+       'stub_server/**/*.json': ['json_fixtures']
     },
 
     // Configure the reporter

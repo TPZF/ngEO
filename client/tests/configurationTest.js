@@ -2,9 +2,7 @@ var Configuration = require('configuration');
 
 describe("Configuration test", function() {
     
-	// Mocks of configurations, not really need for the moment..
-    var serverConfigurationMock = __html__["stub_server/webClientConfigurationData/configuration.json"];
-    var clientConfigurationMock = __html__["client/conf/configuration.json"];
+    var datasetResponse = __fixtures__["stub_server/productSearch/Virtual_response"];
 	
 	it("should load configurations", function(done) {
 		Configuration.url = "/client-dev/conf/"; // Use stub_server's url
@@ -16,22 +14,18 @@ describe("Configuration test", function() {
 
     it("should override basic configuration by server configuration on load", function() {
 
-        Configuration.setConfigurationData(clientConfigurationMock);
-        Configuration.buildServerConfiguration(serverConfigurationMock);
-
         // Check override
         expect(Configuration.data["map"]["layers"].length).toBeGreaterThan(0); 
         expect(Configuration.data["map"]["browseDisplay"]["crossOrigin"]).toBe("anonymous");
     });
 
     it("checks get method", function() {
-        Configuration.buildServerConfiguration(serverConfigurationMock);
         expect(Configuration.get("map.openlayers.transitionEffect")).toBe("resize");
     });
 
     it("checks get/set mapped property methods", function() {
-        // TODO: mock feature and check the access to mapped properties + load localConfiguration
-
+    	var feature = datasetResponse.features[0]; // Take the first one
+    	expect(Configuration.getMappedProperty(feature, "start")).toBe("2015-06-20T12:36:48Z");
     });
 
     //will insert additional tests here later
