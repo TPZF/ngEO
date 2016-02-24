@@ -8,10 +8,28 @@ var PanelManager = Backbone.View.extend({
 	 */
 	initialize: function(options) {
 
+		/**
+		 *	Redraw the element, used for CHROME HACK
+		 */
+		// jQuery.fn.redraw = function() {
+		// 	return this.hide(0, function() {
+		// 		$(this).show();
+		// 	});
+		// };
+
 		this.$center = $(options.center);
 
 		var self = this;
 		this.centerResizedCallback = function() {
+			// CHROME HACK
+			// var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+			// if (isChrome) {
+			// 	$('#statusBar').redraw();
+			// 	if ($('#dateRangeSlider').is(':visible'))
+			// 		$('#dateRangeSlider').redraw();
+			// 	$('#bottomToolbar').redraw();
+			// 	$('#map').redraw();
+			// }
 			self.trigger('centerResized');
 		};
 		this.leftResizedCallback = function() {

@@ -1,13 +1,7 @@
-var toRadians = function(num) {
-	return num * Math.PI / 180;
-}
-
 /**
  * MapUtils module
  */
 module.exports = {
-
-	earthRadius: 6371e3,
 
 	/**
 	 * Normalize longitude to always be betwwen -180 and 180
@@ -235,15 +229,6 @@ module.exports = {
 			if (coord[0] < 0) {
 				coord[0] += 360;
 			}
-			
-			/*
-			// Fix crossDateLine + greenwich case
-			if ( n > 0 && coords[n-1][0] - coord[0] > 180 ) {
-				console.log("Add 360");
-				posc.push( [coord[0] + 360, coord[1]] );
-			}
-			*/
-
 			posc.push(coord);
 			negc.push([coord[0] - 360, coord[1]]);
 		}
@@ -297,117 +282,5 @@ module.exports = {
 
 			output.push([lon, lat]);
 		}
-	},
-
-	/**
-	 *	The following part is extracted from http://www.movable-type.co.uk/scripts/latlong.html
-	 *	(c) Chris Veness 2011-2015
-	 *	MIT Licence
-	 */
-
-	/**
-	 *	Convert the given lat/lon to Vector3 object
-	 */
-	toVector: function(latLon) {
-		var phi = toRadians(latLon.lat);
-		var lambda = toRadians(latLon.lon);
-
-		// Right-handed vector: x -> 0°E,0°N; y -> 90°E,0°N, z -> 90°N
-		var x = Math.cos(phi) * Math.cos(lambda);
-		var y = Math.cos(phi) * Math.sin(lambda);
-		var z = Math.sin(phi);
-		return new Vector3d(x,y,z);
-	},
-
-	/**
-	 * Great circle obtained by heading on given bearing from the given lat/lon
-	 *
-	 * Direction of vector is such that initial bearing vector b = c × p.
-	 *
-	 * @param   {number}   bearing - Compass bearing in degrees.
-	 * @returns {Vector3d} Normalised vector representing great circle.
-	 *
-	 * @example
-	 *   var p1 = new LatLon(53.3206, -1.7297);
-	 *   var gc = p1.greatCircle(96.0); // gc.toString(): [-0.794,0.129,0.594]
-	 */
-	greatCircle: function(lat, lon, bearing) {
-		var phi = toRadians(lat);
-		var lambda = toRadians(lon);
-		var theta = toRadians(Number(bearing));
-
-		var x =  Math.sin(lambda) * Math.cos(theta) - Math.sin(phi) * Math.cos(lambda) * Math.sin(theta);
-		var y = -Math.cos(lambda) * Math.cos(theta) - Math.sin(phi) * Math.sin(lambda) * Math.sin(theta);
-		var z =  Math.cos(phi) * Math.sin(theta);
-		return new Vector3d(x, y, z);
-	},
-
-	/**
-	 *	Distance between to points on earth
-	 *	@param {Object} p1 : Geo-point {lat: int, lon: int}
-	 *	@param {Object} p2 : Geo-point {lat: int, lon: int}
-	 *	@param {number} radius : Earth radius in meters
-	 *	@returns
-	 *		Distance between to points in same units as radius
-	 */
-	distanceBetween: function(p1, p2, radius) {
-	    // if (!(point instanceof LatLon)) throw new TypeError('point is not LatLon object');
-		radius = (radius === undefined) ? 6371e3 : Number(radius);
-
-		var v1 = this.toVector(p1);
-		var v2 = this.toVector(p2);
-		var delta = v1.angleTo(v2);
-		var d = delta * radius;
-		return d;
-	},
-
-	crossTrackDistanceBetween: function(latLon, pathStart, pathEnd, radius) {
-	    radius = (radius === undefined) ? 6371e3 : Number(radius);
-
-	    var p = this.toVector(latLon);
-
-	    // Great circle defined by two points
-	    console.log("pathStart", pathStart);
-	    var v1 = this.toVector(pathStart);
-	    console.log("v1", v1);
-	    console.log("pathEnd", pathEnd);
-	    var v2 = this.toVector(pathEnd);
-	    console.log("v2", v2);
-	    var gc = v1.cross(v2);
-	    console.log(gc);
-
-	    var alpha = gc.angleTo(p, p.cross(gc)); // (signed) angle between point & great-circle normal vector
-	    alpha = alpha<0 ? -Math.PI/2 - alpha : Math.PI/2 - alpha; // (signed) angle between point & great-circle
-
-	    var d = alpha * radius;
-
-	    return d;
-	},
-
-	distanceToSegment: function(latLon, point1, point2, radius) {
-	    var v0 = this.toVector(latLon),
-	    	v1 = this.toVector(point1),
-	    	v2 = this.toVector(point2);
-
-	    // Dot product p10⋅p12 tells us if p0 is on p2 side of p1, similarly for p20⋅p21
-	    var p10 = v0.minus(v1), p12 = v2.minus(v1);
-	    var p20 = v0.minus(v2), p21 = v1.minus(v2);
-
-	    var extent1 = p10.dot(p12);
-	    var extent2 = p20.dot(p21);
-
-	    var withinExtent = extent1>=0 && extent2>=0;
-
-	    if (withinExtent) {
-	        // closer to segment than to its endpoints, use cross-track distance
-	        var d = Math.abs(this.crossTrackDistanceBetween(latLon, point1, point2, radius));
-	    } else {
-	        // beyond segment extent, take smaller of distances to endpoints
-	        var d1 = this.distanceBetween(latLon, point1, radius);
-	        var d2 = this.distanceBetween(latLon, point2, radius);
-	        var d = Math.min(d1, d2);
-	    }
-
-	    return d;
 	}
 }
