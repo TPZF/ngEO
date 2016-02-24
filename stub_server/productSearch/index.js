@@ -28,6 +28,9 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	featureCollections['landsat'] = wcsCoveragePaser.parse('./productSearch/landsat_coverage.xml',inputFeatureCollection);
 });
 // New json format
+fs.readFile('./productSearch/Virtual_response.json', 'utf8', function(err, data) {
+	featureCollections['Virtual']  = JSON.parse(data);
+});
 fs.readFile('./productSearch/S2MSI1A_response.json', 'utf8', function(err, data) {
 	featureCollections['S2MSI1A']  = JSON.parse(data);
 });
@@ -73,13 +76,17 @@ fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, d
 	featureCollections['DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME']  = JSON.parse(data);
 });
 
-// Graticules related files
-var graticules;
+// Granules related files
+var genericGranules;
+var staticGranules;
 var dummyProperties;
 
-// Use UTM grid as graticules base for test
+// Use UTM grid as granules base for test
 fs.readFile('./productSearch/utm.json', 'utf8', function(err, data) {
-	graticules = JSON.parse(data);
+	genericGranules = JSON.parse(data);
+});
+fs.readFile('./productSearch/granulesSearch.json', 'utf8', function(err, data) {
+	staticGranules = JSON.parse(data);
 });
 fs.readFile('./productSearch/dummyProperties.json', 'utf8', function(err, data) {
 	dummyProperties = JSON.parse(data);
@@ -232,23 +239,27 @@ module.exports = function(req, res){
 	// Find with id or not
 	if ( req.query.id ) {
 		var feature = findFeature(featureCollection, req.query.id);
-
-		// Graticules request
-		// This code is here cuz productUrl comes with "id=" (see setupProductUrl method) -> refactor it to no more use of "id"
+		
+		// Static granules response
 		if ( req.query.enableSourceproduct ) {
-			var intersectedFeatures = [];
-			// Send only intersected graticules as "sources"
-			for ( var i=0; i<graticules.features.length; i++ ) {
-				graticule = graticules.features[i];
-				if ( new terraformer.Primitive(feature.geometry).intersects( new terraformer.Primitive(graticule.geometry) ) ) {
-					graticule.properties = dummyProperties;
-					graticule.id = "graticule_" + i;
-					intersectedFeatures.push( graticule );
-				}
-			}
-			feature.properties.source = paginateFeatures(req, intersectedFeatures);
-			setTimeout( function() { res.send( feature ); }, 1000 );
+			setTimeout( function() { res.send(staticGranules); }, 1000 );
 		}
+		
+		// Generic granules response (intersects with product)
+		// This code is here cuz productUrl comes with "id=" (see setupProductUrl method) -> refactor it to no more use of "id"
+		// if ( req.query.enableSourceproduct ) {
+		// 	var intersectedFeatures = [];
+		// 	// Send only intersected granules as "sources"
+		// 	for ( var i=0; i<genericGranules.features.length; i++ ) {
+		// 		var granule = genericGranules.features[i];
+		// 		if ( new terraformer.Primitive(feature.geometry).intersects( new terraformer.Primitive(granule.geometry) ) ) {
+		// 			granule.properties = dummyProperties;
+		// 			granule.id = "granule_" + i;
+		// 			intersectedFeatures.push( granule );
+		// 		}
+		// 	}
+		// 	setTimeout( function() { res.send( paginateFeatures(req, intersectedFeatures) ); }, 1000 );
+		// }
 		return;
 	}
 	
