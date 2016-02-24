@@ -39,7 +39,7 @@ module.exports = function(config) {
       // Mocks
       'stub_server/**/*.json',
 
-      'client/tests/**/*.js'
+      'client/tests/integration/**/*.spec'
     ],
 
     // List of files to exclude
@@ -56,7 +56,7 @@ module.exports = function(config) {
 
     // Configure the reporter
     coverageReporter: {
-        dir : 'test/report/',
+        dir : 'client/tests/report/',
         reporters: [
             { type: 'html', subdir: 'html-coverage' },
             { type: 'cobertura',  subdir: '.' },
@@ -111,7 +111,8 @@ module.exports = function(config) {
 
     // Start these browsers
     // Available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome'],
+    // browsers: ['Chrome'],
+    browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
