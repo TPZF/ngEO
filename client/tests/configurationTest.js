@@ -1,30 +1,38 @@
-define(['configuration'], function (Configuration) {
+var Configuration = require('configuration');
 
-    // Define the QUnit module and lifecycle.
-    QUnit.module("Configuration");
-
-    QUnit.asyncTest("Check configuration data", 11, function () {
-		Configuration.url = "../conf/configuration.json";
-		Configuration.load()
-			.done( function() {
-				var mapData = Configuration.data.map;
-				QUnit.ok(mapData,"map object found in configuration");
-				QUnit.ok($.isArray(mapData.layers),"layers found in map configuration");
-				QUnit.ok($.isArray(mapData.backgroundLayers),"background layers found in map configuration");
-				
-				var dataAccessRequestStatuses = Configuration.localConfig.dataAccessRequestStatuses;
-				QUnit.ok(dataAccessRequestStatuses,"dataAccessRequestStatuses object found in configuration");
-				QUnit.ok(dataAccessRequestStatuses.validStatuses,"validStatuses found in configuration");
-				
-				QUnit.ok(dataAccessRequestStatuses.validStatuses.inProgressStatus.value == 0,"in progress status 0 OK");
-				QUnit.ok(dataAccessRequestStatuses.validStatuses.pausedStatus.value == 1,"paused status 1 OK");
-				QUnit.ok(dataAccessRequestStatuses.validStatuses.completedStatus.value == 2,"completed status 2 OK");
-				QUnit.ok(dataAccessRequestStatuses.validStatuses.cancelledStatus.value == 3,"cancelled status 3 OK");
-				QUnit.ok(dataAccessRequestStatuses.validStatuses.validatedStatus.value == 4,"validated status 4 OK");
-				QUnit.ok(dataAccessRequestStatuses.validStatuses.bulkOrderStatus.value == 5,"Bulk order status 5 OK");
-				
-				QUnit.start();
-			});
+describe("Configuration test", function() {
+    
+	// Mocks of configurations, not really need for the moment..
+    var serverConfigurationMock = __html__["stub_server/webClientConfigurationData/configuration.json"];
+    var clientConfigurationMock = __html__["client/conf/configuration.json"];
+	
+	it("should load configurations", function(done) {
+		Configuration.url = "/client-dev/conf/"; // Use stub_server's url
+		Configuration.load().done(function(response){
+			expect(Configuration.data).not.toEqual({});
+			done();
+		})
 	});
 
+    it("should override basic configuration by server configuration on load", function() {
+
+        Configuration.setConfigurationData(clientConfigurationMock);
+        Configuration.buildServerConfiguration(serverConfigurationMock);
+
+        // Check override
+        expect(Configuration.data["map"]["layers"].length).toBeGreaterThan(0); 
+        expect(Configuration.data["map"]["browseDisplay"]["crossOrigin"]).toBe("anonymous");
+    });
+
+    it("checks get method", function() {
+        Configuration.buildServerConfiguration(serverConfigurationMock);
+        expect(Configuration.get("map.openlayers.transitionEffect")).toBe("resize");
+    });
+
+    it("checks get/set mapped property methods", function() {
+        // TODO: mock feature and check the access to mapped properties + load localConfiguration
+
+    });
+
+    //will insert additional tests here later
 });

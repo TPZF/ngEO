@@ -6,6 +6,13 @@ module.exports = function(config) {
 
     // Base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '.',
+	
+	// Use proxy to out stub server which is launched on port 3000
+	// Used in couple with ng-scenario plugin to make integration tests
+    proxies: {
+      '/': 'http://localhost:3000'
+    },
+    urlRoot: '/__karma__/',
 
     // Frameworks to use
     // Available frameworks: https://npmjs.org/browse/keyword/karma-adapter
@@ -112,7 +119,7 @@ module.exports = function(config) {
     },
 
     // Web server port
-    port: 3000,
+    port: 9876,
 
     // Enable / disable colors in the output (reporters and logs)
     colors: true,
