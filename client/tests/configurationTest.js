@@ -67,6 +67,8 @@ describe("Configuration test", function() {
     it("checks get/set mapped property methods", function() {
     	var feature = datasetResponse.features[0]; // Take the first one
     	expect(Configuration.getMappedProperty(feature, "start")).toBe("2015-06-20T12:36:48Z");
+    	Configuration.setMappedProperty(feature, "start", "2020-06-20T12:36:48Z");
+    	expect(Configuration.getMappedProperty(feature, "start")).toBe("2020-06-20T12:36:48Z");
     });
 
     //will insert additional tests here later
