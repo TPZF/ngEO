@@ -33,6 +33,8 @@ var _getProductDownloadOptions = function(feature) {
 
 var FeatureCollection = function() {
 
+	// Store ajax request to be able to cancel it
+	var _xhr = null;
 
 	// Keep the page results
 	var _pageCache = [];
@@ -79,7 +81,7 @@ var FeatureCollection = function() {
 	var _fetch = function(startIndex, currentUrl) {
 		var searchUrl = _url + "&startIndex=" + startIndex;
 
-		$.ajax({
+		_xhr = $.ajax({
 			url: searchUrl,
 			dataType: 'json'
 
@@ -113,7 +115,8 @@ var FeatureCollection = function() {
 				}*/
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
-			if (jqXHR.status == 0) {
+			if (_xhr.statusText != "abort" && jqXHR.status == 0) {
+				// Reload location when UMSSO session has expired
 				location.reload();
 			} else {
 				console.log("ERROR when retrieving the products :" + textStatus + ' ' + errorThrown);
@@ -121,12 +124,17 @@ var FeatureCollection = function() {
 				self.trigger('error:features', searchUrl);
 				self.trigger('endLoading');
 			}
+		}).complete(function() {
+			_xhr = null;
 		});
 	};
 
 	// Add features to collection
 	this.addFeatures = function(features) {
 		for (var i = 0; i < features.length; i++) {
+			// HACK to update product url
+			this.buildProductUrl(features[i]);
+
 			self.features.push(features[i]);
 		}
 		self.trigger('add:features', features, self);
@@ -142,6 +150,13 @@ var FeatureCollection = function() {
 
 	// Launch a search
 	this.search = function(baseUrl) {
+
+		if ( _xhr ) {
+			console.log("Aborting xhr", _xhr);
+			 _xhr.abort();
+			_xhr = null;
+			console.log("xhr null");
+		}
 
 		// build base url
 		_url = baseUrl;
@@ -304,6 +319,17 @@ var FeatureCollection = function() {
 	};
 
 	/**
+	 *	Update cropProduct : true to WKT of the current DataSetSearch.searchArea
+	 *	Try to put this part to server..
+	 */
+	this.buildProductUrl = function(feature) {
+		var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+		if ( productUrl ) {
+			Configuration.setMappedProperty(feature, "productUrl", productUrl.replace("cropProduct:true","cropProduct:" + DataSetSearch.searchArea.toWKT()) );
+		}
+	},
+
+	/**
 	 *	Update feature url property according to the given download options
 	 *
 	 *  The following method appends the download options using this convention ngEO product URI :
@@ -312,8 +338,10 @@ var FeatureCollection = function() {
 	this.updateProductUrl = function(feature, urlProperty, downloadOptions) {
 		
 		// CropProduct must be a WKT and not a boolean
+		// NB: Do not use "cropProduct" as it is a generic property!
+		var cropProductKey = _.find(downloadOptions.collection, function(downloadOption){ return downloadOption.argumentName == key && Boolean(downloadOption.cropProductSearchArea) }).argumentName;
 		var buildCropProduct = function(key, value) {
-			if ( key == "cropProduct" && value === true ) {
+			if ( key == cropProductKey && value === true ) {
 				value = DataSetSearch.searchArea.toWKT();
 			}
 			return value;

@@ -74,7 +74,8 @@ var BrowsesLayer = function(params, mapEngine) {
 			
 			if ( type == "wms" ) {
 				params.layers = eoBrowse.eop_layer;
-				params.styles = "ellipsoid";
+				//params.styles = "ellipsoid";
+				params.styles = "";
 			} else {
 				// Default is WMTS
 				var mapProjection = Configuration.get('map.projection', "EPSG:4326");

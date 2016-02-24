@@ -137,7 +137,8 @@ DownloadOptions.prototype.getAsUrlParameters = function() {
 
         if ( value ) {
 
-            if ( key == "cropProduct" && value == true ) {
+            var isCropProduct = ( _.find(this.collection, function(downloadOption){ return downloadOption.argumentName == key && Boolean(downloadOption.cropProductSearchArea) }) );
+            if ( isCropProduct && value == true ) {
                 // TODO: resolve circular dependency
                 var DataSetSearch = require('search/model/datasetSearch');
                 values.push(key + ":" + DataSetSearch.searchArea.toWKT());
