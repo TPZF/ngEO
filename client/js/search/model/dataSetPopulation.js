@@ -123,13 +123,15 @@ var DataSetPopulation = Backbone.Model.extend({
 
 	/** 
 	 * Parse the response from the server
+	 * Row example: [ "", "", "Friendly ATS_TOA_1P", "", "false", "ATS_TOA_1P", "100" ],
+	 *				[ criteria1, criteria2, ..., criteriaN, id, count ]
+	 * Parse methode find special "name" criteria in response and put it in the end if exists
 	 */
 	parse: function(response) {
 
 		var matrix = response.datasetpopulationmatrix.datasetPopulationValues;
 		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
 		var criterias = [];
-
 		
 		// See NGEOD-434
 		// usableForInterferometry is stored in the criteria titles
