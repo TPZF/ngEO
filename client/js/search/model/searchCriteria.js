@@ -132,10 +132,10 @@ var SearchCriteria = Backbone.Model.extend({
 					if (coords.length != 4)
 						throw "Invalid OpenSearch URL : bbox parameter is not correct."
 					this.searchArea.setBBox({
-						west: coords[0],
-						south: coords[1],
-						east: coords[2],
-						north: coords[3]
+						west: parseFloat(coords[0]),
+						south: parseFloat(coords[1]),
+						east: parseFloat(coords[2]),
+						north: parseFloat(coords[3])
 					});
 					break;
 				case "geom":
