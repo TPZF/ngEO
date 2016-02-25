@@ -55,9 +55,27 @@ describe("Configuration test", function() {
 
     it("should override basic configuration by server configuration on load", function() {
 
-        // Check override
-        expect(Configuration.data["map"]["layers"].length).toBeGreaterThan(0); 
-        expect(Configuration.data["map"]["browseDisplay"]["crossOrigin"]).toBe("anonymous");
+        // Check server configuration
+        var mapData = Configuration.data["map"];
+        expect(mapData).toBeDefined();
+        expect(mapData["layers"].length).toBeGreaterThan(0); 
+        expect($.isArray(mapData["backgroundLayers"])).toBe(true);
+
+        // Check override (in configuration.json of client it is "use-credentials")
+        expect(mapData["browseDisplay"]["crossOrigin"]).toBe("anonymous");
+    });
+
+    it("should check local configuration", function(){
+    	// Check local configuration
+		var dataAccessRequestStatuses = Configuration.localConfig.dataAccessRequestStatuses;
+		expect(dataAccessRequestStatuses).toBeDefined();
+		expect(dataAccessRequestStatuses.validStatuses).toBeDefined();
+		expect(dataAccessRequestStatuses.validStatuses.inProgressStatus.value).toBe(0); // in progress status 0
+		expect(dataAccessRequestStatuses.validStatuses.pausedStatus.value).toBe(1); // paused status 1
+		expect(dataAccessRequestStatuses.validStatuses.completedStatus.value).toBe(2); // completed status 2
+		expect(dataAccessRequestStatuses.validStatuses.cancelledStatus.value).toBe(3); // cancelled status 3
+		expect(dataAccessRequestStatuses.validStatuses.validatedStatus.value).toBe(4); // validated status 4
+		expect(dataAccessRequestStatuses.validStatuses.bulkOrderStatus.value).toBe(5); // bulk order status 5
     });
 
     it("checks get method", function() {
