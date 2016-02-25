@@ -39,7 +39,7 @@ module.exports = function(config) {
       // Mocks
       'stub_server/**/*.json',
 
-      'client/tests/integration/**/*.spec'
+      'client/tests/integration/**/*.spec.js'
     ],
 
     // List of files to exclude
@@ -49,7 +49,7 @@ module.exports = function(config) {
     // Preprocess matching files before serving them to the browser
     // Available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-       '**/client/js/**/*.js': ['coverage'],
+       // '**/client/js/**/*.js': ['coverage'],
        'client/js/**/*.js': ['commonjs'],
        'stub_server/**/*.json': ['json_fixtures']
     },
@@ -111,8 +111,8 @@ module.exports = function(config) {
 
     // Start these browsers
     // Available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    // browsers: ['Chrome'],
-    browsers: ['PhantomJS'],
+    browsers: ['Chrome'],
+    // browsers: ['PhantomJS'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
