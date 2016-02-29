@@ -85,7 +85,7 @@ var FeatureCollection = function() {
 
 		}).done(function(data) {
 
-			if ( self.parse )
+			if (self.parse)
 				data = self.parse(data);
 
 			// Update data if a new launch has not been done, the launch is new if the url has changed
@@ -127,7 +127,9 @@ var FeatureCollection = function() {
 	// Add features to collection
 	this.addFeatures = function(features) {
 		for (var i = 0; i < features.length; i++) {
-			self.features.push(features[i]);
+
+			var feature = features[i];
+			self.features.push(feature);
 		}
 		self.trigger('add:features', features, self);
 	};
@@ -143,13 +145,13 @@ var FeatureCollection = function() {
 	// Launch a search
 	this.search = function(baseUrl) {
 
-		// build base url
+		// Build base url
 		_url = baseUrl;
 		_url += "&count=" + this.countPerPage;
 
-		// reset the cache
+		// Reset the cache
 		_pageCache.length = 0;
-		// resest the count of results
+		// Reset the count of results
 		this.lastPage = 1;
 		this.totalResults = 0;
 		// Change to first page, will trigger the first search
@@ -163,12 +165,12 @@ var FeatureCollection = function() {
 		this.resetSelected();
 
 		_url = "";
-		// reset the cache
+		// Reset the cache
 		_pageCache.length = 0;
-		// resest the count of results
+		// Reset the count of results
 		this.lastPage = 1;
 		this.totalResults = 0;
-		// reset the features
+		// Reset the features
 		this.features.length = 0;
 		this.trigger('reset:features', this);
 	};
@@ -197,7 +199,7 @@ var FeatureCollection = function() {
 		this.currentPage = page;
 		this.trigger('startLoading', this);
 		_fetch(1 + (this.currentPage - 1) * this.countPerPage, _url);
-	},
+	};
 
 	// Set the selection, replace the previous one
 	this.setSelection = function(features) {
@@ -267,7 +269,7 @@ var FeatureCollection = function() {
 	this.selectAll = function(filteredFeatures) {
 
 		// Use filtered features if defined otherwise select all present features
-		var selected = _.difference( filteredFeatures ? filteredFeatures : this.features, this.selection );
+		var selected = _.difference(filteredFeatures ? filteredFeatures : this.features, this.selection);
 		for (var i = 0; i < selected.length; i++) {
 			this.selection.push(selected[i]);
 		}
@@ -310,10 +312,14 @@ var FeatureCollection = function() {
 	 *		ngEO_DO={param_1:value1,....,param_n:value_n}
 	 */
 	this.updateProductUrl = function(feature, urlProperty, downloadOptions) {
-		
+
 		// CropProduct must be a WKT and not a boolean
+		// NB: Do not use "cropProduct" as it is a generic property!
+		var cropProductKey = _.find(downloadOptions.collection, function(downloadOption) {
+			return downloadOption.argumentName == key && Boolean(downloadOption.cropProductSearchArea)
+		});
 		var buildCropProduct = function(key, value) {
-			if ( key == "cropProduct" && value === true ) {
+			if (cropProductKey && key == cropProductKey.argumentName && value === true) {
 				value = DataSetSearch.searchArea.toWKT();
 			}
 			return value;
@@ -337,7 +343,7 @@ var FeatureCollection = function() {
 				// Otherwise
 				url += "&";
 			}
-			url += "ngEO_DO="+JSON.stringify(downloadOptions, buildCropProduct).replace(/\"/g,""); // No "" by spec
+			url += "ngEO_DO=" + JSON.stringify(downloadOptions, buildCropProduct).replace(/\"/g, ""); // No "" by spec
 			Configuration.setMappedProperty(feature, urlProperty, url);
 			//console.log("product url updated = " + url);
 		}
@@ -394,56 +400,56 @@ var FeatureCollection = function() {
 	 */
 	this.getDatasetId = function(feature) {
 
-			// If the feature collection has a dataset, just return its id
-			if (this.dataset) {
-				return this.dataset.get('datasetId');
-			}
+		// If the feature collection has a dataset, just return its id
+		if (this.dataset) {
+			return this.dataset.get('datasetId');
+		}
 
-			// Otherwise extract the id from the feature
-			var re = /catalogue\/(\w+)\/search/;
-			var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-			var match = re.exec(productUrl);
-			if (match) {
-				return match[1];
-			}
-			return null;
-		},
+		// Otherwise extract the id from the feature
+		var re = /catalogue\/(\w+)\/search/;
+		var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
+		var match = re.exec(productUrl);
+		if (match) {
+			return match[1];
+		}
+		return null;
+	};
 
-		/**
-		 * Get the datasets from the selection
-		 */
-		this.getSelectionDatasetIds = function() {
-			var datasetIds = [];
-			for (var i = 0; i < this.selection.length; i++) {
-				var datasetId = this.getDatasetId(this.selection[i]);
-				if (datasetId) {
-					if (datasetIds.indexOf(datasetId) < 0) {
-						datasetIds.push(datasetId);
-					}
+	/**
+	 * Get the datasets from the selection
+	 */
+	this.getSelectionDatasetIds = function() {
+		var datasetIds = [];
+		for (var i = 0; i < this.selection.length; i++) {
+			var datasetId = this.getDatasetId(this.selection[i]);
+			if (datasetId) {
+				if (datasetIds.indexOf(datasetId) < 0) {
+					datasetIds.push(datasetId);
 				}
 			}
-			return datasetIds;
-		},
+		}
+		return datasetIds;
+	};
 
-		/** 
-		 * Fetch the available download options for the selected products
-		 */
-		this.fetchAvailableDownloadOptions = function(callback) {
+	/** 
+	 * Fetch the available download options for the selected products
+	 */
+	this.fetchAvailableDownloadOptions = function(callback) {
 
-			if (this.dataset) {
-				return callback(this.dataset.get('downloadOptions'));
-			}
+		if (this.dataset) {
+			return callback(this.dataset.get('downloadOptions'));
+		}
 
-			var downloadOptions = [];
-			var datasetIds = this.getSelectionDatasetIds();
-			if (datasetIds.length == 1) {
-				DataSetPopulation.fetchDataset(datasetIds[0], function(dataset) {
-					callback(dataset.get('downloadOptions'));
-				});
-			} else {
-				callback([]);
-			}
-		};
+		var downloadOptions = [];
+		var datasetIds = this.getSelectionDatasetIds();
+		if (datasetIds.length == 1) {
+			DataSetPopulation.fetchDataset(datasetIds[0], function(dataset) {
+				callback(dataset.get('downloadOptions'));
+			});
+		} else {
+			callback([]);
+		}
+	};
 
 	/** return the non Planned features */
 	/*	this.getSelectedNonPlannedFeatures = function() {
