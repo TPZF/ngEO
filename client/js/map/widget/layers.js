@@ -4,13 +4,14 @@
 
 var Map = require('map/map');
 var ngeoWidget = require('ui/widget');
+var SelectHandler = require('map/selectHandler');
 
 /**
  * Callback called when a layer is checked
  */
 var layerCheckedCallback = function() {
-	var $this = $(this);
-	$this.data('layer').setVisible($this.prop('checked'));
+	$(this).data('layer').setVisible($(this).prop('checked'));
+	SelectHandler.setPickable($(this).data('layer'), $(this).prop('checked'));
 };
 
 var LayersWidget = function(element) {

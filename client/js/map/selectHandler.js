@@ -10,6 +10,8 @@ var SearchResults = require('searchResults/model/searchResults');
  */
 // The current picked features
 var pickedFeatures = [];
+// The layers to be excluded on picking (TODO: very hacky way.. think how to centralize it)
+var excludedLayers = [];
 // The layer to pick
 var featureCollections = [];
 // The index when using stack picking
@@ -126,14 +128,17 @@ var getFeaturesFromPoint = function(lonlat) {
 	radius = -1;
 
 	var features = [];
+	for (var i = 0; i < featureCollections.length; i++) {
+		var fc = featureCollections[i];
+		if ( excludedLayers.indexOf(fc._footprintLayer) >= 0 )
+			continue;
 
-	for (var j = 0; j < featureCollections.length; j++) {
-		for (var i = 0; i < featureCollections[j].features.length; i++) {
+		for (var j = 0; j < fc.features.length; j++) {
 			// Fix dateline to be able to pick dateline-crossing features
 			// since its original geometry isn't modified
-			var feature = MapUtils.fixDateLine(featureCollections[j].features[i]);
+			var feature = MapUtils.fixDateLine(fc.features[j]);
 			if (pointInGeometry(lonlat, feature.geometry)) {
-				feature._featureCollection = featureCollections[j];
+				feature._featureCollection = fc;
 				features.push(feature);
 			}
 		}
@@ -261,9 +266,24 @@ module.exports = new Handler({
 	 * Remove a feature collection from the selectHandler
 	 */
 	removeFeatureCollection: function(fc) {
+		this.setPickable(fc._footprintLayer, true); // Remove it from excludedLayers array just in case
 		var i = featureCollections.indexOf(fc);
 		if (i >= 0) {
 			featureCollections.splice(i, 1);
+		}
+	},
+
+	/**
+	 *	Set the given layer(not featureCollection) pickable
+	 */
+	setPickable: function(layer, isPickable) {
+		if ( isPickable ) {
+			var i = excludedLayers.indexOf(layer);
+			if (i >= 0) {
+				excludedLayers.splice(i, 1);
+			}
+		} else {
+			excludedLayers.push(layer);	
 		}
 	},
 
