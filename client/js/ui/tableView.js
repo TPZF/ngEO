@@ -684,6 +684,7 @@ var TableView = Backbone.View.extend({
 			self.triggerHighlightFeature();
 		});
 		this.listenTo(childrenCollection, "selectFeatures", this.toggleSelection);
+		this.listenTo(childrenCollection, "unselectFeatures", this.toggleSelection);
 
 		// Attach to rowData
 		rowData.childFc = childrenCollection;
