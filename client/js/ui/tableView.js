@@ -451,6 +451,17 @@ var TableView = Backbone.View.extend({
 		if (this.$table) {
 			this.$table.find('tbody').empty();
 
+			// Clear added child feature collections from map
+			// TODO: move it from here
+			var fcWithChilds = _.filter(this.rowsData, function(rowData) { return rowData.childFc != null });
+			for ( var i=0; i<fcWithChilds.length; i++ ) {
+				SearchResultsMap.removeFeatureCollection(fcWithChilds[i].childFc, {
+					layerName: "Child Result",
+					style: "results-footprint",
+					hasBrowse: true
+				});
+			}
+
 			this.rowsData = [];
 			this.hasExpandableRows = false;
 
