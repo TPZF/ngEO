@@ -671,7 +671,7 @@ var TableView = Backbone.View.extend({
 				<td></td>\
 				<td></td>\
 				<td colspan="' + this.columnDefs.length + '">Error while loading</td>\
-			</tr>').insertAfter($row);
+			</tr>').insertAfter($el);
 		});
 
 		// Reset features
@@ -868,6 +868,9 @@ var TableView = Backbone.View.extend({
 
 		this.updateFixedHeader();
 		this.toggleSelection(this.model.selection);
+		// TODO: Make this view dependent on model only ...
+		// HACK: Update all highlights
+		_allHighlights = _allHighlights.concat(this.model.highlights);
 		this.highlightFeature(this.model.highlights, []);
 	},
 
