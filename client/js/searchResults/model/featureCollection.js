@@ -173,10 +173,9 @@ var FeatureCollection = function() {
 
 		// Reset children
 		for ( var x in this.children ) {
-			var childFc = this.children[x];
-			childFc.reset();
+			this.removeChild(x);
 		}
-		this.children = [];
+		this.children = {};
 
 		_url = "";
 		// Reset the cache
@@ -200,10 +199,9 @@ var FeatureCollection = function() {
 
 			// Reset children
 			for ( var x in this.children ) {
-				var childFc = this.children[x];
-				childFc.reset();
+				this.removeChild(x);
 			}
-			this.children = [];
+			this.children = {};
 			this.trigger('reset:features', this);
 			if (_pageCache[this.currentPage]) {
 				this.addFeatures(_pageCache[this.currentPage]);
