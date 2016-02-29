@@ -88,7 +88,9 @@ DataSetPopulation.on('unselect', function(dataset) {
 	} else {
 		// Otherwise remove the dataset
 		var datasetId = dataset.get('datasetId');
+
 		if (SearchResults.featureCollection.hasOwnProperty(datasetId)) {
+			SearchResults.featureCollection[datasetId].reset();
 			SearchResults.trigger('remove:featureCollection', SearchResults.featureCollection[datasetId]);
 			delete SearchResults.featureCollection[datasetId];
 		}

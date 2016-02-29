@@ -265,7 +265,6 @@ var TableView = Backbone.View.extend({
 		}
 
 		this.model = model;
-
 		var self = this;
 		if (this.model) {
 			this.listenTo(this.model, "reset:features", this.clear);
@@ -350,12 +349,7 @@ var TableView = Backbone.View.extend({
 		} else {
 
 			if ( rowData.childFc ) {
-				// Add feature collection to the map
-				SearchResultsMap.removeFeatureCollection(rowData.childFc, {
-					layerName: "Child Result",
-					style: "results-footprint",
-					hasBrowse: true
-				});
+				this.model.removeChild(rowData.feature.id);
 			}
 
 			rowData.children.length = 0;
@@ -363,7 +357,6 @@ var TableView = Backbone.View.extend({
 			$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
 		}
 	},
-
 
 	/**
 	 * Highlight the features on the table when they have been highlighted on the map.
@@ -451,17 +444,6 @@ var TableView = Backbone.View.extend({
 		if (this.$table) {
 			this.$table.find('tbody').empty();
 
-			// Clear added child feature collections from map
-			// TODO: move it from here
-			var fcWithChilds = _.filter(this.rowsData, function(rowData) { return rowData.childFc != null });
-			for ( var i=0; i<fcWithChilds.length; i++ ) {
-				SearchResultsMap.removeFeatureCollection(fcWithChilds[i].childFc, {
-					layerName: "Child Result",
-					style: "results-footprint",
-					hasBrowse: true
-				});
-			}
-
 			this.rowsData = [];
 			this.hasExpandableRows = false;
 
@@ -473,43 +455,65 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
+	 *	Create row data for the given feature
+	 */
+	createRowData: function(feature, parentRowData) {
+
+		var isExpandable = false;
+		var hasGraticules = false;
+		var links = Configuration.getMappedProperty(feature, "links", null);
+		if (links) {
+			// Is interferometric search
+			isExpandable = Boolean(_.find(links, function(link) {
+				return link['@rel'] == "related" && link['@title'] == "interferometry";
+			}));
+			hasGraticules |= Boolean(Configuration.getMappedProperty(feature, "virtualProductUrl", null));
+			isExpandable |= hasGraticules;
+		}
+
+		var cleanedId = String(feature.id).replace(/\W/g,'_'); // Id without special characters
+		var rowData = {
+			feature: feature,
+			cellData: [],
+			isExpandable: isExpandable ? !parentRowData : false,
+			isExpanded: this.model.children[cleanedId] ? true : false,
+			hasGraticules: hasGraticules,
+			isCheckable: (parentRowData && parentRowData.hasGraticules ? false : true),
+			childFc: this.model.children[cleanedId],
+			children: [],
+			isLoading: false
+		};
+
+		var columns = this.columnDefs;
+		for (var j = 0; j < columns.length; j++) {
+			var d = Configuration.getFromPath(feature, columns[j].mData);
+			rowData.cellData.push(d);
+			if (d) {
+				columns[j].numValidCell++;
+			}
+		}
+		return rowData;
+	},
+
+	/**
 	 * Add data 
 	 */
 	addData: function(features, model, parentRowData) {
 
 		if (features.length > 0) {
-			var columns = this.columnDefs;
 			
 			var hasGraticules = false;
 			for (var i = 0; i < features.length; i++) {				
+				var feature = features[i];
+				var rowData = this.createRowData(feature, parentRowData);
+				hasGraticules |= rowData.hasGraticules;
 
-				var isExpandable = false;
-				var links = Configuration.getMappedProperty(features[i], "links", null);
-				if (links) {
-					// Is interferometric search
-					isExpandable = Boolean(_.find(links, function(link) {
-						return link['@rel'] == "related" && link['@title'] == "interferometry";
-					}));
-					hasGraticules |= Boolean(Configuration.getMappedProperty(features[i], "virtualProductUrl", null));
-					isExpandable |= hasGraticules;
-				}
-
-				var rowData = {
-					feature: features[i],
-					cellData: [],
-					isExpandable: isExpandable ? !parentRowData : false,
-					isExpanded: false,
-					hasGraticules: hasGraticules,
-					isCheckable: (parentRowData && parentRowData.hasGraticules ? false : true),
-					childFc: null,
-					children: [],
-					isLoading: false
-				};
-				for (var j = 0; j < columns.length; j++) {
-					var d = Configuration.getFromPath(features[i], columns[j].mData);
-					rowData.cellData.push(d);
-					if (d) {
-						columns[j].numValidCell++;
+				if ( rowData.childFc ) {
+					for ( var j=0; j<rowData.childFc.features.length; j++ ) {
+						var childFeature = rowData.childFc.features[j];
+						var childRowData = this.createRowData( childFeature, rowData );
+						childRowData.parent = rowData;
+						rowData.children.push(childRowData);
 					}
 				}
 
@@ -619,19 +623,16 @@ var TableView = Backbone.View.extend({
 
 	/**
 	 *	Create children feature collection for the given row data
-	 *	TODO: move this logic to FeatureCollection model ?
 	 */
 	createChildrenFeatureCollection: function(rowData) {
-		var childrenCollection = new FeatureCollection();
-		var cleanedId = String(rowData.feature.id).replace(/\W/g,'_'); // Id without special characters
-		childrenCollection.id = cleanedId;
-		childrenCollection.countPerPage = Configuration.get('expandSearch.countPerPage', 100);
+
 		var $el;
+		var child = this.model.createChild(rowData.feature.id);
 
 		// Add "loading" label on start
-		this.listenTo(childrenCollection, 'startLoading', function(fc) {
+		this.listenTo(child, 'startLoading', function(fc) {
 			// Find element after which add 'loading'
-			$el = this.$el.find(".child_of_"+ childrenCollection.id + ":last");
+			$el = this.$el.find(".child_of_"+ child.id + ":last");
 			if ( !$el.length ) {
 				// No childs --> add after current row
 				$el = this._getRowFromFeature(rowData.feature);
@@ -646,23 +647,17 @@ var TableView = Backbone.View.extend({
 		});
 
 		// Add features to table
-		this.listenTo(childrenCollection, 'add:features', function(features) {
+		this.listenTo(child, 'add:features', function(features) {
 			$el.next('.loadingChildren').remove();
 			rowData.isLoading = false;
 			if ( !rowData.isExpanded || !features )
 				return;
 
-			// HACK: currently server returns the same id for all children so we modify it to be unique
-			for ( var i=0; i < features.length; i++ ) {
-				var feature = features[i];
-				feature.id = feature.id + i;
-			}
-
 			this.addData(features, this.model, rowData);
 		});
 
 		// Add "error message"
-		this.listenTo(childrenCollection, 'error:features', function(url) {
+		this.listenTo(child, 'error:features', function(url) {
 			rowData.isLoading = false;
 			if ( !rowData.isExpanded )
 				return;
@@ -675,26 +670,19 @@ var TableView = Backbone.View.extend({
 		});
 
 		// Reset features
-		this.listenTo(childrenCollection, 'reset:features', function(fc) {
+		this.listenTo(child, 'reset:features', function(fc) {
 			rowData.children.length = 0;
 		});
 		var self = this;
-		this.listenTo(childrenCollection, "highlightFeatures", function(features) {
+		this.listenTo(child, "highlightFeatures", function(features) {
 			_allHighlights = _allHighlights.concat(features);
 			self.triggerHighlightFeature();
 		});
-		this.listenTo(childrenCollection, "selectFeatures", this.toggleSelection);
-		this.listenTo(childrenCollection, "unselectFeatures", this.toggleSelection);
+		this.listenTo(child, "selectFeatures", this.toggleSelection);
+		this.listenTo(child, "unselectFeatures", this.toggleSelection);
 
 		// Attach to rowData
-		rowData.childFc = childrenCollection;
-
-		// Add feature collection to the map (listens to add:features, reset:features etc...)
-		SearchResultsMap.addFeatureCollection(childrenCollection, {
-			layerName: "Child Result",
-			style: "results-footprint",
-			hasBrowse: true
-		});
+		rowData.childFc = child;
 	},
 
 	/**
@@ -862,7 +850,8 @@ var TableView = Backbone.View.extend({
 			this._createRow(rowData, $body);
 
 			if (rowData.isExpanded) {
-				this.updateChildren(rowData, $body);
+				var $row = this.feature2row[rowData.feature.id];
+				this.updateChildren(rowData, $row);
 			}
 
 		}

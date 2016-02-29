@@ -33,6 +33,8 @@ var _getProductDownloadOptions = function(feature) {
 
 var FeatureCollection = function() {
 
+	// Dictionary for features containing children feature collections
+	this.children = {};
 
 	// Keep the page results
 	var _pageCache = [];
@@ -128,7 +130,12 @@ var FeatureCollection = function() {
 	this.addFeatures = function(features) {
 		for (var i = 0; i < features.length; i++) {
 
+			// HACK: currently server returns the same id for all children so we modify it to be unique
 			var feature = features[i];
+			if ( this.parent != null ) {
+				feature.id = feature.id + i;
+			}
+
 			self.features.push(feature);
 		}
 		self.trigger('add:features', features, self);
@@ -164,6 +171,13 @@ var FeatureCollection = function() {
 		this.resetHighlighted();
 		this.resetSelected();
 
+		// Reset children
+		for ( var x in this.children ) {
+			var childFc = this.children[x];
+			childFc.reset();
+		}
+		this.children = [];
+
 		_url = "";
 		// Reset the cache
 		_pageCache.length = 0;
@@ -184,6 +198,12 @@ var FeatureCollection = function() {
 			this.resetHighlighted();
 			this.resetSelected();
 
+			// Reset children
+			for ( var x in this.children ) {
+				var childFc = this.children[x];
+				childFc.reset();
+			}
+			this.children = [];
 			this.trigger('reset:features', this);
 			if (_pageCache[this.currentPage]) {
 				this.addFeatures(_pageCache[this.currentPage]);
@@ -246,6 +266,33 @@ var FeatureCollection = function() {
 			// Event for highlight
 			this.trigger("highlightFeatures", features, prevHighlights, this);
 		}
+	};
+
+	// Create a child feature collection for the given feature
+	this.createChild = function(featureId) {
+		var child = new FeatureCollection();
+		var cleanedId = String(featureId).replace(/\W/g,'_'); // Id without special characters
+		child.id = cleanedId;
+		child.parent = this;
+		child.countPerPage = Configuration.get('expandSearch.countPerPage', 100);
+		this.children[cleanedId] = child;
+		this.trigger('add:child', child, {
+			layerName: "Child Result",
+			style: "results-footprint",
+			hasBrowse: true
+		});
+		return child;
+	};
+
+	// Remove child feature collection for the given feature
+	this.removeChild = function(featureId) {
+		var cleanedId = String(featureId).replace(/\W/g,'_'); // Id without special characters
+		this.trigger('remove:child', this.children[cleanedId], {
+			layerName: "Child Result",
+			style: "results-footprint",
+			hasBrowse: true
+		});
+		delete this.children[cleanedId];
 	};
 
 	// Select a feature
