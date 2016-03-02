@@ -159,12 +159,12 @@ var setupProductUrl = function(featureCollection, id) {
 		var localhost = "http://localhost:3000";
 		// Here it is used by the direct download
 		var productUri = conf.getMappedProperty(feature, "productUri");
-		if ( productUri ) {
+		if ( productUri && productUri.indexOf(localhost) == -1 ) {
 			conf.setMappedProperty(feature, "productUri", productUri.replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
 		}
 
 		var productUrl = conf.getMappedProperty(feature, "productUrl");
-		if ( productUrl ) {
+		if ( productUrl && productUrl.indexOf(localhost) == -1 ) {
 			// Here will be used by the download manager
 			conf.setMappedProperty(feature, "productUrl", productUrl.replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
 		}
