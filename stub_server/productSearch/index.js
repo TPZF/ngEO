@@ -260,6 +260,7 @@ module.exports = function(req, res){
 		// 	}
 		// 	setTimeout( function() { res.send( paginateFeatures(req, intersectedFeatures) ); }, 1000 );
 		// }
+		res.send(feature);
 		return;
 	}
 	
