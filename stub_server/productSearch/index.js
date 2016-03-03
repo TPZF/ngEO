@@ -243,6 +243,8 @@ module.exports = function(req, res){
 		// Static granules response
 		if ( req.query.enableSourceproduct ) {
 			setTimeout( function() { res.send(staticGranules); }, 1000 );
+		} else {
+			res.send(feature);
 		}
 		
 		// Generic granules response (intersects with product)
@@ -260,7 +262,6 @@ module.exports = function(req, res){
 		// 	}
 		// 	setTimeout( function() { res.send( paginateFeatures(req, intersectedFeatures) ); }, 1000 );
 		// }
-		res.send(feature);
 		return;
 	}
 	
