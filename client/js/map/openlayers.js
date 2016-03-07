@@ -67,7 +67,8 @@ OpenLayersMapEngine = function(element) {
 	this._map = new OpenLayers.Map(this.element, {
 		controls: [
 			new OpenLayers.Control.Navigation({
-				zoomWheelEnabled: true
+				zoomWheelEnabled: true,
+				defaultDblClick: function(event) { return; }
 			}),
 			new OpenLayers.Control.Attribution()
 		],
