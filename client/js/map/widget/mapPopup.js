@@ -56,8 +56,9 @@ var MapPopup = function(container) {
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
 			
+			var isSelected = $(this).parent().hasClass('ui-btn-active');
 			// Update button's layout
-			if ($(this).parent().hasClass('ui-btn-active')) {
+			if (isSelected) {
 				$(this).parent().removeClass('ui-btn-active ui-focus');
 			} else {
 				$(this).parent().addClass('ui-btn-active');
@@ -65,7 +66,7 @@ var MapPopup = function(container) {
 
 			for (var i = 0; i < products.length; i++) {
 				var p = products[i];
-				if (p._featureCollection.isSelected(p)) {
+				if (isSelected) {
 					p._featureCollection.unselect(p);
 				} else {
 					p._featureCollection.select(p);
@@ -170,12 +171,21 @@ var MapPopup = function(container) {
 		} else {
 			content = products.length + " products picked.<br>Click again to cycle through products.";
 			if (adv) {
-				content += "<p>Products:</p>";
+				content += "<p>Products: </p>";
 				for (var i = 0; i < products.length; i++) {
 					content += "<p title='"+ products[i].id +"'>" + products[i].id + "</p>";
 				}
 			}
 		}
+
+
+		var hasSelected = _.find(products, function(feature) { return feature._featureCollection.isSelected(feature); });
+		if ( hasSelected ) {
+			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
+		} else {
+			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
+		}
+
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist
 		var hasPlannedOrNoProductUrl = _.find(products, function(feature) {
 			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED" ||
@@ -196,7 +206,7 @@ var MapPopup = function(container) {
 
 		products = highlightedFeatures;
 
-		// Clean-up previou state
+		// Clean-up previous state
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
 
 		buildContent(advancedActivated);
