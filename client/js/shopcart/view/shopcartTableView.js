@@ -6,7 +6,7 @@ var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget'
 var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
 
 /**
- * The model is the backbone model shopcart 
+ * The model is the backbone model FeatureCollection 
  */
 var ShopcartTableView = TableView.extend({
 
@@ -24,7 +24,7 @@ var ShopcartTableView = TableView.extend({
 
 		if (this.model.selection.length > 0) {
 			this.deleteButton.button('enable');
-			if (this.model.getSelectionDatasetIds().length == 1) {
+			if (this.model.getSelectionDatasetIds().length > 0) {
 				this.retrieveProduct.button('enable');
 				this.downloadOptionsButton.button('enable');
 			} else {
