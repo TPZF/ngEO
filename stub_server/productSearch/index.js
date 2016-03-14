@@ -166,7 +166,12 @@ var setupProductUrl = function(featureCollection, id) {
 		var productUrl = conf.getMappedProperty(feature, "productUrl");
 		if ( productUrl && productUrl.indexOf(localhost) == -1 ) {
 			// Here will be used by the download manager
-			conf.setMappedProperty(feature, "productUrl", productUrl.replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost));
+			productUrl = productUrl.replace(/http[s]?:\/\/(\w)+.(\w)+.(\w)+/g, localhost);
+			if ( productUrl && productUrl.indexOf("id=") == -1 ) {
+				// Add id to be able to retrieve the feature on searchById
+				productUrl += "&id="+encodeURIComponent(feature.id);
+			}
+			conf.setMappedProperty(feature, "productUrl", productUrl);
 		}
 		
 		if ( !conf.getMappedProperty(feature, "virtualProductUrl", null) ) {
@@ -238,7 +243,8 @@ module.exports = function(req, res){
 	
 	// Find with id or not
 	if ( req.query.id ) {
-		var feature = findFeature(featureCollection, req.query.id);
+		var id = decodeURIComponent(req.query.id);
+		var feature = findFeature(featureCollection, id);
 		
 		// Static granules response
 		if ( req.query.enableSourceproduct ) {

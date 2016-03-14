@@ -123,7 +123,7 @@ var removeItem = function(shopcartContent,id) {
 var findFeatureByProductUrl = function(features,url) {
 	for (var i=0; i < features.length; i++) {
 		var feature = features[i];
-		var productUrl = find(feature.properties.links, {'@rel': 'self'})['@href'];
+		var productUrl = Configuration.getMappedProperty(feature, "productUrl");
 		if (productUrl == url){
 			return true;
 		}
@@ -247,11 +247,12 @@ module.exports = {
 			}
 			
 			var waitingRequests = req.body.shopCartItemAdding.length;
-			var id;
 			//add an id to each shopcart item
 			for (var i=0; i<req.body.shopCartItemAdding.length; i++) {		
 				
-				if ( findFeatureByProductUrl( shopcartContents[req.params.id].features, req.body.shopCartItemAdding[i].product ) ) {
+				var productUrl = req.body.shopCartItemAdding[i].product;
+				logger.debug("Product URL " + productUrl );
+				if ( findFeatureByProductUrl( shopcartContents[req.params.id].features, productUrl ) ) {
 					waitingRequests--;
 					if ( waitingRequests == 0 ) {
 						//save the new content of the shopcart 
@@ -261,27 +262,30 @@ module.exports = {
 					continue;
 				}
 				
-				logger.debug("Product URL " + req.body.shopCartItemAdding[i].product );
-				
-				http.get(req.body.shopCartItemAdding[i].product, function(r) {
+				// Get product url
+				http.get(productUrl, function(r) {
 					
 					if ( r.statusCode == 200 ) {
 						r.on('data', function (chunk) {
 							var feature = JSON.parse(chunk);
-							id = uuid.v4();
-							
-							//Set the shopcart item id on the feature
-							feature.properties.shopcartItemId = id;
-							shopcartContents[req.params.id].features.push(feature);
-							
-							var productUrl = find(feature.properties.links, {'@rel': 'self'})['@href'];
-							// Add to the response
-							response.shopCartItemAdding.push({"id" : id, "shopcartId" : req.params.id, "product" : productUrl});
-							
-							logger.debug( req.params.id + ' : ' + shopcartContents[req.params.id].features.length );
+							if ( feature.type == "Feature" ) {
+								var id = uuid.v4();
+								// Set the shopcart item id on the feature
+								feature.properties.shopcartItemId = id;
+								shopcartContents[req.params.id].features.push(feature);
+								
+								var productUrl = find(feature.properties.links, {'@rel': 'self'})['@href'];
+								// Add to the response
+								response.shopCartItemAdding.push({"id" : id, "shopcartId" : req.params.id, "product" : productUrl});
+								
+								logger.debug( req.params.id + ' : ' + shopcartContents[req.params.id].features.length );
+							} else {
+								logger.warn( "Product url doesn't returned a FeatureCollection" );
+							}
+
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
-								//save the new content of the shopcart 
+								// Save the new content of the shopcart
 								saveShopcartContent(req.params.id);
 								res.send(response);	
 							}
@@ -289,7 +293,7 @@ module.exports = {
 					} else {
 							waitingRequests--;
 							if ( waitingRequests == 0 ) {
-								//save the new content of the shopcart 
+								// Save the new content of the shopcart
 								saveShopcartContent(req.params.id);
 								res.send(response);	
 							}
@@ -306,7 +310,7 @@ module.exports = {
 	 *	Add/update shopcart
 	 */
 	put : function(req, res) {
-		//Rename shopcart 
+		// Rename shopcart 
 		if (!req.body.createShopcart.shopcart.name) {
 			res.send(500);
 		} else {
