@@ -37,27 +37,30 @@ var AdvancedSearchView = Backbone.View.extend({
 
 			var $target = $(event.currentTarget);
 			var $input = $target.next();
-			var value = $input.attr('value');
+			var newValue = $input.attr('value');
 			var name = $input.attr('name');
 
-			var attributeToUpdate = _.findWhere( this.advancedAttributes, { id: name } );
-			var newValue = attributeToUpdate.value;
+			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+				id: name
+			});
+			var currentValue = attributeToUpdate.value;
 			// Update the value
 			if ($target.hasClass('ui-checkbox-off')) {
 
-				if (!newValue) {
-					newValue = value;
+				if (!currentValue) {
+					currentValue = newValue;
 				} else {
-					newValue += "," + value;
+					currentValue += "," + newValue;
 				}
 
 				// Update attribute with new value
-				attributeToUpdate.value = newValue;
+				attributeToUpdate.value = currentValue;
 
 			} else if ($target.hasClass('ui-checkbox-on')) {
 
-				var currentValues = newValue.split(',');
-				var currentValues = _.without(currentValues, value);
+				var currentValues = currentValue.split(',');
+				// Tricky way to remove ["HV"," VH"] values from currentValues
+				currentValues = _.without.apply(_, [currentValues].concat(newValue.split(",")));
 
 				//set the new value or remove if empty
 				if (currentValues.length == 0) {
@@ -80,8 +83,10 @@ var AdvancedSearchView = Backbone.View.extend({
 		var from = $from.val();
 		var to = $to.val();
 
-		var attributeToUpdate = _.findWhere( this.advancedAttributes, { id: name } );
-		if ( from == $from.attr('min') && to == $to.attr('max') ) {
+		var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+			id: name
+		});
+		if (from == $from.attr('min') && to == $to.attr('max')) {
 			delete attributeToUpdate.value;
 		} else {
 			var value = '[' + from + ',' + to + ']';
@@ -99,7 +104,9 @@ var AdvancedSearchView = Backbone.View.extend({
 			name = name.replace(/_from|_to/, '');
 			this.updateRange(name);
 		} else {
-			var attributeToUpdate = _.findWhere( this.advancedAttributes, { id: name } );
+			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+				id: name
+			});
 			var value = $(event.currentTarget).val();
 			attributeToUpdate.value = value;
 		}
