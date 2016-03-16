@@ -361,7 +361,7 @@ var FeatureCollection = function() {
 		// CropProduct must be a WKT and not a boolean
 		// NB: Do not use "cropProduct" as it is a generic property!
 		var cropProductKey = _.find(downloadOptions.collection, function(downloadOption) {
-			return downloadOption.argumentName == key && Boolean(downloadOption.cropProductSearchArea)
+			return Boolean(downloadOption.cropProductSearchArea)
 		});
 		var buildCropProduct = function(key, value) {
 			if (cropProductKey && key == cropProductKey.argumentName && value === true) {
@@ -388,7 +388,7 @@ var FeatureCollection = function() {
 				// Otherwise
 				url += "&";
 			}
-			url += "ngEO_DO=" + JSON.stringify(downloadOptions, buildCropProduct).replace(/\"/g, ""); // No "" by spec
+			url += "ngEO_DO=" + JSON.stringify(downloadOptions.getAttributes(), buildCropProduct).replace(/\"/g, ""); // No "" by spec
 			Configuration.setMappedProperty(feature, urlProperty, url);
 			//console.log("product url updated = " + url);
 		}

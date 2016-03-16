@@ -52,7 +52,7 @@ var DownloadOptionsWidget = function() {
 			var fcDownloadOptions = featureCollection.getSelectedDownloadOptions();
 			for ( var i=0; i<datasetDownloadOptions.length; i++ ){
 				var key = datasetDownloadOptions[i].argumentName;
-				if ( key == "cropProduct" ) {
+				if ( datasetDownloadOptions[i].cropProductSearchArea == "true" ) {
 					widgetDownloadOptions.attributes[key] = true; // HACK: Set true by default
 				} else {
 					if ( fcDownloadOptions[key] ) {
@@ -68,8 +68,7 @@ var DownloadOptionsWidget = function() {
 				el: element,
 				updateCallback: function(event) {
 					// Update the product url of the selected products with the selected download options
-					var attributes = widgetDownloadOptions.getAttributes();
-					return $.when(featureCollection.updateDownloadOptions(attributes));
+					return $.when(featureCollection.updateDownloadOptions(widgetDownloadOptions));
 				}
 			});
 			downloadOptionsView.render();
