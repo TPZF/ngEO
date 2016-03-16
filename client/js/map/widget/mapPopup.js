@@ -6,6 +6,7 @@ var GlobalEvents = require('globalEvents');
 var Logger = require('logger');
 var Configuration = require('configuration');
 var Map = require('map/map');
+var DownloadOptions = require('search/model/downloadOptions');
 var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var SearchResults = require('searchResults/model/searchResults');
@@ -152,7 +153,7 @@ var MapPopup = function(container) {
 			var product = products[0];
 			// Build product title according to NGEO-1969
 			var productTitle = Configuration.getMappedProperty(product, "sensor") + " / "
-							+ Configuration.getMappedProperty(product, "sensorType") + " / "
+							+ Configuration.getMappedProperty(product, "operationalMode") + " / "
 							+ Configuration.getMappedProperty(product, "productType")
 			content = '<p><b>' + productTitle + '</b></p>';
 			if (adv) {
@@ -160,8 +161,22 @@ var MapPopup = function(container) {
 				for (var i = 0; i < columnDefs.length; i++) {
 					if (columnDefs[i].sTitle != 'Product') {
 						var value = Configuration.getFromPath(product, columnDefs[i].mData);
+						if ( columnDefs[i].sTitle == 'Download options' && value ) {
+							// HACK: Skip it for now, we should store it somewhere, or WEBS should send it for us
+								continue;
+							/*
+							// Snippet to handle download options depending on current search area
+								var downloadOptions = new DownloadOptions();
+								downloadOptions.initFromUrl(value);
+								var value = downloadOptions.getParameters();
+								if ( !value.length )
+									value = "No download options";
+							*/
+							
+						}
+
 						if (value) {
-							content += '<p>' + columnDefs[i].sTitle + ': ' + value + '</p>';
+							content += '<p>' + columnDefs[i].sTitle + ': <span title="'+value+'">' + value + '</span></p>';
 						}
 					}
 				}
