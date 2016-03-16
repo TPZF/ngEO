@@ -30,7 +30,7 @@ var StandingOrderDataAccessRequest = {
 
 	SchedulingOptions: {},
 
-	name: null,
+	name: "subscription",
 
 	resetRequest: function() {
 
@@ -38,8 +38,15 @@ var StandingOrderDataAccessRequest = {
 		this.DownloadOptions = {};
 		this.SchedulingOptions = {};
 		this.hostedProcessId = null;
-		this.name = null;
+		this.name = "subscription";
+	},
 
+	/**
+	 *	Get dataset included in request
+	 */
+	getDataType: function() {
+		var datasetNameRegExp = new RegExp(/catalogue\/(\w*)\//)
+		return datasetNameRegExp.exec(this.OpenSearchURL)[1];
 	},
 
 	/** 
@@ -70,7 +77,7 @@ var StandingOrderDataAccessRequest = {
 			request.StandingOrderDataAccessRequest.createBulkOrder = true;
 		}
 
-		console.log(request);
+		// console.log(request);
 		return request;
 	},
 

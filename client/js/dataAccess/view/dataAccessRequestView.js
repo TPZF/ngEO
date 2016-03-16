@@ -2,7 +2,7 @@ var Configuration = require('configuration');
 var HostedProcessList = require('hostedProcesses/model/hostedProcessList');
 var SelectHostedProcessView = require('hostedProcesses/view/selectHostedProcessesView');
 
-var downloadManagersList_template = require('dataAccess/template/dataAccessRequestViewContent');
+var dataAccessRequestView_template = require('dataAccess/template/dataAccessRequestViewContent');
 var downloadManagerInstall_template = require('dataAccess/template/downloadManagerInstallContent');
 
 
@@ -140,6 +140,9 @@ var DataAccessRequestView = Backbone.View.extend({
 	 */
 	render: function() {
 
+		// NGEO-2079: Generate a default name for current request
+		this.request.name += "-"+ this.request.getDataType() +"-" + new Date().toISOString();
+
 		// After the download managers are retrieved
 		// if (this.model.attributes.downloadmanagers != 0) {
 		if (this.model.attributes.downloadmanagers == 0) {
@@ -151,8 +154,11 @@ var DataAccessRequestView = Backbone.View.extend({
 			this.$el.html("<p class='ui-error-message'><b>No download manager has been registered.<br>In order to download products, you need to install a download manager.</b></p>" + installContent);
 
 		} else {
-			// Render the registered download managers
-			var content = downloadManagersList_template(this.model.attributes);
+			// Render the data access request template
+			var content = dataAccessRequestView_template({
+				model: this.model,
+				request: this.request
+			});
 			this.$el.html(content);
 
 			this.$el.find("#downloadDirectory").autoComplete({

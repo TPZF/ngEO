@@ -10,7 +10,7 @@
 
    url: Configuration.baseServerUrl + "/simpleDataAccessRequest",
 
-   name: null,
+   name: "download",
 
    rejectedProductsNB: 0, //nb of products checked but not having a url 
 
@@ -26,8 +26,16 @@
      this.rejectedProductsNB = 0;
      this.productURLs = [];
      this.hostedProcessId = null;
-     this.name = null;
+     this.name = "download";
    },
+
+   /**
+	 *	Get dataset included in request
+	 */
+	getDataType: function() {
+		var datasetNameRegExp = new RegExp(/catalogue\/(\w*)\//)
+		return datasetNameRegExp.exec(this.productURLs[0])[1]; // Take catalogue of first product for now
+	},
 
    /**
     * Get the current request to submit
