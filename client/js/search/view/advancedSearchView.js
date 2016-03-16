@@ -47,6 +47,10 @@ var AdvancedSearchView = Backbone.View.extend({
 			// Update the value
 			if ($target.hasClass('ui-checkbox-off')) {
 
+				// NGEO-2075: Surround value by "" in case when value contains ","
+				if (newValue.indexOf(",") != -1) {
+					newValue = "\"" + newValue + "\"";
+				}
 				if (!currentValue) {
 					currentValue = newValue;
 				} else {
@@ -57,10 +61,11 @@ var AdvancedSearchView = Backbone.View.extend({
 				attributeToUpdate.value = currentValue;
 
 			} else if ($target.hasClass('ui-checkbox-on')) {
-
-				var currentValues = currentValue.split(',');
-				// Tricky way to remove ["HV"," VH"] values from currentValues
-				currentValues = _.without.apply(_, [currentValues].concat(newValue.split(",")));
+				var regExp = new RegExp(/(\w{1,}[,\s+\w{1,}]*)/g); // Take values with "," without " sign
+				var currentValues = currentValue.match(regExp);
+				currentValues = _.without(currentValues, newValue).map(function(val){
+					return "\"" + val + "\""; // NGEO-2075
+				});
 
 				//set the new value or remove if empty
 				if (currentValues.length == 0) {
