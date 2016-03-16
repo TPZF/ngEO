@@ -358,18 +358,6 @@ var FeatureCollection = function() {
 	 */
 	this.updateProductUrl = function(feature, urlProperty, downloadOptions) {
 
-		// CropProduct must be a WKT and not a boolean
-		// NB: Do not use "cropProduct" as it is a generic property!
-		var cropProductKey = _.find(downloadOptions.collection, function(downloadOption) {
-			return Boolean(downloadOption.cropProductSearchArea)
-		});
-		var buildCropProduct = function(key, value) {
-			if (cropProductKey && key == cropProductKey.argumentName && value === true) {
-				value = DataSetSearch.searchArea.toWKT();
-			}
-			return value;
-		};
-
 		var url = Configuration.getMappedProperty(feature, urlProperty, null);
 		if (url) {
 			// console.log("product url initial = " + url);
@@ -388,7 +376,7 @@ var FeatureCollection = function() {
 				// Otherwise
 				url += "&";
 			}
-			url += "ngEO_DO=" + JSON.stringify(downloadOptions.getAttributes(), buildCropProduct).replace(/\"/g, ""); // No "" by spec
+			url += downloadOptions.getAsUrlParameters();
 			Configuration.setMappedProperty(feature, urlProperty, url);
 			//console.log("product url updated = " + url);
 		}
