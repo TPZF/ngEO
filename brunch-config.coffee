@@ -53,4 +53,7 @@ module.exports = config:
       dumpLineNumbers: 'comments' # other options: 'mediaquery', 'all'
     uglify: 
       mangle: true
-	  comments: 'all' 
+      comments: 'all'
+  server:
+  	command: 'node ./stub_server/app.js'
+  
