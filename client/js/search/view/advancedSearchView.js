@@ -47,7 +47,7 @@ var AdvancedSearchView = Backbone.View.extend({
 			// Update the value
 			if ($target.hasClass('ui-checkbox-off')) {
 
-				// NGEO-2075: Surround value by "" in case when value contains ","
+				// NGEO-2075: Surround value with quotes in case when value contains ","
 				if (newValue.indexOf(",") != -1) {
 					newValue = "\"" + newValue + "\"";
 				}
@@ -61,11 +61,24 @@ var AdvancedSearchView = Backbone.View.extend({
 				attributeToUpdate.value = currentValue;
 
 			} else if ($target.hasClass('ui-checkbox-on')) {
-				var regExp = new RegExp(/(\w{1,}[,\s+\w{1,}]*)/g); // Take values with "," without " sign
-				var currentValues = currentValue.match(regExp);
-				currentValues = _.without(currentValues, newValue).map(function(val){
-					return "\"" + val + "\""; // NGEO-2075
-				});
+				var currentValues = null;
+				var hasQuotes = currentValue.indexOf("\"") >= 0;
+				if ( hasQuotes ) {
+					var regExp = new RegExp(/(\w{1,}[,-\s+\w{1,}]*)/g); // Take values with "," without quote sign
+					currentValues = currentValue.match(regExp);
+				} else {
+					// Parameters without "," so split it as usual
+					currentValues = currentValue.split(",");
+				}
+
+				currentValues = _.without(currentValues, newValue);
+
+				// Re-surround array with quotes after "without" operation
+				if ( hasQuotes ) {
+					currentValues = currentValues.map(function(val){
+						return "\"" + val + "\""; // NGEO-2075
+					});
+				}
 
 				//set the new value or remove if empty
 				if (currentValues.length == 0) {
