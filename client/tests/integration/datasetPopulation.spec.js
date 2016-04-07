@@ -36,13 +36,14 @@ describe("DatasetPopulation test", function() {
     });
 
     it("should be able to fetch dataset", function() {
+    	var ajaxSpy = spyOn($, 'ajax').and.callThrough();
+    	expect(ajaxSpy.calls.count()).toBe(0);
     	DataSetPopulation.fetchDataset('SENTINEL2_L1', function( dataset ){
     		expect(dataset.get("datasetId")).toBe("SENTINEL2_L1");
-    		dataset.isCached = true;
-
+    		expect(ajaxSpy.calls.count()).toBe(1); // Ajax call has been made to retrieve dataset
     		// Check if it caches the dataset on another fetch
 			DataSetPopulation.fetchDataset('SENTINEL2_L1', function( cachedDataset ) {
-				expect(cachedDataset.isCached).toBe(true);
+				expect(ajaxSpy.calls.count()).toBe(1); // No ajax, dataset has came from cache
 			})
 
     	});
