@@ -4,7 +4,7 @@ var Map;
 describe("Map test", function() {
 
     beforeEach(function(done){
-
+    	Configuration.url = "/client-dev/conf/"; // Use stub_server's url
     	// Load configuration
     	Configuration.load().done(function(){
     		done();
@@ -31,8 +31,8 @@ describe("Map test", function() {
         })
     });
 
-    it("should be able to add layers", function() {
+    // it("should be able to add layers", function() {
     	
-    });
+    // });
 
 });
