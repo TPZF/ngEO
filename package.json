@@ -7,7 +7,7 @@
     "clean-css-brunch": "^1.7.2",
     "commonjs-require-definition": "^0.2.1",
     "css-brunch": "^1.7.0",
-    "jasmine-core": "^2.3.4",
+    "jasmine-core": "2.3.4",
     "javascript-brunch": "^1.7.1",
     "karma": "^0.13.11",
     "karma-chrome-launcher": "^0.2.1",
