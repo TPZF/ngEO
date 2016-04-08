@@ -51,11 +51,14 @@ describe("DatasetPopulation test", function() {
 
     it("should react on selection of dataset", function() {
     	var datasetId = "ND_OPT_1";
+
+		var ajaxSpy = spyOn($, 'ajax');
 		DataSetPopulation.select(datasetId);
-		// Wait the fetch
-		setTimeout(function() {
-			expect(DataSetPopulation.selection.hasOwnProperty(datasetId)).toBe(true);
-		}, 1000);
+		
+		// Pending ...
+
+		ajaxSpy.calls.mostRecent().args[0].success(__fixtures__['stub_server/datasetSearchInfo/'+datasetId+'_datasetInfo'])
+		expect(DataSetPopulation.selection.hasOwnProperty(datasetId)).toBe(true);
     });
 
     it("should react on unselection of dataset", function() {
