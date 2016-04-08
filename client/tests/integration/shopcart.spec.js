@@ -28,6 +28,7 @@ describe("Shopcart test", function() {
 			expect(shopcarts[0].get("id")).toBe("TPZ_SHP_01");
 			expect(shopcarts[0].get("name")).toBe("S1 product's shopcart");
 			expect(shopcarts[0].get("userId")).toBe("TPZ_user_01");
+			done();
     	});
     });
 });
