@@ -10,6 +10,7 @@ describe("DataAccessRequest test", function() {
     	Configuration.load().done(function(){
     		// Use SimpleDataAccessRequest to check dar workflow
     		SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
+    		StandingOrderDataAccessRequest = require('dataAccess/model/standingOrderDataAccessRequest');
     		statusesConfig = Configuration.localConfig.dataAccessRequestStatuses;
     		done();
     	})
@@ -19,6 +20,10 @@ describe("DataAccessRequest test", function() {
     it("should be able to initialize", function() {
         expect(SimpleDataAccessRequest.initialize).toBeDefined();
         SimpleDataAccessRequest.initialize();
+
+        // Init download manager id to be valid
+		SimpleDataAccessRequest.downloadLocation.DownloadManagerId = "DM_1";
+		expect(SimpleDataAccessRequest.requestStage).toBe('validation');
     });
 
     it("should be able to set products", function(done){
@@ -37,10 +42,6 @@ describe("DataAccessRequest test", function() {
 		// Set product
 		SimpleDataAccessRequest.setProducts([feature]);
 		expect(SimpleDataAccessRequest.productURLs.length).toEqual(1);
-		expect(SimpleDataAccessRequest.requestStage).toBe('validation');
-
-		// Init download manager id to be valid
-		SimpleDataAccessRequest.downloadLocation.DownloadManagerId = "DM_1";
 
 		done();
     });
@@ -64,7 +65,25 @@ describe("DataAccessRequest test", function() {
 			expect(triggerSpy).toHaveBeenCalledWith('SuccessConfirmationRequest', jasmine.anything(), jasmine.anything());
 			done();
 		});
+    });
 
+    it("should be able to initialize subscription", function(){
+    	StandingOrderDataAccessRequest.initialize();
+    	// Init download manager id & OpenSearchURL to be valid
+		StandingOrderDataAccessRequest.downloadLocation.DownloadManagerId = "DM_1";
+		StandingOrderDataAccessRequest.OpenSearchURL = "http://localhost:3000/server/catalogueSearch/ND_OPT_1?start=2012-12-07T09:34:00&stop=2012-12-07T09:34:00&count=10&bbox=-15.5775,47.07669921875,12.5475,57.84330078125";
+    });
+
+    it("should be able to validate subscription", function(done) {
+    	var triggerSpy = spyOn(StandingOrderDataAccessRequest, 'trigger').and.callThrough();
+    	spyOn(StandingOrderDataAccessRequest, 'isValid').and.callThrough();
+    	StandingOrderDataAccessRequest.submit().done(function() {
+    		expect(StandingOrderDataAccessRequest.OpenSearchURL).not.toBe(null);
+    		expect(StandingOrderDataAccessRequest.getSchedulingOptions().TimeDriven).not.toBe(undefined);
+    		// TODO: check better and add some more test for standing-order-specific params
+
+    		done();
+    	});
     });
 
 });
