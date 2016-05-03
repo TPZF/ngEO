@@ -1,7 +1,3 @@
-/**
- * These are the model components for Shopcarts Collection handling
- */
-
 var Logger = require('logger');
 var Configuration = require('configuration');
 var FeatureCollection = require('searchResults/model/featureCollection');
@@ -20,13 +16,13 @@ var methodMap = {
 	'read': 'GET'
 };
 
-//////////////////////////////////////////////////////////////////////////////////////////////////
-/** This is the backbone Model of the Shopcart element
+/**
+ *  This is the backbone Model of the Shopcart element
  */
 var Shopcart = Backbone.Model.extend({
 
 	defaults: {
-		name: "",
+		name: "Shopcart",
 		isDefault: false
 	},
 
@@ -39,6 +35,13 @@ var Shopcart = Backbone.Model.extend({
 
 		// The shopcart content is a feature collection
 		this.featureCollection = new FeatureCollection();
+		var self = this;
+		this.listenTo(this.featureCollection, 'add:features', function(features){
+			self.trigger("add:features", features)
+		});
+		this.listenTo(this.featureCollection, 'remove:features', function(features) {
+			self.trigger("remove:features", features);
+		});
 	},
 
 	/**
@@ -178,6 +181,7 @@ var Shopcart = Backbone.Model.extend({
 				}
 				Logger.inform(addToShopcartMsg);
 
+				self.featureCollection.totalResults += featuresAdded.length;
 				self.featureCollection.addFeatures(featuresAdded);
 			},
 
@@ -200,7 +204,8 @@ var Shopcart = Backbone.Model.extend({
 		}
 	},
 
-	/** submit a delete request to the server in order to delete the selected 
+	/**
+	 * Submit a delete request to the server in order to delete the selected 
 	 * shopcart items.
 	 */
 	deleteSelection: function() {
@@ -256,6 +261,7 @@ var Shopcart = Backbone.Model.extend({
 				}
 
 				if (removedItems.length > 0) {
+					self.featureCollection.totalResults -= removedItems.length;
 					self.featureCollection.removeFeatures(removedItems);
 				}
 			},
@@ -267,7 +273,8 @@ var Shopcart = Backbone.Model.extend({
 		});
 	},
 
-	/** submit a PUT request to the server in order to update the selected 
+	/**
+	 * Submit a PUT request to the server in order to update the selected 
 	 * shopcart items with the given download options
 	 */
 	updateSelection: function(downloadOptions) {

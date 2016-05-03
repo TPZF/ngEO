@@ -15,6 +15,7 @@ menu[type=toolbar] {
 }
 
 .tb-elt {
+	position: relative;
 	display: inline-block;	
 	margin-top: 3px;
 	margin-left: 4px;
@@ -25,6 +26,18 @@ menu[direction=vertical] .tb-elt {
 	display: block;
 }
 
+.nbFeatures {
+	display: none;
+    position: absolute;
+    background: red;
+    border-radius: 6px;
+    padding: 1px 5px;
+    top: 0px;
+    right: 0px;
+    font-size: 9px;
+    transform: translate(50%, -50%);
+}
+
 .tb-button {
 	cursor: pointer;
 	margin: auto;
@@ -32,6 +45,7 @@ menu[direction=vertical] .tb-elt {
 	width: 24px;
 	height: 24px;
 	.border-radius(0.5em);
+	position: inherit;
 }
 
 .tb-button:hover {
@@ -57,6 +71,7 @@ menu[direction=vertical] .tb-elt {
 	background-repeat: no-repeat;
 	width: 24px;
 	height: 24px;
+	position: inherit;
 }
 
 .tb-separator {

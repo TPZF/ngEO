@@ -32,7 +32,8 @@ menu[type=toolbar] {
 
 // Search toolbar
 #bottomToolbar {
-	bottom: 0px;
+	position: relative;
+	//bottom: 0px;
 	width: 100%;
 	height: @statusBar-bottom;
 	// Needed to swipe-effect
@@ -54,6 +55,9 @@ menu[type=toolbar] {
 }
 #dataset .tb-icon {
 	background-image: url(../images/dataset.png); 
+}
+#table .tb-icon {
+	background-image: url(../images/menu.png); 
 }
 .result .tb-icon {
 	background-image: url(../images/result.png); 
@@ -88,11 +92,10 @@ menu[type=toolbar] {
  */
 #dateRangeSlider {
 	z-index: 1005;
-	bottom: @statusBar-bottom + @statusBar-height;
 	left: 0px;
 	right: 0px;
 	background: @widget-background-color; 
-	position: absolute;
+	position: relative;
 	//width: 100%;
 }
 
@@ -100,10 +103,9 @@ menu[type=toolbar] {
  * The status bar
  */
 #statusBar {
-	position: absolute;
+	position: relative;
 	z-index: 1005;
 	left: 0px;
-	bottom: @statusBar-bottom;
 	width: 100%;
 	height: @statusBar-height;
 	color: white;
@@ -152,9 +154,11 @@ menu[type=toolbar] {
 }
 
 #resultsMessage {
-	display: inline-block;
-	//min-width: 17em;
-    text-align: right;
+    display: inline-block;
+    text-align: left;
+    right: 0px;
+    position: absolute;
+    bottom: 7px;
 }
 
 /**
@@ -163,6 +167,7 @@ menu[type=toolbar] {
 
 #resultsBar {
 	text-align: center;
+	transition: all 0.8s;
 }
 
 #tableCG {

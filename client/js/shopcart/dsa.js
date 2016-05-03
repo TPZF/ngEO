@@ -5,6 +5,7 @@ var Shopcart = require('shopcart/model/shopcart');
 var ShopcartTableView = require('shopcart/view/shopcartTableView');
 var ShopcartView = require('shopcart/view/shopcartView');
 var CreateShopcartView = require('account/view/createShopcartView');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 	
 module.exports =  {
 		
@@ -29,24 +30,26 @@ module.exports =  {
 		panelManager.bottom.addView( tableView );		
 		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
 			tableView.setShopcart(shopcart);
-			shopcartStatus.model = shopcart.featureCollection;
+			// Add shopcartView&tableView as a status to bottom bar
+			var shopcartStatus = {
+				activator: '#shopcart',
+				$el: shopcartView.$el,
+				views: [tableView],
+				viewActivators: [ shopcartView.$el.find('#tableCB') ],
+				model: shopcart.featureCollection
+			};
+			// Update shopcart's name
+			$(shopcartStatus.activator).find('.tb-text').html(shopcart.id);
+
+			// HACK : use addStatus method as well to update status listeners
+			panelManager.bottom.addStatus(shopcartStatus);
 		});
 		tableView.render();
 
-		// Add shopcartView&tableView as a status to bottom bar
-		var shopcartStatus = {
-			activator: '#shopcart',
-			$el: shopcartView.$el,
-			views: [tableView],
-			viewActivators: [ shopcartView.$el.find('#tableCB') ],
-			model: ShopcartCollection.getCurrent()
-		};
-		// Add shopcart status to panel
-		panelManager.bottom.addStatus(shopcartStatus);	
-		
-		// Load the shopcart collection to display the current shopcart in the data services area
+		// // Load the shopcart collection to display the current shopcart in the data services area
 		ShopcartCollection.fetch();
-	
+		
+		
 		// Define route for share shopcart
 		router.route(
 				"data-services-area/shopcart/:shopcartId", 

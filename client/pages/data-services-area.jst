@@ -21,26 +21,24 @@
 		<command id="switch" label="2D/3D" data-help="Switch map mode between 2D and 3D"/>
 	</menu>
 	
-	<menu id="bottomToolbar" type="toolbar">
-	<!--	<command id="result" label="Results"/> -->
-		<command id="shopcart" label="Shopcart"/>
-	</menu>
 	
 	<!-- bottom panel -->
 	<div id="bottom-panel" class="panel ui-body-c">
+		<!-- The date range slide use for product search -->
+		<div style="height: 0px; display: none;" id="dateRangeSlider">
+		</div>
+
+		<menu id="bottomToolbar" type="toolbar">
+		   	<command id="table" label="Table"/>
+		<!--	<command id="result" label="Results"/> -->
+			<command id="shopcart" label="Shopcart"/>
+			<span class="float: right" id="resultsMessage"></span>
+			<div id="coordinatesViewer"></div>
+		</menu>
 	</div>
 	
 	<!-- left panel -->
 	<div id="left-panel" class="panel ui-body-c">
 	</div>
 	
-	<!-- The date range slide use for product search -->
-	<div id="dateRangeSlider">
-	</div>
-	
-	<!-- The status bar to give information on the search results -->
-	<div id="statusBar" class="noSelect" >
-		<div id="coordinatesViewer"></div>
-		
-	</div>
 </div>

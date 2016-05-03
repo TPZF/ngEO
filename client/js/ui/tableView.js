@@ -1,6 +1,7 @@
 var Configuration = require('configuration');
 var DataSetSearch = require('search/model/datasetSearch');
 var Map = require('map/map');
+var Pagination = require('ui/pagination');
 var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 var FeatureCollection = require('searchResults/model/featureCollection');
 var SearchResultsMap = require('searchResults/map');
@@ -220,24 +221,6 @@ var TableView = Backbone.View.extend({
 					positionTo: this.$el.find('#table-columns-button')
 				});
 		},
-
-		// Next/Prev pagination
-		'click .paging_first': function(event) {
-			var rowData = $(event.target).closest('.paging').data("internal");
-			rowData.childFc.changePage(1);
-		},
-		'click .paging_last': function(event) {
-			var rowData = $(event.target).closest('.paging').data("internal");
-			rowData.childFc.changePage(rowData.childFc.lastPage);
-		},
-		'click .paging_next': function(event) {
-			var rowData = $(event.target).closest('.paging').data("internal");
-			rowData.childFc.changePage( rowData.childFc.currentPage + 1 );
-		},
-		'click .paging_prev': function(event) {
-			var rowData = $(event.target).closest('.paging').data("internal");
-			rowData.childFc.changePage( rowData.childFc.currentPage - 1 );
-		},
 		
 		// Incremental pagination
 		'click .loadMore' : function(event) {
@@ -277,6 +260,9 @@ var TableView = Backbone.View.extend({
 				self.triggerHighlightFeature();
 			});
 			this.listenTo(this.model, "update:downloadOptions", this.updateRows);
+			
+			if ( this.pagination )
+				this.pagination.setModel(model);
 
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
@@ -442,7 +428,7 @@ var TableView = Backbone.View.extend({
 	 */
 	clear: function() {
 		if (this.$table) {
-			this.$table.find('tbody').empty();
+			this.$table.html('<div class="table-nodata">No data found</div>');
 
 			this.rowsData = [];
 			this.hasExpandableRows = false;
@@ -544,6 +530,8 @@ var TableView = Backbone.View.extend({
 			if ( parentRowData ) {
 				var $row = this._getRowFromFeature(parentRowData.feature);
 				$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row);
+			} else if ( this.$table ) {
+				this.$table.html('<div class="table-nodata">No data found</div>');
 			}
 		}
 	},
@@ -631,17 +619,14 @@ var TableView = Backbone.View.extend({
 
 		// Add "loading" label on start
 		this.listenTo(child, 'startLoading', function(fc) {
+			this.$el.find(".child_of_"+ child.id).remove();
 			// Find element after which add 'loading'
-			$el = this.$el.find(".child_of_"+ child.id + ":last");
-			if ( !$el.length ) {
-				// No childs --> add after current row
-				$el = this._getRowFromFeature(rowData.feature);
-			}
+			$el = this._getRowFromFeature(rowData.feature);
 
-			$('<tr class="loadingChildren">\
+			var $loading = $('<tr class="loadingChildren">\
 				<td></td>\
 				<td></td>\
-				<td colspan="' + this.columnDefs.length + '">Loading...</td>\
+				<td colspan="' + this.columnDefs.length + '"><span class=""><img style="max-width: 20px; margin: 5px 0px;" src="../css/images/ajax-loader.gif"/></span></td>\
 			</tr>').insertAfter($el);
 			rowData.isLoading = true;
 		});
@@ -810,28 +795,17 @@ var TableView = Backbone.View.extend({
 
 			var $pagination = $('<tr class="paging_child_of_'+ rowData.childFc.id +'"><td></td><td></td>\
 				<td colspan="' + this.columnDefs.length + '">\
-					<div class="paging" data-role="controlgroup" data-type="horizontal" data-mini="true">\
-						<a class="paging_first" data-role="button">First</a>\
-						<a class="paging_prev" data-role="button">Previous</a>\
-						<a class="paging_next" data-role="button">Next</a>\
-						<a class="paging_last" data-role="button">Last</a>\
-					</div>\
 				</td>\
 			   </tr>')
-				.insertAfter($lastChild)
-				.trigger("create")
-				.find('.paging')
-					.data("internal", rowData);
+				.insertAfter($lastChild);
 
-			var startIndex = 1 + (rowData.childFc.currentPage - 1) * rowData.childFc.countPerPage;
-			if ( rowData.childFc.currentPage == 1 ) {
-				$pagination.find('.paging_prev').addClass('ui-disabled');
-				$pagination.find('.paging_first').addClass('ui-disabled');
-			}
-			if ( rowData.childFc.currentPage == rowData.childFc.lastPage ) {
-				$pagination.find('.paging_next').addClass('ui-disabled');
-				$pagination.find('.paging_last').addClass('ui-disabled');
-			}
+			var pagination = new Pagination({
+				model: rowData.childFc,
+				el: $pagination.find("td:last")
+			});
+			pagination.render();
+
+			$pagination.trigger("create");
 		}
 	},
 
@@ -861,7 +835,18 @@ var TableView = Backbone.View.extend({
 		// TODO: Make this view dependent on model only ...
 		// HACK: Update all highlights
 		_allHighlights = _allHighlights.concat(this.model.highlights);
-		this.highlightFeature(this.model.highlights, []);
+		this.triggerHighlightFeature();
+	},
+
+	/**
+	 *	Width getter depending on value returns appropriate class for td
+	 */
+	getWidthClass: function(value) {
+		if ( value <= 25 )
+			return "shortest-col";
+		if ( value > 25 && value < 120 )
+			return "short-col";
+		return "long-col";
 	},
 
 	/**
@@ -875,23 +860,38 @@ var TableView = Backbone.View.extend({
 
 			this.$table.find('thead').show();
 			
-//			var maxColWidth = 700;
-			var colWidths = this.$table.find("tr:first").children().map(function() {
-//				return ($(this).outerWidth() > maxColWidth) ? maxColWidth : $(this).outerWidth();
-				return $(this).outerWidth();
+			var self = this;
+			var colWidths = this.$table.find("tr:first").children().map(function(index) {
+				var headerWidth = self.$table.find("th:nth-child("+(index+1)+")").outerWidth();
+				return $(this).outerWidth() > headerWidth ? $(this).outerWidth : headerWidth;
 			});
 
 			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
+			var colSumWidth = _.reduce(colWidths, function(sum, w) { return sum+w;}, 0);
+			var hasSlider = colSumWidth <= ($(window).width() - 100);
 			for ( var i=0; i<colWidths.length; i++ ) {
-				$colgroup.append("<col width=" + colWidths[i] + ">");
+				if ( hasSlider ) {
+					$colgroup.append("<col width=" + colWidths[i] + ">");
+					this.$table.find('td:nth-child('+(i+1)+')').addClass( 'default-width' );
+				} else {
+					this.$el.find('.table-header').find('th:nth-child('+(i+1)+')').addClass( this.getWidthClass(colWidths[i]) );
+					this.$table.find('td:nth-child('+(i+1)+')').addClass( this.getWidthClass(colWidths[i]) );
+				}
 			}
 
-			// Copy table COLGROUP to grid head and grid foot
-			$colgroup
-				.insertBefore(this.$table.find('thead'))
-				.clone()
-				.insertBefore(this.$headerTable.find('thead'));
+			if ( hasSlider ) {
+				//this.$el.find('.table-header').addClass("fullscreenWidth");
+				this.$el.find('.table-view').addClass("fullscreenWidth");
+				// Copy table COLGROUP to grid head and grid foot
+				$colgroup
+					.insertBefore(this.$table.find('thead'))
+					.clone()
+					.insertBefore(this.$headerTable.find('thead'));
+			} else {
+				//this.$el.find('.table-header').removeClass("fullscreenWidth");
+				this.$el.find('.table-view').removeClass("fullscreenWidth");
+			}
 
 			this.$table.find('thead').hide();
 			var diffWidth = this.$headerTable.width() - this.$table.width();
@@ -935,8 +935,7 @@ var TableView = Backbone.View.extend({
 	 */
 	buildTable: function() {
 
-		this.$el.find('.table-content').remove();
-		this.$el.find('.table-header').remove();
+		this.$el.find('.inner-container').remove();
 		this.$el.find('.table-nodata').remove();
 
 		if (this.rowsData.length == 0) {
@@ -960,12 +959,22 @@ var TableView = Backbone.View.extend({
 			}
 		}
 
-		this.$table = $table.prependTo(this.el);
+		var $container = $('<div class="inner-container"></div>').prependTo(this.$el);
+		// Override the tine rectangle on scrollbar crossing bars
+		$('<div style="position: absolute;background: #292929;bottom: 0px;right: 0px;width: 15px; height: 16px;z-index: 1;"></div>').appendTo($container);
+
+		this.$table = $table.prependTo($container);
 
 		// Build the fixed header table
 		this.$table.wrap('<div class="table-content"></div>');
-		this.$headerTable = this.$table.clone().prependTo(this.el).wrap('<div class="table-header"></div>');
+		this.$headerTable = this.$table.clone().prependTo($container).wrap('<div class="table-header"></div>');
 		this.$table.find('thead').hide();
+
+
+		// Update header as well
+		this.$el.find(".table-content").scroll(function () {
+			$(".table-header").offset({ left: -1*this.scrollLeft });
+		});
 	},
 
 	/**
@@ -994,20 +1003,27 @@ var TableView = Backbone.View.extend({
 	 * Render footer
 	 */
 	renderFooter: function() {
-		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
+		var footer = $('<div id="tableFooter" class="ui-grid-b"></div>')
 			.append('<div class="table-filter ui-block-a">\
-						<div data-role="fieldcontain" style="display: inline-block; width: 351px;" data-inline="true">\
+						<div data-role="fieldcontain" style="width: 300px; display: inline-block;"  data-inline="true">\
 							<label for="filterTableInput">Filter table:</label>\
-							<input id="filterTableInput" style="display: inline-block; width: 72%;" data-mini="true" type="text"/>\
+							<input id="filterTableInput" data-mini="true" type="text"/>\
 						</div>\
 						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
 					</div>\
-					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
+					<div class="ui-block-b">\
+					</div>\
+					<div class="ui-block-c table-rightButtons"><div data-role="fieldcontain"></div></div>');
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
+
+		this.pagination = new Pagination({
+			model: this.model,
+			el: $(footer).find('.ui-block-b')
+		});
+		this.pagination.render();
 
 		if (this.renderButtons)
 			this.renderButtons($buttonContainer);
-
 
 		this.$el.append(footer);
 	},

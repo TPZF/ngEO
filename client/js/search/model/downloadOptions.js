@@ -47,6 +47,7 @@ DownloadOptions.prototype.initFromUrl = function(url) {
 					"name" : p[1]
 				}]
 			};
+			// No other way to know if the area is cropped or not
 			if ( p[0].indexOf("crop") >= 0 ) {
 				colDo.cropProductSearchArea = "true";
 			}

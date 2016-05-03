@@ -214,7 +214,8 @@ var DatasetSelectionView = Backbone.View.extend({
 		_.each(this.model.selection, function(dataset) {
 			var $elt = $dslListContainer.find('#' + dataset.get('datasetId'));
 			if ($elt.length == 0) {
-				this.model.unselect(dataset.get('datasetId'))
+				this.model.unselect(dataset.get('datasetId'));
+				this.trigger("sizeChanged");
 			} else {
 				$elt.find('.ui-icon').addClass('ui-icon-checkbox-on');
 				$elt.find('.ui-icon').removeClass('ui-icon-checkbox-off');

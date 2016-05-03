@@ -70,3 +70,23 @@ html, body {
 .ui-field-contain > label {
 	vertical-align: middle !important;
 }
+
+// Scroll styling: works in webkit browsers only..
+::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}
+
+// TODO: move it..
+.ui-body-c.panel-content-bottom {
+    height: 295px;
+}

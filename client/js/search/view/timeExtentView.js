@@ -17,6 +17,9 @@ var TimeExtentView = Backbone.View.extend({
 		//typically for shared parameters urls
 		this.listenTo(this.model, "change:start", this.update);
 		this.listenTo(this.model, "change:stop", this.update);
+
+		// Add events
+		_.extend(this, Backbone.Events);
 	},
 
 	events: {
@@ -114,7 +117,7 @@ var TimeExtentView = Backbone.View.extend({
 	addTimeSlider: function() {
 
 		this.$dateRangeSlider = $('#dateRangeSlider');
-		this.$dateRangeSlider.dateRangeSlider({
+		this.$dateRangeSlider.dateRangeSlider('option', {
 			boundsMaxLength: Configuration.localConfig.timeSlider.boundsMaxLength,
 			boundsMinLength: Configuration.localConfig.timeSlider.boundsMinLength,
 			bounds: {
@@ -126,8 +129,9 @@ var TimeExtentView = Backbone.View.extend({
 				max: this.model.get("dateRange").stop
 			},
 			change: $.proxy(this.onTimeSliderChanged, this)
-		}).show();
+		});
 
+		this.$dateRangeSlider.dateRangeSlider('show');
 	},
 
 	// Call when time slider has changed
@@ -148,8 +152,16 @@ var TimeExtentView = Backbone.View.extend({
 
 	// Remove the time slider
 	removeTimeSlider: function() {
-		this.$dateRangeSlider.dateRangeSlider('destroy');
-		this.$dateRangeSlider = $();
+
+		var self = this;
+		this.$dateRangeSlider.dateRangeSlider('hide', function() {
+			// self.$dateRangeSlider.dateRangeSlider('destroy');
+			self.$dateRangeSlider = $();
+			self.trigger("removeTimeSlider");
+
+			// Hack : update panel size when slider has been hidden
+			$(window).trigger('resize');
+		});
 	},
 
 	// Update the view when the model has changed
@@ -183,11 +195,12 @@ var TimeExtentView = Backbone.View.extend({
 
 		// Need to call create to disable the datebox when timeSlider is enabled by default
 		this.$el.trigger('create');
-
+		this.$fromDateInput.datebox();
+		this.$toDateInput.datebox();
 
 		// Append time slider
 		if (this.hasTimeSlider) {
-			this.$el.append('<label class="useTimeSliderLabel">Use Time Slider<input type="checkbox" ' + (this.model.get('useTimeSlider') ? "checked" : "") + ' class="useTimeSliderCheckBox" data-mini="true" data-theme="c"></label>');
+			this.$el.append('<label class="useTimeSliderLabel">Use Time Slider<input type="checkbox" ' + (this.model.get('useTimeSlider') ? "checked" : "") + ' class="useTimeSliderCheckBox" data-mini="true"></label>');
 
 			if (this.model.get("useTimeSlider")) {
 				//disable the dates start and stop widgets if the time slider is enabled
@@ -198,7 +211,6 @@ var TimeExtentView = Backbone.View.extend({
 
 		return this;
 	}
-
 });
 
 module.exports = TimeExtentView;

@@ -11,25 +11,25 @@ var PanelManager = Backbone.View.extend({
 		/**
 		 *	Redraw the element, used for CHROME HACK
 		 */
-		// jQuery.fn.redraw = function() {
-		// 	return this.hide(0, function() {
-		// 		$(this).show();
-		// 	});
-		// };
+		jQuery.fn.redraw = function() {
+			return this.hide(0, function() {
+				$(this).show();
+			});
+		};
 
 		this.$center = $(options.center);
 
 		var self = this;
 		this.centerResizedCallback = function() {
 			// CHROME HACK
-			// var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
-			// if (isChrome) {
+			var isChrome = /Chrome/.test(navigator.userAgent) && /Google Inc/.test(navigator.vendor);
+			if (isChrome) {
 			// 	$('#statusBar').redraw();
 			// 	if ($('#dateRangeSlider').is(':visible'))
 			// 		$('#dateRangeSlider').redraw();
 			// 	$('#bottomToolbar').redraw();
-			// 	$('#map').redraw();
-			// }
+				$('#map').redraw();
+			}
 			self.trigger('centerResized');
 		};
 		this.leftResizedCallback = function() {
@@ -42,6 +42,26 @@ var PanelManager = Backbone.View.extend({
 		}, 300);
 
 		$(window).resize(lazyResize);
+
+		$('#dateRangeSlider').on('drs:hide', function() {
+
+			var currentBottom = parseFloat(self.left.$el.css("bottom"));
+			self.left.$el.animate({
+				"bottom": currentBottom - 24
+			}, 400, self.leftResizedCallback);
+
+		});
+
+		// Update layout when dateRangeSlider visiblity has changed
+		$('#dateRangeSlider').on('drs:show', function() {
+
+			setTimeout(function() {
+				var currentBottom = parseFloat(self.left.$el.css("bottom"));
+				self.left.$el.animate({
+					"bottom": currentBottom + 24
+				}, 400, self.leftResizedCallback);
+			}, 0)
+		});
 
 		this._centerState = null;
 	},
@@ -96,12 +116,12 @@ var PanelManager = Backbone.View.extend({
 	 */
 	updatePanelSize: function(region) {
 		var currentSize = this.getSize(region);
-		var prevSize = this.$center.css(region);
+		var prevSize = parseFloat(this.$center.css(region));
 		if (currentSize != prevSize) {
 			var props = {};
 			props[region] = currentSize;
-			this.$center.css(props);
-			this.trigger('centerResized');
+			//this.$center.css(props);
+			//this.trigger('centerResized');
 			if (region == 'bottom') {
 				this.left.$el.css(props);
 				this.trigger('leftResized');
@@ -128,14 +148,26 @@ var PanelManager = Backbone.View.extend({
 	show: function(region, duration) {
 		var props = {};
 		props[region] = this.getSize(region);
-		this.$center.animate(props, duration, this.centerResizedCallback);
+		// this.$center.animate(props, duration, this.centerResizedCallback);
 
+		var offset = 0;
 		if (region == 'bottom') {
-			this.left.$el.animate(props, duration, this.leftResizedCallback);
+			offset = /*$('#statusBar').height() +*/ $('#bottomToolbar').height() + $('#dateRangeSlider').height() + 2;
+
+			this.$center.animate({
+				"bottom": props.bottom - offset
+			}, duration, this.centerResizedCallback);
+
+			this.left.$el.animate({
+				"bottom": props.bottom
+			}, duration, this.leftResizedCallback);
 		}
 
 		props[region] = 0;
 		this[region].$el.animate(props, duration);
+		if ( region == 'left' ) {
+			$('#searchToolbar').animate({'left': 402});
+		}
 
 		// Listen to size event on the panel
 		this.listenTo(this[region], 'sizeChanged', _.bind(this.updatePanelSize, this, region));
@@ -147,14 +179,23 @@ var PanelManager = Backbone.View.extend({
 	hide: function(region, duration, callback) {
 		var props = {};
 		props[region] = 0;
-		this.$center.animate(props, duration, this.centerResizedCallback);
+		// this.$center.animate(props, duration, this.centerResizedCallback);
 
+		var offset = 0;
 		if (region == 'bottom') {
-			this.left.$el.animate(props, duration, this.leftResizedCallback);
+			this.$center.animate(props, duration, this.centerResizedCallback);
+			console.log("bottom", props);
+			offset = /*$('#statusBar').height() +*/ $('#bottomToolbar').height() + $('#dateRangeSlider').height() + 2;
+			this.left.$el.animate({
+				"bottom": props.bottom + offset
+			}, duration, this.leftResizedCallback);
 		}
 
-		props[region] = -this.getSize(region);
+		props[region] = -this.getSize(region) + offset;
 		this[region].$el.animate(props, duration, callback);
+		if ( region == 'left' ) {
+			$('#searchToolbar').animate({'left': 0});
+		}
 
 		this.stopListening(this[region], 'sizeChanged');
 	}

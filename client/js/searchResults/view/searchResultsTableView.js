@@ -148,7 +148,7 @@ var SearchResultsTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button title="Export" data-role="button" data-inline="true" data-icon="forward" data-iconpos="notext" data-mini="true">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 

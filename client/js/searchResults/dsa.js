@@ -64,22 +64,35 @@ module.exports = {
 		var tableView = new SearchResultsTableView();
 		panelManager.bottom.addView(tableView);
 		tableView.render();
+		tableView.$el.css('display', 'block')
 
-		// Create the GanttView
-		var ganttView = new GanttView();
-		panelManager.bottom.addView(ganttView);
-		ganttView.render();
+		// Create the GanttView (no Gantt view for now)
+		// var ganttView = new GanttView();
+		// panelManager.bottom.addView(ganttView);
+		// ganttView.render();
+
+		$('#table').toolbar().toolbar("refresh");
+		$('#table').click(function() {
+			$(this).toggleClass("toggle");
+			var bottom = parseInt(panelManager.bottom.$el.css('bottom'));
+			var isOpened = (bottom >= 0);
+			if ( isOpened ) {
+				panelManager.hide("bottom", 400);
+			} else {
+				panelManager.show("bottom", 400);
+			}
+		});
 
 		// Call when a new feature collection is available
 		SearchResults.on('add:featureCollection', function(fc) {
 
 			// Create the search results view
-			var searchResultsView = new SearchResultsView({
-				model: fc
-			});
-			_views[fc.id] = searchResultsView;
-			$('#statusBar').append(searchResultsView.$el);
-			searchResultsView.render();
+			// var searchResultsView = new SearchResultsView({
+			// 	model: fc
+			// });
+			// _views[fc.id] = searchResultsView;
+			// $('#statusBar').append(searchResultsView.$el);
+			// searchResultsView.render();
 
 			// Update the toolbar
 			$bottomToolbar
@@ -95,9 +108,9 @@ module.exports = {
 			// Add to status bar
 			panelManager.bottom.addStatus({
 				activator: '#result' + fc.id,
-				$el: searchResultsView.$el,
-				views: [tableView, ganttView],
-				viewActivators: [searchResultsView.$el.find('#tableCB'), searchResultsView.$el.find('#ganttCB')],
+				$el: $(""),//searchResultsView.$el,
+				views: [tableView],//, ganttView],
+				viewActivators: [$('#table')],//, searchResultsView.$el.find('#ganttCB')],
 				model: fc
 			});
 
@@ -133,8 +146,8 @@ module.exports = {
 			}
 
 			// Remove the view
-			_views[fc.id].remove();
-			delete _views[fc.id];
+			// _views[fc.id].remove();
+			// delete _views[fc.id];
 
 			// Remove feature collection from the map
 			SearchResultsMap.removeFeatureCollection(fc);

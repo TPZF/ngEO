@@ -8,7 +8,8 @@ require('ui/widget');
 $.widget("ngeo.toolbar", {
 	// default options
 	options: {
-		onlyIcon: false
+		onlyIcon: false,
+		withNumber: false
 	},
 
 	// the constructor
@@ -32,7 +33,11 @@ $.widget("ngeo.toolbar", {
 			.addClass('tb-elt');
 
 		// Add text for each element
-		elements.append('<div class="tb-button"><div class="tb-icon"></div></div>');
+		var $tbButton = $('<div class="tb-button"><div class="tb-icon"></div></div>').appendTo(elements);
+
+		if ( this.options.withNumber ) {
+			$tbButton.find('.tb-icon').append('<span class="nbFeatures"></span>');
+		}
 
 		// Take care to set the data-help on the tb-icon (now the element to receive click)
 		elements.each(function() {
@@ -55,8 +60,10 @@ $.widget("ngeo.toolbar", {
 				return $(this).attr('label');
 			});
 		} else {
+			var self = this;
 			elements.append(function() {
-				return '<div class="tb-text">' + $(this).attr('label') + '</div>';
+				var $elt = $('<div class="tb-text"> ' + $(this).attr('label') + '</div>');
+				return $elt;
 			});
 		}
 	},
