@@ -24,15 +24,15 @@
 					<input min="<%= parameter.rangeMinValue %>" max="<%= parameter.rangeMaxValue %>" type="number" id="<%= parameter.name %>" data-mini="true" />
 
 			<% break; case "DateTime" : %>
-					<input type="text" data-role="datebox" data-mini="true" data-theme="c" data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d",
+					<input type="text" data-role="datebox" data-mini="true" data-theme="a" data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d",
 					"useTodayButton": true, "themeDate":"c", "themeDatePick":"a", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' id="<%= parameter.name %>" data-mini="true" />
 
 			<% break; case "enumeration" : %>
-					<select id="<%= parameter.name %>" data-mini="true" data-theme="c">
+					<select id="<%= parameter.name %>" data-mini="true" data-theme="a">
 
 						<% for ( var j=0; j<parameter.values.length; j++ )
 						{ %>
-							<option value="<%= parameter.values[j] %>" data-corners="false" data-theme="c" data-mini="true"><%= parameter.values[j] %></option> 
+							<option value="<%= parameter.values[j] %>" data-corners="false" data-theme="a" data-mini="true"><%= parameter.values[j] %></option> 
 						<% } %>
 					</select>
 

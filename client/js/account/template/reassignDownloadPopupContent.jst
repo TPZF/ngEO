@@ -1,7 +1,7 @@
 <div id="reassignDMDialog">
-    <select id="downloadManagersList" data-mini="true" data-theme="c">
+    <select id="downloadManagersList" data-mini="true" data-theme="a">
     <% _.each(downloadmanagers, function( downloadManager ) { %>
-        <option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="c"><%= downloadManager.downloadManagerFriendlyName %></option>
+        <option value="<%= downloadManager.downloadManagerId %>" data-corners="false" data-theme="a"><%= downloadManager.downloadManagerFriendlyName %></option>
     <% }); %>
     </select>
     <a class="submit" data-mini='true' data-inline='true' data-theme='a' data-role='button' >OK</a>

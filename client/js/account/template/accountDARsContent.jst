@@ -1,17 +1,16 @@
 
-<div id="dataAccessMonitoringContent" class="widget-content ui-body-c">
+<div id="dataAccessMonitoringContent" class="widget-content ui-body-a">
 	<div class="ui-grid-a">
-		<div id="dmsDiv" class="ui-block-a widget-content ui-body-c">
+		<div id="dmsDiv" class="ui-block-a widget-content ui-body-a">
 			<h4>Assigned Download Managers : <%= getOrderedStatuses().length %></h4>
-			<ul id="downloadmnagers" data-role="listview" data-inset="true"
-				data-theme="c">
+			<ul id="downloadmnagers" data-role="listview" data-inset="true">
 				<% _.each(getOrderedStatuses(), function(newStatus) { %>
 				<li id="<%= newStatus.dlManagerId %>" data-mini="true"><%=
 					newStatus.downloadManagerName %> : <%= newStatus.DARs.length %></li> <% }); %>
 			</ul>
 		</div>
 
-		<div id="darsDiv" class="ui-block-b widget-content ui-body-c">
+		<div id="darsDiv" class="ui-block-b widget-content">
 		</div>
 
 		<div id="assignDMPopup" data-role="popup" data-theme="a" class="ui-content"></div>

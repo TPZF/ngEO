@@ -1,6 +1,6 @@
 <h4>Assigned Download Managers : <%= getOrderedStatuses().length %></h4>
 <ul id="downloadmnagers" data-role="listview" data-inset="true"
-    data-theme="c">
+    data-theme="a">
     <% _.each(getOrderedStatuses(), function(newStatus) { %>
     <li id="<%= newStatus.dlManagerId %>" data-mini="true"><%=
         newStatus.downloadManagerName %> : <%= newStatus.DARs.length %></li> <% }); %>
