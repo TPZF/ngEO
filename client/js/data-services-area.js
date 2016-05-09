@@ -23,10 +23,10 @@ module.exports = {
 	buildElement: function() {
 
 		var dsa = $(dsa_template());
-		dsa.find('menu[type=toolbar]').toolbar({
-			onlyIcon: false
+		dsa.find('menu[type=toolbar]').not('#bottomToolbar').toolbar();
+		dsa.find('#bottomToolbar').toolbar({
+			withNumber: true
 		});
-
 		return dsa;
 	},
 
@@ -51,8 +51,8 @@ module.exports = {
 		$('#statusBar').show();
 
 		var $dateRangeSlider = $('#dateRangeSlider');
-		$dateRangeSlider.show();
 		if ($dateRangeSlider.is(':ui-dateRangeSlider')) {
+			$dateRangeSlider.show();
 			$dateRangeSlider.dateRangeSlider('refresh');
 		}
 
@@ -100,11 +100,12 @@ module.exports = {
 
 		// Need to add some elements to map to have good positionning.
 		// Not very pretty..
-		$('#statusBar').appendTo('#map').hide().trigger('create');
-		$('#dateRangeSlider').appendTo('#map').hide();
-		$('#searchToolbar').appendTo('#map').hide();
+		// MS: work in progress.. commented parts should be deleted at the end..
+		$('#statusBar')/*.appendTo('#map')*/.hide().trigger('create');
+		// $('#dateRangeSlider').appendTo('#map').hide();
+		// $('#searchToolbar').appendTo('#map').hide();
 		$('#mapToolbar').appendTo('#map').hide();
-		$('#bottomToolbar').appendTo('#map').hide();
+		$('#bottomToolbar')/*.appendTo('#map')*/.hide();
 
 		// Create the router
 		var router = new Backbone.Router();
