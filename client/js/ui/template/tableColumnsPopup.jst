@@ -1,7 +1,7 @@
 <div>
-	<fieldset data-role="controlgroup" data-mini="true" data-theme="c">
+	<fieldset data-role="controlgroup" data-mini="true" data-theme="a">
 		<% for (var i = 0; i < columnDefs.length; i++) { if (columnDefs[i].numValidCell > 0) {%>
-		   <label><input type="checkbox" data-theme="c" data-index="<%= i %>" <%= columnDefs[i].visible ? 'checked': '' %> /><%= columnDefs[i].sTitle %></label>
+		   <label><input type="checkbox" data-theme="a" data-index="<%= i %>" <%= columnDefs[i].visible ? 'checked': '' %> /><%= columnDefs[i].sTitle %></label>
 	   <% }} %>
 	</fieldset>
 </div>

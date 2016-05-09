@@ -1,8 +1,8 @@
 
-<ul id="datasetList" data-role="listview" data-filter="true" data-inset="true" data-count-theme="b">	
+<ul id="datasetList" data-role="listview" data-filter="true" data-inset="true">	
 
 	<% _.each(datasets, function(dataset) { %>
-		<li  id="<%= dataset.datasetId %>" data-theme="d" data-mini="true" >
+		<li  id="<%= dataset.datasetId %>" data-mini="true" >
 					<span class="ui-icon ui-icon-checkbox-off" /><%= dataset.name %>
 					<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
 		</li> 
