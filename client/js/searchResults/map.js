@@ -41,6 +41,7 @@ var _onUnselectFeatures = function(features, fc) {
 			BrowsesManager.removeBrowse(features[i]);
 		}
 	}
+	Map.trigger("unselectFeatures");
 };
 
 // Selected or highlighted features with browse
@@ -70,23 +71,29 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 		}
 	}
 
+	var highlightedFeats = [];
 	if (features.length > 0) {
 		// Highlight currently selected features
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
 			if (fc.isSelected(feature)) {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
 			}
 			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
+			//HACK add feature collection since it does not contain the fetaure collection
+			feature._featureCollection = fc;
+			highlightedFeats.push(feature);
 		}
 	}
 	_updateFeaturesWithBrowse(features);
+	Map.trigger("highlightFeatures", highlightedFeats);
 };
 
 // Connect with map feature picking
-Map.on('pickedFeatures', function(features, event, featureCollections) {
+Map.on('pickedFeatures', function(features, featureCollections) {
 
 	var highlights = {}
 	for (var i = 0; i < featureCollections.length; i++) {

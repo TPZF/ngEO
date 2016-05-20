@@ -111,17 +111,30 @@ var MapPopup = function(container) {
 	parentElement.hide();
 
 	var self = this;
-	Map.on('pickedFeatures', function(highlightedFeatures, event) {
-		if (highlightedFeatures.length == 0) {
-			self.close();
-		} else {
-			self.open(highlightedFeatures, event);
+	Map.on('pickedFeatures', function(pickedFeatures) {
+		self.openOrCloseDialog(pickedFeatures);
+	});
+
+	/**
+	* When we hightligth feature, update information linked to those features if the dialod is open.
+	* Otherwise , do nothing
+	*/
+	Map.on('highlightFeatures', function(highlightedFeatures) {
+		if (isOpened){
+			self.openOrCloseDialog(highlightedFeatures);
 		}
+	});
+
+	/**
+	* When we unselect features, just close the window
+	*/
+	Map.on('unselectFeatures', function() {
+		self.close();
 	});
 
 	/*Map.on('extent:change', function() {
 		self.close();
-	});*/
+	});
 
 	/**
 	 * Private methods
@@ -217,7 +230,7 @@ var MapPopup = function(container) {
 	/**
 		Open the popup
 	 */
-	this.open = function(highlightedFeatures, event) {
+	this.open = function(highlightedFeatures) {
 
 		products = highlightedFeatures;
 
@@ -242,6 +255,17 @@ var MapPopup = function(container) {
 			isOpened = false;
 		}
 
+	};
+
+	/**
+	* Depending on the feature list, if empty, close the dialog, otherwise open the dialog and update content
+	*/
+	this.openOrCloseDialog = function(featuresList) {
+		if (featuresList.length == 0) {
+			this.close();
+		} else {
+			this.open(featuresList);
+		}
 	};
 
 	SearchResults.on('reset:features', this.close, this);
