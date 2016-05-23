@@ -1,5 +1,6 @@
 var downloadOptions_template = require('search/template/downloadOptionsContent');
 var DatasetSearch = require('search/model/datasetSearch');
+var Configuration = require('configuration');
 
 /** 
  * The model is the DownloadOptions
@@ -75,7 +76,8 @@ var DownloadOptionsView = Backbone.View.extend({
 
 		var content = downloadOptions_template({
 			model: this.model,
-			updateCallback: this.updateCallback != null
+			updateCallback: this.updateCallback != null,
+			theme: Configuration.localConfig.theme
 		});
 
 		this.$el.html(content);

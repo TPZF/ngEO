@@ -50,7 +50,8 @@ var DatasetView = Backbone.View.extend({
 
         var content = datasetSearchContent_template({
             dataset: this.dataset,
-            name: DataSetPopulation.getFriendlyName(this.dataset.get("datasetId"))
+            name: DataSetPopulation.getFriendlyName(this.dataset.get("datasetId")),
+            theme: Configuration.localConfig.theme
         });
         this.$el.append(content);
 

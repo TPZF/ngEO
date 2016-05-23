@@ -1,7 +1,7 @@
 <!-- if the selected dataset has no download options display an information message to the user -->
 
 <% if ( model.collection.length == 0 ) { %>
-	<div id="downloadOptionsMessage" class="widget-content ui-body-c ui-error-message">
+	<div id="downloadOptionsMessage" class="widget-content ui-body-<%= theme %> ui-error-message">
 		<p><b>No download options available.</b></p>
 	</div>	
 <% } else { %>
@@ -18,7 +18,7 @@
 			<% if ( model.hasValidPreconditions( option ) ) {
 				if (!option.cropProductSearchArea) { %>
 					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
-						<select id="<%= option.argumentName %>" data-mini="true" data-theme="c">
+						<select id="<%= option.argumentName %>" data-mini="true" data-theme="<%= theme %>">
 						<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
 						<!-- <option value="None">None</option> -->
 
@@ -44,7 +44,7 @@
 
 	<% if (updateCallback) { %>
 		<div class="popup-widget-footer">
-			<button id="downloadOptionsUpdate" data-role="button" data-mini="true" data-inline="true" data-theme="a">Update</button>
+			<button id="downloadOptionsUpdate" data-role="button" data-mini="true" data-inline="true" data-theme="<%= theme %>>Update</button>
 			<div id="downloadOptionsMessage"></div>
 		</div>
 	<% } %>

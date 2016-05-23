@@ -1,9 +1,8 @@
-<div id="userPrefsContent" class="widget-content ui-body-c">
+<div id="userPrefsContent" class="widget-content ui-body-<%= theme %>">
 
 	<ul id="layersPrefsList" data-role='listview' data-divider-theme="a" data-insets="true">
-<!-- 		<li data-role="list-divider">Last Selected Features</li> -->
-		<% _.each(keys, function(key) { %> 
-			<li><%= key %> : <%= (!get(key))? 'None' : get(key)%></li> 
+		<% _.each(UserPrefs.keys, function(key) { %> 
+			<li><%= key %> : <%= (!UserPrefs.get(key))? 'None' : UserPrefs.get(key)%></li> 
 		<% }); %>
 	</ul>
 	

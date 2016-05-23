@@ -1,6 +1,7 @@
 var Logger = require('logger');
 var nameShopcart_template = require('account/template/nameShopcartTemplate');
 var ngeoWidget = require('ui/widget');
+var Configuration = require('configuration');
 
 var CreateShopcartView = Backbone.View.extend({
 
@@ -56,7 +57,8 @@ var CreateShopcartView = Backbone.View.extend({
 		this.$el.appendTo('.ui-page-active');
 		this.$el.ngeowidget({
 			title: this.options.title,
-			hide: $.proxy(this.remove, this)
+			hide: $.proxy(this.remove, this),
+			theme: Configuration.localConfig.theme
 		});
 
 		this.$el.trigger('create');

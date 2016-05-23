@@ -1,7 +1,8 @@
+var Configuration = require('configuration');
+
 /**
  * Tabs module
  */
-
 $.widget("ngeo.tabs", {
 
 	// default options
@@ -24,7 +25,7 @@ $.widget("ngeo.tabs", {
 		this.element.find('a')
 			.each(function(index) {
 				var $div = self.element.find($(this).attr('href'));
-				$div.addClass('ui-body-c').addClass('ui-tabs-content');
+				$div.addClass('ui-body-'+Configuration.localConfig.theme+' ui-tabs-content');
 
 				if (index == 0) {
 					self.activeLink = $(this);

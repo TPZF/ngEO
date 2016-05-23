@@ -26,7 +26,7 @@ var MapPopup = function(container) {
 	var advancedActivated = false;
 
 	element = $(
-		'<div class="widget-content ui-body-c mapPopup">\
+		'<div class="widget-content mapPopup">\
 			<div id="mpText"></div>\
 			<div id="mpButtons" data-mini="true" data-role="controlgroup" data-type="horizontal"></div>\
 		</div>');

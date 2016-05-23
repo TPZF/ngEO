@@ -102,10 +102,10 @@
 	},
 	
 	"searchResults": {
-		"countPerPage": 100
+		"countPerPage": 5
 	},
 	"expandSearch": {
-		"countPerPage": 100
+		"countPerPage": 3
 	},
 
 	"keyDates" : [["2015-04-25", "Super date"]],
@@ -227,7 +227,7 @@
 				},
 				"select" : {
 					"strokeColor": "#7373ff",
-					"strokeWidth": 1,
+					"strokeWidth": 3,
 					"fill" : false
 				},
 				"highlight": {
@@ -237,7 +237,7 @@
 				},
 				"highlight-select": {
 					"strokeColor": "#0000FF",
-					"strokeWidth": 1,
+					"strokeWidth": 3,
 					"fill" : false
 				}
 			},
@@ -249,7 +249,7 @@
 				},
 				"select" : {
 					"strokeColor": "#7373ff",
-					"strokeWidth": 1,
+					"strokeWidth": 3,
 					"fill" : false
 				},
 				"highlight": {
@@ -259,7 +259,7 @@
 				},
 				"highlight-select": {
 					"strokeColor": "#0000FF",
-					"strokeWidth": 1,
+					"strokeWidth": 3,
 					"fill" : false
 				}
 			},

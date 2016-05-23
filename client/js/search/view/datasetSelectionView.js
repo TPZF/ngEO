@@ -185,7 +185,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	 */
 	updateDatasetsList: function() {
 
-		// Retrieve the datasets according to the current filteria
+		// Retrieve the datasets according to the current criteria
 		var datasets = this.model.filterDatasets(this.criteriaFilter);
 
 		// Build the dataset list

@@ -70,7 +70,7 @@ BackgroundWidget.prototype.buildHtml = function(layer) {
 	// Add radio button + attribute callback on change
 	var isChecked = layer.visible ? 'checked="checked"' : "";
 	var id = layer.id ? layer.id : layer.name.replace(/\s+/g,"_");
-	var input = $('<input id="' + id + '" type="radio" data-theme="c" name="background-choice" '+ isChecked +' />')
+	var input = $('<input id="' + id + '" type="radio" name="background-choice" '+ isChecked +' />')
 		.data("layer", layer)
 		.change(changeBackground);
 

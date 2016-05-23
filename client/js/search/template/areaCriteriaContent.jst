@@ -1,15 +1,15 @@
 <fieldset id="toolsChoice" data-role="controlgroup" data-type="horizontal" data-mini="true">
 				     
-	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-bbox" value="bbox" data-theme="c" checked="checked">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-bbox" value="bbox" checked="checked">
 	<label for="radio-bbox" id="radio-bbox-label" data-corners="false">Box</label>
 	
-	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-polygon" value="polygon" data-theme="c">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-polygon" value="polygon">
 	<label for="radio-polygon" id="radio-polygon-label" data-corners="false">Polygon</label>
 			         	
-	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-gazetteer" data-theme="c" value="gazetteer">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-gazetteer" value="gazetteer">
 	<label for="radio-gazetteer" id="radio-gazetteer-label" data-corners="false">Gazetteer</label>
 	
-	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-import" data-theme="c" value="import">
+	<input type="radio" name="radio-area-criteria-<%= name %>" id="radio-import" value="import">
 	<label for="radio-import" id="radio-import-label" data-corners="false">Import</label>
 	    	
 </fieldset>
@@ -18,27 +18,27 @@
 
 	<div data-role="fieldcontain">
 		<label  for="west">West:</label>
-		<input type="text" name="west" id="west" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().west%>">
+		<input type="text" name="west" id="west" data-mini="true" value="<%=searchArea.getBBox().west%>">
 	</div>
 	
 		<div data-role="fieldcontain">
 		<label for="south">South:</label>
-		<input type="text" name="south" id="south" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().south%>">
+		<input type="text" name="south" id="south" data-mini="true" value="<%=searchArea.getBBox().south%>">
 	</div>
 	
 	<div data-role="fieldcontain">
 		<label for="east">East:</label>
-		<input type="text" name="east" id="east" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().east%>">
+		<input type="text" name="east" id="east" data-mini="true" value="<%=searchArea.getBBox().east%>">
 	</div>
 
 	<div data-role="fieldcontain">
 		<label for="north">North:</label>
-		<input type="text" name="north" id="north" data-mini="true" data-theme="c" value="<%=searchArea.getBBox().north%>">
+		<input type="text" name="north" id="north" data-mini="true" value="<%=searchArea.getBBox().north%>">
 	</div>
 
 	<div id="mapExtent" data-role="fieldcontain">
 		<label class="mapExtentCheckBoxLabel">Use map extent
-		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" data-theme="c" <% if (attributes.useExtent) print('checked="checked"'); %> ></label>
+		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" <% if (attributes.useExtent) print('checked="checked"'); %> ></label>
 	</div>
 	<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>
 

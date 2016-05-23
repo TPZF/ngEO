@@ -136,7 +136,8 @@ var AdvancedSearchView = Backbone.View.extend({
 		var content = advancedCriteria_template({
 			advancedAttributes: this.model.get("advancedAttributes")[this.dataset.get("datasetId")],
 			criterionLabels: criterionLabels,
-			dataset: this.dataset
+			dataset: this.dataset,
+			theme: Configuration.localConfig.theme
 		});
 
 

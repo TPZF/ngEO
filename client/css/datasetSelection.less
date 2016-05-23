@@ -10,11 +10,15 @@
 	border-top: 1px solid grey;
 }
 
+.ui-collapsible-content {
+	background-color: #383838;
+}
+
 #ds-content { 
 	overflow-y: auto;
 	overflow-x: hidden;
 	
-	// Fix when using search filter, remvoe all margin is needed
+	// Fix when using search filter, remove all margin is needed
 	.ui-listview-filter-inset {
 		margin: 0;
 	}	
@@ -22,6 +26,7 @@
 	// The listview is in read-only mode because no <a> is needed for dataset list view so we need to modify the cursor
 	ul {
 		cursor: pointer;
+		background-color: #333333;
 	}
 	
 	li img {
@@ -47,6 +52,11 @@
 	li .ui-icon-checkbox-on {
 		background-color: #4596CE;
 	}	
+
+	// Add background color to be consistent with jqm 'c' theme
+	.ui-collapsible-content {
+		background-color: #333333;
+	}
 
 }
 

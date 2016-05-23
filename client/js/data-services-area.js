@@ -9,6 +9,7 @@ var PanelManager = require('ui/panelManager');
 var StackPanel = require('ui/stackPanel');
 var StatusPanel = require('ui/statusPanel');
 var dsa_template = require('../pages/data-services-area');
+var Configuration = require('configuration');
 require('ui/toolbar');
 require('ui/dateRangeSlider');
 
@@ -22,7 +23,9 @@ module.exports = {
 	 */
 	buildElement: function() {
 
-		var dsa = $(dsa_template());
+		var dsa = $(dsa_template({
+			theme: Configuration.localConfig.theme
+		}));
 		dsa.find('menu[type=toolbar]').not('#bottomToolbar').toolbar();
 		dsa.find('#bottomToolbar').toolbar({
 			withNumber: true
@@ -79,13 +82,13 @@ module.exports = {
 		// Add left panel (use for search )
 		panelManager.add('left', new StackPanel({
 			el: '#left-panel',
-			classes: 'ui-body-c panel-content-left'
+			classes: 'ui-body-'+Configuration.localConfig.theme+' panel-content-left'
 		}));
 
 		// Add bottom panel (use for results and shopcart)
 		panelManager.add('bottom', new StatusPanel({
 			el: '#bottom-panel',
-			classes: 'ui-body-c panel-content-bottom'
+			classes: 'ui-body-'+Configuration.localConfig.theme+' panel-content-bottom'
 		}));
 
 		panelManager.on('centerResized', function() {

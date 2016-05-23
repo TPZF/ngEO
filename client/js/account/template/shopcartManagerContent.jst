@@ -1,9 +1,9 @@
-<div id="shopcartManagerContent" class="widget-content ui-body-c">
+<div id="shopcartManagerContent" class="widget-content ui-body-<%= theme %>">
 
 	<div id="shopcartListDiv">
 		<fieldset id="shopcartList" data-role=controlgroup data-inset="true">	
 		
-			<% _.each(models, function(shopcart) { %>
+			<% _.each(shopcarts.models, function(shopcart) { %>
 				
 				<label id="<%= shopcart.id %>"><input id="<%= shopcart.id %>_input" type="radio" name="shopcart" data-theme="a" data-mini="true"/>  <%= shopcart.get('name') %> </label> 
 			

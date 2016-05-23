@@ -52,7 +52,7 @@ var LayersWidget = function(element) {
  */
 LayersWidget.prototype.buildHTML = function(layer) {
 	// Build the input
-	var input = $("<input data-theme='c' type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
+	var input = $("<input type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
 		.data('layer', layer);
 
 	// Callback called when the input is changed

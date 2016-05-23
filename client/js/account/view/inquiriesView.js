@@ -1,5 +1,6 @@
 var Logger = require('logger');
 var inquiries_template = require('account/template/inquiriesContent');
+var Configuration = require('configuration');
 
 /** the mode is the Inquiry object */
 var InquiriesView = Backbone.View.extend({
@@ -85,7 +86,9 @@ var InquiriesView = Backbone.View.extend({
 	// Render the view
 	render: function() {
 
-		this.$el.append(inquiries_template());
+		this.$el.append(inquiries_template({
+			theme: Configuration.localConfig.theme
+		}));
 		this.$el.find('#submitInquiryButtonContainer').addClass("ui-disabled");
 		this.$el.trigger('create');
 		return this;

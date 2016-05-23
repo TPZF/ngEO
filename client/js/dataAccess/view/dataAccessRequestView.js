@@ -149,7 +149,8 @@ var DataAccessRequestView = Backbone.View.extend({
 			// No download manager is already registered : propose a link to the user to install one
 			var installContent = downloadManagerInstall_template({
 				downloadManagerInstallationLink: Configuration.data.downloadManager.downloadManagerInstallationLink,
-				downloadmanagers: this.model.get('downloadmanagers')
+				downloadmanagers: this.model.get('downloadmanagers'),
+				theme: Configuration.localConfig.theme
 			});
 			this.$el.html("<p class='ui-error-message'><b>No download manager has been registered.<br>In order to download products, you need to install a download manager.</b></p>" + installContent);
 
@@ -157,7 +158,8 @@ var DataAccessRequestView = Backbone.View.extend({
 			// Render the data access request template
 			var content = dataAccessRequestView_template({
 				model: this.model,
-				request: this.request
+				request: this.request,
+				theme: Configuration.localConfig.theme
 			});
 			this.$el.html(content);
 

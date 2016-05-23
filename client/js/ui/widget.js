@@ -1,10 +1,11 @@
+var Configuration = require('configuration');
+
+var modalScreen = $('<div class="ui-popup-screen ui-overlay-a ui-screen-hidden"></div>').appendTo('.ui-page-active');
+$._ngeoOpenedWidgets = [];
+
 /**
  * An element to block user interactions when opening a modal pop-up
  */
-var modalScreen = $('<div class="ui-popup-screen ui-overlay-a ui-screen-hidden"></div>').appendTo('.ui-page-active');
-
-$._ngeoOpenedWidgets = [];
-
 $.widget("ngeo.ngeowidget", {
 
 	// default options
@@ -28,7 +29,7 @@ $.widget("ngeo.ngeowidget", {
 		// Style the container
 		this.element.addClass("widget-content");
 		// Use jQM to style the content
-		this.element.addClass("ui-body-c");
+		this.element.addClass("ui-body-"+Configuration.localConfig.theme);
 
 		// Wrap with the parent div for widget
 		this.element.wrap("<div class='widget'/>");

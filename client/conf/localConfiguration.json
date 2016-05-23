@@ -1,5 +1,6 @@
 {
 	"version": 2.29,
+	"theme": "c",
 	"serverPropertyMapper" : {
 		"start": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition",
 		"stop": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition",

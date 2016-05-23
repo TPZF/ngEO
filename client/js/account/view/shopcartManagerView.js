@@ -87,7 +87,10 @@ var ShopcartManagerView = Backbone.View.extend({
 	},
 
 	render: function() {
-		var mainContent = shopcartManagerContent_template(this.model);
+		var mainContent = shopcartManagerContent_template({
+			theme : Configuration.localConfig.theme,
+			shopcarts: this.model
+		});
 		this.$el.html(mainContent);
 
 		// Select the current one

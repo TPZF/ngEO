@@ -63,7 +63,8 @@ var SelectHostedProcessView = Backbone.View.extend({
 
 	render: function() {
 		var content = hostedProcessesList_template({
-			hostedProcesses: this.model.get('hostedProcess')
+			hostedProcesses: this.model.get('hostedProcess'),
+			theme: Configuration.localConfig.theme
 		});
 
 		this.$el.html(content);

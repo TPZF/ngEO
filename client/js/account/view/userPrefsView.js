@@ -1,14 +1,14 @@
 var UserPrefs = require('userPrefs');
 var userPrefs_template = require('account/template/userPrefsContent');
+var Configuration = require('configuration');
 
-/** the mode is the Inquiry object */
+/**
+ * The model is the UserPrefs singleton.
+ * Simple Implemetantion with only the reset of the preferences 
+ * without knowledge on the type of the feature to remove.
+ */
 var UserPrefsView = Backbone.View.extend({
 
-	/**
-	 * The model is the UserPrefs singleton.
-	 * Simple Implemetantion with only the reset of the preferences 
-	 * without knowledge on the type of the feature to remove.
-	 */
 	initialize: function() {
 		UserPrefs.on("addedPreference removedPreference", this.refresh, this);
 	},
@@ -22,7 +22,10 @@ var UserPrefsView = Backbone.View.extend({
 
 	render: function() {
 
-		this.$el.append(userPrefs_template(UserPrefs));
+		this.$el.append(userPrefs_template({
+			theme: Configuration.localConfig.theme,
+			UserPrefs: UserPrefs
+		}));
 		this.$el.trigger('create');
 
 		return this;

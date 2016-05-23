@@ -1,6 +1,6 @@
 
 	<label>Acquisition Start Date :
-	<input name="From" class="fromDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(model.attributes.start.toISODateString()) %>"
+	<input name="From" class="fromDateInput" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.start.toISODateString()) %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.start.toISODateString()) %>", 
 		  "themeDate":"c", "themeDatePick":"a", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'  /></label>
 
@@ -8,12 +8,12 @@
 <!-- <div data-role="fieldcontain"> -->
 		
 <!-- 	<label id="fromTimeLabel" for="fromTimeInput" data-mini="true">Start Time:</label> -->
-<!-- 	<input name="startTime" id="fromTimeInput" type="text" data-role="datebox" data-mini="true" data-theme="c" value="<%=model.attributes.startTime %>" -->
+<!-- 	<input name="startTime" id="fromTimeInput" type="text" data-role="datebox" data-mini="true" value="<%=model.attributes.startTime %>" -->
 <!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
 <!-- </div> -->
 
 	<label>Acquisition End Date :
-	<input name="toDate" class="toDateInput" type="text" data-role="datebox" data-mini="true"  data-theme="c" value="<% print(model.attributes.stop.toISODateString()) %>"
+	<input name="toDate" class="toDateInput" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.stop.toISODateString()) %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.stop.toISODateString()) %>", 
 	   	"themeDate":"c", "themeDatePick":"a", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'></label>
 
@@ -22,7 +22,7 @@
 <!-- <div data-role="fieldcontain"> -->
 	
 <!-- 	<label id="toTimeLabel" for="toTimeInput" data-mini="true">End Time:</label> -->
-<!-- 	<input name="endTime" id="toTimeInput" type="text" data-role="datebox" data-mini="true" data-theme="c" value="<%=model.attributes.stopTime %>" -->
+<!-- 	<input name="endTime" id="toTimeInput" type="text" data-role="datebox" data-mini="true" value="<%=model.attributes.stopTime %>" -->
 <!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
 <!-- </div> -->
 
