@@ -33,8 +33,13 @@
 	 *	Get dataset included in request
 	 */
 	getDataType: function() {
-		var datasetNameRegExp = new RegExp(/catalogue\/(\w*)\//)
-		return datasetNameRegExp.exec(this.productURLs[0])[1]; // Take catalogue of first product for now
+		var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
+		var match = datasetNameRegExp.exec(this.productURLs[0]); // Take catalogue of first product for now
+		if ( match ) {
+			return match[1];
+		}
+		console.warn("Can't extract datatype from product url " + this.productUrls[0]);
+		return null;
 	},
 
    /**
