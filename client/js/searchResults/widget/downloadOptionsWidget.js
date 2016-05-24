@@ -1,90 +1,104 @@
-/**
- * Download options widget spawned-up from the results table view.
- * Used to update download options for the checked product urls.
- */
-
-var Configuration = require('configuration');
 var DownloadOptionsView = require('search/view/downloadOptionsView');
 var DataSetSearch = require('search/model/datasetSearch');
-var SearchResults = require('searchResults/model/searchResults');
 var DownloadOptions = require('search/model/downloadOptions');
 
+/**
+ *	Download options widget allowing to update download options from table view
+ *	Current widget could be initialized within a feature collection XOR download options
+ *	In case of feature collection: widget will retrieve download options from dataset for selected products
+ *	In case of download options it will use it as it is (used for shopcart for now)
+ *	-> MS: second case seems to be not really necessary.. to be checked
+ *	
+ *	@param options 	Available options:
+ *			<ul>
+ *				<li>{Object} featureCollection: Feature collection</li>
+ *				<li>{Object} downloadOptions: Download options</li>
+ *				<li>{Function} callback: Callback function to be called when do has been updated</li>
+ *			</ul>
+ */
+var DownloadOptionsWidget = function( options ) {
 
-var DownloadOptionsWidget = function() {
+	this.widgetDownloadOptions = null;
+	if ( options.featureCollection ) {
+		this.featureCollection = options.featureCollection;
+	} else if ( options.downloadOptions ) {
+		this.widgetDownloadOptions = new DownloadOptions(options.downloadOptions);
+	}
+	this.callback = options.callback;
 
-	var parentElement = $('<div id="downloadOptionsPopup">');
-	parentElement = parentElement.appendTo('.ui-page-active');
+	this.parentElement = $('<div id="downloadOptionsPopup">\
+		<div id="downloadOptionsPopupContent"></div>\
+	</div>').appendTo('.ui-page-active');
 
-	var element = $('<div id="downloadOptionsPopupContent"></div>');
-	element.appendTo(parentElement);
-
-	parentElement.ngeowidget({
+	var self = this;
+	this.parentElement.ngeowidget({
 		title: "Download Options",
 		hide: function() {
-			parentElement.remove();
+			self.parentElement.remove();
 		}
 	});
+};
 
-	// Use a model to store the download options of selected products
-	var selectedDownloadOptions = new Backbone.Model({
-		downloadOptions: {}
-	});
-
-	/**
-	 *	Open the popup
-	 */
-	this.open = function(featureCollection) {
-
-		// Update the selected download options model
-		selectedDownloadOptions.attributes = featureCollection.getSelectedDownloadOptions();
+/**
+ *	Open the popup
+ */
+DownloadOptionsWidget.prototype.open = function() {
+	var self = this;
+	if ( this.featureCollection ) {
+		var featureCollection = this.featureCollection;
 		var datasetId = featureCollection.dataset.get("datasetId");
-
 		// Fetch the available download options and then display the widget
 		featureCollection.fetchAvailableDownloadOptions(function(datasetDownloadOptions) {
-			//selectedDownloadOptions.set('downloadOptions', downloadOptions);
 			
 			// Stub_server HACK: Nominally, the getSelectedDownloadOptions must extract the ngEO_DO from productUrl, so no need to set downloadOptions
 			// Since our stub currently doesn't have ngEO_DO on productUrl, force the the client to set:
 			//	Two options:
 			//		1) Set as @conflict
 			//		2) Same as DataSetSearch : could bring to confusion..
-			var widgetDownloadOptions = new DownloadOptions(datasetDownloadOptions);
+			self.widgetDownloadOptions = new DownloadOptions(datasetDownloadOptions);
 			var fcDownloadOptions = featureCollection.getSelectedDownloadOptions();
 			for ( var i=0; i<datasetDownloadOptions.length; i++ ){
 				var key = datasetDownloadOptions[i].argumentName;
 				if ( datasetDownloadOptions[i].cropProductSearchArea == "true" ) {
-					widgetDownloadOptions.attributes[key] = true; // HACK: Set true by default
+					self.widgetDownloadOptions.attributes[key] = true; // HACK: Set true by default
 				} else {
 					if ( fcDownloadOptions[key] ) {
-						widgetDownloadOptions.attributes[key] = fcDownloadOptions[key];
+						self.widgetDownloadOptions.attributes[key] = fcDownloadOptions[key];
 					} else {
-						widgetDownloadOptions.attributes[key] = "@conflict";
+						self.widgetDownloadOptions.attributes[key] = "@conflict";
 					}
 				}
 			}
-			
-			var downloadOptionsView = new DownloadOptionsView({
-				model: widgetDownloadOptions,
-				el: element,
-				updateCallback: function(event) {
-					// Update the product url of the selected products with the selected download options
-					return $.when(featureCollection.updateDownloadOptions(widgetDownloadOptions));
-				}
-			});
-			downloadOptionsView.render();
-
-			// Trigger jqm styling
-			parentElement.ngeowidget("show");
+			self.spawnPopup();
 		});
-	};
+	} else if ( this.widgetDownloadOptions ) {
+		this.spawnPopup();
+	}
+};
 
-	/**
-	 *	For the moment not used since the popup can be 
-	 *	closed by clicking out side its content.
-	 */
-	this.close = function() {
-		parentElement.ngeowidget("hide");
-	};
+/**
+ *	Close popup
+ */
+DownloadOptionsWidget.prototype.close = function() {
+	this.parentElement.ngeowidget("hide");
+};
+
+/**
+ *	When widgetDownloadOptions property is ready, spawn popup
+ */
+DownloadOptionsWidget.prototype.spawnPopup = function() {
+	var self = this;
+	var downloadOptionsView = new DownloadOptionsView({
+		model: self.widgetDownloadOptions,
+		el: this.parentElement.find('#downloadOptionsPopupContent'),
+		updateCallback: function() {
+			return $.when(self.callback(self.widgetDownloadOptions));
+		}
+	});
+	downloadOptionsView.render();
+
+	// Trigger jqm styling
+	this.parentElement.ngeowidget("show");
 };
 
 module.exports = DownloadOptionsWidget;

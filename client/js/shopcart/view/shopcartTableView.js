@@ -4,6 +4,7 @@ var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest'
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget');
 var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 
 /**
  * The model is the backbone model FeatureCollection 
@@ -14,26 +15,33 @@ var ShopcartTableView = TableView.extend({
 		TableView.prototype.initialize.apply(this, arguments);
 
 		this.events = _.extend({}, TableView.prototype.events, this.events);
-
 		this.columnDefs = Configuration.data.tableView.columnsDef;
 	},
 
-	/** update the button statuses **/
+	/**
+	 * Update the footer button states
+	 */
 	toggleSelection: function() {
 		TableView.prototype.toggleSelection.apply(this, arguments);
 
-		if (this.model.selection.length > 0) {
+		// The products have to be a part of dataset so we extract dataset ids
+		// to be sure that products are viable
+		var selectedDatasetIds = this.model.getSelectionDatasetIds();
+		if (selectedDatasetIds.length > 0) {
 			this.deleteButton.button('enable');
-			if (this.model.getSelectionDatasetIds().length > 0) {
-				this.retrieveProduct.button('enable');
-				this.downloadOptionsButton.button('enable');
-			} else {
-				this.retrieveProduct.button('disable');
-				this.downloadOptionsButton.button('disable');
-			}
+			this.retrieveProduct.button('enable');
 		} else {
 			this.retrieveProduct.button('disable');
 			this.deleteButton.button('disable');
+		}
+
+		// Add possibility to update download options only
+		// if selected products are coming from the same dataset
+		if ( selectedDatasetIds.length == 1 ) {
+			this.downloadOptionsButton.attr("title", "Modify download options of selected products");
+			this.downloadOptionsButton.button('enable');
+		} else {
+			this.downloadOptionsButton.attr("title", "You should select products coming from the same dataset");
 			this.downloadOptionsButton.button('disable');
 		}
 	},
@@ -69,7 +77,6 @@ var ShopcartTableView = TableView.extend({
 			} else {
 				Logger.inform("Cannot download the product : missing permissions.");
 			}
-
 		});
 
 		//add button to the widget footer in order to download products
@@ -78,17 +85,31 @@ var ShopcartTableView = TableView.extend({
 		this.downloadOptionsButton.button('disable');
 
 		this.downloadOptionsButton.click(function() {
+			var datasetId = self.model.getSelectionDatasetIds()[0]; // We are sure that there is only one dataset selected
 
-			var downloadOptionsWidget = new DownloadOptionsWidget();
-			downloadOptionsWidget.open(self.shopcart.featureCollection);
+			// Make request to know download options of given dataset
+			DataSetPopulation.fetchDataset(datasetId, function(dataset) {
 
+				var downloadOptions = dataset.get("downloadOptions");
+
+				var downloadOptionsWidget = new DownloadOptionsWidget({
+					downloadOptions: downloadOptions,
+					callback: function(updatedDownloadOptions) {
+						self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function(response) {
+							console.log(response);
+							// TODO: handle a real response
+							self.model.updateDownloadOptions(updatedDownloadOptions);
+						});
+					}
+				});
+				downloadOptionsWidget.open();
+			});
 		});
 
 		//add button to the widget footer in order to download products		
 		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true">Delete</button>').appendTo($buttonContainer);
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
-
 
 		this.deleteButton.click(function() {
 			self.shopcart.deleteSelection();

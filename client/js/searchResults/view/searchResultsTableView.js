@@ -142,9 +142,14 @@ var SearchResultsTableView = TableView.extend({
 		//for the moment all product belong to the unique selected dataset 
 		this.downloadOptionsButton.click(function() {
 
-			var downloadOptionsWidget = new DownloadOptionsWidget();
-			downloadOptionsWidget.open(self.model);
-
+			var downloadOptionsWidget = new DownloadOptionsWidget({
+				featureCollection: self.model,
+				callback: function(updatedDownloadOptions) {
+					// Update the product url of the selected products with the selected download options
+					return $.when(self.model.updateDownloadOptions(updatedDownloadOptions));
+				}
+			});
+			downloadOptionsWidget.open();
 		});
 
 		//add button to the widget footer in order to download products		
