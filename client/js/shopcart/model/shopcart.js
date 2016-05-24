@@ -279,31 +279,32 @@ var Shopcart = Backbone.Model.extend({
 	 */
 	updateSelection: function(downloadOptions) {
 		var itemsToUpdate = [];
+
+		// Build the request body
 		for (var i = 0; i < this.featureCollection.selection.length; i++) {
-			itemsToUpdate.push({
-				'shopcartId': this.id,
-				'id': this.featureCollection.selection[i].id,
-				'downloadOptions': downloadOptions
-			});
+			var f = this.featureCollection.selection[i];
+			if ( f.properties.shopcartItemId ) {
+				itemsToUpdate.push({
+					'shopcartId': this.id,
+					'id': f.properties.shopcartItemId,
+					'downloadOptions': downloadOptions
+				});
+			}
 		}
 
 		var self = this;
 		return $.ajax({
-
 			url: self.url() + '/items',
 			type: 'PUT',
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify({
-				'items': itemsToUpdate
+				'shopCartItemUpdating': itemsToUpdate
 			}),
-
 			success: function(data) {
-
 				var response = data.items;
 				self.trigger("itemsUpdated", response);
 			},
-
 			error: function(jqXHR, textStatus, errorThrown) {
 				self.trigger('updateItemsError');
 

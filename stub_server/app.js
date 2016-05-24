@@ -90,22 +90,22 @@ app.get('/ngeo/shopcarts/:id/search', shopcarts.getContent);
 //create shopcart and add items interfaces
 app.post('/ngeo/shopcarts', shopcarts.create);
 
-//create shopcart and add items interfaces
-app.post('/ngeo/shopcarts/:id/items', shopcarts.addItems);
 
-//rename shopcart and update items interfaces
+// Rename shopcart and update items interfaces
 app.put('/ngeo/shopcarts/:id', shopcarts.put);
 
-//delete shopcart and delete items of shopcart interfaces
+// Delete shopcart
 app.delete('/ngeo/shopcarts/:id', shopcarts.deleteShopcart);
 
-//delete shopcart and delete items of shopcart interfaces
+// CRUD on shopcart items
+app.post('/ngeo/shopcarts/:id/items', shopcarts.addItems);
+app.put('/ngeo/shopcarts/:id/items', shopcarts.updateItems);
 app.delete('/ngeo/shopcarts/:id/items', shopcarts.deleteItems);
 
-// get authorization
+// Get authorization
 app.get('/ngeo/datasetAuthorization', datasetAuthorization);
 
-//Hosted processing list
+// Hosted processing list
 app.get('/ngeo/hostedProcesses', hostedProcesses);
 
 // Basic user management
