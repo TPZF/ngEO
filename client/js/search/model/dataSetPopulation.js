@@ -54,7 +54,7 @@ var DataSetPopulation = Backbone.Model.extend({
 	 * Fetch dataset
 	 * Use a cache
 	 */
-	fetchDataset: function(datasetId, callback, url) {
+	fetchDataset: function(datasetId, callback) {
 		if (this.cache.hasOwnProperty(datasetId)) {
 			if (callback) {
 				callback(this.cache[datasetId]);
@@ -64,9 +64,6 @@ var DataSetPopulation = Backbone.Model.extend({
 			var dataset = new DataSet({
 				datasetId: datasetId
 			});
-			if ( url ) {
-				dataset.url = url;
-			}
 			dataset.fetch({
 				success: function(model) {
 					self.cache[datasetId] = model;
