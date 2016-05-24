@@ -279,12 +279,15 @@ var TableView = Backbone.View.extend({
 			var feature = features[i];
 			var $row = this._getRowFromFeature(feature);
 			var rowData = $row.data("internal");
-			rowData.cellData.length = 0;
 
+			// Update offset
 			var tdOffset = 1; // Since first <td> could be + and checkbox
-			if ( rowData.cellData.isExpandable ) {
+			if ( rowData.isExpandable ) {
 				tdOffset++;
 			}
+
+			// Update rowData according to columnDefs
+			rowData.cellData.length = 0;
 			for (var j = 0; j < this.columnDefs.length; j++) {
 				var d = Configuration.getFromPath(feature, this.columnDefs[j].mData);
 				rowData.cellData.push(d);
