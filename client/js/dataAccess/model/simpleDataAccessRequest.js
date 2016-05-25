@@ -38,7 +38,7 @@
 		if ( match ) {
 			return match[1];
 		}
-		console.warn("Can't extract datatype from product url " + this.productUrls[0]);
+		console.warn("Can't extract datatype from product url " + this.productURLs[0]);
 		return null;
 	},
 
