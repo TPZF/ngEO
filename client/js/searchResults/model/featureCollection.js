@@ -138,6 +138,7 @@ var FeatureCollection = function() {
 
 			self.features.push(feature);
 		}
+
 		self.trigger('add:features', features, self);
 	};
 
@@ -147,6 +148,22 @@ var FeatureCollection = function() {
 		this.highlight(_.difference(this.highlights, features));
 		this.features = _.difference(this.features, features);
 		self.trigger('remove:features', features, self);
+	};
+
+	// Show features
+	this.showFeatures = function(features) {
+		self.trigger('show:features', features, self);
+		if ( features.length > 0 ) {
+			// HACK: highlight all highlights, selected all selection for the moment
+			this.trigger("highlightFeatures", this.highlights, this.highlights, this);
+			this.trigger("selectFeatures", this.selection, this);
+		}
+
+	};
+	
+	// Hide features
+	this.hideFeatures = function(features) { 
+		self.trigger('hide:features', features, self);
 	};
 
 	// Launch a search

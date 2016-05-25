@@ -573,6 +573,11 @@ var TableView = Backbone.View.extend({
 	 * Filter data
 	 */
 	filterData: function(val) {
+
+		// Store previously visible rows to compute the newly hidden/shown features
+		var previouslyVisibleRows = this.visibleRowsData.splice(0);
+
+		// Reconstruct visible rows data after filtering
 		this.visibleRowsData = [];
 		for (var i = 0; i < this.rowsData.length; i++) {
 
@@ -580,11 +585,19 @@ var TableView = Backbone.View.extend({
 			for (var j = 0; !match && j < this.rowsData[i].cellData.length; j++) {
 				match = String(this.rowsData[i].cellData[j]).search(val) >= 0;
 			}
+
 			if (match) {
 				this.visibleRowsData.push(this.rowsData[i]);
 			}
 		}
 
+		// Show/Hide filtered features on map
+		var rowsToShow = _.difference(this.visibleRowsData, previouslyVisibleRows);
+		var rowsToHide = _.difference(previouslyVisibleRows, this.visibleRowsData);
+		this.model.showFeatures(_.map(rowsToShow, 'feature'));
+		this.model.hideFeatures(_.map(rowsToHide, 'feature'));
+
+		// Finally build the content
 		this.buildTableContent();
 	},
 

@@ -141,6 +141,8 @@ module.exports = {
 		fc.on('add:child', this.addFeatureCollection);
 		fc.on('remove:child', this.removeFeatureCollection);
 
+		fc.on('show:features', fc._footprintLayer.addFeatures, footprintLayer);
+		fc.on('hide:features', fc._footprintLayer.removeFeatures, footprintLayer);
 		fc.on('selectFeatures', _onSelectFeatures);
 		fc.on('unselectFeatures', _onUnselectFeatures);
 		fc.on('highlightFeatures', _onHighlightFeatures);
@@ -160,6 +162,9 @@ module.exports = {
 		fc.off('reset:features', fc._footprintLayer.resetFeatures, fc._footprintLayer);
 		fc.off('add:child', this.addFeatureCollection);
 		fc.off('remove:child', this.removeFeatureCollection);
+
+		fc.off('show:features', fc._footprintLayer.addFeatures, fc._footprintLayer);
+		fc.off('hide:features', fc._footprintLayer.removeFeatures, fc._footprintLayer);
 		fc.off('selectFeatures', _onSelectFeatures);
 		fc.off('unselectFeatures', _onUnselectFeatures);
 		fc.off('highlightFeatures', _onHighlightFeatures);
