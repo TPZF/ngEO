@@ -143,6 +143,7 @@ var SearchResultsTableView = TableView.extend({
 		this.downloadOptionsButton.click(function() {
 
 			var downloadOptionsWidget = new DownloadOptionsWidget({
+				datasetId: self.model.dataset.get("datasetId"),
 				featureCollection: self.model,
 				callback: function(updatedDownloadOptions) {
 					// Update the product url of the selected products with the selected download options

@@ -86,24 +86,18 @@ var ShopcartTableView = TableView.extend({
 
 		this.downloadOptionsButton.click(function() {
 			var datasetId = self.model.getSelectionDatasetIds()[0]; // We are sure that there is only one dataset selected
-
-			// Make request to know download options of given dataset
-			DataSetPopulation.fetchDataset(datasetId, function(dataset) {
-
-				var downloadOptions = dataset.get("downloadOptions");
-
-				var downloadOptionsWidget = new DownloadOptionsWidget({
-					downloadOptions: downloadOptions,
-					callback: function(updatedDownloadOptions) {
-						self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function(response) {
-							console.log(response);
-							// TODO: handle a real response
-							self.model.updateDownloadOptions(updatedDownloadOptions);
-						});
-					}
-				});
-				downloadOptionsWidget.open();
+			var downloadOptionsWidget = new DownloadOptionsWidget({
+				datasetId: datasetId,
+				featureCollection: self.model,
+				callback: function(updatedDownloadOptions) {
+					self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function(response) {
+						console.log(response);
+						// TODO: handle a real response
+						self.model.updateDownloadOptions(updatedDownloadOptions);
+					});
+				}
 			});
+			downloadOptionsWidget.open();
 		});
 
 		//add button to the widget footer in order to download products		
