@@ -37,6 +37,7 @@
 	font-weight: bold;
 	cursor: pointer;
 	*cursor: hand;
+	padding: 0px 5px;
 
 	/* Align with content */
 	box-sizing: border-box;
@@ -71,11 +72,13 @@
     font-size: 12px;
     text-align: center;
 	border-right: 1px solid @table-border-color;
+	padding: 0px 5px;
 
 	/* Break long lines --> update height : Not forget to uncomment maxColWidth in tableView */
 	//word-wrap: break-word;
-	//max-width: 590px; /* Symbolic width to apply colgroup width, doesn't work otherwise... */
+	max-width: 590px; /* Symbolic width to apply colgroup width, doesn't work otherwise... */
 	//height: 30px;
+	//max-width: 300px;
 
 	/* Constant height --> ellipsis : I prefer this one */
 	white-space: nowrap;
@@ -153,29 +156,6 @@
 {
     background-color: yellow;
     height: 40px;
-}
-
-.default-width {
-	max-width: 590px;
-}
-
-.shortest-col
-{
-	width: 25px;
-	max-width: 25px;
-	min-width: 25px;
-}
-
-.short-col
-{
-    width:120px;
-    max-width: 120px;
-    min-width: 120px;
-}
-.long-col
-{
-	max-width: 300px;
-    min-width: 300px;
 }
 
 /*

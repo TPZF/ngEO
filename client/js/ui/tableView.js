@@ -855,27 +855,21 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 *	Width getter depending on value returns appropriate class for td
-	 */
-	getWidthClass: function(value) {
-		if ( value <= 25 )
-			return "shortest-col";
-		if ( value > 25 && value < 120 )
-			return "short-col";
-		return "long-col";
-	},
-
-	/**
 	 * Update fixed header
 	 */
 	updateFixedHeader: function() {
 		if (this.$table) {
-			this.$el.find('.table-header').css('margin-right', 0);
-			this.$table.find('colgroup').remove();
+			var $tableHeader = this.$el.find('.table-header');
+			// Reinit min width of every "td/th" before computing the real width
+			$tableHeader.css('margin-right', 0).end()
+				.find('th').css('min-width',"");
+			this.$table
+				.find('colgroup').remove().end()
+				.find('thead').show().end()
+				.find('td').css('min-width', "");
 			this.$headerTable.find('colgroup').remove();
-
-			this.$table.find('thead').show();
 			
+			// Compute actual col-width per th
 			var self = this;
 			var colWidths = this.$table.find("tr:first").children().map(function(index) {
 				var headerWidth = self.$table.find("th:nth-child("+(index+1)+")").outerWidth();
@@ -885,33 +879,33 @@ var TableView = Backbone.View.extend({
 			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
 			var colSumWidth = _.reduce(colWidths, function(sum, w) { return sum+w;}, 0);
-			var hasSlider = colSumWidth <= ($(window).width() - 100);
+			var hasSlider = colSumWidth > $(window).width() - 5;
 			for ( var i=0; i<colWidths.length; i++ ) {
 				if ( hasSlider ) {
-					$colgroup.append("<col width=" + colWidths[i] + ">");
-					this.$table.find('td:nth-child('+(i+1)+')').addClass( 'default-width' );
+					// Set min-width since it forces table to be wider than window --> show slider
+					$tableHeader.find('th:nth-child('+(i+1)+')')
+						.css('min-width', colWidths[i]);
+					this.$table.find('td:nth-child('+(i+1)+')')
+						.css('min-width', colWidths[i]);
 				} else {
-					this.$el.find('.table-header').find('th:nth-child('+(i+1)+')').addClass( this.getWidthClass(colWidths[i]) );
-					this.$table.find('td:nth-child('+(i+1)+')').addClass( this.getWidthClass(colWidths[i]) );
+					$colgroup.append("<col width=" + colWidths[i] + ">");
 				}
 			}
 
 			if ( hasSlider ) {
-				//this.$el.find('.table-header').addClass("fullscreenWidth");
+				this.$el.find('.table-view').removeClass("fullscreenWidth");
+			} else {
 				this.$el.find('.table-view').addClass("fullscreenWidth");
 				// Copy table COLGROUP to grid head and grid foot
 				$colgroup
 					.insertBefore(this.$table.find('thead'))
 					.clone()
 					.insertBefore(this.$headerTable.find('thead'));
-			} else {
-				//this.$el.find('.table-header').removeClass("fullscreenWidth");
-				this.$el.find('.table-view').removeClass("fullscreenWidth");
 			}
 
 			this.$table.find('thead').hide();
 			var diffWidth = this.$headerTable.width() - this.$table.width();
-			this.$el.find('.table-header').css('margin-right', diffWidth);
+			$tableHeader.css('margin-right', diffWidth);
 		}
 
 	},
