@@ -105,7 +105,7 @@ var layerCheckedCallback = function() {
  *			<ul>
  *				<li>WMS layer coming from configuration</li>
  *				<li>Added by user within mapserver url(coming from "wmsCapabilitiesFormat.read")</li>
- *				<li>Added by user within full wms request(coming from "createWmsLayerFromUrl")</li>
+ *				<li>Added by user within full wms/wmts request(coming from "createWmsLayerFromUrl")</li>
  *			</ul>
  *	@return
  *		Item object for highCheckTree plugin
@@ -120,7 +120,7 @@ var buildItem = function(layer) {
 		// WMS/KML url added by user
 		params = layer;
 	} else if (layer.name) {
-		// Layers coming from get capabilities of mapserver
+		// Layers coming from get capabilities of WMS mapserver
 		// Only layers with name attribute are accepted, otherwise it's just a group of layers
 		params = {
 			type: "WMS",
@@ -129,6 +129,26 @@ var buildItem = function(layer) {
 			visible: false,
 			params: {
 				layers: layer.name
+			}
+		}
+	} else if (layer.tileMatrixSets && layer.identifier) {
+		// Layers coming from get capabilities of WMTS mapserver
+		
+		// Extract the given matrix of current layer (take the first one for now)
+		// TODO: get the appropriate one from list
+		var matrixSet = layer.tileMatrixSets[layer.tileMatrixSetLinks[0].tileMatrixSet];
+		var mapProjectionNumber = Configuration.get("map.projection").replace("EPSG:","");
+		if ( matrixSet.projection.indexOf(mapProjectionNumber) != -1 ) {
+			// Add WMTS layers only compatible with current map projection
+			params = {
+				type: "WMTS",
+				name: layer.identifier,
+				baseUrl: layer.baseUrl,
+				visible: false,
+				params: {
+					layer: layer.identifier,
+					matrixSet: layer.tileMatrixSetLinks[0].tileMatrixSet
+				}
 			}
 		}
 	}
@@ -170,13 +190,12 @@ var buildHighCheckTreeData = function(layers, baseUrl) {
 };
 
 /**
- *	Create WMS layer from url
+ *	Create WMS/WMTS layer from url
  */
 var createWmsLayerFromUrl = function(baseUrl) {
 
 	var parsed = {};
 	var params = baseUrl.split(/\?|\&/);
-
 	_.each(params, function(param) {
 		var kv = param.split("=");
 		if (kv.length == 2)
@@ -184,19 +203,23 @@ var createWmsLayerFromUrl = function(baseUrl) {
 	});
 
 	// TODO: Check SRS --> must be 4326 ?
-
+	var layerTag = parsed['SERVICE'] == 'WMS' ? 'LAYERS' : 'LAYER';
 	var wmsLayer = {
 		type: parsed['SERVICE'],
 		baseUrl: params[0],
-		name: parsed['LAYERS'],
-		title: parsed['LAYERS'],
+		name: layerTag,
+		title: layerTag,
 		params: {
-			layers: parsed['LAYERS'],
 			format: decodeURIComponent(parsed['FORMAT']),
 			style: parsed['STYLE']
 		}
+	};
+	if ( parsed['SERVICE'] == 'WMTS' ) {
+		wmsLayer.params.matrixSet = parsed['TILEMATRIXSET'];
+		wmsLayer.params.layer = layerTag;
+	} else {
+		wmsLayer.params.layers = layerTag;
 	}
-
 	return wmsLayer;
 };
 
@@ -247,6 +270,7 @@ var addToTrees = function($trees, data) {
 			var parentLayer = _.findWhere(userLayers, {
 				name: parentName
 			});
+			
 			if ($li.attr("rel") == parentLayer.name) {
 				userLayers.splice(userLayers.indexOf(parentLayer), 1);
 			} else {
@@ -310,7 +334,7 @@ var LayerManagerView = Backbone.View.extend({
 
 	/**
 	 *	Open popup to add layer to map
-	 *	Could be: wms mapserver url, wms url of specific layer or url to KML layer
+	 *	Could be: wms mapserver url, wms/wmts url of specific layer or url to KML layer
 	 */
 	onAdd: function(event) {
 
@@ -336,18 +360,19 @@ var LayerManagerView = Backbone.View.extend({
 
 			// Specific layer
 			// baseUrl = "http://demonstrator.telespazio.com/wmspub?LAYERS=GTOPO&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fjpeg&SRS=EPSG%3A4326&BBOX=90,0,112.5,22.5&WIDTH=256&HEIGHT=256"
+			// baseUrl = "https://c.tiles.maps.eox.at/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=terrain-light&TILEMATRIXSET=WGS84&TILEMATRIX=2&TILEROW=1&TILECOL=0&FORMAT=image%2Fpng"
 
 			// KML
 			// baseUrl = "http://quakes.bgs.ac.uk/earthquakes/recent_world_events.kml"
 			baseUrl = $openedPopup.find("input[name='layerUrl']").val();
-
+			var type = $openedPopup.find('input[name="capabilities-type"]:checked').val()
 			if (baseUrl != "") {
-
 				$openedPopup.find(".status").hide();
 				var name = $openedPopup.find("input[name='layerName']").val();
 				var layer = {
 					name: name,
-					baseUrl: baseUrl
+					baseUrl: baseUrl,
+					type: type
 				};
 				self.addLayer(layer, {
 					onError: function(message) {
@@ -366,12 +391,22 @@ var LayerManagerView = Backbone.View.extend({
 
 		// Define callbacks for the given buttons
 		$openedPopup
-			.find('a[data-icon="search"]').click(onSearch).end();
+			.find('a[data-icon="search"]').click(onSearch).end()
+			.find('input[name="layerUrl"]').on('input propertychange', function(event) {
+				var layerUrl = $(this).val();
+				if ( layerUrl.match(/LAYER|.kml/) ) {
+					// Single layer or KML url
+					$openedPopup.find('form').hide();
+				} else {
+					// MapServer url, so show the box allowing user to choose type
+					$openedPopup.find('form').show();
+				}
+			});
 
 	},
 
 	/**
-	 *	Add WMS/KML layer to GUI
+	 *	Add WMS/WMTS/KML layer to GUI
 	 */
 	addLayer: function(layer, options) {
 		if (layer.baseUrl.endsWith(".kml")) {
@@ -390,8 +425,8 @@ var LayerManagerView = Backbone.View.extend({
 			if (options && options.onSuccess)
 				options.onSuccess(kmlDesc);
 
-		} else if (layer.baseUrl.toUpperCase().indexOf("LAYERS=") > 0) {
-			// WMS single url
+		} else if (layer.baseUrl.toUpperCase().indexOf("LAYER=") > 0) {
+			// WMS/WMTS single url
 			var layer = createWmsLayerFromUrl(layer.baseUrl);
 			// Override title by user defined
 			layer.title = layer.name;
@@ -428,26 +463,33 @@ var LayerManagerView = Backbone.View.extend({
 
 		var self = this;
 		// Launch search request to explore capabilities
-		var wmsCapabilitiesFormat = new OpenLayers.Format.WMSCapabilities();
 		$.ajax({
 			type: "GET",
 			url: layer.baseUrl,
 			data: {
-				SERVICE: 'WMS',
+				SERVICE: layer.type,
 				//VERSION: '1.1.0', // No need to negociate version, since the highest one will be returned
 				//@see http://cite.opengeospatial.org/OGCTestData/wms/1.1.1/spec/wms1.1.1.html#basic_elements.version.negotiation
 				REQUEST: 'GetCapabilities'
 			},
 			success: function(doc) {
 
-				var c = wmsCapabilitiesFormat.read(doc);
-				if (!c || !c.capability) {
+				var capabilities = layer.type == "WMS" ? new OpenLayers.Format.WMSCapabilities() : new OpenLayers.Format.WMTSCapabilities();
+				var c = capabilities.read(doc);
+
+				if (!c || !(c.capability || c.contents)) {
 					if (options && options.onError)
 						options.onError("Error while parsing capabilities");
 					return;
 				}
 
-				var tree = buildHighCheckTreeData(c.capability.nestedLayers, layer.baseUrl);
+				var layers = layer.type == "WMS" ? c.capability.nestedLayers : c.contents.layers;
+				
+				// HACK: store tileMatrixSets on layer object for WMTS : used to extract projection on build
+				if ( layer.type == "WMTS" ) {
+					_.map(layers, function(layer) { layer.tileMatrixSets = c.contents.tileMatrixSets });
+				}
+				var tree = buildHighCheckTreeData(layers, layer.baseUrl);
 
 				addToTrees(self.$el.find("#trees"), [{
 					item: {
@@ -459,7 +501,7 @@ var LayerManagerView = Backbone.View.extend({
 				}]);
 
 				if (options && options.onSuccess)
-					options.onSuccess(c.capability.nestedLayers);
+					options.onSuccess(layers);
 			},
 			error: function(r) {
 				if (options && options.onError)
@@ -490,7 +532,7 @@ var LayerManagerView = Backbone.View.extend({
 		var self = this;
 		var userLayers = JSON.parse(UserPrefs.get("userLayers") || "[]");
 		_.each(userLayers, function(layer) {
-			// Check if layer contains data coming from GetCapabilities
+			// Check if layer contains data coming from GetCapabilities			
 			if (_.isArray(layer.data)) {
 				var tree = buildHighCheckTreeData(layer.data, layer.baseUrl);
 
@@ -502,8 +544,8 @@ var LayerManagerView = Backbone.View.extend({
 					},
 					children: tree
 				}]);
-			} else if (layer.data.type == "WMS" || layer.data.type == "KML") {
-				// Ordinary WMS/KML layer
+			} else if (layer.data.type == "WMS" || layer.data.type == "WMTS" || layer.data.type == "KML") {
+				// Ordinary WMS/WMTS/KML layer
 				self.addLayer(layer);
 			} else {
 				console.warn("Can't handle layer");

@@ -7,6 +7,16 @@
         <label>Layer url:
             <input name="layerUrl" type="text" placeholder="Mapserver url" value="" />
         </label>
+        <form style="display: none;">
+			<fieldset style="text-align: center" data-mini="true" data-role="controlgroup" data-type="horizontal">
+			    <label>WMS
+			    	<input type="radio" name="capabilities-type" value="WMS" checked="checked">
+			    </label>
+			    <label>WMTS
+			    	<input type="radio" name="capabilities-type" value="WMTS">
+			    </label>
+			</fieldset>
+		</form>
         <a data-mini="true" data-role="button" data-icon="search" data-iconpos="right">Search</a>
         <div style="display: none; margin-top: 10px; font-type:bold; font-weight: bold; color: red;" class="status"></div>
     </div>
