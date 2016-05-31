@@ -188,6 +188,9 @@ var DatasetSelectionView = Backbone.View.extend({
 		// Retrieve the datasets according to the current criteria
 		var datasets = this.model.filterDatasets(this.criteriaFilter);
 
+		// NGEO-2129: Sort by name
+		datasets = _.sortBy(datasets, function(dataset) { return dataset.name.toLowerCase() });
+
 		// Build the dataset list
 		var $dslListContainer = this.$el.find("#datasetListContainer")
 		var listContent = this.datasetsListTemplate({
