@@ -162,10 +162,7 @@
         //delete node
         container.off('click', '.delete').on('click', '.delete', function () {
             console.log($(event.target).attr('rel'));
-            var $li = $(this).closest("li");           
-            if ( settings.onDeleteLi ) {
-                settings.onDeleteLi($li, false);
-            }
+            var $li = $(this).closest("li");
 
             // Remove all childs
             $(this).siblings('ul').find('#baseCheckbox.checked').each(function () {
@@ -174,6 +171,11 @@
                     settings.onDeleteLi($subli, false);
                 }
             });
+
+            // Remove itself
+            if ( settings.onDeleteLi ) {
+                settings.onDeleteLi($li, false);
+            }
 
             // Remove from DOM
             $li.fadeOut(300, function(){
