@@ -13,8 +13,35 @@ var _updateFeaturesWithBrowse = function(features) {
 	if ( _featuresWithBrowse.length != beforeLen ) {
 		_lazyRenderOrdering();
 	}
-
 }
+
+// Call when feature is hidden
+var _onHideFeatures = function(features, fc) {
+
+	// Remove browses of all hidden features
+	for (var i = 0; i < features.length; i++) {
+		var feature = features[i];
+		BrowsesManager.removeBrowse(feature);
+	}
+	// Remove footprints from map
+	fc._footprintLayer.removeFeatures(features);
+};
+
+// Call when feature is shown
+var _onShowFeatures = function(features, fc) {
+
+	// Add browses for highlighted or selected features
+	for (var i = 0; i < features.length; i++) {
+		var feature = features[i];
+		if ( fc.isHighlighted(feature) || fc.isSelected(feature) ) {
+			BrowsesManager.addBrowse(feature);
+		}
+	}
+	_updateFeaturesWithBrowse(features);
+
+	// Add footprints to map
+	fc._footprintLayer.addFeatures(features);
+};
 
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
@@ -31,14 +58,16 @@ var _onSelectFeatures = function(features, fc) {
 	_updateFeaturesWithBrowse(features);
 };
 
+
 // Call when a feature is unselected to synchronize the map
 var _onUnselectFeatures = function(features, fc) {
 	for (var i = 0; i < features.length; i++) {
-		if (fc.isHighlighted(features[i])) {
-			fc._footprintLayer.modifyFeaturesStyle([features[i]], "highlight");
+		var feature = features[i];
+		if (fc.isHighlighted(feature)) {
+			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
 		} else {
-			fc._footprintLayer.modifyFeaturesStyle([features[i]], "default");
-			BrowsesManager.removeBrowse(features[i]);
+			fc._footprintLayer.modifyFeaturesStyle([feature], "default");
+			BrowsesManager.removeBrowse(feature);
 		}
 	}
 	Map.trigger("unselectFeatures");
@@ -141,8 +170,8 @@ module.exports = {
 		fc.on('add:child', this.addFeatureCollection);
 		fc.on('remove:child', this.removeFeatureCollection);
 
-		fc.on('show:features', fc._footprintLayer.addFeatures, footprintLayer);
-		fc.on('hide:features', fc._footprintLayer.removeFeatures, footprintLayer);
+		fc.on('show:features', _onShowFeatures, footprintLayer);
+		fc.on('hide:features', _onHideFeatures, footprintLayer);
 		fc.on('selectFeatures', _onSelectFeatures);
 		fc.on('unselectFeatures', _onUnselectFeatures);
 		fc.on('highlightFeatures', _onHighlightFeatures);
