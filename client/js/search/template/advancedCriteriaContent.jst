@@ -1,6 +1,6 @@
 <!-- If the selected dataset has no advanced criteria display an information message to the user -->
 <% if ( advancedAttributes.length == 0 ) { %>
-	<div class="widget-content ui-body-<%= theme %> ui-error-message">
+	<div class="widget-content ui-body-a ui-error-message">
 		<p><b>No advanced criteria available.</b></p>
 	</div>
 
@@ -35,9 +35,9 @@
 				<div data-role="fieldcontain">
 			    	<div data-role="rangeslider" data-highlight="true" data-mini="true">
 				        <label class="capitalize" for="<%= criterion.id %>_from"><%= label %>:</label>
-				        <input type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(1, value.indexOf(','))) : print(criterion.rangeMinValue) %>">
+				        <input data-theme="a" type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(1, value.indexOf(','))) : print(criterion.rangeMinValue) %>">
 				        <label class="capitalize" for="<%= criterion.id %>_to"><%= label %>:</label>
-				        <input type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
+				        <input data-theme="a" type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
 				    </div>
 				</div>
 

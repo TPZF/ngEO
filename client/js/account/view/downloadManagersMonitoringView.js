@@ -84,14 +84,10 @@ var DownloadManagersMonitoringView = Backbone.View.extend({
 		// Add HTML to install a download manager
 		var installContent = downloadManagerInstall_template({
 			downloadManagerInstallationLink: Configuration.data.downloadManager.downloadManagerInstallationLink,
-			downloadmanagers: this.model.get('downloadmanagers'),
-			theme: Configuration.localConfig.theme
+			downloadmanagers: this.model.get('downloadmanagers')
 		});
-		this.$el.append(installContent);
-
-		this.$el.append(downloadManagersMonitoring_template({
-			theme: Configuration.localConfig.theme
-		}));
+		this.$el.append(installContent)
+				.append(downloadManagersMonitoring_template());
 
 		this.buildDownloadManagersTable();
 

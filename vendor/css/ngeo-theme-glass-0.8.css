@@ -366,7 +366,7 @@
 }
 .ui-btn-up-f {
 	border: 1px solid #cccccc /*{c-bup-border}*/;
-	background: #eeeeee /*{c-bup-background-color}*/;
+	background: rgba(230, 230, 230, 0.8) /*{c-bup-background-color}*/;
 	font-weight: bold;
 	color: #2f3e46 /*{c-bup-color}*/;
 	text-shadow: 0 /*{c-bup-shadow-x}*/ 1px /*{c-bup-shadow-y}*/ 0 /*{c-bup-shadow-radius}*/ #ffffff /*{c-bup-shadow-color}*/;
@@ -707,7 +707,7 @@
 -----------------------------------------------------------------------------------------------------------*/
 .ui-bar-c {
 	border: 1px solid #333333 /*{a-bar-border}*/;
-	background: rgba(17,17,17,0.6) /*{f-bar-background-color}*/;
+	background: rgba(17,17,17,1.0) /*{f-bar-background-color}*/;
 	color: #ffffff /*{a-bar-color}*/;
 	font-weight: bold;
 	text-shadow: 0 /*{a-bar-shadow-x}*/ -1px /*{a-bar-shadow-y}*/ 0 /*{a-bar-shadow-radius}*/ #000000 /*{a-bar-shadow-color}*/;
@@ -740,20 +740,14 @@
 .ui-bar-c select,
 .ui-bar-c textarea,
 .ui-bar-c button {
-	    font-camily: Helvetica, Arial, sans-serif /*{global-cont-camily}*/;
+	    font-family: Helvetica, Arial, sans-serif /*{global-cont-family}*/;
 }
 .ui-body-c,
 .ui-overlay-c {
 	border: 1px solid #444444 /*{a-body-border}*/;
 	color: #ffffff /*{a-body-color}*/;
 	text-shadow: 0 /*{a-body-shadow-x}*/ 1px /*{a-body-shadow-y}*/ 0 /*{a-body-shadow-radius}*/ #111111 /*{a-body-shadow-color}*/;
-	background: rgba(34,34,34,0.6) /*{f-body-background-color}*/;
-	background-image: -webkit-gradient(linear, left top, left bottom, from( #444444 /*{a-body-background-start}*/), to( #222222 /*{a-body-background-end}*/)); /* Saf4+, Chrome */
-	background-image: -webkit-linear-gradient( #444444 /*{a-body-background-start}*/, #222222 /*{a-body-background-end}*/); /* Chrome 10+, Saf5.1+ */
-	background-image:    -moz-linear-gradient( #444444 /*{a-body-background-start}*/, #222222 /*{a-body-background-end}*/); /* FF3.6 */
-	background-image:     -ms-linear-gradient( #444444 /*{a-body-background-start}*/, #222222 /*{a-body-background-end}*/); /* IE10 */
-	background-image:      -o-linear-gradient( #444444 /*{a-body-background-start}*/, #222222 /*{a-body-background-end}*/); /* Opera 11.10+ */
-	background-image:         linear-gradient( #444444 /*{a-body-background-start}*/, #222222 /*{a-body-background-end}*/);
+	background: rgba(23, 23, 23, 0.8);
 }
 
 .ui-overlay-c {
@@ -765,7 +759,7 @@
 .ui-body-c select,
 .ui-body-c textarea,
 .ui-body-c button {
-	    font-camily: Helvetica, Arial, sans-serif /*{global-cont-camily}*/;
+	    font-family: Helvetica, Arial, sans-serif /*{global-cont-family}*/;
 }
 .ui-body-c .ui-link-inherit {
 	color: #ffffff /*{f-body-color}*/;
@@ -785,7 +779,7 @@
 }
 .ui-btn-up-c {
 	border: 1px solid #111111 /*{a-bup-border}*/;
-	background: rgba(51,51,51,0.6) /*{f-bup-background-color}*/;
+	background: rgba(51,51,51,1.0) /*{f-bup-background-color}*/;
 	font-weight: bold;
 	color: #ffffff /*{a-bup-color}*/;
 	text-shadow: 0 /*{a-bup-shadow-x}*/ 1px /*{a-bup-shadow-y}*/ 0 /*{a-bup-shadow-radius}*/ #111111 /*{a-bup-shadow-color}*/;
@@ -839,7 +833,7 @@
 .ui-btn-up-c,
 .ui-btn-hover-c,
 .ui-btn-down-c {
-	    font-camily: Helvetica, Arial, sans-serif /*{global-cont-camily}*/;
+    font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;
 	text-decoration: none;
 }
 

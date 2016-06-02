@@ -1,7 +1,7 @@
 
-<div id="dataAccessMonitoringContent" class="widget-content ui-body-a">
+<div id="dataAccessMonitoringContent" class="widget-content">
 	<div class="ui-grid-a">
-		<div id="dmsDiv" class="ui-block-a widget-content ui-body-a">
+		<div id="dmsDiv" class="ui-block-a widget-content">
 			<h4>Assigned Download Managers : <%= getOrderedStatuses().length %></h4>
 			<ul id="downloadmnagers" data-role="listview" data-inset="true">
 				<% _.each(getOrderedStatuses(), function(newStatus) { %>
