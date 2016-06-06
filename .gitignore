@@ -1,0 +1,6 @@
+# Node
+node_modules
+
+# Build directories
+output-dev
+output-opt
