@@ -4,3 +4,6 @@ node_modules
 # Build directories
 output-dev
 output-opt
+
+# Tests
+client/tests/report
