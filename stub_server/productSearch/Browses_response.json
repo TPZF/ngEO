@@ -443,6 +443,117 @@
                 "productUrl": "http://localhost:3000/ngeo/files/product.zip"
             },
             "type": "Feature"
+        },
+        {
+            "geometry": {
+                "coordinates": [
+                    [
+                        [
+                            -40.03,
+                            50.71
+                        ],
+                        [
+                            10,
+                            51.56
+                        ],
+                        [
+                            10.62,
+                            51.87
+                        ],
+                        [
+                            -40.03,
+                            50.86
+                        ],
+                        [
+                            -40.03,
+                            50.71
+                        ]
+                    ]
+                ],
+                "type": "Polygon"
+            },
+            "id": "ArcGisFeature_3857",
+            "properties": {
+                "EarthObservation": {
+                    "EarthObservationEquipment": {
+                        "Acquisition": {
+                            "atm_centreViewAngles": 1.0,
+                            "atm_multiViewAngles": 1.0,
+                            "eop_completionTimeFromAscendingNode": 1200000,
+                            "eop_illuminationAzimuthAngle": 1.5,
+                            "eop_illuminationElevationAngle": 1.5,
+                            "eop_illuminationZenithAngle": 1.5,
+                            "eop_orbitDirection": "ASCENDING",
+                            "eop_orbitNumber": 1000,
+                            "eop_startTimeFromAscendingNode": 1000000,
+                            "eop_wrsLatitudeGrid": "7200",
+                            "eop_wrsLongitudeGrid": "150",
+                            "sar_antennaLookDirection": "LEFT",
+                            "sar_dopplerFrequency": 1.0,
+                            "sar_incidenceAngleVariation": 1.0,
+                            "sar_maximumIncidenceAngle": 1.0,
+                            "sar_minimumIncidenceAngle": 1.0,
+                            "sar_polarisationChannels": "HH",
+                            "sar_polarisationMode": "D"
+                        },
+                        "eop_instrumentShortName": "ArcGIS",
+                        "eop_operationalMode": "SM",
+                        "eop_platformSerialIdentifier": "1A",
+                        "eop_platformShortName": "SENTINEL-1",
+                        "eop_sensorType": "RADAR",
+                        "eop_swathIdentifier": "I1"
+                    },
+                    "EarthObservationMetaData": {
+                        "eop_acquisitionSubType": "subtype",
+                        "eop_acquisitionType": "NOMINAL",
+                        "eop_identifier": "S11A0001",
+                        "eop_imageQualityDegradation": 10.5,
+                        "eop_imageQualityDegradationTag": [
+                            "RADIOMETRY",
+                            "MISSING_LINES"
+                        ],
+                        "eop_imageQualityReportURL": "http://srv/quality/report.xml",
+                        "eop_imageQualityStatus": "NOMINAL",
+                        "eop_localAttribute": [
+                            "pitch",
+                            "star_name"
+                        ],
+                        "eop_localValue": [
+                            "0.1",
+                            "aldebaran"
+                        ],
+                        "eop_parentIdentifier": "S1_IW_GRDH_1S",
+                        "eop_processing": {
+                            "eop_processingMode": "level1"
+                        },
+                        "eop_productGroupId": "grp_1",
+                        "eop_productType": "S1_IW_GRDH_1S",
+                        "eop_status": "ARCHIVED"
+                    },
+                    "EarthObservationResult": {
+                        "atm_cloudCoverPercentage": 10.0,
+                        "atm_snowCoverPercentage": 15.0,
+                        "eop_ProductInformation": {
+                            "eop_filename": "",
+                            "eop_size": "",
+                            "eop_version": ""
+                        },
+                        "eop_BrowseInformation": {
+                          "eop_type": "wmts",
+                          "eop_layer": "World_Imagery",
+                          "eop_url": "http://services.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/WMTS?"
+                        },
+                        "opt_cloudCoverPercentage": 10.0,
+                        "opt_snowCoverPercentage": 15.0
+                    },
+                    "gml_beginPosition": "2001-01-01T10:00:00.00Z",
+                    "gml_endPosition": "2001-01-01T12:00:00.00Z",
+                    "gml_timePosition": "2001-01-01T12:00:00.00Z",
+                    "om_observedProperty": "href"
+                },
+                "productUrl": "http://localhost:3000/ngeo/files/product.zip"
+            },
+            "type": "Feature"
         }
     ],
     "type": "FeatureCollection"
