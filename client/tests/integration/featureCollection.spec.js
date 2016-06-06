@@ -40,12 +40,14 @@ describe("FeatureCollection test", function() {
 		jasmine.Ajax.install();
 
 		fc = respondWith( __fixtures__["stub_server/productSearch/S2MSI1A_page1_response"] );
+		// Update fc countPerPage to be 5 to test pagination
+		fc.countPerPage = 5;
+		
 		fc.search(baseUrl);
-		expect(fc.features.length).toEqual(5);
+		expect(fc.features.length).toEqual(fc.countPerPage);
 		expect(fc.totalResults).toEqual(100); // TODO: check if it's normal that total results is a string
 		expect(fc.currentPage).toEqual(1);
-		var countPerPage = 5; // Test has been realized with 5 as count per page
-		expect(fc.lastPage).toEqual(Math.ceil(fc.totalResults / countPerPage));
+		expect(fc.lastPage).toEqual(Math.ceil(fc.totalResults / fc.countPerPage));
 		expect(fc.features[0].id).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T20:46:12.000Z&stop=2015-06-20T20:46:12.000Z&format=atom");
 		expect($.ajax).toHaveBeenCalled();
 

@@ -1,0 +1,923 @@
+{
+  "type": "FeatureCollection",
+  "properties": {
+    "totalResults": 100
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -86.092024,
+              79.716064
+            ],
+            [
+              -86.092024,
+              81.804093
+            ],
+            [
+              -65.911808,
+              81.804093
+            ],
+            [
+              -65.911808,
+              79.716064
+            ],
+            [
+              -86.092024,
+              79.716064
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T20:46:12.000Z&stop=2015-06-20T20:46:12.000Z&format=atom",
+      "properties": {
+        "EarthObservation": {
+          "@id": "46992",
+          "featureOfInterest": {
+            "Footprint": {
+              "@id": "46996",
+              "multiExtentOf": {
+                "MultiSurface": {
+                  "@id": "46997",
+                  "@srsName": "EPSG:4326",
+                  "surfaceMembers": {
+                    "Polygon": {
+                      "@id": "46998",
+                      "exterior": {
+                        "LinearRing": {
+                          "posList": "79.716064 -86.092024 81.804093 -86.092024 81.804093 -65.911808 79.716064 -65.911808 79.716064 -86.092024"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metaDataProperty": {
+            "EarthObservationMetaData": {
+              "acquisitionSubType": "INS-NOBS",
+              "acquisitionType": "NOMINAL",
+              "identifier": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T014612_20150620T204612_20150620T204612_L1A_14_0",
+              "parentIdentifier": "S2MSI1A",
+              "productGroupId": "GS2A_20150620T204612_001429_N01_01",
+              "productType": "S2MSI1A",
+              "status": "ARCHIVED",
+              "statusSubType": "ON-LINE"
+            }
+          },
+          "observedProperty": {
+            "@nil": "true",
+            "@nilReason": "inapplicable"
+          },
+          "phenomenonTime": {
+            "TimePeriod": {
+              "@id": "46993",
+              "beginPosition": "2015-06-20T20:46:12Z",
+              "endPosition": "2015-06-20T20:46:12Z"
+            }
+          },
+          "procedure": {
+            "EarthObservationEquipment": {
+              "@id": "46995",
+              "acquisitionParameters": {
+                "Acquisition": {
+                  "illuminationAzimuthAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationElevationAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationZenithAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "orbitDirection": "DESCENDING",
+                  "orbitNumber": "1429"
+                }
+              },
+              "instrument": {
+                "Instrument": {
+                  "shortName": "MSI"
+                }
+              },
+              "platform": {
+                "Platform": {
+                  "serialIdentifier": "A",
+                  "shortName": "Sentinel-2"
+                }
+              },
+              "sensor": {
+                "Sensor": {
+                  "operationalMode": "IM",
+                  "sensorType": "OPTICAL"
+                }
+              }
+            }
+          },
+          "result": {
+            "@type": "eop:EarthObservationResultPropertyType",
+            "EarthObservationResult": {
+              "@id": "46999",
+              "cloudCoverPercentage": {
+                "#text": "1.43",
+                "@uom": "%"
+              },
+              "product": {
+                "ProductInformation": {
+                  "fileName": {
+                    "ServiceReference": {
+                      "@href": "s2://ngeo.eo.esa.int/Sentinel-2/L1A/S2A_OPER_REP_METARC_UPA__20150621T014612_20150620T204612_20150620T204612_L1A_14_0",
+                      "RequestMessage": null
+                    }
+                  },
+                  "size": {
+                    "#text": "20717",
+                    "@uom": "Bytes"
+                  },
+                  "version": "1.0"
+                }
+              }
+            }
+          },
+          "resultTime": {
+            "TimeInstant": {
+              "@id": "46994",
+              "timePosition": "2015-06-20T20:46:12Z"
+            }
+          }
+        },
+        "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T20:46:12.000Z&stop=2015-06-20T20:46:12.000Z&format=atom",
+        "links": [
+          {
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T20:46:12.000Z&stop=2015-06-20T20:46:12.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T20%3A46%3A12.000Z%26stop%3D2015-06-20T20%3A46%3A12.000Z%26format%3Datom",
+            "@rel": "self",
+            "@title": "Reference link",
+            "@type": "application/atom+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/description",
+            "@rel": "search",
+            "@title": "OpenSearch Description link",
+            "@type": "application/opensearchdescription+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T20:46:12.000Z&stop=2015-06-20T20:46:12.000Z&format=metalink",
+            "@rel": "enclosure",
+            "@title": "metalink",
+            "@type": "application/x-binary"
+          },
+          {
+            "@title": "Virtual Product Components",
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T20:46:12.000Z&stop=2015-06-20T20:46:12.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T20%3A46%3A12.000Z%26stop%3D2015-06-20T20%3A46%3A12.000Z%26format%3Datom&enableSourceproduct=true&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T20%3A46%3A12.000Z%26stop%3D2015-06-20T20%3A46%3A12.000Z%26format%3Datom"
+          },
+          {
+            "@title": "interferometry",
+            "@rel": "related"
+          }
+        ],
+        "published": "2015-10-15T06:31:17Z",
+        "title": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T014612_20150620T204612_20150620T204612_L1A_14_0 (NOMINAL)",
+        "updated": "2015-10-15T06:31:17Z"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -86.364111,
+              76.843971
+            ],
+            [
+              -86.364111,
+              81.422902
+            ],
+            [
+              -68.484203,
+              81.422902
+            ],
+            [
+              -68.484203,
+              76.843971
+            ],
+            [
+              -86.364111,
+              76.843971
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:53.000Z&stop=2015-06-20T19:06:53.000Z&format=atom",
+      "properties": {
+        "EarthObservation": {
+          "@id": "47000",
+          "featureOfInterest": {
+            "Footprint": {
+              "@id": "47004",
+              "multiExtentOf": {
+                "MultiSurface": {
+                  "@id": "47005",
+                  "@srsName": "EPSG:4326",
+                  "surfaceMembers": {
+                    "Polygon": {
+                      "@id": "47006",
+                      "exterior": {
+                        "LinearRing": {
+                          "posList": "76.843971 -86.364111 81.422902 -86.364111 81.422902 -68.484203 76.843971 -68.484203 76.843971 -86.364111"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metaDataProperty": {
+            "EarthObservationMetaData": {
+              "acquisitionSubType": "INS-NOBS",
+              "acquisitionType": "NOMINAL",
+              "identifier": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T000653_20150620T190653_20150620T190653_L1A_9_6",
+              "parentIdentifier": "S2MSI1A",
+              "productGroupId": "GS2A_20150620T190653_001428_N01_01",
+              "productType": "S2MSI1A",
+              "status": "ARCHIVED",
+              "statusSubType": "ON-LINE"
+            }
+          },
+          "observedProperty": {
+            "@nil": "true",
+            "@nilReason": "inapplicable"
+          },
+          "phenomenonTime": {
+            "TimePeriod": {
+              "@id": "47001",
+              "beginPosition": "2015-06-20T19:06:53Z",
+              "endPosition": "2015-06-20T19:06:53Z"
+            }
+          },
+          "procedure": {
+            "EarthObservationEquipment": {
+              "@id": "47003",
+              "acquisitionParameters": {
+                "Acquisition": {
+                  "illuminationAzimuthAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationElevationAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationZenithAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "orbitDirection": "DESCENDING",
+                  "orbitNumber": "1428"
+                }
+              },
+              "instrument": {
+                "Instrument": {
+                  "shortName": "MSI"
+                }
+              },
+              "platform": {
+                "Platform": {
+                  "serialIdentifier": "A",
+                  "shortName": "Sentinel-2"
+                }
+              },
+              "sensor": {
+                "Sensor": {
+                  "operationalMode": "IM",
+                  "sensorType": "OPTICAL"
+                }
+              }
+            }
+          },
+          "result": {
+            "@type": "eop:EarthObservationResultPropertyType",
+            "EarthObservationResult": {
+              "@id": "47007",
+              "cloudCoverPercentage": {
+                "#text": "8.14",
+                "@uom": "%"
+              },
+              "product": {
+                "ProductInformation": {
+                  "fileName": {
+                    "ServiceReference": {
+                      "@href": "s2://ngeo.eo.esa.int/Sentinel-2/L1A/S2A_OPER_REP_METARC_UPA__20150621T000653_20150620T190653_20150620T190653_L1A_9_6",
+                      "RequestMessage": null
+                    }
+                  },
+                  "size": {
+                    "#text": "20752",
+                    "@uom": "Bytes"
+                  },
+                  "version": "1.0"
+                }
+              }
+            }
+          },
+          "resultTime": {
+            "TimeInstant": {
+              "@id": "47002",
+              "timePosition": "2015-06-20T19:06:53Z"
+            }
+          }
+        },
+        "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:53.000Z&stop=2015-06-20T19:06:53.000Z&format=atom",
+        "links": [
+          {
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:53.000Z&stop=2015-06-20T19:06:53.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A06%3A53.000Z%26stop%3D2015-06-20T19%3A06%3A53.000Z%26format%3Datom",
+            "@rel": "self",
+            "@title": "Reference link",
+            "@type": "application/atom+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/description",
+            "@rel": "search",
+            "@title": "OpenSearch Description link",
+            "@type": "application/opensearchdescription+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:53.000Z&stop=2015-06-20T19:06:53.000Z&format=metalink",
+            "@rel": "enclosure",
+            "@title": "metalink",
+            "@type": "application/x-binary"
+          },
+          {
+            "@title": "Virtual Product Components",
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:53.000Z&stop=2015-06-20T19:06:53.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A06%3A53.000Z%26stop%3D2015-06-20T19%3A06%3A53.000Z%26format%3Datom&enableSourceproduct=true&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A06%3A53.000Z%26stop%3D2015-06-20T19%3A06%3A53.000Z%26format%3Datom"
+          },
+          {
+            "@title": "interferometry",
+            "@rel": "related"
+          }
+        ],
+        "published": "2015-10-15T07:31:49Z",
+        "title": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T000653_20150620T190653_20150620T190653_L1A_9_6 (NOMINAL)",
+        "updated": "2015-10-15T07:31:49Z"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -79.422068,
+              78.833789
+            ],
+            [
+              -79.422068,
+              81.917801
+            ],
+            [
+              -55.284524,
+              81.917801
+            ],
+            [
+              -55.284524,
+              78.833789
+            ],
+            [
+              -79.422068,
+              78.833789
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:11.000Z&stop=2015-06-20T19:06:11.000Z&format=atom",
+      "properties": {
+        "EarthObservation": {
+          "@id": "47008",
+          "featureOfInterest": {
+            "Footprint": {
+              "@id": "47012",
+              "multiExtentOf": {
+                "MultiSurface": {
+                  "@id": "47013",
+                  "@srsName": "EPSG:4326",
+                  "surfaceMembers": {
+                    "Polygon": {
+                      "@id": "47014",
+                      "exterior": {
+                        "LinearRing": {
+                          "posList": "78.833789 -79.422068 81.917801 -79.422068 81.917801 -55.284524 78.833789 -55.284524 78.833789 -79.422068"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metaDataProperty": {
+            "EarthObservationMetaData": {
+              "acquisitionSubType": "INS-NOBS",
+              "acquisitionType": "NOMINAL",
+              "identifier": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T000611_20150620T190611_20150620T190611_L1A_10_4",
+              "parentIdentifier": "S2MSI1A",
+              "productGroupId": "GS2A_20150620T190611_001428_N01_01",
+              "productType": "S2MSI1A",
+              "status": "ARCHIVED",
+              "statusSubType": "ON-LINE"
+            }
+          },
+          "observedProperty": {
+            "@nil": "true",
+            "@nilReason": "inapplicable"
+          },
+          "phenomenonTime": {
+            "TimePeriod": {
+              "@id": "47009",
+              "beginPosition": "2015-06-20T19:06:11Z",
+              "endPosition": "2015-06-20T19:06:11Z"
+            }
+          },
+          "procedure": {
+            "EarthObservationEquipment": {
+              "@id": "47011",
+              "acquisitionParameters": {
+                "Acquisition": {
+                  "illuminationAzimuthAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationElevationAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationZenithAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "orbitDirection": "DESCENDING",
+                  "orbitNumber": "1428"
+                }
+              },
+              "instrument": {
+                "Instrument": {
+                  "shortName": "MSI"
+                }
+              },
+              "platform": {
+                "Platform": {
+                  "serialIdentifier": "A",
+                  "shortName": "Sentinel-2"
+                }
+              },
+              "sensor": {
+                "Sensor": {
+                  "operationalMode": "IM",
+                  "sensorType": "OPTICAL"
+                }
+              }
+            }
+          },
+          "result": {
+            "@type": "eop:EarthObservationResultPropertyType",
+            "EarthObservationResult": {
+              "@id": "47015",
+              "cloudCoverPercentage": {
+                "#text": "2.1",
+                "@uom": "%"
+              },
+              "product": {
+                "ProductInformation": {
+                  "fileName": {
+                    "ServiceReference": {
+                      "@href": "s2://ngeo.eo.esa.int/Sentinel-2/L1A/S2A_OPER_REP_METARC_UPA__20150621T000611_20150620T190611_20150620T190611_L1A_10_4",
+                      "RequestMessage": null
+                    }
+                  },
+                  "size": {
+                    "#text": "20474",
+                    "@uom": "Bytes"
+                  },
+                  "version": "1.0"
+                }
+              }
+            }
+          },
+          "resultTime": {
+            "TimeInstant": {
+              "@id": "47010",
+              "timePosition": "2015-06-20T19:06:11Z"
+            }
+          }
+        },
+        "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:11.000Z&stop=2015-06-20T19:06:11.000Z&format=atom",
+        "links": [
+          {
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:11.000Z&stop=2015-06-20T19:06:11.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A06%3A11.000Z%26stop%3D2015-06-20T19%3A06%3A11.000Z%26format%3Datom",
+            "@rel": "self",
+            "@title": "Reference link",
+            "@type": "application/atom+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/description",
+            "@rel": "search",
+            "@title": "OpenSearch Description link",
+            "@type": "application/opensearchdescription+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:11.000Z&stop=2015-06-20T19:06:11.000Z&format=metalink",
+            "@rel": "enclosure",
+            "@title": "metalink",
+            "@type": "application/x-binary"
+          },
+          {
+            "@title": "Virtual Product Components",
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:06:11.000Z&stop=2015-06-20T19:06:11.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A06%3A11.000Z%26stop%3D2015-06-20T19%3A06%3A11.000Z%26format%3Datom&enableSourceproduct=true&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A06%3A11.000Z%26stop%3D2015-06-20T19%3A06%3A11.000Z%26format%3Datom"
+          },
+          {
+            "@title": "interferometry",
+            "@rel": "related"
+          }
+        ],
+        "published": "2015-10-15T07:32:31Z",
+        "title": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T000611_20150620T190611_20150620T190611_L1A_10_4 (NOMINAL)",
+        "updated": "2015-10-15T07:32:31Z"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -58.092433,
+              79.932769
+            ],
+            [
+              -58.092433,
+              81.788593
+            ],
+            [
+              -40.720036,
+              81.788593
+            ],
+            [
+              -40.720036,
+              79.932769
+            ],
+            [
+              -58.092433,
+              79.932769
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:05:30.000Z&stop=2015-06-20T19:05:30.000Z&format=atom",
+      "properties": {
+        "EarthObservation": {
+          "@id": "47016",
+          "featureOfInterest": {
+            "Footprint": {
+              "@id": "47020",
+              "multiExtentOf": {
+                "MultiSurface": {
+                  "@id": "47021",
+                  "@srsName": "EPSG:4326",
+                  "surfaceMembers": {
+                    "Polygon": {
+                      "@id": "47022",
+                      "exterior": {
+                        "LinearRing": {
+                          "posList": "79.932769 -58.092433 81.788593 -58.092433 81.788593 -40.720036 79.932769 -40.720036 79.932769 -58.092433"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metaDataProperty": {
+            "EarthObservationMetaData": {
+              "acquisitionSubType": "INS-NOBS",
+              "acquisitionType": "NOMINAL",
+              "identifier": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T000530_20150620T190530_20150620T190530_L1A_10_0",
+              "parentIdentifier": "S2MSI1A",
+              "productGroupId": "GS2A_20150620T190530_001428_N01_01",
+              "productType": "S2MSI1A",
+              "status": "ARCHIVED",
+              "statusSubType": "ON-LINE"
+            }
+          },
+          "observedProperty": {
+            "@nil": "true",
+            "@nilReason": "inapplicable"
+          },
+          "phenomenonTime": {
+            "TimePeriod": {
+              "@id": "47017",
+              "beginPosition": "2015-06-20T19:05:30Z",
+              "endPosition": "2015-06-20T19:05:30Z"
+            }
+          },
+          "procedure": {
+            "EarthObservationEquipment": {
+              "@id": "47019",
+              "acquisitionParameters": {
+                "Acquisition": {
+                  "illuminationAzimuthAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationElevationAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationZenithAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "orbitDirection": "DESCENDING",
+                  "orbitNumber": "1428"
+                }
+              },
+              "instrument": {
+                "Instrument": {
+                  "shortName": "MSI"
+                }
+              },
+              "platform": {
+                "Platform": {
+                  "serialIdentifier": "A",
+                  "shortName": "Sentinel-2"
+                }
+              },
+              "sensor": {
+                "Sensor": {
+                  "operationalMode": "IM",
+                  "sensorType": "OPTICAL"
+                }
+              }
+            }
+          },
+          "result": {
+            "@type": "eop:EarthObservationResultPropertyType",
+            "EarthObservationResult": {
+              "@id": "47023",
+              "cloudCoverPercentage": {
+                "#text": "7.09",
+                "@uom": "%"
+              },
+              "product": {
+                "ProductInformation": {
+                  "fileName": {
+                    "ServiceReference": {
+                      "@href": "s2://ngeo.eo.esa.int/Sentinel-2/L1A/S2A_OPER_REP_METARC_UPA__20150621T000530_20150620T190530_20150620T190530_L1A_10_0",
+                      "RequestMessage": null
+                    }
+                  },
+                  "size": {
+                    "#text": "20078",
+                    "@uom": "Bytes"
+                  },
+                  "version": "1.0"
+                }
+              }
+            }
+          },
+          "resultTime": {
+            "TimeInstant": {
+              "@id": "47018",
+              "timePosition": "2015-06-20T19:05:30Z"
+            }
+          }
+        },
+        "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:05:30.000Z&stop=2015-06-20T19:05:30.000Z&format=atom",
+        "links": [
+          {
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:05:30.000Z&stop=2015-06-20T19:05:30.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A05%3A30.000Z%26stop%3D2015-06-20T19%3A05%3A30.000Z%26format%3Datom",
+            "@rel": "self",
+            "@title": "Reference link",
+            "@type": "application/atom+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/description",
+            "@rel": "search",
+            "@title": "OpenSearch Description link",
+            "@type": "application/opensearchdescription+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:05:30.000Z&stop=2015-06-20T19:05:30.000Z&format=metalink",
+            "@rel": "enclosure",
+            "@title": "metalink",
+            "@type": "application/x-binary"
+          },
+          {
+            "@title": "Virtual Product Components",
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T19:05:30.000Z&stop=2015-06-20T19:05:30.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A05%3A30.000Z%26stop%3D2015-06-20T19%3A05%3A30.000Z%26format%3Datom&enableSourceproduct=true&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T19%3A05%3A30.000Z%26stop%3D2015-06-20T19%3A05%3A30.000Z%26format%3Datom"
+          },
+          {
+            "@title": "interferometry",
+            "@rel": "related"
+          }
+        ],
+        "published": "2015-10-15T07:02:32Z",
+        "title": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150621T000530_20150620T190530_20150620T190530_L1A_10_0 (NOMINAL)",
+        "updated": "2015-10-15T07:02:32Z"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              -81.409302,
+              73.07409
+            ],
+            [
+              -81.409302,
+              75.579712
+            ],
+            [
+              -70.795699,
+              75.579712
+            ],
+            [
+              -70.795699,
+              73.07409
+            ],
+            [
+              -81.409302,
+              73.07409
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T17:28:24.000Z&stop=2015-06-20T17:28:24.000Z&format=atom",
+      "properties": {
+        "EarthObservation": {
+          "@id": "47024",
+          "featureOfInterest": {
+            "Footprint": {
+              "@id": "47028",
+              "multiExtentOf": {
+                "MultiSurface": {
+                  "@id": "47029",
+                  "@srsName": "EPSG:4326",
+                  "surfaceMembers": {
+                    "Polygon": {
+                      "@id": "47030",
+                      "exterior": {
+                        "LinearRing": {
+                          "posList": "73.07409 -81.409302 75.579712 -81.409302 75.579712 -70.795699 73.07409 -70.795699 73.07409 -81.409302"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "metaDataProperty": {
+            "EarthObservationMetaData": {
+              "acquisitionSubType": "INS-NOBS",
+              "acquisitionType": "NOMINAL",
+              "identifier": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150620T222824_20150620T172824_20150620T172824_L1A_2_7",
+              "parentIdentifier": "S2MSI1A",
+              "productGroupId": "GS2A_20150620T172824_001427_N01_01",
+              "productType": "S2MSI1A",
+              "status": "ARCHIVED",
+              "statusSubType": "ON-LINE"
+            }
+          },
+          "observedProperty": {
+            "@nil": "true",
+            "@nilReason": "inapplicable"
+          },
+          "phenomenonTime": {
+            "TimePeriod": {
+              "@id": "47025",
+              "beginPosition": "2015-06-20T17:28:24Z",
+              "endPosition": "2015-06-20T17:28:24Z"
+            }
+          },
+          "procedure": {
+            "EarthObservationEquipment": {
+              "@id": "47027",
+              "acquisitionParameters": {
+                "Acquisition": {
+                  "illuminationAzimuthAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationElevationAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "illuminationZenithAngle": {
+                    "#text": "0",
+                    "@uom": "deg"
+                  },
+                  "orbitDirection": "DESCENDING",
+                  "orbitNumber": "1427"
+                }
+              },
+              "instrument": {
+                "Instrument": {
+                  "shortName": "MSI"
+                }
+              },
+              "platform": {
+                "Platform": {
+                  "serialIdentifier": "A",
+                  "shortName": "Sentinel-2"
+                }
+              },
+              "sensor": {
+                "Sensor": {
+                  "operationalMode": "IM",
+                  "sensorType": "OPTICAL"
+                }
+              }
+            }
+          },
+          "result": {
+            "@type": "eop:EarthObservationResultPropertyType",
+            "EarthObservationResult": {
+              "@id": "47031",
+              "cloudCoverPercentage": {
+                "#text": "3.4",
+                "@uom": "%"
+              },
+              "product": {
+                "ProductInformation": {
+                  "fileName": {
+                    "ServiceReference": {
+                      "@href": "s2://ngeo.eo.esa.int/Sentinel-2/L1A/S2A_OPER_REP_METARC_UPA__20150620T222824_20150620T172824_20150620T172824_L1A_2_7",
+                      "RequestMessage": null
+                    }
+                  },
+                  "size": {
+                    "#text": "20673",
+                    "@uom": "Bytes"
+                  },
+                  "version": "1.0"
+                }
+              }
+            }
+          },
+          "resultTime": {
+            "TimeInstant": {
+              "@id": "47026",
+              "timePosition": "2015-06-20T17:28:24Z"
+            }
+          }
+        },
+        "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T17:28:24.000Z&stop=2015-06-20T17:28:24.000Z&format=atom",
+        "links": [
+          {
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T17:28:24.000Z&stop=2015-06-20T17:28:24.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T17%3A28%3A24.000Z%26stop%3D2015-06-20T17%3A28%3A24.000Z%26format%3Datom",
+            "@rel": "self",
+            "@title": "Reference link",
+            "@type": "application/atom+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/description",
+            "@rel": "search",
+            "@title": "OpenSearch Description link",
+            "@type": "application/opensearchdescription+xml"
+          },
+          {
+            "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T17:28:24.000Z&stop=2015-06-20T17:28:24.000Z&format=metalink",
+            "@rel": "enclosure",
+            "@title": "metalink",
+            "@type": "application/x-binary"
+          },
+          {
+            "@title": "Virtual Product Components",
+            "@href": "http://localhost:3000/ngeo/catalogue/S2MSI1A/search?start=2015-06-20T17:28:24.000Z&stop=2015-06-20T17:28:24.000Z&format=atom&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T17%3A28%3A24.000Z%26stop%3D2015-06-20T17%3A28%3A24.000Z%26format%3Datom&enableSourceproduct=true&id=https%3A%2F%2Fngeopro.magellium.fr%2Fngeo%2Fcatalogue%2FS2MSI1A%2Fsearch%3Fstart%3D2015-06-20T17%3A28%3A24.000Z%26stop%3D2015-06-20T17%3A28%3A24.000Z%26format%3Datom"
+          },
+          {
+            "@title": "interferometry",
+            "@rel": "related"
+          }
+        ],
+        "published": "2015-10-15T07:16:02Z",
+        "title": "urn:eop:ESA:S2A_OPER_REP_METARC_UPA__20150620T222824_20150620T172824_20150620T172824_L1A_2_7 (NOMINAL)",
+        "updated": "2015-10-15T07:16:02Z"
+      },
+      "type": "Feature"
+    }
+  ]
+}

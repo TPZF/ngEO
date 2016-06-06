@@ -60,7 +60,7 @@
         ],
         "caption": "S1 SAR EW Dual Polarization",
         "datasetId": "S1_SAR_EW_DUAL_POL",
-        "description": "S1_SAR_EW_DUAL_POL desc",
+        "description": "S1_SAR_EW_DUAL_POL (used to test download options)",
         "downloadOptions": [
             {
                 "argumentName": "processing",
@@ -88,6 +88,11 @@
                         "sizeFactor": "1"
                     }
                 ]
+            },
+            {
+                "argumentName": "do_crop",
+                "description" : "Crop product to search area",
+                "cropProductSearchArea" : "true"
             },
             {
                 "argumentName": "resolution",

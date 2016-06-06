@@ -1,6 +1,6 @@
 {
     "datasetSearchInfo": {
-        "datasetId": "ND_SAR_1",
+        "datasetId": "ND_OPT_1",
         "description": "All L1 products for the S1 mission",
         "keywords": [
             {
@@ -47,6 +47,11 @@
                         "sizeFactor": "1"
                     }
                 ]
+            },
+            {
+                "argumentName": "cropProduct",
+                "description" : "Crop product to search area",
+                "cropProductSearchArea" : "true"
             }
         ],
         "attributes": [

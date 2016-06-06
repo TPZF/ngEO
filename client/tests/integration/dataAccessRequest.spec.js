@@ -79,7 +79,7 @@ describe("DataAccessRequest test", function() {
     	spyOn(StandingOrderDataAccessRequest, 'isValid').and.callThrough();
     	StandingOrderDataAccessRequest.submit().done(function() {
     		expect(StandingOrderDataAccessRequest.OpenSearchURL).not.toBe(null);
-    		expect(StandingOrderDataAccessRequest.getSchedulingOptions().TimeDriven).not.toBe(undefined);
+    		expect(StandingOrderDataAccessRequest.getSchedulingOptions().DataDriven).not.toBe(undefined);
     		// TODO: check better and add some more test for standing-order-specific params
 
     		done();
