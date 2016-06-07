@@ -11,7 +11,7 @@ var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest'
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var SearchResults = require('searchResults/model/searchResults');
 var Utils = require('map/utils');
-
+var UserPrefs = require('userPrefs');
 
 var MapPopup = function(container) {
 
@@ -23,7 +23,7 @@ var MapPopup = function(container) {
 	var arrow;
 	var products = null;
 	var isOpened = false;
-	var advancedActivated = false;
+	var advancedActivated = UserPrefs.get("Advanced info state") ? UserPrefs.get("Advanced info state") : false;
 
 	element = $(
 		'<div class="widget-content mapPopup">\
@@ -50,6 +50,7 @@ var MapPopup = function(container) {
 				buildContent(advancedActivated);
 				$(this).parent().addClass('ui-btn-active');
 			}
+			UserPrefs.save("Advanced info state", advancedActivated);
 		});
 
 	// Select

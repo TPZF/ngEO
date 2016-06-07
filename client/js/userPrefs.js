@@ -1,12 +1,13 @@
-/** Singleton Model for storing and retrieving user preferences */
-
-/** Each plain object that will be stored in the local storage 
- * by the current user, will have its key prefixxed by the user id
- * In order to allow many users save their prefs in the same "machine/browser"
- */
 var Logger = require('logger');
 var Configuration = require('configuration');
 
+/**
+ * Singleton Model for storing and retrieving user preferences
+ *
+ * Each plain object that will be stored in the local storage 
+ * by the current user, will have its key prefixxed by the user id
+ * In order to allow many users save their prefs in the same "machine/browser"
+ */
 var UserPrefs = {
     //count for the same added object
     //count : 0, 
@@ -31,10 +32,12 @@ var UserPrefs = {
         }
     },
 
-    /** Save the preferences key, value passed to the local storage */
+    /**
+     * Save the preferences key, value passed to the local storage
+     */
     save: function(key, value) {
 
-        if (localStorage && _.isString(value) && !_.isArray(value) && !_.isFunction(value)) {
+        if (localStorage && (_.isString(value) || _.isBoolean(value)) && !_.isArray(value) && !_.isFunction(value)) {
 
             var oldValue = localStorage.setItem(this.preffix + key, value);
             localStorage.setItem(this.preffix + key, value);
@@ -52,7 +55,9 @@ var UserPrefs = {
         }
     },
 
-    /** Save the preferences object passed to the local storage */
+    /**
+     * Save the preferences object passed to the local storage
+     */
     saveObject: function(key, object) {
 
         if (_.isObject(localStorage) && _.isObject(object) && !_.isArray(object) && !_.isFunction(object)) {
@@ -74,7 +79,9 @@ var UserPrefs = {
         }
     },
 
-    /** removed stored keys */
+    /**
+     * Remove all stored keys
+     */
     reset: function() {
         var self = this;
         //remove stored keys
@@ -90,7 +97,7 @@ var UserPrefs = {
     }
 };
 
-//add events method to object
+// Add events method to object
 _.extend(UserPrefs, Backbone.Events);
 
 module.exports = UserPrefs;

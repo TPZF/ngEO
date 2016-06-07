@@ -85,7 +85,7 @@
 	},
 	
 	"userPrefs": {
-		"keys": ["Dataset", "Background", "Map mode"]
+		"keys": ["Dataset", "Background", "Map mode", "Advanced info state"]
 	},
 
 	"contextHelp": {
