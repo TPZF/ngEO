@@ -254,7 +254,8 @@ module.exports = {
 
 		element = document.getElementById(eltId);
 
-		mapEngine = new engines['2d'](element);
+		var preferedMapEngine = UserPrefs.get("Map mode") ? UserPrefs.get("Map mode") : '2d';
+		mapEngine = new engines[preferedMapEngine](element);
 
 		// Check layers from configuration
 		isGeo = Configuration.data.map.projection == "EPSG:4326";
@@ -495,6 +496,8 @@ module.exports = {
 		} catch (err) {
 			mapEngine = null;
 		}
+
+		UserPrefs.save("Map mode", id);
 
 		if (mapEngine) {
 			mapEngine.subscribe("init", initCallback);

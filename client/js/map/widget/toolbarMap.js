@@ -1,9 +1,9 @@
 var Map = require('map/map');
 var LayersWidget = require('map/widget/layers');
 var BackgroundWidget = require('map/widget/background');
+var UserPrefs = require('userPrefs');
 
-
-var mode2D = true;
+var mode2D = UserPrefs.get('Map mode') ? UserPrefs.get('Map mode') == '2d' : true;
 
 module.exports = function(dsa) {
 
