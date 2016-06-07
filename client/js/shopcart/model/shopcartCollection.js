@@ -4,6 +4,7 @@
 
 var Configuration = require('configuration');
 var Shopcart = require('shopcart/model/shopcart');
+var UserPrefs = require('userPrefs');
 
 /** This is the backbone Collection modeling the shopcart list
  */
@@ -28,15 +29,21 @@ var ShopcartCollection = Backbone.Collection.extend({
 				return;
 			}
 
-			// Find the current : the default one or the first one if none defined
-			var current = this.findWhere({
-				isDefault: true
-			});
-			if (!current) {
-				current = this.at(0);
+			// Check if current shopcart is defined in user prefereneces
+			var current = this.findWhere({ id: UserPrefs.get("Current shopcart") });
+			if ( !current ) {
+
+				// Use the default one or the first one if none has been defined
+				var current = this.findWhere({
+					isDefault: true
+				});
+
+				if ( !current ) {
+					current = this.at(0);
+				}
 			}
 
-			// Set the new current 
+			// Set current shopcart
 			this.setCurrent(current);
 
 		}, this);

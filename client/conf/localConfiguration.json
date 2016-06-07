@@ -85,7 +85,7 @@
 	},
 	
 	"userPrefs": {
-		"keys": ["Dataset", "Background", "Map mode", "Advanced info state"]
+		"keys": ["Dataset", "Background", "Map mode", "Advanced info state", "Current shopcart"]
 	},
 
 	"contextHelp": {

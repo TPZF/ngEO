@@ -1,6 +1,7 @@
 var SearchResultsMap = require('searchResults/map');
 var Map = require('map/map');
 var shopcartViewContent_template = require('shopcart/template/shopcartViewContent');
+var UserPrefs = require('userPrefs');
 
 /**
  * This view represents the status bar for shopcart dataset
@@ -51,6 +52,9 @@ var ShopcartView = Backbone.View.extend({
 
             // Change model on table when the shopcart is changed
             current.loadContent();
+
+            // Store as user preference
+            UserPrefs.save("Current shopcart", current.id);
         });
     },
 
