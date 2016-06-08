@@ -2,9 +2,9 @@
 <ul id="datasetList" data-filter-theme="a" data-role="listview" data-filter="true" data-inset="true">	
 
 	<% _.each(datasets, function(dataset) { %>
-		<li  id="<%= dataset.datasetId %>" data-mini="true" >
-					<span class="ui-icon ui-icon-checkbox-off" /><%= dataset.name %>
-					<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
+		<li  id="<%= dataset.tagFriendlyId %>" data-datasetid="<%= dataset.datasetId %>" data-mini="true" >
+			<span class="ui-icon ui-icon-checkbox-off" /><%= dataset.name %>
+			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
 		</li> 
 	<% }); %>
 		

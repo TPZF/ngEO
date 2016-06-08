@@ -46,11 +46,21 @@ var StatusPanel = Backbone.View.extend({
 				var currentMaxDate = new Date(Configuration.getMappedProperty(feature, "start"));
 				if (maxDate < currentMaxDate){
 					maxDate = currentMaxDate;
-					recentFeatureCollection = feature._featureCollection.id;
+					recentFeatureCollection = feature._featureCollection;
 				}
 			}
+
+			// Very hacky method to click on status corresponding to picked features
 			if ( recentFeatureCollection ) {
-				$('#result' + recentFeatureCollection).click();
+				if ( !recentFeatureCollection.dataset ) {
+					// Actually shopcart doesn't have dataset, so since we have only one shopcart
+					// click on shopcart
+					// TODO: This issue will be resolved when multiple shopcarts could be chosen by user
+					$('#shopcart').click();
+				} else if ( recentFeatureCollection.id ) {
+					// Otherwise the dataset containing products have been clicked
+					$('#result' + recentFeatureCollection.id).click();
+				}
 			}
 		})
 	},

@@ -4,7 +4,7 @@ var _ReservedNames = ['start', 'stop', 'geom', 'bbox', 'id', 'lat', 'lon', 'radi
 
 var Dataset = Backbone.Model.extend({
 
-	//	Dataset attributes
+	// Dataset attributes
 	defaults: {
 		description: "",
 		keywords: null,
@@ -16,26 +16,34 @@ var Dataset = Backbone.Model.extend({
 		validityEndDate: null
 	},
 
-	/** Constructor : initialize the url from the configuration */
 	initialize: function() {
 		// The base url to retreive the dataset Search Info
 		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
 		this.listenTo(this, "error", this.onError);
+
+		// NGEO-2171: datasetId can possibly have special characters so to use it as #id we need to remove them
+		this.tagFriendlyId = this.get("datasetId").replace(/\W/g, '_'); // Used in HTML tag-id generation
 	},
 
-	/** Call when the model cannot be fetched from the server */
+	/** 
+	 * Call when the model cannot be fetched from the server
+	 */
 	onError: function(model, response) {
 		if (response.status == 0) {
 			location.reload();
 		}
 	},
 
-	/** Check if the keywords exists */
+	/**
+	 * Check if the keywords exists
+	 */
 	hasKeyword: function(val) {
 		return this.get('keywords').indexOf(val) >= 0;
 	},
 
-	/** Parse the response from server */
+	/**
+	 * Parse the response from server
+	 */
 	parse: function(response, options) {
 		var resp = {};
 		if (response.datasetSearchInfo) {

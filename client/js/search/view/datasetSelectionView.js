@@ -24,11 +24,11 @@ var DatasetSelectionView = Backbone.View.extend({
 
 		'click li': function(event) {
 			if (!$(event.target).hasClass('ui-icon')) {
-				var datasetId = event.currentTarget.id;
+				var datasetId = $(event.currentTarget).data("datasetid");
 				this.model.fetchDataset(datasetId, function(model) {
 					if (model.get('description')) {
 						$('#dsPopupDescription').html('<p>' + model.get('description') + '</p>').popup('open', {
-							positionTo: "#" + datasetId + " .ui-li-count"
+							positionTo: "#" + dataset.tagFriendlyId + " .ui-li-count"
 						});
 					}
 				});
@@ -36,11 +36,11 @@ var DatasetSelectionView = Backbone.View.extend({
 		},
 
 		'click .ui-icon': function(event) {
-			var $target = $(event.currentTarget);
-			if ($target.hasClass("ui-icon-checkbox-off")) {
-				this.model.select(event.currentTarget.parentElement.id);
+			var datasetId = $(event.currentTarget.parentElement).data("datasetid");
+			if ($(event.currentTarget).hasClass("ui-icon-checkbox-off")) {
+				this.model.select(datasetId);
 			} else {
-				this.model.unselect(event.currentTarget.parentElement.id);
+				this.model.unselect(datasetId);
 			}
 		},
 
@@ -71,7 +71,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Call when a dataset is selected
 	 */
 	onSelect: function(dataset) {
-		var $elt = this.$el.find('#' + dataset.get('datasetId') + ' .ui-icon');
+		var $elt = this.$el.find('#' + dataset.tagFriendlyId + ' .ui-icon');
 		$elt.removeClass("ui-icon-checkbox-off");
 		$elt.addClass("ui-icon-checkbox-on");
 	},
@@ -80,7 +80,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Call when a dataset is unselected
 	 */
 	onUnselect: function(dataset) {
-		var $elt = this.$el.find('#' + dataset.get('datasetId') + ' .ui-icon');
+		var $elt = this.$el.find('#' + dataset.tagFriendlyId + ' .ui-icon');
 		$elt.removeClass("ui-icon-checkbox-on");
 		$elt.addClass("ui-icon-checkbox-off");
 	},
@@ -202,22 +202,22 @@ var DatasetSelectionView = Backbone.View.extend({
 		// Apply authorization
 		// Warning : need to be done after jQuery Mobile has "enhanced" the markup otherwise images are not correctly placed
 		for (var i = 0; i < datasets.length; i++) {
-			if (!DatasetAuthorizations.hasDownloadAccess(datasets[i].datasetId)) {
-				$('#' + datasets[i].datasetId).append('<img src="../images/nodownload.png" />');
+			if (!DatasetAuthorizations.hasDownloadAccess(datasets[i].tagFriendlyId)) {
+				$('#' + datasets[i].tagFriendlyId).append('<img src="../images/nodownload.png" />');
 			}
-			if (!DatasetAuthorizations.hasViewAccess(datasets[i].datasetId)) {
-				$('#' + datasets[i].datasetId).append('<img src="../images/noview.png" />');
+			if (!DatasetAuthorizations.hasViewAccess(datasets[i].tagFriendlyId)) {
+				$('#' + datasets[i].tagFriendlyId).append('<img src="../images/noview.png" />');
 			}
-			if (!DatasetAuthorizations.hasSearchAccess(datasets[i].datasetId)) {
-				$('#' + datasets[i].datasetId).addClass('ui-disabled');
+			if (!DatasetAuthorizations.hasSearchAccess(datasets[i].tagFriendlyId)) {
+				$('#' + datasets[i].tagFriendlyId).addClass('ui-disabled');
 			}
 		}
 
 		// Synchronize the selection with dataset list
 		_.each(this.model.selection, function(dataset) {
-			var $elt = $dslListContainer.find('#' + dataset.get('datasetId'));
+			var $elt = $dslListContainer.find('#' + dataset.tagFriendlyId);
 			if ($elt.length == 0) {
-				this.model.unselect(dataset.get('datasetId'));
+				this.model.unselect(dataset.tagFriendlyId);
 				this.trigger("sizeChanged");
 			} else {
 				$elt.find('.ui-icon').addClass('ui-icon-checkbox-on');

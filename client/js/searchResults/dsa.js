@@ -94,9 +94,10 @@ module.exports = {
 			// $('#statusBar').append(searchResultsView.$el);
 			// searchResultsView.render();
 
+			var tagFriendlyId = "result" + fc.id;
 			// Update the toolbar
 			$bottomToolbar
-				.append('<command id="result' + fc.id + '" title="'+ fc.id +'" label="' + fc.id + '" class="result" />')
+				.append('<command id="'+ tagFriendlyId +'" title="'+ fc.dataset.name +'" label="' + fc.id + '" class="result" />')
 				.toolbar('refresh');
 
 			// Update the daterange slider
@@ -107,7 +108,7 @@ module.exports = {
 
 			// Add to status bar
 			panelManager.bottom.addStatus({
-				activator: '#result' + fc.id,
+				activator: '#' + tagFriendlyId,
 				$el: $(""),//searchResultsView.$el,
 				views: [tableView],//, ganttView],
 				viewActivators: [$('#table')],//, searchResultsView.$el.find('#ganttCB')],
@@ -122,7 +123,7 @@ module.exports = {
 			});
 
 			// Activate the new result
-			$('#result' + fc.id).click();
+			$('#' + tagFriendlyId).click();
 
 			// Show user which dataset is currently selected
 			dragTo($bottomToolbar.find('command:last').position().left);
@@ -133,8 +134,9 @@ module.exports = {
 
 			// WARNING : order of removal is important !
 
+			var tagFriendlyId = "result" + fc.id;
 			// Update the status bar
-			panelManager.bottom.removeStatus('#result' + fc.id);
+			panelManager.bottom.removeStatus('#' + tagFriendlyId);
 
 			// Activate the last
 			$('#bottomToolbar command:last-child').click();

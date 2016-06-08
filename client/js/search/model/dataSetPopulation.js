@@ -30,7 +30,7 @@ Criteria.prototype.addValue = function(value) {
 };
 
 /**
- * Datasets population model 
+ * Dataset population model 
  * Handled transparently the criteria received from the server.
  * Filters the datasets according to a criteria list
  */
@@ -232,6 +232,7 @@ var DataSetPopulation = Backbone.Model.extend({
 
 					filteredDatasets.push({
 						datasetId: datasetId,
+						tagFriendlyId: datasetId.replace(/\W/g,'_'),
 						name: name_index < row.length ? row[name_index] : datasetId,
 						itemsCount: row[count_index]
 					});

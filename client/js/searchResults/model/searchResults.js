@@ -71,7 +71,8 @@ DataSetPopulation.on('select', function(dataset) {
 	var datasetId = dataset.get('datasetId');
 	if (!SearchResults.featureCollection.hasOwnProperty(datasetId)) {
 		var fc = new FeatureCollection();
-		fc.id = datasetId;
+		// NGEO-2171: Use tag friendly id since datasetId can contain special characters as '/'
+		fc.id = dataset.tagFriendlyId;
 		fc.dataset = dataset;
 		fc.viewAccess = DatasetAuthorizations.hasViewAccess(datasetId);
 		fc.downloadAccess = DatasetAuthorizations.hasDownloadAccess(datasetId);

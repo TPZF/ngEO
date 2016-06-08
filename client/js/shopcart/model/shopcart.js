@@ -35,6 +35,7 @@ var Shopcart = Backbone.Model.extend({
 
 		// The shopcart content is a feature collection
 		this.featureCollection = new FeatureCollection();
+		this.featureCollection.id = this.id;
 		var self = this;
 		this.listenTo(this.featureCollection, 'add:features', function(features){
 			self.trigger("add:features", features)
