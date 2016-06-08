@@ -29,6 +29,15 @@ var Layer = function(params, engineLayer) {
 
 	this.setVisible = function(vis) {
 		this.params.visible = vis;
+
+		var visibleLayers = JSON.parse(UserPrefs.get("Visible layers") || "[]");
+		if ( vis ) {
+			visibleLayers.push(this.params.name);
+		} else {
+			visibleLayers.splice(visibleLayers.indexOf(this.params.name), 1);
+		}
+		UserPrefs.save("Visible layers", JSON.stringify(visibleLayers));
+
 		mapEngine.setLayerVisible(this.engineLayer, vis);
 	};
 	this.changeEngine = function(mapEngine) {
@@ -268,31 +277,27 @@ module.exports = {
 			}
 		}
 
+		var visibleLayers = JSON.parse(UserPrefs.get("Visible layers") || "[]");
 		// Build the addtionnal layers from the configuration
 		var confLayers = Configuration.data.map.layers;
 		for (var i = 0; i < confLayers.length; i++) {
-			if (isLayerCompatible(confLayers[i])) {
-				self.layers.push(new Layer(confLayers[i], null));
+			var layerConf = confLayers[i];
+			if (isLayerCompatible(layerConf)) {
+
+				// Update visibilty according to user preferences
+				if ( visibleLayers.indexOf(layerConf.name) != -1 ) {
+					layerConf.visible = true;
+				}
+
+				self.layers.push(new Layer(layerConf, null));
 			}
 		}
 
-		//set the background layer from the preferences if it exists,
-		//unless set it to be the first one in the list of background layers.
+		// Set the background layer from the preferences if it exists,
+		// otherwise set it to be the first one in the list of background layers
 		var preferedBackgroundId = UserPrefs.get("Background");
-
-		if (preferedBackgroundId && preferedBackgroundId != 'None') {
-
-			for (var i = 0; i < self.backgroundLayers.length; i++) {
-				if (self.backgroundLayers[i].id == preferedBackgroundId) {
-					backgroundLayer = self.backgroundLayers[i];
-				}
-			}
-
-			//if the bg layer in the preferences does not existset the layer to be the default one.
-			if (backgroundLayer == null) {
-				backgroundLayer = self.backgroundLayers[0];
-			}
-		} else {
+		backgroundLayer = _.findWhere(self.backgroundLayers, {id: preferedBackgroundId});
+		if ( !backgroundLayer ) {
 			backgroundLayer = self.backgroundLayers[0];
 		}
 
