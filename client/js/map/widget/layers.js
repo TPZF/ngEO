@@ -10,8 +10,11 @@ var SelectHandler = require('map/selectHandler');
  * Callback called when a layer is checked
  */
 var layerCheckedCallback = function() {
-	$(this).data('layer').setVisible($(this).prop('checked'));
-	SelectHandler.setPickable($(this).data('layer'), $(this).prop('checked'));
+	var isVisible = $(this).prop('checked');
+	var layer = $(this).data('layer');
+
+	layer.setVisible(isVisible);
+	SelectHandler.setPickable(layer, isVisible);
 };
 
 var LayersWidget = function(element) {

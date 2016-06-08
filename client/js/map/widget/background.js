@@ -3,7 +3,6 @@
  */
 
 var Map = require('map/map');
-var UserPrefs = require('userPrefs');
 var ngeoWidget = require('ui/widget');
 
 /**
