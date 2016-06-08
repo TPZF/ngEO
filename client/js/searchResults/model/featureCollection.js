@@ -278,8 +278,12 @@ var FeatureCollection = function() {
 			var prevHighlights = this.highlights;
 			// Copy highlighted items
 			this.highlights = features.slice(0);
-			// Event for highlight
-			this.trigger("highlightFeatures", features, prevHighlights, this);
+			// Trigger highlight event with features which belongs to "this" feature collection
+			this.trigger("highlightFeatures", _.intersection(features, this.features), prevHighlights, this);
+			// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
+			for ( var x in this.children ) {
+				this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
+			}
 		}
 	};
 

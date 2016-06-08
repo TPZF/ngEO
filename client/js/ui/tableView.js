@@ -45,6 +45,7 @@ var _getObjects = function(obj, key, options) {
 }
 
 var _allHighlights = [];
+var ctrlPressed = false;
 /**
  * A view to display a table.
  * The model contains a feature collection
@@ -71,6 +72,21 @@ var TableView = Backbone.View.extend({
 
 		this.maxVisibleColumns = 10;
 		var self = this;
+
+		var onKeyDown = function(e) {
+			if ( e.keyCode == '17' ) {
+				ctrlPressed = !ctrlPressed;
+				console.log(ctrlPressed);
+			}
+		}
+		var onKeyUp = function(e) {
+			if ( e.keyCode == '17' ) {
+				ctrlPressed = false;
+				console.log(ctrlPressed);
+			}
+		}
+		document.onkeydown = onKeyDown;
+		document.onkeyup = onKeyUp;
 
 		/**
 		 *	This code just temporary serves to trigger highlight on ALL the feature collections
@@ -103,24 +119,22 @@ var TableView = Backbone.View.extend({
 		'click tr': function(event) {
 
 			var $row = $(event.currentTarget);
-			if ($row.hasClass('row_selected')) {
-				return; // Nothing to do
-			}
-
-			var fc = this.model;
 			var data = $row.data('internal');
 			if ( data ) {
-				// Very very very ugly hack... to sync map with highlighted elements in table
-				// TODO: move children feature colleciton into model ?
-				if ( data.parent ) {
-					fc = data.parent.childFc;
-					this.model.highlight([]);
-				} else if ( data.childFc ) {
-					data.childFc.highlight([]);
+				var fc = this.model;
+				var currentHighlights;
+				if ( ctrlPressed ) {
+					if ( fc.highlights.indexOf(data.feature) != -1 ) {
+						currentHighlights = _.without(fc.highlights, data.feature);
+					} else {
+						currentHighlights = fc.highlights.concat(data.feature);
+					}
+				} else {
+					currentHighlights = [data.feature];
 				}
 
 				if (fc.highlight && data.feature) {
-					fc.highlight([data.feature]);
+					fc.highlight(currentHighlights);
 				}
 			}
 		},
