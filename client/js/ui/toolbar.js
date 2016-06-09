@@ -62,7 +62,14 @@ $.widget("ngeo.toolbar", {
 		} else {
 			var self = this;
 			elements.append(function() {
-				var $elt = $('<div class="tb-text"> ' + $(this).attr('label') + '</div>');
+				var $elt;
+				// Even if globally toolbar have labels, some elements still could be without label
+				// Ex: "Table" .. check if data-notext exist and add title only
+				if ( $(this).data('notext') ) {
+					$(this).attr('title', $(this).attr('label'));
+				} else {
+					$elt = $('<div class="tb-text"> ' + $(this).attr('label') + '</div>');
+				}
 				return $elt;
 			});
 		}
