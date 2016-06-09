@@ -1,4 +1,5 @@
 var Logger = require('logger');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 var SearchResultsMap = require('searchResults/map');
 var SelectHandler = require('map/selectHandler');
 var SearchResults = require('searchResults/model/searchResults');
@@ -71,7 +72,6 @@ module.exports = {
 		// panelManager.bottom.addView(ganttView);
 		// ganttView.render();
 
-		$('#table').toolbar().toolbar("refresh");
 		$('#table').click(function() {
 			$(this).toggleClass("toggle");
 			var bottom = parseInt(panelManager.bottom.$el.css('bottom'));
@@ -95,9 +95,13 @@ module.exports = {
 			// searchResultsView.render();
 
 			var tagFriendlyId = "result" + fc.id;
+			var friendlyName = DataSetPopulation.getFriendlyName(fc.dataset.get("datasetId"));
+			if ( !friendlyName )
+				friendlyName = fc.id;
+			
 			// Update the toolbar
 			$bottomToolbar
-				.append('<command id="'+ tagFriendlyId +'" title="'+ fc.dataset.name +'" label="' + fc.id + '" class="result" />')
+				.append('<command id="'+ tagFriendlyId +'" title="'+ friendlyName +'" label="' + friendlyName + '" class="result" />')
 				.toolbar('refresh');
 
 			// Update the daterange slider
