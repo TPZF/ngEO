@@ -9,6 +9,7 @@ var Pagination = Backbone.View.extend({
 			this.setupListeners();
 			this.updatePagination();
 		}
+		this.pagesRange = 5;
 	},
 
 	events: {
@@ -24,6 +25,9 @@ var Pagination = Backbone.View.extend({
 		},
 		'click .prev': function() {
 			this.model.changePage(this.model.currentPage - 1);
+		},
+		'click .pageNum': function(event) {
+			this.model.changePage(parseInt($(event.currentTarget).attr("value")));
 		}
 	},
 
@@ -32,6 +36,7 @@ var Pagination = Backbone.View.extend({
 	 */
 	updatePagination: function() {
 
+		this.$el.find('.pageNum').remove();
 		if (parseInt(this.model.totalResults) > 0) {
 			// Updage paging button according to the current page
 			this.$el.find('#globalPaging a').removeClass('ui-disabled');
@@ -43,6 +48,7 @@ var Pagination = Backbone.View.extend({
 				this.$el.find('.next').addClass('ui-disabled');
 				this.$el.find('.last').addClass('ui-disabled');
 			}
+			this.generatePages();
 		} else if (this.model.totalResults == 0) {
 			this.$el.find('#globalPaging a').addClass('ui-disabled');
 		}
@@ -72,14 +78,54 @@ var Pagination = Backbone.View.extend({
 	},
 
 	/**
+	 *	Generate pages between "Prev" and "Next" labels
+	 */
+	generatePages: function() {
+		if ( this.model ) {
+
+			var startIndex;
+			var halfRange = Math.floor(this.pagesRange / 2) + 1;
+			if ( this.model.lastPage <= this.pagesRange ) {
+				// Case when the range is larger than available pages in dataset
+				startIndex = 1;
+				endIndex = this.model.lastPage;
+			} else {
+				if ( this.model.currentPage <= halfRange ) {
+					// First half start from beginning
+					startIndex = 1;
+				} else {
+					// Nominal case : compute from current page
+					startIndex = this.model.currentPage - (halfRange - 1);
+				}
+
+				if ( this.model.currentPage + halfRange > this.model.lastPage )
+				{
+					// Almost at the end so clamp it by last page
+					endIndex = this.model.lastPage;
+				} else {
+					// Nominal case : compute from current page
+					endIndex = this.model.currentPage + (halfRange - 1);
+				}
+			}
+
+			for ( var i=startIndex; i <= endIndex; i++ ) {
+				this.$el.find('.next').before('<a class="pageNum" data-role="button" value="'+i+'">'+i+'</a>');
+			}
+			this.$el.find('.pageNum[value="'+ this.model.currentPage +'"]').addClass('ui-btn-active');
+			this.$el.trigger("create");
+
+		}
+	},
+
+	/**
 	 *	Render
 	 */
 	render: function() {
 		var content = '<div id="globalPaging" style="text-align: center; margin: 4px 15px;" data-role="controlgroup" data-type="horizontal" data-mini="true">\
-			<a class="first" data-role="button">First</a>\
-			<a class="prev" data-role="button">Previous</a>\
-			<a class="next" data-role="button">Next</a>\
-			<a class="last" data-role="button">Last</a>\
+			<a class="first" data-role="button"><<</a>\
+			<a class="prev" data-role="button"><</a>\
+			<a class="next" data-role="button">></a>\
+			<a class="last" data-role="button">>></a>\
 		</div>';
 		this.$el.html(content).trigger("create");
 		this.$el.find("a").addClass("ui-disabled");
