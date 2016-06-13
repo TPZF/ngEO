@@ -274,9 +274,6 @@ var TableView = Backbone.View.extend({
 				self.triggerHighlightFeature();
 			});
 			this.listenTo(this.model, "update:downloadOptions", this.updateRows);
-			
-			if ( this.pagination )
-				this.pagination.setModel(model);
 
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
@@ -1027,7 +1024,7 @@ var TableView = Backbone.View.extend({
 	 * Render footer
 	 */
 	renderFooter: function() {
-		var footer = $('<div id="tableFooter" class="ui-grid-b"></div>')
+		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block;"  data-inline="true">\
 							<label for="filterTableInput">Filter table:</label>\
@@ -1035,16 +1032,8 @@ var TableView = Backbone.View.extend({
 						</div>\
 						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
 					</div>\
-					<div class="ui-block-b">\
-					</div>\
-					<div class="ui-block-c table-rightButtons"><div data-role="fieldcontain"></div></div>');
+					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
-
-		this.pagination = new Pagination({
-			model: this.model,
-			el: $(footer).find('.ui-block-b')
-		});
-		this.pagination.render();
 
 		if (this.renderButtons)
 			this.renderButtons($buttonContainer);

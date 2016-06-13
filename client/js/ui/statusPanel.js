@@ -1,6 +1,7 @@
 var Configuration = require('configuration');
 var Map = require('map/map');
 var DataSetSearch = require('search/model/datasetSearch');
+var Pagination = require('ui/pagination');
 
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
@@ -62,7 +63,13 @@ var StatusPanel = Backbone.View.extend({
 					$('#result' + recentFeatureCollection.id).click();
 				}
 			}
-		})
+		});
+
+		this.pagination = new Pagination({
+			model: null,
+			el: this.$el.find('#statusPagination')
+		});
+		this.pagination.render();
 	},
 
 	// Only used by shared shopcart. Should be removed later?
@@ -149,6 +156,7 @@ var StatusPanel = Backbone.View.extend({
 		for (var i = 0; i < status.views.length; i++) {
 			status.views[i].setModel(status.model);
 		}
+		this.pagination.setModel(status.model);
 
 		this.activeStatus = status;
 	},

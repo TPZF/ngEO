@@ -98,18 +98,20 @@ module.exports = {
 			var friendlyName = DataSetPopulation.getFriendlyName(fc.dataset.get("datasetId"));
 			if ( !friendlyName )
 				friendlyName = fc.id;
-			
+
 			// Update the toolbar
 			$bottomToolbar
-				.append('<command id="'+ tagFriendlyId +'" title="'+ friendlyName +'" label="' + friendlyName + '" class="result" />')
+				.find('command:last')
+					.after('<command id="'+ tagFriendlyId +'" title="'+ friendlyName +'" label="' + friendlyName + '" class="result" />').end()
 				.toolbar('refresh');
 
+			
 			// Update the daterange slider
 			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");
 			if (slider) {
 				slider.refresh();
 			}
-
+			
 			// Add to status bar
 			panelManager.bottom.addStatus({
 				activator: '#' + tagFriendlyId,
@@ -208,7 +210,7 @@ module.exports = {
 			}
 		});
 
-		$('#map').on('mouseup', function(event) {
+		$(document).on('mouseup', function(event) {
 			if ( dragging ) {
 				event.preventDefault();
 

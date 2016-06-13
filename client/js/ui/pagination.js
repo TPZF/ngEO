@@ -75,7 +75,7 @@ var Pagination = Backbone.View.extend({
 	 *	Render
 	 */
 	render: function() {
-		var content = '<div id="globalPaging" style="text-align: center; margin: 15px;" data-role="controlgroup" data-type="horizontal" data-mini="true">\
+		var content = '<div id="globalPaging" style="text-align: center; margin: 4px 15px;" data-role="controlgroup" data-type="horizontal" data-mini="true">\
 			<a class="first" data-role="button">First</a>\
 			<a class="prev" data-role="button">Previous</a>\
 			<a class="next" data-role="button">Next</a>\
