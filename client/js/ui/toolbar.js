@@ -9,7 +9,8 @@ $.widget("ngeo.toolbar", {
 	// default options
 	options: {
 		onlyIcon: false,
-		withNumber: false
+		withNumber: false,
+		large: false	// Large button option (actually used for bottom panel)
 	},
 
 	// the constructor
@@ -28,51 +29,83 @@ $.widget("ngeo.toolbar", {
 	// build some elements
 	_build: function(elements) {
 
-		// Wrap the image with a div to display both image and text below, and then add class for button styling
-		elements
-			.addClass('tb-elt');
+		if ( this.options.large ) {
 
-		// Add text for each element
-		var $tbButton = $('<div class="tb-button"><div class="tb-icon"></div></div>').appendTo(elements);
+			// Large buttons in bottom panel
+			// TODO: create dedicated module
+			elements.addClass('tb-elt');
 
-		if ( this.options.withNumber ) {
-			$tbButton.find('.tb-icon').append('<span class="nbFeatures"></span>');
-		}
+			if ( $(this).data('notext') ) {
 
-		// Take care to set the data-help on the tb-icon (now the element to receive click)
-		elements.each(function() {
-			var $this = $(this);
-			var contextHelp = $this.data('help');
-			if (contextHelp) {
-				// Add it the current element
-				$this.attr('data-help', contextHelp);
-
-				// OLD code to store data-help on tb-icon, discarded by NGEO-2003
-				// Add it to the lowest element
-				// $this.find('.tb-icon').attr('data-help', contextHelp);
-				// Remove it from the container, not needed anymore
-				// $this.removeAttr('data-help');
+			} else {
+				$('<div>\
+				   </div>').appendTo(elements);
+				
 			}
-		});
 
-		if (this.options.onlyIcon) {
-			elements.attr('title', function() {
-				return $(this).attr('label');
-			});
-		} else {
-			var self = this;
-			elements.append(function() {
-				var $elt;
-				// Even if globally toolbar have labels, some elements still could be without label
-				// Ex: "Table" .. check if data-notext exist and add title only
+			elements.each(function() {
 				if ( $(this).data('notext') ) {
+					$(this).append('<div class="tb-button"><div class="tb-icon"></div></div>');
 					$(this).attr('title', $(this).attr('label'));
 				} else {
-					$elt = $('<div class="tb-text"> ' + $(this).attr('label') + '</div>');
+					$(this).append('<div class="tb-large-button">\
+							   			<div class="btnHeader"><span class=".tb-text">'+$(this).attr('label')+'</span></div>\
+					   					<div class="btnFooter"><span class="nbFeatures">No search done</span></div>\
+				   					</div>');
+					if ( $(this).data('icon') ) {
+						$(this).find('.btnHeader').prepend('<img style="width:12px; margin-right: 10px;" src="../images/'+$(this).data('icon')+'.png" />');
+					}
 				}
-				return $elt;
 			});
+
+		} else {
+			// Wrap the image with a div to display both image and text below, and then add class for button styling
+			elements
+				.addClass('tb-elt');
+
+			// Add text for each element
+			var $tbButton = $('<div class="tb-button"><div class="tb-icon"></div></div>').appendTo(elements);
+
+			if ( this.options.withNumber ) {
+				$tbButton.find('.tb-icon').append('<span class="nbFeatures"></span>');
+			}
+
+			// Take care to set the data-help on the tb-icon (now the element to receive click)
+			elements.each(function() {
+				var $this = $(this);
+				var contextHelp = $this.data('help');
+				if (contextHelp) {
+					// Add it the current element
+					$this.attr('data-help', contextHelp);
+
+					// OLD code to store data-help on tb-icon, discarded by NGEO-2003
+					// Add it to the lowest element
+					// $this.find('.tb-icon').attr('data-help', contextHelp);
+					// Remove it from the container, not needed anymore
+					// $this.removeAttr('data-help');
+				}
+			});
+
+			if (this.options.onlyIcon) {
+				elements.attr('title', function() {
+					return $(this).attr('label');
+				});
+			} else {
+				var self = this;
+				elements.append(function() {
+					var $elt;
+					// Even if globally toolbar have labels, some elements still could be without label
+					// Ex: "Table" .. check if data-notext exist and add title only
+					if ( $(this).data('notext') ) {
+						$(this).attr('title', $(this).attr('label'));
+					} else {
+						$elt = $('<div class="tb-text"> ' + $(this).attr('label') + '</div>');
+					}
+					return $elt;
+				});
+			}
 		}
+
 	},
 
 	// refresh the toolbar

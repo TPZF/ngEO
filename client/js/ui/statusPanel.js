@@ -154,31 +154,19 @@ var StatusPanel = Backbone.View.extend({
 	},
 
 	/**
-	 *	Indicate that catalog is searching to user
+	 *	Build result message
 	 */
-	onStartLoading: function() {
-		var $resultsMessage = this.$el.find('#resultsMessage');
-		$resultsMessage.html("Searching...");
-		$resultsMessage.addClass("pulsating")
-		$resultsMessage.show();
-	},
-
-	/**
-	 *	Update message on right indicating the current number of features per page
-	 */
-	updateResultsMessage: function(features, fc){
-		var $resultsMessage = this.$el.find('#resultsMessage');
-		$resultsMessage.removeClass("pulsating");
+	buildResultMessage: function(features, fc) {
 		var content = "";
 		if ( fc.totalResults > 0 ) {
 			var startIndex = 1 + (fc.currentPage - 1) * fc.countPerPage;
-			content = 'Showing ' + startIndex + ' to ' + (startIndex + features.length - 1) + " of " + fc.totalResults + " products.";
+			content = startIndex + ' to ' + (startIndex + features.length - 1) + " of " + fc.totalResults;
 		} else if (fc.totalResults == 0) {
 			content = 'No product found.';
 		} else {
 			content = 'No search done.';
 		}
-		$resultsMessage.html(content);
+		return content;
 	},
 
 	/**
@@ -202,28 +190,25 @@ var StatusPanel = Backbone.View.extend({
 		// });
 
 		if ( status.model ) {
-			this.listenTo( status.model, "startLoading", this.onStartLoading);
+
+			this.listenTo(status.model, "startLoading", function() {
+				$(status.activator).find('.nbFeatures').html("Searching..").addClass("pulsating");
+			});
 
 			// Update tiny red circle with number of features on search
 			this.listenTo(status.model, "add:features", function(features, fc) {
 				// Use of closure for status
-				$(status.activator).find('.nbFeatures').html(fc.totalResults).show(500, function() {
-					if ( $(status.activator).hasClass("toggle") ) {
-						// setTimeout(function() {
-							self.updateResultsMessage(features, fc);
-						// }, 0);
-					}
-				});
+				$(status.activator).find('.nbFeatures').removeClass("pulsating").html(this.buildResultMessage( features, fc ));
 			});
 
 			this.listenTo(status.model, "remove:features", function(features, fc) {
-				$(status.activator).find('.nbFeatures').html(fc.totalResults).show(500);
+				$(status.activator).find('.nbFeatures').html(this.buildResultMessage( features, fc ));
 			});
 
 			this.listenTo(status.model, "reset:features", function(fc){
 				// Hide it only on first search, no need for pagination searches
 				if ( fc.currentPage == 0 ) {
-					$(status.activator).find('.nbFeatures').hide(500).html("0");
+					$(status.activator).find('.nbFeatures').html("No search done");
 				}
 			});
 		}
@@ -234,7 +219,6 @@ var StatusPanel = Backbone.View.extend({
 				self.showStatus(status);
 				self.activeView = status.views[0];
 			}
-			self.updateResultsMessage(status.model.features, status.model);
 		});
 
 		// Activate the first 'status'

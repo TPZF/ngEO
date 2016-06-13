@@ -28,7 +28,8 @@ module.exports = {
 		}));
 		dsa.find('menu[type=toolbar]').not('#bottomToolbar').toolbar();
 		dsa.find('#bottomToolbar').toolbar({
-			withNumber: true
+			withNumber: true,
+			large: true
 		});
 		return dsa;
 	},

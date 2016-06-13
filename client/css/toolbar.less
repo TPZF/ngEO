@@ -20,12 +20,16 @@ menu[type=toolbar] {
 	margin-top: 3px;
 	margin-left: 4px;
 	margin-right: 4px;
+	vertical-align: middle;
 }
 
 menu[direction=vertical] .tb-elt {
 	display: block;
 }
 
+/*
+Red dot with number of features
+(Commented since the new order..)
 .nbFeatures {
 	display: none;
     position: absolute;
@@ -36,6 +40,23 @@ menu[direction=vertical] .tb-elt {
     right: 0px;
     font-size: 9px;
     transform: translate(50%, -50%);
+}
+*/
+
+.btnHeader {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.tb-large-button {
+	cursor: pointer;
+	margin: auto;
+	padding: 4px;
+	width: 130px;
+	height: 34px;
+	.border-radius(0.5em);
+	position: inherit;
 }
 
 .tb-button {
@@ -48,9 +69,13 @@ menu[direction=vertical] .tb-elt {
 	position: inherit;
 }
 
-.tb-button:hover {
+.tb-button:hover, .tb-large-button {
 	cursor: pointer;
 	background: fade(@text-color, 20%); 
+}
+
+.toggle .tb-large-button, .tb-large-button:active {
+	background-color: black;
 }
 
 .toggle .tb-button, .tb-button:active {
