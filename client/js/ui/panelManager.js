@@ -184,7 +184,6 @@ var PanelManager = Backbone.View.extend({
 		var offset = 0;
 		if (region == 'bottom') {
 			this.$center.animate(props, duration, this.centerResizedCallback);
-			console.log("bottom", props);
 			offset = /*$('#statusBar').height() +*/ $('#bottomToolbar').height() + $('#dateRangeSlider').height() + 2;
 			this.left.$el.animate({
 				"bottom": props.bottom + offset
