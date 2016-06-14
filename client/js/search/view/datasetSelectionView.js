@@ -28,7 +28,7 @@ var DatasetSelectionView = Backbone.View.extend({
 				this.model.fetchDataset(datasetId, function(model) {
 					if (model.get('description')) {
 						$('#dsPopupDescription').html('<p>' + model.get('description') + '</p>').popup('open', {
-							positionTo: "#" + dataset.tagFriendlyId + " .ui-li-count"
+							positionTo: "#" + model.tagFriendlyId + " .ui-li-count"
 						});
 					}
 				});
