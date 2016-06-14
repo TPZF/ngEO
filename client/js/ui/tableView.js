@@ -46,6 +46,26 @@ var _getObjects = function(obj, key, options) {
 
 var _allHighlights = [];
 var ctrlPressed = false;
+var shiftPressed = false;
+var _lastSelectedRow = null;
+
+/**
+ *	Toggle arrays helper used to splice/push features depending on their presence in prevArray
+ *	Used to handle Shift+click selection
+ *	Ex: newArray = [1,2,3]; prevArray = [2,3,4] --> prevArray becomes = [1,4]
+ */
+var toggleArrays = function(newArray, prevArray) {
+  	for ( var i=0; i<newArray.length; i++ ) {
+  		var item = newArray[i];
+  		var idx = _.indexOf(prevArray, item);
+  		if ( idx !== -1 ) {
+  			prevArray.splice(idx, 1);
+  		} else {
+  			prevArray.push(item);
+  		}
+  	}
+}
+
 /**
  * A view to display a table.
  * The model contains a feature collection
@@ -75,14 +95,18 @@ var TableView = Backbone.View.extend({
 
 		var onKeyDown = function(e) {
 			if ( e.keyCode == '17' ) {
-				ctrlPressed = !ctrlPressed;
-				console.log(ctrlPressed);
+				ctrlPressed = true;
+			}
+			if ( e.keyCode == '16' ) {
+				shiftPressed = true;
 			}
 		}
 		var onKeyUp = function(e) {
 			if ( e.keyCode == '17' ) {
 				ctrlPressed = false;
-				console.log(ctrlPressed);
+			}
+			if ( e.keyCode == '16' ) {
+				shiftPressed = false;
 			}
 		}
 		document.onkeydown = onKeyDown;
@@ -117,7 +141,6 @@ var TableView = Backbone.View.extend({
 
 		// Call when a row is clicked
 		'click tr': function(event) {
-
 			var $row = $(event.currentTarget);
 			var data = $row.data('internal');
 			if ( data ) {
@@ -129,9 +152,21 @@ var TableView = Backbone.View.extend({
 					} else {
 						currentHighlights = fc.highlights.concat(data.feature);
 					}
+				} else if ( shiftPressed && _lastSelectedRow ) {
+					document.getSelection().removeAllRanges();
+					var range = [_lastSelectedRow, $row].sort(function(a,b) { return a.index() - b.index() } );
+
+					var selectedRows = range[0].nextUntil(range[1]);
+					selectedRows.push(event.currentTarget);
+					var selectedFeatures = _.map(selectedRows, function(row) {
+						return $(row).data('internal').feature;
+					});
+					currentHighlights = fc.highlights.slice(0);
+					toggleArrays(selectedFeatures, currentHighlights);
 				} else {
 					currentHighlights = [data.feature];
 				}
+				_lastSelectedRow = $row;
 
 				if (fc.highlight && data.feature) {
 					fc.highlight(currentHighlights);
