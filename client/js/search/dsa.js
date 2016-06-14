@@ -96,7 +96,11 @@ module.exports = {
 					if (status == "SUCCESS") {
 
 						// Update datasetsearch from common criterias containing date&area + adv&do options of the given dataset
-						var currentSharedParameters = sharedParameters['commonCriteria'] + "&" + sharedParameters[datasetId];
+						var currentSharedParameters = sharedParameters['commonCriteria'];
+
+						// Check if dataset has download or advanced options, add to shared params if so
+						if ( sharedParameters[datasetId] )
+							currentSharedParameters += "&" + sharedParameters[datasetId];
 						DatasetSearch.populateModelfromURL(currentSharedParameters, datasetId);
 
 						// Refresh the view
