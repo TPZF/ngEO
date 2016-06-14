@@ -70,17 +70,22 @@ var StatusPanel = Backbone.View.extend({
 			el: this.$el.find('#statusPagination')
 		});
 		this.pagination.render();
-		this.listenTo(this.pagination, 'pagination:updated', function() {
+
+		var self = this;
+		// Need to update bottom dataset width when several dataset has been chosen to hide overflow
+		var updateBottomDatasetWidth = function() {
 			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
-			$('#bottomDatasets').width($('#bottomToolbar').outerWidth() - this.$el.find('#statusPagination').width() - menuCommandWidth);
-		});
+			$('#bottomDatasets').width($('#bottomToolbar').outerWidth() - self.$el.find('#statusPagination').width() - menuCommandWidth);
+		};
+		$(window).resize(updateBottomDatasetWidth)
+		this.listenTo(this.pagination, 'pagination:updated', updateBottomDatasetWidth);
 	},
 
 	// Only used by shared shopcart. Should be removed later?
 	showTable: function() {
 		this.activeStatus.tableView.show();
 		this.regionManager.show(this.region, 400);
-		this.activeStatus.$el.find('#tableCB').prop('checked', 'checked').checkboxradiosu('refresh');
+		this.activeStatus.$el.find('#tableCB').prop('checked', 'checked').checkboxradio('refresh');
 	},
 
 	/**
