@@ -49,7 +49,7 @@ $.widget("ngeo.toolbar", {
 					$(this).attr('title', $(this).attr('label'));
 				} else {
 					$(this).append('<div class="tb-large-button">\
-							   			<div class="btnHeader"><span class=".tb-text">'+$(this).attr('label')+'</span></div>\
+							   			<div class="btnHeader"><span class="datasetName">'+$(this).attr('label')+'</span></div>\
 					   					<div class="btnFooter"><span class="nbFeatures">No search done</span></div>\
 				   					</div>');
 					if ( $(this).data('icon') ) {
