@@ -70,6 +70,10 @@ var StatusPanel = Backbone.View.extend({
 			el: this.$el.find('#statusPagination')
 		});
 		this.pagination.render();
+		this.listenTo(this.pagination, 'pagination:updated', function() {
+			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
+			$('#bottomDatasets').width($('#bottomToolbar').outerWidth() - this.$el.find('#statusPagination').width() - menuCommandWidth);
+		});
 	},
 
 	// Only used by shared shopcart. Should be removed later?

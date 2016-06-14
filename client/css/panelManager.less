@@ -42,6 +42,18 @@
 	left: 0;
 	right: 0;
     z-index: 11;
+
+	// HACK: first command is a "Show table" button, fix layout
+    #table {
+    	vertical-align: top;
+    	top: 5px;
+    }
+
+    #bottomDatasets {
+    	display: inline-block;
+    	width: 75%;
+    	overflow: hidden;
+    }
 }
 
 .panel-toolbar-bottom {

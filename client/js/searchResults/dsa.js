@@ -22,7 +22,7 @@ var $bottomToolbar = null;
  */
 var computeCommandWidth = function() {
 	var twidth=0;
-	$bottomToolbar.children().each(function() {
+	$bottomToolbar.find('command').each(function() {
 		twidth += $(this).outerWidth( true );
 	});
 	return twidth;
@@ -33,7 +33,7 @@ var computeCommandWidth = function() {
  */
 var clampPos = function(pos) {
 
-	var tdiff = computeCommandWidth() - $bottomToolbar.width();
+	var tdiff = computeCommandWidth() - $bottomDatasets.width();
 	if ( pos > tdiff )
 		pos = tdiff;
 	if ( pos < 0 )
@@ -46,7 +46,8 @@ var clampPos = function(pos) {
  */
 var dragTo = function(delta) {
 	leftPos += delta;
-	$bottomToolbar.scrollLeft( clampPos(leftPos) );
+	leftPos = clampPos(leftPos);
+	$bottomDatasets.scrollLeft( leftPos );
 }
 
 module.exports = {
@@ -60,6 +61,7 @@ module.exports = {
 	initialize: function(element, router, panelManager) {
 
 		$bottomToolbar = $('#bottomToolbar');
+		$bottomDatasets = $bottomToolbar.find('#bottomDatasets');
 
 		// Create the results table view
 		var tableView = new SearchResultsTableView();
@@ -193,15 +195,15 @@ module.exports = {
 	 */
 	initSwipeEffect: function() {
 		// "Swipe"-effect
-		$bottomToolbar.on('mousedown', function(event) {
+		$bottomDatasets.on('mousedown', function(event) {
 			// Apply swiping only if scroll is activated
-			if ( $bottomToolbar.outerWidth() >= parseInt($bottomToolbar.css('max-width')) ) {
+			if ( $bottomDatasets.outerWidth() < computeCommandWidth() ) {
 				dragging = true;
 				_lastX = event.clientX;
 			}
 		});
 
-		$bottomToolbar.on('mousemove', function(event) {
+		$bottomDatasets.on('mousemove', function(event) {
 			if ( dragging ) {
 				event.preventDefault();
 				dx = _lastX - event.clientX;		
@@ -214,7 +216,7 @@ module.exports = {
 			if ( dragging ) {
 				event.preventDefault();
 
-				leftPos = clampPos($bottomToolbar.scrollLeft() + (dx * 10));
+				leftPos = clampPos($bottomDatasets.scrollLeft() + (dx * 10));
 				$bottomToolbar.stop().animate({
 					'scrollLeft': leftPos
 				}, Math.abs(dx * 30), "easeOutQuad");

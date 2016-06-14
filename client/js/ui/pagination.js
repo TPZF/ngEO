@@ -52,6 +52,10 @@ var Pagination = Backbone.View.extend({
 		} else if (this.model.totalResults == 0) {
 			this.$el.find('#globalPaging a').addClass('ui-disabled');
 		}
+
+		// Trigger is currently used only to update width of bottom datasets toolbar
+		// TODO: improve behaviour with flex ?
+		this.trigger('pagination:updated');
 	},
 
 	/**
