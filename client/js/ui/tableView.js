@@ -48,6 +48,7 @@ var _allHighlights = [];
 var ctrlPressed = false;
 var shiftPressed = false;
 var _lastSelectedRow = null;
+var _clickInTable = false; // Terrible hack to avoid scrolling to most recent feature(FIXME please..)
 
 /**
  *	Toggle arrays helper used to splice/push features depending on their presence in prevArray
@@ -163,6 +164,7 @@ var TableView = Backbone.View.extend({
 					});
 					currentHighlights = fc.highlights.slice(0);
 					toggleArrays(selectedFeatures, currentHighlights);
+					_clickInTable = true;
 				} else {
 					currentHighlights = [data.feature];
 				}
@@ -418,8 +420,10 @@ var TableView = Backbone.View.extend({
 			});
 
 			var $mostRecentRow = this._getRowFromFeature(mostRecentFeature);
-			if ( $mostRecentRow ) {
+			if ( $mostRecentRow && !_clickInTable ) {
 				this._scrollTo($mostRecentRow);
+			} else {
+				_clickInTable = false;
 			}
 
 		}
