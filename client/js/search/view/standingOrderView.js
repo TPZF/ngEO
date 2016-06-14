@@ -95,7 +95,7 @@ var StandingOrderView = SearchView.extend({
 	},
 
 	onShow: function() {
-		$('#dateRangeSlider').hide(); // Assuming that there is only one slider on page
+		$('#dateRangeSlider').dateRangeSlider('hide'); // Assuming that there is only one slider on page
 		//this.dateCriteriaView.removeTimeSlider();
 		SearchView.prototype.onShow.apply(this);
 	},
