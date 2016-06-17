@@ -207,8 +207,8 @@ var createWmsLayerFromUrl = function(baseUrl) {
 	var wmsLayer = {
 		type: parsed['SERVICE'],
 		baseUrl: params[0],
-		name: layerTag,
-		title: layerTag,
+		name: parsed[layerTag],
+		title: parsed[layerTag],
 		params: {
 			format: decodeURIComponent(parsed['FORMAT']),
 			style: parsed['STYLE']
@@ -216,9 +216,9 @@ var createWmsLayerFromUrl = function(baseUrl) {
 	};
 	if ( parsed['SERVICE'] == 'WMTS' ) {
 		wmsLayer.params.matrixSet = parsed['TILEMATRIXSET'];
-		wmsLayer.params.layer = layerTag;
+		wmsLayer.params.layer = parsed[layerTag];
 	} else {
-		wmsLayer.params.layers = layerTag;
+		wmsLayer.params.layers = parsed[layerTag];
 	}
 	return wmsLayer;
 };
@@ -427,14 +427,14 @@ var LayerManagerView = Backbone.View.extend({
 
 		} else if (layer.baseUrl.toUpperCase().indexOf("LAYER=") > 0) {
 			// WMS/WMTS single url
-			var layer = createWmsLayerFromUrl(layer.baseUrl);
+			var wmsLayer = createWmsLayerFromUrl(layer.baseUrl);
 			// Override title by user defined
-			layer.title = layer.name;
-			var item = buildItem(layer);
+			wmsLayer.title = layer.name;
+			var item = buildItem(wmsLayer);
 			addToTrees(this.$el.find("#trees"), [item]);
 
 			if (options && options.onSuccess)
-				options.onSuccess(layer);
+				options.onSuccess(wmsLayer);
 
 		} else {
 			// WMS mapserver url
