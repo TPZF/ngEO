@@ -39,7 +39,7 @@ module.exports =  {
 				model: shopcart.featureCollection
 			};
 			// Update shopcart's name
-			$(shopcartStatus.activator).find('.datasetName').html(shopcart.id).attr('title', shopcart.id);
+			$(shopcartStatus.activator).find('.datasetName').html(shopcart.get('name')).attr('title', shopcart.get('name'));
 
 			// HACK : use addStatus method as well to update status listeners
 			panelManager.bottom.addStatus(shopcartStatus);
