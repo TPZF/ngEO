@@ -43,7 +43,7 @@ var FeatureCollection = function() {
 	var _url = "";
 
 	// Store the current page index
-	this.currentPage = 0;
+	this.currentPage = 1;
 
 	// The last page
 	this.lastPage = 0;
