@@ -134,11 +134,11 @@ var buildItem = function(layer) {
 	} else if (layer.tileMatrixSets && layer.identifier) {
 		// Layers coming from get capabilities of WMTS mapserver
 		
-		// Extract the given matrix of current layer (take the first one for now)
-		// TODO: get the appropriate one from list
-		var matrixSet = layer.tileMatrixSets[layer.tileMatrixSetLinks[0].tileMatrixSet];
+		// Extract the given matrix of current layer
 		var mapProjectionNumber = Configuration.get("map.projection").replace("EPSG:","");
-		if ( matrixSet.projection.indexOf(mapProjectionNumber) != -1 ) {
+		var matrixSet = _.find(layer.tileMatrixSets, function(set) { return set.supportedCRS.indexOf(mapProjectionNumber) >= 0 } )
+		if ( matrixSet ) {
+
 			// Add WMTS layers only compatible with current map projection
 			params = {
 				type: "WMTS",
@@ -147,7 +147,8 @@ var buildItem = function(layer) {
 				visible: false,
 				params: {
 					layer: layer.identifier,
-					matrixSet: layer.tileMatrixSetLinks[0].tileMatrixSet
+					matrixSet: matrixSet.identifier,
+					matrixIds: matrixSet.matrixIds
 				}
 			}
 		}
@@ -357,8 +358,9 @@ var LayerManagerView = Backbone.View.extend({
 			// baseUrl = "http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi";
 			// baseUrl = "http://neowms.sci.gsfc.nasa.gov/wms/wms";
 			// baseUrl = "http://demonstrator.telespazio.com/wmspub";
+			// baseUrl = "http://www.ign.es/wmts/pnoa-ma?SERVICE=WMTS";
 
-			// Specific layer
+			// Specific layer (wms/wmts)
 			// baseUrl = "http://demonstrator.telespazio.com/wmspub?LAYERS=GTOPO&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fjpeg&SRS=EPSG%3A4326&BBOX=90,0,112.5,22.5&WIDTH=256&HEIGHT=256"
 			// baseUrl = "https://c.tiles.maps.eox.at/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=terrain-light&TILEMATRIXSET=WGS84&TILEMATRIX=2&TILEROW=1&TILECOL=0&FORMAT=image%2Fpng"
 
