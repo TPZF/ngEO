@@ -222,6 +222,10 @@ var StatusPanel = Backbone.View.extend({
 				$(status.activator).find('.nbFeatures').html(this.buildResultMessage( features, fc ));
 			});
 
+			this.listenTo(status.model, 'error:features', function(searchUrl) {
+				$(status.activator).find('.nbFeatures').removeClass("pulsating").html("Error on search");
+			});
+
 			this.listenTo(status.model, "reset:features", function(fc){
 				// Hide it only on first search, no need for pagination searches
 				if ( fc.currentPage == 0 ) {
