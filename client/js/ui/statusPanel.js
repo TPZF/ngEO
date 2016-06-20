@@ -1,5 +1,6 @@
 var Configuration = require('configuration');
 var Map = require('map/map');
+var BrowsesManager = require('searchResults/browsesManager');
 var DataSetSearch = require('search/model/datasetSearch');
 var Pagination = require('ui/pagination');
 
@@ -64,6 +65,30 @@ var StatusPanel = Backbone.View.extend({
 				}
 			}
 		});
+		
+		// Update statuses checkbox according to layer visibility
+		Map.on('visibility:changed', function(layer) {
+			
+			if ( layer.params.type == "Browses" )
+				return;
+
+			// Very ugly method to find feature collection id from layer
+			// TODO: improve !
+			var fcId = layer.params.name.substr(0, layer.params.name.indexOf(" Result"));
+			var selector = "#result"+fcId;
+			if ( !fcId ) {
+				// Shopcart special case
+				fcId = layer.params.name.substr(0, layer.params.name.indexOf(" Footprint"));
+				selector = "#shopcart";
+			}
+
+			if ( layer.params.visible ) {
+				$(selector).find('.layerVisibility').removeClass('ui-icon-checkbox-off').addClass('ui-icon-checkbox-on');
+			} else {
+				$(selector).find('.layerVisibility').removeClass('ui-icon-checkbox-on').addClass('ui-icon-checkbox-off');
+			}
+
+		});
 
 		this.pagination = new Pagination({
 			model: null,
@@ -71,7 +96,6 @@ var StatusPanel = Backbone.View.extend({
 		});
 		this.pagination.render();
 
-		var self = this;
 		// Need to update bottom dataset width when several dataset has been chosen to hide overflow
 		var updateBottomDatasetWidth = function() {
 			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
@@ -239,6 +263,19 @@ var StatusPanel = Backbone.View.extend({
 			if (!$(this).hasClass('toggle')) {
 				self.showStatus(status);
 				self.activeView = status.views[0];
+			}
+		});
+
+		// Update footprint/browses visibility when layerVisibility checkbox is toggled
+		$(status.activator).find('.layerVisibility').click(function(event) {
+			event.stopPropagation();
+			var _footprintLayer = status.model._footprintLayer;
+			var isVisible = !_footprintLayer.params.visible;
+			_footprintLayer.setVisible(isVisible);
+			
+			var browsesLayer = BrowsesManager.getBrowseLayer(status.model);
+			if ( browsesLayer ) {
+				browsesLayer.setVisible(isVisible);
 			}
 		});
 

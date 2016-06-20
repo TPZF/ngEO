@@ -128,6 +128,22 @@ module.exports = {
 	},
 
 	/**
+	 *	Get browse layer with the given feature collection
+	 */
+	getBrowseLayer: function(fc) {
+		// HACK: Get the first one for now
+		var feature = fc.features[0];
+		if ( feature ) {
+			var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
+			if (browseInfo) {
+				var key = _getKey(browseInfo);
+				return _browseLayerMap[key];
+			}
+		}
+		return null;
+	},
+
+	/**
 	 *	Update order of browses rendering depending on time attribute of each browse
 	 *	with highlighted features on top
 	 *

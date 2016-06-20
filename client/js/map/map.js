@@ -39,6 +39,7 @@ var Layer = function(params, engineLayer) {
 		UserPrefs.save("Visible layers", JSON.stringify(visibleLayers));
 
 		mapEngine.setLayerVisible(this.engineLayer, vis);
+		self.trigger("visibility:changed", this);
 	};
 	this.changeEngine = function(mapEngine) {
 		this.engineLayer = mapEngine.addLayer(this.params);
@@ -319,7 +320,9 @@ module.exports = {
 		return engineLayer;
 	},
 
-	/** get the selected background layer */
+	/**
+	 * Get the selected background layer
+	 */
 	getBackgroundLayer: function() {
 		return backgroundLayer;
 	},

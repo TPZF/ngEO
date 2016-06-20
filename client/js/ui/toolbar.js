@@ -50,10 +50,10 @@ $.widget("ngeo.toolbar", {
 				} else {
 					$(this).append('<div class="tb-large-button">\
 							   			<div class="btnHeader"><span class="datasetName">'+$(this).attr('label')+'</span></div>\
-					   					<div class="btnFooter"><span class="nbFeatures">No search done</span></div>\
+					   					<div class="btnFooter"><span class="layerVisibility ui-icon ui-icon-checkbox-on"></span><span class="nbFeatures">No search done</span></div>\
 				   					</div>');
 					if ( $(this).data('icon') ) {
-						$(this).find('.btnHeader').prepend('<img style="width:12px; margin-right: 10px;" src="../images/'+$(this).data('icon')+'.png" />');
+						$(this).find('.btnHeader').prepend('<img class="datasetTypeIcon" src="../images/'+$(this).data('icon')+'.png" />');
 					}
 				}
 			});

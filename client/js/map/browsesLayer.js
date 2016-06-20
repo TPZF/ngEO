@@ -37,6 +37,10 @@ var BrowsesLayer = function(params, mapEngine) {
 			browseLayers[i].params.visible = vis;
 			mapEngine.setLayerVisible(browseLayers[i].engineLayer,vis);
 		}
+
+		// HACK: Load Map dynamically to avoid circular dependency
+		var Map = require('map/map');
+		Map.trigger("visibility:changed", this);
 	};
 	
 	/**
@@ -74,7 +78,8 @@ var BrowsesLayer = function(params, mapEngine) {
 			
 			if ( type == "wms" ) {
 				params.layers = eoBrowse.eop_layer;
-				params.styles = "ellipsoid";
+				//params.styles = "ellipsoid";
+				params.styles = "";
 			} else {
 				// Default is WMTS
 				var mapProjection = Configuration.get('map.projection', "EPSG:4326");

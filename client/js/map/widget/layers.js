@@ -10,11 +10,9 @@ var SelectHandler = require('map/selectHandler');
  * Callback called when a layer is checked
  */
 var layerCheckedCallback = function() {
-	var isVisible = $(this).prop('checked');
 	var layer = $(this).data('layer');
-
-	layer.setVisible(isVisible);
-	SelectHandler.setPickable(layer, isVisible);
+	var isVisible = !layer.params.visible;
+	layer.setVisible(isVisible);	
 };
 
 var LayersWidget = function(element) {
@@ -25,6 +23,29 @@ var LayersWidget = function(element) {
 	this.container = $("<fieldset data-role='controlgroup'></fieldset>");
 
 	var layers = Map.layers;
+
+	// Update checkboxes when layers visibility has changed
+	Map.on("visibility:changed", function(layer) {
+		var $input = null;
+		// Fins input according to layer
+		self.container.find('input').each(function() {
+			if ($(this).data('layer') == layer) {
+				$input = $(this);
+				return;
+			}
+		});
+
+		if ($input) {
+			var isVisible = layer.params.visible;
+			if ( isVisible ) {
+				$input.prop('checked', 'checked').checkboxradio("refresh");
+			} else {
+				$input.removeProp('checked').checkboxradio("refresh");
+			}
+			SelectHandler.setPickable(layer, isVisible);
+		}
+	});
+
 	for (var i = 0; i < layers.length; i++) {
 		this.buildHTML(layers[i]);
 	}
