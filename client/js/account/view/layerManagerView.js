@@ -133,24 +133,49 @@ var buildItem = function(layer) {
 		}
 	} else if (layer.tileMatrixSets && layer.identifier) {
 		// Layers coming from get capabilities of WMTS mapserver
-		
-		// Extract the given matrix of current layer
-		var mapProjectionNumber = Configuration.get("map.projection").replace("EPSG:","");
-		var matrixSet = _.find(layer.tileMatrixSets, function(set) { return set.supportedCRS.indexOf(mapProjectionNumber) >= 0 } )
-		if ( matrixSet ) {
 
-			// Add WMTS layers only compatible with current map projection
-			params = {
-				type: "WMTS",
-				name: layer.identifier,
-				baseUrl: layer.baseUrl,
-				visible: false,
-				params: {
-					layer: layer.identifier,
-					matrixSet: matrixSet.identifier,
-					matrixIds: matrixSet.matrixIds
+		// Get current map's projection
+		var mapProjectionNumbers = [Configuration.get("map.projection").replace("EPSG:","")];
+
+		// Add "G00gle" projection in case of Mercator
+		if ( Configuration.get("map.projection") == "EPSG:3857" )
+			mapProjectionNumbers.push("900913");
+
+		// Extract the given matrix of current layer
+		// Check out if mapserver(!) tileMatrixSets contains current map projection
+		// NB: could have 4326 AND 3857, allows to extract matrixSet identifier
+		var matrixSet = _.find(layer.tileMatrixSets, function(set) { return _.find(mapProjectionNumbers, function(projNum) { return set.supportedCRS.indexOf(projNum) >= 0 } ); });
+		
+		if ( matrixSet ) {
+			// Check out if current layer is compatible with current map projection
+			// NB: could be 3857 only
+			var isCompatible = _.find(layer.tileMatrixSetLinks, function(link) { return link.tileMatrixSet == matrixSet.identifier });
+			if ( isCompatible ) {
+				// Add WMTS layers only compatible with current map projection
+				params = {
+					type: "WMTS",
+					title: layer.title,
+					name: layer.identifier,
+					baseUrl: layer.baseUrl,
+					visible: false,
+					params: {
+						layer: layer.identifier,
+						matrixSet: matrixSet.identifier,
+						format: layer.formats[0], // Take first one by default
+						matrixIds: matrixSet.matrixIds.map(function(id) { return id.identifier })
+					}
 				}
+
+				// Layer bounds should be in displayProjection -> 4326
+				var boundsBase = layer.bounds ? layer.bounds : null;
+				if ( boundsBase ) {
+					params.bbox = [boundsBase.left, boundsBase.bottom,boundsBase.right,boundsBase.top];
+				}
+			} else {
+				return null;
 			}
+		} else {
+			return null;
 		}
 	}
 
@@ -174,17 +199,19 @@ var buildHighCheckTreeData = function(layers, baseUrl) {
 	_.each(layers, function(layer) {
 		var item = buildItem(layer);
 
-		if (item.item.layerDesc && !item.item.layerDesc.baseUrl) {
-			// Update baseUrl for layers coming from GetCapabilities
-			// NB: layerDesc doesn't exist for layer which serves only to group WMS layers
-			item.item.layerDesc.baseUrl = baseUrl;
-		}
+		if ( item ) {
+			if (item.item.layerDesc && !item.item.layerDesc.baseUrl) {
+				// Update baseUrl for layers coming from GetCapabilities
+				// NB: layerDesc doesn't exist for layer which serves only to group WMS layers
+				item.item.layerDesc.baseUrl = baseUrl;
+			}
 
-		if (layer.nestedLayers && layer.nestedLayers.length > 0) {
-			// Create children
-			item.children = buildHighCheckTreeData(layer.nestedLayers, baseUrl);
+			if (layer.nestedLayers && layer.nestedLayers.length > 0) {
+				// Create children
+				item.children = buildHighCheckTreeData(layer.nestedLayers, baseUrl);
+			}
+			data.push(item);
 		}
-		data.push(item);
 	});
 
 	return data;
@@ -363,6 +390,8 @@ var LayerManagerView = Backbone.View.extend({
 			// Specific layer (wms/wmts)
 			// baseUrl = "http://demonstrator.telespazio.com/wmspub?LAYERS=GTOPO&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&STYLES=&FORMAT=image%2Fjpeg&SRS=EPSG%3A4326&BBOX=90,0,112.5,22.5&WIDTH=256&HEIGHT=256"
 			// baseUrl = "https://c.tiles.maps.eox.at/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=terrain-light&TILEMATRIXSET=WGS84&TILEMATRIX=2&TILEROW=1&TILECOL=0&FORMAT=image%2Fpng"
+			// baseUrlMercator = "https://c.tiles.maps.eox.at/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=terrain_3857&TILEMATRIXSET=g&TILEMATRIX=2&TILEROW=1&TILECOL=0&FORMAT=image%2Fpng"
+			// baseUrlMercatorOL3 = "http://services.arcgisonline.com/arcgis/rest/services/Demographics/USA_Population_Density/MapServer/WMTS/";
 
 			// KML
 			// baseUrl = "http://quakes.bgs.ac.uk/earthquakes/recent_world_events.kml"
@@ -433,10 +462,14 @@ var LayerManagerView = Backbone.View.extend({
 			// Override title by user defined
 			wmsLayer.title = layer.name;
 			var item = buildItem(wmsLayer);
-			addToTrees(this.$el.find("#trees"), [item]);
+			if ( item ) {
+				addToTrees(this.$el.find("#trees"), [item]);
 
-			if (options && options.onSuccess)
-				options.onSuccess(wmsLayer);
+				if (options && options.onSuccess)
+					options.onSuccess(wmsLayer);
+			} else {
+				console.warn("Something wrong happend when adding " + layer.name);
+			}
 
 		} else {
 			// WMS mapserver url
