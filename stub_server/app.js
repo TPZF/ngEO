@@ -53,10 +53,10 @@ app.get('/ngeo/webClientConfigurationData', webClientConfigurationData);
 app.get('/ngeo/datasetPopulationMatrix', datasetPopulationMatrix);
 
 //datasetSearchInfo interface
-app.get('/ngeo/datasetSearchInfo/:id', datasetSearchInfo);
+app.get(/\/ngeo\/datasetSearchInfo\/(.*)/, datasetSearchInfo);
 
 //product search interface
-app.get('/ngeo/catalogue/:datasetId/search', productSearch);
+app.get(/ngeo\/catalogue\/(.*)\/search/, productSearch);
 
 //download managers list interface
 app.get('/ngeo/downloadManagers', downloadManagers.list);

@@ -18,7 +18,7 @@ var SearchResults = {
 	launch: function(searchCriteria) {
 		for (var x in this.featureCollection) {
 			var fc = this.featureCollection[x];
-			var baseUrl = searchCriteria.getOpenSearchURL({id: fc.id});
+			var baseUrl = searchCriteria.getOpenSearchURL({id: fc.getDatasetId()});
 			fc.search(baseUrl);
 		}
 

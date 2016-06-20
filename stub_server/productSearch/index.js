@@ -24,6 +24,7 @@ var featureCollections = {
 fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 	var inputFeatureCollection = JSON.parse(data);
 	featureCollections['ND_OPT_1'] = eoliParser.parse('./productSearch/dataFromEOLI.txt',inputFeatureCollection);
+	featureCollections['ND_OPT_1/2'] = eoliParser.parse('./productSearch/dataFromEOLI.txt',inputFeatureCollection);
 	featureCollections['default'] = wcsCoveragePaser.parse('./productSearch/sar_coverage.xml',inputFeatureCollection);
 	featureCollections['landsat'] = wcsCoveragePaser.parse('./productSearch/landsat_coverage.xml',inputFeatureCollection);
 });
@@ -232,14 +233,15 @@ module.exports = function(req, res){
 		fcId = req.param('datasetId');
 	}*/
 	
-	if ( featureCollections.hasOwnProperty( req.param('datasetId') ) ){
-		fcId = req.param('datasetId');
+	var datasetId = req.params[0];
+	if ( featureCollections.hasOwnProperty( datasetId ) ){
+		fcId = datasetId;
 	}
 	logger.debug("Search on : " + fcId);
 	
 	var featureCollection = featureCollections[fcId];
 	
-	setupProductUrl( featureCollection, req.param('datasetId') );
+	setupProductUrl( featureCollection, datasetId );
 	
 	// Find with id or not
 	if ( req.query.id ) {
