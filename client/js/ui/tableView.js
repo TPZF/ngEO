@@ -164,10 +164,10 @@ var TableView = Backbone.View.extend({
 					});
 					currentHighlights = fc.highlights.slice(0);
 					toggleArrays(selectedFeatures, currentHighlights);
-					_clickInTable = true;
 				} else {
 					currentHighlights = [data.feature];
 				}
+				_clickInTable = true;
 				_lastSelectedRow = $row;
 
 				if (fc.highlight && data.feature) {
