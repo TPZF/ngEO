@@ -121,27 +121,33 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 	Map.trigger("highlightFeatures", highlightedFeats);
 };
 
-// Connect with map feature picking
-Map.on('pickedFeatures', function(features, featureCollections) {
-
-	var highlights = {}
-	for (var i = 0; i < featureCollections.length; i++) {
-		highlights[featureCollections[i].id] = [];
-	}
-
-	for (var i = 0; i < features.length; i++) {
-		var fc = features[i]._featureCollection;
-		highlights[fc.id].push(features[i]);
-	}
-
-	for (var i = 0; i < featureCollections.length; i++) {
-		featureCollections[i].highlight(highlights[featureCollections[i].id]);
-	}
-});
-
-
-
 module.exports = {
+
+	/**
+	 *	Initialize picked features event
+	 *	Used only to ensure the ORDER of event binding
+	 *
+	 *	Highlight event should be triggered AFTER status panel reacted to 'pickedFeatures'
+	 *	so table view could react on highlight to features which it contains
+	 */
+	initialize: function() {
+		// Connect with map feature picking
+		Map.on('pickedFeatures', function(features, featureCollections) {
+			var highlights = {}
+			for (var i = 0; i < featureCollections.length; i++) {
+				highlights[featureCollections[i].id] = [];
+			}
+
+			for (var i = 0; i < features.length; i++) {
+				var fc = features[i]._featureCollection;
+				highlights[fc.id].push(features[i]);
+			}
+
+			for (var i = 0; i < featureCollections.length; i++) {
+				featureCollections[i].highlight(highlights[featureCollections[i].id]);
+			}
+		});
+	},
 
 	/**
 	 * Add a feature collection to be displayed on the map

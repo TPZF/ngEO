@@ -1,6 +1,7 @@
 var Logger = require('logger');
 var UserPrefs = require('userPrefs');
 var Map = require('map/map');
+var SearchResultsMap = require('searchResults/map');
 var SearchDSA = require('search/dsa');
 var SearchResultsDSA = require('searchResults/dsa');
 var ShopcartDSA = require('shopcart/dsa');
@@ -91,6 +92,11 @@ module.exports = {
 			el: '#bottom-panel',
 			classes: 'ui-body-'+Configuration.localConfig.theme+' panel-content-bottom'
 		}));
+
+		// Initialize "pickedFeatures"-event AFTER adding status panel
+		// to ensure that click on map changes status depending on feature before
+		// scrolling to highlighted feature in TableView thus the feature2row is consistent
+		SearchResultsMap.initialize();
 
 		panelManager.on('centerResized', function() {
 			Map.updateViewportSize();
