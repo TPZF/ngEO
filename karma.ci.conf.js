@@ -96,7 +96,9 @@ module.exports = function(config) {
 		reporters: ['progress', 'html', 'coverage', 'junit'],
 
 		junitReporter: {
-			outputFile: './jenkins-report.xml'
+			outputDir: 'client/tests/report/',
+			outputFile: './jenkins-report.xml',
+			useBrowserName: false
 		},
 
 		// The default configuration
