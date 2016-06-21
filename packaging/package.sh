@@ -1,4 +1,7 @@
 
+# Jenkins hack
+cd `pwd`
+
 export WEBC_VERSION=$1
 export WEBC_RELEASE=SNAPSHOT$2
 
