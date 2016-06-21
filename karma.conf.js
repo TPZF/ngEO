@@ -20,7 +20,7 @@ module.exports = function(config) {
 
 		// Uncomment to have control on all the used packages
 		// By default all plugins are included
-		// plugins: ['karma-qunit', 'karma-jasmine', 'karma-chrome-launcher', 'karma-commonjs-preprocessor', 'karma-html2js-preprocessor'],
+		// plugins: ['karma-jasmine', 'karma-chrome-launcher', 'karma-commonjs-preprocessor', 'karma-html2js-preprocessor', 'karma-json-fixtures-preprocessor', 'karma-jasmine-html-reporter', 'karma-coverage', 'karma-jasmine-ajax', 'karma-phantomjs-launcher'],
 
 		// List of files / patterns to load in the browser
 		files: [
