@@ -1,0 +1,17 @@
+<div id="shopcartSelectionPopup" data-transition="flip" data-role=popup data-theme="a" data-overlay-theme="a" class="ui-content">
+	<a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+	
+	<h4>Select shopcart in list:</h4>
+	<ul style="max-height: 500px; overflow: auto; padding-right: 10px;" id="shopcartsSelection" data-role="listview" data-inset="true"
+	    data-theme="a">
+	    <fieldset data-role="controlgroup">
+
+	    <% _.each(shopcarts.models, function(shopcart) { %>
+			<label><input id="<%= shopcart.id %>" type="radio" name="shopcart" data-theme="a" data-mini="true" />  <%= shopcart.get('name') %> </label>
+		<% }); %>
+		
+		</fieldset>
+	</ul>
+
+	<a class="selectShopcart" data-mini="true" data-role="button" data-icon="select" data-iconpos="right">Select</a>
+</div>

@@ -185,7 +185,12 @@ var StatusPanel = Backbone.View.extend({
 		// Activate model for the views
 		// NB: activate model after toggleView cuz element should be visible to compute width properly
 		for (var i = 0; i < status.views.length; i++) {
-			status.views[i].setModel(status.model);
+			if ( status.parent ) {
+				// Special case of shopcart, find a better solution
+				status.views[i].setShopcart(status.parent);
+			} else {
+				status.views[i].setModel(status.model);
+			}
 		}
 		this.pagination.setModel(status.model);
 

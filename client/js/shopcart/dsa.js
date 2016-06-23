@@ -10,6 +10,7 @@ var ShopcartTableView = require('shopcart/view/shopcartTableView');
 var ShopcartView = require('shopcart/view/shopcartView');
 var CreateShopcartView = require('account/view/createShopcartView');
 var DataSetPopulation = require('search/model/dataSetPopulation');
+var ShopcartListPopup = require('shopcart/view/shopcartListPopup');
 	
 module.exports =  {
 		
@@ -65,7 +66,6 @@ module.exports =  {
 		});
 
 		ShopcartCollection.on('change:isSelected', function(shopcart) {
-			console.log("SHOPCART", shopcart);
 
 			var tagFriendlyId = 'shopcart_'+shopcart.get('id');
 			if ( shopcart.get('isSelected') ) {
@@ -73,7 +73,7 @@ module.exports =  {
 				// Update the toolbar
 				$('#bottomToolbar')
 					.find('#bottomDatasets')
-						.prepend('<command id="'+ tagFriendlyId +'" data-icon="shopcart" title="11'+ shopcart.get('name') +'" label="11' + shopcart.get('name') + '" class="result" />').end()
+						.prepend('<command id="'+ tagFriendlyId +'" data-icon="shopcart" title="'+ shopcart.get('name') +'" label="' + shopcart.get('name') + '" class="result" />').end()
 					.toolbar('refresh');
 
 				// Add shopcartView&tableView as a status to bottom bar
@@ -82,7 +82,8 @@ module.exports =  {
 					$el: shopcartView.$el,
 					views: [tableView],
 					viewActivators: [ shopcartView.$el.find('#tableCB') ],
-					model: shopcart.featureCollection
+					model: shopcart.featureCollection,
+					parent: shopcart
 				};
 				panelManager.bottom.addStatus(shopcartStatus);
 
@@ -122,22 +123,28 @@ module.exports =  {
 		
 		// Subscribe add to shopcart
 		GlobalEvents.on('addToShopcart', function(features) {
-		
-			if (!ShopcartCollection.getCurrent()) {
+			
+			ShopcartListPopup.open({
+				onSelect: function(shopcart) {
+					shopcart.addItems( features );
+				}
+			})
 
-				var createShopcartView = new CreateShopcartView({
-					model : ShopcartCollection,
-					title : "Create shopcart",
-					success : function(model) {
-						ShopcartCollection.setCurrent( model );
-						ShopcartCollection.getCurrent().addItems( features );
-					}
-				});
-				createShopcartView.render();
+			// Code used when there were only one shopcart chosen
+			// if (!ShopcartCollection.getCurrent()) {
+			// 	var createShopcartView = new CreateShopcartView({
+			// 		model : ShopcartCollection,
+			// 		title : "Create shopcart",
+			// 		success : function(model) {
+			// 			ShopcartCollection.setCurrent( model );
+			// 			ShopcartCollection.getCurrent().addItems( features );
+			// 		}
+			// 	});
+			// 	createShopcartView.render();
 				
-			} else {
-				ShopcartCollection.getCurrent().addItems( features );
-			}
+			// } else {
+			// 	ShopcartCollection.getCurrent().addItems( features );
+			// }
 		});
 		
 	},
