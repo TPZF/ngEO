@@ -96,8 +96,12 @@ var StatusPanel = Backbone.View.extend({
 
 		// Need to update bottom dataset width when several dataset has been chosen to hide overflow
 		var updateBottomDatasetWidth = _.debounce(function() {
-			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
-			$('#bottomDatasets').width($('#bottomToolbar').outerWidth() - self.$el.find('#statusPagination').width() - menuCommandWidth);
+			if ( $('#bottomToolbar').is('visible') ) {
+				var menuCommandWidth = 40; // Width of first button allowing to "Show table"
+				var width = $('#bottomToolbar').outerWidth() - self.$el.find('#statusPagination').width() - menuCommandWidth;
+				console.log("Updating width to " + width);
+				$('#bottomDatasets').width(width);
+			}
 		}, 30);
 		$(window).resize(updateBottomDatasetWidth)
 		this.listenTo(this.pagination, 'pagination:updated', updateBottomDatasetWidth);
