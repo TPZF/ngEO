@@ -208,7 +208,7 @@ var StatusPanel = Backbone.View.extend({
 		var content = "";
 		if ( fc.totalResults > 0 ) {
 			var startIndex = 1 + (fc.currentPage - 1) * fc.countPerPage;
-			content = startIndex + ' to ' + (startIndex + features.length - 1) + " of " + fc.totalResults;
+			content = startIndex + ' to ' + (startIndex + fc.features.length - 1) + " of " + fc.totalResults;
 		} else if (fc.totalResults == 0) {
 			content = 'No product found.';
 		} else {
