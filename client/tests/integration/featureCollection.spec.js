@@ -98,7 +98,7 @@ describe("FeatureCollection test", function() {
 
 			s1downloadOptions.setValue("ProductFormat", "JP2");
 			// TODO: the product url comes with do_crop as true, think about evolution
-			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}");
+			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}");
 			fc.select(fc.features[0]);
 			fc.updateDownloadOptions(s1downloadOptions);
 			// Check that it updates do_crop to WKT & ProductFormat to JP2
