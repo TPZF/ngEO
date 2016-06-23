@@ -23,11 +23,12 @@ var Shopcart = Backbone.Model.extend({
 
 	defaults: {
 		name: "Shopcart",
-		isDefault: false
+		isDefault: false,
+		isSelected: false
 	},
 
 	/**
-		Initialize the shopcart
+	 * Initialize the shopcart
 	 */
 	initialize: function() {
 		// The base url to retreive the shopcarts list
@@ -46,7 +47,7 @@ var Shopcart = Backbone.Model.extend({
 	},
 
 	/**
-		Parse response from server
+	 * Parse response from server
 	 */
 	parse: function(response) {
 
@@ -58,7 +59,7 @@ var Shopcart = Backbone.Model.extend({
 	},
 
 	/**
-		Sync model with server
+	 * Sync model with server
 	 */
 	sync: function(method, model, options) {
 		var type = methodMap[method];
@@ -99,10 +100,17 @@ var Shopcart = Backbone.Model.extend({
 
 
 	/**
-    	Load the shopcart content
-	*/
+     * Load the shopcart content
+	 */
 	loadContent: function() {
 		this.featureCollection.search(this.url() + '/search?format=json');
+	},
+
+	/**
+	 *	Toggle selection of shopcart
+	 */
+	toggleSelected: function() {
+		this.set('isSelected', !this.get('isSelected'));
 	},
 
 

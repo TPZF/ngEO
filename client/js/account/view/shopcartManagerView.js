@@ -6,6 +6,9 @@ var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
 var SharePopup = require('ui/sharePopup');
 var shopcartManagerContent_template = require('account/template/shopcartManagerContent');
 
+/**
+ *	The model of this view is <ShopcartCollection>
+ */
 var ShopcartManagerView = Backbone.View.extend({
 
 	initialize: function() {
@@ -14,8 +17,10 @@ var ShopcartManagerView = Backbone.View.extend({
 	},
 
 	events: {
-		'click label': function(event) {
-			this.model.setCurrent(this.model.get(event.currentTarget.id));
+		// Change selection attribute of shopcart
+		'change input[name="shopcart"]': function(event) {
+			var shopcart = this.model.get(event.currentTarget.id);
+			shopcart.toggleSelected();
 		},
 
 		'click #new_shp': function(event) {
@@ -37,7 +42,7 @@ var ShopcartManagerView = Backbone.View.extend({
 		},
 
 		'click #rename_shp': function(event) {
-
+			// TODO: Add possibility to choose the shopcart to be renamed
 			var renameShopcartView = new RenameShopcartView({
 				model: this.model,
 				title: "Rename shopcart"
@@ -45,9 +50,9 @@ var ShopcartManagerView = Backbone.View.extend({
 			renameShopcartView.render();
 		},
 
-		//called when the share button is clicked.
+		// Called when the share button is clicked.
 		'click #share_shp': function(event) {
-
+			// TODO: Add possibility to select the shared shopcart
 			SharePopup.open({
 				url: Configuration.serverHostName + (window.location.pathname) + this.model.getShopcartSharedURL(),
 				positionTo: '#share_shp'
@@ -56,6 +61,7 @@ var ShopcartManagerView = Backbone.View.extend({
 		},
 
 		'click #delete_shp': function(event) {
+			// TODO: Add possibility to delete shopcart
 			var self = this;
 			this.model.getCurrent().destroy()
 				.done(function() {
@@ -66,9 +72,9 @@ var ShopcartManagerView = Backbone.View.extend({
 					self.showMessage(errorThrown);
 				});
 		},
-		//added export as in the shopcart item view
+		// Added export as in the shopcart item view
 		'click #export_shp': function(event) {
-
+			// Add possibility to select the shopcart to export
 			var shopcartExportWidget = new ShopcartExportWidget();
 			shopcartExportWidget.open();
 		}
@@ -92,20 +98,15 @@ var ShopcartManagerView = Backbone.View.extend({
 		});
 		this.$el.html(mainContent);
 
-		// Select the current one
-		if (this.model.getCurrent()) {
-			var currentShopcartSelect = "#" + this.model.getCurrent().id + "_input";
-			this.$el.find(currentShopcartSelect).attr('checked', true);
-		}
-
 		this.$el.trigger("create");
-
 		this.refreshSize();
 
 		return this;
 	},
 
-	/** display the error message if any */
+	/** 
+	 * Display the error message if any
+	 */
 	showMessage: function(message) {
 		if (this.timeOut) {
 			clearTimeout(this.timeOut);
@@ -122,7 +123,7 @@ var ShopcartManagerView = Backbone.View.extend({
 	},
 
 	/**
-	 * this is a callback method to display an error message when an error occurs during 
+	 * This is a callback method to display an error message when an error occurs during 
 	 * shopcart list retrieving. 
 	 */
 	error: function() {

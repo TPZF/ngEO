@@ -42,10 +42,9 @@ var ShopcartCollection = Backbone.Collection.extend({
 					current = this.at(0);
 				}
 			}
-
-			// Set current shopcart
-			this.setCurrent(current);
-
+			// Set current shopcart selected
+			current.set('isSelected', true);
+			
 		}, this);
 	},
 

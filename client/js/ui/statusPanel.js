@@ -55,10 +55,8 @@ var StatusPanel = Backbone.View.extend({
 			// Very hacky method to click on status corresponding to picked features
 			if ( recentFeatureCollection ) {
 				if ( !recentFeatureCollection.dataset ) {
-					// Actually shopcart doesn't have dataset, so since we have only one shopcart
-					// click on shopcart
-					// TODO: This issue will be resolved when multiple shopcarts could be chosen by user
-					$('#shopcart').click();
+					// Actually shopcart doesn't have dataset.. (to be improved ?)
+					$('#shopcart_'+ recentFeatureCollection.id ).click();
 				} else if ( recentFeatureCollection.id ) {
 					// Otherwise the dataset containing products have been clicked
 					$('#result' + recentFeatureCollection.id).click();
@@ -78,8 +76,8 @@ var StatusPanel = Backbone.View.extend({
 			var selector = "#result"+fcId;
 			if ( !fcId ) {
 				// Shopcart special case
-				fcId = layer.params.name.substr(0, layer.params.name.indexOf(" Footprint"));
-				selector = "#shopcart";
+				fcId = layer.params.name.substr(layer.params.name.indexOf("Footprints ") + "Footprints ".length);
+				selector = "#shopcart_"+fcId;
 			}
 
 			if ( layer.params.visible ) {
@@ -97,10 +95,10 @@ var StatusPanel = Backbone.View.extend({
 		this.pagination.render();
 
 		// Need to update bottom dataset width when several dataset has been chosen to hide overflow
-		var updateBottomDatasetWidth = function() {
+		var updateBottomDatasetWidth = _.debounce(function() {
 			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
 			$('#bottomDatasets').width($('#bottomToolbar').outerWidth() - self.$el.find('#statusPagination').width() - menuCommandWidth);
-		};
+		}, 30);
 		$(window).resize(updateBottomDatasetWidth)
 		this.listenTo(this.pagination, 'pagination:updated', updateBottomDatasetWidth);
 	},

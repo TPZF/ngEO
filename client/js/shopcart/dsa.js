@@ -1,5 +1,9 @@
 var GlobalEvents = require('globalEvents');
 var MenuBar = require('ui/menubar');
+var Map = require('map/map');
+var SearchResultsMap = require('searchResults/map');
+var UserPrefs = require('userPrefs');
+
 var ShopcartCollection = require('shopcart/model/shopcartCollection');
 var Shopcart = require('shopcart/model/shopcart');
 var ShopcartTableView = require('shopcart/view/shopcartTableView');
@@ -27,28 +31,72 @@ module.exports =  {
 		
 		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
-		panelManager.bottom.addView( tableView );		
-		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
-			tableView.setShopcart(shopcart);
-			// Add shopcartView&tableView as a status to bottom bar
-			var shopcartStatus = {
-				activator: '#shopcart',
-				$el: shopcartView.$el,
-				views: [tableView],
-				viewActivators: [ shopcartView.$el.find('#tableCB') ],
-				model: shopcart.featureCollection
-			};
-			// Update shopcart's name
-			$(shopcartStatus.activator).find('.datasetName').html(shopcart.get('name')).attr('title', shopcart.get('name'));
+		panelManager.bottom.addView( tableView );
 
-			// HACK : use addStatus method as well to update status listeners
-			panelManager.bottom.addStatus(shopcartStatus);
+		// Manage display of shopcart footprints
+		ShopcartCollection.on('change:isSelected', function( shopcart ) {
+
+			var updateShopcartLabel = function() {
+				// TODO:
+				console.log("Update name");
+			};
+
+			if ( shopcart.get('isSelected') ) {
+				// Connect shopcart with Map
+				var shopcartLayer = Map.addLayer({
+					name: "Shopcart Footprints " + shopcart.get('id'),
+					type: "Feature",
+					visible: true,
+					style: "shopcart-footprint"
+				});
+				SearchResultsMap.addFeatureCollection( shopcart.featureCollection, {
+					layer: shopcartLayer,
+					hasBrowse: false
+				});
+				shopcart.on('change:name', updateShopcartLabel);
+
+				// Change model on table when the shopcart is changed
+				shopcart.loadContent();
+			} else {
+				SearchResultsMap.removeFeatureCollection( shopcart.featureCollection );
+				shopcart.off('change:name', updateShopcartLabel);
+			}
+
+		});
+
+		ShopcartCollection.on('change:isSelected', function(shopcart) {
+			console.log("SHOPCART", shopcart);
+
+			var tagFriendlyId = 'shopcart_'+shopcart.get('id');
+			if ( shopcart.get('isSelected') ) {
+
+				// Update the toolbar
+				$('#bottomToolbar')
+					.find('#bottomDatasets')
+						.prepend('<command id="'+ tagFriendlyId +'" data-icon="shopcart" title="11'+ shopcart.get('name') +'" label="11' + shopcart.get('name') + '" class="result" />').end()
+					.toolbar('refresh');
+
+				// Add shopcartView&tableView as a status to bottom bar
+				var shopcartStatus = {
+					activator: '#'+tagFriendlyId,
+					$el: shopcartView.$el,
+					views: [tableView],
+					viewActivators: [ shopcartView.$el.find('#tableCB') ],
+					model: shopcart.featureCollection
+				};
+				panelManager.bottom.addStatus(shopcartStatus);
+
+				// TODO: Current shopcart is the array for now..
+				UserPrefs.save("Current shopcart", shopcart.id);
+			} else {
+				// Update the status bar
+				panelManager.bottom.removeStatus('#' + tagFriendlyId);
+			}
 		});
 		tableView.render();
 
-		// // Load the shopcart collection to display the current shopcart in the data services area
+		// Load the shopcart collection to display the current shopcart in the data services area
 		ShopcartCollection.fetch();
-		
 		
 		// Define route for share shopcart
 		router.route(
@@ -63,9 +111,6 @@ module.exports =  {
 				isShared: true
 			});
 			ShopcartCollection.setCurrent( shareShopcart );
-			
-			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
-			//shareShopcart.loadContent();
 			
 			// Show the GUI once loaded
 			shareShopcart.on("add:features", function() {
