@@ -101,12 +101,13 @@ module.exports = {
 			if ( !friendlyName )
 				friendlyName = fc.id;
 
+			var statusContent = '<command id="'+ tagFriendlyId +'" title="'+ friendlyName +'" label="' + friendlyName + '" class="result" />';
 			// Update the toolbar
-			$bottomToolbar
-				.find('command:last')
-					.after('<command id="'+ tagFriendlyId +'" title="'+ friendlyName +'" label="' + friendlyName + '" class="result" />').end()
-				.toolbar('refresh');
-
+			if ( $bottomToolbar.find('command:last') === 0 ) {
+				$bottomToolbar.find('#bottomDatasets').append(statusContent).end().toolbar('refresh');
+			} else {
+				$bottomToolbar.find('command:last').after(statusContent).end().toolbar('refresh');
+			}
 			
 			// Update the daterange slider
 			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");
