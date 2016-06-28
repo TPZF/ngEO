@@ -2,6 +2,8 @@ var Configuration = require('configuration');
 var DataSet = require('search/model/dataset');
 var DataSetAuthorizations = require('search/model/datasetAuthorizations');
 
+// Crazy fix !
+// NB: just to check how git merges conflict between two branches
 
 /**
  * Function to match a row from the matrix with the given filter
