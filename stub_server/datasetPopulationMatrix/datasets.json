@@ -7,37 +7,34 @@
 			[ "", "", "Friendly ATS_TOA_1P", "", "false", "ATS_TOA_1P", "100" ],
 			[ "", "", "ASA_WS__0P", "", "false", "ASA_WS__0P", "5" ],
 			[ "S1", "SAR", "ND_SAR_1", "", "true", "ND_SAR_1", "15"], 
-            [ "S1", "SAR", "ND_SAR_1", "interferometry", "true", "ND_SAR_1", "8"],
-            [ "S1", "SAR", "ND_SAR_1", "polarimetry", "true", "ND_SAR_1", "7"], 
+            [ "S1", "SAR", "ND_SAR_1", "group1:interferometry", "true", "ND_SAR_1", "8"],
+            [ "S1", "SAR", "ND_SAR_1", "group1:polarimetry", "true", "ND_SAR_1", "7"], 
             
-            [ "", "", "ND_OPT_1", "interferometry", "true", "ND_OPT_1", "365"],
-            [ "", "", "ND_OPT_1 with slash", "interferometry", "true", "ND_OPT_1/2", "365"],
+            [ "", "", "ND_OPT_1", "group1:interferometry", "true", "ND_OPT_1", "365"],
+            [ "", "", "ND_OPT_1 with slash", "group1:interferometry", "true", "ND_OPT_1/2", "365"],
 
-			[ "S2", "OPT", "ND_S2_1", "optical", "false", "ND_S2_1", "6"],
-            [ "S2", "OPT", "ND_S2_1", "land mapping", "false", "ND_S2_1", "6"], 
-            [ "S2", "OPT", "ND_S2_1", "reflectance", "false", "ND_S2_1", "6"],
+			[ "S2", "OPT", "ND_S2_1", "group2:optical", "false", "ND_S2_1", "6"],
+            [ "S2", "OPT", "ND_S2_1", "group3:land mapping", "false", "ND_S2_1", "6"], 
+            [ "S2", "OPT", "ND_S2_1", "group3:reflectance", "false", "ND_S2_1", "6"],
 
             [ "Sentinel-2", "MSI", "Friendly S2MSI1A", "key 1", "true", "S2MSI1A", "45408" ],
             [ "Virtual", "MSI", "Virtual", "key 1", "true", "Virtual", "45408" ],
             [ "Sentinel-1", "SAR", "S1_SAR_EW_DUAL_POL", "", "false", "S1_SAR_EW_DUAL_POL", "860" ],
 
-            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "Envisat", "false", "ENVISAT_ASA_IM__0P", "1091"],
-            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "Native", "false", "ENVISAT_ASA_IM__0P", "1091"],
-            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "IM","false", "ENVISAT_ASA_IM__0P", "1091"],
-            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "ASA","false", "ENVISAT_ASA_IM__0P", "1091"],
-            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "interferometry", "true", "ENVISAT_ASA_IM__0P", "1"],
+            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "mission:Envisat", "false", "ENVISAT_ASA_IM__0P", "1091"],
+            ["ENVISAT-1", "ASA", "ENVISAT_ASA_IM__0P", "group1:interferometry", "true", "ENVISAT_ASA_IM__0P", "1"],
          
             [ "", "", "LD_SENTINEL_1", "", "false", "LD_SENTINEL_1", "7"], 
-            [ "S1", "SAR", "LD_SENTINEL_1", "land mapping", "false", "LD_SENTINEL_1","7"],
-            [ "S1", "OPT", "LD_SENTINEL_1", "ice mapping", "false", "LD_SENTINEL_1", "7"],
-            [ "S1", "OPT", "LD_SENTINEL_1", "interferometry", "false", "LD_SENTINEL_1", "7"],
+            [ "S1", "SAR", "LD_SENTINEL_1", "group3:land mapping", "false", "LD_SENTINEL_1","7"],
+            [ "S1", "OPT", "LD_SENTINEL_1", "group3:ice mapping", "false", "LD_SENTINEL_1", "7"],
+            [ "S1", "OPT", "LD_SENTINEL_1", "group1:interferometry", "false", "LD_SENTINEL_1", "7"],
             
-            [ "S2", "", "SENTINEL2_L1", "land mapping", "false", "SENTINEL2_L1", "7"],
-            [ "S2", "", "Sentinel2", "land mapping", "false", "Sentinel2", "3"],
+            [ "S2", "", "SENTINEL2_L1", "group3:land mapping", "false", "SENTINEL2_L1", "7"],
+            [ "S2", "", "Sentinel2", "group3:land mapping", "false", "Sentinel2", "3"],
            
-            [ "S3", "", "SENTINEL3", "land mapping", "false", "SENTINEL3", "7"],
+            [ "S3", "", "SENTINEL3", "group3:land mapping", "false", "SENTINEL3", "7"],
             [ "S3", "", "SENTINEL3_L1", "", "false", "SENTINEL3_L1", "7"], 
-            [ "S3", "SAR", "SENTINEL3_L2", "land mapping", "false", "SENTINEL3_L2","7"],
+            [ "S3", "SAR", "SENTINEL3_L2", "group3:land mapping", "false", "SENTINEL3_L2","7"],
 			
 			[ "", "", "landsat", "", "false", "landsat","100"],
             
@@ -57,7 +54,7 @@
 			
 		    [ "", "", "DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME", "", "false", "DATASET_WITH_A_LONG_LONG_VEEERY_LONG_NAME", "100" ],
             
-            [ "", "", "ENVISAT_ASA_GM1_1P", "interferometry", "true", "ENVISAT_ASA_GM1_1P", "100" ]
+            [ "", "", "ENVISAT_ASA_GM1_1P", "group1:interferometry", "true", "ENVISAT_ASA_GM1_1P", "100" ]
        ]
     }
         

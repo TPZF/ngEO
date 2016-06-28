@@ -54,7 +54,8 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Constructor
 	 */
 	initialize: function() {
-		this.criteriaFilter = [];
+
+		this.filteredDatasets = [];
 
 		this.listenTo(this.model, "select", this.onSelect);
 		this.listenTo(this.model, "unselect", this.onUnselect);
@@ -122,8 +123,8 @@ var DatasetSelectionView = Backbone.View.extend({
 		this.$el.append(mainContent);
 
 		// Build the criteria select element and datasets list
-		this.updateSelectCriteria();
 		this.updateDatasetsList();
+		this.updateSelectCriteria();
 
 		this.$el.trigger('create');
 
@@ -135,11 +136,9 @@ var DatasetSelectionView = Backbone.View.extend({
 			//bind a change event handler to the select id
 			//Fixes the binding after the display of the widget in case of success
 			self.$el.find("#criteria_" + index).change(function(event) {
-
-				self.criteriaFilter[index] = $(this).val();
-				if (self.criteriaFilter[index] == '') {
-					self.criteriaFilter[index] = undefined;
-				}
+				
+				var value = $(this).val() ? $(this).val() : "";
+				criteria.selectedValue = value;
 
 				// Update datasets list and criteria according to the new criteria filter
 				self.updateDatasetsList();
@@ -151,28 +150,29 @@ var DatasetSelectionView = Backbone.View.extend({
 	},
 
 	/**
-	 * Update the select element for criterias
+	 * Update the select elements for criterias with the given datasets
+	 * The <option>'s should be updated according to filtered datasets
 	 */
-	updateSelectCriteria: function(filterResult) {
+	updateSelectCriteria: function() {
 
 		// Rebuilt the criterias to select
 		var criterias = this.model.get('criterias');
 		for (var i = 0; i < criterias.length; i++) {
-
+			var criteria = criterias[i];
 			var $selectCriteria = this.$el.find("#criteria_" + i);
 
 			$selectCriteria.empty();
 			$selectCriteria.append('<option value="">' + criterias[i].title + ' : None</option>');
 
-			var criteriaValues = this.model.filterCriteriaValues(this.criteriaFilter, i);
+			var criteriaValues = this.model.filterCriteriaValues( this.filteredDatasets, criteria );
 			for (var j = 0; j < criteriaValues.length; j++) {
 
 				// Add the option to the select element
 				var $opt = $('<option value="' + criteriaValues[j] + '">' + criterias[i].title + ' : ' + criteriaValues[j] + '</option>')
 					.appendTo($selectCriteria);
 
-				// Select it if necessary
-				if (this.criteriaFilter[i] == criteriaValues[j]) {
+				// Add selected attr to option if is actually selected
+				if (criteria.selectedValue == criteriaValues[j]) {
 					$opt.attr('selected', 'selected');
 				}
 			}
@@ -186,7 +186,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	updateDatasetsList: function() {
 
 		// Retrieve the datasets according to the current criteria
-		var datasets = this.model.filterDatasets(this.criteriaFilter);
+		var datasets = this.model.filterDatasets();
 
 		// NGEO-2129: Sort by name
 		datasets = _.sortBy(datasets, function(dataset) { return dataset.name.toLowerCase() });
@@ -224,6 +224,8 @@ var DatasetSelectionView = Backbone.View.extend({
 				$elt.find('.ui-icon').removeClass('ui-icon-checkbox-off');
 			}
 		}, this);
+
+		this.filteredDatasets = datasets;
 	}
 
 });

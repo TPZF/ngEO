@@ -20,6 +20,7 @@ var matchRow = function(filter, row) {
  */
 var Criteria = function(name) {
 	this.title = name;
+	this.selectedValue = "";
 	this.possibleValues = [];
 };
 
@@ -155,13 +156,34 @@ var DataSetPopulation = Backbone.Model.extend({
 			}
 		}
 
-		// Build the criterias
-		for (var i = 0; i < criteriaTitles.length; i++) {
-			var criteria = new Criteria(criteriaTitles[i]);
-			for (var n = 0; n < matrix.length; n++) {
-				criteria.addValue(matrix[n][i]);
+		// Object which contains rows/keyword information to be able to filter dataset by criterias
+		this.datasetInfoMap = {};
+
+		// NGEO-2160 : Criterias are now build from "keyword" values
+		this.keywordIndex = response.datasetpopulationmatrix.criteriaTitles.indexOf("keyword");
+		for ( var i = 0; i < matrix.length; i++ ) {
+			var datasetId = matrix[i][criteriaTitles.length];
+			if ( !this.datasetInfoMap[datasetId] ) {
+				this.datasetInfoMap[datasetId] = {
+					rows: [],
+					keywords: {}
+				}
 			}
-			criterias.push(criteria);
+			this.datasetInfoMap[datasetId].rows.push(matrix[i]);
+
+			var keyword = matrix[i][this.keywordIndex].split(":"); // GROUP:VALUE
+			// Continue if empty
+			if ( keyword.length != 2 )
+				continue;
+
+			var criteria = _.findWhere(criterias, { "title": keyword[0] });
+			if ( !criteria ) {
+				criteria = new Criteria(keyword[0]);
+				criterias.push(criteria);
+			}
+			criteria.addValue(keyword[1]);
+			// Store group:value as a dictionary in datasetInfoMap
+			this.datasetInfoMap[datasetId].keywords[keyword[0]] = keyword[1];
 		}
 
 		return {
@@ -171,29 +193,20 @@ var DataSetPopulation = Backbone.Model.extend({
 	},
 
 	/**
-	 * Return the criteria values filtered by the given filter for the given criteria index
+	 *	Extract criteria values for the given datasets with the given criteria key
 	 */
-	filterCriteriaValues: function(criteriaFilter, index) {
-
+	filterCriteriaValues: function(datasets, criteria) {
 		var criteriaValues = [];
 
-		// Remove the criteria from the filter
-		var backupFilter = criteriaFilter[index];
-		criteriaFilter[index] = undefined;
-
-		// Process all rows of the dataset population matrix
-		for (var i = 0; i < this.get('matrix').length; i++) {
-			var row = this.get('matrix')[i];
-			if (row[index] != '' && matchRow(criteriaFilter, row)) {
-				if (!_.contains(criteriaValues, row[index])) {
-					criteriaValues.push(row[index]);
+		for ( var i = 0; i<datasets.length; i++ ) {
+			var dataset = this.datasetInfoMap[datasets[i].datasetId];
+			for ( var group in dataset.keywords ) {
+				var value = dataset.keywords[group];
+				if ( group == criteria.title && (criteria.selectedValue == '' || criteria.selectedValue == value) && !_.contains(criteriaValues, value) ) {
+					criteriaValues.push(value);
 				}
 			}
 		}
-
-		// Restore the criteria filter
-		criteriaFilter[index] = backupFilter;
-
 		return criteriaValues;
 	},
 
@@ -221,25 +234,32 @@ var DataSetPopulation = Backbone.Model.extend({
 		var count_index = this.get('criterias').length + 1;
 		var name_index = this.get('criterias').length + 2;
 
-		// Process all rows of the dataset population matrix
-		for (var i = 0; i < this.get('matrix').length; i++) {
-			var row = this.get('matrix')[i];
-			var datasetId = row[id_index];
+		// Process all grouped datasets
+		for ( var datasetId in this.datasetInfoMap ) {
 
-			if (matchRow(criteriaFilter, row)) {
+			var datasetInfos = this.datasetInfoMap[datasetId];
+			var passedFilter = true;
 
-				if (!treatedDatasets.hasOwnProperty(datasetId)) {
+			var selectedCriterias = _.filter(this.get('criterias'), function(o) { return o.selectedValue });
+			if ( selectedCriterias.length ) {
 
-					filteredDatasets.push({
-						datasetId: datasetId,
-						tagFriendlyId: datasetId.replace(/\W/g,'_'),
-						name: name_index < row.length ? row[name_index] : datasetId,
-						itemsCount: row[count_index]
-					});
-
-					treatedDatasets[datasetId] = true;
+				var row = datasetInfos.rows[0];
+				// Need filter all the datasets
+				for ( var i=0; i<selectedCriterias.length; i++ ) {
+					var criteria = selectedCriterias[i];
+					passedFilter &= _.contains(datasetInfos.keywords, criteria.selectedValue);
 				}
+			}
 
+			if (passedFilter) {
+				var row = datasetInfos.rows[0];
+				// No need to filter take all the datasets
+				filteredDatasets.push({
+					datasetId: datasetId,
+					tagFriendlyId: datasetId.replace(/\W/g,'_'),
+					name: name_index < row.length ? row[name_index] : datasetId,
+					itemsCount: row[count_index]
+				})
 			}
 		}
 
