@@ -28,7 +28,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -159,7 +159,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -171,7 +171,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 430271552,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE",
@@ -212,7 +212,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -343,7 +343,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -355,7 +355,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 424301748,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T223505_20150714T223613_006813_0092BE",
@@ -396,7 +396,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -527,7 +527,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -539,7 +539,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 453926052,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T223405_20150714T223513_006813_0092BE",
@@ -580,7 +580,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -711,7 +711,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -723,7 +723,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 421833784,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T222934_20150714T223042_006813_0092BC",
@@ -764,7 +764,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -895,7 +895,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -907,7 +907,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451436776,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T222834_20150714T222942_006813_0092BC",
@@ -948,7 +948,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -1079,7 +1079,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -1091,7 +1091,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 422104439,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T191204_20150714T191313_006811_0092AB",
@@ -1132,7 +1132,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -1263,7 +1263,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -1275,7 +1275,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451316507,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T191104_20150714T191213_006811_0092AB",
@@ -1316,7 +1316,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -1447,7 +1447,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -1459,7 +1459,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 422071562,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T173320_20150714T173428_006810_0092A5",
@@ -1500,7 +1500,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -1631,7 +1631,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -1643,7 +1643,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451480133,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T173220_20150714T173328_006810_0092A5",
@@ -1684,7 +1684,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -1815,7 +1815,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -1827,7 +1827,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 404584555,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T172850_20150714T172947_006810_0092A4",
@@ -1868,7 +1868,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -1999,7 +1999,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -2011,7 +2011,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 421977239,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T155435_20150714T155543_006809_00929C",
@@ -2052,7 +2052,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -2183,7 +2183,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -2195,7 +2195,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451333686,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T155335_20150714T155443_006809_00929C",
@@ -2236,7 +2236,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -2367,7 +2367,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -2379,7 +2379,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 168756202,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T155204_20150714T155227_006809_00929B",
@@ -2420,7 +2420,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -2551,7 +2551,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -2563,7 +2563,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427296539,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T141520_20150714T141629_006808_009294",
@@ -2604,7 +2604,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -2735,7 +2735,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -2747,7 +2747,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427202756,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T141420_20150714T141529_006808_009294",
@@ -2788,7 +2788,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -2919,7 +2919,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -2931,7 +2931,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427032488,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T141320_20150714T141429_006808_009294",
@@ -2972,7 +2972,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -3103,7 +3103,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -3115,7 +3115,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 426963605,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T141220_20150714T141329_006808_009294",
@@ -3156,7 +3156,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -3287,7 +3287,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -3299,7 +3299,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 456899677,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T141120_20150714T141229_006808_009294",
@@ -3340,7 +3340,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -3471,7 +3471,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -3483,7 +3483,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 167583358,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T124945_20150714T125012_006807_00928E",
@@ -3524,7 +3524,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -3655,7 +3655,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -3667,7 +3667,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 455148591,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T124845_20150714T124953_006807_00928E",
@@ -3708,7 +3708,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -3839,7 +3839,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -3851,7 +3851,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 145311257,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T124126_20150714T124151_006807_00928D",
@@ -3892,7 +3892,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -4023,7 +4023,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -4035,7 +4035,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 422484974,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T124026_20150714T124135_006807_00928D",
@@ -4076,7 +4076,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -4207,7 +4207,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -4219,7 +4219,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451608297,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T123626_20150714T123735_006807_00928D",
@@ -4260,7 +4260,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -4391,7 +4391,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -4403,7 +4403,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 339091024,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T123335_20150714T123427_006807_00928C",
@@ -4444,7 +4444,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -4575,7 +4575,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -4587,7 +4587,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 454113929,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T123235_20150714T123344_006807_00928C",
@@ -4628,7 +4628,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -4759,7 +4759,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -4771,7 +4771,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 439450293,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T110551_20150714T110657_006806_009284",
@@ -4812,7 +4812,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -4943,7 +4943,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -4955,7 +4955,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427552925,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T110451_20150714T110600_006806_009284",
@@ -4996,7 +4996,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -5127,7 +5127,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -5139,7 +5139,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427740194,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T110351_20150714T110500_006806_009284",
@@ -5180,7 +5180,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -5311,7 +5311,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -5323,7 +5323,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427508835,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T110251_20150714T110400_006806_009284",
@@ -5364,7 +5364,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -5495,7 +5495,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -5507,7 +5507,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 427865042,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T110151_20150714T110300_006806_009284",
@@ -5548,7 +5548,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -5679,7 +5679,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -5691,7 +5691,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 323779653,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T092951_20150714T093041_006805_00927E",
@@ -5732,7 +5732,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -5863,7 +5863,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -5875,7 +5875,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 426104363,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T092851_20150714T093000_006805_00927E",
@@ -5916,7 +5916,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -6047,7 +6047,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -6059,7 +6059,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 456008549,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T092751_20150714T092900_006805_00927E",
@@ -6100,7 +6100,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -6231,7 +6231,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -6243,7 +6243,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 221353888,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T074822_20150714T074857_006804_009274",
@@ -6284,7 +6284,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -6415,7 +6415,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -6427,7 +6427,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 425081376,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T074722_20150714T074830_006804_009274",
@@ -6468,7 +6468,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -6599,7 +6599,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -6611,7 +6611,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 425115771,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T074622_20150714T074730_006804_009274",
@@ -6652,7 +6652,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -6783,7 +6783,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -6795,7 +6795,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 454902251,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T074522_20150714T074630_006804_009274",
@@ -6836,7 +6836,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -6967,7 +6967,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -6979,7 +6979,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 209064285,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T060740_20150714T060813_006803_00926D",
@@ -7020,7 +7020,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -7151,7 +7151,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -7163,7 +7163,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451651351,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T060640_20150714T060748_006803_00926D",
@@ -7204,7 +7204,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -7335,7 +7335,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -7347,7 +7347,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 251925491,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T042901_20150714T042941_006802_009267",
@@ -7388,7 +7388,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -7519,7 +7519,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -7531,7 +7531,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 451882065,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T042801_20150714T042909_006802_009267",
@@ -7572,7 +7572,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -7703,7 +7703,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -7715,7 +7715,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 302465594,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDV_20150714T031814_20150714T031856_006801_009264",
@@ -7756,7 +7756,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -7887,7 +7887,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -7899,7 +7899,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 415640941,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T025210_20150714T025313_006801_009261",
@@ -7940,7 +7940,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -8071,7 +8071,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -8083,7 +8083,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 425743254,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T025110_20150714T025219_006801_009261",
@@ -8124,7 +8124,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -8255,7 +8255,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -8267,7 +8267,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 425758225,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T025010_20150714T025119_006801_009261",
@@ -8308,7 +8308,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -8439,7 +8439,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -8451,7 +8451,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 455533820,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T024910_20150714T025019_006801_009261",
@@ -8492,7 +8492,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -8623,7 +8623,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -8635,7 +8635,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 442878638,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDV_20150714T013836_20150714T013941_006800_00925C",
@@ -8676,7 +8676,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -8807,7 +8807,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -8819,7 +8819,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 436675370,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDV_20150714T013736_20150714T013844_006800_00925C",
@@ -8860,7 +8860,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -8991,7 +8991,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -9003,7 +9003,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 467040134,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDV_20150714T013636_20150714T013744_006800_00925C",
@@ -9044,7 +9044,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -9175,7 +9175,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -9187,7 +9187,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 243199059,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T011350_20150714T011428_006800_00925A",
@@ -9228,7 +9228,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -9359,7 +9359,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -9371,7 +9371,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 425486705,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T011250_20150714T011358_006800_00925A",
@@ -9412,7 +9412,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -9543,7 +9543,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -9555,7 +9555,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 425477240,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T011150_20150714T011258_006800_00925A",
@@ -9596,7 +9596,7 @@
                 ],
                 "type": "Polygon"
             },
-            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+            "id": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
             "properties": {
                 "BrowseInformation": {
                     "eop_layer": "EW_S1A_GRD",
@@ -9727,7 +9727,7 @@
                 "identifier": "https://ngeopro.magellium.fr:443/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A&format=atom",
                 "links": [
                     {
-                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A&format=atom&ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A&format=atom&ngEO_DO={processing:RAW,do_crop:true}",
                         "@rel": "self",
                         "@title": "Reference link",
                         "@type": "application/atom+xml"
@@ -9739,7 +9739,7 @@
                         "@type": "application/opensearchdescription+xml"
                     },
                     {
-                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A?ngEO_DO={processing:RAW,cropProduct:true}",
+                        "@href": "https://ngeopro.magellium.fr/odabroker/rest/ngEO//S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A?ngEO_DO={processing:RAW,do_crop:true}",
                         "@length": 455263657,
                         "@rel": "enclosure",
                         "@title": "S1A_EW_RAW__0SDH_20150714T011050_20150714T011158_006800_00925A",
@@ -9761,7 +9761,7 @@
         "itemsPerPage": "500",
         "links": [
             {
-                "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?start=2015-07-14T00:00:00.000Z&stop=2015-07-14T23:59:59.999Z&bbox=-127.71,-80.95,127.7,80.94&ngEO_DO={processing:RAW,cropProduct:true}&count=500&startIndex=1&format=atom",
+                "@href": "https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?start=2015-07-14T00:00:00.000Z&stop=2015-07-14T23:59:59.999Z&bbox=-127.71,-80.95,127.7,80.94&ngEO_DO={processing:RAW,do_crop:true}&count=500&startIndex=1&format=atom",
                 "@rel": "self",
                 "@title": "Reference link",
                 "@type": "application/atom+xml"
