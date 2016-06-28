@@ -4,6 +4,7 @@ var DataSetAuthorizations = require('search/model/datasetAuthorizations');
 
 // Crazy fix !
 // NB: just to check how git merges conflict between two branches
+// Merge successful without conflicts \o/ now we want to merge this work to master
 
 /**
  * Function to match a row from the matrix with the given filter
