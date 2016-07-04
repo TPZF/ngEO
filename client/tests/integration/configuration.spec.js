@@ -1,7 +1,6 @@
 var Configuration = require('configuration');
 
-// TODO: doesn't work actually...
-xdescribe("Failure loading", function() {
+describe("Configuration failed loading test", function() {
 
 	beforeEach(function(){
 		jasmine.Ajax.install();
@@ -10,27 +9,25 @@ xdescribe("Failure loading", function() {
 	it("should not affect configuration if load fails", function(done){
 		
 		Configuration.url = "/client-dev/conf/"; // Use stub_server's url
-		jasmine.Ajax.stubRequest(Configuration.url + "/webClientConfigurationData").andReturn({
+		jasmine.Ajax.stubRequest(Configuration.baseServerUrl + "/webClientConfigurationData").andReturn({
 			"status": 500,
 			"contentType": "text/plain",
-			"responseText": "Coucou"
+			"responseText": "Error"
 		});
 		jasmine.Ajax.stubRequest(Configuration.url + "/localConfiguration.json").andReturn({
-			"status": 500,
-			"contentType": "text/plain",
-			"responseText": "Coucou"
+			"status": 200,
+			"contentType": "application/json",
+			"responseText": JSON.stringify(__fixtures__["client/conf/localConfiguration"])
 		});
 		jasmine.Ajax.stubRequest(Configuration.url + "/configuration.json").andReturn({
-			"status": 500,
+			"status": 200,
 			"contentType": "text/plain",
-			"responseText": "Coucou"
+			"responseText": JSON.stringify(__fixtures__["client/conf/configuration"])
 		});
-		Configuration.load().done(function(response){
-			console.log(response)
-			expect(Configuration.data).toEqual({});
-			done();
-		}).fail(function(){
-			console.log("Error");
+
+		Configuration.load().always(function(response){
+			expect(Configuration.data["map"]["browseDisplay"]["crossOrigin"]).toBe("use-credentials");
+			// TODO: add tests
 			done();
 		});
 	});

@@ -95,6 +95,7 @@ var configuration = {
 					}
 				})
 			).then(function(){
+				// Override our's server configuration with one coming from WEBS
 				configuration.buildServerConfiguration(externalData);
 			})
 		);

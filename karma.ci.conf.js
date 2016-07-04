@@ -46,6 +46,7 @@ module.exports = function(config) {
 
 			// Mocks
 			'stub_server/**/*.json',
+			'client/conf/*.json',
 
 			'client/tests/integration/**/*.spec.js'
 		],
@@ -62,7 +63,8 @@ module.exports = function(config) {
 			// Comment in case when files loaded to browser is generated code(cf 'files')
 			'client/js/**/*.js': ['commonjs'],
 
-			'stub_server/**/*.json': ['json_fixtures']
+			'stub_server/**/*.json': ['json_fixtures'], 
+			'client/conf/*.json': ['json_fixtures'] 
 		},
 
 		// Configure the reporter
