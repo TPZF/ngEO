@@ -97,7 +97,10 @@ module.exports = {
 			// searchResultsView.render();
 
 			var tagFriendlyId = "result" + fc.id;
-			var friendlyName = DataSetPopulation.getFriendlyName(fc.dataset.get("datasetId"));
+			var friendlyName;
+			if ( fc.dataset ) {
+				friendlyName = DataSetPopulation.getFriendlyName(fc.dataset.get("datasetId"));
+			}
 			if ( !friendlyName )
 				friendlyName = fc.id;
 
