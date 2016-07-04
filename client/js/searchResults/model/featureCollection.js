@@ -316,14 +316,18 @@ var FeatureCollection = function() {
 
 	// Select a feature
 	this.select = function(feature) {
-		this.selection.push(feature);
-		this.trigger("selectFeatures", [feature], this);
+		if ( this.selection.indexOf(feature) == -1 ) {
+			this.selection.push(feature);
+			this.trigger("selectFeatures", [feature], this);
+		}
 	};
 
 	// Unselect a feature
 	this.unselect = function(feature) {
-		this.selection.splice(this.selection.indexOf(feature), 1);
-		this.trigger("unselectFeatures", [feature], this);
+		if ( this.selection.indexOf(feature) >= 0 ) {
+			this.selection.splice(this.selection.indexOf(feature), 1);
+			this.trigger("unselectFeatures", [feature], this);
+		}
 	};
 
 	/**
