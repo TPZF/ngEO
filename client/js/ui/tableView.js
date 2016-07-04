@@ -101,6 +101,12 @@ var TableView = Backbone.View.extend({
 			if ( e.keyCode == '16' ) {
 				shiftPressed = true;
 			}
+
+			if ( ctrlPressed && e.keyCode == '65' ) {
+				// Ctrl+A : select all
+				e.preventDefault();
+				$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+			}
 		}
 		var onKeyUp = function(e) {
 			if ( e.keyCode == '17' ) {
@@ -217,7 +223,7 @@ var TableView = Backbone.View.extend({
 
 		// Called when the user clicks on the checkbox of the dataTables
 		'click .table-view-checkbox': function(event) {
-			// retreive the position of the selected row
+			// Retreive the position of the selected row
 			var $target = $(event.currentTarget);
 			var $row = $target.closest('tr');
 			var data = $row.data('internal');
