@@ -227,7 +227,14 @@ var TableView = Backbone.View.extend({
 				// HUGE problem with multiple feature collections cuz this view depends on model
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
-					model.select(data.feature);
+					if ( $row.hasClass('row_selected') ) {
+						// NGEO-2174: check every highlighted feature when clicking on already selected row
+						for ( var i=0; i<model.highlights.length; i++ ) {
+							model.select(model.highlights[i]);
+						}
+					} else {
+						model.select(data.feature);
+					}
 				} else {
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
@@ -238,7 +245,14 @@ var TableView = Backbone.View.extend({
 			} else {
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
-					model.unselect(data.feature);
+					if ( $row.hasClass('row_selected') ) {
+						// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
+						for ( var i=0; i<model.highlights.length; i++ ) {
+							model.unselect(model.highlights[i]);
+						}
+					} else {
+						model.unselect(data.feature);
+					}
 				} else {
 					this.model.unselectAll();
 					$target
