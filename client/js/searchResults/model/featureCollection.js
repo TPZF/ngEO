@@ -166,6 +166,17 @@ var FeatureCollection = function() {
 		self.trigger('hide:features', features, self);
 	};
 
+	// Show browses
+	this.showBrowses = function(features) {
+		self.trigger('show:browses', features, self);
+	};
+
+	// Hide browses
+	this.hideBrowses = function(features) {
+		self.trigger('hide:browses', features, self);
+	};
+
+
 	// Launch a search
 	this.search = function(baseUrl) {
 

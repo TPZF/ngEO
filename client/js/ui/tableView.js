@@ -221,7 +221,26 @@ var TableView = Backbone.View.extend({
 			}
 		},
 
-		// Called when the user clicks on the checkbox of the dataTables
+		// Called when the user clicks on "browse-visibility" checkbox in table
+		'click .browse-visibility-checkbox': function(event) {
+			var $target = $(event.currentTarget);
+			var $row = $target.closest('tr');
+			var data = $row.data('internal');
+
+			// Toggle css
+			$target
+				.toggleClass('ui-icon-checkbox-off')
+				.toggleClass('ui-icon-checkbox-on');
+
+			// Based on css value, show/hide browses
+			if ($target.hasClass('ui-icon-checkbox-off')) {
+				this.model.showBrowses([data.feature]);
+			} else {
+				this.model.hideBrowses([data.feature]);
+			}
+		},
+
+		// Called when the user clicks on the "selection" checkbox in table
 		'click .table-view-checkbox': function(event) {
 			// Retreive the position of the selected row
 			var $target = $(event.currentTarget);
@@ -803,8 +822,14 @@ var TableView = Backbone.View.extend({
 			checkedClass = 'ui-icon-checkbox-on';
 		}
 
+		// Layer selection checkbox
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
 		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
+
+		// Layer browse visibility checkbox
+		var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
+
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
 			if (this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0) {
@@ -949,7 +974,7 @@ var TableView = Backbone.View.extend({
 			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
 			var colSumWidth = _.reduce(colWidths, function(sum, w) { return sum+w;}, 0);
-			var hasSlider = colSumWidth > $(window).width() - 5;
+			var hasSlider = colSumWidth > $(window).width() - 1;
 			for ( var i=0; i<colWidths.length; i++ ) {
 				if ( hasSlider ) {
 					// Set min-width since it forces table to be wider than window --> show slider
@@ -1033,6 +1058,8 @@ var TableView = Backbone.View.extend({
 			$row.append('<th></th>');
 		}
 		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
+		$row.append('<th class="browseVisibility"></th>');
+
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
 				$row.append('<th>' + columns[j].sTitle + '</th>');
