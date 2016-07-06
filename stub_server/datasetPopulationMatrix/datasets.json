@@ -43,6 +43,7 @@
 			[ "", "", "Line", "", "false", "Line","1"],
 			
 			[ "", "", "MultiLine", "", "false", "MultiLine","1"],
+			[ "", "", "MultiBrowse", "", "false", "MultiBrowse","1"],
 		
 			[ "", "", "Crossing", "", "false", "Crossing","2"],
 

@@ -1,0 +1,224 @@
+{
+	"properties": {
+		"links": [{
+			"@href": "https://ngeo.sentinel1.copernicus.eu/ngeo/catalogue/S1_SAR_IW/search?start=2016-05-29T00:00:00.000Z&stop=2016-06-28T23:59:59.999Z&bbox=29.79,-35.23,30.05,-35.07&ngEO_DO={processing:RAW}&count=200&startIndex=1&format=atom",
+			"@rel": "self",
+			"@title": "Reference link",
+			"@type": "application/atom+xml"
+		}, {
+			"@href": "https://ngeo.sentinel1.copernicus.eu/ngeo/catalogue/S1_SAR_IW/description",
+			"@rel": "search",
+			"@title": "OpenSearch Description link",
+			"@type": "application/opensearchdescription+xml"
+		}],
+		"updated": "2016-07-01T08:29:45Z",
+		"title": "Results for search on Native Dataset S1 IW (RAW, GRDH, SLC) [Archived]",
+		"totalResults": "1",
+		"queryTime": "144.0659",
+		"startIndex": "1",
+		"itemsPerPage": "200",
+		"Query": {
+			"@os:count": "200",
+			"@os:startIndex": "1"
+		}
+	},
+	"features": [{
+		"id": "https://ngeo.sentinel1.copernicus.eu/ngeo/catalogue/S1_SAR_IW/search?id=S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B&format=atom&ngEO_DO={processing:RAW}",
+		"properties": {
+			"links": [{
+				"@href": "https://ngeo.sentinel1.copernicus.eu/ngeo/catalogue/S1_SAR_IW/search?id=S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B&format=atom&ngEO_DO={processing:RAW}",
+				"@rel": "self",
+				"@title": "Reference link",
+				"@type": "application/atom+xml"
+			}, {
+				"@href": "https://ngeo.sentinel1.copernicus.eu/ngeo/catalogue/S1_SAR_IW/description",
+				"@rel": "search",
+				"@title": "OpenSearch Description link",
+				"@type": "application/opensearchdescription+xml"
+			}, {
+				"@href": "https://s1-pdmcdmz-oda-v-20.sentinel1.eo.esa.int/odabroker/rest/ngEO//S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B?ngEO_DO={processing:RAW}",
+				"@rel": "enclosure",
+				"@title": "S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B",
+				"@type": "application/x-binary",
+				"@length": 2049894611
+			}],
+			"updated": "2016-06-28T21:21:57Z",
+			"published": "2016-06-28T21:21:57Z",
+			"title": "S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B (DPA)",
+			"EarthObservation": {
+				"@id": "ID-15264",
+				"phenomenonTime": {
+					"TimePeriod": {
+						"@id": "ID-15265",
+						"beginPosition": "2016-06-28T16:44:14.05Z",
+						"endPosition": "2016-06-28T16:44:43.08Z"
+					}
+				},
+				"resultTime": {
+					"TimeInstant": {
+						"@id": "ID-15266",
+						"timePosition": "2016-06-28T17:39:46.08Z"
+					}
+				},
+				"procedure": {
+					"EarthObservationEquipment": {
+						"@id": "ID-15267",
+						"platform": {
+							"Platform": {
+								"shortName": "Sentinel-1",
+								"serialIdentifier": "A"
+							}
+						},
+						"instrument": {
+							"Instrument": {
+								"shortName": "SAR"
+							}
+						},
+						"sensor": {
+							"Sensor": {
+								"sensorType": "RADAR",
+								"operationalMode": {
+									"@codeSpace": "urn:eop:SEN1:sensorMode",
+									"#text": "IW"
+								},
+								"swathIdentifier": "IW"
+							}
+						},
+						"acquisitionParameters": {
+							"Acquisition": {
+								"orbitNumber": "11913",
+								"orbitDirection": "ASCENDING",
+								"wrsLongitudeGrid": {
+									"@codeSpace": "",
+									"#text": "116"
+								},
+								"startTimeFromAscendingNode": {
+									"@uom": "msec",
+									"#text": "5319951"
+								},
+								"completionTimeFromAscendingNode": {
+									"@uom": "msec",
+									"#text": "5348975"
+								},
+								"polarisationMode": "D",
+								"polarisationChannels": "VV, VH"
+							}
+						}
+					}
+				},
+				"observedProperty": {
+					"@nilReason": "inapplicable",
+					"@nil": "true"
+				},
+				"featureOfInterest": {
+					"Footprint": {
+						"@id": "ID-15268",
+						"multiExtentOf": {
+							"MultiSurface": {
+								"@id": "ID-15269",
+								"@srsName": "EPSG:4326",
+								"surfaceMembers": {
+									"Polygon": {
+										"@id": "ID-15270",
+										"exterior": {
+											"LinearRing": {
+												"posList": "-35.011768 31.774431 -33.295361 31.160921 -33.941521 28.464239 -35.670692 29.026291 -35.011768 31.774431"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"result": {
+					"EarthObservationResult": {
+						"@id": "ID-15271",
+						"product": {
+							"ProductInformation": {
+								"fileName": {
+									"ServiceReference": {
+										"@href": "https://s1-pdmcdmz-oda-v-20.sentinel1.eo.esa.int/odabroker/rest/ngEO//S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B",
+										"RequestMessage": null
+									}
+								},
+								"size": {
+									"@uom": "Bytes",
+									"#text": "2049894611"
+								},
+								"timeliness": "Fast-24h"
+							}
+						},
+						"browse": {
+							"BrowseInformation": [{
+								"type": "QUICKLOOK",
+								"referenceSystemIdentifier": {
+									"@codeSpace": "EPSG",
+									"#text": "EPSG:4326"
+								},
+								"fileName": {
+									"ServiceReference": {
+										"@href": "https://ngeo.sentinel1.copernicus.eu/c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=IW_S1A_GRD&TIME=2016-04-29T16%3A44%3A15Z%2F2016-04-29T16%3A44%3A30Z",
+										"RequestMessage": null
+									}
+								}
+							}, {
+								"type": "QUICKLOOK",
+								"referenceSystemIdentifier": {
+									"@codeSpace": "EPSG",
+									"#text": "EPSG:4326"
+								},
+								"fileName": {
+									"ServiceReference": {
+										"@href": "https://ngeo.sentinel1.copernicus.eu/c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=EW_S1A_GRD&TIME=2016-04-22T02%3A40%3A15Z%2F2016-04-22T03%3A44%3A30Z",
+										"RequestMessage": null
+									}
+								}
+							}]
+						}
+					}
+				},
+				"metaDataProperty": {
+					"EarthObservationMetaData": {
+						"identifier": "S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B",
+						"acquisitionType": "NOMINAL",
+						"productType": "N/A",
+						"status": "ARCHIVED",
+						"vendorSpecific": {
+							"SpecificInformation": {
+								"localAttribute": "nativeDatasetId",
+								"localValue": "S1_SAR_IW"
+							}
+						}
+					}
+				}
+			},
+			"BrowseInformation": {
+				"eop_layer": "IW_S1A_GRD",
+				"eop_referenceSystemIdentifier": {
+					"@nil": "true"
+				},
+				"eop_subtype": {
+					"@nil": "true"
+				},
+				"eop_type": "wmts",
+				"eop_url": "https://ngeo.sentinel1.copernicus.eu:443/c/wmts?LAYER=IW_S1A_GRD"
+			},
+			"identifier": "https://ngeo.sentinel1.copernicus.eu:443/ngeo/catalogue/S1_SAR_IW/search?id=S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B&format=atom"
+		},
+		"type": "Feature",
+		"geometry": {
+			"coordinates": [
+				[
+					[31.774431, -35.011768],
+					[31.160921, -33.295361],
+					[28.464239, -33.941521],
+					[29.026291, -35.670692],
+					[31.774431, -35.011768]
+				]
+			],
+			"type": "Polygon"
+		}
+	}],
+	"type": "FeatureCollection"
+}
