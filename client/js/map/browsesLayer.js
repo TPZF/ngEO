@@ -71,7 +71,7 @@ var BrowsesLayer = function(params, mapEngine) {
 				layerDesc.params.time = toWMTSTime(begin) + "/" + toWMTSTime(end);
 			}
 
-			if ( layerDesc.type == "WMTS" && !layerDesc.params.matrixSet ) {
+			if ( layerDesc.type.toUpperCase() == "WMTS" && !layerDesc.params.matrixSet ) {
 				// If no matrixSet is defined, take ones from configuration
 				var mapProjection = Configuration.get('map.projection', "EPSG:4326");
 				var wmtsMap = Configuration.get('browseDisplay.wmtsParameters', {

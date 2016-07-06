@@ -307,7 +307,7 @@ module.exports = {
 	 */
 	getLayerName: function(url) {
 		var parsed = this.parseUrl(url);
-		var layerTag = parsed['SERVICE'] == 'WMS' ? 'LAYERS' : 'LAYER';
+		var layerTag = parsed['SERVICE'].toUpperCase() == 'WMS' ? 'LAYERS' : 'LAYER';
 		return parsed[layerTag];
 	},
 
@@ -320,7 +320,7 @@ module.exports = {
 		var parsed = this.parseUrl(url);
 
 		// TODO: Check SRS --> must be 4326 ?
-		var layerTag = parsed['SERVICE'] == 'WMS' ? 'LAYERS' : 'LAYER';
+		var layerTag = parsed['SERVICE'].toUpperCase() == 'WMS' ? 'LAYERS' : 'LAYER';
 		var wmsLayer = {
 			type: parsed['SERVICE'],
 			baseUrl: parsed["BASEURL"],
@@ -332,7 +332,7 @@ module.exports = {
 				time: parsed['TIME'] ? decodeURIComponent(parsed['TIME']) : null
 			}
 		};
-		if ( parsed['SERVICE'] == 'WMTS' ) {
+		if ( parsed['SERVICE'].toUpperCase() == 'WMTS' ) {
 			wmsLayer.params.matrixSet = parsed['TILEMATRIXSET'];
 			wmsLayer.params.layer = parsed[layerTag];
 		} else {
