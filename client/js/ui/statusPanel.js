@@ -273,6 +273,7 @@ var StatusPanel = Backbone.View.extend({
 			var isVisible = !_footprintLayer.params.visible;
 			_footprintLayer.setVisible(isVisible);
 			
+			// TODO: handle multiple browse layer case
 			var browsesLayer = BrowsesManager.getBrowseLayer(status.model);
 			if ( browsesLayer ) {
 				browsesLayer.setVisible(isVisible);
