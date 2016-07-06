@@ -285,24 +285,45 @@ module.exports = {
 	},
 
 	/**
-	 *	Create WMS/WMTS layer from url
-	 *	Not really appropriate here, move it ?
+	 *	Parse url extracting all the parameters which respecting key=value
+	 *	Ex: http://base_url?key1=val1&key2=val2
+	 *
+	 *	Returns a dictionary containing parameters + BASEURL
 	 */
-	createWmsLayerFromUrl: function(baseUrl) {
-
+	parseUrl: function(url) {
 		var parsed = {};
-		var params = baseUrl.split(/\?|\&/);
+		var params = url.split(/\?|\&/);
+		parsed["BASEURL"] = params[0];
 		_.each(params, function(param) {
 			var kv = param.split("=");
 			if (kv.length == 2)
 				parsed[kv[0].toUpperCase()] = kv[1];
 		});
+		return parsed;
+	},
+
+	/**
+	 *	Get WMS/WMTS layer name from url
+	 */
+	getLayerName: function(url) {
+		var parsed = this.parseUrl(url);
+		var layerTag = parsed['SERVICE'] == 'WMS' ? 'LAYERS' : 'LAYER';
+		return parsed[layerTag];
+	},
+
+	/**
+	 *	Create WMS/WMTS layer from url
+	 *	Not really appropriate here, move it ?
+	 */
+	createWmsLayerFromUrl: function(url) {
+
+		var parsed = this.parseUrl(url);
 
 		// TODO: Check SRS --> must be 4326 ?
 		var layerTag = parsed['SERVICE'] == 'WMS' ? 'LAYERS' : 'LAYER';
 		var wmsLayer = {
 			type: parsed['SERVICE'],
-			baseUrl: params[0],
+			baseUrl: parsed["BASEURL"],
 			name: parsed[layerTag],
 			title: parsed[layerTag],
 			params: {

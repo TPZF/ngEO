@@ -87,12 +87,12 @@ module.exports = {
 		if (!$.isEmptyObject(browseInfo) && !isPlanned) {
 			var browseObject = browseInfo[0]; // Use the first browse by default
 			var browseUrl = _getUrl(browseObject);
-			if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, browseInfo.eop_layer)) {
-
+			var layerName = MapUtils.getLayerName(browseUrl);
+			if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
 				var browseLayer = _browseLayerMap[browseUrl];
 				if (!browseLayer) {
 					browseLayer = _browseLayerMap[browseUrl] = Map.addLayer({
-						name: browseObject.eop_layer, // Update it
+						name: layerName,
 						type: "Browses",
 						visible: true
 					});
