@@ -76,6 +76,28 @@ var MapPopup = function(container) {
 			}
 		});
 
+	// Browse
+	btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
+		.appendTo(element.find("#mpButtons"))
+		.click(function() {
+			var isSelected = $(this).parent().hasClass('ui-btn-active');
+			// Update button's layout
+			if (isSelected) {
+				$(this).parent().removeClass('ui-btn-active ui-focus');
+			} else {
+				$(this).parent().addClass('ui-btn-active');
+			}
+
+			for (var i = 0; i < products.length; i++) {
+				var p = products[i];
+				if (isSelected) {
+					p._featureCollection.hideBrowses([p]);
+				} else {
+					p._featureCollection.showBrowses([p]);
+				}
+			}
+		});
+
 	// DAR
 	btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo(element.find('#mpButtons'))
@@ -213,6 +235,13 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
 		} else {
 			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
+		}
+
+		var hasBrowses = _.find(products, function(feature) { return feature._browseShown; });
+		if ( hasBrowses ) {
+			element.find('#mpButtons button[data-icon="browse"]').parent().addClass('ui-btn-active');
+		} else {
+			element.find('#mpButtons button[data-icon="browse"]').parent().removeClass('ui-btn-active');
 		}
 
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist

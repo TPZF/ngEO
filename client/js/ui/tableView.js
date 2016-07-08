@@ -227,11 +227,6 @@ var TableView = Backbone.View.extend({
 			var $row = $target.closest('tr');
 			var data = $row.data('internal');
 
-			// Toggle css
-			$target
-				.toggleClass('ui-icon-checkbox-off')
-				.toggleClass('ui-icon-checkbox-on');
-
 			// Based on css value, show/hide browses
 			if ($target.hasClass('ui-icon-checkbox-off')) {
 				this.model.showBrowses([data.feature]);
@@ -345,6 +340,8 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "remove:features", this.removeData);
 			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
+			this.listenTo(this.model, "show:browses", this.toggleBrowses);
+			this.listenTo(this.model, "hide:browses", this.toggleBrowses);
 			this.listenTo(this.model, "highlightFeatures", function(features){
 				_allHighlights = _allHighlights.concat(features);
 				self.triggerHighlightFeature();
@@ -496,6 +493,22 @@ var TableView = Backbone.View.extend({
 			return $row;
 		} else {
 			return null;
+		}
+	},
+
+	/**
+	 *	Toggle browses for the given features
+	 */
+	toggleBrowses: function(features) {
+		if (!this.$table) return;
+
+		for (var i = 0; i < features.length; i++) {
+			var $row = this._getRowFromFeature(features[i]);
+			if ($row) { 
+				$row.find('.browse-visibility-checkbox')
+					.toggleClass('ui-icon-checkbox-off')
+					.toggleClass('ui-icon-checkbox-on');
+			}
 		}
 	},
 
