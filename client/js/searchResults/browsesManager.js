@@ -85,7 +85,12 @@ module.exports = {
 		var isPlanned = (Configuration.getMappedProperty(feature, "status") == "PLANNED"); // NGEO-1775 : no browse for planned features
 		// NB: NGEO-1812: Use isEmptyObject to check that browseInfo exists AND not empty (server sends the response not inline with ICD)
 		if (!$.isEmptyObject(browseInfo) && !isPlanned) {
-			var browseObject = browseInfo[0]; // Use the first browse by default
+			var browseObject = _.findWhere(browseInfo, { _selected: true });
+			if (!browseObject) {
+				browseObject = browseInfo[0]
+				browseObject._selected = true;
+			}
+			
 			var browseUrl = _getUrl(browseObject);
 			var layerName = MapUtils.getLayerName(browseUrl);
 			if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
@@ -116,7 +121,8 @@ module.exports = {
 
 		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
 		if (browseInfo) {
-			var url = _getUrl(browseInfo[0]);
+			var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
+			var url = _getUrl(selectedBrowse);
 			var browseLayer = _browseLayerMap[url];
 			if (browseLayer) {
 				browseLayer.removeBrowse(feature.id);
@@ -138,9 +144,8 @@ module.exports = {
 		if ( feature ) {
 			var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
 			if (browseInfo) {
-				// HACK: Take the first one, which is still not good cuz in case of multiple browse it's almost sure that every
-				// browse is coming from different Mapserver LAYER
-				var url = _getUrl(browseInfo[0]);
+				var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
+				var url = _getUrl(selectedBrowse);
 				return _browseLayerMap[url];
 			}
 		}

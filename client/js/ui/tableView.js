@@ -5,6 +5,7 @@ var Pagination = require('ui/pagination');
 var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 var FeatureCollection = require('searchResults/model/featureCollection');
 var SearchResultsMap = require('searchResults/map');
+var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
 
 /**
  *	Get nested objects containing the given key
@@ -144,6 +145,14 @@ var TableView = Backbone.View.extend({
 			if (data) {
 				Map.zoomToFeature(data.feature);
 			}
+		},
+
+		'click .multipleBrowse': function(event) {
+			var data = $(event.currentTarget).closest('tr').data('internal')
+			MultipleBrowseWidget.open({
+				feature: data.feature,
+				featureCollection: this.model
+			});
 		},
 
 		// Call when a row is clicked
@@ -868,6 +877,11 @@ var TableView = Backbone.View.extend({
 			}
 		}
 		$row.html(content);
+
+		var browseInfo = Configuration.getMappedProperty(rowData.feature, "browseInformation");
+		if ( browseInfo.length > 1 ) {
+			$row.find('.browse-visibility-checkbox').after('<span title="Multiple browse management" class="multipleBrowse"></span>');
+		}
 	},
 
 	/**
