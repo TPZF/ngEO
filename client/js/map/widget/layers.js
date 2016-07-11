@@ -54,7 +54,7 @@ var LayersWidget = function(element) {
 	var self = this;
 	// Callback when a layer is added on the map
 	Map.on('layerAdded', function(layer) {
-		if ( layer.type != "Browses" && layer.params.name.indexOf("Footprints") == -1 ) {
+		if ( layer.params.type != "Browses" && layer.params.name.indexOf("Footprints") == -1 ) {
 			self.buildHTML(layer);
 			$layersWidget.trigger('create');
 		}
