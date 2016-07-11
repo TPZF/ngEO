@@ -99,11 +99,24 @@ module.exports.parse = function(file,fc) {
 		Configuration.setMappedProperty(feature, "stop", cells[stopIndex].replace(' ','T') + '0Z');
 
 		var layer = dataSet2wmsLayers[ cells[collectionIndex] ];
-		Configuration.setMappedProperty(feature, "browseInformation", {
-			eop_type: "wms",
-			eop_layer: layer,
-			eop_url: "/wms2eos/servlets/wms"
-		});
+
+		var browseUrl = "/wms2eos/servlets/wms?layers="+ layer +"&service=wms";
+		// NGEO-2164 : New JSON format for browse information
+		Configuration.setMappedProperty(feature, "browseInformation",
+			[{
+				"type": "QUICKLOOK",
+				"referenceSystemIdentifier": {
+					"@codeSpace": "EPSG",
+					"#text": "EPSG:4326" // Currently not taken into account
+				},
+				"fileName": {
+					"ServiceReference": {
+						"@href": browseUrl,
+						"RequestMessage": null
+					}
+				}
+			}]
+		);
 
 		Configuration.setMappedProperty(feature, "mission", cells[missionIndex]);
 		Configuration.setMappedProperty(feature, "sensor", cells[sensorIndex]);
