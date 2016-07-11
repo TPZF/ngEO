@@ -66,12 +66,12 @@ var MapPopup = function(container) {
 				$(this).parent().addClass('ui-btn-active');
 			}
 
-			for (var i = 0; i < products.length; i++) {
-				var p = products[i];
-				if (isSelected) {
-					p._featureCollection.unselect(p);
-				} else {
-					p._featureCollection.select(p);
+			for (var i = 0; i < products.length; i++) {  
+				var p = products[i];  
+				if (isSelected) {  
+					p._featureCollection.unselect([p]);
+				} else {  
+					p._featureCollection.select([p]);
 				}
 			}
 		});
