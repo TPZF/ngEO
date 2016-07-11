@@ -1,6 +1,7 @@
 var Logger = require('logger');
 var Configuration = require('configuration');
 var DatasetAuthorizations = require('search/model/datasetAuthorizations');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 var Map = require('map/map');
 var MapUtils = require('map/utils');
 var SelectHandler = require('map/selectHandler');
@@ -94,9 +95,9 @@ module.exports = {
 			var browseUrl = _getUrl(browseObject);
 			var layerName = MapUtils.getLayerName(browseUrl);
 			if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
-				var browseLayer = _browseLayerMap[browseUrl];
+				var browseLayer = _browseLayerMap[layerName];
 				if (!browseLayer) {
-					browseLayer = _browseLayerMap[browseUrl] = Map.addLayer({
+					browseLayer = _browseLayerMap[layerName] = Map.addLayer({
 						name: layerName,
 						type: "Browses",
 						visible: true
@@ -123,14 +124,14 @@ module.exports = {
 		if (browseInfo) {
 			var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
 			if ( selectedBrowse ) {
-				var url = _getUrl(selectedBrowse);
-				var browseLayer = _browseLayerMap[url];
+				var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));
+				var browseLayer = _browseLayerMap[layerName];
 				if (browseLayer) {
 					browseLayer.removeBrowse(feature.id);
 
 					if (browseLayer.isEmpty()) {
 						Map.removeLayer(browseLayer);
-						delete _browseLayerMap[url];
+						delete _browseLayerMap[layerName];
 					}
 				}
 			}
@@ -148,8 +149,10 @@ module.exports = {
 			if (browseInfo) {
 				var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
 				if ( selectedBrowse ) {
-					var url = _getUrl(selectedBrowse);
-					selectedBrowses.push(_browseLayerMap[url]);
+					var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));	
+					if ( selectedBrowses.indexOf(_browseLayerMap[layerName]) == -1 ) {
+						selectedBrowses.push(_browseLayerMap[layerName]);
+					}
 				}
 			}
 		}
