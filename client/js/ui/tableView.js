@@ -105,7 +105,9 @@ var TableView = Backbone.View.extend({
 			if ( ctrlPressed && e.keyCode == '65' ) {
 				// Ctrl+A : select all
 				e.preventDefault();
-				$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+
+				if ( self.model )
+					$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
 			}
 		}
 		var onKeyUp = function(e) {
@@ -116,8 +118,8 @@ var TableView = Backbone.View.extend({
 				shiftPressed = false;
 			}
 		}
-		document.onkeydown = onKeyDown;
-		document.onkeyup = onKeyUp;
+		document.addEventListener('keydown', onKeyDown);
+		document.addEventListener('keyup', onKeyUp);
 
 		/**
 		 *	This code just temporary serves to trigger highlight on ALL the feature collections
@@ -310,7 +312,6 @@ var TableView = Backbone.View.extend({
 	setModel: function(model) {
 
 		if (this.model) {
-
 			// Clean-up previous data
 			this.clear();
 
