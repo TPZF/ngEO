@@ -16,24 +16,37 @@
 			%>
 			<span value="<%= selectedValue %>"></span>
 			<% if ( model.hasValidPreconditions( option ) ) {
-				if (!option.cropProductSearchArea) { %>
-					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
+				if (!option.cropProductSearchArea) {
+					if (parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 0) {
+					%>
+						<fieldset data-role="controlgroup">
+						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
+							<% _.each(option.value, function(value) { %>
+								<label>
+									<!-- Select the check box if value is defined -->
+									<input type="checkbox" name="<%= option.argumentName %>" value="<%= value.name %>" data-mini="true" <% if ( value && value.selected == "true" ) print('checked="checked"'); %> />
+									<%= value.humanReadable %>
+								</label>
+							<% }); %>
+						</fieldset>
+					<% } else { %>
+						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
 						<select id="<%= option.argumentName %>" data-mini="true" data-theme="<%= theme %>">
-						<!-- NGEO-1811: No more "None" in download options.. wait for final decision -->
-						<!-- <option value="None">None</option> -->
+							<!-- None is possible depending on option properties : NGEO-1811, NGEO-2165 -->
 
-						<!-- NGEO-1916: Add "???" field in case of conflict between the selected products -->
-						<% if ( selectedValue == "@conflict" ) { %>
-							<option value="@conflict" selected>???</option>
-						<% } %>
-						<% _.each(option.value, function(value) { %>
-							<% if ( !model.hasValidPreconditions(value) ) { %>
-								<option value="" style="display: none;"></option>
-							<% } else { %>
-								<option value="<%= value.name%>" <% if ( selectedValue == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
+							<!-- NGEO-1916: Add "???" field in case of conflict between the selected products -->
+							<% if ( selectedValue == "@conflict" ) { %>
+								<option value="@conflict" selected>???</option>
 							<% } %>
-						<% }); %>
-					</select>
+							<% _.each(option.value, function(value) { %>
+								<% if ( !model.hasValidPreconditions(value) ) { %>
+									<option value="" style="display: none;"></option>
+								<% } else { %>
+									<option value="<%= value.name%>" <% if ( selectedValue == value.name) { print('selected'); } %> ><%= value.humanReadable %></option>
+								<% } %>
+							<% }); %>
+						</select>
+					<% } %>
 				<% } else { %>
 					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
 					<input type="checkbox" id="<%= option.argumentName %>" <% if( selectedValue ) print('checked="checked"'); %> data-mini="true" />
