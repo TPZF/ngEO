@@ -12,6 +12,7 @@ var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var SearchResults = require('searchResults/model/searchResults');
 var Utils = require('map/utils');
 var UserPrefs = require('userPrefs');
+var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
 
 var MapPopup = function(container) {
 
@@ -96,6 +97,16 @@ var MapPopup = function(container) {
 					p._featureCollection.showBrowses([p]);
 				}
 			}
+		});
+
+	// Multiple browse management
+	btn = $("<button data-icon='browse-multiple' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
+		.appendTo(element.find("#mpButtons"))
+		.click(function() {
+			MultipleBrowseWidget.open({
+				feature: products[0],
+				featureCollection: products[0]._featureCollection
+			});
 		});
 
 	// DAR
@@ -185,6 +196,9 @@ var MapPopup = function(container) {
 	var buildContent = function(adv) {
 		var content;
 
+		// Hide by default
+		element.find('#mpButtons button[data-icon="browse-multiple"]').parent().hide();
+
 		if (products.length == 1) {
 			var product = products[0];
 			// Build product title according to NGEO-1969
@@ -219,6 +233,13 @@ var MapPopup = function(container) {
 			} else {
 				content += '<p>Date: ' + Configuration.getMappedProperty(product, "start") + '</p>';
 			}
+
+			// Show only if product has multiple browses
+			var browseInfos = Configuration.getMappedProperty(product, "browseInformation");
+			if ( browseInfos.length > 1 ) {
+				element.find('#mpButtons button[data-icon="browse-multiple"]').parent().show();
+			}
+
 		} else {
 			content = products.length + " products picked.<br>Click again to cycle through products.";
 			if (adv) {
