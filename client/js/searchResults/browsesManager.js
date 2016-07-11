@@ -122,14 +122,16 @@ module.exports = {
 		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
 		if (browseInfo) {
 			var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
-			var url = _getUrl(selectedBrowse);
-			var browseLayer = _browseLayerMap[url];
-			if (browseLayer) {
-				browseLayer.removeBrowse(feature.id);
+			if ( selectedBrowse ) {
+				var url = _getUrl(selectedBrowse);
+				var browseLayer = _browseLayerMap[url];
+				if (browseLayer) {
+					browseLayer.removeBrowse(feature.id);
 
-				if (browseLayer.isEmpty()) {
-					Map.removeLayer(browseLayer);
-					delete _browseLayerMap[url];
+					if (browseLayer.isEmpty()) {
+						Map.removeLayer(browseLayer);
+						delete _browseLayerMap[url];
+					}
 				}
 			}
 		}
