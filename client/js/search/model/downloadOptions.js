@@ -11,6 +11,17 @@ var DownloadOptions = function(downloadOptions, options) {
 	if (options && options.init) {
 		for (var i = 0; i < this.collection.length; i++) {
 			var option = this.collection[i];
+
+			// NGEO-2165: Add None value according to minOccurs & maxOccurs parameters
+			var hasNone = _.findWhere(option.value, { "humanReadable": "None" }); // Standing order passes here as well...
+			if ( parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 1 && !hasNone ) {
+				option.value.unshift({
+					"humanReadable": "None",
+					"name": "none",
+					"sizeFactor": 1
+				});
+			}
+
 			if (!option.cropProductSearchArea) {
 				this.setValue(option.argumentName, this.getValidValue(this.collection[i]).name);
 			} else {
