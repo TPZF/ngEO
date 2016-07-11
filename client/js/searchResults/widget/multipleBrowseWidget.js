@@ -4,6 +4,7 @@
 
 var Configuration = require('configuration');
 var BrowsesManager = require('searchResults/browsesManager');
+var MapUtils = require('map/utils');
 var multipleBrowse_template = require('searchResults/template/multipleBrowseContent');
 
 /**  
@@ -18,7 +19,8 @@ module.exports = {
 		var browseInformation = Configuration.getMappedProperty(feature, "browseInformation");
 		var $popup = $(multipleBrowse_template({
 			feature: feature,
-			browseInformation: browseInformation
+			browseInformation: browseInformation,
+			MapUtils: MapUtils
 		}));
 
 		$popup.appendTo('.ui-page-active');

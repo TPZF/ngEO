@@ -2,13 +2,13 @@
     <a href="#" data-rel="back" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a> 
    
     <h4>Select browse to use in list:</h4> 
-    <ul style="max-height: 500px; overflow: auto; padding-right: 10px;" id="multipleBrowseSelection" data-role="listview" data-inset="true" 
+    <ul style="max-height: 500px; max-width: 500px; overflow: auto; padding-right: 10px;" id="multipleBrowseSelection" data-role="listview" data-inset="true" 
       data-theme="a"> 
 		<fieldset data-role="controlgroup"> 
 		    <% _.each(browseInformation, function(browseInfo, index) { 
 		    	var url = browseInfo.fileName.ServiceReference["@href"]
 		    	%> 
-				<label><input type="radio" name="shopcart" data-theme="a" data-mini="true" value="<%= index %>" <% if(browseInfo._selected) print('checked="checked"') %> />  <%= url %> </label> 
+				<label title="<%= url %>"><input type="radio" name="shopcart" data-theme="a" data-mini="true" value="<%= index %>" <% if(browseInfo._selected) print('checked="checked"') %> />  <%= MapUtils.getLayerName(url) %> </label> 
 			<% }); %> 
      
 		</fieldset> 
