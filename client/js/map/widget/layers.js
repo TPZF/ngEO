@@ -54,18 +54,22 @@ var LayersWidget = function(element) {
 	var self = this;
 	// Callback when a layer is added on the map
 	Map.on('layerAdded', function(layer) {
-		self.buildHTML(layer);
-		$layersWidget.trigger('create');
+		if ( layer.type != "Browses" && layer.params.name.indexOf("Footprints") == -1 ) {
+			self.buildHTML(layer);
+			$layersWidget.trigger('create');
+		}
 	});
 
 	// Callback when a layer is removed from the map
 	Map.on('layerRemoved', function(layer) {
-		self.container.find('input').each(function() {
-			if ($(this).data('layer') == layer) {
-				$(this).parent().remove();
-			}
-		});
-		$layersWidget.trigger('create');
+		if ( layer.type != "Browses" && layer.params.name.indexOf("Footprints") == -1 ) {
+			self.container.find('input').each(function() {
+				if ($(this).data('layer') == layer) {
+					$(this).parent().remove();
+				}
+			});
+			$layersWidget.trigger('create');
+		}
 	});
 
 	this.$el = $layersWidget;
@@ -75,17 +79,20 @@ var LayersWidget = function(element) {
  * Build the HTML for a layer
  */
 LayersWidget.prototype.buildHTML = function(layer) {
-	// Build the input
-	var input = $("<input type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
-		.data('layer', layer);
 
-	// Callback called when the input is changed
-	input.change(layerCheckedCallback);
+	if ( layer.params.name.indexOf('Footprints') == -1 ) {
+		// Build the input
+		var input = $("<input type='checkbox'" + (layer.params.visible ? "checked='checked'" : "") + ">")
+			.data('layer', layer);
 
-	// Build the label for input and add it to the group
-	$("<label data-mini='true'>" + (layer.params.title ? layer.params.title : layer.params.name) + "</label>")
-		.prepend(input)
-		.appendTo(this.container);
+		// Callback called when the input is changed
+		input.change(layerCheckedCallback);
+
+		// Build the label for input and add it to the group
+		$("<label data-mini='true'>" + (layer.params.title ? layer.params.title : layer.params.name) + "</label>")
+			.prepend(input)
+			.appendTo(this.container);
+	}
 };
 
 /**
