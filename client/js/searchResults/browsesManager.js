@@ -138,20 +138,22 @@ module.exports = {
 	},
 
 	/**
-	 *	Get browse layer with the given feature collection
+	 *	Get all selected browse layers for the given feature collection
 	 */
-	getBrowseLayer: function(fc) {
-		// HACK: Get the first one for now considering that all the features in collection have the same browse source
-		var feature = fc.features[0];
-		if ( feature ) {
+	getSelectedBrowseLayers: function(fc) {
+		var selectedBrowses = [];
+		for ( var i=0; i<fc.features.length; i++ ) {
+			var feature = fc.features[i];
 			var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
 			if (browseInfo) {
 				var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
-				var url = _getUrl(selectedBrowse);
-				return _browseLayerMap[url];
+				if ( selectedBrowse ) {
+					var url = _getUrl(selectedBrowse);
+					selectedBrowses.push(_browseLayerMap[url]);
+				}
 			}
 		}
-		return null;
+		return selectedBrowses;
 	},
 
 	/**
