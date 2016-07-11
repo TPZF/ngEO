@@ -41,6 +41,9 @@ fs.readFile('./productSearch/S1_SAR_EW_DUAL_POL_response.json', 'utf8', function
 fs.readFile('./productSearch/ENVISAT_ASA_IM__0P_response.json', 'utf8', function (err, data) {
 	featureCollections['ENVISAT_ASA_IM__0P']  = JSON.parse(data);
 });
+fs.readFile('./productSearch/MultiBrowse_response.json', 'utf8', function (err, data) {
+	featureCollections['MultiBrowse']  = JSON.parse(data);
+});
 
 // Old json format
 fs.readFile('./productSearch/ATS_TOA_1P_response.json', 'utf8', function (err, data) {

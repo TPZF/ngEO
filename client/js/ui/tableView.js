@@ -5,6 +5,7 @@ var Pagination = require('ui/pagination');
 var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 var FeatureCollection = require('searchResults/model/featureCollection');
 var SearchResultsMap = require('searchResults/map');
+var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
 
 /**
  *	Get nested objects containing the given key
@@ -148,6 +149,14 @@ var TableView = Backbone.View.extend({
 			}
 		},
 
+		'click .multipleBrowse': function(event) {
+			var data = $(event.currentTarget).closest('tr').data('internal')
+			MultipleBrowseWidget.open({
+				feature: data.feature,
+				featureCollection: this.model
+			});
+		},
+
 		// Call when a row is clicked
 		'click tr': function(event) {
 			var $row = $(event.currentTarget);
@@ -223,7 +232,21 @@ var TableView = Backbone.View.extend({
 			}
 		},
 
-		// Called when the user clicks on the checkbox of the dataTables
+		// Called when the user clicks on "browse-visibility" checkbox in table
+		'click .browse-visibility-checkbox': function(event) {
+			var $target = $(event.currentTarget);
+			var $row = $target.closest('tr');
+			var data = $row.data('internal');
+
+			// Based on css value, show/hide browses
+			if ($target.hasClass('ui-icon-checkbox-off')) {
+				this.model.showBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+			} else {
+				this.model.hideBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+			}
+		},
+
+		// Called when the user clicks on the "selection" checkbox in table
 		'click .table-view-checkbox': function(event) {
 			// Retreive the position of the selected row
 			var $target = $(event.currentTarget);
@@ -235,15 +258,10 @@ var TableView = Backbone.View.extend({
 				// HUGE problem with multiple feature collections cuz this view depends on model
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
-					if ( $row.hasClass('row_selected') ) {
-						// NGEO-2174: check every highlighted feature when clicking on already selected row
-						for ( var i=0; i<model.highlights.length; i++ ) {
-							model.select(model.highlights[i]);
-						}
-					} else {
-						model.select(data.feature);
-					}
+					// NGEO-2174: check every highlighted feature when clicking on already selected row
+					model.select( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
 				} else {
+					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
 					$target
@@ -253,15 +271,10 @@ var TableView = Backbone.View.extend({
 			} else {
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
-					if ( $row.hasClass('row_selected') ) {
-						// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
-						for ( var i=0; i<model.highlights.length; i++ ) {
-							model.unselect(model.highlights[i]);
-						}
-					} else {
-						model.unselect(data.feature);
-					}
+					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
+					model.unselect( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
 				} else {
+					// "Unselect all" case
 					this.model.unselectAll();
 					$target
 						.removeClass('ui-icon-checkbox-on')
@@ -327,6 +340,8 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "remove:features", this.removeData);
 			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
 			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
+			this.listenTo(this.model, "show:browses", this.toggleBrowses);
+			this.listenTo(this.model, "hide:browses", this.toggleBrowses);
 			this.listenTo(this.model, "highlightFeatures", function(features){
 				_allHighlights = _allHighlights.concat(features);
 				self.triggerHighlightFeature();
@@ -478,6 +493,22 @@ var TableView = Backbone.View.extend({
 			return $row;
 		} else {
 			return null;
+		}
+	},
+
+	/**
+	 *	Toggle browses for the given features
+	 */
+	toggleBrowses: function(features) {
+		if (!this.$table) return;
+
+		for (var i = 0; i < features.length; i++) {
+			var $row = this._getRowFromFeature(features[i]);
+			if ($row) { 
+				$row.find('.browse-visibility-checkbox')
+					.toggleClass('ui-icon-checkbox-off')
+					.toggleClass('ui-icon-checkbox-on');
+			}
 		}
 	},
 
@@ -804,8 +835,14 @@ var TableView = Backbone.View.extend({
 			checkedClass = 'ui-icon-checkbox-on';
 		}
 
+		// Layer selection checkbox
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
 		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
+
+		// Layer browse visibility checkbox
+		var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
+
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
 			if (this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0) {
@@ -831,6 +868,11 @@ var TableView = Backbone.View.extend({
 			}
 		}
 		$row.html(content);
+
+		var browseInfo = Configuration.getMappedProperty(rowData.feature, "browseInformation");
+		if ( browseInfo.length > 1 ) {
+			$row.find('.browse-visibility-checkbox').after('<span title="Multiple browse management" class="multipleBrowse"></span>');
+		}
 	},
 
 	/**
@@ -950,7 +992,7 @@ var TableView = Backbone.View.extend({
 			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
 			var colSumWidth = _.reduce(colWidths, function(sum, w) { return sum+w;}, 0);
-			var hasSlider = colSumWidth > $(window).width() - 5;
+			var hasSlider = colSumWidth > $(window).width() - 1;
 			for ( var i=0; i<colWidths.length; i++ ) {
 				if ( hasSlider ) {
 					// Set min-width since it forces table to be wider than window --> show slider
@@ -1034,6 +1076,8 @@ var TableView = Backbone.View.extend({
 			$row.append('<th></th>');
 		}
 		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
+		$row.append('<th class="browseVisibility"></th>');
+
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
 				$row.append('<th>' + columns[j].sTitle + '</th>');

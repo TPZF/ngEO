@@ -273,9 +273,10 @@ var StatusPanel = Backbone.View.extend({
 			var isVisible = !_footprintLayer.params.visible;
 			_footprintLayer.setVisible(isVisible);
 			
-			var browsesLayer = BrowsesManager.getBrowseLayer(status.model);
-			if ( browsesLayer ) {
-				browsesLayer.setVisible(isVisible);
+			// Show/Hide browses
+			var browsesLayers = BrowsesManager.getSelectedBrowseLayers(status.model);
+			for ( var i=0; i<browsesLayers.length; i++ ) {
+				browsesLayers[i].setVisible(isVisible);
 			}
 		});
 

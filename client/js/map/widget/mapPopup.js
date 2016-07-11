@@ -12,6 +12,7 @@ var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var SearchResults = require('searchResults/model/searchResults');
 var Utils = require('map/utils');
 var UserPrefs = require('userPrefs');
+var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
 
 var MapPopup = function(container) {
 
@@ -66,14 +67,46 @@ var MapPopup = function(container) {
 				$(this).parent().addClass('ui-btn-active');
 			}
 
+			for (var i = 0; i < products.length; i++) {  
+				var p = products[i];  
+				if (isSelected) {  
+					p._featureCollection.unselect([p]);
+				} else {  
+					p._featureCollection.select([p]);
+				}
+			}
+		});
+
+	// Browse
+	btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Display browse</button>")
+		.appendTo(element.find("#mpButtons"))
+		.click(function() {
+			var isSelected = $(this).parent().hasClass('ui-btn-active');
+			// Update button's layout
+			if (isSelected) {
+				$(this).parent().removeClass('ui-btn-active ui-focus');
+			} else {
+				$(this).parent().addClass('ui-btn-active');
+			}
+
 			for (var i = 0; i < products.length; i++) {
 				var p = products[i];
 				if (isSelected) {
-					p._featureCollection.unselect(p);
+					p._featureCollection.hideBrowses([p]);
 				} else {
-					p._featureCollection.select(p);
+					p._featureCollection.showBrowses([p]);
 				}
 			}
+		});
+
+	// Multiple browse management
+	btn = $("<button data-icon='browse-multiple' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Multiple browse management</button>")
+		.appendTo(element.find("#mpButtons"))
+		.click(function() {
+			MultipleBrowseWidget.open({
+				feature: products[0],
+				featureCollection: products[0]._featureCollection
+			});
 		});
 
 	// DAR
@@ -163,6 +196,9 @@ var MapPopup = function(container) {
 	var buildContent = function(adv) {
 		var content;
 
+		// Hide by default
+		element.find('#mpButtons button[data-icon="browse-multiple"]').parent().hide();
+
 		if (products.length == 1) {
 			var product = products[0];
 			// Build product title according to NGEO-1969
@@ -197,6 +233,13 @@ var MapPopup = function(container) {
 			} else {
 				content += '<p>Date: ' + Configuration.getMappedProperty(product, "start") + '</p>';
 			}
+
+			// Show only if product has multiple browses
+			var browseInfos = Configuration.getMappedProperty(product, "browseInformation");
+			if ( browseInfos.length > 1 ) {
+				element.find('#mpButtons button[data-icon="browse-multiple"]').parent().show();
+			}
+
 		} else {
 			content = products.length + " products picked.<br>Click again to cycle through products.";
 			if (adv) {
@@ -213,6 +256,13 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
 		} else {
 			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
+		}
+
+		var hasBrowses = _.find(products, function(feature) { return feature._browseShown; });
+		if ( hasBrowses ) {
+			element.find('#mpButtons button[data-icon="browse"]').parent().addClass('ui-btn-active');
+		} else {
+			element.find('#mpButtons button[data-icon="browse"]').parent().removeClass('ui-btn-active');
 		}
 
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist

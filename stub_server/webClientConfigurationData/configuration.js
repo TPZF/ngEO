@@ -145,9 +145,6 @@ module.exports = {
 				// gml_beginPosition exists --> Old format
 				this.setMappedProperty(feature, "start", feature.properties.EarthObservation.gml_beginPosition);
 				this.setMappedProperty(feature, "stop", feature.properties.EarthObservation.gml_endPosition);
-				if ( feature.properties.EarthObservation.EarthObservationResult ) {
-					this.setMappedProperty(feature, "browseInformation", feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation);
-				}
 				this.setMappedProperty(feature, "mission", feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName);
 				this.setMappedProperty(feature, "sensor", feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName);
 				this.setMappedProperty(feature, "swath", feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier);
@@ -160,6 +157,33 @@ module.exports = {
 				this.setMappedProperty(feature, "imageQualityReportURL", feature.properties.EarthObservation.EarthObservationMetaData.eop_imageQualityReportURL);
 				this.setMappedProperty(feature, "links", []);
 				this.setMappedProperty(feature, "productUrl", feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename);
+
+				// NGEO-2164 : New JSON format for browse information
+				this.setMappedProperty(feature, "browseInformation",
+					[{
+						"type": "QUICKLOOK",
+						"referenceSystemIdentifier": {
+							"@codeSpace": "EPSG",
+							"#text": "EPSG:4326" // Currently not taken into account
+						},
+						"fileName": {
+							"ServiceReference": {
+								"@href": "https://dummy_url.com/c/wmts",
+								"RequestMessage": null
+							}
+						}
+					}]
+				);
+
+				// Construct browse url from old format
+				if ( feature.properties.EarthObservation.EarthObservationResult ) {
+					var browseInfo = feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation;
+					if ( browseInfo ) {
+						var layerParam = (browseInfo.eop_type == "wmts" ? "layer" : "layers") + "=" + browseInfo.eop_layer;
+						var browseUrl = browseInfo.eop_url + "?" + layerParam + "&service=" + browseInfo.eop_type;
+						feature.properties.EarthObservation.result.EarthObservationResult.browse.BrowseInformation[0].fileName.ServiceReference["@href"] = browseUrl;
+					}
+				}
 			}
 		}
 

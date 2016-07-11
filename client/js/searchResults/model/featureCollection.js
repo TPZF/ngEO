@@ -166,6 +166,17 @@ var FeatureCollection = function() {
 		self.trigger('hide:features', features, self);
 	};
 
+	// Show browses
+	this.showBrowses = function(features) {
+		self.trigger('show:browses', features, self);
+	};
+
+	// Hide browses
+	this.hideBrowses = function(features) {
+		self.trigger('hide:browses', features, self);
+	};
+
+
 	// Launch a search
 	this.search = function(baseUrl) {
 
@@ -314,20 +325,26 @@ var FeatureCollection = function() {
 		delete this.children[cleanedId];
 	};
 
-	// Select a feature
-	this.select = function(feature) {
-		if ( this.selection.indexOf(feature) == -1 ) {
-			this.selection.push(feature);
-			this.trigger("selectFeatures", [feature], this);
+	// Select features
+	this.select = function(features) {
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			if ( this.selection.indexOf(feature) == -1 ) {
+				this.selection.push(feature);
+			}
 		}
+		this.trigger("selectFeatures", features, this);
 	};
 
-	// Unselect a feature
-	this.unselect = function(feature) {
-		if ( this.selection.indexOf(feature) >= 0 ) {
-			this.selection.splice(this.selection.indexOf(feature), 1);
-			this.trigger("unselectFeatures", [feature], this);
+	// Unselect features
+	this.unselect = function(features) {
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			if ( this.selection.indexOf(feature) >= 0 ) {
+				this.selection.splice(this.selection.indexOf(feature), 1);
+			}
 		}
+		this.trigger("unselectFeatures", features, this);
 	};
 
 	/**
