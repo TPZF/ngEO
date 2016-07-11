@@ -238,9 +238,9 @@ var TableView = Backbone.View.extend({
 
 			// Based on css value, show/hide browses
 			if ($target.hasClass('ui-icon-checkbox-off')) {
-				this.model.showBrowses([data.feature]);
+				this.model.showBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
 			} else {
-				this.model.hideBrowses([data.feature]);
+				this.model.hideBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
 			}
 		},
 
@@ -265,6 +265,7 @@ var TableView = Backbone.View.extend({
 						model.select(data.feature);
 					}
 				} else {
+					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
 					$target
@@ -283,6 +284,7 @@ var TableView = Backbone.View.extend({
 						model.unselect(data.feature);
 					}
 				} else {
+					// "Unselect all" case
 					this.model.unselectAll();
 					$target
 						.removeClass('ui-icon-checkbox-on')
