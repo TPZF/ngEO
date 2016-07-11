@@ -152,6 +152,11 @@ DownloadOptions.prototype.hasValidPreconditions = function(param) {
  */
 DownloadOptions.prototype.getValidValue = function(option) {
 
+	var selectedValue = _.findWhere(option.value, {selected: "true"} );
+	if ( selectedValue )
+		return selectedValue;
+
+	// If selected isn't defined, get the first valid one
 	for (var i = 0; i < option.value.length; i++) {
 		var value = option.value[i];
 		if (this.hasValidPreconditions(value)) {
