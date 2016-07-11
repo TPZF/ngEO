@@ -198,6 +198,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 			gwLayer = new GlobWeb.WMSLayer($.extend({
 				name: layer.name,
 				baseUrl: layer.baseUrl,
+				projection: layer.projection,
 				crossOrigin: layer.crossOrigin
 			}, layer.params));
 			break;
@@ -207,8 +208,10 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 				baseUrl: layer.baseUrl,
 				style: layer.params.style,
 				layer: layer.params.layer,
+				projection: layer.projection,
 				format: layer.params.format,
 				matrixSet: layer.params.matrixSet,
+				startLevel: layer.projection == "EPSG:4326" ? 1 : 0,
 				time: layer.params.time,
 				crossOrigin: layer.crossOrigin
 			};

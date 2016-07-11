@@ -159,6 +159,7 @@ var buildItem = function(layer) {
 					name: layer.identifier,
 					baseUrl: layer.baseUrl,
 					visible: false,
+					projection: Configuration.get("map.projection"),
 					params: {
 						layer: layer.identifier,
 						matrixSet: matrixSet.identifier,
