@@ -133,6 +133,37 @@ module.exports = {
 	},
 
 	/**
+	 *	NGEO-2164 : New JSON format for browse information
+	 */
+	updateBrowseInformation : function(feature) {
+		this.setMappedProperty(feature, "browseInformation",
+			[{
+				"type": "QUICKLOOK",
+				"referenceSystemIdentifier": {
+					"@codeSpace": "EPSG",
+					"#text": "EPSG:4326" // Currently not taken into account
+				},
+				"fileName": {
+					"ServiceReference": {
+						"@href": "https://dummy_url.com/c/wmts",
+						"RequestMessage": null
+					}
+				}
+			}]
+		);
+
+		// Construct browse url from old format
+		if ( feature.properties.EarthObservation.EarthObservationResult ) {
+			var browseInfo = feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation;
+			if ( browseInfo ) {
+				var layerParam = (browseInfo.eop_type == "wmts" ? "layer" : "layers") + "=" + browseInfo.eop_layer;
+				var browseUrl = browseInfo.eop_url + "?" + layerParam + "&service=" + browseInfo.eop_type;
+				feature.properties.EarthObservation.result.EarthObservationResult.browse.BrowseInformation[0].fileName.ServiceReference["@href"] = browseUrl;
+			}
+		}
+	},
+
+	/**
 	* Transform the old featurecollection json data format to the new one according to the Work Order 
 	*/
 	toNewJsonFormat: function(featureCollection){
@@ -157,33 +188,10 @@ module.exports = {
 				this.setMappedProperty(feature, "imageQualityReportURL", feature.properties.EarthObservation.EarthObservationMetaData.eop_imageQualityReportURL);
 				this.setMappedProperty(feature, "links", []);
 				this.setMappedProperty(feature, "productUrl", feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename);
+			}
 
-				// NGEO-2164 : New JSON format for browse information
-				this.setMappedProperty(feature, "browseInformation",
-					[{
-						"type": "QUICKLOOK",
-						"referenceSystemIdentifier": {
-							"@codeSpace": "EPSG",
-							"#text": "EPSG:4326" // Currently not taken into account
-						},
-						"fileName": {
-							"ServiceReference": {
-								"@href": "https://dummy_url.com/c/wmts",
-								"RequestMessage": null
-							}
-						}
-					}]
-				);
-
-				// Construct browse url from old format
-				if ( feature.properties.EarthObservation.EarthObservationResult ) {
-					var browseInfo = feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation;
-					if ( browseInfo ) {
-						var layerParam = (browseInfo.eop_type == "wmts" ? "layer" : "layers") + "=" + browseInfo.eop_layer;
-						var browseUrl = browseInfo.eop_url + "?" + layerParam + "&service=" + browseInfo.eop_type;
-						feature.properties.EarthObservation.result.EarthObservationResult.browse.BrowseInformation[0].fileName.ServiceReference["@href"] = browseUrl;
-					}
-				}
+			if ( !feature.properties.EarthObservation.result || !feature.properties.EarthObservation.result.EarthObservationResult.browse ) {
+				this.updateBrowseInformation(feature);
 			}
 		}
 
