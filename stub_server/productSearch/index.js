@@ -30,16 +30,16 @@ fs.readFile('./productSearch/results.json', 'utf8', function (err, data) {
 });
 // New json format
 fs.readFile('./productSearch/Virtual_response.json', 'utf8', function(err, data) {
-	featureCollections['Virtual']  = JSON.parse(data);
+	featureCollections['Virtual']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/S2MSI1A_response.json', 'utf8', function(err, data) {
-	featureCollections['S2MSI1A']  = JSON.parse(data);
+	featureCollections['S2MSI1A']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/S1_SAR_EW_DUAL_POL_response.json', 'utf8', function(err, data) {
-	featureCollections['S1_SAR_EW_DUAL_POL']  = JSON.parse(data);
+	featureCollections['S1_SAR_EW_DUAL_POL']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/ENVISAT_ASA_IM__0P_response.json', 'utf8', function (err, data) {
-	featureCollections['ENVISAT_ASA_IM__0P']  = JSON.parse(data);
+	featureCollections['ENVISAT_ASA_IM__0P']  = conf.toNewJsonFormat(JSON.parse(data));
 });
 fs.readFile('./productSearch/MultiBrowse_response.json', 'utf8', function (err, data) {
 	featureCollections['MultiBrowse']  = JSON.parse(data);
