@@ -17,7 +17,7 @@ var DownloadOptions = function(downloadOptions, options) {
 			if ( parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 1 && !hasNone ) {
 				option.value.unshift({
 					"humanReadable": "None",
-					"name": "none",
+					"name": "@none",
 					"sizeFactor": 1
 				});
 			}
@@ -95,7 +95,7 @@ DownloadOptions.prototype.setValue = function(attribute, value) {
  */
 DownloadOptions.prototype.getAttributes = function() {
 	return _.omit(this.attributes, function(attr) {
-		return attr == null || attr == "@conflict"
+		return attr == null || attr == "@conflict" || attr == "@none";
 	});
 };
 
