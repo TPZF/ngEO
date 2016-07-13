@@ -24,7 +24,7 @@
 							<% _.each(option.value, function(value) { %>
 								<label>
 									<!-- Select the check box if value is defined -->
-									<input type="checkbox" name="<%= option.argumentName %>" value="<%= value.name %>" data-mini="true" <% if ( value && value.selected == "true" ) print('checked="checked"'); %> />
+									<input type="checkbox" name="<%= option.argumentName %>" value="<%= value.name %>" data-mini="true" <% if ( value && selectedValue.indexOf(value.name) >= 0 ) print('checked="checked"'); %> />
 									<%= value.humanReadable %>
 								</label>
 							<% }); %>
@@ -48,8 +48,9 @@
 						</select>
 					<% } %>
 				<% } else { %>
-					<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %></label>
-					<input type="checkbox" id="<%= option.argumentName %>" <% if( selectedValue ) print('checked="checked"'); %> data-mini="true" />
+					<label id="<%= option.argumentName %>_label"><%= option.caption || option.description %>
+						<input name="<%= option.argumentName%>" data-wkt="true" type="checkbox" value="true" <% if( selectedValue ) print('checked="checked"'); %> data-mini="true" />
+					</label>
 				<% }
 			}
 		}); %>

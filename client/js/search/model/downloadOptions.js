@@ -22,8 +22,10 @@ var DownloadOptions = function(downloadOptions, options) {
 				});
 			}
 
+			// Select tag
 			if (!option.cropProductSearchArea) {
-				this.setValue(option.argumentName, this.getValidValue(this.collection[i]).name);
+				var selectedValue = this.getValidValue(this.collection[i]);
+				this.setValue(option.argumentName, selectedValue);
 			} else {
 				this.setValue(option.argumentName, Boolean(option.cropProductSearchArea));
 			}
@@ -41,31 +43,47 @@ DownloadOptions.prototype.initFromUrl = function(url) {
 	if ( doIndex >= 0 ) {
 		var don = url.substr(doIndex + 8);
 		don = don.replace(/\{|\}/g,"");
-		var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
-		var parameters = don.split(commaNotBetweenParenthesisRe);
-
-		for (var n = 0; n < parameters.length; n++) {
-			var p = parameters[n].split(':');
-			if (p.length != 2)
-				throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
-
-			this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
-
-			// Update collection with current values
-			var colDo = {
-				argumentName: p[0],
-				value: [ {
-					"name" : p[1]
-				}]
-			};
-			// No other way to know if the area is cropped or not
-			if ( p[0].indexOf("crop") >= 0 ) {
-				colDo.cropProductSearchArea = "true";
-			}
-			this.collection.push(colDo);
-		}
+		this.initFromParameters(don);
 	}
 };
+
+/**
+ *	Init from parameters (no ngEO_DO)
+ */
+DownloadOptions.prototype.initFromParameters = function(params) {
+	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
+	// var parameters = don.split(commaNotBetweenParenthesisRe);
+
+	// Iteration version of the same thing..
+	var keys = params.match(/([\b\s\w]+):/gm);
+	var parameters = [];
+	for ( var i=0; i<keys.length-1; i++ ) {
+		var current = params.substring(params.indexOf(keys[i]), params.indexOf(keys[i+1]) - 1);
+		parameters.push(current);
+	}
+	parameters.push(params.substring(params.indexOf(keys[keys.length-1])))
+
+	for (var n = 0; n < parameters.length; n++) {
+		var p = parameters[n].split(':');
+		if (p.length != 2)
+			throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
+
+		this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
+
+		// Update collection with current values
+		var colDo = {
+			argumentName: p[0],
+			value: [ {
+				"name" : p[1]
+			}]
+		};
+		// No other way to know if the area is cropped or not
+		if ( p[0].indexOf("crop") >= 0 ) {
+			colDo.cropProductSearchArea = "true";
+		}
+		this.collection.push(colDo);
+	}
+}
 
 /**
  *  Update download options with the given options
@@ -82,7 +100,7 @@ DownloadOptions.prototype.updateFrom = function(downloadOptions) {
  */
 DownloadOptions.prototype.setValue = function(attribute, value) {
 
-	if (value == null) {
+	if (!value) {
 		delete this.attributes[attribute]
 	} else {
 		this.attributes[attribute] = value;
@@ -118,7 +136,8 @@ DownloadOptions.prototype.updatePreconditions = function() {
 						name: selectedValue
 					});
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
-					if (selectedValue != "@conflict" && !self.hasValidPreconditions(valueObject)) {
+					// If valueObject hasn't been found => checkboxes, doesn't implemented yet !
+					if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
 						self.attributes[option.argumentName] = self.getValidValue(option).name;
 					}
 				} else {
@@ -162,16 +181,19 @@ DownloadOptions.prototype.hasValidPreconditions = function(param) {
  *   @see NGEOD-729: Download options with pre-conditions
  */
 DownloadOptions.prototype.getValidValue = function(option) {
-
-	var selectedValue = _.findWhere(option.value, {selected: "true"} );
-	if ( selectedValue )
-		return selectedValue;
-
+	// Multiple value has been selected take only it names
+	var selectedValue = _.filter(option.value, {selected: "true"} );
+	if ( selectedValue.length == 1 ) {
+		return selectedValue[0].name;
+	} else if ( selectedValue.length > 1 ) {
+		return _.map(selectedValue, function(value) { return value.name });
+	}
+	
 	// If selected isn't defined, get the first valid one
 	for (var i = 0; i < option.value.length; i++) {
 		var value = option.value[i];
 		if (this.hasValidPreconditions(value)) {
-			return value;
+			return value.name;
 		}
 	}
 	return null;

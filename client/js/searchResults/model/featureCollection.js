@@ -16,11 +16,27 @@ var _getProductDownloadOptions = function(feature) {
 		var idx = productUrl.indexOf("ngEO_DO={");
 		if (idx >= 0) {
 			var str = productUrl.substring(idx + 9, productUrl.length - 1);
-			var kvs = str.split(',');
+
+			// Doesn't work !
+			// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
+			// kvs = str.split(commaNotBetweenParenthesisRe);
+
+			// Iteration version of the same thing..
+			var keys = str.match(/([\b\s\w]+):/gm);
+			var kvs = [];
+			for ( var i=0; i<keys.length-1; i++ ) {
+				var current = str.substring(str.indexOf(keys[i]), str.indexOf(keys[i+1]) - 1);
+				kvs.push(current);
+			}
+			kvs.push(str.substring(str.indexOf(keys[keys.length-1])))
 
 			for (var n = 0; n < kvs.length; n++) {
 				var kv = kvs[n].split(':');
 				if (kv.length == 2) {
+					if ( kv[1].indexOf("[") >= 0 ) {
+						// Because life is a piece of shit... see the shitty spec where array doesn't contains strings...
+						kv[1] = JSON.parse(kv[1].replace(/([^,\[\]]*)/g, function(r, $1) { console.log(r, $1); if (r){ return '"'+$1+'"'} else { return "" } } ))
+					}
 					downloadOptions[kv[0]] = kv[1];
 				}
 			}

@@ -160,10 +160,19 @@ var SearchCriteria = Backbone.Model.extend({
 				case "ngEO_DO":
 					var don = value.substr(1, value.length-2);
 
-					// Use this regex to avoid splitting crop product
-					// which has multiple "," in it
-					var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
-					parameters = don.split(commaNotBetweenParenthesisRe);
+					// // Use this regex to avoid splitting crop product
+					// // which has multiple "," in it OR multiple values between  []
+					// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
+					// parameters = don.split(commaNotBetweenParenthesisRe);
+
+					// Iteration version of the same thing..
+					var keys = don.match(/([\b\s\w]+):/gm);
+					var parameters = [];
+					for ( var j=0; j<keys.length-1; j++ ) {
+						var current = don.substring(don.indexOf(keys[j]), don.indexOf(keys[j+1]) - 1);
+						parameters.push(current);
+					}
+					parameters.push(don.substring(don.indexOf(keys[keys.length-1])))
 
 					var downloadOptions = this.get('downloadOptions')[datasetId];
 					for ( var n = 0; n < parameters.length; n++ ) {
