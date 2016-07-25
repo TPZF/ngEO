@@ -471,13 +471,13 @@ var FeatureCollection = function() {
 			var dos = _getProductDownloadOptions(this.selection[i]);
 
 			for (var x in dos) {
-				if (selectedDownloadOptions[x] != dos[x]) {
+				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
 
 			for (var x in selectedDownloadOptions) {
-				if (selectedDownloadOptions[x] != dos[x]) {
+				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
