@@ -175,11 +175,11 @@ DownloadOptions.prototype.updatePreconditions = function() {
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
 					// If valueObject hasn't been found => checkboxes, doesn't implemented yet !
 					if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
-						self.attributes[option.argumentName] = self.getValidValue(option).name;
+						self.attributes[option.argumentName] = self.getValidValue(option);
 					}
 				} else {
 					// Option respects the preconditions, update model with a valid value
-					self.attributes[option.argumentName] = self.getValidValue(option).name;
+					self.attributes[option.argumentName] = self.getValidValue(option);
 				}
 			}
 		} else {
