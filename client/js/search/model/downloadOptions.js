@@ -181,21 +181,34 @@ DownloadOptions.prototype.hasValidPreconditions = function(param) {
  *   @see NGEOD-729: Download options with pre-conditions
  */
 DownloadOptions.prototype.getValidValue = function(option) {
-	// Multiple value has been selected take only it names
-	var selectedValue = _.filter(option.value, {selected: "true"} );
-	if ( selectedValue.length == 1 ) {
-		return selectedValue[0].name;
-	} else if ( selectedValue.length > 1 ) {
-		return _.map(selectedValue, function(value) { return value.name });
-	}
-	
-	// If selected isn't defined, get the first valid one
-	for (var i = 0; i < option.value.length; i++) {
-		var value = option.value[i];
-		if (this.hasValidPreconditions(value)) {
-			return value.name;
+
+	if ( parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 0 ) {
+		// Checkboxes : return an array
+		var selectedValue = _.filter(option.value, {selected: "true"} );
+		if ( selectedValue.length ) {
+			return _.map(selectedValue, function(value) { return value.name });
+		}
+		
+		// No value selected by default
+		return [];
+	} else {
+		// Select tag
+		// Multiple value has been selected take only it names
+		var selectedValue = _.filter(option.value, {selected: "true"} );
+		if ( selectedValue.length == 1 ) {
+			return selectedValue[0].name;
+		}
+		
+		// TODO: should be handled even in case of "selected"
+		// If selected isn't defined, get the first valid one
+		for (var i = 0; i < option.value.length; i++) {
+			var value = option.value[i];
+			if (this.hasValidPreconditions(value)) {
+				return value.name;
+			}
 		}
 	}
+
 	return null;
 };
 
