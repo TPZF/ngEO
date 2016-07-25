@@ -35,6 +35,7 @@ var DownloadOptions = function(downloadOptions, options) {
 
 /**
  * Init download options from url
+ * (DOESN'T USED FOR NOW)
  */
 DownloadOptions.prototype.initFromUrl = function(url) {
 	this.collection = [];
@@ -49,6 +50,7 @@ DownloadOptions.prototype.initFromUrl = function(url) {
 
 /**
  *	Init from parameters (no ngEO_DO)
+ * (DOESN'T USED FOR NOW)
  */
 DownloadOptions.prototype.initFromParameters = function(params) {
 	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
@@ -84,6 +86,41 @@ DownloadOptions.prototype.initFromParameters = function(params) {
 		this.collection.push(colDo);
 	}
 }
+
+/**
+ *	Populate download options object from the given url parameters
+ *	@param urlParams Url parameters for ngEO_DO
+ *		ex: {processing:RAW,Otherwise option:[val2,val3]}
+ */
+DownloadOptions.prototype.populateFromUrlParams = function(urlParams) {
+	// // Use this regex to avoid splitting crop product
+	// // which has multiple "," in it OR multiple values between  []
+	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
+	// parameters = urlParams.split(commaNotBetweenParenthesisRe);
+
+	// Iteration version of the same thing..
+	var keys = urlParams.match(/([\b\s\w]+):/gm);
+	var parameters = [];
+	for ( var j=0; j<keys.length-1; j++ ) {
+		var current = urlParams.substring(urlParams.indexOf(keys[j]), urlParams.indexOf(keys[j+1]) - 1);
+		parameters.push(current);
+	}
+	parameters.push(urlParams.substring(urlParams.indexOf(keys[keys.length-1])))
+
+	for ( var n = 0; n < parameters.length; n++ ) {
+		var p = parameters[n].split(':');
+		if (p.length != 2) 
+			throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
+
+		this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
+	}
+
+	// HACK: Set crop to false if doesn't exist in URL
+	var cropDo = _.findWhere(this.collection, {cropProductSearchArea: "true"});
+	if ( cropDo ) {
+		this.attributes[cropDo.argumentName] = _.find(parameters, function(p) { return p.indexOf("crop") >= 0 });
+	}
+};
 
 /**
  *  Update download options with the given options
