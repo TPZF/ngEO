@@ -78,11 +78,24 @@ DownloadOptions.prototype.initFromParameters = function(params) {
 }
 
 /**
+ *	Populate model from url
+ */
+DownloadOptions.prototype.populateFromUrl = function(url) {
+	var idx = url.indexOf("ngEO_DO={");
+	if (idx >= 0) {
+		var params = url.substring(idx + 9, url.length - 1);
+		return this.populateFromUrlParams(params);
+	}
+};
+
+/**
  *	Populate download options object from the given url parameters
  *	@param urlParams Url parameters for ngEO_DO
  *		ex: {processing:RAW,Otherwise option:[val2,val3]}
  */
 DownloadOptions.prototype.populateFromUrlParams = function(urlParams) {
+
+	// // Doesn't work !
 	// // Use this regex to avoid splitting crop product
 	// // which has multiple "," in it OR multiple values between  []
 	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
