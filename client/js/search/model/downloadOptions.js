@@ -1,30 +1,22 @@
+var DownloadOption = require('search/model/downloadOption');
+
 /**
- *  Download option model
+ *  Download options model
  */
 var DownloadOptions = function(downloadOptions, options) {
 
 	// TODO : refactor collection property, try to use Backbone.Collection object ?
-	this.collection = downloadOptions || [];
+	this.collection = [];
 	this.attributes = {}; // Simplified form of currently chosen options
 
-	// Fill with valid options
-	if (options && options.init) {
-		for (var i = 0; i < this.collection.length; i++) {
-			var option = this.collection[i];
+	for (var i = 0; i < downloadOptions.length; i++) {
+		var option = new DownloadOption(this, downloadOptions[i]);
+		this.collection.push(option);
 
-			// NGEO-2165: Add None value according to minOccurs & maxOccurs parameters
-			var hasNone = _.findWhere(option.value, { "humanReadable": "None" }); // Standing order passes here as well...
-			if ( parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 1 && !hasNone ) {
-				option.value.unshift({
-					"humanReadable": "None",
-					"name": "@none",
-					"sizeFactor": 1
-				});
-			}
-
-			// Select tag
+		if (options && options.init) {
+			// Fill with valid values
 			if (!option.cropProductSearchArea) {
-				var selectedValue = this.getValidValue(this.collection[i]);
+				var selectedValue = option.getValidValue();
 				this.setValue(option.argumentName, selectedValue);
 			} else {
 				this.setValue(option.argumentName, Boolean(option.cropProductSearchArea));
@@ -73,16 +65,14 @@ DownloadOptions.prototype.initFromParameters = function(params) {
 		this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
 
 		// Update collection with current values
-		var colDo = {
+		var colDo = new DownloadOption(
+			this, {
 			argumentName: p[0],
 			value: [ {
 				"name" : p[1]
-			}]
-		};
-		// No other way to know if the area is cropped or not
-		if ( p[0].indexOf("crop") >= 0 ) {
-			colDo.cropProductSearchArea = "true";
-		}
+			}],
+			cropProductSearchArea: p[0].indexOf("crop") >= 0 ? "true" : false // No other way to know if the area is cropped or not
+		});
 		this.collection.push(colDo);
 	}
 }
@@ -175,11 +165,11 @@ DownloadOptions.prototype.updatePreconditions = function() {
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
 					// If valueObject hasn't been found => checkboxes, doesn't implemented yet !
 					if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
-						self.attributes[option.argumentName] = self.getValidValue(option);
+						self.attributes[option.argumentName] = option.getValidValue();
 					}
 				} else {
 					// Option respects the preconditions, update model with a valid value
-					self.attributes[option.argumentName] = self.getValidValue(option);
+					self.attributes[option.argumentName] = option.getValidValue();
 				}
 			}
 		} else {
@@ -210,43 +200,6 @@ DownloadOptions.prototype.hasValidPreconditions = function(param) {
 		res |= (self.attributes[precondition.parentDownloadOption] == precondition.parentDownloadValue);
 	});
 	return res;
-};
-
-/**
- *   Get first valid value for the given option respecting the preconditions
- *
- *   @see NGEOD-729: Download options with pre-conditions
- */
-DownloadOptions.prototype.getValidValue = function(option) {
-
-	if ( parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 0 ) {
-		// Checkboxes : return an array
-		var selectedValue = _.filter(option.value, {selected: "true"} );
-		if ( selectedValue.length ) {
-			return _.map(selectedValue, function(value) { return value.name });
-		}
-		
-		// No value selected by default
-		return [];
-	} else {
-		// Select tag
-		// Multiple value has been selected take only it names
-		var selectedValue = _.filter(option.value, {selected: "true"} );
-		if ( selectedValue.length == 1 ) {
-			return selectedValue[0].name;
-		}
-		
-		// TODO: should be handled even in case of "selected"
-		// If selected isn't defined, get the first valid one
-		for (var i = 0; i < option.value.length; i++) {
-			var value = option.value[i];
-			if (this.hasValidPreconditions(value)) {
-				return value.name;
-			}
-		}
-	}
-
-	return null;
 };
 
 /**

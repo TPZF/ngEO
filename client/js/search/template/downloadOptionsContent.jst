@@ -17,7 +17,7 @@
 			<span value="<%= selectedValue %>"></span>
 			<% if ( model.hasValidPreconditions( option ) ) {
 				if (!option.cropProductSearchArea) {
-					if (parseInt(option.minOccurs) == 0 && parseInt(option.maxOccurs) == 0) {
+					if (option.type == "checkbox") {
 					%>
 						<fieldset data-role="controlgroup">
 						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
