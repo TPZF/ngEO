@@ -13,10 +13,7 @@ var DownloadOptions = require('search/model/downloadOptions');
 var _getProductDownloadOptions = function(feature) {
 
 	var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-	// Use populate from url method in DownloadOptions
-	var tempDownloadOptions = new DownloadOptions([]);
-	tempDownloadOptions.populateFromUrl(productUrl);
-	return tempDownloadOptions.getAttributes();
+	return DownloadOptions.extractParamsFromUrl(productUrl);
 };
 
 

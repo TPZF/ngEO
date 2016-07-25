@@ -26,89 +26,25 @@ var DownloadOptions = function(downloadOptions, options) {
 };
 
 /**
- * Init download options from url
- * (DOESN'T USED FOR NOW)
+ * Static method allowing to extract download options from the given url
  */
-DownloadOptions.prototype.initFromUrl = function(url) {
-	this.collection = [];
-	this.attributes = {};
-	var doIndex = url.indexOf("ngEO_DO");
-	if ( doIndex >= 0 ) {
-		var don = url.substr(doIndex + 8);
-		don = don.replace(/\{|\}/g,"");
-		this.initFromParameters(don);
-	}
-};
+DownloadOptions.extractParamsFromUrl = function(url) {
 
-/**
- *	Init from parameters (no ngEO_DO)
- * (DOESN'T USED FOR NOW)
- */
-DownloadOptions.prototype.initFromParameters = function(params) {
-	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
-	// var parameters = don.split(commaNotBetweenParenthesisRe);
-
-	// Iteration version of the same thing..
-	var keys = params.match(/([\b\s\w]+):/gm);
-	var parameters = [];
-	for ( var i=0; i<keys.length-1; i++ ) {
-		var current = params.substring(params.indexOf(keys[i]), params.indexOf(keys[i+1]) - 1);
-		parameters.push(current);
-	}
-	parameters.push(params.substring(params.indexOf(keys[keys.length-1])))
-
-	for (var n = 0; n < parameters.length; n++) {
-		var p = parameters[n].split(':');
-		if (p.length != 2)
-			throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
-
-		this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
-
-		// Update collection with current values
-		var colDo = new DownloadOption(
-			this, {
-			argumentName: p[0],
-			value: [ {
-				"name" : p[1]
-			}],
-			cropProductSearchArea: p[0].indexOf("crop") >= 0 ? "true" : false // No other way to know if the area is cropped or not
-		});
-		this.collection.push(colDo);
-	}
-}
-
-/**
- *	Populate model from url
- */
-DownloadOptions.prototype.populateFromUrl = function(url) {
 	var idx = url.indexOf("ngEO_DO={");
 	if (idx >= 0) {
-		var params = url.substring(idx + 9, url.length - 1);
-		return this.populateFromUrlParams(params);
+		// Case when ngEO_DO is present in url --> remove it
+		url = url.substring(idx + 9, url.length - 1);
 	}
-};
 
-/**
- *	Populate download options object from the given url parameters
- *	@param urlParams Url parameters for ngEO_DO
- *		ex: {processing:RAW,Otherwise option:[val2,val3]}
- */
-DownloadOptions.prototype.populateFromUrlParams = function(urlParams) {
-
-	// // Doesn't work !
-	// // Use this regex to avoid splitting crop product
-	// // which has multiple "," in it OR multiple values between  []
-	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
-	// parameters = urlParams.split(commaNotBetweenParenthesisRe);
-
-	// Iteration version of the same thing..
-	var keys = urlParams.match(/([\b\s\w]+):/gm);
+	var res = {};
+	// Extract keys/values from parameters
+	var keys = url.match(/([\b\s\w]+):/gm);
 	var parameters = [];
 	for ( var j=0; j<keys.length-1; j++ ) {
-		var current = urlParams.substring(urlParams.indexOf(keys[j]), urlParams.indexOf(keys[j+1]) - 1);
+		var current = url.substring(url.indexOf(keys[j]), url.indexOf(keys[j+1]) - 1);
 		parameters.push(current);
 	}
-	parameters.push(urlParams.substring(urlParams.indexOf(keys[keys.length-1])))
+	parameters.push(url.substring(url.indexOf(keys[keys.length-1])))
 
 	for ( var n = 0; n < parameters.length; n++ ) {
 		var p = parameters[n].split(':');
@@ -124,14 +60,31 @@ DownloadOptions.prototype.populateFromUrlParams = function(urlParams) {
 				return "";
 			} } ));
 		}
-
-		this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
+		res[p[0]] = (p[0] == "cropProduct") ? true : p[1];
 	}
+	return res;
+};
 
+
+/**
+ *	Populate download options object from the given url parameters
+ *	@param urlParams Url parameters for ngEO_DO or the entire url containing ngEO_DO
+ *		ex: {processing:RAW,Otherwise option:[val2,val3]}
+ *		ex: http://ngeo?advancedProperties={}&ngEO_DO={key1:val1,key2:[val1,val2]}
+ */
+DownloadOptions.prototype.populateFromUrl = function(url) {
+
+	// // Doesn't work !
+	// // Use this regex to avoid splitting crop product
+	// // which has multiple "," in it OR multiple values between  []
+	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
+	// parameters = url.split(commaNotBetweenParenthesisRe);
+
+	this.attributes = DownloadOptions.extractParamsFromUrl(url);
 	// HACK: Set crop to false if doesn't exist in URL
 	var cropDo = _.findWhere(this.collection, {cropProductSearchArea: "true"});
 	if ( cropDo ) {
-		this.attributes[cropDo.argumentName] = _.find(parameters, function(p) { return p.indexOf("crop") >= 0 });
+		this.attributes[cropDo.argumentName] = _.find(_.keys(this.attributes), function(p) { return p.indexOf("crop") >= 0 }) ? "true" : false;
 	}
 };
 

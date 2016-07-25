@@ -160,7 +160,7 @@ var SearchCriteria = Backbone.Model.extend({
 				case "ngEO_DO":
 					var don = value.substr(1, value.length-2);
 					var downloadOptions = this.get('downloadOptions')[datasetId];
-					downloadOptions.populateFromUrlParams(don);
+					downloadOptions.populateFromUrl(don);
 					// Force triggering since there is no set of 'downloadOptions'
 					this.trigger("change:downloadOptions");
 					break;
