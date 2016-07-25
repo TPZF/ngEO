@@ -99,7 +99,7 @@ describe("FeatureCollection test", function() {
 			s1downloadOptions.setValue("ProductFormat", "JP2");
 			// TODO: the product url comes with do_crop as true, think about evolution
 			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:true}");
-			fc.select(fc.features[0]);
+			fc.select([fc.features[0]]);
 			fc.updateDownloadOptions(s1downloadOptions);
 			// Check that it updates do_crop to WKT & ProductFormat to JP2
 			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:RAW,do_crop:POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125)),ProductFormat:JP2}");
