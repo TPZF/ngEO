@@ -102,6 +102,16 @@ DownloadOptions.prototype.populateFromUrlParams = function(urlParams) {
 		if (p.length != 2) 
 			throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
 
+		if ( p[1].indexOf("[") >= 0 ) {
+			// Surround every item in array with '"' to be able to parse as JSON
+			// WEBS spec rocks !
+			p[1] = JSON.parse(p[1].replace(/([^,\[\]]*)/g, function(r, $1) { if (r){
+				return '"'+$1+'"';
+			} else {
+				return "";
+			} } ));
+		}
+
 		this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
 	}
 
