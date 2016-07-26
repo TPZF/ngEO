@@ -59,6 +59,9 @@ var BrowsesLayer = function(params, mapEngine) {
 	 */
 	this.addBrowse = function(feature, browseUrl) {
 		if (!browseLayersMap.hasOwnProperty(feature.id)) {
+			// Set feature.id in map to mark the creation of browse to avoid double creating of
+			// browse provoked by highlight event as well..
+			browseLayersMap[feature.id] = browseUrl;
 			
 			var layerDesc = MapUtils.createWmsLayerFromUrl(browseUrl);
 			if ( !layerDesc.params.time ) {
@@ -100,14 +103,13 @@ var BrowsesLayer = function(params, mapEngine) {
 			});
 			layerDesc.params.transparent = true;
 
-			console.log(layerDesc);
-
 			var browseLayerDesc = {
 				time:  Configuration.getMappedProperty( feature, "stop" ),
 				params: layerDesc.params,
 				engineLayer: mapEngine.addLayer(layerDesc)
 			};
-			
+
+			// Finally set the real browseLayerDesc in browseLayerMap
 			browseLayersMap[feature.id] = browseLayerDesc;
 			browseLayers.push( browseLayerDesc );
 		}
