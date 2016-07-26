@@ -66,6 +66,8 @@
                 "argumentName": "processing",
                 "caption": "Processing",
                 "description": "Processing level",
+                "minOccurs" : "1",
+                "maxOccurs" : "1",
                 "value": [
                     {
                         "humanReadable": "raw",
@@ -75,7 +77,8 @@
                     {
                         "humanReadable": "slc",
                         "name": "SLC",
-                        "sizeFactor": "1"
+                        "sizeFactor": "1",
+                        "selected": "true"
                     },
                     {
                         "humanReadable": "grd",
@@ -88,6 +91,51 @@
                         "sizeFactor": "1"
                     }
                 ]
+            },
+            {
+            	"argumentName": "With none option",
+            	"caption": "With none",
+            	"description": "Test option with None value",
+            	"minOccurs": "0",
+            	"maxOccurs": "1",
+            	"value": [
+            		{
+            			"humanReadable": "val1",
+            			"name": "val1",
+            			"sizeFactor": 1
+            		},
+            		{
+            			"humanReadable": "val2",
+            			"name": "val2",
+            			"sizeFactor": 1
+            		}
+            	]
+            },
+            {
+            	"argumentName": "Otherwise option",
+            	"caption": "Otherwise option: maxOccurs == 0",
+            	"description": "Test option as checkboxes",
+            	"minOccurs": "0",
+            	"maxOccurs": "0",
+            	"value": [
+            		{
+            			"humanReadable": "val1",
+            			"name": "val1",
+            			"sizeFactor": 1,
+            			"selected": "true"
+            		},
+            		{
+            			"humanReadable": "val2",
+            			"name": "val2",
+            			"sizeFactor": 1,
+            			"selected": "true"
+            		},
+            		{
+            			"humanReadable": "val3",
+            			"name": "val3",
+            			"sizeFactor": 1
+            		}
+            	]
             },
             {
                 "argumentName": "do_crop",

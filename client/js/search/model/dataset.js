@@ -8,7 +8,7 @@ var Dataset = Backbone.Model.extend({
 	defaults: {
 		description: "",
 		keywords: null,
-		downloadOptions: null,
+		downloadOptions: [],
 		attributes: null,
 		datasetId: "",
 		startDate: null,

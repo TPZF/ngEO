@@ -29,9 +29,6 @@ var DownloadOptionsView = Backbone.View.extend({
 
 			var name = event.currentTarget.id;
 			var value = $(event.currentTarget).val();
-			//WEBC_FAT_12 Removed Download options checkbox
-   			//In case of one choice is in the select box, the change event is not fired so the None is added 
-    		//to allow changing the values. --> OBSOLETE WITH NGEO-1811 .. wait for final decision about "None" to remove it
 			this.model.setValue( name, value );
 			var self = this;
 
@@ -40,12 +37,26 @@ var DownloadOptionsView = Backbone.View.extend({
 
 		// For input checkbox
 		'change input': function(event) {
-			var name = event.currentTarget.id;
 			var isChecked = $(event.target).is(":checked");
-			if ( isChecked ) {
-				this.model.setValue( name, true );
+			var name = $(event.currentTarget).attr('name')
+			var value = $(event.target).val();
+			var currentValue = this.model.getAttributes()[name];
+			if ( !$(event.target).data("wkt") ) {
+				if ( isChecked ) {
+					if ( !currentValue ) {
+						currentValue = [value];
+					} else {
+						currentValue.push(value);
+					}
+				} else {
+					currentValue = _.without(currentValue, value);
+					if ( currentValue.length == 0 ) {
+						currentValue = null;
+					}
+				}
+				this.model.setValue( name, currentValue );
 			} else {
-				this.model.setValue( name, null );				
+				this.model.setValue( name, isChecked ? true : null );
 			}
 		},
 		

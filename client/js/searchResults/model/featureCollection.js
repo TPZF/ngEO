@@ -5,29 +5,15 @@
 var Configuration = require('configuration');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var DataSetSearch = require('search/model/datasetSearch');
+var DownloadOptions = require('search/model/downloadOptions');
 
 /**
  * Extract the download options from the product url
  */
 var _getProductDownloadOptions = function(feature) {
-	var downloadOptions = {};
+
 	var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-	if (productUrl) {
-		var idx = productUrl.indexOf("ngEO_DO={");
-		if (idx >= 0) {
-			var str = productUrl.substring(idx + 9, productUrl.length - 1);
-			var kvs = str.split(',');
-
-			for (var n = 0; n < kvs.length; n++) {
-				var kv = kvs[n].split(':');
-				if (kv.length == 2) {
-					downloadOptions[kv[0]] = kv[1];
-				}
-			}
-		}
-	}
-
-	return downloadOptions;
+	return DownloadOptions.extractParamsFromUrl(productUrl);
 };
 
 
@@ -455,13 +441,13 @@ var FeatureCollection = function() {
 			var dos = _getProductDownloadOptions(this.selection[i]);
 
 			for (var x in dos) {
-				if (selectedDownloadOptions[x] != dos[x]) {
+				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
 
 			for (var x in selectedDownloadOptions) {
-				if (selectedDownloadOptions[x] != dos[x]) {
+				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
