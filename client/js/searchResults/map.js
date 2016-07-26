@@ -58,7 +58,7 @@ var _onShowBrowses = function(features, fc) {
 		var feature = features[i];
 		feature._browseShown = true;
 
-		BrowsesManager.addBrowse(feature);
+		BrowsesManager.addBrowse(feature, fc.dataset.get("datasetId"));
 	}
 };
 

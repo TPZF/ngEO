@@ -5,6 +5,7 @@ var DataSetPopulation = require('search/model/dataSetPopulation');
 var Map = require('map/map');
 var MapUtils = require('map/utils');
 var SelectHandler = require('map/selectHandler');
+var SearchResults = require('searchResults/model/searchResults');
 
 var _browseLayerMap = {};
 var _browseAccessInformationMap = {};
@@ -88,12 +89,18 @@ module.exports = {
 		if (!$.isEmptyObject(browseInfo) && !isPlanned) {
 			var browseObject = _.findWhere(browseInfo, { _selected: true });
 			if (!browseObject) {
-				browseObject = browseInfo[0]
+				var fc = SearchResults.featureCollection[datasetId];
+				browseObject = browseInfo[fc.browseIndex];
 				browseObject._selected = true;
 			}
 			
 			var browseUrl = _getUrl(browseObject);
 			var layerName = MapUtils.getLayerName(browseUrl);
+			if (!layerName) {
+				// Can't find the name of layer: it's impossible to add a new layer
+				return null;
+			}
+
 			if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
 				var browseLayer = _browseLayerMap[layerName];
 				if (!browseLayer) {

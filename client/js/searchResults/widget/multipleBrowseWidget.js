@@ -35,16 +35,26 @@ module.exports = {
 		$popup.find('.selectBrowse').click(function(event) {
 
 			$popup.popup('close');
+			var newIndex = parseInt($popup.find('input:checked').val());
+			for ( var i=0; i<fc.features.length; i++ ) {
+				var f = fc.features[i];
+				var bi = Configuration.getMappedProperty(f, "browseInformation");
+				var currentBrowse = _.findWhere(bi, { _selected: true });
 
-			var currentBrowse = _.findWhere(browseInformation, { _selected: true });
-			if ( currentBrowse ) {
-				BrowsesManager.removeBrowse(feature);
-				delete currentBrowse._selected;
+				if ( currentBrowse && bi.indexOf(currentBrowse) != newIndex ) {
+					BrowsesManager.removeBrowse(f);
+					delete currentBrowse._selected;
+
+				}
+
+				if ( f._browseShown ) {
+					bi[newIndex]._selected = true;
+					BrowsesManager.addBrowse(f, fc.id);
+				}
+
 			}
 
-			var selectedIndex = parseInt($popup.find('input:checked').val());
-			browseInformation[selectedIndex]._selected = true;
-			BrowsesManager.addBrowse(feature, fc.id);
+			fc.browseIndex = newIndex;
 
 			if (options.onSelect) {
 				options.onSelect();

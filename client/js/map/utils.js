@@ -299,6 +299,7 @@ module.exports = {
 			if (kv.length == 2)
 				parsed[kv[0].toUpperCase()] = kv[1];
 		});
+
 		return parsed;
 	},
 
@@ -307,6 +308,10 @@ module.exports = {
 	 */
 	getLayerName: function(url) {
 		var parsed = this.parseUrl(url);
+		if ( !parsed['SERVICE'] ) {
+			console.warn("Url " + url + " hasn't got a SERVICE parameter");
+			return null;
+		}
 		var layerTag = parsed['SERVICE'].toUpperCase() == 'WMS' ? 'LAYERS' : 'LAYER';
 		return parsed[layerTag];
 	},
@@ -318,7 +323,7 @@ module.exports = {
 	createWmsLayerFromUrl: function(url) {
 
 		var parsed = this.parseUrl(url);
-
+		
 		// TODO: Check SRS --> must be 4326 ?
 		var layerTag = parsed['SERVICE'].toUpperCase() == 'WMS' ? 'LAYERS' : 'LAYER';
 		var wmsLayer = {
