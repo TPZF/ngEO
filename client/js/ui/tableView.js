@@ -1130,9 +1130,9 @@ var TableView = Backbone.View.extend({
 	renderFooter: function() {
 		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
-						<div data-role="fieldcontain" style="width: 300px; display: inline-block;"  data-inline="true">\
+						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
 							<label for="filterTableInput">Filter table:</label>\
-							<input id="filterTableInput" data-mini="true" type="text"/>\
+							<input id="filterTableInput" data-inline="true" data-mini="true" type="text"/>\
 						</div>\
 						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
 					</div>\
@@ -1142,7 +1142,9 @@ var TableView = Backbone.View.extend({
 		if (this.renderButtons)
 			this.renderButtons($buttonContainer);
 
-		this.$el.append(footer);
+		this.$el.append(footer).trigger("create");
+		// HACK jQm Firefox: Display text-input on the same level as label & button
+		this.$el.find('.table-filter .ui-input-text').css("vertical-align","middle");
 	},
 
 	/**
