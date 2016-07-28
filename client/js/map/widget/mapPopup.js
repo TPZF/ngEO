@@ -154,16 +154,19 @@ var MapPopup = function(container) {
 	* Otherwise , do nothing
 	*/
 	Map.on('highlightFeatures', function(highlightedFeatures) {
-		if (isOpened){
-			self.openOrCloseDialog(highlightedFeatures);
-		}
+		self.openOrCloseDialog(highlightedFeatures);
 	});
 
 	/**
 	* When we unselect features, just close the window
 	*/
 	Map.on('unselectFeatures', function() {
-		self.close();
+		// Set timeout to be sure that this event will trigger after highlight
+		// Used in case when user clicked on not highlighted but checked feature in table
+		// So basically he unchecks and highlights the feature -> popup shouldn't be displayed
+		setTimeout(function() {
+			self.close();
+		}, 1);
 	});
 
 	/*Map.on('extent:change', function() {
@@ -302,7 +305,7 @@ var MapPopup = function(container) {
 	this.close = function() {
 
 		if (isOpened) {
-			parentElement.fadeOut();
+			parentElement.stop(true).fadeOut();
 			isOpened = false;
 		}
 
