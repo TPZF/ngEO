@@ -340,8 +340,8 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "remove:features", this.removeData);
 			this.listenTo(this.model, "selectFeatures", this.updateSelection);
 			this.listenTo(this.model, "unselectFeatures", this.updateSelection);
-			this.listenTo(this.model, "show:browses", this.toggleBrowses);
-			this.listenTo(this.model, "hide:browses", this.toggleBrowses);
+			this.listenTo(this.model, "show:browses", this.showBrowses);
+			this.listenTo(this.model, "hide:browses", this.hideBrowses);
 			this.listenTo(this.model, "highlightFeatures", function(features){
 				_allHighlights = _allHighlights.concat(features);
 				self.triggerHighlightFeature();
@@ -497,17 +497,33 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 *	Toggle browses for the given features
+	 *	Hide browses for the given features
 	 */
-	toggleBrowses: function(features) {
+	hideBrowses: function(features) {
 		if (!this.$table) return;
 
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
 			if ($row) { 
 				$row.find('.browse-visibility-checkbox')
-					.toggleClass('ui-icon-checkbox-off')
-					.toggleClass('ui-icon-checkbox-on');
+					.addClass('ui-icon-checkbox-off')
+					.removeClass('ui-icon-checkbox-on');
+			}
+		}
+	},
+
+	/**
+	 *	Show browses for the given features
+	 */
+	showBrowses: function(features) {
+		if (!this.$table) return;
+
+		for (var i = 0; i < features.length; i++) {
+			var $row = this._getRowFromFeature(features[i]);
+			if ($row) { 
+				$row.find('.browse-visibility-checkbox')
+					.removeClass('ui-icon-checkbox-off')
+					.addClass('ui-icon-checkbox-on');
 			}
 		}
 	},
