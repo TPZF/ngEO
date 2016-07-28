@@ -145,7 +145,7 @@ module.exports = {
 				},
 				"fileName": {
 					"ServiceReference": {
-						"@href": "https://dummy_url.com/c/wmts",
+						"@href": "https://dummy_url.com/c/wmts&service=wmts&layer=dummy",
 						"RequestMessage": null
 					}
 				}
