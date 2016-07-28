@@ -21,8 +21,8 @@ var ShopcartTableView = TableView.extend({
 	/**
 	 * Update the footer button states
 	 */
-	toggleSelection: function() {
-		TableView.prototype.toggleSelection.apply(this, arguments);
+	updateSelection: function() {
+		TableView.prototype.updateSelection.apply(this, arguments);
 
 		// The products have to be a part of dataset so we extract dataset ids
 		// to be sure that products are viable
