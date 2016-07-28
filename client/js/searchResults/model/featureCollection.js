@@ -360,8 +360,10 @@ var FeatureCollection = function() {
 	 * Unselect all the already selected table items
 	 */
 	this.unselectAll = function() {
-		this.trigger("unselectFeatures", this.selection, this);
+		// Copy current selection into new array to be fired within the event
+		var features = this.selection.slice(0);
 		this.selection = [];
+		this.trigger("unselectFeatures", features, this);
 	};
 
 	/**

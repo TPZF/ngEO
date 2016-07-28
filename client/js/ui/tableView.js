@@ -338,8 +338,8 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "reset:features", this.clear);
 			this.listenTo(this.model, "add:features", this.addData);
 			this.listenTo(this.model, "remove:features", this.removeData);
-			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
-			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
+			this.listenTo(this.model, "selectFeatures", this.updateSelection);
+			this.listenTo(this.model, "unselectFeatures", this.updateSelection);
 			this.listenTo(this.model, "show:browses", this.toggleBrowses);
 			this.listenTo(this.model, "hide:browses", this.toggleBrowses);
 			this.listenTo(this.model, "highlightFeatures", function(features){
@@ -513,17 +513,25 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 * Toggle selection for the given features
+	 * Update selection checkbox state for the given features
+	 * based on "selection" property of current <FeatureCollection>
 	 */
-	toggleSelection: function(features) {
+	updateSelection: function(features) {
 		if (!this.$table) return;
 
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
-			if ($row) {
+
+			if ( $row && this.model.selection.indexOf(features[i]) >= 0 ) {
+				// Feature is seleceted
 				$row.find('.table-view-checkbox')
-					.toggleClass('ui-icon-checkbox-off')
-					.toggleClass('ui-icon-checkbox-on');
+					.addClass('ui-icon-checkbox-on')
+					.removeClass('ui-icon-checkbox-off');
+			} else {
+				// Feature isn't selected
+				$row.find('.table-view-checkbox')
+					.removeClass('ui-icon-checkbox-on')
+					.addClass('ui-icon-checkbox-off');
 			}
 		}
 	},
@@ -781,8 +789,8 @@ var TableView = Backbone.View.extend({
 			_allHighlights = _allHighlights.concat(features);
 			self.triggerHighlightFeature();
 		});
-		this.listenTo(child, "selectFeatures", this.toggleSelection);
-		this.listenTo(child, "unselectFeatures", this.toggleSelection);
+		this.listenTo(child, "selectFeatures", this.updateSelection);
+		this.listenTo(child, "unselectFeatures", this.updateSelection);
 
 		// Attach to rowData
 		rowData.childFc = child;
@@ -960,7 +968,7 @@ var TableView = Backbone.View.extend({
 		}
 
 		this.updateFixedHeader();
-		this.toggleSelection(this.model.selection);
+		this.updateSelection(this.model.selection);
 		// TODO: Make this view dependent on model only ...
 		// HACK: Update all highlights
 		_allHighlights = _allHighlights.concat(this.model.highlights);
