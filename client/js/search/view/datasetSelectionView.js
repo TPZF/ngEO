@@ -199,6 +199,8 @@ var DatasetSelectionView = Backbone.View.extend({
 		$dslListContainer.html(listContent);
 		$dslListContainer.trigger('create');
 
+		$dslListContainer.find('input[data-type="search"]').attr('placeholder', 'Filter on dataset names...');
+
 		// Apply authorization
 		// Warning : need to be done after jQuery Mobile has "enhanced" the markup otherwise images are not correctly placed
 		for (var i = 0; i < datasets.length; i++) {
