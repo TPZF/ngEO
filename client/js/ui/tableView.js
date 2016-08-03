@@ -886,6 +886,10 @@ var TableView = Backbone.View.extend({
 							cellDataColumn = "No download options";
 					}
 					content += '<td title="'+ cellDataColumn +'" class="' + classes + '">' + cellDataColumn + '</td>';
+				} else if ( typeof cellDataColumn == "string" ) {
+					// WO: Make url-like values "clickable"
+					// TODO: Clearify if we need to create a button with configurable label for urls
+					content += '<td title="'+ cellDataColumn +'"><a target="_blank" href="' + cellDataColumn + '">'+cellDataColumn+'</a></td>';	
 				} else {
 					content += '<td title="'+ cellDataColumn +'">' + cellDataColumn + '</td>';
 				}
