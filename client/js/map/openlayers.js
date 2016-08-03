@@ -89,7 +89,7 @@ OpenLayersMapEngine = function(element) {
 		internalProjection: this._map.projection
 	});
 
-	this._styles = {};
+	this.styles = {};
 };
 
 
@@ -121,7 +121,7 @@ OpenLayersMapEngine.prototype.computeResolutions = function(restrictedExtent) {
  * Add a style
  */
 OpenLayersMapEngine.prototype.addStyle = function(name, style) {
-	this._styles[name] = new OpenLayers.StyleMap(style);
+	this.styles[name] = new OpenLayers.StyleMap( _.extend({}, Configuration.get("map").styles.lut, style) );
 };
 
 /**
@@ -325,8 +325,8 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 
 		// Set common options
 		olLayer.attribution = layer.attribution;
-		if (layer.style && this._styles[layer.style]) {
-			olLayer.styleMap = this._styles[layer.style];
+		if (layer.style && this.styles[layer.style]) {
+			olLayer.styleMap = this.styles[layer.style];
 		}
 		olLayer.setVisibility(layer.visible);
 
@@ -480,7 +480,7 @@ OpenLayersMapEngine.prototype.removeAllFeatures = function(layer) {
 OpenLayersMapEngine.prototype.addFeature = function(layer, feature) {
 	var olFeatures = this._geoJsonFormat.read(MapUtils.fixDateLine(feature));
 	layer.addFeatures(olFeatures);
-
+	layer.drawFeature(layer.getFeatureByFid(feature.id), feature.renderHint);
 }
 
 /**
@@ -490,8 +490,27 @@ OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer, feature, styl
 	var olFeature = layer.getFeatureByFid(feature.id);
 	if (olFeature) {
 		olFeature.renderIntent = style;
-		layer.drawFeature(layer.getFeatureByFid(feature.id), style);
+		layer.drawFeature(olFeature, style);
 	}
+}
+
+/**
+ *	Updates style for the given feature according to LUT from configuration
+ */
+OpenLayersMapEngine.prototype.updateStyleByLut = function(feature, style) {
+	var currentStyle = style;
+	var engineStyles = this.styles["lut"].styles;
+	for ( var x in engineStyles ) {
+		var engineStyle = engineStyles[x];
+		if ( engineStyle.defaultStyle.hasOwnProperty("filters") ) {
+			for ( var j=0; j<engineStyle.defaultStyle.filters.length; j++ ) {
+				if ( Configuration.getMappedProperty(feature, engineStyle.defaultStyle.filters[j].property) == engineStyle.defaultStyle.filters[j].value ) {
+					currentStyle = x;
+				}
+			}
+		}
+	}
+	return currentStyle;
 }
 
 /**

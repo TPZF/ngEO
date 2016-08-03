@@ -113,7 +113,7 @@ GlobWebMapEngine.prototype.addStyle = function(name, style) {
 
 	var gwStyle = {};
 
-	if (style['default']) {
+	if (style['default'] || name == "lut") {
 		for (var x in style) {
 			if (style.hasOwnProperty(x)) {
 				gwStyle[x] = createGWStyle(style[x]);
@@ -260,7 +260,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	if (gwLayer) {
 		if (layer.style && this.styles.hasOwnProperty(layer.style)) {
 			gwLayer.style = this.styles[layer.style]['default'];
-			gwLayer.styleMap = this.styles[layer.style];
+			gwLayer.styleMap = _.extend({}, this.styles["lut"], this.styles[layer.style]);
 		}
 		
 		// NGEO-1779: Set zIndex to be always on top for overlay WMS/WMTS
@@ -463,6 +463,25 @@ GlobWebMapEngine.prototype.updateFeature = function(layer, feature) {
  */
 GlobWebMapEngine.prototype.removeFeature = function(layer, feature) {
 	layer.removeFeature(feature);
+}
+
+/**
+ *	Updates style for the given feature according to LUT from configuration
+ */
+GlobWebMapEngine.prototype.updateStyleByLut = function(feature, style) {
+	var currentStyle = style;
+	var engineStyles = this.styles["lut"];
+	for ( var x in engineStyles ) {
+		var engineStyle = engineStyles[x];
+		if ( engineStyle.hasOwnProperty("filters") ) {
+			for ( var j=0; j<engineStyle.filters.length; j++ ) {
+				if ( Configuration.getMappedProperty(feature, engineStyle.filters[j].property) == engineStyle.filters[j].value ) {
+					currentStyle = x;
+				}
+			}
+		}
+	}
+	return currentStyle;
 }
 
 /**

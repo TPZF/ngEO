@@ -87,6 +87,7 @@ var FeatureLayer = function(params, engineLayer) {
 		if (feature.geometry) {
 			tesselateGreatCircle(params, feature);
 			mapEngine.addFeature(this.engineLayer, feature);
+			this.modifyFeaturesStyle([feature], "default");
 			this.features.push(feature);
 		}
 	};
@@ -96,10 +97,16 @@ var FeatureLayer = function(params, engineLayer) {
 			this.features.splice(this.features.indexOf(features[i]), 1);
 		}
 	};
+
 	this.modifyFeaturesStyle = function(features, style) {
 		for (var i = 0; i < features.length; i++) {
-			features[i].properties.styleHint = style;
-			mapEngine.modifyFeatureStyle(this.engineLayer, features[i], style);
+			var feature = features[i];
+			// WO: Update only 'default'-styled features according to LUT from configuration
+			if ( style == 'default' ) {
+				style = mapEngine.updateStyleByLut(feature, style);
+			}
+			feature.renderHint = style;
+			mapEngine.modifyFeatureStyle(this.engineLayer, feature, feature.renderHint);
 		}
 	};
 	this.updateFeature = function(feature, customFixDateLine) {
@@ -112,8 +119,8 @@ var FeatureLayer = function(params, engineLayer) {
 		for (var i = 0; i < this.features.length; i++) {
 			var f = this.features[i];
 			mapEngine.addFeature(this.engineLayer, f);
-			if (f && f.properties && f.properties.styleHint && f.properties.styleHint != 'default') {
-				mapEngine.modifyFeatureStyle(this.engineLayer, f, f.properties.styleHint);
+			if (f.renderHint) {
+				mapEngine.modifyFeatureStyle(this.engineLayer, f, f.renderHint);
 			}
 		}
 	};
