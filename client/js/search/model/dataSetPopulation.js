@@ -187,6 +187,7 @@ var DataSetPopulation = Backbone.Model.extend({
 
 		return {
 			criterias: criterias,
+			criteriaLength: criteriaTitles.length,
 			matrix: matrix
 		};
 	},
@@ -213,8 +214,8 @@ var DataSetPopulation = Backbone.Model.extend({
 	 *	Get user-friendly name for the given datasetId
 	 */
 	getFriendlyName: function(datasetId) {
-		var idIndex = this.get('criterias').length;
-		var nameIndex = this.get('criterias').length + 2;
+		var idIndex = this.get('criteriaLength').length;
+		var nameIndex = this.get('criteriaLength').length + 2;
 
 		var datasetRow = _.find(this.get('matrix'), function(row) { return row[idIndex] == datasetId } )
 		return datasetRow[nameIndex] ? datasetRow[nameIndex] : datasetRow[idIndex];
@@ -229,9 +230,9 @@ var DataSetPopulation = Backbone.Model.extend({
 		var treatedDatasets = {};
 
 		// Keep the id and count index for the dataset population row
-		var id_index = this.get('criterias').length;
-		var count_index = this.get('criterias').length + 1;
-		var name_index = this.get('criterias').length + 2;
+		var id_index = this.get('criteriaLength');
+		var count_index = this.get('criteriaLength') + 1;
+		var name_index = this.get('criteriaLength') + 2;
 
 		// Process all grouped datasets
 		for ( var datasetId in this.datasetInfoMap ) {
