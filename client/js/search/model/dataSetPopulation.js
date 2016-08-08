@@ -214,8 +214,8 @@ var DataSetPopulation = Backbone.Model.extend({
 	 *	Get user-friendly name for the given datasetId
 	 */
 	getFriendlyName: function(datasetId) {
-		var idIndex = this.get('criteriaLength').length;
-		var nameIndex = this.get('criteriaLength').length + 2;
+		var idIndex = this.get('criteriaLength');
+		var nameIndex = this.get('criteriaLength') + 2;
 
 		var datasetRow = _.find(this.get('matrix'), function(row) { return row[idIndex] == datasetId } )
 		return datasetRow[nameIndex] ? datasetRow[nameIndex] : datasetRow[idIndex];
