@@ -1,28 +1,29 @@
 
 	<label>Acquisition Start Date :
-	<input name="From" class="fromDateInput" data-theme="a" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.start.toISODateString()) %>"
-		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.start.toISODateString()) %>", 
-		  "themeDate":"a", "themeDatePick":"a", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'  /></label>
+	<input name="From" class="fromDateInput" data-theme="a" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.start) %>"
+		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultValue": "<% print(model.attributes.start) %>", 
+		  "themeDate":"a", "themeDatePick":"b", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calShowTime": false, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'  /></label>
 
-<!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
-<!-- <div data-role="fieldcontain"> -->
-		
-<!-- 	<label id="fromTimeLabel" for="fromTimeInput" data-mini="true">Start Time:</label> -->
-<!-- 	<input name="startTime" id="fromTimeInput" type="text" data-role="datebox" data-mini="true" value="<%=model.attributes.startTime %>" -->
-<!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
-<!-- </div> -->
+	<!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
+	<!--
+	<div class="timePicker">
+		<label data-mini="true">Start Time:
+			<input name="startTime" id="fromTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.start.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
+		</label>
+ 	</div>
+	 -->
 
 	<label>Acquisition End Date :
-	<input name="toDate" class="toDateInput" data-theme="a" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.stop.toISODateString()) %>"
-	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.stop.toISODateString()) %>", 
-	   	"themeDate":"a", "themeDatePick":"a", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'></label>
+	<input name="toDate" class="toDateInput" data-theme="a" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.stop) %>"
+	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.stop) %>", 
+	   	"themeDate":"a", "themeDatePick":"b", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calShowTime": false, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'></label>
 
-
-<!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
-<!-- <div data-role="fieldcontain"> -->
-	
-<!-- 	<label id="toTimeLabel" for="toTimeInput" data-mini="true">End Time:</label> -->
-<!-- 	<input name="endTime" id="toTimeInput" type="text" data-role="datebox" data-mini="true" value="<%=model.attributes.stopTime %>" -->
-<!--   			data-options='{"mode": "timebox", "overrideTimeFormat": "24", "zindex": "2000"}'> -->
-<!-- </div> -->
+	<!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
+	<!--
+	<div class="timePicker">
+		<label data-mini="true">Stop Time:
+			<input name="stopTime" id="toTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.stop.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
+		</label>
+ 	</div>
+ 	-->
 

@@ -37,8 +37,11 @@ Date.fromISOString = function(str) {
 };
 
 // Helper function to convert a date to an iso string, only the date part
-Date.prototype.toISODateString = function() {
-	return this.getUTCFullYear() + "-" + pad(this.getUTCMonth() + 1, 2) + "-" + pad(this.getUTCDate(), 2);
+Date.prototype.toISODateString = function(withTime) {
+	var strDate = this.getUTCFullYear() + "-" + pad(this.getUTCMonth() + 1, 2) + "-" + pad(this.getUTCDate(), 2);
+	if (withTime)
+		strDate += " " + pad(this.getUTCHours(), 2) + ":" + pad(this.getUTCMinutes(),2) + ":" + pad(this.getUTCSeconds(), 2)
+	return strDate;
 };
 
 // A constant
