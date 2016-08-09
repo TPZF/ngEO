@@ -164,7 +164,7 @@ var TableView = Backbone.View.extend({
 			if ( data ) {
 				var fc = this.model;
 				var currentHighlights;
-				if ( ctrlPressed ) {
+				if ( ctrlPressed || event.metaKey ) { // metaKey used for Apple "command" btn
 					if ( fc.highlights.indexOf(data.feature) != -1 ) {
 						currentHighlights = _.without(fc.highlights, data.feature);
 					} else {
