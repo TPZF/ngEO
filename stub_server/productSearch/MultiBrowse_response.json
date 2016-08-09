@@ -268,7 +268,7 @@
 						},
 						"instrument": {
 							"Instrument": {
-								"shortName": "SAR"
+								"shortName": "http://google.com"
 							}
 						},
 						"sensor": {
@@ -380,7 +380,7 @@
 						"identifier": "S1A_IW_RAW__0SDV_20160628T164414_20160628T164446_011913_01258B_other",
 						"acquisitionType": "NOMINAL",
 						"productType": "N/A",
-						"status": "ARCHIVED",
+						"status": "PLANNED",
 						"vendorSpecific": {
 							"SpecificInformation": {
 								"localAttribute": "nativeDatasetId",
