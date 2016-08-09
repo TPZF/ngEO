@@ -8,7 +8,7 @@
 	<!--
 	<div class="timePicker">
 		<label data-mini="true">Start Time:
-			<input name="startTime" id="fromTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.start.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
+			<input name="startTime" id="fromTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.start.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "lockInput": false, "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
 		</label>
  	</div>
 	 -->
@@ -22,7 +22,7 @@
 	<!--
 	<div class="timePicker">
 		<label data-mini="true">Stop Time:
-			<input name="stopTime" id="toTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.stop.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
+			<input name="stopTime" id="toTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.stop.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "lockInput": false, "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
 		</label>
  	</div>
  	-->
