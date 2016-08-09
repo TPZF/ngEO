@@ -299,6 +299,22 @@
 		}],
 	
 		"styles": {
+			"lut": {  
+			    "radar": {  
+			      "strokeColor": "cyan",  
+			      "filters": [{  
+			        "property": "status",  
+			        "value": "PLANNED"  
+			      }]  
+			    },  
+			    "optic": {  
+			      "strokeColor": "magenta",  
+			      "filters": [{  
+			        "property": "status",  
+			        "value": "ARCHIVED"  
+			      }]  
+			    }  
+			  },  
 			"results-footprint" : {
 				"default" : {
 					"strokeColor": "#FF7373",
