@@ -1,6 +1,7 @@
 var Logger = require('logger');
 var Configuration = require('configuration');
 var FeatureCollection = require('searchResults/model/featureCollection');
+var UserPrefs = require('userPrefs');
 
 // Check if a feature is planned or not
 var isNotPlanned = function(feature) {
@@ -23,8 +24,7 @@ var Shopcart = Backbone.Model.extend({
 
 	defaults: {
 		name: "Shopcart",
-		isDefault: false,
-		isSelected: false
+		isDefault: false
 	},
 
 	/**
@@ -44,6 +44,7 @@ var Shopcart = Backbone.Model.extend({
 		this.listenTo(this.featureCollection, 'remove:features', function(features) {
 			self.trigger("remove:features", features);
 		});
+		this._isSelected = false;
 	},
 
 	/**
@@ -54,7 +55,6 @@ var Shopcart = Backbone.Model.extend({
 		if (response.createShopcart && response.createShopcart.shopcart) {
 			return response.createShopcart.shopcart;
 		}
-
 		return response;
 	},
 
@@ -110,7 +110,8 @@ var Shopcart = Backbone.Model.extend({
 	 *	Toggle selection of shopcart
 	 */
 	toggleSelected: function() {
-		this.set('isSelected', !this.get('isSelected'));
+		this._isSelected = !this._isSelected;
+		this.trigger('change:isSelected', this);
 	},
 
 

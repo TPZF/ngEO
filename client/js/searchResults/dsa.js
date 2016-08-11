@@ -103,10 +103,10 @@ module.exports = {
 
 			var statusContent = '<command id="'+ tagFriendlyId +'" title="'+ friendlyName +'" label="' + friendlyName + '" class="result" />';
 			// Update the toolbar
-			if ( $bottomToolbar.find('command:last') === 0 ) {
+			if ( $bottomToolbar.find('#bottomDatasets command:last').length === 0 ) {
 				$bottomToolbar.find('#bottomDatasets').append(statusContent).end().toolbar('refresh');
 			} else {
-				$bottomToolbar.find('command:last').after(statusContent).end().toolbar('refresh');
+				$bottomToolbar.find('#bottomDatasets command:last').after(statusContent).end().toolbar('refresh');
 			}
 			
 			// Update the daterange slider
@@ -148,7 +148,7 @@ module.exports = {
 			panelManager.bottom.removeStatus('#' + tagFriendlyId);
 
 			// Activate the last
-			$('#bottomToolbar command:last-child').click();
+			$bottomToolbar.find('#bottomDatasets command:last').click();
 
 			// Update the daterange slider
 			var slider = $("#dateRangeSlider").data("ui-dateRangeSlider");

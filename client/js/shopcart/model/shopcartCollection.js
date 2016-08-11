@@ -30,20 +30,28 @@ var ShopcartCollection = Backbone.Collection.extend({
 			}
 
 			// Check if current shopcart is defined in user prefereneces
-			var current = this.findWhere({ id: UserPrefs.get("Current shopcart") });
-			if ( !current ) {
-
+			var selectedShopcarts = JSON.parse(UserPrefs.get("Selected shopcarts") || "[]");
+			var shopcarts = this.filter(function(s) { return selectedShopcarts.indexOf(s.get('id')) >= 0 });
+			if ( !shopcarts.length ) {
 				// Use the default one or the first one if none has been defined
-				var current = this.findWhere({
+				var shopcarts = this.findWhere({
 					isDefault: true
 				});
 
-				if ( !current ) {
-					current = this.at(0);
+				// No more already selected by default shopcart
+				// if ( !current ) {
+				// 	current = this.at(0);
+				// }
+				// shopcarts = [current];
+			}
+
+			for ( var i=0; i<shopcarts.length; i++ ) {
+				var shopcart = shopcarts[i];
+				if ( !shopcart._isSelected ) {
+					shopcart._isSelected = true;
+					shopcart.trigger("change:isSelected", shopcart);
 				}
 			}
-			// Set current shopcart selected
-			current.set('isSelected', true);
 			
 		}, this);
 	},

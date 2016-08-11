@@ -36,13 +36,15 @@ module.exports =  {
 
 		// Manage display of shopcart footprints
 		ShopcartCollection.on('change:isSelected', function( shopcart ) {
-
+	
 			var updateShopcartLabel = function() {
 				// TODO:
 				console.log("Update name");
 			};
 
-			if ( shopcart.get('isSelected') ) {
+			var selectedShopcarts = JSON.parse(UserPrefs.get("Selected shopcarts") || "[]");
+
+			if ( shopcart._isSelected ) {
 				// Connect shopcart with Map
 				var shopcartLayer = Map.addLayer({
 					name: "Shopcart Footprints " + shopcart.get('id'),
@@ -58,17 +60,27 @@ module.exports =  {
 
 				// Change model on table when the shopcart is changed
 				shopcart.loadContent();
+
+				// Add to selected shopcarts only if it's not already present
+				// FIXME: investigate why we need to request multiple times this change...
+				if ( selectedShopcarts.indexOf(shopcart.get("id")) == -1 )
+					selectedShopcarts.push(shopcart.get("id"));
 			} else {
+				shopcart.featureCollection.reset(); // Reset feature collection to update table view
 				SearchResultsMap.removeFeatureCollection( shopcart.featureCollection );
 				shopcart.off('change:name', updateShopcartLabel);
+				selectedShopcarts.splice( selectedShopcarts.indexOf(shopcart.get("id")), 1);
 			}
 
+			UserPrefs.save("Selected shopcarts", JSON.stringify(selectedShopcarts));
 		});
-
+	
+		// Manager GUI of selected shopcart
 		ShopcartCollection.on('change:isSelected', function(shopcart) {
 
+			// console.log("Updating panel " + shopcart.get('id') +" is set to " + shopcart._isSelected);
 			var tagFriendlyId = 'shopcart_'+shopcart.get('id');
-			if ( shopcart.get('isSelected') ) {
+			if ( shopcart._isSelected ) {
 
 				// Update the toolbar
 				$('#bottomToolbar')
@@ -87,11 +99,12 @@ module.exports =  {
 				};
 				panelManager.bottom.addStatus(shopcartStatus);
 
-				// TODO: Current shopcart is the array for now..
-				UserPrefs.save("Current shopcart", shopcart.id);
+				var shopcarts = JSON.parse(UserPrefs.get("Selected shopcarts") || "[]");
+				shopcarts.push(shopcart.id);
 			} else {
 				// Update the status bar
 				panelManager.bottom.removeStatus('#' + tagFriendlyId);
+				$('#bottomToolbar #bottomDatasets command:last').click();
 			}
 		});
 		tableView.render();

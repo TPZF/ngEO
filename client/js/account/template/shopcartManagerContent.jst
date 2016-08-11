@@ -5,7 +5,7 @@
 		
 			<% _.each(shopcarts.models, function(shopcart) { %>
 				
-				<label><input id="<%= shopcart.id %>" type="checkbox" name="shopcart" data-theme="a" data-mini="true" <% if( shopcart.get('isSelected') ) print('checked="checked"') %> />  <%= shopcart.get('name') %> </label> 
+				<label><input id="<%= shopcart.id %>" type="checkbox" name="shopcart" data-theme="a" data-mini="true" <% if( shopcart._isSelected ) print('checked="checked"') %> />  <%= shopcart.get('name') %> </label> 
 			
 			<% }); %>
 				
