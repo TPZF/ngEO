@@ -7,8 +7,7 @@ var UserPrefs = require('userPrefs');
 var ShopcartCollection = require('shopcart/model/shopcartCollection');
 var Shopcart = require('shopcart/model/shopcart');
 var ShopcartTableView = require('shopcart/view/shopcartTableView');
-var ShopcartView = require('shopcart/view/shopcartView');
-var CreateShopcartView = require('account/view/createShopcartView');
+// var CreateShopcartView = require('account/view/createShopcartView');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var ShopcartListPopup = require('shopcart/view/shopcartListPopup');
 	
@@ -21,14 +20,6 @@ module.exports =  {
 	 * @param router 	The data-services-area router
 	 */
 	initialize: function(element, router, panelManager) {
-
-		// Create shopcart view
-		var shopcartView = new ShopcartView({
-			model: ShopcartCollection.getCurrent(),
-			collection: ShopcartCollection
-		});
-		$('#statusBar').append(shopcartView.$el);
-		shopcartView.render();
 		
 		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
@@ -88,12 +79,12 @@ module.exports =  {
 						.prepend('<command id="'+ tagFriendlyId +'" data-icon="shopcart" title="'+ shopcart.get('name') +'" label="' + shopcart.get('name') + '" class="result" />').end()
 					.toolbar('refresh');
 
-				// Add shopcartView&tableView as a status to bottom bar
+				// Add tableView as a status to bottom bar
 				var shopcartStatus = {
 					activator: '#'+tagFriendlyId,
-					$el: shopcartView.$el,
+					$el: $(''),
 					views: [tableView],
-					viewActivators: [ shopcartView.$el.find('#tableCB') ],
+					viewActivators: [ $('#table') ],
 					model: shopcart.featureCollection,
 					parent: shopcart
 				};
