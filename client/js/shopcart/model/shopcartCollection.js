@@ -6,7 +6,8 @@ var Configuration = require('configuration');
 var Shopcart = require('shopcart/model/shopcart');
 var UserPrefs = require('userPrefs');
 
-/** This is the backbone Collection modeling the shopcart list
+/**
+ * This is the backbone Collection modeling the shopcart list
  */
 var ShopcartCollection = Backbone.Collection.extend({
 
@@ -47,10 +48,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 
 			for ( var i=0; i<shopcarts.length; i++ ) {
 				var shopcart = shopcarts[i];
-				if ( !shopcart._isSelected ) {
-					shopcart._isSelected = true;
-					shopcart.trigger("change:isSelected", shopcart);
-				}
+				this.setShopcartSelection(shopcart, true);
 			}
 			
 		}, this);
@@ -75,20 +73,20 @@ var ShopcartCollection = Backbone.Collection.extend({
 	},
 
 	/** 
-	 *	Get the current shopcart 
+	 *	Get the selected shopcarts
 	 */
-	getCurrent: function() {
-		return this._current;
+	getSelected: function() {
+		var selectedShopcarts = _.filter(this.models, function(s) { return s._isSelected == true; });
+		return selectedShopcarts;
 	},
 
 	/** 
-	 *	Set the current shopcart 
+	 *	Select/unselect the given shopcart
 	 */
-	setCurrent: function(current) {
-		if (current != this._current) {
-			var prevCurrent = this._current;
-			this._current = current;
-			this.trigger('change:current', this._current, prevCurrent);
+	setShopcartSelection: function(shopcart, isSelected) {
+		if ( shopcart._isSelected != isSelected ){
+			shopcart.toggleSelected();
+			this.trigger('change:isSelected', shopcart);
 		}
 	},
 
@@ -96,8 +94,13 @@ var ShopcartCollection = Backbone.Collection.extend({
 	 * Get the current shopcart shared URL
 	 */
 	getShopcartSharedURL: function() {
+		var selectedShopcarts = this.getSelected();
+		if ( selectedShopcarts.length != 1 ) {
+			console.warn("Invalid number of shopcarts", selectedShopcarts.length); // TODO: Handle this later..
+			return null;
+		}
 
-		return "#data-services-area/shopcart/" + this.getCurrent().id;
+		return "#data-services-area/shopcart/" + selectedShopcarts[0].id;
 
 	},
 

@@ -8,25 +8,32 @@ var DuplicateShopcartView = CreateShopcartView.extend({
 	/** submit to the server */
 	submit: function(name, options) {
 
-		var features = this.model.getCurrent().featureCollection.features;
+		var selectedShopcarts = this.model.getSelected();
 
-		var wrapSuccess = function(model) {
-			model.addItems(features);
-			if (options.success) options.success();
-		};
+		for ( var i=0; i<selectedShopcarts.length; i++ ) {
+			var shopcart = selectedShopcarts[i];
+
+			var features = shopcart.featureCollection.features;
+
+			var wrapSuccess = function(model) {
+				model.addItems(features);
+				if (options.success) options.success();
+			};
 
 
-		var attributes = {
-			"name": name,
-			"userId": "",
-			"isDefault": false
-		};
+			var attributes = {
+				"name": name,
+				"userId": "",
+				"isDefault": false
+			};
 
-		this.model.create(attributes, {
-			wait: true,
-			success: wrapSuccess,
-			error: options.error
-		});
+			this.model.create(attributes, {
+				wait: true,
+				success: wrapSuccess,
+				error: options.error
+			});
+		}
+
 
 	}
 

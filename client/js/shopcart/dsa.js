@@ -28,9 +28,9 @@ module.exports =  {
 		// Manage display of shopcart footprints
 		ShopcartCollection.on('change:isSelected', function( shopcart ) {
 	
-			var updateShopcartLabel = function() {
-				// TODO:
-				console.log("Update name");
+			var updateShopcartLabel = function(shopcart) {
+				$('#shopcart_'+shopcart.get("id")).attr('label', shopcart.get('name')).attr('title',shopcart.get('name'))
+					.find('.datasetName').html(shopcart.get('name'));
 			};
 
 			var selectedShopcarts = JSON.parse(UserPrefs.get("Selected shopcarts") || "[]");

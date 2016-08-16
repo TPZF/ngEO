@@ -18,7 +18,12 @@ var ShopcartExportView = Backbone.View.extend({
 			} else {
 				var format = $select.val();
 				$download.removeClass('ui-disabled');
-				$download.attr('href', ShopcartCollection.getCurrent().url() + "?format=" + format);
+				var selectedShopcarts = ShopcartCollection.getSelected();
+				if ( selectedShopcarts.length != 1 ) {
+					console.warn('Invalid number of selected shopcarts', selectedShopcarts.length);
+					// TODO: Handle this later..
+				}
+				$download.attr('href', selectedShopcarts[0].url() + "?format=" + format);
 			}
 		},
 
