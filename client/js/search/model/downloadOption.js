@@ -23,8 +23,8 @@ var DownloadOption = function(parent, options) {
 	this.cropProductSearchArea = options.hasOwnProperty("cropProductSearchArea") ? options.cropProductSearchArea : false;
 
 	// Define the type of download option depending on minOccurs/maxOccurs
-	this.type = (this.minOccurs == 0 && this.maxOccurs == 0) ? "checkbox" :
-				(this.minOccurs == 0 && this.maxOccurs == 1 ) ?  "select-with-none" : "select";
+	this.type = (this.minOccurs == 1 && this.maxOccurs == 1) ? "select" :
+				(this.minOccurs == 0 && this.maxOccurs == 1) ? "select-with-none" : "checkbox"
 
 	// NGEO-2165: Add None value according to minOccurs & maxOccurs parameters
 	if ( this.type == "select-with-none" ) {
