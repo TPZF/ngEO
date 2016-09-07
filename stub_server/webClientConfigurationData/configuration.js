@@ -136,17 +136,19 @@ module.exports = {
 	 *	NGEO-2164 : New JSON format for browse information
 	 */
 	updateBrowseInformation : function(feature) {
-		this.setMappedProperty(feature, "browseInformation",
+		this.setMappedProperty(feature, "browses",
 			[{
-				"type": "QUICKLOOK",
-				"referenceSystemIdentifier": {
-					"@codeSpace": "EPSG",
-					"#text": "EPSG:4326" // Currently not taken into account
-				},
-				"fileName": {
-					"ServiceReference": {
+				"BrowseInformation" : {
+					"type": "QUICKLOOK",
+					"referenceSystemIdentifier": {
+						"@codeSpace": "EPSG",
+						"#text": "EPSG:4326" // Currently not taken into account
+					},
+					"fileName": {
+						"ServiceReference": {
 						"@href": "https://dummy_url.com/c/wmts&service=wmts&layer=dummy",
-						"RequestMessage": null
+							"RequestMessage": null
+						}	
 					}
 				}
 			}]
@@ -158,7 +160,7 @@ module.exports = {
 			if ( browseInfo ) {
 				var layerParam = (browseInfo.eop_type == "wmts" ? "layer" : "layers") + "=" + browseInfo.eop_layer;
 				var browseUrl = browseInfo.eop_url + "?" + layerParam + "&service=" + browseInfo.eop_type;
-				feature.properties.EarthObservation.result.EarthObservationResult.browse.BrowseInformation[0].fileName.ServiceReference["@href"] = browseUrl;
+				feature.properties.EarthObservation.result.EarthObservationResult.browse[0].BrowseInformation.fileName.ServiceReference["@href"] = browseUrl;
 			}
 		}
 	},

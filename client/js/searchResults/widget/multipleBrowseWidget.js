@@ -16,10 +16,10 @@ module.exports = {
 		var feature = options.feature;
 		var fc = options.featureCollection;
 
-		var browseInformation = Configuration.getMappedProperty(feature, "browseInformation");
+		var browses = Configuration.getMappedProperty(feature, "browses");
 		var $popup = $(multipleBrowse_template({
 			feature: feature,
-			browseInformation: browseInformation,
+			browses: browses,
 			MapUtils: MapUtils
 		}));
 
@@ -38,17 +38,17 @@ module.exports = {
 			var newIndex = parseInt($popup.find('input:checked').val());
 			for ( var i=0; i<fc.features.length; i++ ) {
 				var f = fc.features[i];
-				var bi = Configuration.getMappedProperty(f, "browseInformation");
-				var currentBrowse = _.findWhere(bi, { _selected: true });
+				var browses = Configuration.getMappedProperty(f, "browses");
+				var currentBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 
-				if ( currentBrowse && bi.indexOf(currentBrowse) != newIndex ) {
+				if ( currentBrowse && browses.indexOf(currentBrowse) != newIndex ) {
 					BrowsesManager.removeBrowse(f);
-					delete currentBrowse._selected;
+					delete currentBrowse.BrowseInformation._selected;
 
 				}
 
 				if ( f._browseShown ) {
-					bi[newIndex]._selected = true;
+					browses[newIndex].BrowseInformation._selected = true;
 					BrowsesManager.addBrowse(f, fc.id);
 				}
 

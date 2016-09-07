@@ -13,9 +13,9 @@ var _browseAccessInformationMap = {};
 /**
  * Get the url to be used in the map for the given browse info
  */
-var _getUrl = function(browseInfo) {
+var _getUrl = function(browse) {
 	// TODO: parametrize from conf
-	return browseInfo.fileName.ServiceReference["@href"];
+	return browse.BrowseInformation.fileName.ServiceReference["@href"];
 };
 
 /**
@@ -83,15 +83,15 @@ module.exports = {
 	 */
 	addBrowse: function(feature, datasetId) {
 
-		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation", null);
+		var browses = Configuration.getMappedProperty(feature, "browses", null);
 		var isPlanned = (Configuration.getMappedProperty(feature, "status") == "PLANNED"); // NGEO-1775 : no browse for planned features
-		// NB: NGEO-1812: Use isEmptyObject to check that browseInfo exists AND not empty (server sends the response not inline with ICD)
-		if (!$.isEmptyObject(browseInfo) && !isPlanned) {
-			var browseObject = _.findWhere(browseInfo, { _selected: true });
+		// NB: NGEO-1812: Use isEmptyObject to check that browses exists AND not empty (server sends the response not inline with ICD)
+		if (!$.isEmptyObject(browses) && !isPlanned) {
+			var browseObject = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 			if (!browseObject) {
 				var fc = SearchResults.featureCollection[datasetId];
-				browseObject = browseInfo[fc.browseIndex];
-				browseObject._selected = true;
+				browseObject = browses[fc.browseIndex];
+				browseObject.BrowseInformation._selected = true;
 			}
 			
 			var browseUrl = _getUrl(browseObject);
@@ -127,9 +127,9 @@ module.exports = {
 	 */
 	removeBrowse: function(feature) {
 
-		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
-		if (browseInfo) {
-			var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
+		var browses = Configuration.getMappedProperty(feature, "browses");
+		if (browses) {
+			var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 			if ( selectedBrowse ) {
 				var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));
 				var browseLayer = _browseLayerMap[layerName];
@@ -152,9 +152,9 @@ module.exports = {
 		var selectedBrowses = [];
 		for ( var i=0; i<fc.features.length; i++ ) {
 			var feature = fc.features[i];
-			var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
-			if (browseInfo) {
-				var selectedBrowse = _.findWhere(browseInfo, {_selected: true});
+			var browses = Configuration.getMappedProperty(feature, "browses");
+			if (browses) {
+				var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 				if ( selectedBrowse ) {
 					var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));	
 					if ( selectedBrowses.indexOf(_browseLayerMap[layerName]) == -1 ) {

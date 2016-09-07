@@ -5,10 +5,10 @@
     <ul style="max-height: 500px; max-width: 500px; overflow: auto; padding-right: 10px;" id="multipleBrowseSelection" data-role="listview" data-inset="true" 
       data-theme="a"> 
 		<fieldset data-role="controlgroup"> 
-		    <% _.each(browseInformation, function(browseInfo, index) { 
-		    	var url = browseInfo.fileName.ServiceReference["@href"]
+		    <% _.each(browses, function(browse, index) { 
+		    	var url = browse.BrowseInformation.fileName.ServiceReference["@href"]
 		    	%> 
-				<label title="<%= url %>"><input type="radio" name="shopcart" data-theme="a" data-mini="true" value="<%= index %>" <% if(browseInfo._selected) print('checked="checked"') %> />  <%= MapUtils.getLayerName(url) %> </label> 
+				<label title="<%= url %>"><input type="radio" name="shopcart" data-theme="a" data-mini="true" value="<%= index %>" <% if(browse.BrowseInformation._selected) print('checked="checked"') %> />  <%= MapUtils.getLayerName(url) %> </label> 
 			<% }); %> 
      
 		</fieldset> 

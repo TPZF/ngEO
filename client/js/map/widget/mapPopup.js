@@ -238,8 +238,8 @@ var MapPopup = function(container) {
 			}
 
 			// Show only if product has multiple browses
-			var browseInfos = Configuration.getMappedProperty(product, "browseInformation");
-			if ( browseInfos && browseInfos.length > 1 ) {
+			var browses = Configuration.getMappedProperty(product, "browses");
+			if ( browses && browses.length > 1 ) {
 				element.find('#mpButtons button[data-icon="browse-multiple"]').parent().show();
 			}
 

@@ -893,8 +893,8 @@ var TableView = Backbone.View.extend({
 		}
 		$row.html(content);
 
-		var browseInfo = Configuration.getMappedProperty(rowData.feature, "browseInformation");
-		if ( browseInfo && browseInfo.length > 1 ) {
+		var browses = Configuration.getMappedProperty(rowData.feature, "browses");
+		if ( browses && browses.length > 1 ) {
 			$row.find('.browse-visibility-checkbox').after('<span title="Multiple browse management" class="multipleBrowse"></span>');
 		}
 	},
