@@ -42,7 +42,7 @@ var DownloadOption = function(parent, options) {
  *   @see NGEOD-729: Download options with pre-conditions
  */
 DownloadOption.prototype.getValidValue = function() {
-	var selectedValue = _.filter(this.value, {selected: "true"} );
+	var selectedValue = _.filter(this.value, function(v){ return Boolean(v.selected) == true; } );
 	if ( this.type == "checkbox" ) {
 		// Checkbox : return an array
 		if ( selectedValue.length ) {
