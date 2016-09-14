@@ -202,16 +202,17 @@ var TableView = Backbone.View.extend({
 			if ($cell.find('.table-view-checkbox').length > 0)
 				return;
 
+			var cellIndex = this.columnDefs.indexOf(_.find(this.columnDefs, function(c) { return c.sTitle == $cell.html(); } ));
 			if ($cell.hasClass('sorting_asc')) {
 				$cell.removeClass('sorting_asc');
 				this.sortData(-1, 'original');
 			} else if ($cell.hasClass('sorting_desc')) {
 				$cell.removeClass('sorting_desc');
 				$cell.addClass('sorting_asc');
-				this.sortData($cell.index(), 'asc');
+				this.sortData(cellIndex, 'asc');
 			} else {
 				$cell.addClass('sorting_desc');
-				this.sortData($cell.index(), 'desc');
+				this.sortData(cellIndex, 'desc');
 			}
 		},
 
@@ -731,8 +732,6 @@ var TableView = Backbone.View.extend({
 	 * Sort data
 	 */
 	sortData: function(columnIndex, order) {
-
-		columnIndex -= this.hasExpandableRows ? 2 : 1;
 
 		if (order == "original") {
 			this.visibleRowsData = this.rowsData.slice(0);
