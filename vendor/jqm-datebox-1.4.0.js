@@ -1888,6 +1888,7 @@
 						break;
 				}
 			});
+			w.d.input.trigger('datebox', {'method':'set', 'value':w._formatter(w.__fmt(),w.theDate), 'date':w.theDate});
 		},
 		_dbox_vhour: function (delta) {
 			var w = this,
@@ -1934,6 +1935,7 @@
 						w.theDate.setMinutes(parseInt(item.val(),10)); break;
 				}
 			}
+			w.d.input.trigger('datebox', {'method':'set', 'value':w._formatter(w.__fmt(),w.theDate), 'date':w.theDate});
 			w.refresh();
 		}
 	});

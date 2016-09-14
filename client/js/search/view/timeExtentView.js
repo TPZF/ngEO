@@ -3,46 +3,12 @@ var SearchResults = require('searchResults/model/searchResults');
 //require('jqm-datebox');
 //require('ui/dateRangeSlider');
 var dateCriteria_template = require('search/template/dateCriteriaContent');
-
-/**
- *	Extract time from the given ISO date 
- *
- *	@param isoDate Date in ISO format (ex: 2005/07/07T03:14:15Z)
- *	@return time in following format: "HH:MM" (ex: 03:14)
- */
-var _buildTime = function(isoDate) {
-	var time = isoDate.split(" ")[1];
-	return time.substr(0, time.lastIndexOf(":")); // Cut seconds since jqm widget handles H:M only
-};
+require('ui/datetimepicker');
 
 /**
  * The backbone model is DatasetSearch
  */
 var TimeExtentView = Backbone.View.extend({
-
-	/**
-	 *	Set Y/M/D only for the given date attribute in model
-	 *
-	 *	@param newDate {Date} containing new year/month/day to update
-	 *	@param attribute {string} "start" or "stop"
-	 *
-	 */
-	_setDate: function(newDate, attribute) {
-		var prevDate = this.model.get(attribute);
-		this.model.set(attribute, new Date(Date.UTC( newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), prevDate.getUTCHours(), prevDate.getUTCMinutes(), prevDate.getUTCSeconds() )));
-	},
-
-	/**
-	 *	Set H:M:S for the given date attribute in model
-	 *
-	 *	@param newTime {String} containing new hour:minute:second to update
-	 *	@param attribute {string} "start" or "stop"
-	 */
-	_setTime: function(newTime, attribute) {
-		var prevDate = this.model.get(attribute);
-		var time = newTime.split(':');
-		this.model.set(attribute, new Date(Date.UTC( prevDate.getFullYear(), prevDate.getMonth(), prevDate.getDate(), time[0], time[1], time[2] )));
-	},
 
 	initialize: function(options) {
 
@@ -60,22 +26,11 @@ var TimeExtentView = Backbone.View.extend({
 	events: {
 		// The 2 next handlers listen to start and stop date changes
 		'change .fromDateInput': function(event) {
-			this._setDate(Date.fromISOString($(event.currentTarget).val()), "start");
+			this.model.set("start", Date.fromISOString($(event.currentTarget).val()));
 		},
 		'change .toDateInput': function(event) {
-			this._setDate(Date.fromISOString($(event.currentTarget).val()), "stop");
+			this.model.set("stop", Date.fromISOString($(event.currentTarget).val()));
 		},
-
-		//The 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
-		/*
-		'change #fromTimeInput': function(event) {
-			this._setTime($(event.currentTarget).val()+":00", "start");
-		},
-
-		'change #toTimeInput': function(event) {
-			this._setTime($(event.currentTarget).val()+":59", "stop");
-		},
-		*/
 
 		// Check box changes to display or not the time slider widget
 		'click .useTimeSliderLabel': function(event) {
@@ -89,11 +44,13 @@ var TimeExtentView = Backbone.View.extend({
 			if (checked) {
 				// Disable the dates start and stop widgets if the time slider is enabled
 				this.$el.find('input[type="text"]').datebox('disable');
+				this.$el.find('[name="datetimeinput"]').datetimepicker('disable');
 				this.addTimeSlider();
 			} else {
 				this.removeTimeSlider();
 				// Enable the dates start and stop widgets if the time slider is disabled
 				this.$el.find('input[type="text"]').datebox('enable');
+				this.$el.find('[name="datetimeinput"]').datetimepicker('enable');
 			}
 
 		}
@@ -134,6 +91,7 @@ var TimeExtentView = Backbone.View.extend({
 				return new Date(a[0]) - new Date(b[0]);
 			});
 
+			// TODO: make the same thing with datetimepicker...
 			var dateRangeOptions = {
 				startYear: startDate.getFullYear(),
 				endYear: stopDate.getFullYear(),
@@ -141,6 +99,7 @@ var TimeExtentView = Backbone.View.extend({
 			};
 			this.$fromDateInput.datebox("option", dateRangeOptions);
 			this.$toDateInput.datebox("option", dateRangeOptions);
+
 		} else if (useTimeSlider) {
 			this.removeTimeSlider();
 		}
@@ -170,16 +129,31 @@ var TimeExtentView = Backbone.View.extend({
 	// Call when time slider has changed
 	onTimeSliderChanged: function(bounds) {
 
-		// Update model
-		this._setDate(bounds.min, "start");
-		this._setDate(bounds.max, "stop");
+		// Update the model   
+		this.model.set({  
+			start: bounds.min,
+			stop: bounds.max
+		});
 
-		// Update the date inputs
-		this.$fromDateInput.val(this.model.get("start").toISODateString());
-		this.$toDateInput.val(this.model.get("stop").toISODateString());
+		this.updateDateTimePicker();
 
 		// Launch a new search
 		SearchResults.launch(this.model);
+	},
+
+	// Update datetimepicker widget with model's values
+	updateDateTimePicker: function() {
+		// Update the date inputs
+		// this.$fromDateInput.val(this.model.get("start").toISODateString());
+		// this.$toDateInput.val(this.model.get("stop").toISODateString());
+		this.$el.find('.startDateTime').datetimepicker('option', {
+			date: this.model.get("start"),
+			time: this.model.get("startTime")
+		});
+		this.$el.find('.stopDateTime').datetimepicker('option', {
+			date: this.model.get("stop"),
+			time: this.model.get("stopTime")
+		});
 	},
 
 	// Remove the time slider
@@ -198,8 +172,8 @@ var TimeExtentView = Backbone.View.extend({
 
 	// Update the view when the model has changed
 	update: function() {
-		this.$fromDateInput.val(this.model.get("start").toISODateString());
-		this.$toDateInput.val(this.model.get("stop").toISODateString());
+
+		this.updateDateTimePicker();
 
 		if (this.$dateRangeSlider.length > 0) {
 			this.$dateRangeSlider.dateRangeSlider('option', 'bounds', {
@@ -207,16 +181,11 @@ var TimeExtentView = Backbone.View.extend({
 				max: this.model.get("stop")
 			});
 		}
-
-		// Uncomment when time input should be updated
-		/*
-		this.$el.find('#fromTimeInput').val(_buildTime(this.model.get("start").toISODateString(true)));
-		this.$el.find('#toTimeInput').val(_buildTime(this.model.get("stop").toISODateString(true)));
-		*/
 	},
 
 	render: function() {
 
+		var self = this;
 		var content = dateCriteria_template({
 			model: this.model,
 			keyDates: JSON.stringify(Configuration.get("keyDates"))
@@ -224,14 +193,37 @@ var TimeExtentView = Backbone.View.extend({
 		this.$el.append(content);
 
 		// Keep the DOM elements needed by the view
-		this.$fromDateInput = this.$el.find(".fromDateInput");
-		this.$toDateInput = this.$el.find(".toDateInput");
+		// this.$fromDateInput = this.$el.find(".fromDateInput");
+		// this.$toDateInput = this.$el.find(".toDateInput");
 		this.$dateRangeSlider = $();
+
+		// // Initialize datetime picker widgets
+		this.$el.find('.startDateTime').datetimepicker({
+			date: this.model.get("start"),
+			time: this.model.get("startTime"),
+			keyDates: JSON.stringify(Configuration.get("keyDates")),
+			onUpdate: function(date, time) {
+				self.model.set({
+					"start": date,
+					"startTime": time
+				});
+			}	
+		});
+
+		this.$el.find('.stopDateTime').datetimepicker({
+			date: this.model.get("stop"),
+			time: this.model.get("stopTime"),
+			keyDates: JSON.stringify(Configuration.get("keyDates")),
+			onUpdate: function(date, time) {
+				self.model.set({
+					"stop": date,
+					"stopTime": time
+				});
+			}	
+		});
 
 		// Need to call create to disable the datebox when timeSlider is enabled by default
 		this.$el.trigger('create');
-		// this.$fromDateInput.datebox();
-		// this.$toDateInput.datebox();
 
 		// Append time slider
 		if (this.hasTimeSlider) {
@@ -240,6 +232,7 @@ var TimeExtentView = Backbone.View.extend({
 			if (this.model.get("useTimeSlider")) {
 				// Disable the dates start and stop widgets if the time slider is enabled
 				this.$el.find('input[type="text"]').datebox("disable");
+				this.$el.find('[name="datetimeinput"]').datetimepicker('disable');
 			}
 		}
 

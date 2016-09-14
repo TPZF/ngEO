@@ -12,7 +12,7 @@ function pad(num, size) {
 // Helper function to convert a string in ISO format to date
 Date.fromISOString = function(str) {
 
-	var reDate = /(\d+)-(\d+)-(\d+)(?:T(\d+):(\d+)(?::(\d+)(?:.(\d+))?)?Z)?/;
+	var reDate = /(\d+)-(\d+)-(\d+)(?:[T|\s](\d+):(\d+)(?::(\d+)(?:.(\d+))?)?Z?)?/;
 	var match = reDate.exec(str);
 	if (match) {
 		// Hack to support bad date
@@ -58,10 +58,24 @@ var SearchCriteria = Backbone.Model.extend({
 		return {
 			stop: new Date(),
 			start: new Date(new Date().getTime() - ONE_MONTH),
+			startTime: new Date(Date.UTC(2001,1,1,0,0,0)),
+			stopTime: new Date(Date.UTC(2001,1,1,23,59,59)),
 			useExtent: true,
 			advancedAttributes: {},
 			downloadOptions: {}
 		}
+	},
+
+	/**
+	 *	Builds ISO date-time from model properties
+	 *	@param attribute
+	 *		Model attribute: start or stop
+	 */
+	buildISODateTime: function(attribute) {
+		var date = this.get(attribute).toISODateString();
+		var time = this.get(attribute+"Time").toISODateString(true).split(" ")[1];
+		var isoDateTime = date+"T"+time+":00.000Z";
+		return isoDateTime;
 	},
 
 	/**	
@@ -197,8 +211,8 @@ var SearchCriteria = Backbone.Model.extend({
 	// Add date WITHOUT cf ngeo 368 time and area parameters
 	addGeoTemporalParams: function() {
 
-		var params = "start=" + this.get("start").toISOString() + "&" +
-			"stop=" + this.get("stop").toISOString();
+		var params = "start=" + this.buildISODateTime("start") + "&" +
+			"stop=" + this.buildISODateTime("stop");
 
 		var searchAreaParam = this.searchArea.getOpenSearchParameter(Configuration.get("search.geometryPrecision", 2));
 		//if user has no search area parameter (for exmaple, in polygon mode, there are no area defined by user)

@@ -1,0 +1,9 @@
+<div style="min-width: 200px">
+	<label>
+	<input class="dateInput" data-theme="a" type="text" data-role="datebox" data-mini="true" value="<%= date.toISODateString() %>"
+		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultValue": "<%= date %>", "themeDate":"a", "themeDatePick":"b", "lockInput": false, "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calShowTime": false, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates", "useInline":true, "hideInput": true}'  /></label>
+
+	<label data-mini="true">
+	 	<input class="timeInput" type="text" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<%= time.toISODateString(true).split(" ")[1] %>", "overrideTimeOutput": "%H:%M", "lockInput": false, "showInitialValue": true, "icon": "clock", "zindex": "2000", "useInline":true, "useSetButton": false, "hideInput": true}'>
+	 </label>
+</div>

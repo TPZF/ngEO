@@ -1,29 +1,19 @@
-
-	<label>Acquisition Start Date :
+	<!-- Date only -->
+<!-- 	<label>Acquisition Start Date :
 	<input name="From" class="fromDateInput" data-theme="a" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.start) %>"
 		  data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultValue": "<% print(model.attributes.start) %>", 
 		  "themeDate":"a", "themeDatePick":"b", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calShowTime": false, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'  /></label>
 
-	<!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
-	<!--
-	<div class="timePicker">
-		<label data-mini="true">Start Time:
-			<input name="startTime" id="fromTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.start.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "lockInput": false, "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
-		</label>
- 	</div>
-	 -->
-
 	<label>Acquisition End Date :
 	<input name="toDate" class="toDateInput" data-theme="a" type="text" data-role="datebox" data-mini="true"  value="<% print(model.attributes.stop) %>"
 	   data-options='{"mode": "calbox", "overrideDateFormat":"%Y-%m-%d", "defaultDate": "<% print(model.attributes.stop) %>", 
-	   	"themeDate":"a", "themeDatePick":"b", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calShowTime": false, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'></label>
+	   	"themeDate":"a", "themeDatePick":"b", "calHighToday": false, "calUsePickers": true, "calNoHeader": true, "zindex": "2000", "calShowDateList": true, "calShowTime": false, "calDateList": <%= keyDates %>, "overrideCalDateListLabel": "Key dates"}'></label> -->
 
-	<!-- ACCORDING TO GARIN CF ISSUE 368 TIME NOT NEEDED AS A SEARCH CRITERIA -->
-	<!--
-	<div class="timePicker">
-		<label data-mini="true">Stop Time:
-			<input name="stopTime" id="toTimeInput" type="text" data-theme="a" data-role="datebox" data-mini="true" data-options='{"mode": "timebox", "overrideTimeFormat": "24", "defaultValue":"<% print(model.attributes.stop.toISODateString().split(" ")[1]) %>", "overrideTimeOutput": "%H:%M", "lockInput": false, "showInitialValue": true, "icon": "clock", "zindex": "2000"}'>
-		</label>
- 	</div>
- 	-->
-
+	<!-- Using datetimewidget widget -->
+	<label>Acquisition Start Date:
+		<input name="datetimeinput" class="startDateTime" />
+	</label>
+ 
+	<label>Acquisition Stop Date:
+		<input name="datetimeinput" class="stopDateTime" />
+	</label>
