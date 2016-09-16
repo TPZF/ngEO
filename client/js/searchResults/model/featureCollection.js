@@ -63,7 +63,7 @@ var FeatureCollection = function() {
 
 	// Current browse index (in case of multiple browses) per feature collection
 	// MS: Maybe move it to BrowsesManager.. (tbd on deploy)
-	this.browseIndex = 0;
+	this.browseIndex = [0];
 
 	var self = this;
 
