@@ -276,7 +276,7 @@ $.widget("ui.dateRangeSlider", {
 	_computeCurrentDate: function() {
 		return {
 			min: new Date(this.minDate.getTime() + this.dragLeftDays * 86400000),
-			max: new Date(this.minDate.getTime() + this.dragRightDays * 86400000 + (3600 * 1000 * 24 - 1))
+			max: new Date(this.minDate.getTime() + this.dragRightDays * 86400000/* + (3600 * 1000 * 24 - 1)*/)
 		};
 	},
 
