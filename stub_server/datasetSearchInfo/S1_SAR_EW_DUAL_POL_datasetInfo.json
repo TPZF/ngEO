@@ -78,7 +78,7 @@
                         "humanReadable": "slc",
                         "name": "SLC",
                         "sizeFactor": "1",
-                        "selected": "true"
+                        "selected": true
                     },
                     {
                         "humanReadable": "grd",
@@ -116,7 +116,7 @@
             	"caption": "Otherwise option: maxOccurs == 0",
             	"description": "Test option as checkboxes",
             	"minOccurs": "0",
-            	"maxOccurs": "0",
+            	"maxOccurs": "2",
             	"value": [
             		{
             			"humanReadable": "val1",

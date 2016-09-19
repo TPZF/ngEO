@@ -16,7 +16,7 @@
 		"azimuthAngle": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#text",
 		"zenithAngle": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#text",
 		"elevationAngle": "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#text",
-		"browseInformation": "properties.EarthObservation.result.EarthObservationResult.browse.BrowseInformation",
+		"browses": "properties.EarthObservation.result.EarthObservationResult.browse",
 		"interferometryUrl": "properties.links.@title=interferometry.@href",
 		"links": "properties.links",
 		"imageQualityReportURL" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.imageQualityReportURL"

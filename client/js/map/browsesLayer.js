@@ -58,10 +58,10 @@ var BrowsesLayer = function(params, mapEngine) {
 	 * Add features to layer
 	 */
 	this.addBrowse = function(feature, browseUrl) {
-		if (!browseLayersMap.hasOwnProperty(feature.id)) {
-			// Set feature.id in map to mark the creation of browse to avoid double creating of
+		if (!browseLayersMap.hasOwnProperty(browseUrl)) {
+			// Set browseUrl in map to mark the creation of browse to avoid double creating of
 			// browse provoked by highlight event as well..
-			browseLayersMap[feature.id] = browseUrl;
+			browseLayersMap[browseUrl] = browseUrl;
 			
 			var layerDesc = MapUtils.createWmsLayerFromUrl(browseUrl);
 			if ( !layerDesc.params.time ) {
@@ -95,7 +95,7 @@ var BrowsesLayer = function(params, mapEngine) {
 
 			// Update some WEBC intrinsic values which couldn't be extracted from browse url
 			_.merge(layerDesc, {
-				name: feature.id,
+				name: browseUrl,
 				visible: this.params.visible,
 				opacity: Configuration.get("map.browseDisplay.opacity", 1.0),
 				bbox: feature.bbox,
@@ -110,23 +110,26 @@ var BrowsesLayer = function(params, mapEngine) {
 			};
 
 			// Finally set the real browseLayerDesc in browseLayerMap
-			browseLayersMap[feature.id] = browseLayerDesc;
+			browseLayersMap[browseUrl] = browseLayerDesc;
 			browseLayers.push( browseLayerDesc );
 		}
 	};
 
 	/**
 	 * Remove browse from layer
+	 *
+	 * @param id
+	 *		Browse url
 	 */
-	this.removeBrowse = function(id)  {
-		// Create the WMS if it does not exists
-		if (browseLayersMap.hasOwnProperty(id)) {
+	this.removeBrowse = function(browseUrl)  {
+		// Remove the WMS only if it does exists
+		if (browseLayersMap.hasOwnProperty(browseUrl)) {
 		
 			// Get the browse layer structure from the map
-			var bl = browseLayersMap[ id ];
+			var bl = browseLayersMap[ browseUrl ];
 			
 			// Delete it
-			delete browseLayersMap[ id ];
+			delete browseLayersMap[ browseUrl ];
 			
 			// Remove browse layer from the current engine
 			mapEngine.removeLayer(bl.engineLayer);

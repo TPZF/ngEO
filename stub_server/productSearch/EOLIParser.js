@@ -102,17 +102,19 @@ module.exports.parse = function(file,fc) {
 
 		var browseUrl = "/wms2eos/servlets/wms?layers="+ layer +"&service=wms";
 		// NGEO-2164 : New JSON format for browse information
-		Configuration.setMappedProperty(feature, "browseInformation",
+		Configuration.setMappedProperty(feature, "browses",
 			[{
-				"type": "QUICKLOOK",
-				"referenceSystemIdentifier": {
-					"@codeSpace": "EPSG",
-					"#text": "EPSG:4326" // Currently not taken into account
-				},
-				"fileName": {
-					"ServiceReference": {
-						"@href": browseUrl,
-						"RequestMessage": null
+				"BrowseInformation" : {
+					"type": "QUICKLOOK",
+					"referenceSystemIdentifier": {
+						"@codeSpace": "EPSG",
+						"#text": "EPSG:4326" // Currently not taken into account
+					},
+					"fileName": {
+						"ServiceReference": {
+							"@href": browseUrl,
+							"RequestMessage": null
+						}
 					}
 				}
 			}]

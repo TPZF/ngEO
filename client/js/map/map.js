@@ -30,13 +30,19 @@ var Layer = function(params, engineLayer) {
 	this.setVisible = function(vis) {
 		this.params.visible = vis;
 
-		var visibleLayers = JSON.parse(UserPrefs.get("Visible layers") || "[]");
-		if ( vis ) {
-			visibleLayers.push(this.params.name);
-		} else {
-			visibleLayers.splice(visibleLayers.indexOf(this.params.name), 1);
+		if ( this.params.type != "Feature" ) {
+			// Store only raster layers into user preferences for now
+			var visibleLayers = JSON.parse(UserPrefs.get("Visible layers") || "[]");
+			if ( vis ) {
+				visibleLayers.push(this.params.name);
+			} else {
+				var idx = visibleLayers.indexOf(this.params.name);
+				if ( idx != -1 ) {
+					visibleLayers.splice(idx, 1);
+				}
+			}
+			UserPrefs.save("Visible layers", JSON.stringify(visibleLayers));
 		}
-		UserPrefs.save("Visible layers", JSON.stringify(visibleLayers));
 
 		mapEngine.setLayerVisible(this.engineLayer, vis);
 		self.trigger("visibility:changed", this);

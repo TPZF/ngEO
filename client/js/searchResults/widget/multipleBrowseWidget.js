@@ -16,10 +16,10 @@ module.exports = {
 		var feature = options.feature;
 		var fc = options.featureCollection;
 
-		var browseInformation = Configuration.getMappedProperty(feature, "browseInformation");
+		var browses = Configuration.getMappedProperty(feature, "browses");
 		var $popup = $(multipleBrowse_template({
 			feature: feature,
-			browseInformation: browseInformation,
+			browses: browses,
 			MapUtils: MapUtils
 		}));
 
@@ -36,25 +36,22 @@ module.exports = {
 
 			$popup.popup('close');
 			var newIndex = parseInt($popup.find('input:checked').val());
+
+			var checkedBrowseIdx = [];
+
+			var selectedIndices = _.toArray($popup.find('input:checked').map(function(i, elem) { return parseInt($(elem).val()) }));
+			var notSelectedIndices = _.toArray($popup.find('input:not(:checked)').map(function(i, elem) { return parseInt($(elem).val()) }));
 			for ( var i=0; i<fc.features.length; i++ ) {
+				// Feature loop
 				var f = fc.features[i];
-				var bi = Configuration.getMappedProperty(f, "browseInformation");
-				var currentBrowse = _.findWhere(bi, { _selected: true });
-
-				if ( currentBrowse && bi.indexOf(currentBrowse) != newIndex ) {
-					BrowsesManager.removeBrowse(f);
-					delete currentBrowse._selected;
-
-				}
+				var browses = Configuration.getMappedProperty(f, "browses");
 
 				if ( f._browseShown ) {
-					bi[newIndex]._selected = true;
-					BrowsesManager.addBrowse(f, fc.id);
+					BrowsesManager.addBrowse(f, fc.id, selectedIndices);
+					BrowsesManager.removeBrowse(f, notSelectedIndices);
 				}
-
 			}
-
-			fc.browseIndex = newIndex;
+			fc.browseIndex = selectedIndices;
 
 			if (options.onSelect) {
 				options.onSelect();

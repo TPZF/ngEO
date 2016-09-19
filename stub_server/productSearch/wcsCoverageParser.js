@@ -42,11 +42,13 @@ module.exports.parse = function(file,fc) {
 
 		Configuration.setMappedProperty(feature, "start", timeStart.textContent);
 		Configuration.setMappedProperty(feature, "stop", timeStart.textContent);
-		Configuration.setMappedProperty(feature, "browseInformation", {
-			eop_type: "wmts",
-			eop_layer: "ESA.EECF.ERS_SAR_xS",
-			eop_url: 'http://brow01.v1.ngeo.eox.at/c/wmts/'
-		});
+		Configuration.setMappedProperty(feature, "browses", [{
+			"BrowseInformation" : {
+				eop_type: "wmts",
+				eop_layer: "ESA.EECF.ERS_SAR_xS",
+				eop_url: 'http://brow01.v1.ngeo.eox.at/c/wmts/'
+			}
+		}]);
 		Configuration.setMappedProperty(feature, "links", []);
 		feature.geometry.coordinates = convertToGeojsonPolygon(posList.textContent);
 		featureCollection.features.push( feature ); 
