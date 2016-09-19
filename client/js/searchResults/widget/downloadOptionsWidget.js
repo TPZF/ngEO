@@ -51,7 +51,7 @@ DownloadOptionsWidget.prototype.open = function() {
 			var key = datasetDownloadOptions[i].argumentName;
 			if ( datasetDownloadOptions[i].cropProductSearchArea == "true" ) {
 				// Should be true or false & not the real WKT value (to be verified)..
-				self.widgetDownloadOptions.attributes[key] = fcDownloadOptions.hasOwnProperty(key);
+				self.widgetDownloadOptions.attributes[key] = fcDownloadOptions.hasOwnProperty(key) ? fcDownloadOptions.hasOwnProperty(key) : null;
 			} else {
 				if ( fcDownloadOptions[key] ) {
 					self.widgetDownloadOptions.attributes[key] = fcDownloadOptions[key];

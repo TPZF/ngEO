@@ -30,9 +30,10 @@ describe("DatasetPopulation test", function() {
     });
 
     it("should filter correctly datasets", function(){
-    	expect(DataSetPopulation.filterDatasets(['S3']).length).toBe(3); // One dataset
-    	expect(DataSetPopulation.filterDatasets(['S1', 'SAR']).length).toBe(2); // Multiple datasets
-		expect(DataSetPopulation.filterDatasets(['', '', 'land mapping']).length).toBe(6); // Keyword
+    	DataSetPopulation.get("criterias")[0].selectedValue = "interferometry";
+    	expect(DataSetPopulation.filterDatasets().length).toBe(5); // One criteria
+    	DataSetPopulation.get("criterias")[2].selectedValue = "ice mapping";
+    	expect(DataSetPopulation.filterDatasets().length).toBe(1); // Multiple criterias
     });
 
     it("should be able to fetch dataset", function() {

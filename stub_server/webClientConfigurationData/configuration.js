@@ -133,6 +133,39 @@ module.exports = {
 	},
 
 	/**
+	 *	NGEO-2164 : New JSON format for browse information
+	 */
+	updateBrowseInformation : function(feature) {
+		this.setMappedProperty(feature, "browses",
+			[{
+				"BrowseInformation" : {
+					"type": "QUICKLOOK",
+					"referenceSystemIdentifier": {
+						"@codeSpace": "EPSG",
+						"#text": "EPSG:4326" // Currently not taken into account
+					},
+					"fileName": {
+						"ServiceReference": {
+						"@href": "https://dummy_url.com/c/wmts&service=wmts&layer=dummy",
+							"RequestMessage": null
+						}	
+					}
+				}
+			}]
+		);
+
+		// Construct browse url from old format
+		if ( feature.properties.EarthObservation.EarthObservationResult ) {
+			var browseInfo = feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation;
+			if ( browseInfo ) {
+				var layerParam = (browseInfo.eop_type == "wmts" ? "layer" : "layers") + "=" + browseInfo.eop_layer;
+				var browseUrl = browseInfo.eop_url + "?" + layerParam + "&service=" + browseInfo.eop_type;
+				feature.properties.EarthObservation.result.EarthObservationResult.browse[0].BrowseInformation.fileName.ServiceReference["@href"] = browseUrl;
+			}
+		}
+	},
+
+	/**
 	* Transform the old featurecollection json data format to the new one according to the Work Order 
 	*/
 	toNewJsonFormat: function(featureCollection){
@@ -145,9 +178,6 @@ module.exports = {
 				// gml_beginPosition exists --> Old format
 				this.setMappedProperty(feature, "start", feature.properties.EarthObservation.gml_beginPosition);
 				this.setMappedProperty(feature, "stop", feature.properties.EarthObservation.gml_endPosition);
-				if ( feature.properties.EarthObservation.EarthObservationResult ) {
-					this.setMappedProperty(feature, "browseInformation", feature.properties.EarthObservation.EarthObservationResult.eop_BrowseInformation);
-				}
 				this.setMappedProperty(feature, "mission", feature.properties.EarthObservation.EarthObservationEquipment.eop_platformShortName);
 				this.setMappedProperty(feature, "sensor", feature.properties.EarthObservation.EarthObservationEquipment.eop_instrumentShortName);
 				this.setMappedProperty(feature, "swath", feature.properties.EarthObservation.EarthObservationEquipment.eop_swathIdentifier);
@@ -160,6 +190,10 @@ module.exports = {
 				this.setMappedProperty(feature, "imageQualityReportURL", feature.properties.EarthObservation.EarthObservationMetaData.eop_imageQualityReportURL);
 				this.setMappedProperty(feature, "links", []);
 				this.setMappedProperty(feature, "productUrl", feature.properties.EarthObservation.EarthObservationResult.eop_ProductInformation.eop_filename);
+			}
+
+			if ( !feature.properties.EarthObservation.result || !feature.properties.EarthObservation.result.EarthObservationResult.browse ) {
+				this.updateBrowseInformation(feature);
 			}
 		}
 

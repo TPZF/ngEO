@@ -15,7 +15,7 @@ var _updateFeaturesWithBrowse = function(features) {
 	}
 }
 
-// Call when feature is hidden
+// Called when feature is hidden
 var _onHideFeatures = function(features, fc) {
 
 	// Remove browses of all hidden features
@@ -27,13 +27,13 @@ var _onHideFeatures = function(features, fc) {
 	fc._footprintLayer.removeFeatures(features);
 };
 
-// Call when feature is shown
+// Called when feature is shown
 var _onShowFeatures = function(features, fc) {
 
 	// Add browses for highlighted or selected features
 	for (var i = 0; i < features.length; i++) {
 		var feature = features[i];
-		if ( fc.isHighlighted(feature) || fc.isSelected(feature) ) {
+		if ( (fc.isHighlighted(feature) || fc.isSelected(feature)) && feature._browseShown) {
 			BrowsesManager.addBrowse(feature);
 		}
 	}
@@ -41,6 +41,25 @@ var _onShowFeatures = function(features, fc) {
 
 	// Add footprints to map
 	fc._footprintLayer.addFeatures(features);
+};
+
+// Called when feature browse is hidden
+var _onHideBrowses = function(features, fc) {
+	for (var i=0; i<features.length; i++) {
+		var feature = features[i];
+		delete feature._browseShown;
+		BrowsesManager.removeBrowse(feature);
+	}
+};
+
+// Called when feature browse is shown
+var _onShowBrowses = function(features, fc) {
+	for (var i=0; i<features.length; i++) {
+		var feature = features[i];
+		feature._browseShown = true;
+
+		BrowsesManager.addBrowse(feature, fc.dataset.get("datasetId"));
+	}
 };
 
 // Call when a feature is selected to synchronize the map
@@ -53,7 +72,8 @@ var _onSelectFeatures = function(features, fc) {
 			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 		}
 
-		BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
+		if ( feature._browseShown )
+			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 	}
 	_updateFeaturesWithBrowse(features);
 };
@@ -111,8 +131,10 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
 			}
-			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-			//HACK add feature collection since it does not contain the fetaure collection
+			if ( feature._browseShown )
+				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
+
+			//HACK add feature collection since it does not contain the feature collection
 			feature._featureCollection = fc;
 			highlightedFeats.push(feature);
 		}
@@ -181,6 +203,8 @@ module.exports = {
 		fc.on('selectFeatures', _onSelectFeatures);
 		fc.on('unselectFeatures', _onUnselectFeatures);
 		fc.on('highlightFeatures', _onHighlightFeatures);
+		fc.on('show:browses', _onShowBrowses);
+		fc.on('hide:browses', _onHideBrowses);
 
 		SelectHandler.addFeatureCollection(fc);
 	},
@@ -203,6 +227,8 @@ module.exports = {
 		fc.off('selectFeatures', _onSelectFeatures);
 		fc.off('unselectFeatures', _onUnselectFeatures);
 		fc.off('highlightFeatures', _onHighlightFeatures);
+		fc.off('show:browses', _onShowBrowses);
+		fc.off('hide:browses', _onHideBrowses);
 
 		if (!options || !options.keepLayer) {
 			Map.removeLayer(fc._footprintLayer);

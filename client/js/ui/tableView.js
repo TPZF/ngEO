@@ -5,6 +5,7 @@ var Pagination = require('ui/pagination');
 var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 var FeatureCollection = require('searchResults/model/featureCollection');
 var SearchResultsMap = require('searchResults/map');
+var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
 
 /**
  *	Get nested objects containing the given key
@@ -101,6 +102,14 @@ var TableView = Backbone.View.extend({
 			if ( e.keyCode == '16' ) {
 				shiftPressed = true;
 			}
+
+			if ( ctrlPressed && e.keyCode == '65' ) {
+				// Ctrl+A : select all
+				e.preventDefault();
+
+				if ( self.model )
+					$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+			}
 		}
 		var onKeyUp = function(e) {
 			if ( e.keyCode == '17' ) {
@@ -110,8 +119,8 @@ var TableView = Backbone.View.extend({
 				shiftPressed = false;
 			}
 		}
-		document.onkeydown = onKeyDown;
-		document.onkeyup = onKeyUp;
+		document.addEventListener('keydown', onKeyDown);
+		document.addEventListener('keyup', onKeyUp);
 
 		/**
 		 *	This code just temporary serves to trigger highlight on ALL the feature collections
@@ -138,6 +147,14 @@ var TableView = Backbone.View.extend({
 			if (data) {
 				Map.zoomToFeature(data.feature);
 			}
+		},
+
+		'click .multipleBrowse': function(event) {
+			var data = $(event.currentTarget).closest('tr').data('internal')
+			MultipleBrowseWidget.open({
+				feature: data.feature,
+				featureCollection: this.model
+			});
 		},
 
 		// Call when a row is clicked
@@ -185,16 +202,17 @@ var TableView = Backbone.View.extend({
 			if ($cell.find('.table-view-checkbox').length > 0)
 				return;
 
+			var cellIndex = this.columnDefs.indexOf(_.find(this.columnDefs, function(c) { return c.sTitle == $cell.html(); } ));
 			if ($cell.hasClass('sorting_asc')) {
 				$cell.removeClass('sorting_asc');
 				this.sortData(-1, 'original');
 			} else if ($cell.hasClass('sorting_desc')) {
 				$cell.removeClass('sorting_desc');
 				$cell.addClass('sorting_asc');
-				this.sortData($cell.index(), 'asc');
+				this.sortData(cellIndex, 'asc');
 			} else {
 				$cell.addClass('sorting_desc');
-				this.sortData($cell.index(), 'desc');
+				this.sortData(cellIndex, 'desc');
 			}
 		},
 
@@ -215,9 +233,23 @@ var TableView = Backbone.View.extend({
 			}
 		},
 
-		// Called when the user clicks on the checkbox of the dataTables
+		// Called when the user clicks on "browse-visibility" checkbox in table
+		'click .browse-visibility-checkbox': function(event) {
+			var $target = $(event.currentTarget);
+			var $row = $target.closest('tr');
+			var data = $row.data('internal');
+
+			// Based on css value, show/hide browses
+			if ($target.hasClass('ui-icon-checkbox-off')) {
+				this.model.showBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+			} else {
+				this.model.hideBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+			}
+		},
+
+		// Called when the user clicks on the "selection" checkbox in table
 		'click .table-view-checkbox': function(event) {
-			// retreive the position of the selected row
+			// Retreive the position of the selected row
 			var $target = $(event.currentTarget);
 			var $row = $target.closest('tr');
 			var data = $row.data('internal');
@@ -227,8 +259,10 @@ var TableView = Backbone.View.extend({
 				// HUGE problem with multiple feature collections cuz this view depends on model
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
-					model.select(data.feature);
+					// NGEO-2174: check every highlighted feature when clicking on already selected row
+					model.select( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
 				} else {
+					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
 					$target
@@ -238,8 +272,10 @@ var TableView = Backbone.View.extend({
 			} else {
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
-					model.unselect(data.feature);
+					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
+					model.unselect( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
 				} else {
+					// "Unselect all" case
 					this.model.unselectAll();
 					$target
 						.removeClass('ui-icon-checkbox-on')
@@ -290,7 +326,6 @@ var TableView = Backbone.View.extend({
 	setModel: function(model) {
 
 		if (this.model) {
-
 			// Clean-up previous data
 			this.clear();
 
@@ -304,8 +339,10 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "reset:features", this.clear);
 			this.listenTo(this.model, "add:features", this.addData);
 			this.listenTo(this.model, "remove:features", this.removeData);
-			this.listenTo(this.model, "selectFeatures", this.toggleSelection);
-			this.listenTo(this.model, "unselectFeatures", this.toggleSelection);
+			this.listenTo(this.model, "selectFeatures", this.updateSelection);
+			this.listenTo(this.model, "unselectFeatures", this.updateSelection);
+			this.listenTo(this.model, "show:browses", this.showBrowses);
+			this.listenTo(this.model, "hide:browses", this.hideBrowses);
 			this.listenTo(this.model, "highlightFeatures", function(features){
 				_allHighlights = _allHighlights.concat(features);
 				self.triggerHighlightFeature();
@@ -461,17 +498,57 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 * Toggle selection for the given features
+	 *	Hide browses for the given features
 	 */
-	toggleSelection: function(features) {
+	hideBrowses: function(features) {
 		if (!this.$table) return;
 
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
-			if ($row) {
+			if ($row) { 
+				$row.find('.browse-visibility-checkbox')
+					.addClass('ui-icon-checkbox-off')
+					.removeClass('ui-icon-checkbox-on');
+			}
+		}
+	},
+
+	/**
+	 *	Show browses for the given features
+	 */
+	showBrowses: function(features) {
+		if (!this.$table) return;
+
+		for (var i = 0; i < features.length; i++) {
+			var $row = this._getRowFromFeature(features[i]);
+			if ($row) { 
+				$row.find('.browse-visibility-checkbox')
+					.removeClass('ui-icon-checkbox-off')
+					.addClass('ui-icon-checkbox-on');
+			}
+		}
+	},
+
+	/**
+	 * Update selection checkbox state for the given features
+	 * based on "selection" property of current <FeatureCollection>
+	 */
+	updateSelection: function(features) {
+		if (!this.$table) return;
+
+		for (var i = 0; i < features.length; i++) {
+			var $row = this._getRowFromFeature(features[i]);
+
+			if ( $row && this.model.selection.indexOf(features[i]) >= 0 ) {
+				// Feature is seleceted
 				$row.find('.table-view-checkbox')
-					.toggleClass('ui-icon-checkbox-off')
-					.toggleClass('ui-icon-checkbox-on');
+					.addClass('ui-icon-checkbox-on')
+					.removeClass('ui-icon-checkbox-off');
+			} else {
+				// Feature isn't selected
+				$row.find('.table-view-checkbox')
+					.removeClass('ui-icon-checkbox-on')
+					.addClass('ui-icon-checkbox-off');
 			}
 		}
 	},
@@ -656,8 +733,6 @@ var TableView = Backbone.View.extend({
 	 */
 	sortData: function(columnIndex, order) {
 
-		columnIndex -= this.hasExpandableRows ? 2 : 1;
-
 		if (order == "original") {
 			this.visibleRowsData = this.rowsData.slice(0);
 		} else {
@@ -729,8 +804,8 @@ var TableView = Backbone.View.extend({
 			_allHighlights = _allHighlights.concat(features);
 			self.triggerHighlightFeature();
 		});
-		this.listenTo(child, "selectFeatures", this.toggleSelection);
-		this.listenTo(child, "unselectFeatures", this.toggleSelection);
+		this.listenTo(child, "selectFeatures", this.updateSelection);
+		this.listenTo(child, "unselectFeatures", this.updateSelection);
 
 		// Attach to rowData
 		rowData.childFc = child;
@@ -783,8 +858,14 @@ var TableView = Backbone.View.extend({
 			checkedClass = 'ui-icon-checkbox-on';
 		}
 
+		// Layer selection checkbox
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
 		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
+
+		// Layer browse visibility checkbox
+		var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
+
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
 			if (this.columnDefs[j].visible && this.columnDefs[j].numValidCell > 0) {
@@ -810,6 +891,11 @@ var TableView = Backbone.View.extend({
 			}
 		}
 		$row.html(content);
+
+		var browses = Configuration.getMappedProperty(rowData.feature, "browses");
+		if ( browses && browses.length > 1 ) {
+			$row.find('.browse-visibility-checkbox').after('<span title="Multiple browse management" class="multipleBrowse"></span>');
+		}
 	},
 
 	/**
@@ -897,7 +983,7 @@ var TableView = Backbone.View.extend({
 		}
 
 		this.updateFixedHeader();
-		this.toggleSelection(this.model.selection);
+		this.updateSelection(this.model.selection);
 		// TODO: Make this view dependent on model only ...
 		// HACK: Update all highlights
 		_allHighlights = _allHighlights.concat(this.model.highlights);
@@ -929,7 +1015,7 @@ var TableView = Backbone.View.extend({
 			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
 			var colSumWidth = _.reduce(colWidths, function(sum, w) { return sum+w;}, 0);
-			var hasSlider = colSumWidth > $(window).width() - 5;
+			var hasSlider = colSumWidth > $(window).width() - 1;
 			for ( var i=0; i<colWidths.length; i++ ) {
 				if ( hasSlider ) {
 					// Set min-width since it forces table to be wider than window --> show slider
@@ -1013,6 +1099,8 @@ var TableView = Backbone.View.extend({
 			$row.append('<th></th>');
 		}
 		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
+		$row.append('<th class="browseVisibility"></th>');
+
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
 				$row.append('<th>' + columns[j].sTitle + '</th>');
@@ -1065,9 +1153,9 @@ var TableView = Backbone.View.extend({
 	renderFooter: function() {
 		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
-						<div data-role="fieldcontain" style="width: 300px; display: inline-block;"  data-inline="true">\
+						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
 							<label for="filterTableInput">Filter table:</label>\
-							<input id="filterTableInput" data-mini="true" type="text"/>\
+							<input id="filterTableInput" data-inline="true" data-mini="true" type="text"/>\
 						</div>\
 						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
 					</div>\
@@ -1077,7 +1165,9 @@ var TableView = Backbone.View.extend({
 		if (this.renderButtons)
 			this.renderButtons($buttonContainer);
 
-		this.$el.append(footer);
+		this.$el.append(footer).trigger("create");
+		// HACK jQm Firefox: Display text-input on the same level as label & button
+		this.$el.find('.table-filter .ui-input-text').css("vertical-align","middle");
 	},
 
 	/**

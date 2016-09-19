@@ -1,18 +1,23 @@
+var DownloadOption = require('search/model/downloadOption');
+
 /**
- *  Download option model
+ *  Download options model
  */
 var DownloadOptions = function(downloadOptions, options) {
 
 	// TODO : refactor collection property, try to use Backbone.Collection object ?
-	this.collection = downloadOptions || [];
+	this.collection = [];
 	this.attributes = {}; // Simplified form of currently chosen options
 
-	// Fill with valid options
-	if (options && options.init) {
-		for (var i = 0; i < this.collection.length; i++) {
-			var option = this.collection[i];
+	for (var i = 0; i < downloadOptions.length; i++) {
+		var option = new DownloadOption(this, downloadOptions[i]);
+		this.collection.push(option);
+
+		if (options && options.init) {
+			// Fill with valid values
 			if (!option.cropProductSearchArea) {
-				this.setValue(option.argumentName, this.getValidValue(this.collection[i]).name);
+				var selectedValue = option.getValidValue();
+				this.setValue(option.argumentName, selectedValue);
 			} else {
 				this.setValue(option.argumentName, Boolean(option.cropProductSearchArea));
 			}
@@ -21,38 +26,65 @@ var DownloadOptions = function(downloadOptions, options) {
 };
 
 /**
- * Init download options from url
+ * Static method allowing to extract download options from the given url
  */
-DownloadOptions.prototype.initFromUrl = function(url) {
-	this.collection = [];
-	this.attributes = {};
-	var doIndex = url.indexOf("ngEO_DO");
-	if ( doIndex >= 0 ) {
-		var don = url.substr(doIndex + 8);
-		don = don.replace(/\{|\}/g,"");
-		var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
-		var parameters = don.split(commaNotBetweenParenthesisRe);
+DownloadOptions.extractParamsFromUrl = function(url) {
 
-		for (var n = 0; n < parameters.length; n++) {
-			var p = parameters[n].split(':');
-			if (p.length != 2)
-				throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
+	var idx = url.indexOf("ngEO_DO={");
+	if (idx >= 0) {
+		// Case when ngEO_DO is present in url --> remove it
+		url = url.substring(idx + 9, url.length - 1);
+	}
 
-			this.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
+	var res = {};
+	// Extract keys/values from parameters
+	var keys = url.match(/([\b\s\w]+):/gm);
+	var parameters = [];
+	for ( var j=0; j<keys.length-1; j++ ) {
+		var current = url.substring(url.indexOf(keys[j]), url.indexOf(keys[j+1]) - 1);
+		parameters.push(current);
+	}
+	parameters.push(url.substring(url.indexOf(keys[keys.length-1])))
 
-			// Update collection with current values
-			var colDo = {
-				argumentName: p[0],
-				value: [ {
-					"name" : p[1]
-				}]
-			};
-			// No other way to know if the area is cropped or not
-			if ( p[0].indexOf("crop") >= 0 ) {
-				colDo.cropProductSearchArea = "true";
-			}
-			this.collection.push(colDo);
+	for ( var n = 0; n < parameters.length; n++ ) {
+		var p = parameters[n].split(':');
+		if (p.length != 2) 
+			throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
+
+		if ( p[1].indexOf("[") >= 0 ) {
+			// Surround every item in array with '"' to be able to parse as JSON
+			// WEBS spec rocks !
+			p[1] = JSON.parse(p[1].replace(/([^,\[\]]*)/g, function(r, $1) { if (r){
+				return '"'+$1+'"';
+			} else {
+				return "";
+			} } ));
 		}
+		res[p[0]] = (p[0] == "cropProduct") ? true : p[1];
+	}
+	return res;
+};
+
+
+/**
+ *	Populate download options object from the given url parameters
+ *	@param urlParams Url parameters for ngEO_DO or the entire url containing ngEO_DO
+ *		ex: {processing:RAW,Otherwise option:[val2,val3]}
+ *		ex: http://ngeo?advancedProperties={}&ngEO_DO={key1:val1,key2:[val1,val2]}
+ */
+DownloadOptions.prototype.populateFromUrl = function(url) {
+
+	// // Doesn't work !
+	// // Use this regex to avoid splitting crop product
+	// // which has multiple "," in it OR multiple values between  []
+	// var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^\(\)]*\))(?!\[?[^,]*\])/g);
+	// parameters = url.split(commaNotBetweenParenthesisRe);
+
+	this.attributes = DownloadOptions.extractParamsFromUrl(url);
+	// HACK: Set crop to false if doesn't exist in URL
+	var cropDo = _.findWhere(this.collection, {cropProductSearchArea: "true"});
+	if ( cropDo ) {
+		this.attributes[cropDo.argumentName] = _.find(_.keys(this.attributes), function(p) { return p.indexOf("crop") >= 0 }) ? "true" : false;
 	}
 };
 
@@ -71,7 +103,7 @@ DownloadOptions.prototype.updateFrom = function(downloadOptions) {
  */
 DownloadOptions.prototype.setValue = function(attribute, value) {
 
-	if (value == null) {
+	if (!value) {
 		delete this.attributes[attribute]
 	} else {
 		this.attributes[attribute] = value;
@@ -84,7 +116,7 @@ DownloadOptions.prototype.setValue = function(attribute, value) {
  */
 DownloadOptions.prototype.getAttributes = function() {
 	return _.omit(this.attributes, function(attr) {
-		return attr == null || attr == "@conflict"
+		return attr == null || attr == "@conflict" || attr == "@none";
 	});
 };
 
@@ -107,12 +139,13 @@ DownloadOptions.prototype.updatePreconditions = function() {
 						name: selectedValue
 					});
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
-					if (selectedValue != "@conflict" && !self.hasValidPreconditions(valueObject)) {
-						self.attributes[option.argumentName] = self.getValidValue(option).name;
+					// If valueObject hasn't been found => checkboxes, doesn't implemented yet !
+					if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
+						self.attributes[option.argumentName] = option.getValidValue();
 					}
 				} else {
 					// Option respects the preconditions, update model with a valid value
-					self.attributes[option.argumentName] = self.getValidValue(option).name;
+					self.attributes[option.argumentName] = option.getValidValue();
 				}
 			}
 		} else {
@@ -143,22 +176,6 @@ DownloadOptions.prototype.hasValidPreconditions = function(param) {
 		res |= (self.attributes[precondition.parentDownloadOption] == precondition.parentDownloadValue);
 	});
 	return res;
-};
-
-/**
- *   Get first valid value for the given option respecting the preconditions
- *
- *   @see NGEOD-729: Download options with pre-conditions
- */
-DownloadOptions.prototype.getValidValue = function(option) {
-
-	for (var i = 0; i < option.value.length; i++) {
-		var value = option.value[i];
-		if (this.hasValidPreconditions(value)) {
-			return value;
-		}
-	}
-	return null;
 };
 
 /**

@@ -159,20 +159,8 @@ var SearchCriteria = Backbone.Model.extend({
 
 				case "ngEO_DO":
 					var don = value.substr(1, value.length-2);
-
-					// Use this regex to avoid splitting crop product
-					// which has multiple "," in it
-					var commaNotBetweenParenthesisRe = new RegExp(/,(?!\(?[^()]*\))/);
-					parameters = don.split(commaNotBetweenParenthesisRe);
-
 					var downloadOptions = this.get('downloadOptions')[datasetId];
-					for ( var n = 0; n < parameters.length; n++ ) {
-						var p = parameters[n].split(':');
-						if (p.length != 2) 
-							throw "Invalid OpenSearch URL : download option parameter " + parameters[n] + "not correctly defined."
-
-						downloadOptions.setValue(p[0], (p[0] == "cropProduct" ? true : p[1]));
-					}
+					downloadOptions.populateFromUrl(don);
 					// Force triggering since there is no set of 'downloadOptions'
 					this.trigger("change:downloadOptions");
 					break;

@@ -64,9 +64,9 @@ var SearchResultsTableView = TableView.extend({
 	/**
 	 * Call when selection has changed
 	 */
-	toggleSelection: function(features) {
+	updateSelection: function(features) {
 
-		TableView.prototype.toggleSelection.apply(this, arguments);
+		TableView.prototype.updateSelection.apply(this, arguments);
 
 		// Disable export if no product selected
 		if (this.model.selection.length > 0) {

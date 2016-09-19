@@ -5,29 +5,15 @@
 var Configuration = require('configuration');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var DataSetSearch = require('search/model/datasetSearch');
+var DownloadOptions = require('search/model/downloadOptions');
 
 /**
  * Extract the download options from the product url
  */
 var _getProductDownloadOptions = function(feature) {
-	var downloadOptions = {};
+
 	var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-	if (productUrl) {
-		var idx = productUrl.indexOf("ngEO_DO={");
-		if (idx >= 0) {
-			var str = productUrl.substring(idx + 9, productUrl.length - 1);
-			var kvs = str.split(',');
-
-			for (var n = 0; n < kvs.length; n++) {
-				var kv = kvs[n].split(':');
-				if (kv.length == 2) {
-					downloadOptions[kv[0]] = kv[1];
-				}
-			}
-		}
-	}
-
-	return downloadOptions;
+	return DownloadOptions.extractParamsFromUrl(productUrl);
 };
 
 
@@ -74,6 +60,10 @@ var FeatureCollection = function() {
 
 	// The id of the feature collection
 	this.id = "";
+
+	// Current browse index (in case of multiple browses) per feature collection
+	// MS: Maybe move it to BrowsesManager.. (tbd on deploy)
+	this.browseIndex = [0];
 
 	var self = this;
 
@@ -165,6 +155,17 @@ var FeatureCollection = function() {
 	this.hideFeatures = function(features) { 
 		self.trigger('hide:features', features, self);
 	};
+
+	// Show browses
+	this.showBrowses = function(features) {
+		self.trigger('show:browses', features, self);
+	};
+
+	// Hide browses
+	this.hideBrowses = function(features) {
+		self.trigger('hide:browses', features, self);
+	};
+
 
 	// Launch a search
 	this.search = function(baseUrl) {
@@ -314,16 +315,26 @@ var FeatureCollection = function() {
 		delete this.children[cleanedId];
 	};
 
-	// Select a feature
-	this.select = function(feature) {
-		this.selection.push(feature);
-		this.trigger("selectFeatures", [feature], this);
+	// Select features
+	this.select = function(features) {
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			if ( this.selection.indexOf(feature) == -1 ) {
+				this.selection.push(feature);
+			}
+		}
+		this.trigger("selectFeatures", features, this);
 	};
 
-	// Unselect a feature
-	this.unselect = function(feature) {
-		this.selection.splice(this.selection.indexOf(feature), 1);
-		this.trigger("unselectFeatures", [feature], this);
+	// Unselect features
+	this.unselect = function(features) {
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			if ( this.selection.indexOf(feature) >= 0 ) {
+				this.selection.splice(this.selection.indexOf(feature), 1);
+			}
+		}
+		this.trigger("unselectFeatures", features, this);
 	};
 
 	/**
@@ -349,8 +360,10 @@ var FeatureCollection = function() {
 	 * Unselect all the already selected table items
 	 */
 	this.unselectAll = function() {
-		this.trigger("unselectFeatures", this.selection, this);
+		// Copy current selection into new array to be fired within the event
+		var features = this.selection.slice(0);
 		this.selection = [];
+		this.trigger("unselectFeatures", features, this);
 	};
 
 	/**
@@ -434,13 +447,13 @@ var FeatureCollection = function() {
 			var dos = _getProductDownloadOptions(this.selection[i]);
 
 			for (var x in dos) {
-				if (selectedDownloadOptions[x] != dos[x]) {
+				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
 
 			for (var x in selectedDownloadOptions) {
-				if (selectedDownloadOptions[x] != dos[x]) {
+				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}

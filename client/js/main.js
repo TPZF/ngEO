@@ -32,7 +32,9 @@ module.exports = {
 			window.location = sharedUrl;
 		}
 
-		/** When the document is ready and configuration is loaded load the rest of the application */
+		/**
+		 * When the document is ready and configuration is loaded load the rest of the application
+		 */
 		$.when(doc_ready, Configuration.load())
 			.done(function() {
 

@@ -15,7 +15,8 @@
 			{"sTitle" : "Product Type", "mData" : "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType"},
 			{"sTitle" : "Illumination Azimuth Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationAzimuthAngle.#text"},
 			{"sTitle" : "Illumination Zenith Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationZenithAngle.#text"},
-			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#text"}
+			{"sTitle" : "Illumination Elelvation Angle",  "mData" : "properties.EarthObservation.procedure.EarthObservationEquipment.acquisitionParameters.Acquisition.illuminationElevationAngle.#text"},
+			{"sTitle" : "Cloud cover percentage", "mData" : "properties.EarthObservation.result.EarthObservationResult.cloudCoverPercentage.#text"}
 		],
 		"directDownloadColumn" : 7
 	},

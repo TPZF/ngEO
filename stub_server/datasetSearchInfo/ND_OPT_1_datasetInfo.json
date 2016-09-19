@@ -22,7 +22,7 @@
         "downloadOptions": [
             {
                 "argumentName": "productFormat",
-				"caption": "Product format",
+                "caption": "Product format",
                 "description": "Desired download format",
                 "value": [
                     {
@@ -59,13 +59,19 @@
                 "id": "uuid",
                 "type": "string"
             },
-			
+            
             {
                 "id": "pass",
                 "type": "List",
                 "possibleValues": [ "Ascending", "Descending"]
             },
-            
+            {
+                "id" : "optccp",
+                "type" : "Float",
+                "caption" : "optccp",
+                "rangeMinValue" : "0.072230242192745",
+                "rangeMaxValue" : "99.965942382812"
+            },
             {
                 "id": "orbit",
                 "type": "Integer",

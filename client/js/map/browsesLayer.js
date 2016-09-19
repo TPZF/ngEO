@@ -57,31 +57,25 @@ var BrowsesLayer = function(params, mapEngine) {
 	/**
 	 * Add features to layer
 	 */
-	this.addBrowse = function(feature, eoBrowse) {
-		if (!browseLayersMap.hasOwnProperty(feature.id)) {
-			var eo = feature.properties.EarthObservation;
-			// Fix NGEO-1031 : remove milliseconds from date
-			var begin = Date.fromISOString(Configuration.getMappedProperty( feature, "start" ));
-			begin.setUTCMilliseconds(0);
-			var end = Date.fromISOString(Configuration.getMappedProperty( feature, "stop" ));
-			end.setUTCMilliseconds(0);
+	this.addBrowse = function(feature, browseUrl) {
+		if (!browseLayersMap.hasOwnProperty(browseUrl)) {
+			// Set browseUrl in map to mark the creation of browse to avoid double creating of
+			// browse provoked by highlight event as well..
+			browseLayersMap[browseUrl] = browseUrl;
 			
-			var params = {
-				time: toWMTSTime(begin) + "/" + toWMTSTime(end),
-				transparent: true
-			};
-			
-			var type = eoBrowse.eop_type;
-			if (!type) {
-				type = "wmts";
+			var layerDesc = MapUtils.createWmsLayerFromUrl(browseUrl);
+			if ( !layerDesc.params.time ) {
+				// Take the time from feature if no time has been defined in url
+				// Fix NGEO-1031 : remove milliseconds from date
+				var begin = Date.fromISOString(Configuration.getMappedProperty( feature, "start" ));
+				begin.setUTCMilliseconds(0);
+				var end = Date.fromISOString(Configuration.getMappedProperty( feature, "stop" ));
+				end.setUTCMilliseconds(0);
+				layerDesc.params.time = toWMTSTime(begin) + "/" + toWMTSTime(end);
 			}
-			
-			if ( type == "wms" ) {
-				params.layers = eoBrowse.eop_layer;
-				//params.styles = "ellipsoid";
-				params.styles = "";
-			} else {
-				// Default is WMTS
+
+			if ( layerDesc.type.toUpperCase() == "WMTS" && !layerDesc.params.matrixSet ) {
+				// If no matrixSet is defined, take ones from configuration
 				var mapProjection = Configuration.get('map.projection', "EPSG:4326");
 				var wmtsMap = Configuration.get('browseDisplay.wmtsParameters', {
 					"EPSG:4326": {
@@ -95,45 +89,47 @@ var BrowsesLayer = function(params, mapEngine) {
 						}
 					}
 				});
-				params.matrixSet = wmtsMap[mapProjection].params.matrixSet;
-				params.layer = eoBrowse.eop_layer || "TEST_SAR";
+				layerDesc.params.matrixSet = wmtsMap[mapProjection].params.matrixSet;
 			}
-			
 			MapUtils.computeExtent(feature);
-			var config = {
-				name: feature.id,
-				type: type,
+
+			// Update some WEBC intrinsic values which couldn't be extracted from browse url
+			_.merge(layerDesc, {
+				name: browseUrl,
 				visible: this.params.visible,
-				baseUrl: eoBrowse.eop_url || eoBrowse.eop_filename,
 				opacity: Configuration.get("map.browseDisplay.opacity", 1.0),
-				params: params,
 				bbox: feature.bbox,
 				crossOrigin: Configuration.get("map.browseDisplay.crossOrigin", "anonymous")
-			};
-			
+			});
+			layerDesc.params.transparent = true;
+
 			var browseLayerDesc = {
 				time:  Configuration.getMappedProperty( feature, "stop" ),
-				params: config,
-				engineLayer: mapEngine.addLayer(config)
+				params: layerDesc.params,
+				engineLayer: mapEngine.addLayer(layerDesc)
 			};
-			
-			browseLayersMap[feature.id] = browseLayerDesc;
+
+			// Finally set the real browseLayerDesc in browseLayerMap
+			browseLayersMap[browseUrl] = browseLayerDesc;
 			browseLayers.push( browseLayerDesc );
 		}
 	};
 
 	/**
 	 * Remove browse from layer
+	 *
+	 * @param id
+	 *		Browse url
 	 */
-	this.removeBrowse = function(id)  {
-		// Create the WMS if it does not exists
-		if (browseLayersMap.hasOwnProperty(id)) {
+	this.removeBrowse = function(browseUrl)  {
+		// Remove the WMS only if it does exists
+		if (browseLayersMap.hasOwnProperty(browseUrl)) {
 		
 			// Get the browse layer structure from the map
-			var bl = browseLayersMap[ id ];
+			var bl = browseLayersMap[ browseUrl ];
 			
 			// Delete it
-			delete browseLayersMap[ id ];
+			delete browseLayersMap[ browseUrl ];
 			
 			// Remove browse layer from the current engine
 			mapEngine.removeLayer(bl.engineLayer);

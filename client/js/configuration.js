@@ -95,6 +95,7 @@ var configuration = {
 					}
 				})
 			).then(function(){
+				// Override our's server configuration with one coming from WEBS
 				configuration.buildServerConfiguration(externalData);
 			})
 		);
@@ -139,10 +140,18 @@ var configuration = {
 	getMappedProperty: function(object, propertyId, defaultValue) {
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
 		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
-		if (propertyPath)
-			return this.getFromPath(object, propertyPath, defaultValue);
-		else
+		if (propertyPath) {
+			var value = this.getFromPath(object, propertyPath, defaultValue);
+			if (propertyId == "browses" && !_.isArray(value)) {
+				// HACK: since WEBS sends browses as an Object when there is only one browse
+				// we don't want to change all the logic in WEBC so convert it to array here for now
+				// For more details see NGEO-2182 (in comments)
+				value = [value];
+			}
+			return value;
+		} else {
 			return defaultValue;
+		}
 	},
 
 	/**

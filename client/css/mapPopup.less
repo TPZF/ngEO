@@ -5,6 +5,8 @@
  * Map popup is an overlay on the right of the map
  */
 #mapPopup {
+	max-height: 400px;
+	overflow: auto;
 	position: absolute;
 	right: 0;
 	top: 10%;
@@ -40,4 +42,20 @@
 // Icon for shopcart
 .ui-icon-shop {
 	background-image: url("../images/shop.png");
+}
+
+// Icon for browse
+.ui-icon-browse {
+  background: url("../images/browse.png") 50% 50% no-repeat;
+  background-color: #252525;
+}
+.ui-icon-browse-multiple {
+  background: url("../images/browse_multiple.png") 50% 50% no-repeat;
+  background-color: #252525;	
+}
+// Code to "simulate" jqm button styling
+.ui-btn-active {
+	.ui-icon-browse {
+		background-color: #395E7B !important;
+	}
 }

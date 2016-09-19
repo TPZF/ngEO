@@ -1,6 +1,7 @@
 var Logger = require('logger');
 var Configuration = require('configuration');
 var Map = require('map/map');
+var MapUtils = require('map/utils');
 var UserPrefs = require('userPrefs');
 //require('highchecktree');
 var layerManager_template = require('account/template/layerManagerContent');
@@ -105,7 +106,7 @@ var layerCheckedCallback = function() {
  *			<ul>
  *				<li>WMS layer coming from configuration</li>
  *				<li>Added by user within mapserver url(coming from "wmsCapabilitiesFormat.read")</li>
- *				<li>Added by user within full wms/wmts request(coming from "createWmsLayerFromUrl")</li>
+ *				<li>Added by user within full wms/wmts request(coming from "MapUtils.createWmsLayerFromUrl")</li>
  *			</ul>
  *	@return
  *		Item object for highCheckTree plugin
@@ -158,6 +159,7 @@ var buildItem = function(layer) {
 					name: layer.identifier,
 					baseUrl: layer.baseUrl,
 					visible: false,
+					projection: Configuration.get("map.projection"),
 					params: {
 						layer: layer.identifier,
 						matrixSet: matrixSet.identifier,
@@ -215,40 +217,6 @@ var buildHighCheckTreeData = function(layers, baseUrl) {
 	});
 
 	return data;
-};
-
-/**
- *	Create WMS/WMTS layer from url
- */
-var createWmsLayerFromUrl = function(baseUrl) {
-
-	var parsed = {};
-	var params = baseUrl.split(/\?|\&/);
-	_.each(params, function(param) {
-		var kv = param.split("=");
-		if (kv.length == 2)
-			parsed[kv[0].toUpperCase()] = kv[1];
-	});
-
-	// TODO: Check SRS --> must be 4326 ?
-	var layerTag = parsed['SERVICE'] == 'WMS' ? 'LAYERS' : 'LAYER';
-	var wmsLayer = {
-		type: parsed['SERVICE'],
-		baseUrl: params[0],
-		name: parsed[layerTag],
-		title: parsed[layerTag],
-		params: {
-			format: decodeURIComponent(parsed['FORMAT']),
-			style: parsed['STYLE']
-		}
-	};
-	if ( parsed['SERVICE'] == 'WMTS' ) {
-		wmsLayer.params.matrixSet = parsed['TILEMATRIXSET'];
-		wmsLayer.params.layer = parsed[layerTag];
-	} else {
-		wmsLayer.params.layers = parsed[layerTag];
-	}
-	return wmsLayer;
 };
 
 /**
@@ -458,7 +426,7 @@ var LayerManagerView = Backbone.View.extend({
 
 		} else if (layer.baseUrl.toUpperCase().indexOf("LAYER=") > 0) {
 			// WMS/WMTS single url
-			var wmsLayer = createWmsLayerFromUrl(layer.baseUrl);
+			var wmsLayer = MapUtils.createWmsLayerFromUrl(layer.baseUrl);
 			// Override title by user defined
 			wmsLayer.title = layer.name;
 			var item = buildItem(wmsLayer);

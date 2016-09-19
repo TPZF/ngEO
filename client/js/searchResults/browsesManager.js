@@ -1,25 +1,28 @@
 var Logger = require('logger');
 var Configuration = require('configuration');
 var DatasetAuthorizations = require('search/model/datasetAuthorizations');
+var DataSetPopulation = require('search/model/dataSetPopulation');
 var Map = require('map/map');
 var MapUtils = require('map/utils');
 var SelectHandler = require('map/selectHandler');
+var SearchResults = require('searchResults/model/searchResults');
 
 var _browseLayerMap = {};
 var _browseAccessInformationMap = {};
 
 /**
- * Get the key to be used in the map for the given browse info
+ * Get the url to be used in the map for the given browse info
  */
-var _getKey = function(browseInfo) {
-	// Note : use filename if url not present because of some problems with WEBS
-	return (browseInfo.eop_url || browseInfo.eop_filename) + browseInfo.eop_layer;
+var _getUrl = function(browse) {
+	// TODO: parametrize from conf
+	return browse.BrowseInformation.fileName.ServiceReference["@href"];
 };
 
 /**
  *	Creates a dictionary containing the array of features depending on index
  *	Basically creates an object with keys(the same as _browseAccessInformationMap) with each key,
  *	containing the array with features belonging to this key
+ *	Take url as a key
  */
 var _buildDicoByKey = function(features) {
 	var dico = {};
@@ -27,11 +30,11 @@ var _buildDicoByKey = function(features) {
 		var feature = features[i];
 		var browseInfo = _getBrowseInformation(feature);
 		if (browseInfo) {
-			var key = _getKey(browseInfo);
-			if (!dico.hasOwnProperty(key)) {
-				dico[key] = [];
+			var url = _getUrl(browseInfo);
+			if (!dico.hasOwnProperty(url)) {
+				dico[url] = [];
 			}
-			dico[key].push(feature);
+			dico[url].push(feature);
 		}
 	}
 	return dico;
@@ -78,29 +81,48 @@ module.exports = {
 	 * @param feature		The feature to add
 	 * @param datasetId		The parent dataset id
 	 */
-	addBrowse: function(feature, datasetId) {
+	addBrowse: function(feature, datasetId, browseIndex) {
 
-		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation", null);
+		var browses = Configuration.getMappedProperty(feature, "browses", null);
 		var isPlanned = (Configuration.getMappedProperty(feature, "status") == "PLANNED"); // NGEO-1775 : no browse for planned features
-		// NB: NGEO-1812: Use isEmptyObject to check that browseInfo exists AND not empty (server sends the response not inline with ICD)
-		if (!$.isEmptyObject(browseInfo) && !isPlanned) {
-			var key = _getKey(browseInfo);
-			if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, browseInfo.eop_layer)) {
+		// NB: NGEO-1812: Use isEmptyObject to check that browses exists AND not empty (server sends the response not inline with ICD)
+		if (!$.isEmptyObject(browses) && !isPlanned) {
+			//var browseObject = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 
-				var browseLayer = _browseLayerMap[key];
-				if (!browseLayer) {
-					browseLayer = _browseLayerMap[key] = Map.addLayer({
-						name: browseInfo.eop_layer,
-						type: "Browses",
-						visible: true
-					});
-				}
-				browseLayer.addBrowse(feature, browseInfo);
-
-			} else if (!_browseAccessInformationMap[key]) {
-				Logger.inform("You do not have enough permission to browse the layer " + browseInfo.eop_layer + ".");
-				_browseAccessInformationMap[key] = true;
+			if ( !browseIndex ) {
+				var fc = SearchResults.featureCollection[datasetId];
+				browseIndex = fc.browseIndex;
 			}
+
+			for ( var i=0; i<browseIndex.length; i++ ) {
+				var browseObject = browses[browseIndex[i]];
+				browseObject.BrowseInformation._selected = true;
+
+				var browseUrl = _getUrl(browseObject);
+				var layerName = MapUtils.getLayerName(browseUrl);
+				if (!layerName) {
+					// Can't find the name of layer: it's impossible to add a new layer
+					return null;
+				}
+
+				if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
+					var browseLayer = _browseLayerMap[layerName];
+					if (!browseLayer) {
+						browseLayer = _browseLayerMap[layerName] = Map.addLayer({
+							name: layerName,
+							type: "Browses",
+							visible: true
+						});
+					}
+					browseLayer.addBrowse(feature, browseUrl);
+
+				} else if (!_browseAccessInformationMap[browseUrl]) {
+					Logger.inform("You do not have enough permission to browse the layer " + browseUrl + ".");
+					_browseAccessInformationMap[browseUrl] = true;
+				}
+			}
+			
+			
 		}
 
 	},
@@ -110,37 +132,60 @@ module.exports = {
 	 *
 	 * @param feature		The feature to remove
 	 */
-	removeBrowse: function(feature) {
+	removeBrowse: function(feature, browseIndex) {
 
-		var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
-		if (browseInfo) {
-			var key = _getKey(browseInfo);
-			var browseLayer = _browseLayerMap[key];
-			if (browseLayer) {
-				browseLayer.removeBrowse(feature.id);
+		var browses = Configuration.getMappedProperty(feature, "browses");
+		if (browses) {
+			// var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
+			if ( !browseIndex ) {
+				//var fc = SearchResults.featureCollection[feature._featureCollection.dataset.get("id")];
+				var fc = feature._featureCollection;
+				// var browsesArray = Array.apply(null, Array(browses.length)).map(function (x, i) { return i; });
+				// browseIndex = _.difference(browsesArray, fc.browseIndex);
+				browseIndex = fc.browseIndex;
+			}
 
-				if (browseLayer.isEmpty()) {
-					Map.removeLayer(browseLayer);
-					delete _browseLayerMap[key];
+			for ( var i=0; i<browseIndex.length; i++ ) {
+				var browseObject = browses[browseIndex[i]];
+				if ( browseObject ) {
+
+					var layerName = MapUtils.getLayerName(_getUrl(browseObject));
+					var browseLayer = _browseLayerMap[layerName];
+					if (browseLayer) {
+						var browseUrl = _getUrl(browseObject);
+						browseLayer.removeBrowse(browseUrl);
+
+						if (browseLayer.isEmpty()) {
+							Map.removeLayer(browseLayer);
+							delete _browseLayerMap[layerName];
+						}
+					}
+					delete browseObject.BrowseInformation._selected;
 				}
 			}
+
 		}
 	},
 
 	/**
-	 *	Get browse layer with the given feature collection
+	 *	Get all selected browse layers for the given feature collection
 	 */
-	getBrowseLayer: function(fc) {
-		// HACK: Get the first one for now
-		var feature = fc.features[0];
-		if ( feature ) {
-			var browseInfo = Configuration.getMappedProperty(feature, "browseInformation");
-			if (browseInfo) {
-				var key = _getKey(browseInfo);
-				return _browseLayerMap[key];
+	getSelectedBrowseLayers: function(fc) {
+		var selectedBrowses = [];
+		for ( var i=0; i<fc.features.length; i++ ) {
+			var feature = fc.features[i];
+			var browses = Configuration.getMappedProperty(feature, "browses");
+			if (browses) {
+				var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
+				if ( selectedBrowse ) {
+					var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));	
+					if ( selectedBrowses.indexOf(_browseLayerMap[layerName]) == -1 ) {
+						selectedBrowses.push(_browseLayerMap[layerName]);
+					}
+				}
 			}
 		}
-		return null;
+		return selectedBrowses;
 	},
 
 	/**

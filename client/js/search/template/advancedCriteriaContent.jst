@@ -11,10 +11,12 @@
 
 	<% _.each( advancedAttributes, function(criterion, i) { 
 			var value = criterion.value;
-			var label = criterionLabels[criterion.id] || criterion.id; %>
+			var label = criterionLabels[criterion.id] || criterion.id;
+			var criterionType = criterion.type.toLowerCase();
+			%>
 		   <!-- The criterion is an enumeration has multiple options so create a list of checkboxes  -->
 		   <!-- NGEO-1862 possibleValues contains now a list of String which are the direct value to display instead of object mapped with the string possibleValue -->
-			<% if (criterion.type.toLowerCase() == 'list') { %> 
+			<% if (criterionType == 'list') { %> 
 
 					 <div data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
@@ -30,20 +32,20 @@
 					</div>
 
 			<!-- The criterion is an integer within a range  -->	
-			<% } else if (criterion.type.toLowerCase() == 'integer' && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+			<% } else if ((criterionType == 'integer' || criterionType == 'float') && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 
 				<div data-role="fieldcontain">
 			    	<div data-role="rangeslider" data-highlight="true" data-mini="true">
 				        <label class="capitalize" for="<%= criterion.id %>_from"><%= label %>:</label>
-				        <input data-theme="a" type="range" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(1, value.indexOf(','))) : print(criterion.rangeMinValue) %>">
+				        <input data-theme="a" type="range" step="<% criterionType == "integer" ? print("1") : print(".1") %>" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(1, value.indexOf(','))) : print(criterion.rangeMinValue) %>">
 				        <label class="capitalize" for="<%= criterion.id %>_to"><%= label %>:</label>
-				        <input data-theme="a" type="range" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
+				        <input data-theme="a" type="range" step="<% criterionType == "integer" ? print("1") : print(".1") %>" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
 				    </div>
 				</div>
 
 
 			<!-- The criterion is a string  -->	
-			<% } else if (criterion.type.toLowerCase() == 'string') { %>
+			<% } else if (criterionType == 'string') { %>
 			
 				<div data-role="fieldcontain">
 					<label class="capitalize" for="<%= criterion.id %>"><%= label %>:</label>
@@ -51,7 +53,7 @@
 				</div>
 
 			<!-- The criterion is a float  -->	
-			<% } else if (criterion.type.toLowerCase() == 'float' || criterion.type.toLowerCase() == 'integer') { %>	
+			<% } else if (criterionType == 'float' || criterion.type.toLowerCase() == 'integer') { %>	
 			
 				<div data-role="fieldcontain">
 					<label class="capitalize" for="<%= criterion.id %>"><%= label %>:</label>

@@ -39,6 +39,8 @@ var ExportView = Backbone.View.extend({
 					// Remove internal properties
 					if (feature._featureCollection)
 						delete feature._featureCollection;
+					if (feature._isHidden)
+						delete feature._isHidden;
 					if (feature.properties.styleHint)
 						delete feature.properties.styleHint;
 				});
