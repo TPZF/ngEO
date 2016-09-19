@@ -15,27 +15,28 @@
    "useTodayButton": true, "themeDate":"c", "themeDatePick":"a", "calHighToday": true, "calUsePickers": true, "calNoHeader": true, "zindex": "2000"}' />
 </label> 
 
+<!-- NGEO-2214 & NGEO-2221: Hide time driven panel for now.. -->
+<!--
 <div id="type" class="ui-grid-a">
 
-<div class="ui-block-a"> 
-	<% if (timeDriven == false) {  %>
-		<input id="data-driven-input" type="radio" name="STOType" data-mini="true" checked>		
-	<% } else { %>	 
-		<input id="data-driven-input" type="radio" name="STOType" data-mini="true">
-	<% } %>	 
-	<label for="data-driven-input" id="data-driven-label" data-mini="true" data-corners="false">Data-Driven Subscription</label>         	
-</div>
+	<div class="ui-block-a"> 
+		<% if (timeDriven == false) {  %>
+			<input id="data-driven-input" type="radio" name="STOType" data-mini="true" checked>		
+		<% } else { %>	 
+			<input id="data-driven-input" type="radio" name="STOType" data-mini="true">
+		<% } %>	 
+		<label for="data-driven-input" id="data-driven-label" data-mini="true" data-corners="false">Data-Driven Subscription</label>         	
+	</div>
 
-  <div class="ui-block-b"> 
-	<% if (timeDriven == true) {  %>
-		<input id="time-driven-input" type="radio" name="STOType" data-mini="true" checked>		
-	<% } else { %>	 
-		<input id="time-driven-input" type="radio" name="STOType" data-mini="true">	
-	<% } %>	 
-	
-	<label for="time-driven-input" id="time-driven-label" data-mini="true" data-corners="false">Time-Driven Subscription</label>         	
-</div>
-
+	  <div class="ui-block-b"> 
+		<% if (timeDriven == true) {  %>
+			<input id="time-driven-input" type="radio" name="STOType" data-mini="true" checked>		
+		<% } else { %>	 
+			<input id="time-driven-input" type="radio" name="STOType" data-mini="true">	
+		<% } %>	 
+		
+		<label for="time-driven-input" id="time-driven-label" data-mini="true" data-corners="false">Time-Driven Subscription</label>         	
+	</div>
 </div>
 
 <div id="timeDrivenParams" class="widget-content">
@@ -54,4 +55,7 @@
 	<% } %>
 	
 </div>
+
+-->
+
 </div>
