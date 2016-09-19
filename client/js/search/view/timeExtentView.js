@@ -43,13 +43,13 @@ var TimeExtentView = Backbone.View.extend({
 			// Display the time slider in the bottom of the window when 
 			if (checked) {
 				// Disable the dates start and stop widgets if the time slider is enabled
-				this.$el.find('input[type="text"]').datebox('disable');
+				// this.$el.find('input[type="text"]').datebox('disable');
 				this.$el.find('[name="datetimeinput"]').datetimepicker('disable');
 				this.addTimeSlider();
 			} else {
 				this.removeTimeSlider();
 				// Enable the dates start and stop widgets if the time slider is disabled
-				this.$el.find('input[type="text"]').datebox('enable');
+				// this.$el.find('input[type="text"]').datebox('enable');
 				this.$el.find('[name="datetimeinput"]').datetimepicker('enable');
 			}
 
@@ -97,8 +97,8 @@ var TimeExtentView = Backbone.View.extend({
 				endYear: stopDate.getFullYear(),
 				calDateList: keyDates
 			};
-			this.$fromDateInput.datebox("option", dateRangeOptions);
-			this.$toDateInput.datebox("option", dateRangeOptions);
+			// this.$fromDateInput.datebox("option", dateRangeOptions);
+			// this.$toDateInput.datebox("option", dateRangeOptions);
 
 		} else if (useTimeSlider) {
 			this.removeTimeSlider();
@@ -231,7 +231,7 @@ var TimeExtentView = Backbone.View.extend({
 
 			if (this.model.get("useTimeSlider")) {
 				// Disable the dates start and stop widgets if the time slider is enabled
-				this.$el.find('input[type="text"]').datebox("disable");
+				// this.$el.find('input[type="text"]').datebox("disable");
 				this.$el.find('[name="datetimeinput"]').datetimepicker('disable');
 			}
 		}
