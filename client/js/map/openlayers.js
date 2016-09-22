@@ -40,6 +40,7 @@ var _setupWMTS = function(config) {
 	} */
 }
 
+
 /**
  * Constructor
  * parentElement : the parent element div for the map
@@ -89,7 +90,7 @@ OpenLayersMapEngine = function(element) {
 		internalProjection: this._map.projection
 	});
 
-	this._styles = {};
+	this.styles = {};
 };
 
 
@@ -118,10 +119,33 @@ OpenLayersMapEngine.prototype.computeResolutions = function(restrictedExtent) {
 };
 
 /**
+ *	Create conditional OpenLayers style from configuration
+ *	@see For more details see NGEO-2222
+ */
+OpenLayersMapEngine.prototype.createConditionalStyles = function(baseStyle, condStyle) {
+	var styleHints = ['default', 'select', 'highlight', 'highlight-select'];
+	_.each(styleHints, function(styleHint) {
+		if ( condStyle[styleHint] ) {
+			var s = new OpenLayers.Style(condStyle[styleHint]);
+			s.isApplicable = function(feature, style) {
+				return style == styleHint && Configuration.getFromPath(feature, condStyle.attribute) == condStyle.value;
+			}
+			baseStyle.styles[ condStyle.attribute+"-"+condStyle.value+"-"+styleHint ] = s;
+		}
+	});
+};
+
+/**
  * Add a style
  */
 OpenLayersMapEngine.prototype.addStyle = function(name, style) {
-	this._styles[name] = new OpenLayers.StyleMap(style);
+	this.styles[name] = new OpenLayers.StyleMap( style );
+	if ( style.conditionals ) {
+		var self = this;
+		for ( var i=0; i<style.conditionals.length; i++ ) {
+			self.createConditionalStyles(self.styles[name], style.conditionals[i]);
+		}
+	}
 };
 
 /**
@@ -325,8 +349,8 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 
 		// Set common options
 		olLayer.attribution = layer.attribution;
-		if (layer.style && this._styles[layer.style]) {
-			olLayer.styleMap = this._styles[layer.style];
+		if (layer.style && this.styles[layer.style]) {
+			olLayer.styleMap = this.styles[layer.style];
 		}
 		olLayer.setVisibility(layer.visible);
 
@@ -480,7 +504,7 @@ OpenLayersMapEngine.prototype.removeAllFeatures = function(layer) {
 OpenLayersMapEngine.prototype.addFeature = function(layer, feature) {
 	var olFeatures = this._geoJsonFormat.read(MapUtils.fixDateLine(feature));
 	layer.addFeatures(olFeatures);
-
+	layer.drawFeature(layer.getFeatureByFid(feature.id), feature.renderHint);
 }
 
 /**
@@ -490,8 +514,24 @@ OpenLayersMapEngine.prototype.modifyFeatureStyle = function(layer, feature, styl
 	var olFeature = layer.getFeatureByFid(feature.id);
 	if (olFeature) {
 		olFeature.renderIntent = style;
-		layer.drawFeature(layer.getFeatureByFid(feature.id), style);
+		layer.drawFeature(olFeature, style);
 	}
+}
+
+/**
+ *	Updates style for the given feature according to conditional styling from configuration
+ *	if applicable, otherwise return the initial style
+ */
+OpenLayersMapEngine.prototype.applyConditionalStyling = function(layer, feature, style) {
+	var currentStyle = style;
+	var engineStyles = layer.styleMap.styles;
+	for ( var x in engineStyles ) {
+		var engineStyle = engineStyles[x];
+		if ( engineStyle.isApplicable && engineStyle.isApplicable(feature, style) ) {
+			currentStyle = x;
+		}
+	}
+	return currentStyle;
 }
 
 /**

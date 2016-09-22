@@ -106,6 +106,23 @@ var createGWStyle = function(style) {
 	return gwStyle;
 };
 
+/** 
+ *  Create conditional GlobWeb styles from configuration
+ *  @see For more details see NGEO-2222 
+ */ 
+GlobWebMapEngine.prototype.createConditionalStyles = function(baseStyle, condStyle) {
+	var styleHints = ['default', 'select', 'highlight', 'highlight-select'];
+	_.each(styleHints, function(styleHint) {
+		if ( condStyle[styleHint] ) {
+			var s = createGWStyle(condStyle[styleHint]);
+			s.isApplicable = function(feature, style) {
+				return style == styleHint && Configuration.getFromPath(feature, condStyle.attribute) == condStyle.value;
+			}
+			baseStyle[condStyle.attribute+"-"+condStyle.value+"-"+styleHint] = s;
+		}
+	} );
+}
+
 /**
  * Add a style
  */
@@ -113,13 +130,21 @@ GlobWebMapEngine.prototype.addStyle = function(name, style) {
 
 	var gwStyle = {};
 
-	if (style['default']) {
+	if (style['default'] || name == "lut") {
+		// It's a style map
 		for (var x in style) {
-			if (style.hasOwnProperty(x)) {
-				gwStyle[x] = createGWStyle(style[x]);
+			if ( x == "conditionals" ) {
+				for (var i=0; i<style[x].length; i++) {
+					this.createConditionalStyles(gwStyle, style[x][i]);
+				}
+			} else {
+				if (style.hasOwnProperty(x)) {
+					gwStyle[x] = createGWStyle(style[x]);
+				}
 			}
 		}
 	} else {
+		// It's a simple style description
 		gwStyle['default'] = createGWStyle(style);
 	}
 
@@ -260,7 +285,7 @@ GlobWebMapEngine.prototype.addLayer = function(layer) {
 	if (gwLayer) {
 		if (layer.style && this.styles.hasOwnProperty(layer.style)) {
 			gwLayer.style = this.styles[layer.style]['default'];
-			gwLayer.styleMap = this.styles[layer.style];
+			gwLayer.styleMap = _.extend({}, this.styles["lut"], this.styles[layer.style]);
 		}
 		
 		// NGEO-1779: Set zIndex to be always on top for overlay WMS/WMTS
@@ -463,6 +488,22 @@ GlobWebMapEngine.prototype.updateFeature = function(layer, feature) {
  */
 GlobWebMapEngine.prototype.removeFeature = function(layer, feature) {
 	layer.removeFeature(feature);
+}
+
+/**
+ *	Updates style for the given feature according to conditional styling from configuration
+ *	if applicable, otherwise return the initial style
+ */
+GlobWebMapEngine.prototype.applyConditionalStyling = function(layer, feature, style) {
+	var currentStyle = style;
+	var engineStyles = layer.styleMap;
+	for ( var x in engineStyles ) {
+		var engineStyle = engineStyles[x];
+		if ( engineStyle.isApplicable && engineStyle.isApplicable(feature, style) ) {
+			currentStyle = x;
+		}
+	}
+	return currentStyle;
 }
 
 /**

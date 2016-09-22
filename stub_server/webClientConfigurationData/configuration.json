@@ -320,7 +320,49 @@
 					"strokeColor": "#0000FF",
 					"strokeWidth": 1,
 					"fill" : false
-				}
+				},
+				"conditionals":[{
+					"attribute": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName",
+					"value": "Sentinel-1",
+					"default": {
+						"strokeColor": "cyan",
+						"strokeWidth": 1,
+						"fill" : false
+					},
+					"highlight": {
+						"strokeColor": "#00FFFF",
+						"strokeWidth": 3,
+						"fill" : false
+					},
+					"select" : {
+						"strokeColor": "lime",
+						"strokeWidth": 1,
+						"fill" : false
+					},
+					"highlight-select" : {
+						"strokeColor": "green",
+						"strokeWidth": 3,
+						"fill" : false	
+					}
+				} , {
+					"attribute": "properties.EarthObservation.procedure.EarthObservationEquipment.platform.Platform.shortName",
+					"value": "Sentinel-2",
+					"default": {
+						"strokeColor": "magenta",
+						"strokeWidth": 1,
+						"fill" : false
+					},
+					"highlight": {
+						"strokeColor": "#0000FF",
+						"strokeWidth": 3,
+						"fill" : false
+					},
+					"select" : {
+						"strokeColor": "#00FF18",
+						"strokeWidth": 1,
+						"fill" : false
+					}
+				}]
 			},
 			"shopcart-footprint" : {
 				"default" : {
