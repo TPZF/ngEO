@@ -81,7 +81,6 @@ Rectangle.prototype.updateFeature = function(options) {
 	        ]
 	    ];
 	}
-	console.log(this.feature.geometry.type);
 }
 
 module.exports = Rectangle;

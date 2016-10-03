@@ -63,8 +63,19 @@ var SearchArea = function() {
 			// We really need to update the feature like that to be able to display wide rectangles, otherwise the shortest
 			// segments will be taken..
 			var rectangle = new Rectangle({
-				feature: _feature
+				west: _feature.bbox[0],
+				south: _feature.bbox[1],
+				east: _feature.bbox[2],
+				north: _feature.bbox[3]
 			});
+			_feature.geometry.coordinates = rectangle.feature.geometry.coordinates;
+			_feature.geometry.type = rectangle.feature.geometry.type;
+
+			// Code hereafter doesn't really work, but should be.. improve it one day...
+			// var rectangle = new Rectangle({
+			// 	feature: _feature,
+			// 	type: _feature.bbox[0] > _feature.bbox[2] ? "MultiLineString" : "Polygon"
+			// });
 
 		} else {
 			// Compute the extent from the coordinates
