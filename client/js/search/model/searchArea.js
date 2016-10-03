@@ -1,6 +1,7 @@
 var Map = require('map/map');
 var MapUtils = require('map/utils');
 var GeoJSONConverter = require('map/geojsonconverter');
+var Rectangle = require('map/rectangle');
 
 // Utility method to transfrom from decimal degree to degree/minute/second
 var toDMS = function(dd) {
@@ -59,42 +60,12 @@ var SearchArea = function() {
 	var _updateFeature = function() {
 		if (_mode == SearchArea.BBOX) {
 
-			// TODO: Avoid code duplication from rectangle class
 			// We really need to update the feature like that to be able to display wide rectangles, otherwise the shortest
 			// segments will be taken..
-			
-			var west = _feature.bbox[0];
-			var south = _feature.bbox[1];
-			var east = _feature.bbox[2];
-			var north = _feature.bbox[3];
+			var rectangle = new Rectangle({
+				feature: _feature
+			});
 
-			if ( west > east ) {
-				_feature.geometry.type = "MultiLineString";
-				_feature.geometry.coordinates = [
-					[ [ -180, north ], [ east, north ], [ east, south ], [ -180, south ] ],
-					[ [ 180, north ], [ west, north ], [ west, south ], [ 180, south] ],
-					[ [ -180, north ], [ west - 360, north ], [ west - 360, south ], [ -180, south] ],
-					[ [ 180, north ], [ east + 360, north ], [ east + 360, south ], [ 180, south] ]
-				];
-			} else {
-				_feature.geometry.type = "Polygon";
-				var step = (east - west)/4;
-				_feature.geometry.coordinates = [
-			        [
-			            [west, south],
-			            [MapUtils.normalizeLon(west + step), south],
-			            [MapUtils.normalizeLon(west + step * 2), south],
-			            [MapUtils.normalizeLon(west + step * 3), south],
-			            [east, south],
-			            [east, north],
-			            [MapUtils.normalizeLon(west + step * 3), north],
-			            [MapUtils.normalizeLon(west + step * 2), north],
-			            [MapUtils.normalizeLon(west + step), north],
-			            [west, north],
-			            [west, south]
-			        ]
-		    	];
-			}
 		} else {
 			// Compute the extent from the coordinates
 			var coords = _feature.geometry.coordinates[0];
@@ -198,8 +169,23 @@ var SearchArea = function() {
 	//Transform to WKT
 	//NGEO 509 : it is requested to rollback the changes !
 	this.toWKT = function(precision) {
+
 		var coords = _feature.geometry.coordinates;
+
 		var param = "POLYGON(";
+		if ( _feature.geometry.type == "MultiLineString" ) {
+			// Create rectangle containing Polygon coordinates for the given feature
+			var rectangle = new Rectangle({
+				west: _feature.bbox[0],
+				south: _feature.bbox[1],
+				east: _feature.bbox[2],
+				north: _feature.bbox[3],
+				type: "Polygon"
+			});
+			coords = rectangle.feature.geometry.coordinates;
+		} 
+
+		// Convert polygon coordinates to WKT
 		for (var j = 0; j < coords.length; j++) {
 			if (j != 0) {
 				param += ",";

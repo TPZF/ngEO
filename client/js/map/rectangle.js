@@ -8,53 +8,55 @@ var MapUtils = require('map/utils');
  */
 var Rectangle = function(options) {
     if ( options.feature ) {
-    	this.feature = options.feature
+    	// Compute bbox from feature
+
+    	this.feature = options.feature;
     	var bbox = MapUtils.computeBbox(this.feature.geometry);
     	this.west = bbox[0];
     	this.south = bbox[1];
     	this.east = bbox[2];
     	this.north = bbox[3];
+    	this.computeStep();
+    	this.updateFeature({type: this.feature.geometry.type});
     } else {
+    	// Compute feature from bbox coordinates
 	    this.west = options.west;
 	    this.south = options.south;
 	    this.east = options.east;
 	    this.north = options.north;
 	    this.feature = {
-	        id: "Dynamic",
-	        type: "Feature",
-	        geometry: {
-	            type: "Polygon",
-	            coordinates: [
-	                [
-	                    [this.west, this.south],
-			            [MapUtils.normalizeLon(this.west + step), this.south],
-			            [MapUtils.normalizeLon(this.west + step * 2), this.south],
-			            [MapUtils.normalizeLon(this.west + step * 3), this.south],
-			            [this.east, this.south],
-			            [this.east, this.north],
-			            [MapUtils.normalizeLon(this.west + step * 3), this.north],
-			            [MapUtils.normalizeLon(this.west + step * 2), this.north],
-			            [MapUtils.normalizeLon(this.west + step), this.north],
-			            [this.west, this.north],
-			            [this.west, this.south]
-	                ]
-	            ]
-	        },
-	        properties : {}
-	    };
+	    	id: "Dynamic rectangle",
+	    	type: "Feature",
+	    	geometry: {}, // Will be computed afterwards
+	    	properties: {}
+	    }
+	    this.updateFeature({type: options.type});
     }
-    this.updateFeature();
+}
+
+/**
+ *	Compute step for additional points depending if we cross dateline or not
+ */
+Rectangle.prototype.computeStep = function() {
+	var nbSegments = 4;
+	this.step = this.west > this.east ? ((180 - this.west) + 180 + this.east)/nbSegments : (this.east - this.west)/nbSegments;
 }
 
 /**
  *	Update feature according to new bbox parameters
  */
-Rectangle.prototype.updateFeature = function() {
+Rectangle.prototype.updateFeature = function(options) {
+	var type = this.west > this.east ? "MultiLineString" : "Polygon"; // By default
+	if ( options && options.type ) {
+		type = options.type;
+	}
 
-	var step;
-	if ( this.west > this.east ) {
-		this.feature.geometry.type = "MultiLineString";
-		step = ((180 - this.west) + 180 + this.east)/4;
+	// Update step depending on crossing dateline attribut
+	this.computeStep();
+
+	this.feature.geometry.type = type;
+	if ( type == "MultiLineString" ) {
+		// MultiLine string
 		this.feature.geometry.coordinates = [
 			[ [ -180, this.north ], [ this.east, this.north ], [ this.east, this.south ], [ -180, this.south ] ],
 			[ [ 180, this.north ], [ this.west, this.north ], [ this.west, this.south ], [ 180, this.south] ],
@@ -62,58 +64,24 @@ Rectangle.prototype.updateFeature = function() {
 			[ [ 180, this.north ], [ this.east + 360, this.north ], [ this.east + 360, this.south ], [ 180, this.south] ]
 		];
 	} else {
-
-		this.feature.geometry.type = "Polygon";
-		step = (this.east - this.west)/4;
-		this.feature.geometry.coordinates = [
+		// Polygon
+	    this.feature.geometry.coordinates = [
 	        [
 	            [this.west, this.south],
-	            [MapUtils.normalizeLon(this.west + step), this.south],
-	            [MapUtils.normalizeLon(this.west + step * 2), this.south],
-	            [MapUtils.normalizeLon(this.west + step * 3), this.south],
+	            [MapUtils.normalizeLon(this.west + this.step), this.south],
+	            [MapUtils.normalizeLon(this.west + this.step * 2), this.south],
+	            [MapUtils.normalizeLon(this.west + this.step * 3), this.south],
 	            [this.east, this.south],
 	            [this.east, this.north],
-	            [MapUtils.normalizeLon(this.west + step * 3), this.north],
-	            [MapUtils.normalizeLon(this.west + step * 2), this.north],
-	            [MapUtils.normalizeLon(this.west + step), this.north],
+	            [MapUtils.normalizeLon(this.west + this.step * 3), this.north],
+	            [MapUtils.normalizeLon(this.west + this.step * 2), this.north],
+	            [MapUtils.normalizeLon(this.west + this.step), this.north],
 	            [this.west, this.north],
 	            [this.west, this.south]
 	        ]
-    	];
+	    ];
 	}
-	this.step = step;
+	console.log(this.feature.geometry.type);
 }
-
-/**
- *	DEPRECATED
- */
-Rectangle.prototype.updateFeaturePolygon = function() {
-    var step;
-    if ( this.west > this.east ) {
-        this.feature.geometry.type = "Polygon";
-        step = ((180 - this.west) + 180 + this.east)/4;
-    } else {
-        this.feature.geometry.type = "Polygon";
-        step = (this.east - this.west)/4;
-    }
-
-    this.feature.geometry.coordinates = [
-        [
-            [this.west, this.south],
-            [MapUtils.normalizeLon(this.west + step), this.south],
-            [MapUtils.normalizeLon(this.west + step * 2), this.south],
-            [MapUtils.normalizeLon(this.west + step * 3), this.south],
-            [this.east, this.south],
-            [this.east, this.north],
-            [MapUtils.normalizeLon(this.west + step * 3), this.north],
-            [MapUtils.normalizeLon(this.west + step * 2), this.north],
-            [MapUtils.normalizeLon(this.west + step), this.north],
-            [this.west, this.north],
-            [this.west, this.south]
-        ]
-    ];
-    console.log("Updated feature", this.feature);
-    this.step = step;
-};
 
 module.exports = Rectangle;
