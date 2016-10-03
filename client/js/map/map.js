@@ -121,6 +121,7 @@ var FeatureLayer = function(params, engineLayer) {
 		// Re-add the features to the engine
 		for (var i = 0; i < this.features.length; i++) {
 			var f = this.features[i];
+			f.geometry = _.omit(f.geometry, '_bucket', '_tileIndices');
 			mapEngine.addFeature(this.engineLayer, f);
 			if (f.renderHint) {
 				mapEngine.modifyFeatureStyle(this.engineLayer, f, f.renderHint);

@@ -1,4 +1,5 @@
 var Map = require('map/map');
+var MapUtils = require('map/utils');
 var GeoJSONConverter = require('map/geojsonconverter');
 
 // Utility method to transfrom from decimal degree to degree/minute/second
@@ -44,7 +45,8 @@ var SearchArea = function() {
 					[-180, -90]
 				]
 			]
-		}
+		},
+		properties: {}
 	};
 	// The search area mode : BBOX or POLYGON
 	var _mode = SearchArea.BBOX;
@@ -56,15 +58,43 @@ var SearchArea = function() {
 	// Update the feature when the mode or geometry has changed
 	var _updateFeature = function() {
 		if (_mode == SearchArea.BBOX) {
-			_feature.geometry.coordinates = [
-				[
-					[_feature.bbox[0], _feature.bbox[1]],
-					[_feature.bbox[2], _feature.bbox[1]],
-					[_feature.bbox[2], _feature.bbox[3]],
-					[_feature.bbox[0], _feature.bbox[3]],
-					[_feature.bbox[0], _feature.bbox[1]]
-				]
-			];
+
+			// TODO: Avoid code duplication from rectangle class
+			// We really need to update the feature like that to be able to display wide rectangles, otherwise the shortest
+			// segments will be taken..
+			
+			var west = _feature.bbox[0];
+			var south = _feature.bbox[1];
+			var east = _feature.bbox[2];
+			var north = _feature.bbox[3];
+
+			if ( west > east ) {
+				_feature.geometry.type = "MultiLineString";
+				_feature.geometry.coordinates = [
+					[ [ -180, north ], [ east, north ], [ east, south ], [ -180, south ] ],
+					[ [ 180, north ], [ west, north ], [ west, south ], [ 180, south] ],
+					[ [ -180, north ], [ west - 360, north ], [ west - 360, south ], [ -180, south] ],
+					[ [ 180, north ], [ east + 360, north ], [ east + 360, south ], [ 180, south] ]
+				];
+			} else {
+				_feature.geometry.type = "Polygon";
+				var step = (east - west)/4;
+				_feature.geometry.coordinates = [
+			        [
+			            [west, south],
+			            [MapUtils.normalizeLon(west + step), south],
+			            [MapUtils.normalizeLon(west + step * 2), south],
+			            [MapUtils.normalizeLon(west + step * 3), south],
+			            [east, south],
+			            [east, north],
+			            [MapUtils.normalizeLon(west + step * 3), north],
+			            [MapUtils.normalizeLon(west + step * 2), north],
+			            [MapUtils.normalizeLon(west + step), north],
+			            [west, north],
+			            [west, south]
+			        ]
+		    	];
+			}
 		} else {
 			// Compute the extent from the coordinates
 			var coords = _feature.geometry.coordinates[0];

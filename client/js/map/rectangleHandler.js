@@ -1,86 +1,144 @@
 var Handler = require('map/handler');
 var Map = require('map/map');
 var MapUtils = require('map/utils');
+var Rectangle = require('map/rectangle');
+
 /**
  * Private variables
  */
 var layer;
+var rectangle;
 var feature;
 var startPoint;
+var endPoint;
 var mapEngine;
 var started = false;
 var onstop = null;
 var self = null;
-var startX;
-var endX;
-// Dateline detection properties
-var lastX = null;
-var crossedDL = false;
 
-/**
- * Private methods
- */
+// Current direction of user's mouse
+var toEast;
+
+// Used for debug
+/*
+var params = {
+	name: "Points",
+	type: "Feature",
+	visible: true,
+	style: "imported"
+};
+var pointsLayer = Map.addLayer(params);
+
 // Adds additional points to polygon to handle better wide rectangles
 var addPoints = function(polygon) {
-	var bbox = MapUtils.computeBbox({
-		type: "Polygon",
-		coordinates: polygon
-	})
-	var minX = bbox[0];
-	var minY = bbox[1];
-	var maxX = bbox[2];
-	var maxY = bbox[3];
 
-	var step = Math.abs((maxX - minX) / 2);
+	var minX = polygon[0][0][0];
+	var minY = polygon[0][0][1];
+	var maxX = polygon[0][2][0];
+	var maxY = polygon[0][2][1];
+
+	console.log("===");
+	var oldOne= polygon[0].slice(0);
+	console.log(oldOne);
+
+	var step = Math.abs((maxX - minX) / 3);
 	polygon[0].splice(1, 0, [minX + step, minY]);
-	// polygon[0].splice(2, 0, [minX + 2*step, minY]);
-	// polygon[0].splice(5, 0, [minX + 2*step, maxY]);
-	polygon[0].splice(4, 0, [minX + step, maxY]);
-}
+	polygon[0].splice(2, 0, [minX + 2*step, minY]);
+	polygon[0].splice(5, 0, [minX + 2*step, maxY]);
+	polygon[0].splice(6, 0, [minX + step, maxY]);
 
-// Fix dateline only for bbox geometries
-// NGEO-1810 : WIDE BBOX issue...
-var fixBboxDateLine = function(feature) {
-	if (crossedDL) {
-		feature = MapUtils.splitFeature(feature);
-		for (var i = 0; i < feature.geometry.coordinates.length; i++) {
-			addPoints(feature.geometry.coordinates[i]);
+	pointsLayer.clear();
+
+	for ( var i=0; i<polygon[0].length; i++ ) {
+		var pFeature = {
+			type: 'Feature',
+			geometry: {
+				type: 'Point',
+				coordinates: polygon[0][i]
+			},
+			properties: {}
+		};
+		pointsLayer.addFeature(pFeature);
+	}
+}
+*/
+
+/**
+ *	Compute if user moves mouse in east direction or not
+ */
+var updateToEast = function(start, end) {
+	if ( rectangle.feature.bbox ) {
+		var pCurrent = {
+			lat: end[1], 
+			lon: end[0]
+		};
+		var p2 = {
+			lat: end[1],
+			lon: start[0]
+		};
+
+		var distanceDelta = 2007000;
+		if ( MapUtils.distanceBetween(pCurrent, p2) < distanceDelta && rectangle.step < 30 ) {
+			var seg1 = {
+				lat: -1,
+				lon: start[0]
+			};
+			var seg2 = {
+				lat: 1,
+				lon: start[0]
+			};
+			var d = MapUtils.crossTrackDistanceBetween(pCurrent, seg1, seg2);
+			if ( d > 0 ) {
+				toEast = true;
+			} else {
+				toEast = false;
+			}
 		}
 	}
-	return feature;
+	return toEast;
 }
 
 // Update the feature used to represent the rectangle
-function updateFeature(pt1, pt2) {
-	if (pt1 && pt2) {
+function updateFeature(start, end) {
 
-		var minX = (endX > startX) ? pt1[0] : pt2[0];
-		var maxX = (endX > startX) ? pt2[0] : pt1[0];
+	if ( !start || !end )
+		return;
 
-		var minY = Math.min(pt1[1], pt2[1]);
-		var maxY = Math.max(pt1[1], pt2[1]);
-
-		feature.bbox = [minX, minY, maxX, maxY];
-		feature.geometry.type = "Polygon";
-		feature.geometry.coordinates = [
-			[
-				[minX, minY],
-				[maxX, minY],
-				[maxX, maxY],
-				[minX, maxY],
-				[minX, minY]
-			]
-		];
-
-		layer.updateFeature(feature, fixBboxDateLine);
+	if ( updateToEast(start, end) ) {
+		// Nominal case, user drags to east
+		minX = start[0];
+		maxX = end[0];
+	} else {
+		// Inverse start/end if user moves to west
+		minX = end[0];
+		maxX = start[0];
 	}
+
+	var minY = Math.min(start[1], end[1]);
+	var maxY = Math.max(start[1], end[1]);
+	
+	rectangle.feature.bbox = [ minX, minY, maxX, maxY ];
+
+	rectangle.west = minX;
+	rectangle.east = maxX;
+	rectangle.north = maxY;
+	rectangle.south = minY;
+	rectangle.updateFeature();
+
+	// addPoints(rectangle.feature.geometry.coordinates);
+
+	// No dateline fix when feature crosses dateline
+	var noDateLineFixCallback = function(feature) {
+		return feature;
+	}
+	layer.updateFeature(rectangle.feature, feature.geometry.type == "MultiLineString" ? noDateLineFixCallback : null);
 };
 
 // Called when left mouse button is pressed : start drawing the rectangle
 function onMouseDown(event) {
 	if (event.button == 0) {
-		startX = event.pageX;
 		startPoint = Map.getLonLatFromEvent(event);
+		endPoint = Map.getLonLatFromEvent(event);
 		updateFeature(startPoint, startPoint);
 		started = true;
 	}
@@ -90,25 +148,16 @@ function onMouseDown(event) {
 function onMouseMove(event) {
 	if (started && event.button == 0) {
 		// Check if previous point has passed by dateline
-		var endPoint = Map.getLonLatFromEvent(event);
-		if (lastX && Math.abs(endPoint[0] - lastX[0]) > 180)
-			crossedDL = !crossedDL;
+		endPoint = Map.getLonLatFromEvent(event);
 		updateFeature(startPoint, endPoint);
-
-		lastX = endPoint;
 	}
 };
 
 // Called when left mouse button is release : end drawing the rectangle
 function onMouseUp(event) {
 	if (started && event.button == 0) {
-		endX = event.pageX;
-		var endPoint = Map.getLonLatFromEvent(event);
+		endPoint = Map.getLonLatFromEvent(event);
 		updateFeature(startPoint, endPoint);
-
-		// Reset crossed dataline properties
-		lastX = null;
-		crossedDL = false;
 
 		// end drawing
 		self.stop();
@@ -128,16 +177,19 @@ self = new Handler({
 		if (options.layer) {
 			layer = options.layer;
 			feature = options.feature;
+			rectangle = new Rectangle({
+				feature: feature
+			});
 		} else if (!layer) {
 			coords = [];
-			feature = {
-				id: '0',
-				type: 'Feature',
-				geometry: {
-					type: 'Polygon',
-					coordinates: [coords]
-				}
-			};
+
+			rectangle = new Rectangle({
+				west: 0,
+				east: 1,
+				south: 0,
+				north: 1
+			});
+
 			var params = {
 				name: "Draw Area",
 				type: "Feature",
