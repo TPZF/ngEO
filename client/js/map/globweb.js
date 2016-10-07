@@ -210,6 +210,10 @@ GlobWebMapEngine.prototype.setLayerVisible = function(gwLayer, vis) {
  */
 GlobWebMapEngine.prototype.setLayerIndex = function(gwLayer, index) {
 	gwLayer.zIndex = index;
+	// Update stylemap to update vector layer z-index ordering
+	for ( var x in gwLayer.styleMap ) {
+		gwLayer.styleMap[x].zIndex = index;
+	}
 }
 
 /**

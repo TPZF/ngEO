@@ -189,6 +189,9 @@ module.exports = {
 				style: options.style,
 				greatCircle: true
 			});
+
+			// NGEO-1779: footprint layers should be always on top
+			Map.getMapEngine().setLayerIndex(footprintLayer.engineLayer, 99999);
 		}
 
 		fc._footprintLayer = footprintLayer;
