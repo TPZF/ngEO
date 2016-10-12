@@ -149,7 +149,7 @@ var SearchCriteriaView = SearchView.extend({
 	 */
 	onShow: function() {
 		this.updateSelectMode();
-		if (this.model.get("useTimeSlider")) {
+		if (this.model.get("useTimeSlider") && _.keys(self.selection).length != 0) {
 			$('#dateRangeSlider').dateRangeSlider('show'); // Assuming that there is only one slider on page
 			//this.dateCriteriaView.addTimeSlider();
 		}
