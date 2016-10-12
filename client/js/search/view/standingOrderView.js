@@ -58,7 +58,7 @@ var StandingOrderView = SearchView.extend({
 
 		},
 
-		// Click on import : import settings from search criteria
+		// Click on "Get Criteria" button : import settings from search criteria
 		"click .scImport": function() {
 
 			// Import attributes from DatasetSearch
@@ -66,7 +66,7 @@ var StandingOrderView = SearchView.extend({
 				"start": DatasetSearch.get("start"),
 				"stop": DatasetSearch.get("stop"),
 				"useExtent": DatasetSearch.get("useExtent"),
-				"advancedAttributes":  DatasetSearch.get("advancedAttributes"),
+				"advancedAttributes":  _.clone(DatasetSearch.get("advancedAttributes")),
 			});
 			// NB: Can't use the line below since it doesn't fires "change" events for nested models
 			// this.model.set(DatasetSearch.attributes);
