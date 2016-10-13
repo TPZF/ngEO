@@ -96,29 +96,31 @@ module.exports = {
 
 			for ( var i=0; i<browseIndex.length; i++ ) {
 				var browseObject = browses[browseIndex[i]];
-				browseObject.BrowseInformation._selected = true;
+				if ( browseObject ) {
+					browseObject.BrowseInformation._selected = true;
 
-				var browseUrl = _getUrl(browseObject);
-				var layerName = MapUtils.getLayerName(browseUrl);
-				if (!layerName) {
-					// Can't find the name of layer: it's impossible to add a new layer
-					return null;
-				}
-
-				if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
-					var browseLayer = _browseLayerMap[layerName];
-					if (!browseLayer) {
-						browseLayer = _browseLayerMap[layerName] = Map.addLayer({
-							name: layerName,
-							type: "Browses",
-							visible: true
-						});
+					var browseUrl = _getUrl(browseObject);
+					var layerName = MapUtils.getLayerName(browseUrl);
+					if (!layerName) {
+						// Can't find the name of layer: it's impossible to add a new layer
+						return null;
 					}
-					browseLayer.addBrowse(feature, browseUrl);
 
-				} else if (!_browseAccessInformationMap[browseUrl]) {
-					Logger.inform("You do not have enough permission to browse the layer " + browseUrl + ".");
-					_browseAccessInformationMap[browseUrl] = true;
+					if (DatasetAuthorizations.hasBrowseAuthorization(datasetId, layerName)) {
+						var browseLayer = _browseLayerMap[layerName];
+						if (!browseLayer) {
+							browseLayer = _browseLayerMap[layerName] = Map.addLayer({
+								name: layerName,
+								type: "Browses",
+								visible: true
+							});
+						}
+						browseLayer.addBrowse(feature, browseUrl);
+
+					} else if (!_browseAccessInformationMap[browseUrl]) {
+						Logger.inform("You do not have enough permission to browse the layer " + browseUrl + ".");
+						_browseAccessInformationMap[browseUrl] = true;
+					}
 				}
 			}
 			
@@ -138,8 +140,7 @@ module.exports = {
 		if (browses) {
 			// var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 			if ( !browseIndex ) {
-				//var fc = SearchResults.featureCollection[feature._featureCollection.dataset.get("id")];
-				var fc = feature._featureCollection;
+				var fc = SearchResults.featureCollection[feature._featureCollection.dataset.get("datasetId")];				
 				// var browsesArray = Array.apply(null, Array(browses.length)).map(function (x, i) { return i; });
 				// browseIndex = _.difference(browsesArray, fc.browseIndex);
 				browseIndex = fc.browseIndex;
