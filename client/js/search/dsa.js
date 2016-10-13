@@ -27,6 +27,17 @@ module.exports = {
 		});
 
 		var onDatasetPopulationLoaded = function() {
+
+			// Select the dataset id stored in the prefs
+			var prefsDS = UserPrefs.get("Dataset");
+			if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
+
+				var datasets = prefsDS.split(',');
+				for (var i = 0; i < datasets.length; i++) {
+					DataSetPopulation.select(datasets[i]);
+				}
+			}
+
 			$("#dataset").removeClass('ui-disabled');
 			panelManager.on('leftResized', datasetView.updateContentHeight, datasetView);
 			panelManager.left.add(datasetView, '#dataset');
@@ -176,24 +187,6 @@ module.exports = {
 		router.route(
 			"data-services-area", "dsa",
 			function() {
-
-				// Select the dataset id stored in the prefs
-				var prefsDS = UserPrefs.get("Dataset");
-				if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
-
-					var datasets = prefsDS.split(',');
-					for (var i = 0; i < datasets.length; i++) {
-						DataSetPopulation.select(datasets[i]);
-					}
-				}
-
-				// When the dataset cannot be fetched from the server return an error to warn user
-				/* NGEO-727 : no error when the dataset cannot be retrieved
-				DataSetPopulation.on("datasetFetch", function(datasetId,status) {
-					if ( status == "ERROR" ) {
-						Logger.error('Cannot load the dataset ' + datasetId + '.');
-					}
-				});*/
 
 				// Show the page
 				MenuBar.showPage("data-services-area");
