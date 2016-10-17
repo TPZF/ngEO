@@ -228,7 +228,7 @@ var Shopcart = Backbone.Model.extend({
 
 		// Check if items are correct
 		if (itemsToRemove.length != this.featureCollection.selection.length) {
-			Logger.error("The selected shopcart items do not contain valid ID and cannot be removed.").
+			Logger.error("The selected shopcart items do not contain valid ID and cannot be removed.");
 			return;
 		}
 
