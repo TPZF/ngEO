@@ -985,8 +985,8 @@ var TableView = Backbone.View.extend({
 		this.updateFixedHeader();
 		this.updateSelection(this.model.selection);
 		// TODO: Make this view dependent on model only ...
-		// HACK: Update all highlights
-		_allHighlights = _allHighlights.concat(this.model.highlights);
+		// FIXME: check if hereafter commented line is really needed
+		// _allHighlights = _allHighlights.concat(this.model.highlights);
 		this.triggerHighlightFeature();
 	},
 
