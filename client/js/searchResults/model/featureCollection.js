@@ -125,6 +125,8 @@ var FeatureCollection = function() {
 			if ( this.parent != null ) {
 				feature.id = feature.id + i;
 			}
+			// HACK: store feature collection on each feature to avoid multiple problems on browse changing
+			feature._featureCollection = this;
 
 			self.features.push(feature);
 		}

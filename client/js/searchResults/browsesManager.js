@@ -90,7 +90,7 @@ module.exports = {
 			//var browseObject = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 
 			if ( !browseIndex ) {
-				var fc = SearchResults.featureCollection[datasetId];
+				var fc = feature._featureCollection;
 				browseIndex = fc.browseIndex;
 			}
 
@@ -140,7 +140,7 @@ module.exports = {
 		if (browses) {
 			// var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 			if ( !browseIndex ) {
-				var fc = SearchResults.featureCollection[feature._featureCollection.dataset.get("datasetId")];				
+				var fc = feature._featureCollection;
 				// var browsesArray = Array.apply(null, Array(browses.length)).map(function (x, i) { return i; });
 				// browseIndex = _.difference(browsesArray, fc.browseIndex);
 				browseIndex = fc.browseIndex;
