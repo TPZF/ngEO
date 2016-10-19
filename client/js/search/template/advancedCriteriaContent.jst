@@ -16,9 +16,10 @@
 			%>
 		   <!-- The criterion is an enumeration has multiple options so create a list of checkboxes  -->
 		   <!-- NGEO-1862 possibleValues contains now a list of String which are the direct value to display instead of object mapped with the string possibleValue -->
-			<% if (criterionType == 'list') { %> 
-
-					 <div data-role="fieldcontain">
+			<% if (criterionType == 'list' || criterionType == 'string') { %> 
+				<!-- NGEO-2233: list and string must have possible values for now due to ease of configuration for Ops -->
+				<% if ( criterion.possibleValues && criterion.possibleValues.length > 0 ) { %>
+					<div data-role="fieldcontain">
 						<fieldset data-role="controlgroup">
 							<legend><%= label %>:</legend>
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
@@ -30,6 +31,13 @@
 							<% }); %>
 						</fieldset>
 					</div>
+				<% } else { %>
+					<!-- The criterion has no possible values, show text field -->
+					<div data-role="fieldcontain">
+						<label class="capitalize" for="<%= criterion.id %>"><%= label %>:</label>
+						<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
+					</div>
+				<% } %>
 
 			<!-- The criterion is an integer within a range  -->	
 			<% } else if ((criterionType == 'integer' || criterionType == 'float') && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
@@ -41,15 +49,6 @@
 				        <label class="capitalize" for="<%= criterion.id %>_to"><%= label %>:</label>
 				        <input data-theme="a" type="range" step="<% criterionType == "integer" ? print("1") : print(".1") %>" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
 				    </div>
-				</div>
-
-
-			<!-- The criterion is a string  -->	
-			<% } else if (criterionType == 'string') { %>
-			
-				<div data-role="fieldcontain">
-					<label class="capitalize" for="<%= criterion.id %>"><%= label %>:</label>
-					<input type="text" name="<%= criterion.id %>" id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
 				</div>
 
 			<!-- The criterion is a float  -->	
