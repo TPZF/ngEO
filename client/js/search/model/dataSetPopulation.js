@@ -181,8 +181,10 @@ var DataSetPopulation = Backbone.Model.extend({
 				criterias.push(criteria);
 			}
 			criteria.addValue(keyword[1]);
+			if ( !this.datasetInfoMap[datasetId].keywords[keyword[0]] )
+				this.datasetInfoMap[datasetId].keywords[keyword[0]] = [];
 			// Store group:value as a dictionary in datasetInfoMap
-			this.datasetInfoMap[datasetId].keywords[keyword[0]] = keyword[1];
+			this.datasetInfoMap[datasetId].keywords[keyword[0]].push(keyword[1]);
 		}
 
 		return {
@@ -201,9 +203,11 @@ var DataSetPopulation = Backbone.Model.extend({
 		for ( var i = 0; i<datasets.length; i++ ) {
 			var dataset = this.datasetInfoMap[datasets[i].datasetId];
 			for ( var group in dataset.keywords ) {
-				var value = dataset.keywords[group];
-				if ( group == criteria.title && (criteria.selectedValue == '' || criteria.selectedValue == value) && !_.contains(criteriaValues, value) ) {
-					criteriaValues.push(value);
+				for ( var j = 0; j<dataset.keywords[group].length; j++ ) {
+					var value = dataset.keywords[group][j];
+					if ( group == criteria.title && (criteria.selectedValue == '' || criteria.selectedValue == value) && !_.contains(criteriaValues, value) ) {
+						criteriaValues.push(value);
+					}
 				}
 			}
 		}
@@ -247,7 +251,7 @@ var DataSetPopulation = Backbone.Model.extend({
 				// Need filter all the datasets
 				for ( var i=0; i<selectedCriterias.length; i++ ) {
 					var criteria = selectedCriterias[i];
-					passedFilter &= _.contains(datasetInfos.keywords, criteria.selectedValue);
+					passedFilter &= _.contains(datasetInfos.keywords[criteria.title], criteria.selectedValue);
 				}
 			}
 
