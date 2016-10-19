@@ -129,6 +129,12 @@ module.exports = {
 					if (--datasetsToBeFetched == 0) {
 						DataSetPopulation.off("datasetFetch", onFetch);
 
+						// Explicitely set start/stop dates to force the update of datetimeslider
+						DatasetSearch.set({
+							start: DatasetSearch.get('start'),
+							stop: DatasetSearch.get('stop')
+						});
+
 						// And launch the search!
 						SearchResults.launch(DatasetSearch);
 						
