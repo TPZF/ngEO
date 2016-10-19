@@ -181,6 +181,24 @@ var saveShopcartContent = function(id) {
 	fs.writeFile('./shopcarts/' + id + '_shopcartContent.json', JSON.stringify(shopcartContents[id],null,'\t'), 'utf8');
 }
 
+/**
+ *	Create response according to pagination parameters
+ */
+var paginateFeatures = function(req, features) {
+	var count = req.query.count || 10;
+	var startIndex = req.query.startIndex || 1;
+	startIndex = parseInt(startIndex);
+	count = parseInt(count);
+	var response = {
+		type: 'FeatureCollection',
+		properties: {
+			totalResults : features.length
+		},
+		features: features.slice(startIndex-1, startIndex-1+count)
+	};
+	return response;
+}
+
 module.exports = {
 	
 	/**
@@ -206,8 +224,8 @@ module.exports = {
 					delete shopcartContent.features[i].properties.shopcartItemId;
 				}*/
 				
-				res.send( shopcartContent );		
-			
+				var response = paginateFeatures(req, shopcartContent.features);
+				res.send(response);
 			} else {
 				
 				var filePath, contentType, fileName;
