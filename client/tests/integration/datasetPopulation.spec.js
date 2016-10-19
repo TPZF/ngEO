@@ -31,7 +31,7 @@ describe("DatasetPopulation test", function() {
 
     it("should filter correctly datasets", function(){
     	DataSetPopulation.get("criterias")[0].selectedValue = "interferometry";
-    	expect(DataSetPopulation.filterDatasets().length).toBe(5); // One criteria
+    	expect(DataSetPopulation.filterDatasets().length).toBe(6); // One criteria
     	DataSetPopulation.get("criterias")[2].selectedValue = "ice mapping";
     	expect(DataSetPopulation.filterDatasets().length).toBe(1); // Multiple criterias
     });
