@@ -142,9 +142,10 @@ module.exports = {
 				DataSetPopulation.on("datasetFetch", onFetch);
 
 				// Select & fetch all shared datasets
-				_.each(datasetIds, function(id) {
-					DataSetPopulation.select(id);
-				});
+				// MS: select is done in onDatasetPopulationLoaded callback for now
+				// _.each(datasetIds, function(id) {
+				// 	DataSetPopulation.select(id);
+				// });
 			});
 
 		// Route standing order shared url
