@@ -35,15 +35,16 @@ var LayersWidget = function(element) {
 			}
 		});
 
+		var isVisible = layer.params.visible;
 		if ($input) {
-			var isVisible = layer.params.visible;
 			if ( isVisible ) {
 				$input.prop('checked', 'checked').checkboxradio("refresh");
 			} else {
 				$input.removeProp('checked').checkboxradio("refresh");
 			}
-			SelectHandler.setPickable(layer, isVisible);
 		}
+		// FIXME: nothing to do here..
+		SelectHandler.setPickable(layer, isVisible);
 	});
 
 	for (var i = 0; i < layers.length; i++) {
