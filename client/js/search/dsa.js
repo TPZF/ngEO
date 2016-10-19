@@ -28,13 +28,16 @@ module.exports = {
 
 		var onDatasetPopulationLoaded = function() {
 
-			// Select the dataset id stored in the prefs
-			var prefsDS = UserPrefs.get("Dataset");
-			if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
+			// Check user preferences only if not shared url
+			if ( window.location.href.indexOf("osParameters") == -1 ) {
+				// Select the dataset id stored in the prefs
+				var prefsDS = UserPrefs.get("Dataset");
+				if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
 
-				var datasets = prefsDS.split(',');
-				for (var i = 0; i < datasets.length; i++) {
-					DataSetPopulation.select(datasets[i]);
+					var datasets = prefsDS.split(',');
+					for (var i = 0; i < datasets.length; i++) {
+						DataSetPopulation.select(datasets[i]);
+					}
 				}
 			}
 
@@ -148,10 +151,9 @@ module.exports = {
 				DataSetPopulation.on("datasetFetch", onFetch);
 
 				// Select & fetch all shared datasets
-				// MS: select is done in onDatasetPopulationLoaded callback for now
-				// _.each(datasetIds, function(id) {
-				// 	DataSetPopulation.select(id);
-				// });
+				_.each(datasetIds, function(id) {
+					DataSetPopulation.select(id);
+				});
 			});
 
 		// Route standing order shared url
