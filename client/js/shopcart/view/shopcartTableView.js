@@ -1,3 +1,4 @@
+var Logger = require('logger');
 var TableView = require('ui/tableView');
 var Configuration = require('configuration');
 var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
@@ -5,6 +6,7 @@ var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget');
 var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
 var DataSetPopulation = require('search/model/dataSetPopulation');
+var DataSetAuthorizations = require('search/model/datasetAuthorizations');
 
 /**
  * The model is the backbone model FeatureCollection 
@@ -69,7 +71,12 @@ var ShopcartTableView = TableView.extend({
 		var self = this;
 		this.retrieveProduct.click(function() {
 
-			if (self.model.downloadAccess) {
+			var hasDownloadAccess = true;
+			_.each(self.model.selection, function(feature) {
+				hasDownloadAccess &= DataSetAuthorizations.hasDownloadAccess(self.model.getDatasetId(feature));
+			});
+
+			if (hasDownloadAccess) {
 				SimpleDataAccessRequest.initialize();
 				SimpleDataAccessRequest.setProducts(self.model.selection);
 
