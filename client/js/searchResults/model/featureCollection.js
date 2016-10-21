@@ -87,7 +87,7 @@ var FeatureCollection = function() {
 				_pageCache[self.currentPage] = data.features;
 
 				if (data.properties && data.properties.totalResults) {
-					self.totalResults = data.properties.totalResults;
+					self.totalResults = parseInt(data.properties.totalResults);
 				} else {
 					self.totalResults = data.features.length;
 				}
