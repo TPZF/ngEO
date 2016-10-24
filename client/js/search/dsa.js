@@ -26,25 +26,29 @@ module.exports = {
 			model: DataSetPopulation
 		});
 
+		var datasetPopulationCallbacks = [];
+
 		var onDatasetPopulationLoaded = function() {
 
-			// Check user preferences only if not shared url
-			if ( window.location.href.indexOf("osParameters") == -1 ) {
-				// Select the dataset id stored in the prefs
-				var prefsDS = UserPrefs.get("Dataset");
-				if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
-
-					var datasets = prefsDS.split(',');
-					for (var i = 0; i < datasets.length; i++) {
-						DataSetPopulation.select(datasets[i]);
-					}
-				}
+			// Execute all registered callbacks
+			for ( var i=0; i<datasetPopulationCallbacks.length; i++ ) {
+				datasetPopulationCallbacks[i]();
 			}
 
 			$("#dataset").removeClass('ui-disabled');
 			panelManager.on('leftResized', datasetView.updateContentHeight, datasetView);
 			panelManager.left.add(datasetView, '#dataset');
 			datasetView.render();
+		};
+
+		var onDatasetPopulationFailed = function() {
+			if (dsaXHR.state() == "rejected") {
+				Logger.error('Cannot retreive the DataSet Authorizations from the server');
+				dspXHR.done(onDatasetPopulationLoaded);
+			} else {
+				$("#dataset").addClass('ui-disabled');
+				Logger.error('Cannot retreive the DataSetPopulationMatrix and/or DataSet Authorizations from the server');
+			}
 		};
 
 		// Fetch population and authorization from the server
@@ -55,15 +59,7 @@ module.exports = {
 			// Success
 			onDatasetPopulationLoaded,
 			// Error
-			function() {
-				if (dsaXHR.state() == "rejected") {
-					Logger.error('Cannot retreive the DataSet Authorizations from the server');
-					dspXHR.done(onDatasetPopulationLoaded);
-				} else {
-					$("#dataset").addClass('ui-disabled');
-					Logger.error('Cannot retreive the DataSetPopulationMatrix and/or DataSet Authorizations from the server');
-				}
-			}
+			onDatasetPopulationFailed
 		);
 
 		// Create the view and append it to the panel manager
@@ -146,14 +142,13 @@ module.exports = {
 					}
 				}
 
-				// Set the attribute when the dataset has been loaded in order be sure that the criteria has been loaded
-				// and not overwrite the start/stop dates 
-				DataSetPopulation.on("datasetFetch", onFetch);
-
-				// Select & fetch all shared datasets
-				_.each(datasetIds, function(id) {
-					DataSetPopulation.select(id);
-				});
+				datasetPopulationCallbacks.push(function() {
+					DataSetPopulation.on("datasetFetch", onFetch);
+					// Select & fetch all shared datasets
+					_.each(datasetIds, function(id) {
+						DataSetPopulation.select(id);
+					});
+				})
 			});
 
 		// Route standing order shared url
@@ -186,9 +181,11 @@ module.exports = {
 
 					}
 				});
-
-				// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
-				DataSetPopulation.select(datasetId);
+				
+				datasetPopulationCallbacks.push(function() {					
+					// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
+					DataSetPopulation.select(datasetId);
+				})
 
 			});
 
@@ -196,6 +193,18 @@ module.exports = {
 		router.route(
 			"data-services-area", "dsa",
 			function() {
+
+				datasetPopulationCallbacks.push(function() {
+					// Select the dataset id stored in the prefs
+					var prefsDS = UserPrefs.get("Dataset");
+					if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
+
+						var datasets = prefsDS.split(',');
+						for (var i = 0; i < datasets.length; i++) {
+							DataSetPopulation.select(datasets[i]);
+						}
+					}
+				});
 
 				// Show the page
 				MenuBar.showPage("data-services-area");
