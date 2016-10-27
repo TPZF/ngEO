@@ -107,7 +107,13 @@
             		{
             			"humanReadable": "val2",
             			"name": "val2",
-            			"sizeFactor": 1
+            			"sizeFactor": 1,
+            			"preConditions": [
+		                    {
+		                        "parentDownloadOption": "processing",
+		                        "parentDownloadValue": "GRD"
+		                    }
+		                ]
             		}
             	]
             },
@@ -122,6 +128,12 @@
             			"humanReadable": "val1",
             			"name": "val1",
             			"sizeFactor": 1,
+		            	"preConditions": [
+		                    {
+		                        "parentDownloadOption": "processing",
+		                        "parentDownloadValue": "GRD"
+		                    }
+		                ],
             			"selected": "true"
             		},
             		{

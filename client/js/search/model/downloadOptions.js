@@ -134,18 +134,39 @@ DownloadOptions.prototype.updatePreconditions = function() {
 				var selectedValue = self.attributes[option.argumentName];
 				if (selectedValue) {
 					// Option has already the value set
-					// Check that set value respects it own preconditions
-					var valueObject = _.findWhere(option.value, {
-						name: selectedValue
-					});
+
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
-					// If valueObject hasn't been found => checkboxes, doesn't implemented yet !
-					if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
+					// @see IICD-WC-WS 
+					if (option.type == "checkbox") {
+						// Checkboxes
+						// Remove every invalid value
+						var validOptions = _.filter(option.value, function(v) { return (selectedValue.indexOf(v.name) != -1 && self.hasValidPreconditions(v)) })
+						var newAttributes = validOptions.map(function(value) { return value.name });
+						// TODO: refactor all this stuff from scratch...
+						if ( newAttributes.length == 0 ) {
+							delete self.attributes[option.argumentName];
+						} else {
+							self.attributes[option.argumentName] = newAttributes;
+						}
+
+					} else {
+						// Check that set value respects it own preconditions
+						var valueObject = _.findWhere(option.value, {
+							name: selectedValue
+						});
+						// Get the new random valid value
+						if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
+							self.attributes[option.argumentName] = option.getValidValue();
+						}
+					}
+
+				} else {
+					if ( option.type == "checkbox" ) {
+						// Nothing to do
+					} else {
+						// Option respects the preconditions, update model with a valid value
 						self.attributes[option.argumentName] = option.getValidValue();
 					}
-				} else {
-					// Option respects the preconditions, update model with a valid value
-					self.attributes[option.argumentName] = option.getValidValue();
 				}
 			}
 		} else {

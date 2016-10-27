@@ -22,11 +22,13 @@
 						<fieldset data-role="controlgroup">
 						<label id="<%= option.argumentName %>_label" for="<%= option.argumentName %>"><%= option.caption || option.description %> : </label>
 							<% _.each(option.value, function(value) { %>
-								<label>
-									<!-- Select the check box if value is defined -->
-									<input type="checkbox" name="<%= option.argumentName %>" value="<%= value.name %>" data-mini="true" <% if ( value && selectedValue.indexOf(value.name) >= 0 ) print('checked="checked"'); %> />
-									<%= value.humanReadable %>
-								</label>
+								<% if ( model.hasValidPreconditions(value) ) { %>
+									<label>
+										<!-- Select the check box if value is defined -->
+										<input type="checkbox" name="<%= option.argumentName %>" value="<%= value.name %>" data-mini="true" <% if ( value && selectedValue && selectedValue.indexOf(value.name) >= 0 ) print('checked="checked"'); %> />
+										<%= value.humanReadable %>
+									</label>
+								<% } %>
 							<% }); %>
 						</fieldset>
 					<% } else { %>

@@ -46,11 +46,11 @@ DownloadOption.prototype.getValidValue = function() {
 	if ( this.type == "checkbox" ) {
 		// Checkbox : return an array
 		if ( selectedValue.length ) {
+			var self = this;
 			// Multiple value has been selected take only it names
-			return _.map(selectedValue, function(value) { return value.name });
+			return _.filter(selectedValue, function(value) { return self.parent.hasValidPreconditions(value)}).map(function(value){return value.name});
 		}
-		// TODO: no precondition handler for checkboxes for now..
-		
+
 		// No value selected by default
 		return [];
 	} else {
