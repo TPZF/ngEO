@@ -102,12 +102,28 @@ describe("FeatureCollection test", function() {
 			fc.select([fc.features[0]]);
 			fc.updateDownloadOptions(s1downloadOptions);
 			// Check that it updates do_crop to WKT & ProductFormat to JP2
-			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:SLC,Otherwise option:[val1,val2],do_crop:POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125)),ProductFormat:JP2}");
+			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:SLC,Otherwise option:[val2],do_crop:POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125)),ProductFormat:JP2}");
 
 			// Check through getSelectedDownloadOptions method
 			var extractedDownloadOptions = fc.getSelectedDownloadOptions();
 			expect(extractedDownloadOptions.ProductFormat).toBe("JP2");
 			expect(extractedDownloadOptions.do_crop).toContain("POLYGON");
+
+			// Check preconditions
+			s1downloadOptions.setValue("Otherwise option", ["val1", "val2"]);
+			fc.updateDownloadOptions(s1downloadOptions);
+
+			// No val1 since processing is SLC which is banned by preConditions
+			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:SLC,Otherwise option:[val2],do_crop:POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125)),ProductFormat:JP2}");
+			
+			// Now we set processing to GRD to ensure that val1 will be taken into account
+			s1downloadOptions.setValue("processing", "GRD");
+			s1downloadOptions.setValue("Otherwise option", ["val1", "val2"]);
+			fc.updateDownloadOptions(s1downloadOptions);
+			
+			// Note that resolution parameter has been also updated to be MR by default, since there is no "None" value
+			expect(Configuration.getMappedProperty(fc.features[0], "productUrl")).toBe("https://ngeopro.magellium.fr/ngeo/catalogue/S1_SAR_EW_DUAL_POL/search?id=S1A_EW_RAW__0SDH_20150714T223605_20150714T223710_006813_0092BE&format=atom&ngEO_DO={processing:GRD,Otherwise option:[val1,val2],do_crop:POLYGON((37.6171875 -18.6328125,9.84375 -16.69921875,18.10546875 19.3359375,33.75 18.6328125,46.93359375 -6.50390625,46.93359375 -6.50390625,37.6171875 -18.6328125)),ProductFormat:JP2,resolution:MR}");
+			console.log("OK");
 		});
 
 		it("should return datasetId from the given feature", function() {
