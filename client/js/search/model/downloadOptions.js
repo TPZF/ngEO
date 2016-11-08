@@ -104,16 +104,14 @@ DownloadOptions.prototype.updateFrom = function(downloadOptions) {
 DownloadOptions.prototype.setValue = function(attribute, value) {
 
 	// Update download option "selected" attribute according to new value
-	for ( var i=0; i<this.collection.length; i++ ) {
-		var doption = this.collection[i];
-		if ( doption.argumentName == attribute && doption.value ) {
-			for ( var j=0; j<doption.value.length; j++ ) {
-				var doptionValue = doption.value[j];
-				if ( value && value.indexOf(doptionValue.name) != -1 ) {
-					doptionValue.selected = true;
-				} else {
-					delete doptionValue.selected;
-				}
+	var doption = _.findWhere(this.collection, { "argumentName": attribute });
+	if ( doption.value ) {
+		for ( var i=0; i<doption.value.length; i++ ) {
+			var doptionValue = doption.value[i];
+			if ( value && value.indexOf(doptionValue.name) != -1 ) {
+				doptionValue.selected = true;
+			} else {
+				delete doptionValue.selected;
 			}
 		}
 	}
@@ -174,13 +172,17 @@ DownloadOptions.prototype.updatePreconditions = function() {
 						}
 
 					} else {
+
 						// Check that set value respects it own preconditions
 						var valueObject = _.findWhere(option.value, {
-							name: selectedValue
+							name: selectedValue[0] // Select should have only one selected value
 						});
-						// Get the new random valid value
 						if (selectedValue != "@conflict" && valueObject && !self.hasValidPreconditions(valueObject)) {
+							// Get the new random valid value
 							self.attributes[option.argumentName] = option.getValidValue();
+						} else {
+							// Ensure that selected attribute is chosen
+							self.attributes[option.argumentName] = selectedValue[0];
 						}
 					}
 
