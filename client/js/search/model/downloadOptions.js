@@ -105,7 +105,7 @@ DownloadOptions.prototype.setValue = function(attribute, value) {
 
 	// Update download option "selected" attribute according to new value
 	var doption = _.findWhere(this.collection, { "argumentName": attribute });
-	if ( doption.value ) {
+	if ( doption && doption.value ) {
 		for ( var i=0; i<doption.value.length; i++ ) {
 			var doptionValue = doption.value[i];
 			if ( value && value.indexOf(doptionValue.name) != -1 ) {
@@ -154,7 +154,7 @@ DownloadOptions.prototype.updatePreconditions = function() {
 			// cropProductSearchArea doesn't have any value
 			if (!option.cropProductSearchArea) {
 				var selectedValue = self.getSelectedValues(option.argumentName);
-				if (selectedValue.length) {
+				if (selectedValue.length || self.attributes[option.argumentName] == "@conflict") {
 					// Option has already the value set
 
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
@@ -182,7 +182,8 @@ DownloadOptions.prototype.updatePreconditions = function() {
 							self.attributes[option.argumentName] = option.getValidValue();
 						} else {
 							// Ensure that selected attribute is chosen
-							self.attributes[option.argumentName] = selectedValue[0];
+							self.attributes[option.argumentName] = selectedValue.length > 0 ? selectedValue[0] :
+																							option.type == "select-with-none" ? '@none' : '@conflict'; // With none value
 						}
 					}
 

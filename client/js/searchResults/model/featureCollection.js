@@ -449,13 +449,17 @@ var FeatureCollection = function() {
 			var dos = _getProductDownloadOptions(this.selection[i]);
 
 			for (var x in dos) {
-				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
+				if ( _.isArray(dos[x]) ) {
+					selectedDownloadOptions[x] = _.intersection( selectedDownloadOptions[x], dos[x] );
+				} else if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}
 
 			for (var x in selectedDownloadOptions) {
-				if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
+				if ( _.isArray(selectedDownloadOptions[x]) ) {
+					selectedDownloadOptions[x] = _.intersection( selectedDownloadOptions[x], dos[x] );
+				} else if (! _.isEqual(selectedDownloadOptions[x], dos[x]) ) {
 					selectedDownloadOptions[x] = "@conflict";
 				}
 			}

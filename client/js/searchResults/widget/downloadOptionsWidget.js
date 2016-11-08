@@ -56,7 +56,11 @@ DownloadOptionsWidget.prototype.open = function() {
 				if ( fcDownloadOptions[key] && fcDownloadOptions[key] != "@conflict" ) {
 					self.widgetDownloadOptions.setValue( key, fcDownloadOptions[key] );
 				} else {
-					self.widgetDownloadOptions.attributes[key] = "@conflict";
+					var doption = _.findWhere(self.widgetDownloadOptions.collection, {argumentName: key});
+					for ( var j=0; j<doption.value.length; j++) {
+						delete doption.value[j].selected;
+					}
+					self.widgetDownloadOptions.attributes[key] = (doption.type == 'select-with-none' ? '@none' : "@conflict");
 				}
 			}
 		}
