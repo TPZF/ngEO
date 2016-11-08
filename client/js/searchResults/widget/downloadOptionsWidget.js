@@ -53,8 +53,8 @@ DownloadOptionsWidget.prototype.open = function() {
 				// Should be true or false & not the real WKT value (to be verified)..
 				self.widgetDownloadOptions.attributes[key] = fcDownloadOptions.hasOwnProperty(key) ? fcDownloadOptions.hasOwnProperty(key) : null;
 			} else {
-				if ( fcDownloadOptions[key] ) {
-					self.widgetDownloadOptions.attributes[key] = fcDownloadOptions[key];
+				if ( fcDownloadOptions[key] && fcDownloadOptions[key] != "@conflict" ) {
+					self.widgetDownloadOptions.setValue( key, fcDownloadOptions[key] );
 				} else {
 					self.widgetDownloadOptions.attributes[key] = "@conflict";
 				}

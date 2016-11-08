@@ -7,7 +7,7 @@ var DownloadOptions = function(downloadOptions, options) {
 
 	// TODO : refactor collection property, try to use Backbone.Collection object ?
 	this.collection = [];
-	this.attributes = {}; // Simplified form of currently chosen options
+	this.attributes = {}; // Simplified form of currently visible options
 
 	for (var i = 0; i < downloadOptions.length; i++) {
 		var option = new DownloadOption(this, downloadOptions[i]);
@@ -93,8 +93,8 @@ DownloadOptions.prototype.populateFromUrl = function(url) {
  *	TODO: improve it
  */
 DownloadOptions.prototype.updateFrom = function(downloadOptions) {
-	this.collection = _.clone(downloadOptions.collection);
-	this.attributes = _.clone(downloadOptions.attributes);
+	this.collection = _.cloneDeep(downloadOptions.collection);
+	this.attributes = _.cloneDeep(downloadOptions.attributes);
 };
 
 /**
@@ -103,6 +103,22 @@ DownloadOptions.prototype.updateFrom = function(downloadOptions) {
  */
 DownloadOptions.prototype.setValue = function(attribute, value) {
 
+	// Update download option "selected" attribute according to new value
+	for ( var i=0; i<this.collection.length; i++ ) {
+		var doption = this.collection[i];
+		if ( doption.argumentName == attribute && doption.value ) {
+			for ( var j=0; j<doption.value.length; j++ ) {
+				var doptionValue = doption.value[j];
+				if ( value && value.indexOf(doptionValue.name) != -1 ) {
+					doptionValue.selected = true;
+				} else {
+					delete doptionValue.selected;
+				}
+			}
+		}
+	}
+
+	// Update attributes to hide attributes in form
 	if (!value) {
 		delete this.attributes[attribute]
 	} else {
@@ -121,6 +137,14 @@ DownloadOptions.prototype.getAttributes = function() {
 };
 
 /**
+ *	Get currently selected download option values for the given download option
+ */
+DownloadOptions.prototype.getSelectedValues = function(doName) {
+	var doption = _.findWhere(this.collection, {argumentName: doName});
+	return _.filter(doption.value, function(v) { return v.selected == true; }).map(function(v) { return v.name });
+};
+
+/**
  *  Update model depending on its preconditions
  */
 DownloadOptions.prototype.updatePreconditions = function() {
@@ -131,8 +155,8 @@ DownloadOptions.prototype.updatePreconditions = function() {
 			//var attributeToUpdate = _.findWhere( this.downloadOptions, { "argumentName": option.argumentName } );
 			// cropProductSearchArea doesn't have any value
 			if (!option.cropProductSearchArea) {
-				var selectedValue = self.attributes[option.argumentName];
-				if (selectedValue) {
+				var selectedValue = self.getSelectedValues(option.argumentName);
+				if (selectedValue.length) {
 					// Option has already the value set
 
 					// Set valid value only in case when selected value is not in conflict and preconditions aren't respected
@@ -140,7 +164,7 @@ DownloadOptions.prototype.updatePreconditions = function() {
 					if (option.type == "checkbox") {
 						// Checkboxes
 						// Remove every invalid value
-						var validOptions = _.filter(option.value, function(v) { return (selectedValue.indexOf(v.name) != -1 && self.hasValidPreconditions(v)) })
+						var validOptions = _.filter(option.value, function(v) { return (v.selected && self.hasValidPreconditions(v)) })
 						var newAttributes = validOptions.map(function(value) { return value.name });
 						// TODO: refactor all this stuff from scratch...
 						if ( newAttributes.length == 0 ) {
@@ -192,9 +216,12 @@ DownloadOptions.prototype.hasValidPreconditions = function(param) {
 	var self = this;
 	var res = false;
 	_.each(param.preConditions, function(precondition) {
-		//console.log(model.get(precondition.parentDownloadOption) + " = " + precondition.parentDownloadValue);
-		//var preconditionValue = _.findWhere(self.downloadOptions, {argumentName: precondition.parentDownloadOption})._userSelectedValue;
-		res |= (self.attributes[precondition.parentDownloadOption] == precondition.parentDownloadValue);
+		var doption = _.findWhere(self.collection, {argumentName: precondition.parentDownloadOption});
+		if ( self.hasValidPreconditions(doption) ) {
+			var doptionValue = _.findWhere(doption.value, {name: precondition.parentDownloadValue});
+			res |= doptionValue.selected;
+		}
+		// res |= (self.attributes[precondition.parentDownloadOption] == precondition.parentDownloadValue);
 	});
 	return res;
 };

@@ -16,7 +16,7 @@ var DownloadOption = function(parent, options) {
 	this.description = options.description || "";
 	this.minOccurs = options.hasOwnProperty("minOccurs") ? parseInt(options.minOccurs) : 1;
 	this.maxOccurs = options.hasOwnProperty("maxOccurs") ? parseInt(options.maxOccurs) : 1;
-	this.value = _.clone(options.value);
+	this.value = _.cloneDeep(options.value);
 	this.preConditions = options.preConditions || null;
 
 	// Special "crop" property
