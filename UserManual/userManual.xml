@@ -166,7 +166,7 @@
 					<inlinegraphic fileref="screenshots/toolBarIcons/subscribeIcon.jpg"/>, the Subscribe widget is opened.
 					<graphic fileref="screenshots/subscribeWidget.jpg"/>
 					</para></listitem>
-				<listitem><para>Fill in the Subscribe criteria and then click on the Order button, the Data Access Request widget is spawned-up.
+				<listitem><para>Fill in the Subscribe criteria and then click on the Subscribe button, the Data Access Request widget is spawned-up.
 					<graphic fileref="screenshots/darWidget.jpg"/>
 				</para></listitem>
 				<listitem><para>Click on Validate and then Submit to register the standing order.</para></listitem>
@@ -203,9 +203,9 @@
 				<listitem><para>Once the products are retrieved, the related footprints are drawn on the map.</para></listitem>
 				<listitem><para>Click inside a footprint:
 					<itemizedlist>
-						<listitem><para>the browse image is projected on the footprint,</para></listitem>
 						<listitem><para>the product row is checked on the results table</para></listitem>
 						<listitem><para>a popup widget is displayed with information on the selected product</para></listitem>
+						<listitem><para>Clicking on <inlinegraphic fileref="screenshots/browseIcon.jpg" alt='Show Browse icon'/> allows to display the browse (if any) image projected on the footprint,</para></listitem>
 						<listitem><para>the icon <inlinegraphic fileref="screenshots/darIcon.jpg" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
 						Follow the same steps as in section <xref linkend="simpleDARHowTo"/>.
 						<inlinegraphic fileref="screenshots/itemOnMap.jpg" alt='ITEM ON MAP'/>
@@ -220,9 +220,8 @@
 				<listitem><para>Click on the layers icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/layersIcon.jpg" alt='LAYERS ICON'/>.</para></listitem>		
 				<listitem><para>The layers widget is displayed.
 				<graphic fileref="screenshots/layersWidget.jpg" alt='LAYERS WIDGET'/>
-				The Results Footprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
 				</para></listitem>		
-				<listitem><para>Check the checkbox in front of the layer name, the layer is mapped on the map.
+				<listitem><para>Tick the checkbox in front of the layer name, the layer is mapped on the map.
 					<graphic fileref="screenshots/projectedLayers.jpg" alt='PROJECTED LAYERS'/>
 				</para></listitem>	
 				<listitem><para>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</para></listitem>
@@ -256,12 +255,12 @@
 				<listitem><para>Click on the Stop button <inlinegraphic fileref="screenshots/dmStopButton.jpg" alt='DOWNLOAD MANAGER STOP BUTTON'/>
 					The Stop an ACTIVE or an INACTIVE download manager. 
 				</para></listitem>
-				<listitem><para>Click on the Stop Immediately button <inlinegraphic fileref="screenshots/dmStopImmediatelyButton.jpg" alt='DOWNLOAD MANAGER STOP IMMEDIATELY BUTTON'/>
+				<!--listitem><para>Click on the Stop Immediately button <inlinegraphic fileref="screenshots/dmStopImmediatelyButton.jpg" alt='DOWNLOAD MANAGER STOP IMMEDIATELY BUTTON'/>
 					to stop definitively an ACTIVE or an INACTIVE download manager. 
 					<para><emphasis>Please note that once the Stop or the Stop Immediately buttons are clicked, a new command cannot be issued from the user interface.
 					A notification message is displayed to notify the user.</emphasis></para>
 					<graphic fileref="screenshots/dmMonitoringMessage.jpg" alt='DOWNLOAD MANAGER MONITORING MESSAGE'/>
-				</para></listitem>
+				</para></listitem-->
 			</itemizedlist>
 		</sect1>
 		
@@ -760,9 +759,9 @@
 						
 						<para>Click inside a footprint:
 							<itemizedlist>
-								<listitem><para>- the browse image is projected on the footprint,</para></listitem>
 								<listitem><para>- the product row is checked on the results table</para></listitem>
 								<listitem><para>- a popup widget is displayed with information on the selected product</para></listitem>
+								<listitem><para>- the browse image is projected on the footprint if the the icon <inlinegraphic fileref="screenshots/browseIcon.jpg" alt='Display Browse icon'/> is toggled,</para></listitem>
 								<listitem><para>- the icon <inlinegraphic fileref="screenshots/darIcon.jpg" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
 								Follow the same steps as in section <xref linkend="simpleDARHowTo"/>
 								</para></listitem> 							
@@ -775,9 +774,7 @@
 						<para>To access the map layers, click on the layers icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/layersIcon.jpg" alt='LAYERS ICON'/>.</para>
 						<para>The layers widget is displayed.</para>
 						 <graphic fileref="screenshots/layersWidget.jpg" alt='LAYERS WIDGET'/>
-						<para>The Results Footprints layers is checked by default. It is the layer which displayed the result items footprints on the map.
-						</para>
-						<para>Check the checkbox in front of the layer name, the layer is mapped on the map.</para> 
+						<para>Tick the checkbox in front of the layer name, the layer is displayed on the map.</para> 
 							<graphic fileref="screenshots/projectedLayers.jpg" alt='PROJECTED LAYERS'/>
 						<para>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</para>
 
