@@ -17,13 +17,13 @@
 <dt><span class="sect1"><a href="ch04.html#dars">4.2. Data Access Requests Monitoring</a></span></dt>
 <dt><span class="sect1"><a href="ch04.html#prefs">4.3. User Preferences</a></span></dt>
 <dt><span class="sect1"><a href="ch04.html#shopcartMgmt">4.4. Shopcarts Management</a></span></dt>
-<dt><span class="sect1"><a href="ch04.html#inquiries">4.5. Inquiries</a></span></dt>
+<dt><span class="sect1"><a href="ch04.html#layerManagerPref">4.5. Layer Manager</a></span></dt>
 </dl></div>
 <div class="sect1">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="downloadManagers"></a>4.1. Download Managers Monitoring</h2></div></div></div>
 <p>The "Download Managers" tab in My account menu is dedicated to
-				monitor the users'download managers. Several download managers can
+				monitor the user's download managers. Several download managers can
 				be installed by a user on different working machines. The user
 				interface allows to install a local download manager through the
 				three buttons displayed in the Download managers tab. Each button is related to an OS specific download manager installer: Windows, Linux and MasOS.</p>
@@ -64,7 +64,7 @@
 <li class="listitem">
 <p>Stop: is represented by the button <img src="screenshots/dmStopButton.jpg">.
 					</p>
-<p>This command makes the download manager stop be assigned to product downloads, 
+<p>This command makes the download manager  stop be assigned to product downloads, 
 					purge scheduled/paused Product downloads, but continue ongoing downloading activities until these are finished.</p>
 <p>
 				</p>
@@ -90,25 +90,10 @@
 <p>
 			</p>
 <p>
-
-			</p>
-<p>
 				<img src="screenshots/warning.jpg"> <span class="emphasis"><em>Only the ACTIVE and
 					INACTIVE download managers can be managed.</em></span> <span class="emphasis"><em>STOPPED
 					download managers are only displayed.</em></span>
 
-			</p>
-<p>
-			</p>
-<p>
-				<img src="screenshots/warning.jpg"> <span class="emphasis"><em>Once the Stop or the
-					Stop Immediately buttons are clicked, a new command cannot be
-					issued from the user interface. A notification message is
-					displayed to notify the user.</em></span> </p>
-<div><img src="screenshots/dmMonitoringMessage.jpg"></div>
-<p>
-			</p>
-<p>
 			</p>
 </div>
 <div class="sect1">
@@ -120,19 +105,11 @@
 <p>On the left side, the download managers already assigned to
 				data access requests are displayed. On the right side is displayed
 				the list of the users' data access requests.</p>
-<p><span class="emphasis"><em>Data Access Requests are either Simple Data Access Requests or Standing Order Data Access Requests.</em></span></p>
 <p>
 				The request list can be filtered by the download manager they are
 				assigned to. By clicking, on the download manager name, the
 				requests list is updated. </p>
 <div><img src="screenshots/darsFiltering.jpg"></div>
-<p>
-			</p>
-<p>
-				<img src="screenshots/tip.jpg"> <span class="emphasis"><em>Click on the highlighted
-					download manager name to disable the filtering.</em></span> 
-					</p>
-<div><img src="screenshots/dmMonitoringMessage.jpg"></div>
 <p>
 			</p>
 <p>A data access request can have one of the the possible statuses:
@@ -144,13 +121,15 @@
 					</p></li>
 <li class="listitem"><p>Cancelled: is a cancelled request, it is represented by the <img src="screenshots/cancelledIcon.jpg"> icon.
 					</p></li>
-<li class="listitem"><p>Completed: is a completed request. 
-
+<li class="listitem"><p>Completed: is a completed request, it is represented by the <img src="screenshots/completedIcon.jpg"> icon. --&gt;
 					</p></li>
 </ul></div>
 <p>
 			</p>
-<p>Each request has details information. In order to seen them, click on the a data access request to expand its content. <img src="screenshots/expandedDAR.jpg">.
+<p>Each request has details information. In order to see them, click on the a data access request to expand its content.
+				</p>
+<p><img src="screenshots/expandedDAR.jpg"></p>
+<p>
 				</p>
 <p>The data access request id, status, completion percentage
 					and the number of products are displayed.</p>
@@ -163,7 +142,7 @@
 <p>Each Simple Data Access Request has products when it is submitted.
 				However, standing order requests are submitted with scheduling options, so they do not have product urls when they are created.
 				</p>
-<p>During standing order request processing, when the products are ready, they should should appears in the Products sections. </p>
+<p>During standing order request processing, when the products are ready, they should appear in the Products sections. </p>
 <p>
 				
 				</p>
@@ -204,7 +183,7 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="shopcartMgmt"></a>4.4. Shopcarts Management</h2></div></div></div>
 <p>
-				Click on the Shopcarts tab in My account, the view all the available shopcarts from the user.				
+				Click on the Shopcarts tab in My account, it displays your entire available shopcarts.				
 			</p>
 <div><img src="screenshots/shopcartsTab.jpg"></div>
 <p>Click on shopcart to change the current shopcart accessible in the Data Access Services area.</p>
@@ -220,16 +199,14 @@
 </div>
 <div class="sect1">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="inquiries"></a>4.5. Inquiries</h2></div></div></div>
+<a name="layerManagerPref"></a>4.5. Layer Manager</h2></div></div></div>
 <p>
-				Click on the Inquiries tab in My account, the view displays the inquiry form.
-				
+				Click on the layer Maneger tab in My account, the view displays the layer manager form.
 			</p>
-<div><img src="screenshots/inquiriesTab.jpg"></div>
-<p>To choose the inquiry type, click on the combobox and choose one of the possible inquiry types:
-			Suggestion, Question, Complaint, Request for bulk order, Request on-demand media delivery, Other.</p>
-<p> The inquiry text message has to be typed in the text area underneath</p>
-			Finally click on the Submit button <img src="screenshots/inquiriesSubmitButton.jpg">to submit the inquiry request.
-		</div>
+<div><img src="screenshots/layerManagerTab.jpg"></div>
+<p>You can add your own WMS or WMTS layer or server by clicling the "Add layer" button.</p>
+<p>When you tick on a layer name or list, it will be automatically added in your layer list that you can then manage here <a class="xref" href="ch02.html#layersHowTo" title="2.8. How to select Layers?">Section 2.8, “How to select Layers?”</a>.</p>
+<p>You can remove your layer by clicking on the "x" button when your mouse is on this layer name or list from your preferences.</p>
+</div>
 </div></body>
 </html>
