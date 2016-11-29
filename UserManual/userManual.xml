@@ -26,7 +26,7 @@
 					<para> A dataset is a group of products. Various criteria are used to define a dataset such as : the use of products in a particular domain, the products meta data attributes, the user community. </para>
 					<para> There are four types of datasets: </para>
 					<itemizedlist>
-						<listitem><para>Native Dataset: products are grouped by the same mission/sensor/sensor mode/product type, it is basically an eoli like collection.</para>						</listitem>
+						<listitem><para>Native Dataset: products are grouped by the same mission/sensor/sensor mode/product type</para></listitem>
 						<listitem><para>Logical Dataset: is a dataset handled by the ngeo system for which products are associated.</para></listitem>						
 						<listitem><para>Remote Dataset: is a  dataset handled by external catalogues either by another ngeo instances or by HMA catalogues. Like HMA datasets and GCM.</para>						</listitem>	
 						<listitem><para>Virtual Dataset: it is a dataset composed by one of the above three type.</para></listitem>	
@@ -78,7 +78,7 @@
 				<listitem><para>It is a request issued from the user client in order to retrieve products having a url.</para></listitem>	
 			</varlistentry>
 			<varlistentry><term>Standing Order Data Access Request</term>
-				<listitem><para>It is a request issued from the user client in order to schedule searches either by data or by time.</para></listitem>	
+				<listitem><para>It is a request issued from the user client in order to schedule searches by data</para></listitem>	
 			</varlistentry>
 			</variablelist>
 		</sect1>
@@ -172,7 +172,6 @@
 				<listitem><para>Click on Validate and then Submit to register the standing order.</para></listitem>
 				
 			</itemizedlist>
-			<!--p>When a user performs a search, he retrievs the products metadata. If the product has a url, it can be downloded<p-->
 		</sect1>
 		<sect1 id="mapModeHowTo"><title>How to change Map Mode?</title>
 			<para>Click on the 2D/3D <inlinegraphic fileref="screenshots/toolBarIcons/mapMode.jpg"/> button on the toolbar to change the map mode
@@ -207,9 +206,9 @@
 						<listitem><para>a popup widget is displayed with information on the selected product</para></listitem>
 						<listitem><para>Clicking on <inlinegraphic fileref="screenshots/browseIcon.jpg" alt='Show Browse icon'/> allows to display the browse (if any) image projected on the footprint,</para></listitem>
 						<listitem><para>the icon <inlinegraphic fileref="screenshots/darIcon.jpg" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
-						Follow the same steps as in section <xref linkend="simpleDARHowTo"/>.
-						<inlinegraphic fileref="screenshots/itemOnMap.jpg" alt='ITEM ON MAP'/>
-						</para></listitem>						
+						Follow the same steps as in section <xref linkend="simpleDARHowTo"/>.</para>
+						<para><inlinegraphic fileref="screenshots/itemOnMap.jpg" alt='ITEM ON MAP'/></para>
+						</listitem>						
 					</itemizedlist>
 				</para></listitem>
 			</itemizedlist>
@@ -221,7 +220,7 @@
 				<listitem><para>The layers widget is displayed.
 				<graphic fileref="screenshots/layersWidget.jpg" alt='LAYERS WIDGET'/>
 				</para></listitem>		
-				<listitem><para>Tick the checkbox in front of the layer name, the layer is mapped on the map.
+				<listitem><para>Tick the checkbox in front of the layer name, the layer is displayed on the map.
 					<graphic fileref="screenshots/projectedLayers.jpg" alt='PROJECTED LAYERS'/>
 				</para></listitem>	
 				<listitem><para>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</para></listitem>
@@ -240,11 +239,11 @@
 		
 		<sect1 id="downloadManagersHowTo"><title>How to manage Download Managers?</title>
 			<itemizedlist>
-				<listitem><para>Click on My account on the menu bar.
-					<inlinegraphic fileref="screenshots/menuBar.jpg" alt='MENUBAR IMAGE'/>
-					The download managers already registered are displayed with the information details on each one of them.
-					<graphic fileref="screenshots/downloadManagersView.jpg" alt='DOWNLOAD MANAGERS'/>
-				</para></listitem>
+				<listitem><para>Click on My account on the menu bar.</para>
+					<para><inlinegraphic fileref="screenshots/menuBar.jpg" alt='MENUBAR IMAGE'/></para>
+					<para>The download managers already registered are displayed with the information details on each one of them.</para>
+					<para><graphic fileref="screenshots/downloadManagersView.jpg" alt='DOWNLOAD MANAGERS'/></para>
+				</listitem>
 				<listitem><para>If there is no download manager, click on Install Download Manager to install a new one.</para></listitem>
 				<listitem><para>Select the row of the download manager to monitor, then, the command buttons statuses are updated 
 					according to the download manager status.
@@ -339,19 +338,13 @@
 					To select a dataset, the user has to scroll out the list and
 					choose the dataset by clicking on the list entry. It is also
 					possible to filter the available list of datasets by the means
-					of the filter combo boxes. The filtering criteria are received
-					from the server, but they should mainly contain : mission,
-					sensor and keywords. 
+					of the filter combo boxes.
 					<graphic fileref="screenshots/datasetFilters.jpg" /> 
 					<para>By default, all the
 					criteria are set to "None". As soon as a criteria is chosen in
 					one of the combo boxes, the datasets are filtered and the list is
 					updated, taken into account the other combo boxes selected
-					criteria.</para>
-					<graphic fileref="screenshots/datasetFiltering1.jpg" /> 
-						
-					<para>Here is an examaple of the mission and sensor criteria set to S2 and OPT.</para>	
-					<graphic fileref="screenshots/datasetFiltering2.jpg" />			
+					criteria.</para>		
 					<para>
 					In order to disable the filtering for a criterion, set back the
 					selected option to "None".</para>
@@ -362,18 +355,18 @@
 					Once a dataset has been selected, to set the search criteria,
 					the user has to click on the button <inlinegraphic fileref="screenshots/toolBarIcons/searchIcon.jpg" /> on the left	toolbar.
 					The search criteria widget is then displayed. <graphic fileref="screenshots/dateCriteria.jpg" />
-					It is composed of several accordion, each accordion displays a search criteria type. Each button on the footer has his own role.</para>
+					It is composed of several accordion, each accordion displays a search criteria type. Each button on the footer has its own role.</para>
 		
-				<para>The Search button submits the search request to the server to
+				<para>The Search button submits the search request to the server in order to
 				retrieve the results. See <xref linkend="resultsTable"/>.</para>
 				<para>The Share button when	clicked, displays a popup. <inlinegraphic fileref="screenshots/sharePopup.jpg" />
 				Clik on url, a new browser window is opened, the search widget is displayed with all the search parameters set.
 				</para>
-				<para>
+				<!--para>
 					<inlinegraphic fileref="screenshots/tip.jpg" /><emphasis>The openSearch url to
 						submit is created according to all the criteria selected inside
 						the search criteria widget.</emphasis>
-				</para> 
+				</para--> 
 				<para>There search criteria types are :</para>
 					<sect3><title>Date Criteria</title>
 						<para>
@@ -386,9 +379,7 @@
 							calendar widget is closed and the chosen date does appear in
 							the text field.
 						</para>
-						<para>
-							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>The same methods are used to modify both the start and stop dates.</emphasis>
-						</para>
+						
 						<para>
 							It is also possible to change the dates using a time slider. To enable the time slider, check the checkbox <inlinegraphic fileref="screenshots/timeSliderCheckBox.jpg" />.
 							The search widget is then hidden and the timeSlider is displayed in the bottom of the map.
@@ -430,19 +421,15 @@
 						<para>
 							<para><emphasis>A Polygon search area </emphasis> is defined by its coordinates.</para>
 						
-							<para>To enable drawing polygons, click on the Polygon button <inlinegraphic
-							fileref="screenshots/polygonButton.jpg" />in the area widget.
+							<para>To enable drawing polygons, click on the Polygon button in the area widget.
 							The polygon definition view is displayed.
 							</para> 
 							<graphic fileref="screenshots/polygonWidget.jpg" /> 
-							<para>Enter the polygon coordinates in the text field under 'Enter coordinates:' and then press the Draw button
-							<inlinegraphic fileref="screenshots/drawButton.jpg" />.
+							<para>Enter the polygon coordinates in the text field under 'Enter coordinates:' and then press the Draw button.
 							</para>
-							<para>The polygon is then drawn on the map.</para>
-							<graphic fileref="screenshots/drawnPolygon.jpg" />
 							
 							<para>It is also possible to draw a polygon using the mouse.
-							On the polygon view, press the Draw button <inlinegraphic fileref="screenshots/drawButton.jpg" />, then click on the map to select a polygon edge.
+							On the polygon view, press the Draw button, then click on the map to select a polygon edge.
 							Move the mouse to choose another point an so on. When all the points are choosen double click to finish the definition of the polygon.
 							The polygon widget is then displayed with the polygon coordinates.
 							</para>
@@ -452,18 +439,16 @@
 						</para>	
 						
 						<para>
-							<para><emphasis>A Gazetteer search area</emphasis> can be defined by clicking on the <inlinegraphic
-							fileref="screenshots/gazetteerButton.jpg" /> in the area widget.
+							<para><emphasis>A Gazetteer search area</emphasis> can be defined by clicking the area widget.
 							The gazetteer view is displayed.</para>
 							
 							<graphic fileref="screenshots/gazetteerWidget.jpg" /> 
-							<para>Enter the location to search in the text field and the press the Enter keyboard.</para>
+							<para>Enter the location to search in the text field and then press Enter.</para>
 							<para>The location items retrieved from the server are displayed in a list.</para>
-							<graphic fileref="screenshots/gazetteerResult.jpg" />
 							<para>Click on the choosen location to define the search area.</para>
 						</para>
 						
-						<para><emphasis>To import a search Area</emphasis> click on the <inlinegraphic fileref="screenshots/importButton.jpg" /> in the area widget.
+						<para><emphasis>To import a search Area</emphasis> click on the "Import" button in the area widget.
 							The import view is displayed.
 						</para>
 						<graphic fileref="screenshots/importWidget.jpg" /> 
@@ -474,15 +459,14 @@
 						</para>
 				</sect3>
 					
-				<sect3><title>Advanced Criteria</title>
+				<sect3><title>Advanced Filters and Download Options</title>
 						<para>They are criteria relative to the selected dataset, so
 							they change depending on the dataset chosen.
 						<para>
 							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>Different datasets
-								can have the same criteria. It is a configuration matter on
-								the server side.</emphasis>
-						</para> To visualize the advanced criteria, click on Advanced Criteria
-						tab inside the search criteria widget. <graphic
+								can have the same criteria.</emphasis>
+						</para> To visualize the advanced criteria, click on Advanced Filters and Download Options
+						tab inside the search filters widget. <graphic
 						fileref="screenshots/advancedCriteria.jpg" /> Each criterion is
 						displayed by its name and a selection widget. Criteria having a
 						range are displayed with sliders. Move the slider or set the
@@ -492,10 +476,7 @@
 						boxes to change the criterion selected value.
 						</para>
 						<para>
-							<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>If no dataset
-								has been selected and the Advanced Criteria tab is selected a
-								notification message is displayed to the user and no criteria
-								is displayed.</emphasis>
+							<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>The Advanced Filters and Download Options are displayed per dataset choosen.</emphasis>
 						</para>
 				</sect3>
 				
@@ -504,20 +485,12 @@
 							they change depending on the dataset chosen.
 						<para>
 							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>Different datasets
-								can have the same download options. It is a configuration
-								matter on the server side.</emphasis>
-						</para> To visualize the download options, click on the Download
-						Options tab inside the search criteria widget.
+								can have the same download options.</emphasis>
+						</para>
 						<graphic fileref="screenshots/downloadOptions.jpg" />
 
 						Each option is displayed by its name and a combobox containing
 						the possible values.
-						</para>
-						<para>
-							<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>If no dataset
-								has been selected and the Download Options tab is selected a
-								notification message is displayed to the user and no download
-								option is displayed.</emphasis>
 						</para>
 				</sect3>				
 			</sect2>
@@ -532,12 +505,6 @@
 						</para>
 							<graphic fileref="screenshots/resultsTable.jpg" />
 						<para>
-							<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>If no dataset has
-								been selected and the <inlinegraphic fileref="screenshots/tableButton.jpg" /> is clicked,
-								the results table is empty.
-							</emphasis>
-						</para>
-						<para>
 							<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>The results table can
 								be hidden by clicking on the <inlinegraphic
 								fileref="screenshots/tableButton.jpg" /> button on
@@ -545,15 +512,11 @@
 							</emphasis>
 						</para>
 						<para>
-							The navigation in the table results is insured by the buttons in the middle of the status bar <inlinegraphic fileref="screenshots/tablePaginationButtons.jpg" />.
-							The "First" button displays the first page of the results.
-							The "Last" button displays the last page of the results.
-							The "Previous" and "Next" buttons allow the navigation from one page to the previous or the next one.
+							The navigation in the table results is insured by the pagination tools <inlinegraphic fileref="screenshots/tablePaginationButtons.jpg" />.
 						</para>
 						
 						<para>
-							The field <inlinegraphic fileref="screenshots/resultsSearchFilter.jpg" />
-							allows to filter the results according to the text entred.
+							The field "Filet table" allows to filter the results according to the text entered.
 						</para>
 					</sect2>
 					<sect2><title id="directDownload">Direct Download</title>
@@ -572,8 +535,7 @@
 						<graphic fileref="screenshots/directDownloadWidget.jpg"
 								alt='DIRECT DOWNLOAD WIDGET IMAGE' />
 						<para>According to the product url and to the download managers
-							registered, the user can have the choice to either choose a
-							download via:
+							registered, the user can have the choice to to download via:
 						<itemizedlist>
 							<listitem><para>the browser</para></listitem>
 							<listitem><para>or the local download manager</para></listitem>
@@ -627,19 +589,19 @@
 							confirmed, the request is being processed, unless an error
 							message is dispalyed. 
 						</para>
-						<para>
+						<!--para>
 							The close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg" /> aims to close the widget.
-						</para>
+						</para-->
 					</sect2>
 
 					<sect2><title id="STODar">Standing Order Data Access Request</title>
-						<para>A Standing Order Data Access Request allows the user to schedule a search either by time or data criteria
+						<para>A Standing Order Data Access Request allows the user to schedule a search by data criteria
 						in order to retrieve and download products. Thus, a download manager has
 							to be assigned to the request and will insure the download.</para>
 											
-						<para>This functionnality is available from the Subscribe button <inlinegraphic fileref="screenshots/toolBarIcons/subscribeButton.jpg" /> in the left toolbar.</para>
+						<para>This functionnality is available from the Subscribe button in the left toolbar.</para>
 						<graphic fileref="screenshots/subscribeWidget.jpg" />
-						<para>The "Data-driven Order" radio button is selected by default to submit a <emphasis>data-driven</emphasis> Standing Order</para>
+						<para>The "Data-driven Order" type is selected to submit a <emphasis>data-driven</emphasis> Standing Order</para>
 						
 						<para>Fill in the fields (same as a search) and click on the Order button. Then the list of available download managers is displayed.
 						<graphic
@@ -664,19 +626,10 @@
 							confirmed, the request is being processed, unless an error
 							message is dispalyed. 
 						</para>
-						<para>
+						<!--para>
 							The close icon <inlinegraphic fileref="screenshots/widgetCloseIcon.jpg"
 								alt='WIDGET CLOSE ICON' /> aims to close the widget.
-						</para>
-						
-						<para> To submit a <emphasis>time-driven </emphasis> standing order click on the Time Driven radio button
-						<inlinegraphic fileref="screenshots/timeSTORadio.jpg" /> and fill in the additionnal time-driven scheduling options and follow the same steps than the <emphasis>data-Driven</emphasis> Standing Order.
-						<graphic fileref="screenshots/timeSTOWidget.jpg" /></para>
-								
-						<para><emphasis>Time-Driven and Data-Driven requests can be shared by clicking on the Share button of the widget.
-						a popup will appear with the url to share. Copy the url and paste it in a new window. The Standing order widget is opened with the 
-						same criteria.</emphasis>
-						</para>
+						</para-->
 					</sect2>
 					<sect2><title>Hosted Processing</title>
 						<para>A processing can be added when a product is downloaded through a Data Access Request.</para>
@@ -689,21 +642,19 @@
 			</sect1>
 			
 			<sect1 id="shopcart"><title>Shopcart</title>
-					<para>The user has a current shopcart available in the Data Access Services area. He can manage its shopcarts in My Account area. See <xref linkend="shopcartMgmt"/>
+					<para>The user has a current shopcart available in the Data Access Services area. He can manage his shopcarts in My Account area. See <xref linkend="shopcartMgmt"/>
 					</para>
 
 				<sect2>
 					<title>Content</title>
 					<para>The current shopcart content is displayed directly in the map.</para>
-					<para>Click on Shopcart button <inlinegraphic fileref="screenshots/shopcartButton.jpg" /> to display the name of the current shopcart being used.</para>
-					<para>Click on Table button <inlinegraphic fileref="screenshots/shopcartTableButton.jpg" /> to display the items in a table.</para>
-					<graphic fileref="screenshots/shopcartTable.jpg" />
+					<para>Click on dataset containing shopcart icon <inlinegraphic fileref="screenshots/shopcartButton.jpg" /> to display the current shopcart being used.</para>
 				</sect2>
 				<sect2>
 					<title>Manage shopcart items</title>
 						Items are added into the current shopcart via :
 						<itemizedlist>
-							<listitem><para>Map : click on a product in the map and then click on Add To Shopcart button<graphic fileref="screenshots/mapPopupAddShopcart.jpg" /></para></listitem>
+							<listitem><para>Map : click on a product in the map and then click on "Shopcart" icon<graphic fileref="screenshots/mapPopupAddShopcart.jpg" /></para></listitem>
 							<listitem><para>Table : select products and then click on Add to Shopcart button <inlinegraphic fileref="screenshots/addShopcartButton.jpg" /></para></listitem>
 						</itemizedlist>
 						
@@ -721,13 +672,13 @@
 					<title id="mapModes">Map Modes</title> 
 						ngEO user interface offers to the user two map modes 2D and 3D. Both modes are used to :
 						<itemizedlist>
-							<listitem><para>- vizualize the products footprints</para></listitem>
-							<listitem><para>- navigate on the globe</para></listitem>
-							<listitem><para>- choose search area coordinates</para></listitem>
+							<listitem><para>vizualize the products footprints</para></listitem>
+							<listitem><para>navigate on the globe</para></listitem>
+							<listitem><para>choose search area coordinates</para></listitem>
 		<!-- 					<listitem><para>draw search area</para></listitem> -->
-							<listitem><para>- project product browse images</para></listitem>
-							<listitem><para>- vizualize map layers</para></listitem>
-							<listitem><para>- choose map background</para></listitem>
+							<listitem><para>project product browse images</para></listitem>
+							<listitem><para>vizualize map layers</para></listitem>
+							<listitem><para>choose map background</para></listitem>
 						
 						</itemizedlist>
 						These functionnalities are detailed in the next sections.
@@ -739,30 +690,30 @@
 				<sect2><title id="navigation">Navigation</title> 
 						<para> In order to zoom in either:
 							<itemizedlist>
-								<listitem><para>- Click on the Zooum In <inlinegraphic fileref="screenshots/toolBarIcons/zoomInIcon.jpg"/>button on the toolbar</para></listitem>
-								<listitem><para>- or move the mouse wheel in.</para></listitem>
+								<listitem><para>Click on the Zooum In <inlinegraphic fileref="screenshots/toolBarIcons/zoomInIcon.jpg"/>button on the toolbar</para></listitem>
+								<listitem><para>or move the mouse wheel in.</para></listitem>
 							</itemizedlist>
 						</para>
 
 						<para> In order to zoom out either:
 							<itemizedlist>
-								<listitem><para>- Click on the Zooum Out <inlinegraphic fileref="screenshots/toolBarIcons/zoomOutIcon.jpg"/>button on the toolbar to zoom out. </para></listitem>
-								<listitem><para>- or move the mouse wheel out.</para></listitem>
+								<listitem><para>Click on the Zooum Out <inlinegraphic fileref="screenshots/toolBarIcons/zoomOutIcon.jpg"/>button on the toolbar to zoom out. </para></listitem>
+								<listitem><para>or move the mouse wheel out.</para></listitem>
 							</itemizedlist>
 						</para>
 						<para>Click on the Start View <inlinegraphic fileref="screenshots/toolBarIcons/startViewIcon.jpg"/>button on the toolbar to return back to the initial view.</para>
 				</sect2>
 
 				<sect2><title id="productsOnMap">Products on Map</title> 
-						<para>Once a catalogue search in done and the products are retrieved, the related footprints are drawn on the map.
+						<para>Once a catalogue search is done and the products are retrieved, the related footprints are drawn on the map.
 						</para>
 						
 						<para>Click inside a footprint:
 							<itemizedlist>
-								<listitem><para>- the product row is checked on the results table</para></listitem>
-								<listitem><para>- a popup widget is displayed with information on the selected product</para></listitem>
-								<listitem><para>- the browse image is projected on the footprint if the the icon <inlinegraphic fileref="screenshots/browseIcon.jpg" alt='Display Browse icon'/> is toggled,</para></listitem>
-								<listitem><para>- the icon <inlinegraphic fileref="screenshots/darIcon.jpg" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
+								<listitem><para>the product row is checked on the results table</para></listitem>
+								<listitem><para>a popup widget is displayed with information on the selected product</para></listitem>
+								<listitem><para>Tick the "eyes" icon in the table or toggle the browse icon <inlinegraphic fileref="screenshots/browseIcon.jpg" alt='Display Browse icon'/> in the information panel in order to project the browse image inside the footprints</para></listitem>
+								<listitem><para>the icon <inlinegraphic fileref="screenshots/darIcon.jpg" alt='SIMPLE DAR icon'/> allows submitting a Simple Data access Request.
 								Follow the same steps as in section <xref linkend="simpleDARHowTo"/>
 								</para></listitem> 							
 								<inlinegraphic fileref="screenshots/itemOnMap.jpg" alt='ITEM ON MAP'/>
@@ -774,9 +725,7 @@
 						<para>To access the map layers, click on the layers icon on the toolbar <inlinegraphic fileref="screenshots/toolBarIcons/layersIcon.jpg" alt='LAYERS ICON'/>.</para>
 						<para>The layers widget is displayed.</para>
 						 <graphic fileref="screenshots/layersWidget.jpg" alt='LAYERS WIDGET'/>
-						<para>Tick the checkbox in front of the layer name, the layer is displayed on the map.</para> 
-							<graphic fileref="screenshots/projectedLayers.jpg" alt='PROJECTED LAYERS'/>
-						<para>In order to remove a layer from the map, uncheck the checkbox in front of the layer name.</para>
+						<para>In order to remove a layer from the map, uncheck the checkbox in front of the dataset name upper the table</para>
 
 				</sect2>
 
@@ -796,7 +745,7 @@
 		<sect1 id="downloadManagers"><title>Download Managers Monitoring</title>
 
 			<para>The "Download Managers" tab in My account menu is dedicated to
-				monitor the users'download managers. Several download managers can
+				monitor the user's download managers. Several download managers can
 				be installed by a user on different working machines. The user
 				interface allows to install a local download manager through the
 				three buttons displayed in the Download managers tab. Each button is related to an OS specific download manager installer: Windows, Linux and MasOS.</para>
@@ -839,7 +788,7 @@
 			<itemizedlist>
 				<listitem><para>Stop: is represented by the button <inlinegraphic
 					fileref="screenshots/dmStopButton.jpg" alt='STOP DM BUTTON' />.
-					<para>This command makes the download manager stop be assigned to product downloads, 
+					<para>This command makes the download manager  stop be assigned to product downloads, 
 					purge scheduled/paused Product downloads, but continue ongoing downloading activities until these are finished.</para>
 				</para></listitem>
 
@@ -849,6 +798,8 @@
 					<para>This command makes the download manager stop be assigned to product downloads and stop all ongoing and scheduled/paused Product downloads.</para>
 				</para></listitem>
 			</itemizedlist>
+			</para>
+			
 			<para>
 				To manage a download manager, click on its row in the table, the
 				command buttons are updated according to the download manager
@@ -865,15 +816,6 @@
 					download managers are only displayed.</emphasis>
 
 			</para>
-			<para>
-				<inlinegraphic fileref="screenshots/warning.jpg" /> <emphasis>Once the Stop or the
-					Stop Immediately buttons are clicked, a new command cannot be
-					issued from the user interface. A notification message is
-					displayed to notify the user.</emphasis> <graphic
-					fileref="screenshots/dmMonitoringMessage.jpg"
-					alt='DOWNLOAD MANAGER MONITORING MESSAGE' />
-			</para>
-			</para>
 			
 		</sect1>
 
@@ -886,45 +828,35 @@
 			<para>On the left side, the download managers already assigned to
 				data access requests are displayed. On the right side is displayed
 				the list of the users' data access requests.</para>
-			
-			<para><emphasis>Data Access Requests are either Simple Data Access Requests or Standing Order Data Access Requests.</emphasis></para>
-
 			<para>
 				The request list can be filtered by the download manager they are
 				assigned to. By clicking, on the download manager name, the
 				requests list is updated. <graphic
 					fileref="screenshots/darsFiltering.jpg" alt='DARS FILTERING' />
 			</para>
-
-			<para>
-				<inlinegraphic fileref="screenshots/tip.jpg" /> <emphasis>Click on the highlighted
-					download manager name to disable the filtering.</emphasis> 
-					<graphic fileref="screenshots/dmMonitoringMessage.jpg" alt='DOWNLOAD MANAGER MONITORING MESSAGE' />
-			</para>
-			
 			
 			<para>A data access request can have one of the the possible statuses:
 				<itemizedlist>
 					<listitem><para>Processing: is an going request, it is represented by the <inlinegraphic
-						fileref="screenshots/activeIcon.jpg" alt='MENUBAR IMAGE' /> icon.
+						fileref="screenshots/activeIcon.jpg" alt='processing' /> icon.
 					</para></listitem>
 
 					<listitem><para>Paused: is paused request, it is represented by the <inlinegraphic
-						fileref="screenshots/inactiveIcon.jpg" alt='MENUBAR IMAGE' /> icon.
+						fileref="screenshots/inactiveIcon.jpg" alt='paused' /> icon.
 					</para></listitem>
 
 					<listitem><para>Cancelled: is a cancelled request, it is represented by the <inlinegraphic
-						fileref="screenshots/cancelledIcon.jpg" alt='MENUBAR IMAGE' /> icon.
+						fileref="screenshots/cancelledIcon.jpg" alt='cancelled' /> icon.
 					</para></listitem>
 					
-					<listitem><para>Completed: is a completed request. 
-<!-- 						it is represented by the <inlinegraphic fileref="screenshots/cancelledIcon.jpg" alt='MENUBAR IMAGE' /> icon. -->
+					<listitem><para>Completed: is a completed request, it is represented by the <inlinegraphic fileref="screenshots/completedIcon.jpg" alt='completed' /> icon. -->
 					</para></listitem>
 				</itemizedlist>
 			</para>			
 			
-			<para>Each request has details information. In order to seen them, click on the a data access request to expand its content. <inlinegraphic
-				fileref="screenshots/expandedDAR.jpg" alt='EXPANDED DAR' />.
+			<para>Each request has details information. In order to see them, click on the a data access request to expand its content.
+				<para><inlinegraphic
+				fileref="screenshots/expandedDAR.jpg" alt='EXPANDED DAR' /></para>
 				<para>The data access request id, status, completion percentage
 					and the number of products are displayed.</para>
 				<para>Buttons Pause, Resume and Stop Immediately buttons are
@@ -932,7 +864,7 @@
 			</para>
 			<para>Each Simple Data Access Request has products when it is submitted.
 				However, standing order requests are submitted with scheduling options, so they do not have product urls when they are created.
-				<para>During standing order request processing, when the products are ready, they should should appears in the Products sections. </para>
+				<para>During standing order request processing, when the products are ready, they should appear in the Products sections. </para>
 				
 				<para>Click on the Products button to visualize the products details.</para>
 				<graphic fileref="screenshots/expandedDARProducts.jpg"
@@ -973,7 +905,7 @@
 		
 		<sect1 id="shopcartMgmt"><title>Shopcarts Management</title>
 			<para>
-				Click on the Shopcarts tab in My account, the view all the available shopcarts from the user.				
+				Click on the Shopcarts tab in My account, it displays your entire available shopcarts.				
 			</para>
 			<graphic fileref="screenshots/shopcartsTab.jpg" />
 			<para>Click on shopcart to change the current shopcart accessible in the Data Access Services area.</para>
@@ -988,16 +920,16 @@
 			</itemizedlist>
 		</sect1>
 		
-		<sect1 id="inquiries"><title>Inquiries</title>
+		<sect1 id="layerManagerPref"><title>Layer Manager</title>
 			<para>
-				Click on the Inquiries tab in My account, the view displays the inquiry form.
-				
+				Click on the layer Maneger tab in My account, the view displays the layer manager form.
 			</para>
-			<graphic fileref="screenshots/inquiriesTab.jpg" />
-			<para>To choose the inquiry type, click on the combobox and choose one of the possible inquiry types:
-			Suggestion, Question, Complaint, Request for bulk order, Request on-demand media delivery, Other.</para>
-			<para> The inquiry text message has to be typed in the text area underneath</para>
-			Finally click on the Submit button <inlinegraphic fileref="screenshots/inquiriesSubmitButton.jpg" alt='Prefs Tab' />to submit the inquiry request.
+			<graphic fileref="screenshots/layerManagerTab.jpg" />
+			<para>You can add your own WMS or WMTS layer or server by clicling the "Add layer" button.</para>
+			<para>When you tick on a layer name or list, it will be automatically added in your layer list that you can then manage here <xref linkend="layersHowTo"/>.</para>
+			<para>You can remove your layer by clicking on the "x" button when your mouse is on this layer name or list from your preferences.</para>
+			
+
 		</sect1>
 
 	</chapter>
