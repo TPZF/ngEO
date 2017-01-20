@@ -89,6 +89,7 @@ var BrowsesLayer = function(params, mapEngine) {
 						}
 					}
 				});
+				layerDesc.projection = mapProjection;
 				layerDesc.params.matrixSet = wmtsMap[mapProjection].params.matrixSet;
 			}
 			MapUtils.computeExtent(feature);
