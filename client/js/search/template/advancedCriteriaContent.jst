@@ -41,7 +41,11 @@
 
 			<!-- The criterion is an integer within a range  -->	
 			<% } else if ((criterionType == 'integer' || criterionType == 'float') && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+				<label for="<%= criterion.id %>"><%= label %></label>
+    			<input data-mini="true" name="<%= criterion.id %>" id="<%= criterion.id %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" <% if ( value ) print('value='+value); %> type="range">
 
+    		<!-- The criterion is a range -->
+    		<% } else if ((criterionType == 'range') && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 				<div data-role="fieldcontain">
 			    	<div data-role="rangeslider" data-highlight="true" data-mini="true">
 				        <label class="capitalize" for="<%= criterion.id %>_from"><%= label %>:</label>
