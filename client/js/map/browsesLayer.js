@@ -124,7 +124,7 @@ var BrowsesLayer = function(params, mapEngine) {
 	 *		Browse url
 	 */
 	this.removeBrowse = function(feature, browseUrl)  {
-		var browseId = feature.id + browseUrl;
+		var browseId = browseUrl + feature.id;
 		// Remove the WMS only if it does exists
 		if (browseLayersMap.hasOwnProperty(browseId)) {
 		
