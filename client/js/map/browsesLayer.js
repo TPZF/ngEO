@@ -58,10 +58,11 @@ var BrowsesLayer = function(params, mapEngine) {
 	 * Add features to layer
 	 */
 	this.addBrowse = function(feature, browseUrl) {
-		if (!browseLayersMap.hasOwnProperty(browseUrl)) {
+		var browseId = browseUrl + feature.id;
+		if (!browseLayersMap.hasOwnProperty(browseId)) {
 			// Set browseUrl in map to mark the creation of browse to avoid double creating of
 			// browse provoked by highlight event as well..
-			browseLayersMap[browseUrl] = browseUrl;
+			browseLayersMap[browseId] = browseUrl;
 			
 			var layerDesc = MapUtils.createWmsLayerFromUrl(browseUrl);
 			if ( !layerDesc.params.time ) {
@@ -111,7 +112,7 @@ var BrowsesLayer = function(params, mapEngine) {
 			};
 
 			// Finally set the real browseLayerDesc in browseLayerMap
-			browseLayersMap[browseUrl] = browseLayerDesc;
+			browseLayersMap[browseId] = browseLayerDesc;
 			browseLayers.push( browseLayerDesc );
 		}
 	};
@@ -122,15 +123,16 @@ var BrowsesLayer = function(params, mapEngine) {
 	 * @param id
 	 *		Browse url
 	 */
-	this.removeBrowse = function(browseUrl)  {
+	this.removeBrowse = function(feature, browseUrl)  {
+		var browseId = feature.id + browseUrl;
 		// Remove the WMS only if it does exists
-		if (browseLayersMap.hasOwnProperty(browseUrl)) {
+		if (browseLayersMap.hasOwnProperty(browseId)) {
 		
 			// Get the browse layer structure from the map
-			var bl = browseLayersMap[ browseUrl ];
+			var bl = browseLayersMap[ browseId ];
 			
 			// Delete it
-			delete browseLayersMap[ browseUrl ];
+			delete browseLayersMap[ browseId ];
 			
 			// Remove browse layer from the current engine
 			mapEngine.removeLayer(bl.engineLayer);
