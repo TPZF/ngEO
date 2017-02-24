@@ -31,6 +31,21 @@ var AdvancedSearchView = Backbone.View.extend({
 			this.setInputCriterionValues(event);
 		},
 
+		// For every option modified by a select element
+		'change select': function(event) {
+
+			var name = event.currentTarget.id;
+			var value = $(event.currentTarget).val();
+			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+				id: name
+			});
+			if ( value != "" ) {
+				attributeToUpdate.value = value;
+			} else {
+				delete attributeToUpdate.value;
+			}
+		},
+
 		// Update model values when checkbox has been clicked
 		'change input[type="checkbox"]': function(event) {
 			var isChecked = $(event.target).is(":checked");

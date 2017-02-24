@@ -19,18 +19,29 @@
 			<% if (criterionType == 'list' || criterionType == 'string') { %> 
 				<!-- NGEO-2233: list and string must have possible values for now due to ease of configuration for Ops -->
 				<% if ( criterion.possibleValues && criterion.possibleValues.length > 0 ) { %>
-					<div data-role="fieldcontain">
-						<fieldset data-role="controlgroup">
-							<legend><%= label %>:</legend>
+					<% if ( criterion.maxOccurs == 1 ) { %>
+						<label id="<%= label %>_label" for="<%= criterion.id %>"><%= label %> : </label>
+						<!-- Selectbox -->
+						<select id="<%= criterion.id %>" data-mini="true"">
+							<option value="">None</option>
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
-								<label>
-									<!-- select the check box if value is defined -->
-									<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue) != -1 ) print('checked="checked"'); %> />
-									<%= possibleValue %>
-								</label>
+								<option value="<%= possibleValue %>" <% if ( value && value.indexOf(possibleValue) != -1) { print('selected'); } %> ><%= possibleValue %></option>
 							<% }); %>
-						</fieldset>
-					</div>
+						</select>
+					<% } else { %>
+						<div data-role="fieldcontain">
+							<fieldset data-role="controlgroup">
+								<legend><%= label %>:</legend>
+								<% _.each(criterion.possibleValues, function(possibleValue) { %>
+									<label>
+										<!-- select the check box if value is defined -->
+										<input type="checkbox" name="<%= criterion.id %>" value="<%= possibleValue %>" data-mini="true" <% if ( value && value.indexOf(possibleValue) != -1 ) print('checked="checked"'); %> />
+										<%= possibleValue %>
+									</label>
+								<% }); %>
+							</fieldset>
+						</div>
+					<% } %>
 				<% } else { %>
 					<!-- The criterion has no possible values, show text field -->
 					<div data-role="fieldcontain">
