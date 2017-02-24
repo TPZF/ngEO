@@ -25,14 +25,18 @@ var TimeExtentView = Backbone.View.extend({
 	events: {
 		//The 2 next handlers listen to start and stop date changes
 		'change .fromDateInput': function(event) {
-			this.model.set({
-				"start": Date.fromISOString($(event.currentTarget).val() + "T00:00:00.000Z")
-			});
+			if ( this.model.get("start").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString() ) {
+				this.model.set({
+					"start": Date.fromISOString($(event.currentTarget).val() + "T00:00:00.000Z")
+				});
+			}
 		},
 		'change .toDateInput': function(event) {
-			this.model.set({
-				"stop": Date.fromISOString($(event.currentTarget).val() + "T23:59:59.999Z")
-			});
+			if ( this.model.get("stop").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString() ) {
+				this.model.set({
+					"stop": Date.fromISOString($(event.currentTarget).val() + "T23:59:59.999Z")
+				});
+			}
 		},
 		/*		//the 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
 				'change #fromTimeInput' : function(event){
@@ -104,10 +108,16 @@ var TimeExtentView = Backbone.View.extend({
 			var dateRangeOptions = {
 				startYear: startDate.getFullYear(),
 				endYear: stopDate.getFullYear(),
-				calDateList: keyDates
+				calDateList: keyDates,
 			};
-			this.$fromDateInput.datebox("option", dateRangeOptions);
-			this.$toDateInput.datebox("option", dateRangeOptions);
+			this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
+				calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
+			})).datebox("refresh");
+			this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
+				calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
+			})).datebox("refresh");
 		} else if (useTimeSlider) {
 			this.removeTimeSlider();
 		}
@@ -166,8 +176,6 @@ var TimeExtentView = Backbone.View.extend({
 
 	// Update the view when the model has changed
 	update: function() {
-		this.$fromDateInput.val(this.model.get("start").toISODateString());
-		this.$toDateInput.val(this.model.get("stop").toISODateString());
 
 		if (this.$dateRangeSlider.length > 0) {
 			this.$dateRangeSlider.dateRangeSlider('option', 'bounds', {
@@ -175,6 +183,19 @@ var TimeExtentView = Backbone.View.extend({
 				max: this.model.get("stop")
 			});
 		}
+
+		this.$fromDateInput.datebox("setTheDate", this.model.get("start"));
+		this.$toDateInput.datebox("setTheDate", this.model.get("stop"));
+
+		this.$fromDateInput.datebox("option", {
+			calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
+		}).datebox("refresh");
+		this.$toDateInput.datebox("option", {
+			calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
+			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
+		}).datebox("refresh");
+		//this.$fromDateInput.datebox('setTheDate', this.model.get("start"));
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
 		//		$('#toTimeInput').val( this.model.get("stopTime") );
