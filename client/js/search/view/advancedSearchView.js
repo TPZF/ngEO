@@ -31,21 +31,18 @@ var AdvancedSearchView = Backbone.View.extend({
 			this.setInputCriterionValues(event);
 		},
 
-		//listen to radio and check boxes change events since the events are handled respectively 
-		//by the radio and check boxes labels 
-		'click label': function(event) {
-
-			var $target = $(event.currentTarget);
-			var $input = $target.next();
-			var newValue = $input.attr('value');
-			var name = $input.attr('name');
-
+		// Update model values when checkbox has been clicked
+		'change input[type="checkbox"]': function(event) {
+			var isChecked = $(event.target).is(":checked");
+			var name = $(event.currentTarget).attr('name')
+			var newValue = $(event.target).val();
 			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
 				id: name
 			});
+
 			var currentValue = attributeToUpdate.value;
 			// Update the value
-			if ($target.hasClass('ui-checkbox-off')) {
+			if (isChecked) {
 
 				// NGEO-2075: Surround value with quotes in case when value contains ","
 				if (newValue.indexOf(",") != -1) {
@@ -60,7 +57,7 @@ var AdvancedSearchView = Backbone.View.extend({
 				// Update attribute with new value
 				attributeToUpdate.value = currentValue;
 
-			} else if ($target.hasClass('ui-checkbox-on')) {
+			} else {
 				var currentValues = null;
 				var hasQuotes = currentValue.indexOf("\"") >= 0;
 				if ( hasQuotes ) {
