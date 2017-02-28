@@ -352,6 +352,12 @@ var TableView = Backbone.View.extend({
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
 			}
+
+			// Apply filter for the new model
+			if ( $('#filterTableInput').val() ) {
+				this.filterData($('#filterTableInput').val());
+			}
+			
 		}
 	},
 	
