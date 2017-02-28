@@ -227,16 +227,27 @@ var FeatureCollection = function() {
 				this.addFeatures(_pageCache[this.currentPage]);
 			} else {
 				this.trigger('startLoading', this);
-				_fetch(1 + (this.currentPage - 1) * this.countPerPage, _url);
+				_fetch(this.getStartIndex() + (this.currentPage - 1) * this.countPerPage, _url);
 			}
 		}
+
 	};
 
 	// Append the given page to existing results
 	this.appendPage = function(page) {
 		this.currentPage = page;
 		this.trigger('startLoading', this);
-		_fetch(1 + (this.currentPage - 1) * this.countPerPage, _url);
+		_fetch(this.getStartIndex() + (this.currentPage - 1) * this.countPerPage, _url);
+	};
+
+	// Get start index according to current dataset
+	this.getStartIndex = function() {
+		if ( this.dataset ) {
+			// Backend dataset
+			return this.dataset.get('startIndex');
+		} else {
+			return 1; // Default start index according to OpenSearch spec
+		}
 	};
 
 	// Set the selection, replace the previous one

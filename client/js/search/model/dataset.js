@@ -13,7 +13,8 @@ var Dataset = Backbone.Model.extend({
 		datasetId: "",
 		startDate: null,
 		endDate: null,
-		validityEndDate: null
+		validityEndDate: null,
+		startIndex: 1
 	},
 
 	initialize: function() {
@@ -83,6 +84,10 @@ var Dataset = Backbone.Model.extend({
 			} else {
 				resp.validityEndDate = new Date(resp.endDate.getTime());
 				resp.validityEndDate.setUTCFullYear(resp.endDate.getUTCFullYear() + 5);
+			}
+
+			if ( response.datasetSearchInfo.startIndex ) {
+				resp.startIndex = response.datasetSearchInfo.startIndex;
 			}
 		}
 		return resp;
