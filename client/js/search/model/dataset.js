@@ -86,7 +86,7 @@ var Dataset = Backbone.Model.extend({
 				resp.validityEndDate.setUTCFullYear(resp.endDate.getUTCFullYear() + 5);
 			}
 
-			if ( response.datasetSearchInfo.startIndex ) {
+			if ( response.datasetSearchInfo.hasOwnProperty('startIndex') ) {
 				resp.startIndex = response.datasetSearchInfo.startIndex;
 			}
 		}
