@@ -108,7 +108,7 @@ var TimeExtentView = Backbone.View.extend({
 			var dateRangeOptions = {
 				startYear: startDate.getFullYear(),
 				endYear: stopDate.getFullYear(),
-				calDateList: keyDates,
+				calDateList: keyDates
 			};
 			this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
 				calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
@@ -195,7 +195,6 @@ var TimeExtentView = Backbone.View.extend({
 			calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
 			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
 		}).datebox("refresh");
-		//this.$fromDateInput.datebox('setTheDate', this.model.get("start"));
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
 		//		$('#toTimeInput').val( this.model.get("stopTime") );
