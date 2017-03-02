@@ -26,6 +26,9 @@
 	left: -400px;
 	z-index: 10;
 	bottom: 48px;
+
+	/* Highlighting issue on Safari */
+	-webkit-user-select: none;
 	
 	// Uncomment if need update left panel color
 	//background-color: rgba(53,53,53,0.8);
@@ -42,6 +45,9 @@
 	left: 0;
 	right: 0;
     z-index: 11;
+    
+    /* Highlighting issue on Safari */
+	-webkit-user-select: none;
 
 	// HACK: first command is a "Show table" button, fix layout
     #table {
