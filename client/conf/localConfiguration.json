@@ -7,7 +7,7 @@
 		"productUrl": "properties.links.@rel=self.@href",
 		"productType": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType",
 		"productUri": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href",
-		"operationalMode": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode.#text",
+		"operationalMode": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode",
 		"status": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status",
 		"browses": "properties.EarthObservation.result.EarthObservationResult.browse",
 		"interferometryUrl": "properties.links.@title=interferometry.@href",
