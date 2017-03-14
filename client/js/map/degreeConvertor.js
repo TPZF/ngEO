@@ -1,3 +1,11 @@
+var dmsRe = /^\s*(-?)(\d+)°(\d+)'(\d+)"([EWNS]{0,1})\s*$/;
+
+function filterFloat(value) {
+	if (isNaN(value))
+		return NaN;
+	return parseFloat(value);
+}
+
 /**
  * Utility module to convert decimal degree to degree/minute/second and vice versa.
  */
@@ -49,7 +57,6 @@ module.exports = {
 	 * @return coordinate in decimal degrees.
 	 */
 	toDecimalDegrees: function(dms) {
-		var dmsRe = /^\s*(-?)(\d+)°(\d+)'(\d+)"([EWNS]{0,1})\s*$/;
 		var match = dmsRe.exec(dms);
 
 		if (match) {
@@ -64,6 +71,17 @@ module.exports = {
 	},
 
 	/**
+	 *	Parse the given value to decimal from whatever format (DMS or string)
+	 */
+	parseCoordinate: function(val) {
+		if ( dmsRe.test(val) ) {
+			return this.toDecimalDegrees(val);
+		} else {
+			return filterFloat(val);
+		}
+	},
+
+	/**
 	 * Utility method to convert coordinates from text in degree/minute/second to array of decimal
 	 * degrees coordinates.
 	 * NB: lat/lon convention is used
@@ -73,18 +91,28 @@ module.exports = {
 	 * @return array of coordinates extracted from DMS text. Empty array if regexp don't found match. 
 	 */
 	textToDecimalDegrees: function(text) {
-		var coordinates = [];
-		var polygonRe = /\s*(-?)(\d+)°(\d+)'(\d+)"([NS]{0,1})\s+(-?)(\d+)°(\d+)'(\d+)"([EW]){0,1}/gm;
-		var match = polygonRe.exec(text);
 
-		while (match) {
-			var lat = parseFloat(match[2]) + (parseFloat(match[3]) / 60.0) + (parseFloat(match[4]) / 3600.0);
-			var lon = parseFloat(match[7]) + (parseFloat(match[8]) / 60.0) + (parseFloat(match[9]) / 3600.0);
-			lat *= (match[5] == 'S' || match[1] == "-") ? -1.0 : 1.0;
-			lon *= (match[10] == 'W' || match[6] == "-") ? -1.0 : 1.0;
+		var coordinates = [];
+		// Convert every position in text to decimal
+		var positions = text.trim().split('\n')
+		for ( var i=0; i<positions.length; i++ ) {
+			var position = positions[i].split(" ");
+			var lat = this.parseCoordinate(position[0]);
+			var lon = this.parseCoordinate(position[1]);
 			coordinates.push([lon, lat]);
-			match = polygonRe.exec(text);
 		}
+
+		// Old version, keep it just for history :)
+		// var polygonRe = /\s*(-?)(\d+)°(\d+)'(\d+)"([NS]{0,1})\s+(-?)(\d+)°(\d+)'(\d+)"([EW]){0,1}/gm;
+		// var match = polygonRe.exec(text);
+		// while (match) {
+		// 	var lat = parseFloat(match[2]) + (parseFloat(match[3]) / 60.0) + (parseFloat(match[4]) / 3600.0);
+		// 	var lon = parseFloat(match[7]) + (parseFloat(match[8]) / 60.0) + (parseFloat(match[9]) / 3600.0);
+		// 	lat *= (match[5] == 'S' || match[1] == "-") ? -1.0 : 1.0;
+		// 	lon *= (match[10] == 'W' || match[6] == "-") ? -1.0 : 1.0;
+		// 	coordinates.push([lon, lat]);
+		// 	match = polygonRe.exec(text);
+		// }
 
 		return coordinates;
 	}

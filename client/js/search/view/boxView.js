@@ -81,9 +81,9 @@ var BoxView = Backbone.View.extend({
 				this.model.searchArea.setBBox(bbox);
 			} else {
 				bbox = this.model.searchArea.getBBox();
-				this.updateInputs(bbox);
 			}
-
+			
+			this.updateInputs(bbox);
 			this.parentView.updateSearchAreaLayer();
 
 		},
@@ -114,13 +114,28 @@ var BoxView = Backbone.View.extend({
 		this.$el.find("#north").val(degreeConvertor.toDMS(bbox.north, false, {positionFlag: "number"}));
 	},
 
+	// Get decimal value for the given input
+	getDecimal(value) {
+		if ( value.indexOf("°") >= 0 || value.indexOf("'") >= 0 || value.indexOf("\"") >= 0) {
+			return degreeConvertor.toDecimalDegrees(value);
+		} else {
+			return filterFloat(value);
+		}
+	},
+
 	// Parse input returning the bbox
 	parseInputs: function() {
+
+		var west = this.$el.find("#west").val();
+		var south = this.$el.find("#south").val();
+		var east = this.$el.find("#east").val();
+		var north = this.$el.find("#north").val();
+
 		return {
-			west: degreeConvertor.toDecimalDegrees(this.$el.find("#west").val()),
-			south: degreeConvertor.toDecimalDegrees(this.$el.find("#south").val()),
-			east: degreeConvertor.toDecimalDegrees(this.$el.find("#east").val()),
-			north: degreeConvertor.toDecimalDegrees(this.$el.find("#north").val())
+			west: this.getDecimal(west),
+			south: this.getDecimal(south),
+			east: this.getDecimal(east),
+			north: this.getDecimal(north)
 		}
 	},
 

@@ -1,5 +1,6 @@
 var Map = require('map/map');
 var PolygonHandler = require('map/polygonHandler');
+var degreeConvertor = require('map/degreeConvertor');
 
 /**
  * The PolygonView manages the view to define the search area as a polygon.
@@ -47,10 +48,31 @@ var PolygonView = Backbone.View.extend({
 				this.$el.find('#polygonTextError')
 					.html("Please enter valid coordinates : D°M'S\"")
 					.show();
+			} else {
+				// Format the entered values to DMS (in case when decimal values were entred)
+				// NB: can't use update from model due to precision issue...
+				var positions = text.trim().split('\n');
+				res = "";
+				for ( var i=0; i<positions.length; i++ ) {
+					var position = positions[i].split(" ");
+					res += this.getDMS(position[0] + " ");
+					res += this.getDMS(position[1]) + "\n";
+				}
+				this.$el.find('#polygontext').val(res);
 			}
 			this.parentView.updateSearchAreaLayer();
+
 		},
 
+	},
+
+	// Get DMS-formatted value
+	getDMS(value) {
+		if ( value.indexOf("°") >= 0 || value.indexOf("'") >= 0 || value.indexOf("\"") >= 0) {
+			return value;
+		} else {
+			return degreeConvertor.toDMS(value);
+		}
 	},
 
 	// Update from the model
