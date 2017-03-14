@@ -2,15 +2,21 @@ var Map = require('map/map');
 var MapUtils = require('map/utils');
 var GeoJSONConverter = require('map/geojsonconverter');
 var Rectangle = require('map/rectangle');
+var degreeConvertor = require('map/degreeConvertor');
 
-// Utility method to transfrom from decimal degree to degree/minute/second
-var toDMS = function(dd) {
-	var deg = dd | 0; // truncate dd to get degrees
-	var frac = Math.abs(dd - deg); // get fractional part
-	var min = (frac * 60) | 0; // multiply fraction by 60 and truncate
-	var sec = (frac * 3600 - min * 60) | 0;
-	return deg + ":" + min + ":" + sec;
-};
+function isValidLon(lon) {
+	if (isNaN(lon))
+		return false;
+
+	return lon >= -180 && lon <= 180;
+}
+
+function isValidLat(lat) {
+	if (isNaN(lat))
+		return false;
+
+	return lat >= -90 && lat <= 90;
+}
 
 var numberToString = function(number, precision) {
 	if (typeof precision != 'undefined' && precision >= 0) {
@@ -172,7 +178,7 @@ var SearchArea = function() {
 		var coords = _feature.geometry.coordinates[0];
 		var text = "";
 		for (var i = 0; i < coords.length; i++) {
-			text += toDMS(coords[i][1]) + " " + toDMS(coords[i][0]) + "\n";
+			text += degreeConvertor.toDMS(coords[i][1], true, {positionFlag: 'number'}) + " " + degreeConvertor.toDMS(coords[i][0], false, {positionFlag: 'number'}) + "\n";
 		}
 		return text;
 	};
@@ -263,21 +269,20 @@ var SearchArea = function() {
 
 	// Import polygon from text
 	this.setPolygonFromText = function(text) {
-		var polygonRe = /\s*([-+]?)(\d+):(\d+):(\d+)\s+([-+]?)(\d+):(\d+):(\d+)/gm;
-		var match = polygonRe.exec(text);
-		if (!match) {
+
+		var coordinates = degreeConvertor.textToDecimalDegrees(text);
+		if ( coordinates.length == 0 ) {
 			this.empty();
 			return false;
 		}
-		var coordinates = [];
-		while (match) {
-			var lat = parseFloat(match[2]) + (parseFloat(match[3]) / 60.0) + (parseFloat(match[4]) / 3600.0);
-			var lon = parseFloat(match[6]) + (parseFloat(match[7]) / 60.0) + (parseFloat(match[8]) / 3600.0);
-			lat *= (match[1] == '-') ? -1.0 : 1.0;
-			lon *= (match[5] == '-') ? -1.0 : 1.0;
-			coordinates.push([lon, lat]);
-			match = polygonRe.exec(text);
+
+		// Validate lon/lat values
+		for ( var i=0; i<coordinates.length; i++ ) {
+			if ( !isValidLon(coordinates[i][0]) || !isValidLat(coordinates[i][1]) ) {
+				return false;
+			}
 		}
+		
 		// Close polygon if needed
 		if (coordinates[0][0] != coordinates[coordinates.length - 1][0] || coordinates[0][1] != coordinates[coordinates.length - 1][1]) {
 			coordinates.push(coordinates[0]);

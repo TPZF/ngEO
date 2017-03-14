@@ -38,11 +38,14 @@ var PolygonView = Backbone.View.extend({
 		},
 
 		'change #polygontext': function(event) {
-			if (!this.model.searchArea.setPolygonFromText($(event.currentTarget).val())) {
+			var text = $(event.currentTarget).val();
+			if (/[a-zA-Z]+/.exec(text) || !this.model.searchArea.setPolygonFromText(text)) {
+				// Restore input
+				this.updateFromModel();
 				// Erase content
-				$(event.currentTarget).val('');
+				//$(event.currentTarget).val('');
 				this.$el.find('#polygonTextError')
-					.html("Please enter valid coordinates : D:M:S.")
+					.html("Please enter valid coordinates : D°M'S\"")
 					.show();
 			}
 			this.parentView.updateSearchAreaLayer();

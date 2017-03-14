@@ -1,5 +1,6 @@
 var Map = require('map/map');
 var RectangleHandler = require('map/rectangleHandler');
+var degreeConvertor = require('map/degreeConvertor');
 
 function isValidLon(lon) {
 	if (isNaN(lon))
@@ -63,11 +64,7 @@ var BoxView = Backbone.View.extend({
 					bbox.south = Math.max(bbox.south, -90);
 					bbox.north = Math.min(bbox.north, 90);
 					self.model.searchArea.setBBox(bbox);
-
-					self.$el.find("#west").val(bbox.west);
-					self.$el.find("#south").val(bbox.south);
-					self.$el.find("#east").val(bbox.east);
-					self.$el.find("#north").val(bbox.north);
+					self.updateInputs(bbox);
 
 					$button.removeAttr("disabled").button("refresh");
 				}
@@ -78,23 +75,13 @@ var BoxView = Backbone.View.extend({
 		//change the bbox in the model only and inly if it is valid
 		'blur input': function(event) {
 
-			var bbox = {
-				west: filterFloat(this.$el.find("#west").val()),
-				south: filterFloat(this.$el.find("#south").val()),
-				east: filterFloat(this.$el.find("#east").val()),
-				north: filterFloat(this.$el.find("#north").val())
-			};
-
-
+			var bbox = this.parseInputs();
 			if (isValidLon(bbox.west) && isValidLon(bbox.east) &&
 				isValidLat(bbox.south) && isValidLat(bbox.north)) {
 				this.model.searchArea.setBBox(bbox);
 			} else {
 				bbox = this.model.searchArea.getBBox();
-				this.$el.find("#west").val(bbox.west);
-				this.$el.find("#south").val(bbox.south);
-				this.$el.find("#east").val(bbox.east);
-				this.$el.find("#north").val(bbox.north);
+				this.updateInputs(bbox);
 			}
 
 			this.parentView.updateSearchAreaLayer();
@@ -119,13 +106,28 @@ var BoxView = Backbone.View.extend({
 
 	},
 
+	// Update template inputs with the given bbox
+	updateInputs: function(bbox) {
+		this.$el.find("#west").val(degreeConvertor.toDMS(bbox.west, true, {positionFlag: "number"}));
+		this.$el.find("#south").val(degreeConvertor.toDMS(bbox.south, false, {positionFlag: "number"}));
+		this.$el.find("#east").val(degreeConvertor.toDMS(bbox.east, true, {positionFlag: "number"}));
+		this.$el.find("#north").val(degreeConvertor.toDMS(bbox.north, false, {positionFlag: "number"}));
+	},
+
+	// Parse input returning the bbox
+	parseInputs: function() {
+		return {
+			west: degreeConvertor.toDecimalDegrees(this.$el.find("#west").val()),
+			south: degreeConvertor.toDecimalDegrees(this.$el.find("#south").val()),
+			east: degreeConvertor.toDecimalDegrees(this.$el.find("#east").val()),
+			north: degreeConvertor.toDecimalDegrees(this.$el.find("#north").val())
+		}
+	},
+
 	// Update from the model
 	updateFromModel: function() {
 		var bbox = this.model.searchArea.getBBox();
-		this.$el.find("#west").val(bbox.west);
-		this.$el.find("#south").val(bbox.south);
-		this.$el.find("#east").val(bbox.east);
-		this.$el.find("#north").val(bbox.north);
+		this.updateInputs(bbox);
 		
 		// Update useExtent according to model
 		// Used when clicked on "Get Criteria" importing the layer from gazetter
@@ -174,12 +176,7 @@ var BoxView = Backbone.View.extend({
 			this.activateUseExtent();
 		} else {
 
-			var bbox = {
-				west: filterFloat(this.$el.find("#west").val()),
-				south: filterFloat(this.$el.find("#south").val()),
-				east: filterFloat(this.$el.find("#east").val()),
-				north: filterFloat(this.$el.find("#north").val())
-			};
+			var bbox = this.parseInputs();
 			this.model.searchArea.setBBox(bbox);
 			this.parentView.updateSearchAreaLayer();
 		}
@@ -207,10 +204,7 @@ var BoxView = Backbone.View.extend({
 		};
 		this.model.searchArea.setBBox(bbox);
 
-		this.$el.find("#west").val(bbox.west);
-		this.$el.find("#south").val(bbox.south);
-		this.$el.find("#east").val(bbox.east);
-		this.$el.find("#north").val(bbox.north);
+		this.updateInputs(bbox);
 	}
 
 });
