@@ -110,14 +110,17 @@ var TimeExtentView = Backbone.View.extend({
 				endYear: stopDate.getFullYear(),
 				calDateList: keyDates
 			};
-			this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
-				calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
-			})).datebox("refresh");
-			this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
-				calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
-			})).datebox("refresh");
+
+			if ( this.model.get("dateRange") ) {
+				this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
+					calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
+				})).datebox("refresh");
+				this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
+					calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
+				})).datebox("refresh");
+			}
 		} else if (useTimeSlider) {
 			this.removeTimeSlider();
 		}
@@ -187,14 +190,16 @@ var TimeExtentView = Backbone.View.extend({
 		this.$fromDateInput.datebox("setTheDate", this.model.get("start"));
 		this.$toDateInput.datebox("setTheDate", this.model.get("stop"));
 
-		this.$fromDateInput.datebox("option", {
-			calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
-			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
-		}).datebox("refresh");
-		this.$toDateInput.datebox("option", {
-			calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
-			calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
-		}).datebox("refresh");
+		if ( this.model.get("dateRange") ) {			
+			this.$fromDateInput.datebox("option", {
+				calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
+			}).datebox("refresh");
+			this.$toDateInput.datebox("option", {
+				calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
+			}).datebox("refresh");
+		}
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
 		//		$('#toTimeInput').val( this.model.get("stopTime") );
