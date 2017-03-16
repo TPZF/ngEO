@@ -1,9 +1,11 @@
 
-<ul id="datasetList" data-filter-theme="a" data-role="listview" data-filter="true" data-inset="true">	
+<!-- NGEOL-2: Manual filter input in order to filter on name only and not on count -->
+<input placeholder="Filter on dataset names..." data-type="search" class="ui-input-text ui-body-a">
+<ul id="datasetList" data-role="listview" data-inset="true">	
 
 	<% _.each(datasets, function(dataset) { %>
 		<li  id="<%= dataset.tagFriendlyId %>" data-datasetid="<%= dataset.datasetId %>" data-mini="true" >
-			<span class="ui-icon ui-icon-checkbox-off" /><%= dataset.name %>
+			<span class="ui-icon ui-icon-checkbox-off" /><span class="name"><%= dataset.name %></span>
 			<span class="ui-li-count ui-btn-up-c ui-btn-corner-all"><%= dataset.itemsCount %></span>	
 		</li> 
 	<% }); %>

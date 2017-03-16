@@ -47,6 +47,27 @@ var DatasetSelectionView = Backbone.View.extend({
 		// Click on search
 		"click #dsSearch": function(event) {
 			SearchResults.launch(DatasetSearch);
+		},
+
+		'keyup [data-type="search"]' : 'filterDatasets',
+		'change [data-type="search"]': 'filterDatasets'
+	},
+
+	/**
+	 *	Filter dataset based on input
+	 */
+	filterDatasets: function(event) {
+		var filter = $(event.target).val();
+
+		// Set all datasets to visible
+		var $liArray = this.$el.find('#datasetList li').removeClass('ui-screen-hidden')
+
+		if ( filter != "" ) {
+			// Hide all datasets with names which doesn't correspond to filter
+			$liArray
+				.find('.name')
+				.filter(function(index, item) { return $(item).text().indexOf(filter) == -1; }).parent()
+				.addClass('ui-screen-hidden');
 		}
 	},
 
