@@ -59,7 +59,11 @@ var ShopcartManagerView = Backbone.View.extend({
 			var self = this;
 			this.model.getCurrent().destroy()
 				.done(function() {
-					self.model.setCurrent(self.model.at(0));
+					if (self.model.length > 0) {
+						self.model.setCurrent(self.model.at(0));
+					} else {
+						self.model.setCurrent(null);
+					}
 					self.render();
 				})
 				.fail(function(xhr, textStatus, errorThrown) {

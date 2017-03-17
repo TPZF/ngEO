@@ -78,7 +78,7 @@ var ShopcartCollection = Backbone.Collection.extend({
 	 *	Set the current shopcart 
 	 */
 	setCurrent: function(current) {
-		if (current != this._current) {
+		if (current != this._current && current !== null) {
 			var prevCurrent = this._current;
 			this._current = current;
 			this.trigger('change:current', this._current, prevCurrent);
