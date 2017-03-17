@@ -23,9 +23,9 @@ var _getValue = function(object, property, defaultValue) {
 		var kv = property.split("="); // Split by "=" to handle arrays
 		if (kv.length == 2) {
 			// Array
-			value = _.find(object, function(item) {
-				return item[kv[0]] == kv[1];
-			});
+			if (object[kv[0]] == kv[1]) {
+				return object;
+			}
 		} else {
 			// Object
 			value = object[property];
@@ -159,6 +159,7 @@ var configuration = {
 	 *	@see getMappedProperty for more
 	 */
 	setMappedProperty: function(object, propertyId, value) {
+
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
 		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
 		if (propertyPath) {
@@ -183,7 +184,20 @@ var configuration = {
 		var names = path.split('.');
 		var obj = object;
 		for (var i = 0; obj && i < names.length - 1; i++) {
-			obj = _getValue(obj, names[i]);
+			var nameKV = names[i].split('[]');
+			if (nameKV.length === 2) {
+				var obj2 = null;
+				for (var j=0; j<obj[nameKV[0]].length; j++) {
+					var obj2 = obj[nameKV[0]][j];
+					for (var k=i+1; obj2 && k < names.length -1; k++) {
+						obj2 = _getValue(obj2, names[k]);
+					}
+					if (obj2) {i=k; break;}
+				}
+				obj = obj2;
+			} else {
+				obj = _getValue(obj, names[i]);
+			}
 		}
 
 		return _getValue(obj, names[names.length - 1], defaultValue);

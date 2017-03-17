@@ -4,7 +4,7 @@
 	"serverPropertyMapper" : {
 		"start": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition",
 		"stop": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition",
-		"productUrl": "properties.links.@rel=self.@href",
+		"productUrl": "properties.link[].@.rel=enclosure.href",
 		"productType": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType",
 		"productUri": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href",
 		"operationalMode": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode",
