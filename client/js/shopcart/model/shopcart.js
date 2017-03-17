@@ -102,7 +102,7 @@ var Shopcart = Backbone.Model.extend({
     	Load the shopcart content
 	*/
 	loadContent: function() {
-		this.featureCollection.search(this.url() + '/search?format=json');
+		this.featureCollection.search(this.url() + '/items/?format=json');
 	},
 
 
@@ -120,10 +120,19 @@ var Shopcart = Backbone.Model.extend({
 			var feature = features[i];
 			var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
 			if (feature.properties && productUrl && isNotPlanned(feature)) {
-				itemsToAdd.push({
-					shopcartId: this.id,
-					product: productUrl
-				});
+				var myFeature = {
+					id: feature.id,
+					type: feature.type,
+					geometry: feature.geometry,
+					bbox: feature.bbox,
+					properties: feature.properties
+				};
+				myFeature.properties.shopcart_id = this.id;
+				myFeature.properties.productUrl = productUrl;
+				itemsToAdd.push(myFeature);
+				// update for webc
+				feature.properties.shopcart_id = this.id;
+				feature.properties.productUrl = productUrl;
 				productUrls.push(productUrl);
 			}
 		}
@@ -153,7 +162,7 @@ var Shopcart = Backbone.Model.extend({
 				var itemsAddedResponse = data.shopCartItemAdding;
 				for (var i = 0; i < itemsAddedResponse.length; i++) {
 
-					var indexOfProductUrls = productUrls.indexOf(itemsAddedResponse[i].product);
+					var indexOfProductUrls = productUrls.indexOf(itemsAddedResponse[i].properties.productUrl);
 					if (indexOfProductUrls >= 0 && indexOfProductUrls < features.length) {
 
 						// Clone the feature to be different from the selected one
@@ -235,8 +244,8 @@ var Shopcart = Backbone.Model.extend({
 		var self = this;
 		return $.ajax({
 
-			url: this.url() + '/items',
-			type: 'DELETE',
+			url: this.url() + '/items/delete',
+			type: 'POST',
 			dataType: 'json',
 			contentType: 'application/json',
 			data: JSON.stringify({
