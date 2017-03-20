@@ -233,7 +233,7 @@ var StatusPanel = Backbone.View.extend({
 		if ( status.model ) {
 
 			this.listenTo(status.model, "startLoading", function() {
-				$(status.activator).find('.nbFeatures').html("Searching..").addClass("pulsating");
+				$(status.activator).find('.nbFeatures').html("Searching...").addClass("pulsating");
 			});
 
 			// Update tiny red circle with number of features on search
@@ -254,6 +254,12 @@ var StatusPanel = Backbone.View.extend({
 				// Hide it only on first search, no need for pagination searches
 				if ( fc.currentPage == 0 ) {
 					$(status.activator).find('.nbFeatures').html("No search done");
+				}
+			});
+
+			this.listenTo(status.model, "endLoading", function(nbFeatures) {
+				if (typeof nbFeatures !== undefined && nbFeatures === 0) {
+					$(status.activator).find('.nbFeatures').removeClass("pulsating").html("No data to display");
 				}
 			});
 		}

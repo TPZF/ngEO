@@ -99,10 +99,13 @@ var FeatureCollection = function() {
 
 				// Relaunch a search on next page if there is still some results
 				/*if ( data.features.length == self.countPerPage ) {
-					self.fetch(startIndex + self.countPerPage, currentUrl);
+				 	self.fetch(startIndex + self.countPerPage, currentUrl);
 				} else {
-					self.trigger('endLoading');
+				 	self.trigger('endLoading');
 				}*/
+				if (data.features.length < 1) {
+					self.trigger('endLoading', 0);
+				}
 			}
 		}).fail(function(jqXHR, textStatus, errorThrown) {
 			if (jqXHR.status == 0) {
@@ -131,7 +134,15 @@ var FeatureCollection = function() {
 			self.features.push(feature);
 		}
 
-		self.trigger('add:features', features, self);
+		if (features.length > 0) {
+			// if lastPage = 0 (empty) => set to 1 (now not empty)
+			if (self.lastPage === 0) {
+				self.lastPage = 1;
+			}
+
+			self.trigger('add:features', features, self);
+		}
+
 	};
 
 	// Remove features from the collection
