@@ -170,7 +170,8 @@ var StatusPanel = Backbone.View.extend({
 		}
 
 		// Show the status
-		status.$el.show();
+		//status.$el.show();
+		//status.views[0].$el.show();
 		$(status.activator).addClass('toggle');
 
 		// Manage active view : keep an active view if there is already one
@@ -181,6 +182,9 @@ var StatusPanel = Backbone.View.extend({
 				this.toggleView(status.views[0]);
 				this.activeView = status.views[0];
 			}
+		} else {
+			this.toggleView(status.views[0]);
+			this.activeView = status.views[0];
 		}
 
 		// Activate model for the views
@@ -299,6 +303,10 @@ var StatusPanel = Backbone.View.extend({
 	 */
 	removeStatus: function(activatorId) {
 		$(activatorId).remove();
+	},
+
+	setActiveView(view) {
+		this.activeView = view;
 	}
 
 });

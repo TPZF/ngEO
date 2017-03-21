@@ -65,14 +65,15 @@ module.exports = {
 
 		// Create the results table view
 		var tableView = new SearchResultsTableView();
-		var isShopcartShared = (window.location.href.indexOf("shopcart") >= 0);
 		panelManager.bottom.addView(tableView);
 		tableView.render();
-		
+
+		// shopcartshared if 'shopcart' is in the url
+		var isShopcartShared = (window.location.href.indexOf("shopcart") >= 0);
 		if ( !isShopcartShared ) {
 			// By default table view element is visible
 			// In case of shared shopcart, it's showTable method who takes care about view visibility
-			tableView.$el.css('display', 'block');
+			// tableView.$el.css('display', 'block');
 		}
 
 		// In case of shopcart sharing we shouldn"t trigger a click event on search datasets at least first 3 sec 

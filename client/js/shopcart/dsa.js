@@ -14,6 +14,7 @@ module.exports =  {
 	 *
 	 * @param element 	The root element of the data-services-area
 	 * @param router 	The data-services-area router
+	 * @param panelManager
 	 */
 	initialize: function(element, router, panelManager) {
 
@@ -27,7 +28,11 @@ module.exports =  {
 		
 		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
-		panelManager.bottom.addView( tableView );		
+		panelManager.bottom.addView( tableView );
+		tableView.$el.css('display', 'block');
+		panelManager.bottom.setActiveView(tableView);
+		// Add shopcartView&tableView as a status to bottom bar
+
 		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
 			tableView.setShopcart(shopcart);
 			// Add shopcartView&tableView as a status to bottom bar
