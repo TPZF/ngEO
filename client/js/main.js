@@ -32,19 +32,6 @@ module.exports = {
 			window.location = sharedUrl;
 		}
 
-		// from pathname like /proxy-path/sec/ get /proxy-path
-		// and set baseServerUrl to /proxy-path/ngeo
-		var pathItems = window.location.pathname.split('/');
-		var baseProxyPath = '';
-		if (pathItems.length > 0) {
-			for (var i=0; i<pathItems.length; i++) {
-				if (pathItems[i]!=='sec' && pathItems[i]!=='') {
-					baseProxyPath = baseProxyPath + '/' + pathItems[i];
-				}
-			}
-			Configuration.baseServerUrl = baseProxyPath + '/ngeo';
-		}
-
 		/**
 		 * When the document is ready and configuration is loaded load the rest of the application
 		 */
