@@ -70,17 +70,21 @@ module.exports = {
 
 		// shopcartshared if 'shopcart' is in the url
 		var isShopcartShared = (window.location.href.indexOf("shopcart") >= 0);
+		/*
 		if ( !isShopcartShared ) {
 			// By default table view element is visible
 			// In case of shared shopcart, it's showTable method who takes care about view visibility
 			// tableView.$el.css('display', 'block');
 		}
+		*/
 
 		// In case of shopcart sharing we shouldn"t trigger a click event on search datasets at least first 3 sec 
 		// to ensure the display of shared shopcart content to user
+		/*
 		setTimeout(function() {
 			isShopcartShared = false;
 		}, 3000);
+		*/
 
 		// Create the GanttView (no Gantt view for now)
 		// var ganttView = new GanttView();

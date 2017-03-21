@@ -29,9 +29,9 @@ module.exports =  {
 		// Create the shopcart table view and add it to panel
 		var tableView = new ShopcartTableView();
 		panelManager.bottom.addView( tableView );
+		// display and set active by default
 		tableView.$el.css('display', 'block');
 		panelManager.bottom.setActiveView(tableView);
-		// Add shopcartView&tableView as a status to bottom bar
 
 		tableView.listenTo(ShopcartCollection, 'change:current', function(shopcart) {
 			tableView.setShopcart(shopcart);
@@ -72,12 +72,14 @@ module.exports =  {
 			// Load content is not needed because it is already done by the shopcart widget when setCurrent is done
 			//shareShopcart.loadContent();
 			
+			/*
 			// Show the GUI once loaded
 			shareShopcart.on("add:features", function() {
 				// Toggle the shopcart button to be clicked
 				$("#shopcart").trigger('click');
 				panelManager.bottom.showTable();
 			});
+			*/
 		});
 		
 		// Subscribe add to shopcart
