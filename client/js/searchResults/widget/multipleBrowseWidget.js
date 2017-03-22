@@ -46,7 +46,7 @@ module.exports = {
 				var f = fc.features[i];
 				var browses = Configuration.getMappedProperty(f, "browses");
 
-				if ( f._browseShown ) {
+				if ( f._featureCollection.isHighlighted(f) ) {
 					BrowsesManager.addBrowse(f, fc.id, selectedIndices);
 					BrowsesManager.removeBrowse(f, notSelectedIndices);
 				}
