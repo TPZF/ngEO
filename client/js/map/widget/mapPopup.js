@@ -261,7 +261,8 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
 		}
 
-		var hasBrowses = _.find(products, function(feature) { return feature._browseShown; });
+		//active browse if feature is highlighted
+		var hasBrowses = _.find(products, function(feature) { return feature._featureCollection.isHighlighted(feature); });
 		if ( hasBrowses ) {
 			element.find('#mpButtons button[data-icon="browse"]').parent().addClass('ui-btn-active');
 		} else {

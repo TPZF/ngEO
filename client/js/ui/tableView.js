@@ -869,8 +869,11 @@ var TableView = Backbone.View.extend({
 		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
 
 		// Layer browse visibility checkbox
-		var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		/*
+		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+		var browseVisibilityClass = rowData.feature._featureCollection.isHighlighted(rowData.feature) ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
 		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
+		*/
 
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
@@ -1105,7 +1108,7 @@ var TableView = Backbone.View.extend({
 			$row.append('<th></th>');
 		}
 		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
-		$row.append('<th class="browseVisibility"></th>');
+		//$row.append('<th class="browseVisibility"></th>');
 
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {

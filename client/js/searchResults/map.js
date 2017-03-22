@@ -33,7 +33,7 @@ var _onShowFeatures = function(features, fc) {
 	// Add browses for highlighted or selected features
 	for (var i = 0; i < features.length; i++) {
 		var feature = features[i];
-		if ( (fc.isHighlighted(feature) || fc.isSelected(feature)) && feature._browseShown) {
+		if (fc.isHighlighted(feature) || fc.isSelected(feature)) {
 			BrowsesManager.addBrowse(feature);
 		}
 	}
@@ -67,12 +67,11 @@ var _onSelectFeatures = function(features, fc) {
 		var feature = features[i];
 		if (fc.isHighlighted(feature)) {
 			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+			//display browse if feature is highlighted
+			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 		} else {
 			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 		}
-
-		if ( feature._browseShown )
-			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 	}
 	_updateFeaturesWithBrowse(features);
 };
@@ -126,13 +125,11 @@ var _onHighlightFeatures = function(features, prevFeatures, fc) {
 			var feature = features[i];
 			if (fc.isSelected(feature)) {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
 			}
-			if ( feature._browseShown )
-				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-
 			//HACK add feature collection since it does not contain the feature collection
 			feature._featureCollection = fc;
 			highlightedFeats.push(feature);

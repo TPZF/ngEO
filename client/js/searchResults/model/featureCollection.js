@@ -305,6 +305,7 @@ var FeatureCollection = function() {
 			this.highlights = features.slice(0);
 			// Trigger highlight event with features which belongs to "this" feature collection
 			this.trigger("highlightFeatures", _.intersection(features, this.features), prevHighlights, this);
+			this.showBrowses( _.intersection(features, this.features));
 			// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
 			for ( var x in this.children ) {
 				this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
