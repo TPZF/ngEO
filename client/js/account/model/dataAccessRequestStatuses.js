@@ -19,7 +19,7 @@ var DataAccessRequestStatuses = Backbone.Model.extend({
 
 	initialize: function() {
 		// The base url to retrieve the DARs'statuses list or submit DAR status changes
-		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatus';
+		this.url = Configuration.baseServerUrl + '/dataAccessRequestStatuses';
 		this.listenTo(this, "error", this.onError);
 	},
 

@@ -53,8 +53,8 @@ var DataAccessRequest = {
       contentType: 'application/json',
       success: function(data) {
 
-        console.log(" SUCCESS : Received Validation Response from the server :");
-        console.log(data);
+        //console.log(" SUCCESS : Received Validation Response from the server :");
+        //console.log(data);
 
         //check the server response status with the configured server response statuses  
         var statusesConfig = Configuration.localConfig.dataAccessRequestStatuses;

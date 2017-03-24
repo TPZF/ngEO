@@ -8,7 +8,7 @@
   */
  var SimpleDataAccessRequest = {
 
-   url: Configuration.baseServerUrl + "/simpleDataAccessRequest",
+   url: Configuration.baseServerUrl + "/simpleDataAccessRequests",
 
    name: "download",
 
@@ -33,7 +33,8 @@
 	 *	Get dataset included in request
 	 */
 	getDataType: function() {
-		var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
+		//var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
+    var datasetNameRegExp = new RegExp(/products\/(\w+)\//);
 		var match = datasetNameRegExp.exec(this.productURLs[0]); // Take catalogue of first product for now
 		if ( match ) {
 			return match[1];
@@ -49,7 +50,7 @@
 
      // The JSON to send to the server
      if (this.hostedProcessId) {
-       this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequest";
+       this.url = Configuration.baseServerUrl + "/hostedProcessDataAccessRequests";
        var params = [];
        // Add hosted processing parameters
        for (var i = 0; i < this.productURLs.length; i++) {
@@ -70,10 +71,10 @@
          }
        };
      } else {
-       this.url = Configuration.baseServerUrl + "/simpleDataAccessRequest";
+       this.url = Configuration.baseServerUrl + "/simpleDataAccessRequests";
 
        var request = {
-         SimpleDataAccessRequest: {
+         simpledataaccessrequest: {
            requestStage: this.requestStage,
            downloadLocation: this.downloadLocation,
            productURLs: [],
@@ -82,18 +83,18 @@
        };
        // Add create bulk order if needed
        if (this.createBulkOrder) {
-         request.SimpleDataAccessRequest.createBulkOrder = true;
+         request.simpledataaccessrequest.createBulkOrder = true;
        }
 
        // Transform product URLs
        for (var i = 0; i < this.productURLs.length; i++) {
-         request.SimpleDataAccessRequest.productURLs.push({
+         request.simpledataaccessrequest.productURLs.push({
            productURL: this.productURLs[i]
          });
        }
      }
 
-     console.log(request);
+     //console.log(request);
 
      return request;
    },
