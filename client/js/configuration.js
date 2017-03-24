@@ -103,7 +103,7 @@ var configuration = {
 					}
 				}),
 				$.ajax({
-					url: this.baseServerUrl + "/webClientConfigurationData",
+					url: this.serverHostName + this.baseServerUrl + "/webClientConfigurationData",
 					dataType: 'text',
 					success: function(data) {
 						externalData = data;
