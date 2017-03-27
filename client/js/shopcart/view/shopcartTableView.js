@@ -40,8 +40,11 @@ var ShopcartTableView = TableView.extend({
 		// Add possibility to update download options only
 		// if selected products are coming from the same dataset
 		if ( selectedDatasetIds.length == 1 ) {
+			/*
+			Inactive downloadOptions for the moment
 			this.downloadOptionsButton.attr("title", "Modify download options of selected products");
 			this.downloadOptionsButton.button('enable');
+			*/
 		} else {
 			this.downloadOptionsButton.attr("title", "You should select products coming from the same dataset");
 			this.downloadOptionsButton.button('disable');
