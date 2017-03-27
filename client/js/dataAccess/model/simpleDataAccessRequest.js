@@ -1,6 +1,7 @@
  var Configuration = require('configuration');
  var SearchResults = require('searchResults/model/searchResults');
  var DataAccessRequest = require('dataAccess/model/dataAccessRequest');
+ var ShopCartCollection = require('shopcart/model/shopcartCollection');
 
  /**
   * This module deals with the creation and submission of simple data access requests 
@@ -18,6 +19,8 @@
 
    totalSize: 0,
 
+   dataType: null,
+
    /**
     * Reset specific parameters of a simple DAR
     */
@@ -33,14 +36,7 @@
 	 *	Get dataset included in request
 	 */
 	getDataType: function() {
-		//var datasetNameRegExp = new RegExp(/catalogue\/(\w+)\//);
-    var datasetNameRegExp = new RegExp(/products\/(\w+)\//);
-		var match = datasetNameRegExp.exec(this.productURLs[0]); // Take catalogue of first product for now
-		if ( match ) {
-			return match[1];
-		}
-		console.warn("Can't extract datatype from product url " + this.productURLs[0]);
-		return null;
+    return this.dataType;
 	},
 
    /**
@@ -129,6 +125,14 @@
    setProducts: function(products) {
      this.productURLs = SearchResults.getProductUrls(products);
      this.rejectedProductsNB = products.length - this.productURLs.length;
+     // dataType = name of shopcart or catalog
+     if (_.find(products, function(product) {
+       return (typeof product.properties.shopcart_id !== 'undefined');
+      })) {
+      this.dataType = ShopCartCollection._current.get('name');
+     } else {
+       this.dataType = products[0].properties.originDatasetId;
+     }
    },
 
    /**

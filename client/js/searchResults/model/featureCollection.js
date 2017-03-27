@@ -502,13 +502,7 @@ var FeatureCollection = function() {
 		}
 
 		// Otherwise extract the id from the feature
-		var re = /catalogue\/(\w+)\/search/;
-		var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
-		var match = re.exec(productUrl);
-		if (match) {
-			return match[1];
-		}
-		return null;
+		return Configuration.getMappedProperty(feature, "originDatasetId", null);
 	};
 
 	/**
