@@ -78,7 +78,7 @@ var MapPopup = function(container) {
 		});
 
 	// Browse
-	/*btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Display browse</button>")
+	btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Display browse</button>")
 		.appendTo(element.find("#mpButtons"))
 		.click(function() {
 			var isSelected = $(this).parent().hasClass('ui-btn-active');
@@ -107,7 +107,6 @@ var MapPopup = function(container) {
 				featureCollection: products[0]._featureCollection
 			});
 		});
-		*/
 
 	// DAR
 	btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
@@ -167,6 +166,19 @@ var MapPopup = function(container) {
 		setTimeout(function() {
 			self.close();
 		}, 1);
+	});
+
+	Map.on('selectFeatures', function(selectedFeatures) {
+		//self.openOrCloseDialog(selectedFeatures);
+		if (selectedFeatures.length === 1) {
+			if (Configuration.getMappedProperty(selectedFeatures, "status", null) == "PLANNED" &&
+				!Configuration.getMappedProperty(selectedFeatures, "productUrl")) {
+				element.find('#mpButtons button[data-icon="save"]').button('disable');
+			} else {
+				element.find('#mpButtons button[data-icon="save"]').button('enable');
+			}
+			element.find('#mpButtons button[data-icon="shop"]').button('enable');
+		}
 	});
 
 	/*Map.on('extent:change', function() {
@@ -257,8 +269,12 @@ var MapPopup = function(container) {
 		var hasSelected = _.find(products, function(feature) { return feature._featureCollection.isSelected(feature); });
 		if ( hasSelected ) {
 			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
+			element.find('#mpButtons button[data-icon="save"]').button('enable');
+			element.find('#mpButtons button[data-icon="shop"]').button('enable');
 		} else {
 			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
+			element.find('#mpButtons button[data-icon="save"]').button('disable');
+			element.find('#mpButtons button[data-icon="shop"]').button('disable');
 		}
 
 		//active browse if feature is highlighted
@@ -274,7 +290,9 @@ var MapPopup = function(container) {
 			return Configuration.getMappedProperty(feature, "status", null) == "PLANNED" ||
 				!Configuration.getMappedProperty(feature, "productUrl");
 		});
-		element.find('#mpButtons button[data-icon="save"]').button(hasPlannedOrNoProductUrl ? 'disable' : 'enable');
+		if (hasPlannedOrNoProductUrl) {
+			element.find('#mpButtons button[data-icon="save"]').button('disable');
+		}
 		if ( advancedActivated ) {
 			element.find('#mpButtons button[data-icon="info"]').parent().addClass('ui-btn-active');
 		}

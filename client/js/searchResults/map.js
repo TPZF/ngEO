@@ -73,6 +73,7 @@ var _onSelectFeatures = function(features, fc) {
 			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 		}
 	}
+	Map.trigger("selectFeatures", features);
 	_updateFeaturesWithBrowse(features);
 };
 
