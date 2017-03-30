@@ -17,6 +17,8 @@
 
    productURLs: [],
 
+   productSizes: [],
+
    totalSize: 0,
 
    dataType: null,
@@ -84,8 +86,17 @@
 
        // Transform product URLs
        for (var i = 0; i < this.productURLs.length; i++) {
+         var self = this;
+         var _findExpectedSize = _.find(this.productSizes, function(item) {
+           return item.productURL === self.productURLs[i];
+         });
+         var _expectedSize = "0";
+         if (_findExpectedSize) {
+           _expectedSize = _findExpectedSize.productSize;
+         }
          request.simpledataaccessrequest.productURLs.push({
-           productURL: this.productURLs[i]
+           productURL: this.productURLs[i],
+           expectedSize: _expectedSize
          });
        }
      }
@@ -124,6 +135,7 @@
     */
    setProducts: function(products) {
      this.productURLs = SearchResults.getProductUrls(products);
+     this.productSizes = SearchResults.getProductSizes(products);
      this.rejectedProductsNB = products.length - this.productURLs.length;
      // dataType = name of shopcart or catalog
      if (_.find(products, function(product) {
@@ -184,9 +196,14 @@
      // Calculate the total download estimated size  
      this.totalSize = 0;
      var productStatuses = dataAccessRequestStatus.productStatuses;
+     var aPromises = [];
      for (var i = 0; i < productStatuses.length; i++) {
-       if (productStatuses[i] && productStatuses[i].expectedSize) {
-         this.totalSize += parseInt(productStatuses[i].expectedSize);
+       var _expectedSize = _.find(this.productSizes, function(item) {
+         return item.productURL === productStatuses[i].productURL;
+       }).productSize;
+       if (_expectedSize) {
+          productStatuses[i].expectedSize = _expectedSize;
+          this.totalSize += parseInt(_expectedSize);
        }
      }
    }

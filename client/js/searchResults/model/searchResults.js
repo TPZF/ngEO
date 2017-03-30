@@ -41,6 +41,21 @@ var SearchResults = {
 	},
 
 	/**
+	 * Get the product sizes of the features
+	 */
+	getProductSizes: function(features) {
+		var productSizes = [];
+		for (var i = 0; i < features.length; i++) {
+			var f = features[i];
+			var productUrl = Configuration.getMappedProperty(f, "productUrl", null);
+			var productSize = Configuration.getMappedProperty(f, "productSize", null);
+			if (productUrl && productSize) {
+				productSizes.push({productURL: productUrl, productSize: productSize});
+			}
+		}
+		return productSizes;
+	},
+	/**
 	 * The direct download uses the
 	 *   OLD FORMAT: eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl
 	 *	 NEW FORMAT: mapped "productUri" instead of "productUrl"
