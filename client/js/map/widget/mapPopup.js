@@ -78,7 +78,7 @@ var MapPopup = function(container) {
 		});
 
 	// Browse
-	btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Display browse</button>")
+	/*btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Display browse</button>")
 		.appendTo(element.find("#mpButtons"))
 		.click(function() {
 			var isSelected = $(this).parent().hasClass('ui-btn-active');
@@ -98,7 +98,6 @@ var MapPopup = function(container) {
 				}
 			}
 		});
-
 	// Multiple browse management
 	btn = $("<button data-icon='browse-multiple' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Multiple browse management</button>")
 		.appendTo(element.find("#mpButtons"))
@@ -108,6 +107,7 @@ var MapPopup = function(container) {
 				featureCollection: products[0]._featureCollection
 			});
 		});
+		*/
 
 	// DAR
 	btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
