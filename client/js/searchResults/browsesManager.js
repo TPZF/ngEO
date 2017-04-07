@@ -15,7 +15,7 @@ var _browseAccessInformationMap = {};
  */
 var _getUrl = function(browse) {
 	// TODO: parametrize from conf
-	return browse.BrowseInformation.fileName.ServiceReference["@href"];
+	return browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
 };
 
 /**
