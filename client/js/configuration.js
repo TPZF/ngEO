@@ -49,7 +49,7 @@ var _builBaseServerUrl = function() {
 	var baseProxyPath = '';
 	if (pathItems.length > 0) {
 		for (var i=0; i<pathItems.length; i++) {
-			if (pathItems[i]!=='sec' && pathItems[i]!=='') {
+			if (pathItems[i]!=='sec' && pathItems[i]!=='' && pathItems[i]!=='index.html') {
 				baseProxyPath = baseProxyPath + '/' + pathItems[i];
 			}
 		}
