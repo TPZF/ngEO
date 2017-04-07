@@ -4,10 +4,10 @@
 	"serverPropertyMapper" : {
 		"start": "properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition",
 		"stop": "properties.EarthObservation.phenomenonTime.TimePeriod.endPosition",
-		"productUrl": "properties.link[].@.rel=enclosure.href",
+		"productUrl": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href",
 		"productType": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.productType",
 		"originDatasetId": "properties.originDatasetId",
-		"productUri": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@href",
+		"productUri": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.fileName.ServiceReference.@.href",
 		"productSize": "properties.EarthObservation.result.EarthObservationResult.product.ProductInformation.size.#",
 		"operationalMode": "properties.EarthObservation.procedure.EarthObservationEquipment.sensor.Sensor.operationalMode",
 		"status": "properties.EarthObservation.metaDataProperty.EarthObservationMetaData.status",
@@ -19,7 +19,7 @@
 		"sensor": "properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
 	},
 	"directDownload" : {
-		"productColumnIndex" : 7
+		"productColumnIndex" : 2
 	},
 	
 	"dataAccessRequestStatuses" : {
