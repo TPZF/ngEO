@@ -556,6 +556,27 @@ var FeatureCollection = function() {
 			return nonPlannedFeatures;
 		};*/
 
+	/**
+	 * The direct download uses the
+	 *   OLD FORMAT: eor.eop_ProductInformation.eop_filename and not the feature.properties.productUrl
+	 *	 NEW FORMAT: mapped "productUri" instead of "productUrl"
+	 */
+	this.getDirectDownloadProductUrl = function(feature) {
+		return Configuration.getMappedProperty(feature, "productUri", "");
+	};
+
+	/**
+	 * Check whether the given feature has a direct download url supported by a browser 
+	 */
+	this.isBrowserSupportedUrl = function(feature) {
+
+		var downloadUrl = this.getDirectDownloadProductUrl(feature);
+		if (downloadUrl.indexOf("http") != -1 || downloadUrl.indexOf("https") != -1) {
+			return true;
+		}
+		return false;
+	};
+
 	// Add events
 	_.extend(this, Backbone.Events);
 

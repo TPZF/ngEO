@@ -7,6 +7,7 @@ var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget'
 var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var DataSetAuthorizations = require('search/model/datasetAuthorizations');
+var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
 
 /**
  * The model is the backbone model FeatureCollection 
@@ -14,10 +15,40 @@ var DataSetAuthorizations = require('search/model/datasetAuthorizations');
 var ShopcartTableView = TableView.extend({
 
 	initialize: function() {
+
+		let _this = this;
+
 		TableView.prototype.initialize.apply(this, arguments);
 
 		this.events = _.extend({}, TableView.prototype.events, this.events);
 		this.columnDefs = Configuration.data.tableView.columnsDef;
+
+		// Set specific class for direct download of product
+		var ddIndex = Configuration.get("tableView.directDownloadColumn", -1);
+		if (ddIndex >= 0 && ddIndex < this.columnDefs.length) {
+			this.columnDefs[ddIndex].getClasses = function(feature) {
+				return _this.model.isBrowserSupportedUrl(feature) ? "ui-direct-download" : "";
+			};
+		}
+
+	},
+
+	/**
+	 * Manage events on the view
+	 */
+	events: {
+
+		//Called when the user clicks on the product id of an item
+		'click .ui-direct-download': function(event) {
+			if (this.model.downloadAccess) {
+				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
+				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
+				var directDownloadWidget = new DirectDownloadWidget(this.model.getDirectDownloadProductUrl(feature));
+				directDownloadWidget.open(event);
+			} else {
+				Logger.inform("Cannot download the product : missing permissions.");
+			}
+		}
 	},
 
 	/**
