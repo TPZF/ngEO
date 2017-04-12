@@ -25,7 +25,7 @@ var ShopcartTableView = TableView.extend({
 
 		// Set specific class for direct download of product
 		var ddIndex = Configuration.get("tableView.directDownloadColumn", -1);
-		if (ddIndex >= 0 && ddIndex < this.columnDefs.length) {
+		if (ddIndex >= 0 && ddIndex < this.columnDefs.length && _this.model) {
 			this.columnDefs[ddIndex].getClasses = function(feature) {
 				return _this.model.isBrowserSupportedUrl(feature) ? "ui-direct-download" : "";
 			};
