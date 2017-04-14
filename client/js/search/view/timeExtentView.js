@@ -4,6 +4,32 @@ var SearchResults = require('searchResults/model/searchResults');
 //require('ui/dateRangeSlider');
 var dateCriteria_template = require('search/template/dateCriteriaContent');
 
+var ONE_DAY = 1000*60*60*24;
+var ONE_WEEK = 1000*60*60*24*7;
+var ONE_MONTH = 1000*60*60*24*30;
+var ONE_YEAR = 1000*60*60*24*365;
+
+var _setDateBeginEnd = function(myDate, flagBegin) {
+	var year = myDate.getFullYear();
+	var month = myDate.getMonth();
+	var day = myDate.getDate();
+	let newDate = new Date();
+	newDate.setFullYear(year);
+	newDate.setMonth(month);
+	newDate.setDate(day);
+	if (flagBegin) {
+		newDate.setUTCHours(0);
+		newDate.setUTCMinutes(0);
+		newDate.setUTCSeconds(0);
+		newDate.setUTCMilliseconds(0);
+	} else {
+		newDate.setUTCHours(23);
+		newDate.setUTCMinutes(59);
+		newDate.setUTCSeconds(59);
+		newDate.setUTCMilliseconds(999);
+	}
+	return newDate;
+}
 /**
  * The backbone model is DatasetSearch
  */
@@ -113,12 +139,12 @@ var TimeExtentView = Backbone.View.extend({
 
 			if ( this.model.get("dateRange") ) {
 				this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
-					calYearPickMin: startDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - startDate.getFullYear()
+					calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
 				})).datebox("refresh");
 				this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
-					calYearPickMin: stopDate.getFullYear() - this.model.get("dateRange").start.getFullYear(),
-					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - stopDate.getFullYear()
+					calYearPickMin: this.model.get("stop").getFullYear() - this.model.get("dateRange").start.getFullYear(),
+					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
 				})).datebox("refresh");
 			}
 		} else if (useTimeSlider) {
@@ -190,7 +216,58 @@ var TimeExtentView = Backbone.View.extend({
 		this.$fromDateInput.datebox("setTheDate", this.model.get("start"));
 		this.$toDateInput.datebox("setTheDate", this.model.get("stop"));
 
-		if ( this.model.get("dateRange") ) {			
+		if ( this.model.get("dateRange") ) {
+			// check dates
+			let changeOnDate = false;
+			let startDate = this.model.get("start");
+			let stopDate = this.model.get("stop");
+			let minDate = _setDateBeginEnd(this.model.get("dateRange").start, true);
+			let maxDate = _setDateBeginEnd(this.model.get("dateRange").stop, false);
+			if (startDate > maxDate) {
+				// startDate > max Range ==> stop=max and start = max - 1 week
+				startDate = new Date(maxDate.getTime() - ONE_WEEK);
+				stopDate = maxDate;
+				changeOnDate = true;
+			} else if (startDate < minDate) {
+				// startDate < min Range ==> start = min and stop=min + 1 week
+				startDate = minDate;
+				stopDate = new Date(minDate.getTime() + ONE_WEEK);
+				changeOnDate = true;
+			} else if (stopDate < minDate) {
+				// stop < min => start=min and stop = min + 1 week
+				startDate = minDate;
+				stopDate = new Date(minDate.getTime() + ONE_WEEK);
+				changeOnDate = true;
+			} else if (stopDate > maxDate) {
+				// stop > max => start=max - 1 week and stop = max
+				startDate = new Date(maxDate.getTime() - ONE_WEEK);
+				stopDate = maxDate;
+				changeOnDate = true;
+			} else if (stopDate == maxDate && stopDate - startDate > ONE_YEAR) {
+				startDate = new Date(stopDate.getTime() - ONE_MONTH);
+				changeOnDate = true;
+			} else if (stopDate - startDate > ONE_YEAR) {
+				// stop - start > 1 year => stop = min (max, start + 1 month)
+				stopDate = new Date(startDate.getTime() + ONE_MONTH);
+				if (stopDate > maxDate) {
+					stopDate = maxDate;
+				}
+				changeOnDate = true;
+			} else if (startDate > stopDate) {
+				// start > stop => start = max (stop - 1 month, min)
+				startDate = new Date(stopDate.getTime() - ONE_MONTH);
+				if (startDate < minDate) {
+					startDate = minDate;
+				}
+				changeOnDate = true;
+			}
+			if (changeOnDate) {
+				this.model.set({
+					"start": startDate,
+					"stop": stopDate
+				});
+			}
+
 			this.$fromDateInput.datebox("option", {
 				calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
 				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
@@ -199,6 +276,7 @@ var TimeExtentView = Backbone.View.extend({
 				calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
 				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
 			}).datebox("refresh");
+
 		}
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
