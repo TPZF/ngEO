@@ -2,13 +2,11 @@
  * export widget module
  * Used to display the supported export formats. 
  */
-
 var Configuration = require('configuration');
 var ShopcartExportView = require('shopcart/view/shopcartExportView');
 var ngeoWidget = require('ui/widget');
 
-
-var ShopcartExportWidget = function() {
+var ShopcartExportWidget = function(featureCollection) {
 
 	var parentElement = $('<div id="exportShopcartPopup">');
 	var element = $('<div id="exportShopcartPopupContent"></div>');
@@ -24,6 +22,7 @@ var ShopcartExportWidget = function() {
 	});
 
 	var exportView = new ShopcartExportView({
+		model: featureCollection,
 		el: element
 	});
 

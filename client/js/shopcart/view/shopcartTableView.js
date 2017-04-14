@@ -159,7 +159,7 @@ var ShopcartTableView = TableView.extend({
 		this.exportButton.button('enable');
 
 		this.exportButton.click(function() {
-			var shopcartExportWidget = new ShopcartExportWidget();
+			var shopcartExportWidget = new ShopcartExportWidget(self.model);
 			shopcartExportWidget.open();
 		});
 

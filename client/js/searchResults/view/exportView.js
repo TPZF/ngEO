@@ -2,12 +2,11 @@ var Configuration = require('configuration');
 var GeoJsonConverter = require('map/geojsonconverter');
 var exportViewContent_template = require('searchResults/template/exportViewContent');
 
-
 /** TODO TO BE IMPLEMENTED */
 var ExportView = Backbone.View.extend({
 
-	/** the model is the DatasetSearch (the search model containing search parameters)
-	/* the dataset property of DatasetSearch is the Dataset backbone model containing the download options
+	/**
+	 * the model is the featureCollection
 	 */
 
 	mediaTypes: {
@@ -51,7 +50,7 @@ var ExportView = Backbone.View.extend({
 				$download.attr('download', 'export.' + format);
 				$download.attr('href', URL.createObjectURL(blob));
 			}
-		},
+		}
 
 	},
 

@@ -4,7 +4,6 @@
  */
 var Configuration = require('configuration');
 var ExportView = require('searchResults/view/exportView');
-var DataSetSearch = require('search/model/datasetSearch');
 var ngeoWidget = require('ui/widget');
 
 var ExportWidget = function(featureCollection) {
