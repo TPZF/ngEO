@@ -246,7 +246,7 @@ var TimeExtentView = Backbone.View.extend({
 			} else if (stopDate == maxDate && stopDate - startDate > ONE_YEAR) {
 				startDate = new Date(stopDate.getTime() - ONE_MONTH);
 				changeOnDate = true;
-			} else if (stopDate - startDate > ONE_YEAR) {
+			} else if (stopDate - startDate > ONE_YEAR + ONE_DAY) {
 				// stop - start > 1 year => stop = min (max, start + 1 month)
 				stopDate = new Date(startDate.getTime() + ONE_MONTH);
 				if (stopDate > maxDate) {
