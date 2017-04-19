@@ -99,7 +99,7 @@ var ShopcartTableView = TableView.extend({
 	renderButtons: function($buttonContainer) {
 		var self = this;
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -124,7 +124,7 @@ var ShopcartTableView = TableView.extend({
 
 		//add button to the widget footer in order to download products
 		//do not display this button -> this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);
-		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>');
+		this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Define download options">Download Options</button>');
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable').hide();
 
@@ -145,7 +145,7 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true">Delete</button>').appendTo($buttonContainer);
+		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Delete selected products from this shopcart">Delete</button>').appendTo($buttonContainer);
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
 
@@ -154,7 +154,7 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to export a shopcart
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('enable');
 
