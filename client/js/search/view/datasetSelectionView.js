@@ -38,8 +38,10 @@ var DatasetSelectionView = Backbone.View.extend({
 		'click .ui-icon': function(event) {
 			var datasetId = $(event.currentTarget.parentElement).data("datasetid");
 			if ($(event.currentTarget).hasClass("ui-icon-checkbox-off")) {
+				$(event.currentTarget).removeClass("ui-icon-checkbox-off").addClass("ui-icon-checkbox-on");
 				this.model.select(datasetId);
 			} else {
+				$(event.currentTarget).removeClass("ui-icon-checkbox-on").addClass("ui-icon-checkbox-off");
 				this.model.unselect(datasetId);
 			}
 		},
