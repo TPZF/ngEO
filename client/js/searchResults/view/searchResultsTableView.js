@@ -48,7 +48,7 @@ var SearchResultsTableView = TableView.extend({
 	events: {
 
 		//Called when the user clicks on the product id of an item
-		'click .ui-direct-download': function(event) {
+		'click .directDownload': function(event) {
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
@@ -107,7 +107,7 @@ var SearchResultsTableView = TableView.extend({
 	 */
 	renderButtons: function($buttonContainer) {
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true">Retrieve Product</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -126,7 +126,7 @@ var SearchResultsTableView = TableView.extend({
 
 		});
 		//add selected items to the current or to a new shopcart
-		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true">Add to Shopcart</button>').appendTo($buttonContainer);
+		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true" title="Add selected products to shopcart">Add to shopcart</button>').appendTo($buttonContainer);
 		this.addToShopcart.button();
 		this.addToShopcart.button('disable');
 		this.addToShopcart.click(function() {
@@ -155,7 +155,7 @@ var SearchResultsTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.exportButton = $('<button title="Export" data-role="button" data-inline="true" data-mini="true">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KLM, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 
