@@ -54,10 +54,10 @@ module.exports = {
 				// Initialize menu bar
 				MenuBar.initialize("header nav");
 
-				$.mobile.activePage.find('#helpToolbar').toolbar({
+				/*$.mobile.activePage.find('#helpToolbar').toolbar({
 					onlyIcon: false
 				});
-				ContextHelp($.mobile.activePage);
+				ContextHelp($.mobile.activePage);*/
 			})
 			.fail(function(jqXHR, textStatus, errorThrown) {
 				Logger.error('Cannot load configuration : ' + errorThrown);
