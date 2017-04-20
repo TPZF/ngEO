@@ -170,21 +170,27 @@ var DataSetPopulation = Backbone.Model.extend({
 			}
 			this.datasetInfoMap[datasetId].rows.push(matrix[i]);
 
-			var keyword = matrix[i][this.keywordIndex].split(":"); // GROUP:VALUE
+			var keyword = matrix[i][this.keywordIndex]; // {GROUP: [VALUE]}
 			// Continue if empty
-			if ( keyword.length != 2 )
+			if ( keyword == '' )
 				continue;
 
-			var criteria = _.findWhere(criterias, { "title": keyword[0] });
+			var categorie = Object.keys(keyword)[0];
+
+			var criteria = _.findWhere(criterias, { "title": categorie });
 			if ( !criteria ) {
-				criteria = new Criteria(keyword[0]);
+				criteria = new Criteria(categorie);
 				criterias.push(criteria);
 			}
-			criteria.addValue(keyword[1]);
-			if ( !this.datasetInfoMap[datasetId].keywords[keyword[0]] )
-				this.datasetInfoMap[datasetId].keywords[keyword[0]] = [];
+			keyword[categorie].forEach(function(value) {
+				criteria.addValue(value);
+			});
+			if ( !this.datasetInfoMap[datasetId].keywords[categorie] )
+				this.datasetInfoMap[datasetId].keywords[categorie] = [];
 			// Store group:value as a dictionary in datasetInfoMap
-			this.datasetInfoMap[datasetId].keywords[keyword[0]].push(keyword[1]);
+			keyword[categorie].forEach(function(value) {
+				this.datasetInfoMap[datasetId].keywords[categorie].push(value);
+			});
 		}
 
 		return {
