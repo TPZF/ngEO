@@ -8,6 +8,7 @@ module.exports = {
 		Configuration.url = confPath ? confPath : "conf";
 		Configuration.load().done(function() {
 			$("body .contactUs").attr("href", "mailto:" + Configuration.get("mailto"));
+			$("body footer").append('<span>Client ' + Configuration.localConfig.version + ' - Server ' + Configuration.data.version + '</span>');
 		});
 	}
 };
