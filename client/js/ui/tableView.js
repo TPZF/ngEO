@@ -1163,10 +1163,9 @@ var TableView = Backbone.View.extend({
 		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
-							<label for="filterTableInput">Filter table:</label>\
-							<input id="filterTableInput" data-inline="true" data-mini="true" type="text"/>\
+							<input id="filterTableInput" data-inline="true" data-mini="true" type="text" placeholder="Filter products..." />\
 						</div>\
-						<button data-mini="true" data-inline="true" id="table-columns-button">Columns</button>\
+						<button data-mini="true" data-inline="true" id="table-columns-button" title="Select columns to display in table" >Columns</button>\
 					</div>\
 					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
