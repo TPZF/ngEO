@@ -129,6 +129,7 @@ var DataSetPopulation = Backbone.Model.extend({
 	 */
 	parse: function(response) {
 
+		var _this = this;
 		var matrix = response.datasetpopulationmatrix.datasetPopulationValues;
 		var criteriaTitles = response.datasetpopulationmatrix.criteriaTitles;
 		var criterias = [];
@@ -189,7 +190,7 @@ var DataSetPopulation = Backbone.Model.extend({
 				this.datasetInfoMap[datasetId].keywords[categorie] = [];
 			// Store group:value as a dictionary in datasetInfoMap
 			keyword[categorie].forEach(function(value) {
-				this.datasetInfoMap[datasetId].keywords[categorie].push(value);
+				_this.datasetInfoMap[datasetId].keywords[categorie].push(value);
 			});
 		}
 
