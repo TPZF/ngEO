@@ -858,6 +858,11 @@ var TableView = Backbone.View.extend({
 			}
 		}
 
+		// ----------------------------------------
+		// first column = action buttons
+		// ----------------------------------------
+		content += '<td>';
+
 		var checkedClass = 'ui-icon-checkbox-off'; // By default
 		// Take into account the previous state of input
 		if ($row.find(".table-view-checkbox").length > 0 && $row.find(".table-view-checkbox").hasClass("ui-icon-checkbox-on")) {
@@ -866,14 +871,16 @@ var TableView = Backbone.View.extend({
 
 		// Layer selection checkbox
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
-		content += '<td><span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span></td>';
+		content += '<span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span>';
 
+		content += ' <span title="Direct download for this product" class="ui-icon directDownload"></span>';
 		// Layer browse visibility checkbox
 		/*
 		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
 		var browseVisibilityClass = rowData.feature._featureCollection.isHighlighted(rowData.feature) ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
 		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
 		*/
+		content += '</td>';
 
 		for (var j = 0; j < rowData.cellData.length; j++) {
 
