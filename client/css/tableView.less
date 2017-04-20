@@ -59,9 +59,6 @@
 	th {
 		height: 40px;
 	}
-	.browseVisibility {
-		background: url('../images/eye-white.png') no-repeat center center;
-	}
 }
 
 .fullscreenWidth {
@@ -72,61 +69,80 @@
  * Style for body
  */
  
-.table-view td {
-    font-size: 12px;
-    text-align: center;
-	border-right: 1px solid @table-border-color;
-	padding: 0px 5px;
+.table-view {
+	td {
+		font-size: 12px;
+		text-align: center;
+		border-right: 1px solid @table-border-color;
+		padding: 0px 5px;
 
-	/* Break long lines --> update height : Not forget to uncomment maxColWidth in tableView */
-	//word-wrap: break-word;
-	max-width: 590px; /* Symbolic width to apply colgroup width, doesn't work otherwise... */
-	//height: 30px;
-	//max-width: 300px;
+		/* Break long lines --> update height : Not forget to uncomment maxColWidth in tableView */
+		//word-wrap: break-word;
+		max-width: 590px; /* Symbolic width to apply colgroup width, doesn't work otherwise... */
+		//height: 30px;
+		//max-width: 300px;
 
-	/* Constant height --> ellipsis : I prefer this one */
-	white-space: nowrap;
-	overflow-x: hidden;
-  	text-overflow: ellipsis;
+		/* Constant height --> ellipsis : I prefer this one */
+		white-space: nowrap;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
 
-  	/* Align with header */
-    /*max-width: 220px;
-    min-width: 25px;*/
-  	box-sizing: border-box;
-  	text-shadow: none;
-}
+		/* Align with header */
+		/*max-width: 220px;
+		min-width: 25px;*/
+		box-sizing: border-box;
+		text-shadow: none;
+	}
 
-.table-view td:last-child {
-	border-right: 0px solid @table-border-color;
-}
+	td:last-child {
+		border-right: 0px solid @table-border-color;
+	}
 
 
-// Color for Odd line
-.table-view tr:nth-child(odd) {
-	//background-color: #E9E9E9;
-}
+	// Color for Odd line
+	tr:nth-child(odd) {
+		//background-color: #E9E9E9;
+	}
 
-// Color for Even line
-.table-view tr:nth-child(even) {
-	//background-color: white;
-	background-color: #484847;
-}
+	// Color for Even line
+	tr:nth-child(even) {
+		//background-color: white;
+		background-color: #484847;
+	}
 
-// Color for Selected line 
-.table-view tr.row_selected {
-	background-color: #4596CE;
-	//background-color: #B0BED9;
+	// Color for highlighted line 
+	tr.row_highlighted {
+		background-color: #4596CE;
+		//background-color: #B0BED9;
+	}
 }
 
 // Used to display a lightweight checkbox in the dataTable
 .table-view-checkbox, .table-view-expand, .browse-visibility-checkbox {
 	display: inline-block;
 	border-radius: 3px;
+	margin-right:3px;
 }
 
 // Add a nice background (taken from JQM) when checkbox is on
 .table-view-checkbox.ui-icon-checkbox-on, .browse-visibility-checkbox.ui-icon-checkbox-on {
 	background-color: #4596CE;
+}
+.ui-icon-checkbox-off {
+	background-color: rgba(120,120,120,0.5);
+}
+
+.browseVisibility {
+	background: url('../images/eye-white.png') no-repeat center center;
+}
+.browseVisibility.ui-icon-checkbox-off {
+	background: url('../images/noview.png') no-repeat center center;
+}
+
+.directDownload {
+	background: url('../images/save.png') no-repeat center center;
+	display: inline-block;
+	border-radius: 3px;
 }
 
 .multipleBrowse {
