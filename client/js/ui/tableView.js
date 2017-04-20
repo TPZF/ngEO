@@ -241,9 +241,9 @@ var TableView = Backbone.View.extend({
 
 			// Based on css value, show/hide browses
 			if ($target.hasClass('ui-icon-checkbox-off')) {
-				this.model.showBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+				this.model.showBrowses( $row.hasClass('row_highlighted') ? this.model.highlights : [data.feature] );
 			} else {
-				this.model.hideBrowses( $row.hasClass('row_selected') ? this.model.highlights : [data.feature] );
+				this.model.hideBrowses( $row.hasClass('row_highlighted') ? this.model.highlights : [data.feature] );
 			}
 		},
 
@@ -260,7 +260,7 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: check every highlighted feature when clicking on already selected row
-					model.select( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
+					model.select( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
 				} else {
 					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
@@ -273,7 +273,7 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
-					model.unselect( $row.hasClass('row_selected') ? model.highlights : [data.feature] );
+					model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
 				} else {
 					// "Unselect all" case
 					this.model.unselectAll();
@@ -445,7 +445,7 @@ var TableView = Backbone.View.extend({
 		if (!this.$table) return;
 
 		// Remove previous highlighted rows
-		this.$table.find('.row_selected').removeClass('row_selected');
+		this.$table.find('.row_highlighted').removeClass('row_highlighted');
 
 		if (features.length > 0) {
 			var rows = this.$table.find("tbody tr");
@@ -453,7 +453,7 @@ var TableView = Backbone.View.extend({
 
 				var $row = this._getRowFromFeature(features[i]);
 				if ( $row ) {
-					$row.addClass('row_selected');
+					$row.addClass('row_highlighted');
 				}
 			}
 
@@ -1065,9 +1065,9 @@ var TableView = Backbone.View.extend({
 		}
 		
 		// Scroll to the most recent product if selected
-		var selectedRows = this.$el.find('.row_selected');
-		if ( selectedRows.length ) {
-			var mostRecentRow = _.max(selectedRows, function(row) {
+		var highlightedRows = this.$el.find('.row_highlighted');
+		if ( highlightedRows.length ) {
+			var mostRecentRow = _.max(highlightedRows, function(row) {
 				var feature = $(row).data('internal').feature;
 				return new Date(Configuration.getMappedProperty(feature, "stop"));
 			});
