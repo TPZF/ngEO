@@ -3,7 +3,7 @@
  */
 
 //require('OpenLayers.min');
-
+var Configuration = require('../configuration');
 
 // Use to convert to GeoJSON 
 var geoJsonFormat = new OpenLayers.Format.GeoJSON();
@@ -18,6 +18,85 @@ var _convertOL = function(features) {
 		return JSON.parse(json);
 	}
 };
+
+/**
+ * @function _buildKMLDescription
+ * @param {object} myFeature 
+ * @returns {string}
+ */
+var _buildKMLDescription = function(myFeature) {
+	let result = '';
+	result += ' <description><![CDATA[';
+	let urlIcon = Configuration.getFromPath(myFeature, 'properties.link[].@.rel=icon.href', '');
+	if (urlIcon !== '') {
+		result += ' <img width="100" height="100" src="' + urlIcon + '" >';
+	}
+	result += ' ]]></description>';
+	return result;
+};
+
+var _buildKMLExtendedData = function(myFeature) {
+	let aProp = ["identifier", "title", "published", "updated", "date", "originDatasetId", "productUrl", "polygon"];
+	let result = '';
+	result += ' <ExtendedData>';
+	aProp.forEach(function(property) {
+		if (myFeature.properties[property]) {
+			result += '  <Data name="' + property + '">';
+			result += '   <value>' + myFeature.properties[property] + '</value>';
+			result += '  </Data>';
+		}
+	})
+	result += ' </ExtendedData>';
+	return result;
+};
+
+/**
+ * @function _buildKMLGeometry
+ * @param {*} myFeatureGeometry 
+ * @returns {string}
+ */
+var _buildKMLGeometry = function(myFeatureGeometry) {
+	let result = '';
+	// Only type Polygon is treated
+	if (myFeatureGeometry.type === 'Polygon') {
+		result += ' <Polygon>';
+		result += '  <outerBoundaryIs>';
+		result += '   <LinearRing>';
+		result += '    <coordinates>';
+		myFeatureGeometry.coordinates[0].forEach(function(coord) {
+			result += coord[0] + ',' + coord[1] + ' ';
+		});
+		result += '    </coordinates>';
+		result += '   </LinearRing>';
+		result += '  </outerBoundaryIs>';
+		result += ' </Polygon>';
+	}
+	return result;
+};
+
+/**
+ * Convert to KML, without use OpenLayers lib
+ * 
+ * @function _convertToKML
+ * @param {object} myFeatureCollection 
+ */
+var _convertToKML = function(myFeatureCollection) {
+	var result = '<kml xmlns="http://earth.google.com/kml/2.0">';
+	result += '<Folder>';
+    result += '<name>Export from ngEO</name>';
+    result += '<description>Exported on ' + new Date() + '</description>';
+	myFeatureCollection.features.forEach(function(feature) {
+		result += '<Placemark id="' + feature.id + '">';
+        result += ' <name>' + feature.properties.title + '</name>';
+        result += _buildKMLDescription(feature);
+		result += _buildKMLGeometry(feature.geometry);
+		result += _buildKMLExtendedData(feature);
+		result += '</Placemark>'
+	});
+    result += '</Folder>';
+	result += '</kml>';
+	return result;
+}
 
 /**
  * Public interface for GeoJsonConverter
@@ -79,9 +158,10 @@ module.exports = {
 		switch (f) {
 			case "KML":
 				// Convert to OpenLayers
-				var olFeatures = geoJsonFormat.read(fc);
+				return _convertToKML(fc);
+				/*var olFeatures = geoJsonFormat.read(fc);
 				var kmlFormat = new OpenLayers.Format.KML();
-				return kmlFormat.write(olFeatures);
+				return kmlFormat.write(olFeatures);*/
 				break;
 			case "GML":
 				var olFeatures = geoJsonFormat.read(fc);
