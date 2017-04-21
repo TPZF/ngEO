@@ -14,7 +14,7 @@ var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
  */
 var ShopcartTableView = TableView.extend({
 
-	initialize: function() {
+	initialize: function () {
 
 		let _this = this;
 
@@ -26,7 +26,7 @@ var ShopcartTableView = TableView.extend({
 		// Set specific class for direct download of product
 		var ddIndex = Configuration.get("tableView.directDownloadColumn", -1);
 		if (ddIndex >= 0 && ddIndex < this.columnDefs.length && _this.model) {
-			this.columnDefs[ddIndex].getClasses = function(feature) {
+			this.columnDefs[ddIndex].getClasses = function (feature) {
 				return _this.model.isBrowserSupportedUrl(feature) ? "ui-direct-download" : "";
 			};
 		}
@@ -39,7 +39,7 @@ var ShopcartTableView = TableView.extend({
 	events: {
 
 		//Called when the user clicks on the product id of an item
-		'click .directDownload': function(event) {
+		'click .directDownload': function (event) {
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
@@ -54,7 +54,7 @@ var ShopcartTableView = TableView.extend({
 	/**
 	 * Update the footer button states
 	 */
-	updateSelection: function() {
+	updateSelection: function () {
 		TableView.prototype.updateSelection.apply(this, arguments);
 
 		// Disable export if no product selected
@@ -95,7 +95,7 @@ var ShopcartTableView = TableView.extend({
 	/**
 	 * Set the shopcart used by the view
 	 */
-	setShopcart: function(shopcart) {
+	setShopcart: function (shopcart) {
 		this.shopcart = shopcart;
 		this.setModel(shopcart.featureCollection);
 	},
@@ -103,7 +103,7 @@ var ShopcartTableView = TableView.extend({
 	/**
 	 * Render buttons
 	 */
-	renderButtons: function($buttonContainer) {
+	renderButtons: function ($buttonContainer) {
 		var self = this;
 
 		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
@@ -112,10 +112,10 @@ var ShopcartTableView = TableView.extend({
 
 		//create a simpleDataAccessRequest and assign a download manager
 		var self = this;
-		this.retrieveProduct.click(function() {
+		this.retrieveProduct.click(function () {
 
 			var hasDownloadAccess = true;
-			_.each(self.model.selection, function(feature) {
+			_.each(self.model.selection, function (feature) {
 				hasDownloadAccess &= DataSetAuthorizations.hasDownloadAccess(self.model.getDatasetId(feature));
 			});
 
@@ -135,13 +135,13 @@ var ShopcartTableView = TableView.extend({
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable').hide();
 
-		this.downloadOptionsButton.click(function() {
+		this.downloadOptionsButton.click(function () {
 			var datasetId = self.model.getSelectionDatasetIds()[0]; // We are sure that there is only one dataset selected
 			var downloadOptionsWidget = new DownloadOptionsWidget({
 				datasetId: datasetId,
 				featureCollection: self.model,
-				callback: function(updatedDownloadOptions) {
-					self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function(response) {
+				callback: function (updatedDownloadOptions) {
+					self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function (response) {
 						console.log(response);
 						// TODO: handle a real response
 						self.model.updateDownloadOptions(updatedDownloadOptions);
@@ -156,7 +156,7 @@ var ShopcartTableView = TableView.extend({
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
 
-		this.deleteButton.click(function() {
+		this.deleteButton.click(function () {
 			self.shopcart.deleteSelection();
 		});
 
@@ -165,7 +165,7 @@ var ShopcartTableView = TableView.extend({
 		this.exportButton.button();
 		this.exportButton.button('disable');
 
-		this.exportButton.click(function() {
+		this.exportButton.click(function () {
 			var shopcartExportWidget = new ShopcartExportWidget(self.model);
 			shopcartExportWidget.open();
 		});
