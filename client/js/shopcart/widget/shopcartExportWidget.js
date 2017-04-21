@@ -14,7 +14,7 @@ var ShopcartExportWidget = function(featureCollection) {
 	element.appendTo(parentElement);
 	parentElement.appendTo('.ui-page-active');
 	parentElement.ngeowidget({
-		title: "Export Shopcart",
+		title: "Export",
 		// Reinit the standing order when the widget is closed (FL: is it really needed?)
 		hide: function() {
 			parentElement.remove();

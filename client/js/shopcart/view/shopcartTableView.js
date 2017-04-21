@@ -57,6 +57,13 @@ var ShopcartTableView = TableView.extend({
 	updateSelection: function() {
 		TableView.prototype.updateSelection.apply(this, arguments);
 
+		// Disable export if no product selected
+		if (this.model.selection.length > 0) {
+			this.exportButton.button('enable');
+		} else {
+			this.exportButton.button('disable');
+		}
+
 		// The products have to be a part of dataset so we extract dataset ids
 		// to be sure that products are viable
 		var selectedDatasetIds = this.model.getSelectionDatasetIds();
@@ -156,7 +163,7 @@ var ShopcartTableView = TableView.extend({
 		//add button to the widget footer in order to export a shopcart
 		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
-		this.exportButton.button('enable');
+		this.exportButton.button('disable');
 
 		this.exportButton.click(function() {
 			var shopcartExportWidget = new ShopcartExportWidget(self.model);
