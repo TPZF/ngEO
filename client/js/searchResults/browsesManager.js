@@ -181,7 +181,9 @@ module.exports = {
 				if ( selectedBrowse ) {
 					var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));	
 					if ( selectedBrowses.indexOf(_browseLayerMap[layerName]) == -1 ) {
-						selectedBrowses.push(_browseLayerMap[layerName]);
+						if (_browseLayerMap[layerName]) {
+							selectedBrowses.push(_browseLayerMap[layerName]);
+						}
 					}
 				}
 			}
