@@ -28,7 +28,7 @@ var ExportView = Backbone.View.extend({
 				$download.removeClass('ui-disabled');
 
 				// Export with original geometries, also remove other internal properties
-				var featureWithOrigGeometries = $.extend(true, [], this.model.selection);
+				var featureWithOrigGeometries = $.extend(true, [], this.model.highlights);
 				$.each(featureWithOrigGeometries, function(index, feature) {
 					if (feature._origGeometry) {
 						feature.geometry = feature._origGeometry;
