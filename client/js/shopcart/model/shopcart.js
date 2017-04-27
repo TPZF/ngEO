@@ -163,6 +163,7 @@ var Shopcart = Backbone.Model.extend({
 
 						// Clone the feature to be different from the selected one
 						var feature = _.clone(features[indexOfProductUrls]);
+						feature.id = itemsAddedResponse[i].id;
 						feature.properties = _.clone(feature.properties);
 						feature.properties.shopcartItemId = itemsAddedResponse[i].id;
 
