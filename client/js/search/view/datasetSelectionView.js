@@ -191,7 +191,7 @@ var DatasetSelectionView = Backbone.View.extend({
 			for (var j = 0; j < criteriaValues.length; j++) {
 
 				// Add the option to the select element
-				var $opt = $('<option value="' + criteriaValues[j] + '">' + criterias[i].title + ' : ' + criteriaValues[j] + '</option>')
+				var $opt = $('<option value="' + criteriaValues[j] + '">' + criteriaValues[j] + '</option>')
 					.appendTo($selectCriteria);
 
 				// Add selected attr to option if is actually selected
