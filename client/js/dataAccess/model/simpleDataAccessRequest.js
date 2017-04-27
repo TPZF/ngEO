@@ -198,10 +198,10 @@
      var productStatuses = dataAccessRequestStatus.productStatuses;
      var aPromises = [];
      for (var i = 0; i < productStatuses.length; i++) {
-       var _expectedSize = _.find(this.productSizes, function(item) {
+       var _productSize = _.find(this.productSizes, function(item) {
          return item.productURL === productStatuses[i].productURL;
-       }).productSize;
-       if (_expectedSize) {
+       });
+       if (_productSize && _productSize.productSize) {
           productStatuses[i].expectedSize = _expectedSize;
           this.totalSize += parseInt(_expectedSize);
        }
