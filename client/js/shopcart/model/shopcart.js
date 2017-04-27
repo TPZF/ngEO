@@ -211,18 +211,18 @@ var Shopcart = Backbone.Model.extend({
 	},
 
 	/**
-	 * Submit a delete request to the server in order to delete the selected 
+	 * Submit a delete request to the server in order to delete the highlighted 
 	 * shopcart items.
 	 */
-	deleteSelection: function() {
+	deleteHighlights: function() {
 
-		if (this.featureCollection.selection.length == 0)
+		if (this.featureCollection.highlights.length == 0)
 			return;
 
 		// Build the request body
 		var itemsToRemove = [];
-		for (var i = 0; i < this.featureCollection.selection.length; i++) {
-			var f = this.featureCollection.selection[i];
+		for (var i = 0; i < this.featureCollection.highlights.length; i++) {
+			var f = this.featureCollection.highlights[i];
 			if (f.properties && f.properties.shopcartItemId) {
 				itemsToRemove.push({
 					shopcartId: this.id,
@@ -232,7 +232,7 @@ var Shopcart = Backbone.Model.extend({
 		}
 
 		// Check if items are correct
-		if (itemsToRemove.length != this.featureCollection.selection.length) {
+		if (itemsToRemove.length != this.featureCollection.highlights.length) {
 			Logger.error("The selected shopcart items do not contain valid ID and cannot be removed.");
 			return;
 		}
@@ -280,15 +280,15 @@ var Shopcart = Backbone.Model.extend({
 	},
 
 	/**
-	 * Submit a PUT request to the server in order to update the selected 
+	 * Submit a PUT request to the server in order to update the highlightes 
 	 * shopcart items with the given download options
 	 */
-	updateSelection: function(downloadOptions) {
+	updateHighlights: function(downloadOptions) {
 		var itemsToUpdate = [];
 
 		// Build the request body
-		for (var i = 0; i < this.featureCollection.selection.length; i++) {
-			var f = this.featureCollection.selection[i];
+		for (var i = 0; i < this.featureCollection.highlights.length; i++) {
+			var f = this.featureCollection.highlights[i];
 			if ( f.properties.shopcartItemId ) {
 				itemsToUpdate.push({
 					'shopcartId': this.id,
