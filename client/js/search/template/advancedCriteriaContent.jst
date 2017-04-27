@@ -23,7 +23,7 @@
 						<label id="<%= label %>_label" for="<%= criterion.id %>"><%= label %> : </label>
 						<!-- Selectbox -->
 						<select id="<%= criterion.id %>" data-mini="true"">
-							<option value="">None</option>
+							<option value="">Any</option>
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
 								<option value="<%= possibleValue %>" <% if ( value && value.indexOf(possibleValue) != -1) { print('selected'); } %> ><%= possibleValue %></option>
 							<% }); %>
