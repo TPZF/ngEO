@@ -176,7 +176,7 @@ module.exports = {
 		for ( var i=0; i<fc.features.length; i++ ) {
 			var feature = fc.features[i];
 			var browses = Configuration.getMappedProperty(feature, "browses");
-			if (browses) {
+			if (browses[0] !== undefined) {
 				var selectedBrowse = _.find(browses, function(browse) { return browse.BrowseInformation._selected == true; });
 				if ( selectedBrowse ) {
 					var layerName = MapUtils.getLayerName(_getUrl(selectedBrowse));	
