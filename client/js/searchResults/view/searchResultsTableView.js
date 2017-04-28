@@ -1,13 +1,18 @@
-var Logger = require('logger');
-var GlobalEvents = require('globalEvents');
-var TableView = require('ui/tableView');
 var Configuration = require('configuration');
-var SearchResults = require('searchResults/model/searchResults');
-var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
+var GlobalEvents = require('globalEvents');
+var Logger = require('logger');
+
+var TableView = require('ui/tableView');
+
+// WIDGETS
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
 var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
 var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget');
 var ExportWidget = require('searchResults/widget/exportWidget');
+
+// MODELS
+var SearchResults = require('searchResults/model/searchResults');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 
 /**
  * The model is the backbone model SearchResults 
@@ -49,6 +54,7 @@ var SearchResultsTableView = TableView.extend({
 
 		//Called when the user clicks on the product id of an item
 		'click .directDownload': function(event) {
+			event.stopPropagation();
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
@@ -60,16 +66,11 @@ var SearchResultsTableView = TableView.extend({
 		}
 	},
 
+	updateHighlights: function() {
+		TableView.prototype.updateHighlights.apply(this, arguments);
 
-	/**
-	 * Call when selection has changed
-	 */
-	updateSelection: function(features) {
-
-		TableView.prototype.updateSelection.apply(this, arguments);
-
-		// Disable export if no product selected
-		if (this.model.selection.length > 0) {
+		// Disable export if no product highlighted
+		if (this.model.highlights.length > 0) {
 			this.exportButton.button('enable');
 		} else {
 			this.exportButton.button('disable');
@@ -77,14 +78,14 @@ var SearchResultsTableView = TableView.extend({
 
 		//Disable the retrieve Product and download options button if no product item is selected 
 		//and/or if the products checked do not have a product url
-		if (this.model.getSelectedProductUrls().length == 0) {
+		if (this.model.getHighlightedProductUrls().length == 0) {
 			this.retrieveProduct.button('disable');
 			this.downloadOptionsButton.button('disable');
 			this.addToShopcart.button('disable');
 		} else {
 
 			// NGEO-1770: No retrieve button if selection contains at least one planned product
-			var hasPlanned = _.find(this.model.selection, function(feature) {
+			var hasPlanned = _.find(this.model.highlights, function(feature) {
 				return Configuration.getMappedProperty(feature, "status", null) == "PLANNED";
 			});
 			this.retrieveProduct.button(hasPlanned ? 'disable' : 'enable');
@@ -92,14 +93,8 @@ var SearchResultsTableView = TableView.extend({
 			var hasDownloadOptions = (this.model.dataset && this.model.dataset.get('downloadOptions') && this.model.dataset.get('downloadOptions').length != 0);
 			this.downloadOptionsButton.button(hasDownloadOptions ? 'enable' : 'disable');
 			this.addToShopcart.button('enable');
-
-			/*var nonPlannedSelectProducts = this.model.getSelectedNonPlannedFeatures();
-			if ( nonPlannedSelectProducts.length == 0 ) {
-				this.addToShopcart.button('disable');
-			} else {
-				this.addToShopcart.button('enable');
-			}*/
 		}
+
 	},
 
 	/**
@@ -107,7 +102,7 @@ var SearchResultsTableView = TableView.extend({
 	 */
 	renderButtons: function($buttonContainer) {
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve highlighted products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -117,7 +112,7 @@ var SearchResultsTableView = TableView.extend({
 
 			if (self.model.downloadAccess) {
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts(self.model.selection);
+				SimpleDataAccessRequest.setProducts(self.model.highlights);
 
 				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
@@ -125,12 +120,12 @@ var SearchResultsTableView = TableView.extend({
 			}
 
 		});
-		//add selected items to the current or to a new shopcart
-		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true" title="Add selected products to shopcart">Add to shopcart</button>').appendTo($buttonContainer);
+		//add highlighted items to the current or to a new shopcart
+		this.addToShopcart = $('<button data-role="button" data-inline="true" data-mini="true" title="Add highlighted products to shopcart">Add to shopcart</button>').appendTo($buttonContainer);
 		this.addToShopcart.button();
 		this.addToShopcart.button('disable');
 		this.addToShopcart.click(function() {
-			GlobalEvents.trigger('addToShopcart', self.model.selection);
+			GlobalEvents.trigger('addToShopcart', self.model.highlights);
 		});
 
 		//add button to the widget footer in order to download products
@@ -139,7 +134,7 @@ var SearchResultsTableView = TableView.extend({
 		this.downloadOptionsButton.button();
 		this.downloadOptionsButton.button('disable');
 
-		//Displays the download options of the selected products in order to be changed in one shot
+		//Displays the download options of the highlighted products in order to be changed in one shot
 		//for the moment all product belong to the unique selected dataset 
 		this.downloadOptionsButton.click(function() {
 
@@ -155,7 +150,7 @@ var SearchResultsTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KLM, GeoJson)">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export highlighted products (KLM, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 

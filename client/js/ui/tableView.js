@@ -6,6 +6,7 @@ var tableColumnsPopup_template = require('ui/template/tableColumnsPopup');
 var FeatureCollection = require('searchResults/model/featureCollection');
 var SearchResultsMap = require('searchResults/map');
 var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
+var ProductService = require('ui/productService');
 
 /**
  *	Get nested objects containing the given key
@@ -50,6 +51,7 @@ var ctrlPressed = false;
 var shiftPressed = false;
 var _lastSelectedRow = null;
 var _clickInTable = false; // Terrible hack to avoid scrolling to most recent feature(FIXME please..)
+var _dblClick = false;
 
 /**
  *	Toggle arrays helper used to splice/push features depending on their presence in prevArray
@@ -107,9 +109,17 @@ var TableView = Backbone.View.extend({
 				// Ctrl+A : select all
 				e.preventDefault();
 
-				if ( self.model )
-					$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+				if ( self.model ) {
+					if (self.model.highlights.length === self.model.features.length) {
+						self.model.checkAllHighlight();
+					} else {
+						self.model.setHighlight(self.model.features);
+					}
+				}
+				//	$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
+				
 			}
+			Map.trigger('keyDown', e.keyCode);
 		}
 		var onKeyUp = function(e) {
 			if ( e.keyCode == '17' ) {
@@ -118,6 +128,7 @@ var TableView = Backbone.View.extend({
 			if ( e.keyCode == '16' ) {
 				shiftPressed = false;
 			}
+			Map.trigger('keyUp', e.keyCode);
 		}
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);
@@ -127,8 +138,7 @@ var TableView = Backbone.View.extend({
 		 *	TODO: Replace the mecanism by something more sexy..
 		 */
 		this.triggerHighlightFeature = _.debounce(function(){
-			this.highlightFeature(_allHighlights);
-			_allHighlights = [];
+			self.updateHighlights();
 		}, 10);
 	},
 
@@ -146,6 +156,7 @@ var TableView = Backbone.View.extend({
 			var data = $(event.currentTarget).data('internal');
 			if (data) {
 				Map.zoomToFeature(data.feature);
+				_dblClick = true;
 			}
 		},
 
@@ -164,16 +175,21 @@ var TableView = Backbone.View.extend({
 			if ( data ) {
 				var fc = this.model;
 				var currentHighlights;
+
 				if ( ctrlPressed ) {
-					if ( fc.highlights.indexOf(data.feature) != -1 ) {
-						currentHighlights = _.without(fc.highlights, data.feature);
+					// if feature is highlighted
+					if ( fc.isHighlighted(data.feature) ) {
+						// and if feature is not selected >> unsetHighlight
+						if (!fc.isSelected(data.feature)) {
+							fc.unsetHighlight([data.feature]);
+						}
 					} else {
-						currentHighlights = fc.highlights.concat(data.feature);
+						// highlight this feature
+						fc.setHighlight([data.feature]);
 					}
 				} else if ( shiftPressed && _lastSelectedRow ) {
 					document.getSelection().removeAllRanges();
 					var range = [_lastSelectedRow, $row].sort(function(a,b) { return a.index() - b.index() } );
-
 					var selectedRows = range[0].nextUntil(range[1]);
 					selectedRows.push(event.currentTarget);
 					var selectedFeatures = _.map(selectedRows, function(row) {
@@ -181,15 +197,22 @@ var TableView = Backbone.View.extend({
 					});
 					currentHighlights = fc.highlights.slice(0);
 					toggleArrays(selectedFeatures, currentHighlights);
+					fc.setHighlight(currentHighlights);
+				} else if (!fc.isHighlighted(data.feature)) {
+					// feature is not highlighted
+					// - check all features highlighted before
+					// - and highlight this one
+					fc.checkAllHighlight();
+					fc.setHighlight([data.feature]);
+				} else if (_dblClick) {
+					//fc.unsetHighlight([data.feature]);
+					_dblClick = false;
 				} else {
-					currentHighlights = [data.feature];
+					fc.checkAllHighlight();
+					fc.setHighlight([data.feature]);
 				}
 				_clickInTable = true;
 				_lastSelectedRow = $row;
-
-				if (fc.highlight && data.feature) {
-					fc.highlight(currentHighlights);
-				}
 			}
 		},
 
@@ -199,7 +222,10 @@ var TableView = Backbone.View.extend({
 			var $cell = $(event.currentTarget);
 			$cell.siblings("th").removeClass('sorting_asc').removeClass('sorting_desc');
 
-			if ($cell.find('.table-view-checkbox').length > 0)
+			// if ($cell.find('.table-view-checkbox').length > 0)
+			// 	return;
+			// on fist column, no sort
+			if ($cell.find('#table-columns-button').length > 0)
 				return;
 
 			var cellIndex = this.columnDefs.indexOf(_.find(this.columnDefs, function(c) { return c.sTitle == $cell.html(); } ));
@@ -250,6 +276,7 @@ var TableView = Backbone.View.extend({
 		// Called when the user clicks on the "selection" checkbox in table
 		'click .table-view-checkbox': function(event) {
 			// Retreive the position of the selected row
+			event.stopPropagation();
 			var $target = $(event.currentTarget);
 			var $row = $target.closest('tr');
 			var data = $row.data('internal');
@@ -260,8 +287,12 @@ var TableView = Backbone.View.extend({
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: check every highlighted feature when clicking on already selected row
-					model.select( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
-				} else {
+					//model.select( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
+					model.select([data.feature]);
+					model.setHighlight([data.feature]);
+				}
+				/*
+				 else {
 					// "Select all" case
 					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
 					this.model.selectAll(filteredFeatures);
@@ -269,18 +300,20 @@ var TableView = Backbone.View.extend({
 						.removeClass('ui-icon-checkbox-off')
 						.addClass('ui-icon-checkbox-on');
 				}
+				*/
 			} else {
 				if (data) {
 					var model = data.parent ? data.parent.childFc : this.model;
 					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
-					model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
-				} else {
+					//model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
+					model.unselect([data.feature]);
+				}/* else {
 					// "Unselect all" case
 					this.model.unselectAll();
 					$target
 						.removeClass('ui-icon-checkbox-on')
 						.addClass('ui-icon-checkbox-off');
-				}
+				}*/
 			}
 		},
 
@@ -309,6 +342,13 @@ var TableView = Backbone.View.extend({
 				});
 		},
 		
+		'click #check-button': function(event) {
+			this.model.select(this.model.highlights);
+		},
+
+		'click #uncheck-button': function(event) {
+			this.model.unselect(this.model.highlights);
+		},
 		// Incremental pagination
 		'click .loadMore' : function(event) {
 			var rowData = $(event.currentTarget).closest('.paging').data("internal");
@@ -343,11 +383,15 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "unselectFeatures", this.updateSelection);
 			this.listenTo(this.model, "show:browses", this.showBrowses);
 			this.listenTo(this.model, "hide:browses", this.hideBrowses);
-			this.listenTo(this.model, "highlightFeatures", function(features){
+			this.listenTo(this.model, "highlightFeatures", this.triggerHighlightFeature);/*function(features){
 				_allHighlights = _allHighlights.concat(features);
-				self.triggerHighlightFeature();
-			});
+				self.triggerHighlightFeature(features);
+			});*/
+			this.listenTo(this.model, "unhighlightFeatures", this.unhighlightFeatures);
 			this.listenTo(this.model, "update:downloadOptions", this.updateRows);
+
+			this.listenTo(this.model, "focus", this.onFocus);
+			this.listenTo(this.model, "unfocus", this.onUnFocus);
 
 			if (this.model.features.length > 0) {
 				this.addData(this.model.features);
@@ -439,13 +483,18 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 * Highlight the features on the table when they have been highlighted on the map.
+	 * For each highlights
+	 * Update class for row
+	 * And scroll to most recent
+	 * 
+	 * @function updateHighlights
 	 */
-	highlightFeature: function(features, prevFeatures) {
+	updateHighlights: function() {
 		if (!this.$table) return;
 
-		// Remove previous highlighted rows
-		this.$table.find('.row_highlighted').removeClass('row_highlighted');
+		var _this = this;
+
+		var features = ProductService.getHighlightedProducts();
 
 		if (features.length > 0) {
 			var rows = this.$table.find("tbody tr");
@@ -456,9 +505,9 @@ var TableView = Backbone.View.extend({
 					$row.addClass('row_highlighted');
 				}
 			}
-
 			// NGEO-1941: Scroll to the most recent highlighted product in table
-			var mostRecentFeature = _.max(features, function(f) {
+			// for featureCollection activated
+			var mostRecentFeature = _.max(_.filter(features, function(feat) {return feat._featureCollection.id === _this.model.id}), function(f) {
 				return new Date(Configuration.getMappedProperty(f, "stop"));
 			});
 
@@ -468,9 +517,33 @@ var TableView = Backbone.View.extend({
 			} else {
 				_clickInTable = false;
 			}
-
 		}
 	},
+
+	/**
+	 * For each feature unhighlights (remove class for row)
+	 * And update buttons @see updateHighlights
+	 * 
+	 * @function unhighlightFeatures
+	 * @param {array} features
+	 */
+	unhighlightFeatures: function(features) {
+		if (!this.$table) return;
+		if (features.length > 0) {
+			var rows = this.$table.find("tbody tr");
+			for (var i = 0; i < features.length; i++) {
+
+				var $row = this._getRowFromFeature(features[i]);
+				if ( $row ) {
+					$row.removeClass('row_highlighted');
+					this.onUnFocus(features[i]);
+				}
+			}
+		}
+		// call updateHighlights to update buttons (retrieve/add/export)
+		this.updateHighlights();
+	},
+
 
 	/**
 	 *	Scroll table elt to the given $row
@@ -545,12 +618,12 @@ var TableView = Backbone.View.extend({
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
 
-			if ( $row && this.model.selection.indexOf(features[i]) >= 0 ) {
-				// Feature is seleceted
+			if ( $row && this.model.selections.indexOf(features[i]) >= 0 ) {
+				// Feature is selected
 				$row.find('.table-view-checkbox')
 					.addClass('ui-icon-checkbox-on')
 					.removeClass('ui-icon-checkbox-off');
-			} else {
+			} else if ($row) {
 				// Feature isn't selected
 				$row.find('.table-view-checkbox')
 					.removeClass('ui-icon-checkbox-on')
@@ -873,7 +946,12 @@ var TableView = Backbone.View.extend({
 		var checkboxVisibility = (rowData.isCheckable ? "inline-block" : "none");
 		content += '<span style="display:'+ checkboxVisibility +'" class="table-view-checkbox ui-icon '+ checkedClass +'"></span>';
 
+		// direct download
 		content += ' <span title="Direct download for this product" class="ui-icon directDownload"></span>';
+
+		// focus
+		content += ' <span class="focus-checkbox ui-icon ui-icon-checkbox-off"></span>';
+
 		// Layer browse visibility checkbox
 		/*
 		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
@@ -999,11 +1077,11 @@ var TableView = Backbone.View.extend({
 		}
 
 		this.updateFixedHeader();
-		this.updateSelection(this.model.selection);
+		this.updateSelection(this.model.selections);
 		// TODO: Make this view dependent on model only ...
 		// FIXME: check if hereafter commented line is really needed
 		// _allHighlights = _allHighlights.concat(this.model.highlights);
-		this.triggerHighlightFeature();
+		this.updateHighlights();
 	},
 
 	/**
@@ -1114,8 +1192,17 @@ var TableView = Backbone.View.extend({
 		if (this.hasExpandableRows) {
 			$row.append('<th></th>');
 		}
-		$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
+		//$row.append('<th><span class="table-view-checkbox ui-icon ui-icon-checkbox-off "></th>');
 		//$row.append('<th class="browseVisibility"></th>');
+
+		// $row.append('<th>\
+		// 	<button data-role="button" data-mini="true" data-inline="true" id="table-columns-button" title="Select columns to display in table" >Columns</button>\
+		// </th>');
+
+		$row.append('<th>\
+			<span class="ui-icon" id="table-columns-button" title="Select columns to display in table" ></span>\
+		</th>');
+		
 
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
@@ -1172,7 +1259,8 @@ var TableView = Backbone.View.extend({
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
 							<input id="filterTableInput" data-inline="true" data-mini="true" type="text" placeholder="Filter products..." />\
 						</div>\
-						<button data-mini="true" data-inline="true" id="table-columns-button" title="Select columns to display in table" >Columns</button>\
+						<button data-mini="true" data-inline="true" id="check-button" title="Check highlighted products" >Check</button>\
+						<button data-mini="true" data-inline="true" id="uncheck-button" title="Uncheck highlighted products" >Uncheck</button>\
 					</div>\
 					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
@@ -1190,6 +1278,33 @@ var TableView = Backbone.View.extend({
 	 */
 	refresh: function() {
 		this.updateFixedHeader();
+	},
+
+	onFocus: function(feature, fc) {
+		if (!this.$table) return;
+
+		var $row = this._getRowFromFeature(feature);
+
+		if ( $row ) {
+			// Feature is focus
+			$row.find('.focus-checkbox')
+				.addClass('ui-icon-checkbox-on')
+				.removeClass('ui-icon-checkbox-off');
+			this._scrollTo($row);
+		}
+	},
+
+	onUnFocus: function(feature, fc) {
+		if (!this.$table) return;
+
+		var $row = this._getRowFromFeature(feature);
+
+		if ( $row ) {
+			// Feature is unfocus
+			$row.find('.focus-checkbox')
+				.addClass('ui-icon-checkbox-off')
+				.removeClass('ui-icon-checkbox-on');
+		}
 	}
 });
 

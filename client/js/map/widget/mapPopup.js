@@ -13,18 +13,21 @@ var SearchResults = require('searchResults/model/searchResults');
 var Utils = require('map/utils');
 var UserPrefs = require('userPrefs');
 var MultipleBrowseWidget = require('searchResults/widget/multipleBrowseWidget');
+var ProductService = require('ui/productService');
 
 var MapPopup = function(container) {
 
 	/**
 	 * Private variables
 	 */
+	var self = this;
 	var element;
 	var parentElement;
 	var arrow;
 	var products = null;
 	var isOpened = false;
 	var advancedActivated = UserPrefs.get("Advanced info state") ? UserPrefs.get("Advanced info state") : false;
+	var currentIndice = null;
 
 	element = $(
 		'<div class="widget-content mapPopup">\
@@ -44,18 +47,17 @@ var MapPopup = function(container) {
 		.click(function() {
 			if ($(this).parent().hasClass('ui-btn-active')) {
 				advancedActivated = false;
-				buildContent(advancedActivated);
 				$(this).parent().removeClass('ui-btn-active ui-focus');
 			} else {
 				advancedActivated = true;
-				buildContent(advancedActivated);
 				$(this).parent().addClass('ui-btn-active');
 			}
+			buildContent(advancedActivated, products.length, currentIndice);
 			UserPrefs.save("Advanced info state", advancedActivated);
 		});
 
 	// Select
-	btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Select product</button>")
+	btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Check highlighted products</button>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
 			
@@ -66,15 +68,17 @@ var MapPopup = function(container) {
 			} else {
 				$(this).parent().addClass('ui-btn-active');
 			}
-
 			for (var i = 0; i < products.length; i++) {  
 				var p = products[i];  
 				if (isSelected) {  
 					p._featureCollection.unselect([p]);
+					p._featureCollection.unsetHighlight([p]);
 				} else {  
 					p._featureCollection.select([p]);
+					p._featureCollection.setHighlight([p]);
 				}
 			}
+			self.openOrCloseDialog();
 		});
 
 	// Browse
@@ -91,10 +95,12 @@ var MapPopup = function(container) {
 
 			for (var i = 0; i < products.length; i++) {
 				var p = products[i];
-				if (isSelected) {
+				if (ProductService.getBrowsedProducts().indexOf(p) >= 0) {
 					p._featureCollection.hideBrowses([p]);
+					ProductService.removeBrowsedProducts([p]);
 				} else {
 					p._featureCollection.showBrowses([p]);
+					ProductService.addBrowsedProducts([p]);
 				}
 			}
 		});
@@ -143,52 +149,29 @@ var MapPopup = function(container) {
 
 	parentElement.hide();
 
-	var self = this;
-	Map.on('pickedFeatures', function(pickedFeatures) {
-		self.openOrCloseDialog(pickedFeatures);
-	});
-
 	/**
 	* When we hightligth feature, update information linked to those features if the dialod is open.
 	* Otherwise , do nothing
 	*/
 	Map.on('highlightFeatures', function(highlightedFeatures) {
-		self.openOrCloseDialog(highlightedFeatures);
+		self.openOrCloseDialog('highlight', highlightedFeatures);
+	});
+	Map.on('unhighlightFeatures', function(highlightedFeatures) {
+		self.openOrCloseDialog('highlight', highlightedFeatures);
 	});
 
 	/**
 	* When we unselect features, just close the window
 	*/
+	
 	Map.on('unselectFeatures', function() {
-		// Set timeout to be sure that this event will trigger after highlight
-		// Used in case when user clicked on not highlighted but checked feature in table
-		// So basically he unchecks and highlights the feature -> popup shouldn't be displayed
-		setTimeout(function() {
-			self.close();
-		}, 1);
+		self.openOrCloseDialog('select', []);
 	});
 
 	Map.on('selectFeatures', function(selectedFeatures) {
-		//self.openOrCloseDialog(selectedFeatures);
-		if (selectedFeatures.length === 1) {
-			if (Configuration.getMappedProperty(selectedFeatures, "status", null) == "PLANNED" &&
-				!Configuration.getMappedProperty(selectedFeatures, "productUrl")) {
-				element.find('#mpButtons button[data-icon="save"]').button('disable');
-			} else {
-				element.find('#mpButtons button[data-icon="save"]').button('enable');
-			}
-			element.find('#mpButtons button[data-icon="shop"]').button('enable');
-		}
+		self.openOrCloseDialog('select', selectedFeatures);
 	});
-
-	/*Map.on('extent:change', function() {
-		self.close();
-	});
-
-	/**
-	 * Private methods
-	 */
-
+	
 	/**
 		Get data from a path
 	 */
@@ -208,19 +191,27 @@ var MapPopup = function(container) {
 	/**
 		Build the content of the popup from the given product
 	 */
-	var buildContent = function(adv) {
-		var content;
+	var buildContent = function(adv, nbProducts, indice) {
 
 		// Hide by default
 		element.find('#mpButtons button[data-icon="browse-multiple"]').parent().hide();
 
-		if (products.length == 1) {
-			var product = products[0];
+		var content = "";
+		if (nbProducts === 1) {
+			currentIndice = 0;
+		} else {
+			currentIndice = indice;
+			content += "" + products.length + " products highlighted. <span class='ui-icon btnNext' title='Focus on next product'></span><br>";
+			content += "Click on arrow to cycle through products.<br>";
+		}
+
+		if ((nbProducts > 1 && currentIndice !== null) || (nbProducts===1)) {
+			var product = products[currentIndice];
 			// Build product title according to NGEO-1969
 			var productTitle = Configuration.getMappedProperty(product, "sensor") + " / "
 							+ Configuration.getMappedProperty(product, "operationalMode") + " / "
 							+ Configuration.getMappedProperty(product, "productType")
-			content = '<p><b>' + productTitle + '</b></p>';
+			content += '<p><b>' + productTitle + '</b></p>';
 			if (adv) {
 				var columnDefs = Configuration.data.tableView.columnsDef;
 				for (var i = 0; i < columnDefs.length; i++) {
@@ -256,7 +247,6 @@ var MapPopup = function(container) {
 			}
 
 		} else {
-			content = products.length + " products picked.<br>Click again to cycle through products.";
 			if (adv) {
 				content += "<p>Products: </p>";
 				for (var i = 0; i < products.length; i++) {
@@ -265,21 +255,25 @@ var MapPopup = function(container) {
 			}
 		}
 
-
-		var hasSelected = _.find(products, function(feature) { return feature._featureCollection.isSelected(feature); });
-		if ( hasSelected ) {
-			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
+		// if feature is highlighted >> save and shop are enable
+		var isHighlighted = _.find(products, function(feature) { return feature._featureCollection.isHighlighted(feature); });
+		if ( isHighlighted ) {
 			element.find('#mpButtons button[data-icon="save"]').button('enable');
 			element.find('#mpButtons button[data-icon="shop"]').button('enable');
 		} else {
-			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
 			element.find('#mpButtons button[data-icon="save"]').button('disable');
 			element.find('#mpButtons button[data-icon="shop"]').button('disable');
 		}
-
+		// if feature is selected >> check button is active
+		var isSelected = _.find(products, function(feature) { return feature._featureCollection.isSelected(feature); });
+		if (isSelected) {
+			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
+		} else {
+			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
+		}
 		//active browse if feature is highlighted
-		var hasBrowses = _.find(products, function(feature) { return feature._featureCollection.isHighlighted(feature); });
-		if ( hasBrowses ) {
+		var isBrowsed = _.find(products, function(feature) { return feature._featureCollection.isBrowsed(feature); });
+		if ( isBrowsed ) {
 			element.find('#mpButtons button[data-icon="browse"]').parent().addClass('ui-btn-active');
 		} else {
 			element.find('#mpButtons button[data-icon="browse"]').parent().removeClass('ui-btn-active');
@@ -297,6 +291,36 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="info"]').parent().addClass('ui-btn-active');
 		}
 		element.find('#mpText').html(content);
+		element.find('#mpText .btnNext').click(function() {
+			var next;
+			var changeDataset = false;
+			if (currentIndice === null) {
+				next = 0;
+			} else if (currentIndice === nbProducts - 1) {
+				next = null;
+			} else {
+				next = currentIndice + 1;
+			}
+			if (next !== null) {
+				if (currentIndice === null) {
+					changeDataset = true;
+				} else if (products[currentIndice]._featureCollection.id !== products[next]._featureCollection.id) {
+					changeDataset = true;
+				}
+				if (changeDataset) {
+					if (!products[next]._featureCollection.dataset) {
+						$('#shopcart').click();
+					} else {
+						$('#result' + products[next]._featureCollection.id).click();
+					}
+				}
+				products[next]._featureCollection.focus(products[next]);
+			}
+			if (currentIndice !== null) {
+				products[currentIndice]._featureCollection.unfocus(products[currentIndice]);
+			}
+			buildContent(adv, nbProducts, next);
+		});
 	};
 
 
@@ -310,7 +334,7 @@ var MapPopup = function(container) {
 		// Clean-up previous state
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
 
-		buildContent(advancedActivated);
+		buildContent(advancedActivated, products.length, null);
 
 		parentElement.fadeIn();
 
@@ -333,8 +357,11 @@ var MapPopup = function(container) {
 	/**
 	* Depending on the feature list, if empty, close the dialog, otherwise open the dialog and update content
 	*/
-	this.openOrCloseDialog = function(featuresList) {
-		if (featuresList.length == 0) {
+	this.openOrCloseDialog = function(from, featuresList) {
+		if (from !== 'pick') {
+			featuresList = ProductService.getHighlightedProducts();
+		}
+		if (!featuresList || featuresList.length == 0) {
 			this.close();
 		} else {
 			this.open(featuresList);

@@ -2,6 +2,7 @@ var Logger = require('logger');
 var BrowsesManager = require('searchResults/browsesManager');
 var Map = require('map/map');
 var SelectHandler = require('map/selectHandler');
+var ProductService = require('ui/productService');
 
 /**
  *	Update the array of selected/highlighted features
@@ -61,36 +62,26 @@ var _onShowBrowses = function(features, fc) {
 	}
 };
 
+var _onFocus = function(feature, fc) {
+	fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+};
+
+var _onUnFocus = function(feature, fc) {
+	fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
+};
+
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
-	for (var i = 0; i < features.length; i++) {
-		var feature = features[i];
-		if (fc.isHighlighted(feature)) {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
-			//display browse if feature is highlighted
-			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-		} else {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "select");
-		}
-	}
 	Map.trigger("selectFeatures", features);
-	_updateFeaturesWithBrowse(features);
 };
 
 
 // Call when a feature is unselected to synchronize the map
 var _onUnselectFeatures = function(features, fc) {
-	for (var i = 0; i < features.length; i++) {
-		var feature = features[i];
-		if (fc.isHighlighted(feature)) {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
-		} else {
-			fc._footprintLayer.modifyFeaturesStyle([feature], "default");
-			BrowsesManager.removeBrowse(feature);
-		}
-	}
 	Map.trigger("unselectFeatures");
 };
+
+var _keyCode = 0;
 
 // Selected or highlighted features with browse
 var _featuresWithBrowse = [];
@@ -103,42 +94,45 @@ var _lazyRenderOrdering = _.debounce(function() {
 }, waitTimeout);
 
 // Call when a feature is highlighted to synchronize the map
-var _onHighlightFeatures = function(features, prevFeatures, fc) {
-
-	if (prevFeatures.length > 0) {
-
-		// Set to default the footprint of previously selected features
-		for (var i = 0; i < prevFeatures.length; i++) {
-
-			if (fc.isSelected(prevFeatures[i])) {
-				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "select");
-			} else {
-				fc._footprintLayer.modifyFeaturesStyle([prevFeatures[i]], "default");
-				BrowsesManager.removeBrowse(prevFeatures[i]);
-			}
-		}
-	}
+var _onHighlightFeatures = function(features, fc) {
 
 	var highlightedFeats = [];
-	if (features.length > 0) {
+	if (features && features.length > 0) {
 		// Highlight currently selected features
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
-			if (fc.isSelected(feature)) {
-				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
-				BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
-
-			} else {
-				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
-			}
+			fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
+			BrowsesManager.addBrowse(feature, fc.getDatasetId(feature));
 			//HACK add feature collection since it does not contain the feature collection
 			feature._featureCollection = fc;
 			highlightedFeats.push(feature);
 		}
+		ProductService.addBrowsedProducts(features);
 	}
 	_updateFeaturesWithBrowse(features);
-	Map.trigger("highlightFeatures", highlightedFeats);
+	Map.trigger("highlightFeatures", features);
 };
+
+// Call when a feature is highlighted to synchronize the map
+var _onUnHighlightFeatures = function(features, fc) {
+
+	// for previous features to unhighlight
+	if (features && features.length > 0) {
+
+		// Set to default the footprint of previously selected features
+		for (var i = 0; i < features.length; i++) {
+			var feature = features[i];
+			fc._footprintLayer.modifyFeaturesStyle([feature], "default");
+			
+			BrowsesManager.removeBrowse(feature);
+		}
+		ProductService.removeBrowsedProducts(features);
+	}
+	//_updateFeaturesWithBrowse(featuresToHighLight);
+	// update mapPopup
+	Map.trigger("unhighlightFeatures", features);
+};
+
 
 module.exports = {
 
@@ -152,19 +146,29 @@ module.exports = {
 	initialize: function() {
 		// Connect with map feature picking
 		Map.on('pickedFeatures', function(features, featureCollections) {
-			var highlights = {}
+			var highlights = {};
+			ProductService.addHighlightedProducts(features);
 			for (var i = 0; i < featureCollections.length; i++) {
 				highlights[featureCollections[i].id] = [];
 			}
-
+			// add picked features to highlights
 			for (var i = 0; i < features.length; i++) {
 				var fc = features[i]._featureCollection;
 				highlights[fc.id].push(features[i]);
 			}
-
+			// add checked features to highlights
 			for (var i = 0; i < featureCollections.length; i++) {
-				featureCollections[i].highlight(highlights[featureCollections[i].id]);
+				if (_keyCode !== 17) { // Ctrl key not pressed > unhighlight unchecked products
+					featureCollections[i].checkAllHighlight();
+				}
+				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
 			}
+		});
+		Map.on('keyDown', function(code) {
+			_keyCode = code;
+		});
+		Map.on('keyUp', function(code) {
+			_keyCode = 0;
 		});
 	},
 
@@ -203,8 +207,12 @@ module.exports = {
 		fc.on('selectFeatures', _onSelectFeatures);
 		fc.on('unselectFeatures', _onUnselectFeatures);
 		fc.on('highlightFeatures', _onHighlightFeatures);
+		fc.on('unhighlightFeatures', _onUnHighlightFeatures);
 		fc.on('show:browses', _onShowBrowses);
 		fc.on('hide:browses', _onHideBrowses);
+
+		fc.on('focus', _onFocus);
+		fc.on('unfocus', _onUnFocus);
 
 		SelectHandler.addFeatureCollection(fc);
 	},
@@ -234,12 +242,9 @@ module.exports = {
 			Map.removeLayer(fc._footprintLayer);
 		}
 
-		// Remove browse on highlight and selection
+		// Remove browse on highlight and selections
 		for (var i = 0; i < fc.highlights.length; i++) {
 			BrowsesManager.removeBrowse(fc.highlights[i]);
-		}
-		for (var i = 0; i < fc.selection.length; i++) {
-			BrowsesManager.removeBrowse(fc.selection[i]);
 		}
 
 		SelectHandler.removeFeatureCollection(fc);

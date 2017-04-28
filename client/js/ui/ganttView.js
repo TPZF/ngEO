@@ -241,9 +241,9 @@ var GanttView = Backbone.View.extend({
 		$bar.appendTo(this.$el.find('.gantt-body-scroll'))
 			// ZoomTo & highlight the selected feature
 			.click(function() {
-				if (self.model.highlight) {
+				if (self.model.setHighlight) {
 					Map.zoomToFeature(feature);
-					self.model.highlight([feature]);
+					self.model.setHighlight([feature]);
 				}
 			});
 	},

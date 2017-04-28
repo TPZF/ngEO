@@ -6,6 +6,7 @@ var Configuration = require('configuration');
 var DataSetPopulation = require('search/model/dataSetPopulation');
 var DataSetSearch = require('search/model/datasetSearch');
 var DownloadOptions = require('search/model/downloadOptions');
+var ProductService = require('ui/productService');
 
 /**
  * Extract the download options from the product url
@@ -44,7 +45,7 @@ var FeatureCollection = function() {
 	this.features = [];
 
 	// The current selection
-	this.selection = [];
+	this.selections = [];
 
 	// The hightlighted features
 	this.highlights = [];
@@ -145,26 +146,49 @@ var FeatureCollection = function() {
 
 	};
 
-	// Remove features from the collection
+	// 
+	/**
+	 * Remove features from collection
+	 * 
+	 * @function removeFeatures
+	 * @param {array} features
+	 * 
+	 * @see client/js/shopcart/model#deleteHighlights()
+	 */
 	this.removeFeatures = function(features) {
-		this.setSelection(_.difference(this.selection, features));
-		this.highlight(_.difference(this.highlights, features));
+		this.unselect(features);
+		this.unsetHighlight(features);
 		this.features = _.difference(this.features, features);
 		self.trigger('remove:features', features, self);
 	};
 
-	// Show features
+	// 
+	/**
+	 * Show features of collection
+	 * 
+	 * @function showFeatures
+	 * @param {array} features
+	 * 
+	 * @see client/js/ui/tableView#filterData()
+	 */
 	this.showFeatures = function(features) {
 		self.trigger('show:features', features, self);
 		if ( features.length > 0 ) {
 			// HACK: highlight all highlights, selected all selection for the moment
-			this.trigger("highlightFeatures", this.highlights, this.highlights, this);
-			this.trigger("selectFeatures", this.selection, this);
+			this.trigger("highlightFeatures", this.highlights, this);
+			this.trigger("selectFeatures", this.selections, this);
 		}
 
 	};
 	
-	// Hide features
+	/**
+	 * Hide features of collection
+	 * 
+	 * @function hideFeatures
+	 * @param {array} features
+	 * 
+	 * @see client/js/ui/tableView#filterData()
+	 */ 
 	this.hideFeatures = function(features) { 
 		self.trigger('hide:features', features, self);
 	};
@@ -199,8 +223,8 @@ var FeatureCollection = function() {
 	// Reset the results
 	this.reset = function() {
 		// Reset all highlighted/selected features
-		this.resetHighlighted();
-		this.resetSelected();
+		this.unsetHighlight(this.highlights);
+		this.unselect(this.selections);
 
 		// Reset children
 		for ( var x in this.children ) {
@@ -225,8 +249,8 @@ var FeatureCollection = function() {
 			this.currentPage = page;
 			this.features.length = 0;
 			// Reset all highlighted/selected features
-			this.resetHighlighted();
-			this.resetSelected();
+			this.unsetHighlight(this.highlights);
+			this.unselect(this.selections);
 
 			// Reset children
 			for ( var x in this.children ) {
@@ -261,57 +285,135 @@ var FeatureCollection = function() {
 		}
 	};
 
-	// Set the selection, replace the previous one
-	this.setSelection = function(features) {
-		var unselected = _.difference(this.selection, features);
-		var selected = _.difference(features, this.selection);
-		this.selection = features;
-		if (unselected.length != 0) {
-			this.trigger("unselectFeatures", unselected, this);
-		}
-		if (selected.length != 0) {
-			this.trigger("selectFeatures", selected, this);
-		}
+	/**
+	 * Check if a feature is browsed
+	 * @see ProductService
+	 * 
+	 * @function isBrowsed
+	 * @param {object} feature
+	 * @returns {boolean}
+	 */ 
+	this.isBrowsed = function(feature) {
+		return ProductService.getBrowsedProducts().indexOf(feature) >= 0;
 	};
 
-	// Check if a feature is selected
+	/**
+	 * Check if a feature is selected
+	 * 
+	 * @function isSelected
+	 * @param {object} feature
+	 * @returns {boolean}
+	 */ 
 	this.isSelected = function(feature) {
-		return this.selection.indexOf(feature) >= 0;
+		return this.selections.indexOf(feature) >= 0;
 	};
 
-	// Check if a feature is highlighted
+	/**
+	 * Check if a feature is highlighted
+	 * 
+	 * @function isHighlighted
+	 * @param {object} feature
+	 * @returns {boolean}
+	 */
 	this.isHighlighted = function(feature) {
-		return this.highlights.indexOf(feature) >= 0;
+		return this.highlights.indexOf(feature) >= 0
 	};
 
-	// Reset all highlighted features
-	this.resetHighlighted = function() {
-		this.trigger("highlightFeatures", [], this.highlights, this);
-		this.highlights = [];
+	/**
+	 * For all features
+	 * If feature is not selected (checked)
+	 * Then unhighlight it
+	 * 
+	 * @function checkAllHighlight
+	 * @returns {void}
+	 */
+	this.checkAllHighlight = function() {
+		var _this = this;
+		var unhighlights = [];
+		this.highlights.forEach(function(feat) {
+			if (!_this.isSelected(feat)) {
+				unhighlights.push(feat);
+			}
+		})
+		this.unsetHighlight(unhighlights);
 	};
 
-	// Reset all selected features
-	this.resetSelected = function() {
-		this.trigger("unselectFeatures", this.selection, this);
-		this.selection = [];
+	/**
+	 * Set status highlight for these features
+	 * And trigger this event
+	 * 
+	 * @function setHighlight
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.setHighlight = function(features) {
+
+		ProductService.addHighlightedProducts(features);
+
+		var _this = this; // reference to featureCollection object
+
+		if (features.length === 0) {
+			this.checkAllHighlight();
+		}
+
+		this.highlights = _.union(this.highlights, features);
+
+		this.trigger("highlightFeatures", features, this);
+		// ***OML*** this.showBrowses( _.intersection(features, this.features));
+		// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
+		for ( var x in this.children ) {
+			// ***OML*** this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
+		}
 	};
 
-	// Highlight a feature, only one can be highlight at a time
-	this.highlight = function(features) {
+	/**
+	 * Remove highlight status for these features
+	 * And trigger this event
+	 * 
+	 * @function unsetHighlight
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.unsetHighlight = function(features) {
 
-		if (features.length != 0 || this.highlights.length != 0) {
-			var prevHighlights = this.highlights;
-			// Copy highlighted items
-			this.highlights = features.slice(0);
-			// Trigger highlight event with features which belongs to "this" feature collection
-			this.trigger("highlightFeatures", _.intersection(features, this.features), prevHighlights, this);
-			this.showBrowses( _.intersection(features, this.features));
-			// Trigger highlight event on every children feature collection with highlighted features which belongs to children[x] feature collection
-			for ( var x in this.children ) {
-				this.trigger("highlightFeatures", _.intersection(features, this.children[x].features), prevHighlights, this.children[x])
+		ProductService.removeHighlightedProducts(features);
+		this.highlights = _.difference(this.highlights, features);
+		this.trigger("unhighlightFeatures", features, this);
+
+	};
+
+	/**
+	 * Select features
+	 * 
+	 * @function select
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.select = function(features) {
+		for ( var i=0; i<features.length; i++ ) {
+			var feature = features[i];
+			if ( this.selections.indexOf(feature) == -1 ) {
+				this.selections.push(feature);
 			}
 		}
+		ProductService.addCheckedProducts(features);
+		this.trigger("selectFeatures", features, this);
 	};
+
+	/**
+	 * Unselect features
+	 * 
+	 * @function unselect
+	 * @param {array} features
+	 * @returns {void}
+	 */
+	this.unselect = function(features) {
+		let newSelections = _.difference(this.selections, features);
+		this.selections = newSelections;
+		ProductService.removeCheckedProducts(features);
+		this.trigger("unselectFeatures", features, this);
+	};
+
 
 	// Create a child feature collection for the given feature
 	this.createChild = function(featureId) {
@@ -340,57 +442,6 @@ var FeatureCollection = function() {
 		delete this.children[cleanedId];
 	};
 
-	// Select features
-	this.select = function(features) {
-		for ( var i=0; i<features.length; i++ ) {
-			var feature = features[i];
-			if ( this.selection.indexOf(feature) == -1 ) {
-				this.selection.push(feature);
-			}
-		}
-		this.trigger("selectFeatures", features, this);
-	};
-
-	// Unselect features
-	this.unselect = function(features) {
-		for ( var i=0; i<features.length; i++ ) {
-			var feature = features[i];
-			if ( this.selection.indexOf(feature) >= 0 ) {
-				this.selection.splice(this.selection.indexOf(feature), 1);
-			}
-		}
-		this.trigger("unselectFeatures", features, this);
-	};
-
-	/**
-	 * Select all the items of the table which are not selected
-	 *
-	 * @param filteredFeatures
-	 *		Features to select: used if features were filtered by table view
-	 */
-	this.selectAll = function(filteredFeatures) {
-
-		// Use filtered features if defined otherwise select all present features
-		var selected = _.difference(filteredFeatures ? filteredFeatures : this.features, this.selection);
-		for (var i = 0; i < selected.length; i++) {
-			this.selection.push(selected[i]);
-		}
-
-		if (selected.length != 0) {
-			this.trigger("selectFeatures", selected, this);
-		}
-	};
-
-	/**
-	 * Unselect all the already selected table items
-	 */
-	this.unselectAll = function() {
-		// Copy current selection into new array to be fired within the event
-		var features = this.selection.slice(0);
-		this.selection = [];
-		this.trigger("unselectFeatures", features, this);
-	};
-
 	/**
 	 * Get the list of products URLs from a list of features
 	 * if the file name is empty the product is rejected
@@ -399,8 +450,26 @@ var FeatureCollection = function() {
 
 		var productUrls = [];
 
-		for (var i = 0; i < this.selection.length; i++) {
-			var f = this.selection[i];
+		for (var i = 0; i < this.selections.length; i++) {
+			var f = this.selections[i];
+			var url = Configuration.getMappedProperty(f, "productUrl", null);
+			if (url) {
+				productUrls.push(url);
+			}
+		}
+		return productUrls;
+	};
+
+	/**
+	 * Get the list of products URLs from a list of features
+	 * if the file name is empty the product is rejected
+	 */
+	this.getHighlightedProductUrls = function() {
+
+		var productUrls = [];
+
+		for (var i = 0; i < this.highlights.length; i++) {
+			var f = this.highlights[i];
 			var url = Configuration.getMappedProperty(f, "productUrl", null);
 			if (url) {
 				productUrls.push(url);
@@ -447,13 +516,13 @@ var FeatureCollection = function() {
 	this.updateDownloadOptions = function(downloadOptions) {
 
 		var self = this;
-		_.each(this.selection, function(feature) {
+		_.each(this.selections, function(feature) {
 
 			self.updateProductUrl(feature, "productUrl", downloadOptions);
 			// NGEO-1972: Update productUri (metadata report) as well...
 			self.updateProductUrl(feature, "productUri", downloadOptions);
 		});
-		this.trigger("update:downloadOptions", this.selection);
+		this.trigger("update:downloadOptions", this.selections);
 	};
 
 	/** 
@@ -461,15 +530,15 @@ var FeatureCollection = function() {
 	 */
 	this.getSelectedDownloadOptions = function() {
 
-		if (this.selection.length == 0)
+		if (this.selections.length == 0)
 			return {};
 
 		// Retreive download options for first product in selection
-		var selectedDownloadOptions = _getProductDownloadOptions(this.selection[0]);
+		var selectedDownloadOptions = _getProductDownloadOptions(this.selections[0]);
 
 		// Now check if the other have the same download options
-		for (var i = 1; i < this.selection.length; i++) {
-			var dos = _getProductDownloadOptions(this.selection[i]);
+		for (var i = 1; i < this.selections.length; i++) {
+			var dos = _getProductDownloadOptions(this.selections[i]);
 
 			for (var x in dos) {
 				if ( _.isArray(dos[x]) ) {
@@ -506,12 +575,28 @@ var FeatureCollection = function() {
 	};
 
 	/**
-	 * Get the datasets from the selection
+	 * Get the datasets from the selections
 	 */
-	this.getSelectionDatasetIds = function() {
+	// this.getSelectionDatasetIds = function() {
+	// 	var datasetIds = [];
+	// 	for (var i = 0; i < this.selections.length; i++) {
+	// 		var datasetId = this.getDatasetId(this.selections[i]);
+	// 		if (datasetId) {
+	// 			if (datasetIds.indexOf(datasetId) < 0) {
+	// 				datasetIds.push(datasetId);
+	// 			}
+	// 		}
+	// 	}
+	// 	return datasetIds;
+	// };
+
+	/**
+	 * Get the datasets from the highlights
+	 */
+	this.getDatasetIdsFromHighlights = function() {
 		var datasetIds = [];
-		for (var i = 0; i < this.selection.length; i++) {
-			var datasetId = this.getDatasetId(this.selection[i]);
+		for (var i = 0; i < this.highlights.length; i++) {
+			var datasetId = this.getDatasetId(this.highlights[i]);
 			if (datasetId) {
 				if (datasetIds.indexOf(datasetId) < 0) {
 					datasetIds.push(datasetId);
@@ -531,7 +616,7 @@ var FeatureCollection = function() {
 		}
 
 		var downloadOptions = [];
-		var datasetIds = this.getSelectionDatasetIds();
+		var datasetIds = this.getDatasetIdsFromHighlights();
 		if (datasetIds.length == 1) {
 			DataSetPopulation.fetchDataset(datasetIds[0], function(dataset) {
 				callback(dataset.get('downloadOptions'));
@@ -576,6 +661,15 @@ var FeatureCollection = function() {
 		}
 		return false;
 	};
+
+
+	this.focus = function(feature) {
+		this.trigger("focus", feature, this);
+	}
+
+	this.unfocus = function(feature) {
+		this.trigger("unfocus", feature, this);
+	}
 
 	// Add events
 	_.extend(this, Backbone.Events);

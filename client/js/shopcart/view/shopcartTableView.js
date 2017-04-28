@@ -1,13 +1,18 @@
-var Logger = require('logger');
-var TableView = require('ui/tableView');
 var Configuration = require('configuration');
-var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
+var Logger = require('logger');
+
+var TableView = require('ui/tableView');
+
+// WIDGETS
 var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
+var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
 var DownloadOptionsWidget = require('searchResults/widget/downloadOptionsWidget');
 var ShopcartExportWidget = require('shopcart/widget/shopcartExportWidget');
-var DataSetPopulation = require('search/model/dataSetPopulation');
+
+// MODELS
 var DataSetAuthorizations = require('search/model/datasetAuthorizations');
-var DirectDownloadWidget = require('dataAccess/widget/directDownloadWidget');
+var DataSetPopulation = require('search/model/dataSetPopulation');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 
 /**
  * The model is the backbone model FeatureCollection 
@@ -54,11 +59,11 @@ var ShopcartTableView = TableView.extend({
 	/**
 	 * Update the footer button states
 	 */
-	updateSelection: function () {
-		TableView.prototype.updateSelection.apply(this, arguments);
+	updateHighlights: function () {
+		TableView.prototype.updateHighlights.apply(this, arguments);
 
-		// Disable export if no product selected
-		if (this.model.selection.length > 0) {
+		// Disable export if no product highlighted
+		if (this.model.highlights.length > 0) {
 			this.exportButton.button('enable');
 		} else {
 			this.exportButton.button('disable');
@@ -66,8 +71,8 @@ var ShopcartTableView = TableView.extend({
 
 		// The products have to be a part of dataset so we extract dataset ids
 		// to be sure that products are viable
-		var selectedDatasetIds = this.model.getSelectionDatasetIds();
-		if (selectedDatasetIds.length > 0) {
+		var highlightedDatasetIds = this.model.getDatasetIdsFromHighlights();
+		if (highlightedDatasetIds.length > 0) {
 			this.deleteButton.button('enable');
 			this.retrieveProduct.button('enable');
 		} else {
@@ -106,7 +111,7 @@ var ShopcartTableView = TableView.extend({
 	renderButtons: function ($buttonContainer) {
 		var self = this;
 
-		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve selected products with download manager">Retrieve</button>').appendTo($buttonContainer);
+		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve highlighted products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
 		this.retrieveProduct.button('disable');
 
@@ -115,13 +120,13 @@ var ShopcartTableView = TableView.extend({
 		this.retrieveProduct.click(function () {
 
 			var hasDownloadAccess = true;
-			_.each(self.model.selection, function (feature) {
+			_.each(self.model.highlights, function (feature) {
 				hasDownloadAccess &= DataSetAuthorizations.hasDownloadAccess(self.model.getDatasetId(feature));
 			});
 
 			if (hasDownloadAccess) {
 				SimpleDataAccessRequest.initialize();
-				SimpleDataAccessRequest.setProducts(self.model.selection);
+				SimpleDataAccessRequest.setProducts(self.model.highlights);
 
 				DataAccessWidget.open(SimpleDataAccessRequest);
 			} else {
@@ -136,12 +141,12 @@ var ShopcartTableView = TableView.extend({
 		this.downloadOptionsButton.button('disable').hide();
 
 		this.downloadOptionsButton.click(function () {
-			var datasetId = self.model.getSelectionDatasetIds()[0]; // We are sure that there is only one dataset selected
+			var datasetId = self.model.getDatasetIdsFromHighlights()[0]; // We are sure that there is only one dataset selected
 			var downloadOptionsWidget = new DownloadOptionsWidget({
 				datasetId: datasetId,
 				featureCollection: self.model,
 				callback: function (updatedDownloadOptions) {
-					self.shopcart.updateSelection(updatedDownloadOptions.getAttributes()).then(function (response) {
+					self.shopcart.updateHighlights(updatedDownloadOptions.getAttributes()).then(function (response) {
 						console.log(response);
 						// TODO: handle a real response
 						self.model.updateDownloadOptions(updatedDownloadOptions);
@@ -152,16 +157,16 @@ var ShopcartTableView = TableView.extend({
 		});
 
 		//add button to the widget footer in order to download products		
-		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Delete selected products from this shopcart">Delete</button>').appendTo($buttonContainer);
+		this.deleteButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Delete highlighted products from this shopcart">Delete</button>').appendTo($buttonContainer);
 		this.deleteButton.button();
 		this.deleteButton.button('disable');
 
 		this.deleteButton.click(function () {
-			self.shopcart.deleteSelection();
+			self.shopcart.deleteHighlights();
 		});
 
 		//add button to the widget footer in order to export a shopcart
-		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export selected products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
+		this.exportButton = $('<button data-role="button" data-inline="true" data-mini="true" title="Export highlighted products (KML, GeoJson)">Export</button>').appendTo($buttonContainer);
 		this.exportButton.button();
 		this.exportButton.button('disable');
 
