@@ -18,7 +18,7 @@ var Dataset = Backbone.Model.extend({
 		countPerPage: null
 	},
 
-	initialize: function() {
+	initialize: function () {
 		// The base url to retreive the dataset Search Info
 		this.url = Configuration.baseServerUrl + '/datasetSearchInfo/' + this.get('datasetId');
 		this.listenTo(this, "error", this.onError);
@@ -30,7 +30,7 @@ var Dataset = Backbone.Model.extend({
 	/** 
 	 * Call when the model cannot be fetched from the server
 	 */
-	onError: function(model, response) {
+	onError: function (model, response) {
 		if (response.status == 0) {
 			location.reload();
 		}
@@ -39,26 +39,26 @@ var Dataset = Backbone.Model.extend({
 	/**
 	 * Check if the keywords exists
 	 */
-	hasKeyword: function(val) {
+	hasKeyword: function (val) {
 		return this.get('keywords').indexOf(val) >= 0;
 	},
 
 	/**
 	 * Parse the response from server
 	 */
-	parse: function(response, options) {
+	parse: function (response, options) {
 		var resp = {};
 		if (response.datasetSearchInfo) {
 			resp.description = response.datasetSearchInfo.description;
 			if (_.isArray(response.datasetSearchInfo.downloadOptions)) {
 				// Remove reserved names
-				resp.downloadOptions = _.reject(response.datasetSearchInfo.downloadOptions, function(o) {
+				resp.downloadOptions = _.reject(response.datasetSearchInfo.downloadOptions, function (o) {
 					return _.contains(_ReservedNames, o.argumentName);
 				});
 			}
 			if (_.isArray(response.datasetSearchInfo.attributes)) {
 				// Remove reserved names
-				resp.attributes = _.reject(response.datasetSearchInfo.attributes, function(a) {
+				resp.attributes = _.reject(response.datasetSearchInfo.attributes, function (a) {
 					return _.contains(_ReservedNames, a.id);
 				});
 			}
@@ -87,11 +87,11 @@ var Dataset = Backbone.Model.extend({
 				resp.validityEndDate.setUTCFullYear(resp.endDate.getUTCFullYear() + 5);
 			}
 
-			if ( response.datasetSearchInfo.hasOwnProperty('startIndex') ) {
+			if (response.datasetSearchInfo.hasOwnProperty('startIndex')) {
 				resp.startIndex = response.datasetSearchInfo.startIndex;
 			}
 
-			if ( response.datasetSearchInfo.hasOwnProperty('countPerPage') ) {
+			if (response.datasetSearchInfo.hasOwnProperty('countPerPage')) {
 				resp.countPerPage = response.datasetSearchInfo.countPerPage;
 			}
 		}
