@@ -209,6 +209,9 @@ var FeatureCollection = function() {
 
 		// Build base url
 		_url = baseUrl;
+		if (this.dataset) {
+			this.countPerPage = this.dataset.get('countPerPage');
+		}
 		_url += "&count=" + this.countPerPage;
 
 		// Reset the cache

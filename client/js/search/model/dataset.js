@@ -14,7 +14,8 @@ var Dataset = Backbone.Model.extend({
 		startDate: null,
 		endDate: null,
 		validityEndDate: null,
-		startIndex: 1
+		startIndex: 1,
+		countPerPage: null
 	},
 
 	initialize: function() {
@@ -88,6 +89,10 @@ var Dataset = Backbone.Model.extend({
 
 			if ( response.datasetSearchInfo.hasOwnProperty('startIndex') ) {
 				resp.startIndex = response.datasetSearchInfo.startIndex;
+			}
+
+			if ( response.datasetSearchInfo.hasOwnProperty('countPerPage') ) {
+				resp.countPerPage = response.datasetSearchInfo.countPerPage;
 			}
 		}
 		return resp;
