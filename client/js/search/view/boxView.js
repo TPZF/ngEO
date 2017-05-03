@@ -103,6 +103,20 @@ var BoxView = Backbone.View.extend({
 			}
 		},
 
+		'click .mapExtentWholeWorldBtn': function(event) {
+			this.model.set({
+				"useExtent": false
+			});
+			let bbox = {
+				east: -180,
+				west:180,
+				north: 90,
+				south: -90
+			};
+			this.model.searchArea.setBBox(bbox);
+			this.updateInputs(bbox);
+			this.deactivateUseExtent();
+		},
 
 	},
 

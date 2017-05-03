@@ -35,12 +35,18 @@
 		<label for="north">North:</label>
 		<input type="text" name="north" id="north" data-mini="true" value="<%=searchArea.getBBox().north%>">
 	</div>
-
-	<div id="mapExtent" data-role="fieldcontain">
-		<label class="mapExtentCheckBoxLabel">Use map extent
-		<input type="checkbox" name="mapExtent" id="mapExtentCheckBox" data-mini="true" <% if (attributes.useExtent) print('checked="checked"'); %> ></label>
+	<div class="ui-grid-a" data-role="fieldcontain">
+		<div class="ui-block-a">
+			<label class="mapExtentCheckBoxLabel">Use map extent
+			<input type="checkbox" name="mapExtent" id="mapExtentView" data-mini="true" <% if (attributes.useExtent) print('checked="checked"'); %> ></label>
+		</div>
+		<div class="ui-block-b">
+			<button data-role="button" data-mini="true" class="mapExtentWholeWorldBtn">Use whole world</button>
+		</div>
 	</div>
-	<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>
+	<div class="ui-grid-solo" data-role="fieldcontain">
+		<button data-role="button" data-mini="true"  id="drawbbox">Draw</button>
+	</div>
 
 </div>
 
