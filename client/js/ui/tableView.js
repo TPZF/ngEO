@@ -1200,7 +1200,7 @@ var TableView = Backbone.View.extend({
 		// </th>');
 
 		$row.append('<th>\
-			<span class="ui-icon" id="table-columns-button" title="Select columns to display in table" ></span>\
+			<span class="ui-icon ui-shadow" id="table-columns-button" title="Select columns to display in table" ></span>\
 		</th>');
 		
 
