@@ -108,8 +108,8 @@ var BoxView = Backbone.View.extend({
 				"useExtent": false
 			});
 			let bbox = {
-				east: -180,
-				west:180,
+				east: 180,
+				west:-180,
 				north: 90,
 				south: -90
 			};
