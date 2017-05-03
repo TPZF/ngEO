@@ -35,8 +35,8 @@ var FeatureCollection = function () {
 	// The last page
 	this.lastPage = 0;
 
-	// Store the count per page
-	this.countPerPage = Configuration.get('searchResults.countPerPage', 100);
+	// Store the count per page (retrieve from configuration file)
+	this.countPerPage = Configuration.get('shopCartResults.countPerPage', 100);
 
 	// Store the number of total results
 	this.totalResults = -1;
@@ -209,6 +209,7 @@ var FeatureCollection = function () {
 
 		// Build base url
 		_url = baseUrl;
+		// if search on dataset, get counterPerPage from dataset
 		if (this.dataset) {
 			this.countPerPage = this.dataset.get('countPerPage');
 		}
