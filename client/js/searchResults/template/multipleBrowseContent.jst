@@ -6,7 +6,7 @@
       data-theme="a"> 
 		<fieldset data-role="controlgroup"> 
 		    <% _.each(browses, function(browse, index) { 
-		    	var url = browse.BrowseInformation.fileName.ServiceReference["@href"]
+		    	var url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"]
 		    	%> 
 				<label title="<%= url %>"><input type="checkbox" name="shopcart" data-theme="a" data-mini="true" value="<%= index %>" <% if(browse.BrowseInformation._selected) print('checked="checked"') %> />  <%= MapUtils.getLayerName(url) %> </label> 
 			<% }); %> 

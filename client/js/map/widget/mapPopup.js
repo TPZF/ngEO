@@ -193,7 +193,8 @@ var MapPopup = function(container) {
 	 */
 	var buildContent = function(adv, nbProducts, indice) {
 
-		// Hide by default
+		// Show default browse / Hide multiple browse by default
+		element.find('#mpButtons button[data-icon="browse"]').parent().show();
 		element.find('#mpButtons button[data-icon="browse-multiple"]').parent().hide();
 
 		var content = "";
@@ -244,6 +245,7 @@ var MapPopup = function(container) {
 			var browses = Configuration.getMappedProperty(product, "browses");
 			if ( browses && browses.length > 1 ) {
 				element.find('#mpButtons button[data-icon="browse-multiple"]').parent().show();
+				element.find('#mpButtons button[data-icon="browse"]').parent().hide();
 			}
 
 		} else {
@@ -277,6 +279,25 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="browse"]').parent().addClass('ui-btn-active');
 		} else {
 			element.find('#mpButtons button[data-icon="browse"]').parent().removeClass('ui-btn-active');
+		}
+
+		var isMultipleBrowsed = _.find(products, function(feature) {
+			var browses = Configuration.getMappedProperty(feature, "browses");
+			var bDisplay = false;
+			if (browses && browses.length > 0 && browses[0] !== undefined) {
+				_.each(browses, function(browse) {
+					let url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
+					if (url.indexOf('SERVICE') > -1) {
+						bDisplay = true;
+					}
+				});
+			}
+			return bDisplay;
+		});
+		if ( isMultipleBrowsed ) {
+			element.find('#mpButtons button[data-icon="browse-multiple"]').button('enable');
+		} else {
+			element.find('#mpButtons button[data-icon="browse-multiple"]').button('disable');
 		}
 
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist
