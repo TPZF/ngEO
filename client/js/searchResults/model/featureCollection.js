@@ -356,10 +356,6 @@ var FeatureCollection = function () {
 
 		var _this = this; // reference to featureCollection object
 
-		if (features.length === 0) {
-			this.checkAllHighlight();
-		}
-
 		this.highlights = _.union(this.highlights, features);
 
 		this.trigger("highlightFeatures", features, this);

@@ -147,21 +147,48 @@ module.exports = {
 		// Connect with map feature picking
 		Map.on('pickedFeatures', function(features, featureCollections) {
 			var highlights = {};
-			ProductService.addHighlightedProducts(features);
+			var featsToAdd = [];
+			var featsToRemove = [];
+			// if ctrl key is pressed and one or more features are picked
+			if (_keyCode === 17 && features.length > 0) {
+				features.forEach (function(_feat) {
+					// if feature is already highlighted > add to remove array
+					// if feature is not already highlighted > add to add array
+					if (_.find(ProductService.getHighlightedProducts(), function(_highlighted) {
+						return _feat.id === _highlighted.id;
+					})) {
+						featsToRemove.push(_feat);
+					} else {
+						featsToAdd.push(_feat);
+					}
+				});
+			} else {
+				featsToAdd = features;
+			}
+			ProductService.removeHighlightedProducts(featsToRemove);
+			ProductService.addHighlightedProducts(featsToAdd);
+			// reinit map of highlights
 			for (var i = 0; i < featureCollections.length; i++) {
 				highlights[featureCollections[i].id] = [];
 			}
-			// add picked features to highlights
-			for (var i = 0; i < features.length; i++) {
-				var fc = features[i]._featureCollection;
-				highlights[fc.id].push(features[i]);
+			// set highlights for feats to add
+			for (var i = 0; i < featsToAdd.length; i++) {
+				var fc = featsToAdd[i]._featureCollection;
+				highlights[fc.id].push(featsToAdd[i]);
 			}
 			// add checked features to highlights
 			for (var i = 0; i < featureCollections.length; i++) {
-				if (_keyCode !== 17) { // Ctrl key not pressed > unhighlight unchecked products
+				// Ctrl key not pressed > unhighlight unchecked products
+				// no features picked > unhighlight unchecked products
+				if (_keyCode !== 17 || features.length === 0) {
 					featureCollections[i].checkAllHighlight();
 				}
 				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
+			}
+			// unset highlights for feats to remove
+			for (var i = 0; i < featsToRemove.length; i++) {
+				var fc = featsToRemove[i]._featureCollection;
+				fc.unsetHighlight([featsToRemove[i]]);
 			}
 		});
 		Map.on('keyDown', function(code) {
