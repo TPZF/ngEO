@@ -22,7 +22,7 @@
 				<% if ( criterion.possibleValues && criterion.possibleValues.length > 0 ) { %>
 					<% if ( criterion.maxOccurs == 1 ) { %>
 						<!-- Selectbox -->
-						<select id="<%= criterion.id %>" data-mini="true"" title="Select a <%= label %>">
+						<select id="<%= criterion.id %>" data-mini="true"" title="Select <%= label %>">
 							<option value=""><%= label %> : Any</option>
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
 								<option value="<%= possibleValue %>" <% if ( value && value.indexOf(possibleValue) != -1) { print('selected'); } %> ><%= possibleValue %></option>
