@@ -45,6 +45,7 @@ var ShopcartTableView = TableView.extend({
 
 		//Called when the user clicks on the product id of an item
 		'click .directDownload': function (event) {
+			event.stopPropagation();
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
