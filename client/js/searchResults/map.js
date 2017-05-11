@@ -81,8 +81,6 @@ var _onUnselectFeatures = function(features, fc) {
 	Map.trigger("unselectFeatures");
 };
 
-var _keyCode = 0;
-
 // Selected or highlighted features with browse
 var _featuresWithBrowse = [];
 var waitTimeout = 10; // in ms
@@ -150,7 +148,7 @@ module.exports = {
 			var featsToAdd = [];
 			var featsToRemove = [];
 			// if ctrl key is pressed and one or more features are picked
-			if (_keyCode === 17 && features.length > 0) {
+			if (event.ctrlKey && features.length > 0) {
 				features.forEach (function(_feat) {
 					// if feature is already highlighted > add to remove array
 					// if feature is not already highlighted > add to add array
@@ -180,7 +178,7 @@ module.exports = {
 			for (var i = 0; i < featureCollections.length; i++) {
 				// Ctrl key not pressed > unhighlight unchecked products
 				// no features picked > unhighlight unchecked products
-				if (_keyCode !== 17 || features.length === 0) {
+				if (!event.ctrlKey || features.length === 0) {
 					featureCollections[i].checkAllHighlight();
 				}
 				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
@@ -190,12 +188,6 @@ module.exports = {
 				var fc = featsToRemove[i]._featureCollection;
 				fc.unsetHighlight([featsToRemove[i]]);
 			}
-		});
-		Map.on('keyDown', function(code) {
-			_keyCode = code;
-		});
-		Map.on('keyUp', function(code) {
-			_keyCode = 0;
 		});
 	},
 

@@ -98,10 +98,10 @@ var TableView = Backbone.View.extend({
 		var self = this;
 
 		var onKeyDown = function(e) {
-			if ( e.keyCode == '17' ) {
+			if ( e.ctrlKey ) {
 				ctrlPressed = true;
 			}
-			if ( e.keyCode == '16' ) {
+			if ( e.shiftKey ) {
 				shiftPressed = true;
 			}
 
@@ -119,16 +119,12 @@ var TableView = Backbone.View.extend({
 				//	$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
 				
 			}
-			Map.trigger('keyDown', e.keyCode);
+			//Map.trigger('keyDown', e.keyCode);
 		}
 		var onKeyUp = function(e) {
-			if ( e.keyCode == '17' ) {
-				ctrlPressed = false;
-			}
-			if ( e.keyCode == '16' ) {
-				shiftPressed = false;
-			}
-			Map.trigger('keyUp', e.keyCode);
+			ctrlPressed = e.ctrlKey;
+			shiftPressed = e.shiftKey;
+			//Map.trigger('keyUp', e.keyCode);
 		}
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);
