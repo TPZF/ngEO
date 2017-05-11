@@ -26,7 +26,6 @@ var MapPopup = function(container) {
 	var arrow;
 	var products = null;
 	var isOpened = false;
-	var advancedActivated = UserPrefs.get("Advanced info state") ? UserPrefs.get("Advanced info state") : false;
 	var currentIndice = null;
 
 	element = $(
@@ -40,21 +39,6 @@ var MapPopup = function(container) {
 	parentElement = element.parent();
 
 	// Add buttons for some simple actions
-
-	// Info
-	var btn = $("<button id='info' data-icon='info' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Information</button>")
-		.appendTo(element.find('#mpButtons'))
-		.click(function() {
-			if ($(this).parent().hasClass('ui-btn-active')) {
-				advancedActivated = false;
-				$(this).parent().removeClass('ui-btn-active ui-focus');
-			} else {
-				advancedActivated = true;
-				$(this).parent().addClass('ui-btn-active');
-			}
-			buildContent(advancedActivated, products.length, currentIndice);
-			UserPrefs.save("Advanced info state", advancedActivated);
-		});
 
 	// Select
 	btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Check highlighted products</button>")
@@ -191,7 +175,7 @@ var MapPopup = function(container) {
 	/**
 		Build the content of the popup from the given product
 	 */
-	var buildContent = function(adv, nbProducts, indice) {
+	var buildContent = function(nbProducts, indice) {
 
 		// Show default browse / Hide multiple browse by default
 		element.find('#mpButtons button[data-icon="browse"]').parent().show();
@@ -213,32 +197,28 @@ var MapPopup = function(container) {
 							+ Configuration.getMappedProperty(product, "operationalMode") + " / "
 							+ Configuration.getMappedProperty(product, "productType")
 			content += '<p><b>' + productTitle + '</b></p>';
-			if (adv) {
-				var columnDefs = Configuration.data.tableView.columnsDef;
-				for (var i = 0; i < columnDefs.length; i++) {
-					if (columnDefs[i].sTitle != 'Product') {
-						var value = Configuration.getFromPath(product, columnDefs[i].mData);
-						if ( columnDefs[i].sTitle == 'Download options' && value ) {
-							// HACK: Skip it for now, we should store it somewhere, or WEBS should send it for us
-								continue;
-							/*
-							// Snippet to handle download options depending on current search area
-								var downloadOptions = new DownloadOptions();
-								downloadOptions.initFromUrl(value);
-								var value = downloadOptions.getParameters();
-								if ( !value.length )
-									value = "No download options";
-							*/
-							
-						}
+			var columnDefs = Configuration.data.tableView.columnsDef;
+			for (var i = 0; i < columnDefs.length; i++) {
+				if (columnDefs[i].sTitle != 'Product') {
+					var value = Configuration.getFromPath(product, columnDefs[i].mData);
+					if ( columnDefs[i].sTitle == 'Download options' && value ) {
+						// HACK: Skip it for now, we should store it somewhere, or WEBS should send it for us
+							continue;
+						/*
+						// Snippet to handle download options depending on current search area
+							var downloadOptions = new DownloadOptions();
+							downloadOptions.initFromUrl(value);
+							var value = downloadOptions.getParameters();
+							if ( !value.length )
+								value = "No download options";
+						*/
+						
+					}
 
-						if (value) {
-							content += '<p>' + columnDefs[i].sTitle + ': <span title="'+value+'">' + value + '</span></p>';
-						}
+					if (value) {
+						content += '<p>' + columnDefs[i].sTitle + ': <span title="'+value+'">' + value + '</span></p>';
 					}
 				}
-			} else {
-				content += '<p>Date: ' + Configuration.getMappedProperty(product, "start") + '</p>';
 			}
 
 			// Show only if product has multiple browses
@@ -249,11 +229,9 @@ var MapPopup = function(container) {
 			}
 
 		} else {
-			if (adv) {
-				content += "<p>Products: </p>";
-				for (var i = 0; i < products.length; i++) {
-					content += "<p title='"+ products[i].id +"'>" + products[i].id + "</p>";
-				}
+			content += "<p>Products: </p>";
+			for (var i = 0; i < products.length; i++) {
+				content += "<p title='"+ products[i].id +"'>" + products[i].id + "</p>";
 			}
 		}
 
@@ -308,9 +286,6 @@ var MapPopup = function(container) {
 		if (hasPlannedOrNoProductUrl) {
 			element.find('#mpButtons button[data-icon="save"]').button('disable');
 		}
-		if ( advancedActivated ) {
-			element.find('#mpButtons button[data-icon="info"]').parent().addClass('ui-btn-active');
-		}
 		element.find('#mpText').html(content);
 		element.find('#mpText .btnNext').click(function() {
 			var next;
@@ -340,7 +315,7 @@ var MapPopup = function(container) {
 			if (currentIndice !== null) {
 				products[currentIndice]._featureCollection.unfocus(products[currentIndice]);
 			}
-			buildContent(adv, nbProducts, next);
+			buildContent(nbProducts, next);
 		});
 	};
 
@@ -355,7 +330,7 @@ var MapPopup = function(container) {
 		// Clean-up previous state
 		$('#info').parent().removeClass('ui-btn-active ui-focus');
 
-		buildContent(advancedActivated, products.length, null);
+		buildContent(products.length, null);
 
 		parentElement.fadeIn();
 
