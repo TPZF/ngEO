@@ -58,7 +58,7 @@ var SearchResultsTableView = TableView.extend({
 			if (this.model.downloadAccess) {
 				var feature = $(event.currentTarget).closest('tr').data('internal').feature;
 				//The urls to uses for the direct download are those in the eop_filename property and not in feature.properties.productUrl.
-				var directDownloadWidget = new DirectDownloadWidget(SearchResults.getDirectDownloadProductUrl(feature));
+				var directDownloadWidget = new DirectDownloadWidget(feature, SearchResults.getDirectDownloadProductUrl(feature));
 				directDownloadWidget.open(event);
 			} else {
 				Logger.inform("Cannot download the product : missing permissions.");

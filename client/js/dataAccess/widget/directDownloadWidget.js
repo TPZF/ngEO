@@ -1,9 +1,10 @@
 var Configuration = require('configuration');
 var DownloadManagers = require('dataAccess/model/downloadManagers');
 var directDownload_template = require('dataAccess/template/directDownloadWidgetContent');
+var DataAccessWidget = require('dataAccess/widget/dataAccessWidget');
+var SimpleDataAccessRequest = require('dataAccess/model/simpleDataAccessRequest');
 
-
-var DirectDownloadWidget = function(url) {
+var DirectDownloadWidget = function(feature, url) {
 
 	var parentElement = $('<div id="directDownloadPopup" data-role="popup" data-overlay-theme="a" class="popup-widget-background">');
 	parentElement = parentElement.appendTo('.ui-page-active');
@@ -12,7 +13,7 @@ var DirectDownloadWidget = function(url) {
 	 *	Open the popup
 	 */
 	this.open = function(event) {
-
+		var _this = this;
 
 		parentElement.bind({
 			popupafterclose: function(event, ui) {
@@ -49,6 +50,13 @@ var DirectDownloadWidget = function(url) {
 			x: event.pageX,
 			y: event.pageY,
 			positionTo: "origin"
+		});
+
+		parentElement.find('.viaDownloadManager').click( function() {
+			SimpleDataAccessRequest.initialize();
+			SimpleDataAccessRequest.setProducts([feature]);
+			DataAccessWidget.open(SimpleDataAccessRequest);
+			_this.close();
 		});
 
 	};
