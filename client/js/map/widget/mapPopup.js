@@ -193,9 +193,19 @@ var MapPopup = function(container) {
 		if ((nbProducts > 1 && currentIndice !== null) || (nbProducts===1)) {
 			var product = products[currentIndice];
 			// Build product title according to NGEO-1969
-			var productTitle = Configuration.getMappedProperty(product, "sensor") + " / "
-							+ Configuration.getMappedProperty(product, "operationalMode") + " / "
-							+ Configuration.getMappedProperty(product, "productType")
+			var productTitle = '';
+			var param = Configuration.getMappedProperty(product, "sensor");
+			if (param) {
+				productTitle += param + ' / ';
+			}
+			param = Configuration.getMappedProperty(product, "operationalMode");
+			if (param) {
+				productTitle += param + ' / ';
+			}
+			param = Configuration.getMappedProperty(product, "productType");
+			if (param) {
+				productTitle += param + ' / ';
+			}
 			content += '<p><b>' + productTitle + '</b></p>';
 			var columnDefs = Configuration.data.tableView.columnsDef;
 			for (var i = 0; i < columnDefs.length; i++) {
