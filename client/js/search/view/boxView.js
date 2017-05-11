@@ -115,7 +115,7 @@ var BoxView = Backbone.View.extend({
 			};
 			this.model.searchArea.setBBox(bbox);
 			this.updateInputs(bbox);
-			this.deactivateUseExtent();
+			this.parentView.updateSearchAreaLayer();
 		},
 
 	},
