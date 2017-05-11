@@ -52,8 +52,9 @@ var MapPopup = function(container) {
 			} else {
 				$(this).parent().addClass('ui-btn-active');
 			}
-			for (var i = 0; i < products.length; i++) {  
-				var p = products[i];  
+			var _wProducts = products;
+			for (var i = 0; i < _wProducts.length; i++) {  
+				var p = _wProducts[i];  
 				if (isSelected) {  
 					p._featureCollection.unselect([p]);
 					p._featureCollection.unsetHighlight([p]);
@@ -76,9 +77,10 @@ var MapPopup = function(container) {
 			} else {
 				$(this).parent().addClass('ui-btn-active');
 			}
+			var _wProducts = products;
 
-			for (var i = 0; i < products.length; i++) {
-				var p = products[i];
+			for (var i = 0; i < _wProducts.length; i++) {
+				var p = _wProducts[i];
 				if (ProductService.getBrowsedProducts().indexOf(p) >= 0) {
 					p._featureCollection.hideBrowses([p]);
 					ProductService.removeBrowsedProducts([p]);
