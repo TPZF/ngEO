@@ -136,14 +136,16 @@ var AdvancedSearchView = Backbone.View.extend({
 			this.updateRange(name);
 		} else if (event.currentTarget.pattern) {
 			var value = $(event.currentTarget).val();
-			if (value.match(event.currentTarget.pattern)) {
-				var attributeToUpdate = _.findWhere(this.advancedAttributes, {
-					id: name
-				});
-				var value = $(event.currentTarget).val();
-				attributeToUpdate.value = value;
-			} else {
-				Logger.error("Advanced criteria " + name + " is not valid.");
+			if (value !== '') {
+				if (value.match(event.currentTarget.pattern)) {
+					var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+						id: name
+					});
+					var value = $(event.currentTarget).val();
+					attributeToUpdate.value = value;
+				} else {
+					Logger.error("Advanced criteria " + name + " is not valid.");
+				}
 			}
 		} else {
 			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
