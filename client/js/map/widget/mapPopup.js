@@ -204,7 +204,7 @@ var MapPopup = function(container) {
 			}
 			param = Configuration.getMappedProperty(product, "productType");
 			if (param) {
-				productTitle += param + ' / ';
+				productTitle += param;
 			}
 			content += '<p><b>' + productTitle + '</b></p>';
 			var columnDefs = Configuration.data.tableView.columnsDef;
@@ -273,12 +273,7 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
 		}
 		//active browse if feature is highlighted
-		var isBrowsed = _.find(products, function(feature) { return feature._featureCollection.isBrowsed(feature); });
-		if ( isBrowsed ) {
-			element.find('#mpButtons button[data-icon="browse"]').parent().addClass('ui-btn-active');
-		} else {
-			element.find('#mpButtons button[data-icon="browse"]').parent().removeClass('ui-btn-active');
-		}
+		element.find('#mpButtons button[data-icon="browse"]').button('disable');
 
 		var isMultipleBrowsed = _.find(products, function(feature) {
 			var browses = Configuration.getMappedProperty(feature, "browses");
