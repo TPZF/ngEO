@@ -231,7 +231,18 @@ var MapPopup = function(container) {
 		} else {
 			content += "<p>Products: </p>";
 			for (var i = 0; i < products.length; i++) {
-				content += "<p title='"+ products[i].id +"'>" + products[i].id + "</p>";
+				content += "<p title='"+ products[i].id +"'>";
+				var type = Configuration.getMappedProperty(products[i], "productType", null);
+				if (type !== null) {
+					content += type + " / ";
+				} else {
+					var sensor = Configuration.getMappedProperty(products[i], "sensor", null);
+					if (sensor !== null) {
+						content += sensor + ' / ';
+					}
+				}
+				content += Configuration.getMappedProperty(products[i], "start");
+				content += "</p>";
 			}
 		}
 
