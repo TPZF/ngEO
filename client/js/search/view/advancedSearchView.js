@@ -1,5 +1,6 @@
 var Configuration = require('configuration');
 var advancedCriteria_template = require('search/template/advancedCriteriaContent');
+var Logger = require('logger');
 
 var AdvancedSearchView = Backbone.View.extend({
 
@@ -133,6 +134,17 @@ var AdvancedSearchView = Backbone.View.extend({
 		if (name.match(/_from|_to/)) {
 			name = name.replace(/_from|_to/, '');
 			this.updateRange(name);
+		} else if (event.currentTarget.pattern) {
+			var value = $(event.currentTarget).val();
+			if (value.match(event.currentTarget.pattern)) {
+				var attributeToUpdate = _.findWhere(this.advancedAttributes, {
+					id: name
+				});
+				var value = $(event.currentTarget).val();
+				attributeToUpdate.value = value;
+			} else {
+				Logger.error("Advanced criteria " + name + " is not valid.");
+			}
 		} else {
 			var attributeToUpdate = _.findWhere(this.advancedAttributes, {
 				id: name
