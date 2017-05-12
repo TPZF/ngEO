@@ -243,7 +243,7 @@ var MapPopup = function(container) {
 		} else {
 			content += "<p>Products: </p>";
 			for (var i = 0; i < products.length; i++) {
-				content += "<p title='"+ products[i].id +"'>";
+				content += "<p class='oneproduct' title='"+ products[i].id +"'>";
 				var type = Configuration.getMappedProperty(products[i], "productType", null);
 				if (type !== null) {
 					content += type + " / ";
