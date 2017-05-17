@@ -185,7 +185,7 @@ var DatasetSelectionView = Backbone.View.extend({
 			var $selectCriteria = this.$el.find("#criteria_" + i);
 
 			$selectCriteria.empty();
-			$selectCriteria.append('<option value="">' + criterias[i].title + ' : Any</option>');
+			$selectCriteria.append('<option value="">Any ' + criterias[i].title + '</option>');
 
 			var criteriaValues = this.model.filterCriteriaValues( this.filteredDatasets, criteria );
 			for (var j = 0; j < criteriaValues.length; j++) {
