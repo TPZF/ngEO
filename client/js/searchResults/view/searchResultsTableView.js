@@ -104,7 +104,11 @@ var SearchResultsTableView = TableView.extend({
 
 		this.retrieveProduct = $('<button data-role="button" data-inline="true" data-mini="true" title="Retrieve highlighted products with download manager">Retrieve</button>').appendTo($buttonContainer);
 		this.retrieveProduct.button();
-		this.retrieveProduct.button('disable');
+		if (Configuration.data.downloadManager.enable) {
+			this.retrieveProduct.button('disable');
+		} else {
+			this.retrieveProduct.button('disable').parent().hide();
+		}
 
 		//create a simpleDataAccessRequest and assign a download manager
 		var self = this;

@@ -83,7 +83,7 @@ module.exports = {
 		panelManager.left.add(standingOrderView, '#subscribe');
 		searchView.render();
 		standingOrderView.render();
-		if (!Configuration.data.susbcribe) {
+		if (!Configuration.data.subscribe.enable) {
 			$('#subscribe').hide();
 		}
 

@@ -183,6 +183,12 @@ var MapPopup = function(container) {
 		element.find('#mpButtons button[data-icon="browse"]').parent().show();
 		element.find('#mpButtons button[data-icon="browse-multiple"]').parent().hide();
 
+		// Hide retrieve button in accordance with configuration settings
+		// no downloadmanager => no retrieve button
+		if (!Configuration.data.downloadManager.enable) {
+			element.find('#mpButtons button[data-icon="save"]').parent().hide();
+		}
+
 		var content = "";
 		if (nbProducts === 1) {
 			currentIndice = 0;

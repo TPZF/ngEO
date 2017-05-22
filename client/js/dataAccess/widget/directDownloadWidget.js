@@ -52,6 +52,10 @@ var DirectDownloadWidget = function(feature, url) {
 			positionTo: "origin"
 		});
 
+		if (!Configuration.data.downloadManager.enable) {
+			parentElement.find('.viaDownloadManager').closest('li').hide();
+		}
+
 		parentElement.find('.viaDownloadManager').click( function() {
 			SimpleDataAccessRequest.initialize();
 			SimpleDataAccessRequest.setProducts([feature]);
