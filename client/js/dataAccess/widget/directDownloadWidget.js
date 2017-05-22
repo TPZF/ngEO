@@ -40,6 +40,9 @@ var DirectDownloadWidget = function(feature, url) {
 					downloadHelperUrl: Configuration.baseServerUrl + "/downloadHelper" + "?productURI=" + encodeURIComponent(url + '.ngeo')
 				}));
 				parentElement.trigger('create');
+				if (!Configuration.data.downloadManager.enable) {
+					parentElement.find('.viaDownloadManager').closest('li').hide();
+				}
 			});
 		}
 
@@ -55,7 +58,7 @@ var DirectDownloadWidget = function(feature, url) {
 		if (!Configuration.data.downloadManager.enable) {
 			parentElement.find('.viaDownloadManager').closest('li').hide();
 		}
-
+		
 		parentElement.find('.viaDownloadManager').click( function() {
 			SimpleDataAccessRequest.initialize();
 			SimpleDataAccessRequest.setProducts([feature]);
