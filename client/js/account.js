@@ -70,6 +70,10 @@ module.exports = {
 			theme: "b",
 			activate: onTabActivated
 		});
+		if (!Configuration.data.downloadManager.enable) {
+			acc.find('a[href="#downloadManagersMonitoring"]').parent().hide();
+			acc.find('a[href="#DARMonitoring"]').parent().hide();
+		}
 		return acc;
 	},
 
@@ -89,24 +93,37 @@ module.exports = {
 
 		$(window).resize(refreshViewOnResize);
 
-		// Create the download managers monitoring view
-		dmView = new DownloadManagersMonitoringView({
-			model: DownloadManagers,
-			el: "#downloadManagersMonitoring"
-		});
-		dmView.render();
+		if (Configuration.data.downloadManager.enable) {
+			// Create the download managers monitoring view
+			dmView = new DownloadManagersMonitoringView({
+				model: DownloadManagers,
+				el: "#downloadManagersMonitoring"
+			});
+			dmView.render();
 
-		// Create the view to monitor data access requests
-		darView = new DataAccessRequestMonitoringView({
-			model: DataAccessRequestStatuses,
-			el: "#DARMonitoring"
-		});
+			// Create the view to monitor data access requests
+			darView = new DataAccessRequestMonitoringView({
+				model: DataAccessRequestStatuses,
+				el: "#DARMonitoring"
+			});
 
+			// Fetch data for DM
+			DownloadManagers.fetch();
+
+			DataAccessRequestStatuses.set({
+				collapseDAR: Configuration.data.dataAccessRequestStatuses.collapseDAR,
+				collapseProducts: Configuration.data.dataAccessRequestStatuses.collapseProducts
+			});
+
+			// Fetch DAR : maybe not needed right now
+			DataAccessRequestStatuses.fetch();
+		}
 		//Create the shopcart manager view 
 		shopcartManagerView = new ShopcartManagerView({
 			model: ShopcartCollection,
 			el: "#shopcarts"
 		});
+		shopcartManagerView.render();
 
 		// NGEO-1967: Replace inquiries view by "Contact Us" link
 		// //Create the inquiries View
@@ -128,19 +145,14 @@ module.exports = {
 		});
 		layerManagerView.render();
 
-		// Fetch data for DM
-		DownloadManagers.fetch();
-
-		DataAccessRequestStatuses.set({
-			collapseDAR: Configuration.data.dataAccessRequestStatuses.collapseDAR,
-			collapseProducts: Configuration.data.dataAccessRequestStatuses.collapseProducts
-		});
-
-		// Fetch DAR : maybe not needed right now
-		DataAccessRequestStatuses.fetch();
-
 		// The first active is download manager monitoring
-		activeView = dmView;
+		// if downloadManager is enable
+		if (Configuration.data.downloadManager.enable) {
+			activeView = dmView;
+		} else {
+			activeView = shopcartManagerView;
+		}
+
 	}
 
 };
