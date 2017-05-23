@@ -100,6 +100,13 @@ var MapPopup = function(container) {
 			});
 		});
 
+	// Direct download
+	btn = $("<button data-icon='download' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Direct download product</button>")
+		.appendTo(element.find('#mpButtons'))
+		.click(function() {
+			window.open(products[0].properties.productUrl);
+		});
+
 	// DAR
 	btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
 		.appendTo(element.find('#mpButtons'))
@@ -189,6 +196,9 @@ var MapPopup = function(container) {
 			element.find('#mpButtons button[data-icon="save"]').parent().hide();
 		}
 
+		// disable direct download by default
+		element.find('#mpButtons button[data-icon="download"]').button('disable');
+
 		var content = "";
 		if (nbProducts === 1) {
 			currentIndice = 0;
@@ -217,7 +227,7 @@ var MapPopup = function(container) {
 			content += '<p><b>' + productTitle + '</b></p>';
 			var columnDefs = Configuration.data.tableView.columnsDef;
 			for (var i = 0; i < columnDefs.length; i++) {
-				if (columnDefs[i].sTitle != 'Product') {
+				if (columnDefs[i].sTitle != 'Product URL') {
 					var value = Configuration.getFromPath(product, columnDefs[i].mData);
 					if ( columnDefs[i].sTitle == 'Download options' && value ) {
 						// HACK: Skip it for now, we should store it somewhere, or WEBS should send it for us
@@ -244,6 +254,11 @@ var MapPopup = function(container) {
 			if ( browses && browses.length > 1 ) {
 				element.find('#mpButtons button[data-icon="browse-multiple"]').parent().show();
 				element.find('#mpButtons button[data-icon="browse"]').parent().hide();
+			}
+
+			// activate direct download if productUrl exists
+			if (product.properties.productUrl) {
+				element.find('#mpButtons button[data-icon="download"]').button('enable');
 			}
 
 		} else {
