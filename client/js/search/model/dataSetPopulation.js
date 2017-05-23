@@ -251,7 +251,7 @@ var DataSetPopulation = Backbone.Model.extend({
 			var datasetInfos = this.datasetInfoMap[datasetId];
 			var passedFilter = true;
 
-			var selectedCriterias = _.filter(this.get('criterias'), function(o) { return o.selectedValue });
+			var selectedCriterias = _.filter(criteriaFilter, function(o) { return o.selectedValue });
 			if ( selectedCriterias.length ) {
 
 				var row = datasetInfos.rows[0];

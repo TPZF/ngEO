@@ -22,6 +22,7 @@
 				<% if ( criterion.possibleValues && criterion.possibleValues.length > 0 ) { %>
 					<% if ( criterion.maxOccurs == 1 ) { %>
 						<!-- Selectbox -->
+						<label for="<%= criterion.id %>"><%= label %>:</label><br/>
 						<select id="<%= criterion.id %>" data-mini="true"" title="<%= label %>...">
 							<option value="">Any <%= label %></option>
 							<% _.each(criterion.possibleValues, function(possibleValue) { %>
@@ -45,7 +46,9 @@
 				<% } else { %>
 					<!-- The criterion has no possible values, show text field -->
 					<div data-role="fieldcontain">
+						<label><%=label%>:
 						<input type="text" name="<%= criterion.id %>" title="<%= label %>" <% if ( pattern ) print('pattern='+pattern); %> placeHolder="Set <%= label %>..." id="<%= criterion.id %>" <% if ( value ) print('value='+value); %> data-mini="true"/>
+						</label>
 					</div>
 				<% } %>
 

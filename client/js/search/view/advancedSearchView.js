@@ -42,8 +42,10 @@ var AdvancedSearchView = Backbone.View.extend({
 			});
 			if ( value != "" ) {
 				attributeToUpdate.value = value;
+				$(event.currentTarget).closest('.ui-select').addClass('oneValue');
 			} else {
 				delete attributeToUpdate.value;
+				$(event.currentTarget).closest('.ui-select').removeClass('oneValue');
 			}
 		},
 

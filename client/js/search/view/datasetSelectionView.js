@@ -125,7 +125,8 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Call to set the height of content when the view size is changed
 	 */
 	updateContentHeight: function() {
-		this.$el.find('#ds-content').css('height', this.$el.height() - this.$el.find('#ds-footer').outerHeight());
+		var newHeight = this.$el.height() - this.$el.find('#ds-footer').outerHeight() - this.$el.find('#ds-keywords').outerHeight() - 10;
+		this.$el.find('#ds-content').css('height', newHeight);
 	},
 
 	/**
@@ -162,10 +163,15 @@ var DatasetSelectionView = Backbone.View.extend({
 				
 				var value = $(this).val() ? $(this).val() : "";
 				criteria.selectedValue = value;
+				if (value !== '') {
+					$(event.currentTarget).closest('.ui-select').addClass('oneValue');
+				} else {
+					$(event.currentTarget).closest('.ui-select').removeClass('oneValue');
+				}
 
 				// Update datasets list and criteria according to the new criteria filter
 				self.updateDatasetsList();
-				self.updateSelectCriteria();
+				self.updateSelectCriteria(index);
 			});
 		});
 
@@ -176,18 +182,28 @@ var DatasetSelectionView = Backbone.View.extend({
 	 * Update the select elements for criterias with the given datasets
 	 * The <option>'s should be updated according to filtered datasets
 	 */
-	updateSelectCriteria: function() {
+	updateSelectCriteria: function(idx) {
 
 		// Rebuilt the criterias to select
 		var criterias = this.model.get('criterias');
+
 		for (var i = 0; i < criterias.length; i++) {
+
+			var criteriasForAllGroupsExceptThisOne = JSON.parse(JSON.stringify(criterias));
+			if (typeof idx !== 'undefined') {
+				criteriasForAllGroupsExceptThisOne[i].selectedValue = '';
+			}
+			let datasetsFilteredForAllGroupsExceptThisOne = this.model.filterDatasets(criteriasForAllGroupsExceptThisOne);
+
 			var criteria = criterias[i];
 			var $selectCriteria = this.$el.find("#criteria_" + i);
 
 			$selectCriteria.empty();
 			$selectCriteria.append('<option value="">Any ' + criterias[i].title + '</option>');
 
-			var criteriaValues = this.model.filterCriteriaValues( this.filteredDatasets, criteria );
+			var criteriaValues = null;
+			criteriaValues = this.model.filterCriteriaValues( datasetsFilteredForAllGroupsExceptThisOne, criteriasForAllGroupsExceptThisOne[i] );
+
 			for (var j = 0; j < criteriaValues.length; j++) {
 
 				// Add the option to the select element
@@ -209,7 +225,7 @@ var DatasetSelectionView = Backbone.View.extend({
 	updateDatasetsList: function() {
 
 		// Retrieve the datasets according to the current criteria
-		var datasets = this.model.filterDatasets();
+		var datasets = this.model.filterDatasets(this.model.get('criterias'));
 
 		// NGEO-2129: Sort by name
 		datasets = _.sortBy(datasets, function(dataset) { return dataset.name.toLowerCase() });
