@@ -51,7 +51,21 @@ var DatasetSelectionView = Backbone.View.extend({
 			SearchResults.launch(DatasetSearch);
 		},
 
+		"click #dsResetKeywords": function() {
+			var self = this;
+			var index = 0;
+			this.model.get('criterias').forEach(function(criteria) {
+				criteria.selectedValue = "";
+				self.$el.find("#criteria_" + index).val("").change();
+				self.$el.find("#criteria_" + index).closest('.ui-select').removeClass('oneValue');
+				index++;
+			});
+			this.updateDatasetsList();
+			this.updateSelectCriteria();
+		},
+
 		'keyup [data-type="search"]' : 'filterDatasets',
+
 		'change [data-type="search"]': 'filterDatasets'
 	},
 
@@ -201,8 +215,7 @@ var DatasetSelectionView = Backbone.View.extend({
 			$selectCriteria.empty();
 			$selectCriteria.append('<option value="">Any ' + criterias[i].title + '</option>');
 
-			var criteriaValues = null;
-			criteriaValues = this.model.filterCriteriaValues( datasetsFilteredForAllGroupsExceptThisOne, criteriasForAllGroupsExceptThisOne[i] );
+			var criteriaValues = this.model.filterCriteriaValues( datasetsFilteredForAllGroupsExceptThisOne, criteriasForAllGroupsExceptThisOne[i] );
 
 			for (var j = 0; j < criteriaValues.length; j++) {
 
