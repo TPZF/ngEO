@@ -1,7 +1,7 @@
 module.exports = config:
   paths:
     watched: ['client','test','vendor','bower_components']
-    public: '../ngEO-LWS/public'
+    public: 'output-dev'  # in development mode, the output is on folder 'output-dev' wher files are not uglified
   overrides:
     production:
       optimize: true
@@ -9,7 +9,7 @@ module.exports = config:
       plugins: autoReload: enabled: false
       paths:
         watched: ['client','vendor','bower_components']
-        public: '../ngEO-LWS/public'
+        public: 'output-opt' # in optimisation mode, the output is on folder 'output-opt' wher files are uglified
   files:
     javascripts:
       joinTo:
