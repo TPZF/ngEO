@@ -46,11 +46,6 @@ var DatasetSelectionView = Backbone.View.extend({
 			}
 		},
 
-		// Click on search
-		"click #dsSearch": function(event) {
-			SearchResults.launch(DatasetSearch);
-		},
-
 		"click #dsResetKeywords": function() {
 			var self = this;
 			var index = 0;

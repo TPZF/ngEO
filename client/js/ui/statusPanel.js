@@ -3,6 +3,7 @@ var Map = require('map/map');
 var BrowsesManager = require('searchResults/browsesManager');
 var DataSetSearch = require('search/model/datasetSearch');
 var Pagination = require('ui/pagination');
+var SearchResults = require('searchResults/model/searchResults');
 
 // A constant
 var ONE_MONTH = 24 * 30 * 3600 * 1000;
@@ -17,6 +18,12 @@ var ONE_MONTH = 24 * 30 * 3600 * 1000;
  *	</ul>
  */
 var StatusPanel = Backbone.View.extend({
+
+	events: {
+		'click #statusBtnSearch': function() {
+			SearchResults.launch(DataSetSearch);
+		}
+	},
 
 	/**
 	 * Constructor
@@ -98,8 +105,13 @@ var StatusPanel = Backbone.View.extend({
 
 		// Need to update bottom dataset width when several dataset has been chosen to hide overflow
 		var updateBottomDatasetWidth = function() {
+			var bottomWidth = $('#bottomToolbar').outerWidth();
 			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
-			$('#bottomDatasets').width($('#bottomToolbar').outerWidth() - self.$el.find('#statusPagination').width() - menuCommandWidth);
+			var paginationWidth = self.$el.find('#statusPagination').width();
+			var searchBtnWidth = 40;
+			var shareBtnWidth = 40;
+			
+			$('#bottomDatasets').width(bottomWidth - paginationWidth - searchBtnWidth - shareBtnWidth - menuCommandWidth);
 		};
 		$(window).resize(updateBottomDatasetWidth)
 		this.listenTo(this.pagination, 'pagination:updated', updateBottomDatasetWidth);
