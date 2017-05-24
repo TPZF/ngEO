@@ -110,15 +110,22 @@
 		background-color: #484847;
 	}
 
-	// Color for highlighted line 
-	tr.row_highlighted {
+	// Color for selected line 
+	tr.row_selected {
 		background-color: #4596CE;
 		//background-color: #B0BED9;
 	}
+
+	// Color for highlighted line 
+	tr.row_highlighted {
+		background-color: #395E7B;
+		//background-color: #B0BED9;
+	}
+
 }
 
 // Used to display a lightweight checkbox in the dataTable
-.table-view-checkbox, .table-view-expand, .browse-visibility-checkbox, .focus-checkbox {
+.table-view-checkbox, .table-view-expand, .browse-visibility-checkbox {
 	display: inline-block;
 	border-radius: 3px;
 	margin-right:3px;
@@ -130,6 +137,7 @@
 	background: url('../css/images/icons-18-white.png') no-repeat -432px 0;
 	background-color: rgba(120,120,120,0.5);
 }
+
 // Add a nice background (taken from JQM) when checkbox is on
 .table-view-checkbox.ui-icon-checkbox-on, .browse-visibility-checkbox.ui-icon-checkbox-on {
 	background-color: #4596CE;
@@ -138,17 +146,29 @@
 	background-color: rgba(120,120,120,0.5);
 }
 
-.focus-checkbox {
-	background: url('../images/eye-white.png') no-repeat center center;
+.ui-icon-pin-on {
+	background: url('../images/pin.png') no-repeat center center;
+	background-size: contain;
+	-webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+	transform: rotate(0deg);
 }
-.focus-checkbox.ui-icon-checkbox-off {
-	background: none;
+.ui-icon-pin-off {
+	background: url('../images/pin.png') no-repeat center center;
+	background-size: contain;
+	-webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+	transform: rotate(90deg);
+	opacity: 0.6;
 }
 
 .directDownload {
 	background: url('../images/save.png') no-repeat center center;
 	display: inline-block;
-	border-radius: 3px;
 }
 
 .multipleBrowse {
