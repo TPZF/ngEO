@@ -25,9 +25,9 @@ var _convertOL = function(features) {
  * @returns {string}
  */
 var _buildKMLDescription = function(myFeature) {
-	let result = '';
+	var result = '';
 	result += ' <description><![CDATA[';
-	let urlIcon = Configuration.getFromPath(myFeature, 'properties.link[].@.rel=icon.href', '');
+	var urlIcon = Configuration.getFromPath(myFeature, 'properties.link[].@.rel=icon.href', '');
 	if (urlIcon !== '') {
 		result += ' <img width="100" height="100" src="' + urlIcon + '" >';
 	}
@@ -36,8 +36,8 @@ var _buildKMLDescription = function(myFeature) {
 };
 
 var _buildKMLExtendedData = function(myFeature) {
-	let aProp = ["identifier", "title", "published", "updated", "date", "originDatasetId", "productUrl", "polygon"];
-	let result = '';
+	var aProp = ["identifier", "title", "published", "updated", "date", "originDatasetId", "productUrl", "polygon"];
+	var result = '';
 	result += ' <ExtendedData>';
 	aProp.forEach(function(property) {
 		if (myFeature.properties[property]) {
@@ -56,7 +56,7 @@ var _buildKMLExtendedData = function(myFeature) {
  * @returns {string}
  */
 var _buildKMLGeometry = function(myFeatureGeometry) {
-	let result = '';
+	var result = '';
 	// Only type Polygon is treated
 	if (myFeatureGeometry.type === 'Polygon') {
 		result += ' <Polygon>';

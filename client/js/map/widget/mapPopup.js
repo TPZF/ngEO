@@ -305,7 +305,7 @@ var MapPopup = function(container) {
 			var bDisplay = false;
 			if (browses && browses.length > 0 && browses[0] !== undefined) {
 				_.each(browses, function(browse) {
-					let url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
+					var url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
 					if (url.indexOf('SERVICE') > -1) {
 						bDisplay = true;
 					}

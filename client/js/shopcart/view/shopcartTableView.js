@@ -21,7 +21,7 @@ var ShopcartTableView = TableView.extend({
 
 	initialize: function () {
 
-		let _this = this;
+		var _this = this;
 
 		TableView.prototype.initialize.apply(this, arguments);
 

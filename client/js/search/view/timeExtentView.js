@@ -13,7 +13,7 @@ var _setDateBeginEnd = function(myDate, flagBegin) {
 	var year = myDate.getFullYear();
 	var month = myDate.getMonth();
 	var day = myDate.getDate();
-	let newDate = new Date();
+	var newDate = new Date();
 	newDate.setFullYear(year);
 	newDate.setMonth(month);
 	newDate.setDate(day);
@@ -218,11 +218,11 @@ var TimeExtentView = Backbone.View.extend({
 
 		if ( this.model.get("dateRange") ) {
 			// check dates
-			let changeOnDate = false;
-			let startDate = this.model.get("start");
-			let stopDate = this.model.get("stop");
-			let minDate = _setDateBeginEnd(this.model.get("dateRange").start, true);
-			let maxDate = _setDateBeginEnd(this.model.get("dateRange").stop, false);
+			var changeOnDate = false;
+			var startDate = this.model.get("start");
+			var stopDate = this.model.get("stop");
+			var minDate = _setDateBeginEnd(this.model.get("dateRange").start, true);
+			var maxDate = _setDateBeginEnd(this.model.get("dateRange").stop, false);
 			if (startDate > maxDate) {
 				// startDate > max Range ==> stop=max and start = max - 1 week
 				startDate = new Date(maxDate.getTime() - ONE_WEEK);

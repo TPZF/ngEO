@@ -409,7 +409,7 @@ var FeatureCollection = function () {
 	 * @returns {void}
 	 */
 	this.unselect = function (features) {
-		let newSelections = _.difference(this.selections, features);
+		var newSelections = _.difference(this.selections, features);
 		this.selections = newSelections;
 		ProductService.removeCheckedProducts(features);
 		this.trigger("unselectFeatures", features, this);

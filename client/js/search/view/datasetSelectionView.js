@@ -202,7 +202,7 @@ var DatasetSelectionView = Backbone.View.extend({
 			if (typeof idx !== 'undefined') {
 				criteriasForAllGroupsExceptThisOne[i].selectedValue = '';
 			}
-			let datasetsFilteredForAllGroupsExceptThisOne = this.model.filterDatasets(criteriasForAllGroupsExceptThisOne);
+			var datasetsFilteredForAllGroupsExceptThisOne = this.model.filterDatasets(criteriasForAllGroupsExceptThisOne);
 
 			var criteria = criterias[i];
 			var $selectCriteria = this.$el.find("#criteria_" + i);

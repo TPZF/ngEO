@@ -107,7 +107,7 @@ var BoxView = Backbone.View.extend({
 			this.model.set({
 				"useExtent": false
 			});
-			let bbox = {
+			var bbox = {
 				east: 180,
 				west:-180,
 				north: 90,
