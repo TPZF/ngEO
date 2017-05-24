@@ -29,71 +29,49 @@ var MapPopup = function(container) {
 	var currentIndice = null;
 
 	element = $(
-		'<div class="widget-content mapPopup">\
+		'<div class="mapPopup">\
 			<div id="mpText"></div>\
-			<div id="mpButtons" data-mini="true" data-role="controlgroup" data-type="horizontal"></div>\
+			<div id="mpButtons"></div>\
 		</div>');
 
 	// Wrap with the parent div for widget
-	element.wrap("<div id='mapPopup' class='widget'></div>");
+	element.wrap("<div id='mapPopup'></div>");
 	parentElement = element.parent();
 
 	// Add buttons for some simple actions
 
 	// Select
-	btn = $("<button data-icon='check' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Check highlighted products</button>")
+	btn = $("<a class='check' title='Pin/Unpin products'><span></span></a>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
 			
-			var isSelected = $(this).parent().hasClass('ui-btn-active');
+			var isSelected = $(this).hasClass('select');
 			// Update button's layout
 			if (isSelected) {
-				$(this).parent().removeClass('ui-btn-active ui-focus');
+				$(this).removeClass('select');
 			} else {
-				$(this).parent().addClass('ui-btn-active');
+				$(this).addClass('select');
 			}
 			var _wProducts = products;
 			for (var i = 0; i < _wProducts.length; i++) {  
 				var p = _wProducts[i];  
 				if (isSelected) {  
 					p._featureCollection.unselect([p]);
-					p._featureCollection.unsetHighlight([p]);
 				} else {  
 					p._featureCollection.select([p]);
-					p._featureCollection.setHighlight([p]);
 				}
 			}
 			self.openOrCloseDialog();
 		});
 
-	// Browse
-	btn = $("<button data-icon='browse' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Display browse</button>")
-		.appendTo(element.find("#mpButtons"))
-		.click(function() {
-			var isSelected = $(this).parent().hasClass('ui-btn-active');
-			// Update button's layout
-			if (isSelected) {
-				$(this).parent().removeClass('ui-btn-active ui-focus');
-			} else {
-				$(this).parent().addClass('ui-btn-active');
-			}
-			var _wProducts = products;
-
-			for (var i = 0; i < _wProducts.length; i++) {
-				var p = _wProducts[i];
-				if (ProductService.getBrowsedProducts().indexOf(p) >= 0) {
-					p._featureCollection.hideBrowses([p]);
-					ProductService.removeBrowsedProducts([p]);
-				} else {
-					p._featureCollection.showBrowses([p]);
-					ProductService.addBrowsedProducts([p]);
-				}
-			}
-		});
 	// Multiple browse management
-	btn = $("<button data-icon='browse-multiple' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Multiple browse management</button>")
+	btn = $("<a class='browse-multiple' title='Multiple browse management'><span></span></a>")
 		.appendTo(element.find("#mpButtons"))
-		.click(function() {
+		.click(function(event) {
+			var isActive = $(this).hasClass('active');
+			if (!isActive) {
+				return;
+			}
 			MultipleBrowseWidget.open({
 				feature: products[0],
 				featureCollection: products[0]._featureCollection
@@ -101,17 +79,24 @@ var MapPopup = function(container) {
 		});
 
 	// Direct download
-	btn = $("<button data-icon='download' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Direct download product</button>")
+	btn = $("<a class='download' title='Direct download product'><span></span></a>")
 		.appendTo(element.find('#mpButtons'))
-		.click(function() {
+		.click(function(event) {
+			var isActive = $(this).hasClass('active');
+			if (!isActive) {
+				return;
+			}
 			window.open(products[0].properties.productUrl);
 		});
 
 	// DAR
-	btn = $("<button data-icon='save' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Retrieve product</button>")
+	btn = $("<a class='save' title='Retrieve product'><span></span></a>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
-
+			var isActive = $(this).hasClass('active');
+			if (!isActive) {
+				return;
+			}
 			var allowedProducts = [];
 			for (var i = 0; i < products.length; i++) {
 				if (products[i]._featureCollection.downloadAccess) {
@@ -131,9 +116,13 @@ var MapPopup = function(container) {
 		});
 
 	// Shopcart
-	btn = $("<button data-icon='shop' data-iconpos='notext' data-role='button' data-inline='true' data-mini='true'>Add to shopcart</button>")
+	btn = $("<a class='shop' title='Add to shopcart'><span></span></a>")
 		.appendTo(element.find('#mpButtons'))
 		.click(function() {
+			var isActive = $(this).hasClass('active');
+			if (!isActive) {
+				return;
+			}
 			GlobalEvents.trigger('addToShopcart', products);
 		});
 
@@ -151,6 +140,9 @@ var MapPopup = function(container) {
 	});
 	Map.on('unhighlightFeatures', function(highlightedFeatures) {
 		self.openOrCloseDialog('highlight', highlightedFeatures);
+	});
+	Map.on('pickedFeatures', function(pickedFeatures) {
+		//self.openOrCloseDialog('pick', pickedFeatures);
 	});
 
 	/**
@@ -184,32 +176,28 @@ var MapPopup = function(container) {
 	/**
 		Build the content of the popup from the given product
 	 */
-	var buildContent = function(nbProducts, indice) {
+	var buildContent = function(nbProducts) {
 
-		// Show default browse / Hide multiple browse by default
-		element.find('#mpButtons button[data-icon="browse"]').parent().show();
-		element.find('#mpButtons button[data-icon="browse-multiple"]').parent().hide();
+		// pin button is always active
+		element.find('#mpButtons a.check').addClass('active');
 
 		// Hide retrieve button in accordance with configuration settings
 		// no downloadmanager => no retrieve button
 		if (!Configuration.data.downloadManager.enable) {
-			element.find('#mpButtons button[data-icon="save"]').parent().hide();
+			element.find('#mpButtons a.save').hide();
 		}
 
 		// disable direct download by default
-		element.find('#mpButtons button[data-icon="download"]').button('disable');
+		element.find('#mpButtons a.download').removeClass('active');
 
 		var content = "";
-		if (nbProducts === 1) {
-			currentIndice = 0;
-		} else {
-			currentIndice = indice;
-			content += "" + products.length + " products highlighted. <span class='ui-icon btnNext' title='Focus on next product'></span><br>";
-			content += "Click on arrow to cycle through products.<br>";
+		if (nbProducts > 1) {
+			content += "" + nbProducts + " products picked.<br>Click to cycle through products.<br>";
+			element.find('#mpButtons a.browse-multiple').removeClass('active');
 		}
 
-		if ((nbProducts > 1 && currentIndice !== null) || (nbProducts===1)) {
-			var product = products[currentIndice];
+		if (nbProducts===1) {
+			var product = products[0];
 			// Build product title according to NGEO-1969
 			var productTitle = '';
 			var param = Configuration.getMappedProperty(product, "sensor");
@@ -252,52 +240,64 @@ var MapPopup = function(container) {
 			// Show only if product has multiple browses
 			var browses = Configuration.getMappedProperty(product, "browses");
 			if ( browses && browses.length > 1 ) {
-				element.find('#mpButtons button[data-icon="browse-multiple"]').parent().show();
-				element.find('#mpButtons button[data-icon="browse"]').parent().hide();
+				element.find('#mpButtons a.browse-multiple').addClass('active');
+			} else {
+				element.find('#mpButtons a.browse-multiple').removeClass('active');
 			}
 
 			// activate direct download if productUrl exists
 			if (product.properties.productUrl) {
-				element.find('#mpButtons button[data-icon="download"]').button('enable');
+				element.find('#mpButtons a.download').addClass('active');
+			}
+
+			var isSelected = product._featureCollection.isSelected(product);
+			if (isSelected) {
+				element.find('#mpButtons a.check').addClass('select');
+			} else {
+				element.find('#mpButtons a.check').removeClass('select');
 			}
 
 		} else {
 			content += "<p>Products: </p>";
+			var isAllSelected = true;
 			for (var i = 0; i < products.length; i++) {
-				content += "<p class='oneproduct' title='"+ products[i].id +"'>";
-				var type = Configuration.getMappedProperty(products[i], "productType", null);
+				var _product = products[i];
+				content += "<p class='oneproduct' title='"+ _product.id +"'>";
+				var type = Configuration.getMappedProperty(_product, "productType", null);
 				if (type !== null) {
 					content += type + " / ";
 				} else {
-					var sensor = Configuration.getMappedProperty(products[i], "sensor", null);
+					var sensor = Configuration.getMappedProperty(_product, "sensor", null);
 					if (sensor !== null) {
 						content += sensor + ' / ';
 					}
 				}
-				content += Configuration.getMappedProperty(products[i], "start");
+				content += Configuration.getMappedProperty(_product, "start");
 				content += "</p>";
+				var isSelected = _product._featureCollection.isSelected(_product);
+				if (!isSelected) {
+					isAllSelected = false;
+				}
 			}
+			if (isAllSelected) {
+				element.find('#mpButtons a.check').addClass('select');
+			} else {
+				element.find('#mpButtons a.check').removeClass('select');
+			}
+
 		}
 
 		// if feature is highlighted >> save and shop are enable
 		var isHighlighted = _.find(products, function(feature) { return feature._featureCollection.isHighlighted(feature); });
 		if ( isHighlighted ) {
-			element.find('#mpButtons button[data-icon="save"]').button('enable');
-			element.find('#mpButtons button[data-icon="shop"]').button('enable');
+			element.find('#mpButtons a.save').addClass('active');
+			element.find('#mpButtons a.shop').addClass('active');
 		} else {
-			element.find('#mpButtons button[data-icon="save"]').button('disable');
-			element.find('#mpButtons button[data-icon="shop"]').button('disable');
+			element.find('#mpButtons a.save').removeClass('active');
+			element.find('#mpButtons a.shop').removeClass('active');
 		}
-		// if feature is selected >> check button is active
-		var isSelected = _.find(products, function(feature) { return feature._featureCollection.isSelected(feature); });
-		if (isSelected) {
-			element.find('#mpButtons button[data-icon="check"]').parent().addClass('ui-btn-active');
-		} else {
-			element.find('#mpButtons button[data-icon="check"]').parent().removeClass('ui-btn-active');
-		}
-		//active browse if feature is highlighted
-		element.find('#mpButtons button[data-icon="browse"]').button('disable');
 
+		/*
 		var isMultipleBrowsed = _.find(products, function(feature) {
 			var browses = Configuration.getMappedProperty(feature, "browses");
 			var bDisplay = false;
@@ -312,10 +312,11 @@ var MapPopup = function(container) {
 			return bDisplay;
 		});
 		if ( isMultipleBrowsed ) {
-			element.find('#mpButtons button[data-icon="browse-multiple"]').button('enable');
+			element.find('#mpButtons a.browse-multiple').addClass('active');
 		} else {
-			element.find('#mpButtons button[data-icon="browse-multiple"]').button('disable');
+			element.find('#mpButtons a.browse-multiple').removeClass('active');
 		}
+		*/
 
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist
 		var hasPlannedOrNoProductUrl = _.find(products, function(feature) {
@@ -323,55 +324,23 @@ var MapPopup = function(container) {
 				!Configuration.getMappedProperty(feature, "productUrl");
 		});
 		if (hasPlannedOrNoProductUrl) {
-			element.find('#mpButtons button[data-icon="save"]').button('disable');
+			element.find('#mpButtons a.save').removeClass('active');
 		}
 		element.find('#mpText').html(content);
-		element.find('#mpText .btnNext').click(function() {
-			var next;
-			var changeDataset = false;
-			if (currentIndice === null) {
-				next = 0;
-			} else if (currentIndice === nbProducts - 1) {
-				next = null;
-			} else {
-				next = currentIndice + 1;
-			}
-			if (next !== null) {
-				if (currentIndice === null) {
-					changeDataset = true;
-				} else if (products[currentIndice]._featureCollection.id !== products[next]._featureCollection.id) {
-					changeDataset = true;
-				}
-				if (changeDataset) {
-					if (!products[next]._featureCollection.dataset) {
-						$('#shopcart').click();
-					} else {
-						$('#result' + products[next]._featureCollection.id).click();
-					}
-				}
-				products[next]._featureCollection.focus(products[next]);
-			}
-			if (currentIndice !== null) {
-				products[currentIndice]._featureCollection.unfocus(products[currentIndice]);
-			}
-			buildContent(nbProducts, next);
-		});
 	};
 
 
 	/**
 		Open the popup
 	 */
-	this.open = function(highlightedFeatures) {
+	this.open = function(featuresList) {
 
-		products = highlightedFeatures;
+		products = featuresList;
 
-		// Clean-up previous state
-		$('#info').parent().removeClass('ui-btn-active ui-focus');
-
-		buildContent(products.length, null);
+		buildContent(products.length);
 
 		parentElement.fadeIn();
+		//parentElement.show();
 
 		isOpened = true;
 	};

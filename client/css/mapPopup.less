@@ -11,73 +11,102 @@
 	right: 0;
 	top: 10%;
 	background: rgba(15, 15, 15, 0.6);
-	// Customize widget : no border on right, and no radius on right
-	border-right: 0 solid black;
-   .border-radiuses(5px, 0, 0, 5px);
-    border: 0px solid black;
    
    /* Highlighting issue on Safari */
 	-webkit-user-select: none;
-}
+	padding: 10px;
 
-// Customize widget-content for map popup : no radius on right
-#mapPopup .widget-content {
-    .border-radiuses(5px, 0, 0, 5px);
-}
+	.mapPopup {
+		p {
+			margin: 3px;
+			padding: 0;
+			// Limit width of text in the pop-up
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+		.oneproduct {
+			font-size: 12px;
+		}
+		a {
+			width:24px;
+			height:24px;
+			display: inline-block;
+			margin: 5px;
+			margin-right: 1px;
+			margin-bottom: 0;
+			padding: 5px;
+			background-color: #000;
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+		a span {
+			width:24px;
+			height:24px;
+			display: block;
+			background-repeat: no-repeat;
+			background-position: center;
+		}
+		a.active {
+			opacity: 1;
+			background-color: #999;
+			cursor: pointer;
+		}
+		a.select {
+			background-color: #395E7B;
+		}
+		a.active:hover {
+			background-color: #444;
+		}
+		a.select:hover {
+			background-color: #4596CE;
+		}
+		a.check span {
+			background-image: url("../images/pin.png");
+			-webkit-transform: rotate(90deg);
+			-moz-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			-o-transform: rotate(90deg);
+			transform: rotate(90deg);
+		}
+		a.check:hover span {
+			-webkit-transform: rotate(0deg);
+			-moz-transform: rotate(0deg);
+			-ms-transform: rotate(0deg);
+			-o-transform: rotate(0deg);
+			transform: rotate(0deg);
+		}
+		a.check.select span {
+			-webkit-transform: rotate(0deg);
+			-moz-transform: rotate(0deg);
+			-ms-transform: rotate(0deg);
+			-o-transform: rotate(0deg);
+			transform: rotate(0deg);
+		}
+		// Icon for download
+		a.save span {
+			background-image: url("../images/save.png");
+		}
 
-// Setup good margin/padding for map popup
-.mapPopup {
-	p {
-		margin: 3px;
-		padding: 0;
-		// Limit width of text in the pop-up
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+		// Icon for download
+		a.download span {
+			background-image: url("../images/download.png");
+		}
+
+		// Icon for shopcart
+		a.shop span {
+			background-image: url("../images/cart-in.png");
+		}
+
+		// Icon for browse
+		a.browse span {
+			background-image: url("../images/browses.png");
+		}
+		a.browse-multiple span {
+			background-image: url("../images/browses.png");
+		}
+
 	}
-	.oneproduct {
-		font-size: 12px;
-	}
+
 }
 
-// Icon for download
-.ui-icon-save {
-	background-image: url("../images/save.png");
-}
-
-// Icon for download
-.ui-icon-download {
-	background-image: url("../images/save.png");
-}
-
-// Icon for shopcart
-.ui-icon-shop {
-	background-image: url("../images/shop.png");
-}
-
-// Icon for browse
-.ui-icon-browse {
-  background: url("../images/browse.png") 50% 50% no-repeat;
-  background-color: #252525;
-}
-.ui-icon-browse-multiple {
-  background: url("../images/browse_multiple.png") 50% 50% no-repeat;
-  background-color: #252525;	
-}
-// Code to "simulate" jqm button styling
-.ui-btn-active {
-	.ui-icon-browse {
-		background-color: #395E7B !important;
-	}
-}
-
-.btnNext {
-	display: inline-block;
-	width: 18px;
-	height: 18px;
-	background: url('../css/images/icons-18-white.png') no-repeat -108px 0;
-	background-color: #395E7B;	
-	margin-right:5px;
-	border-radius: 3px;
-	cursor: pointer;
-}
