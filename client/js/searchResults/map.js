@@ -64,7 +64,7 @@ var _onShowBrowses = function(features, fc) {
 
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
-	fc._footprintLayer.modifyFeaturesStyle(features, "highlight-select");
+	fc._footprintLayer.modifyFeaturesStyle(features, "select");
 	Map.trigger("selectFeatures", features);
 };
 
@@ -121,7 +121,7 @@ var _onUnHighlightFeatures = function(features, fc) {
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
 			if (feature._featureCollection.isSelected(feature)) {
-				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+				fc._footprintLayer.modifyFeaturesStyle([feature], "select");
 			} else {
 				fc._footprintLayer.modifyFeaturesStyle([feature], "default");
 				BrowsesManager.removeBrowse(feature);
