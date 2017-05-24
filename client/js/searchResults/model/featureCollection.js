@@ -159,6 +159,7 @@ var FeatureCollection = function () {
 		this.unselect(features);
 		this.unsetHighlight(features);
 		this.features = _.difference(this.features, features);
+		_pageCache.length = 0;
 		self.trigger('remove:features', features, self);
 	};
 
@@ -335,9 +336,9 @@ var FeatureCollection = function () {
 		var _this = this;
 		var unhighlights = [];
 		this.highlights.forEach(function (feat) {
-			if (!_this.isSelected(feat)) {
+			//if (!_this.isSelected(feat)) {
 				unhighlights.push(feat);
-			}
+			//}
 		})
 		this.unsetHighlight(unhighlights);
 	};
@@ -661,15 +662,6 @@ var FeatureCollection = function () {
 		}
 		return false;
 	};
-
-
-	this.focus = function (feature) {
-		this.trigger("focus", feature, this);
-	}
-
-	this.unfocus = function (feature) {
-		this.trigger("unfocus", feature, this);
-	}
 
 	// Add events
 	_.extend(this, Backbone.Events);
