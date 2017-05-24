@@ -62,22 +62,22 @@ var _onShowBrowses = function(features, fc) {
 	}
 };
 
-var _onFocus = function(feature, fc) {
-	fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
-};
-
-var _onUnFocus = function(feature, fc) {
-	fc._footprintLayer.modifyFeaturesStyle([feature], "highlight");
-};
-
 // Call when a feature is selected to synchronize the map
 var _onSelectFeatures = function(features, fc) {
+	fc._footprintLayer.modifyFeaturesStyle(features, "highlight-select");
 	Map.trigger("selectFeatures", features);
 };
 
-
 // Call when a feature is unselected to synchronize the map
 var _onUnselectFeatures = function(features, fc) {
+	features.forEach(function(_f) {
+		if (_f._featureCollection.isHighlighted(_f)) {
+			fc._footprintLayer.modifyFeaturesStyle([_f], "highlight");
+		} else {
+			fc._footprintLayer.modifyFeaturesStyle([_f], "default");
+			BrowsesManager.removeBrowse(_f);
+		}
+	})
 	Map.trigger("unselectFeatures");
 };
 
@@ -120,9 +120,12 @@ var _onUnHighlightFeatures = function(features, fc) {
 		// Set to default the footprint of previously selected features
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
-			fc._footprintLayer.modifyFeaturesStyle([feature], "default");
-			
-			BrowsesManager.removeBrowse(feature);
+			if (feature._featureCollection.isSelected(feature)) {
+				fc._footprintLayer.modifyFeaturesStyle([feature], "highlight-select");
+			} else {
+				fc._footprintLayer.modifyFeaturesStyle([feature], "default");
+				BrowsesManager.removeBrowse(feature);
+			}
 		}
 		ProductService.removeBrowsedProducts(features);
 	}
@@ -229,9 +232,6 @@ module.exports = {
 		fc.on('unhighlightFeatures', _onUnHighlightFeatures);
 		fc.on('show:browses', _onShowBrowses);
 		fc.on('hide:browses', _onHideBrowses);
-
-		fc.on('focus', _onFocus);
-		fc.on('unfocus', _onUnFocus);
 
 		SelectHandler.addFeatureCollection(fc);
 	},
