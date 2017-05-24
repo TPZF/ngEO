@@ -86,7 +86,8 @@ var MapPopup = function(container) {
 			if (!isActive) {
 				return;
 			}
-			window.open(products[0].properties.productUrl);
+			var _productUrl = Configuration.getMappedProperty(products[0], "productUrl", null);
+			window.open(_productUrl);
 		});
 
 	// DAR
@@ -246,7 +247,8 @@ var MapPopup = function(container) {
 			}
 
 			// activate direct download if productUrl exists
-			if (product.properties.productUrl) {
+			var productUrl = Configuration.getMappedProperty(product, "productUrl", null);
+			if (productUrl !== null) {
 				element.find('#mpButtons a.download').addClass('active');
 			}
 
