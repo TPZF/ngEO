@@ -9,7 +9,7 @@ module.exports = config:
       plugins: autoReload: enabled: false
       paths:
         watched: ['client','vendor','bower_components']
-        public: 'output-opt' # in optimisation mode, the output is on folder 'output-opt' wher files are uglified
+        public: '..[\\\/]ngEO-LWS[\\\/]public' # in optimisation mode, the output is on folder 'output-opt' wher files are uglified
   files:
     javascripts:
       joinTo:
