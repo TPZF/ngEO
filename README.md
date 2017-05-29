@@ -75,3 +75,10 @@ Example:
 - sh deployNGEO.sh ngEOV2 2.12 20150507
 - sudo node /usr/local/ngeo/webclient-testserver/app.js
 
+## Test polygon with OpenLayers
+
+- With OpenLayers 2.11 : http://jsfiddle.net/man___ol/dymb9hqr/
+- With OpenLayers 2.12 : http://jsfiddle.net/man___ol/yxtar76j/
+- With OpenLayers 2.13 : http://jsfiddle.net/man___ol/quLjod5x/
+
+

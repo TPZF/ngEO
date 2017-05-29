@@ -338,6 +338,8 @@ OpenLayersMapEngine.prototype.addLayer = function(layer) {
 				renderers: ['Canvas', 'VML'],
 				projection: "EPSG:4326"
 			});
+			// @see also https://gis.stackexchange.com/questions/41570/openlayers-vector-layer-markers-disappear-near-dateline
+			//OpenLayers.Renderer.SVG.prototype.MAX_PIXEL = Number.MAX_VALUE;
 			if (layer.data) {
 				var geojsonFormat = new OpenLayers.Format.GeoJSON();
 				var features = geojsonFormat.read(layer.data);
