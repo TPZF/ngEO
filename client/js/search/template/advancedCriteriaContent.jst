@@ -58,13 +58,13 @@
     			<input data-mini="true" name="<%= criterion.id %>" id="<%= criterion.id %>" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" <% if ( value ) print('value='+value); %> type="range">
 
     		<!-- The criterion is a range -->
-    		<% } else if ((criterionType == 'range') && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
+    		<% } else if ((criterionType.indexOf('range') >=0) && criterion.rangeMinValue && criterion.rangeMaxValue) { %>	
 				<div data-role="fieldcontain">
 			    	<div data-role="rangeslider" data-highlight="true" data-mini="true">
 				        <label class="capitalize" for="<%= criterion.id %>_from"><%= label %>:</label>
-				        <input data-theme="a" type="range" step="<% criterionType == "float" ? print(".1") : print("1") %>" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(0, value.indexOf(','))) : print(criterion.rangeMinValue) %>">
+				        <input data-theme="a" type="range" step="<% criterionType.indexOf("float") >= 0 ? print(".1") : print("1") %>" name="<%= criterion.id %>_from" id="<%= criterion.id %>_from" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(0, value.indexOf(','))) : print(criterion.rangeMinValue) %>">
 				        <label class="capitalize" for="<%= criterion.id %>_to"><%= label %>:</label>
-				        <input data-theme="a" type="range" step="<% criterionType == "float" ? print(".1") : print("1") %>" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
+				        <input data-theme="a" type="range" step="<% criterionType.indexOf("float") >= 0 ? print(".1") : print("1") %>" name="<%= criterion.id %>_to" id="<%= criterion.id %>_to" min="<%= criterion.rangeMinValue %>" max="<%= criterion.rangeMaxValue %>" value="<% value ? print(value.substring(value.indexOf(',')+1,value.length-1)) : print(criterion.rangeMaxValue) %>">
 				    </div>
 				</div>
 
