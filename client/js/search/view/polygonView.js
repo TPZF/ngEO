@@ -67,7 +67,7 @@ var PolygonView = Backbone.View.extend({
 	},
 
 	// Get DMS-formatted value
-	getDMS(value) {
+	getDMS: function(value) {
 		if ( value.indexOf("°") >= 0 || value.indexOf("'") >= 0 || value.indexOf("\"") >= 0) {
 			return value;
 		} else {

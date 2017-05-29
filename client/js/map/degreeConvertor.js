@@ -26,8 +26,9 @@ module.exports = {
 	 *			  'number': +/- at the beginning
 	 * @return coordinates in degree/minute/second
 	 */
-	toDMS: function(dd, isLon, options = {}) {
+	toDMS: function(dd, isLon, options) {
 
+		var options = options || {};
 		var deg = dd | 0; // truncate dd to get degrees
 		var frac = Math.abs(dd - deg); // get fractional part
 		var min = (frac * 60) | 0; // multiply fraction by 60 and truncate

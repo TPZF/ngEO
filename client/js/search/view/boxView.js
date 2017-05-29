@@ -129,8 +129,8 @@ var BoxView = Backbone.View.extend({
 	},
 
 	// Get decimal value for the given input
-	getDecimal(value) {
-		if ( value.indexOf("°") >= 0 || value.indexOf("'") >= 0 || value.indexOf("\"") >= 0) {
+	getDecimal: function(value) {
+		if ( (value.indexOf("°") >= 0) || (value.indexOf("'") >= 0) || (value.indexOf("\"") >= 0)) {
 			return degreeConvertor.toDecimalDegrees(value);
 		} else {
 			return filterFloat(value);

@@ -165,6 +165,7 @@ var SearchCriteriaView = SearchView.extend({
 			submitText: "Search",
 			useDate: true
 		});
+		
 		this.$el.append(content);
 
 		SearchView.prototype.render.apply(this);

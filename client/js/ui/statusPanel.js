@@ -329,7 +329,7 @@ var StatusPanel = Backbone.View.extend({
 		$(activatorId).remove();
 	},
 
-	setActiveView(view) {
+	setActiveView: function(view) {
 		this.activeView = view;
 	}
 
