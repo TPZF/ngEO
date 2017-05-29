@@ -113,7 +113,7 @@ var Pagination = Backbone.View.extend({
 			}
 
 			for ( var i=startIndex; i <= endIndex; i++ ) {
-				this.$el.find('.next').before('<a class="pageNum" data-role="button" value="'+i+'">'+i+'</a>');
+				this.$el.find('.next').before('<a class="pageNum" data-role="button" value="'+i+'" title="Go to page '+i+'">'+i+'</a>');
 			}
 			this.$el.find('.pageNum[value="'+ this.model.currentPage +'"]').addClass('ui-btn-active');
 			this.$el.trigger("create");
@@ -126,10 +126,10 @@ var Pagination = Backbone.View.extend({
 	 */
 	render: function() {
 		var content = '<div id="globalPaging" style="text-align: center; margin: 4px 15px;" data-role="controlgroup" data-type="horizontal" data-mini="true">\
-			<a class="first" data-role="button"><<</a>\
-			<a class="prev" data-role="button"><</a>\
-			<a class="next" data-role="button">></a>\
-			<a class="last" data-role="button">>></a>\
+			<a class="first" data-role="button" title="Go to first page"><<</a>\
+			<a class="prev" data-role="button" title="Go to previous page"><</a>\
+			<a class="next" data-role="button" title="Go to next page">></a>\
+			<a class="last" data-role="button" title="Go to last page">>></a>\
 		</div>';
 		this.$el.html(content).trigger("create");
 		this.$el.find("a").addClass("ui-disabled");
