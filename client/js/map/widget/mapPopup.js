@@ -193,7 +193,7 @@ var MapPopup = function(container) {
 
 		var content = "";
 		if (nbProducts > 1) {
-			content += "" + nbProducts + " products picked.<br>Click to cycle through products.<br>";
+			content += "" + nbProducts + " products picked.<br><span class='clickagain'>(Click again on same location to pick one product at a time)</span>.<br>";
 			element.find('#mpButtons a.browse-multiple').removeClass('active');
 		}
 
@@ -201,18 +201,12 @@ var MapPopup = function(container) {
 			var product = products[0];
 			// Build product title according to NGEO-1969
 			var productTitle = '';
-			var param = Configuration.getMappedProperty(product, "sensor");
-			if (param) {
-				productTitle += param + ' / ';
-			}
-			param = Configuration.getMappedProperty(product, "operationalMode");
-			if (param) {
-				productTitle += param + ' / ';
-			}
-			param = Configuration.getMappedProperty(product, "productType");
-			if (param) {
-				productTitle += param;
-			}
+			var param = Configuration.getMappedProperty(product, "sensor", "-");
+			productTitle += param + ' / ';
+			param = Configuration.getMappedProperty(product, "operationalMode", "-");
+			productTitle += param + ' / ';
+			param = Configuration.getMappedProperty(product, "productType","-");
+			productTitle += param;
 			content += '<p><b>' + productTitle + '</b></p>';
 			var columnDefs = Configuration.data.tableView.columnsDef;
 			for (var i = 0; i < columnDefs.length; i++) {
