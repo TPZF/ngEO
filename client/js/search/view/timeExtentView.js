@@ -241,6 +241,9 @@ var TimeExtentView = Backbone.View.extend({
 			} else if (stopDate > maxDate) {
 				// stop > max => start=max - 1 week and stop = max
 				startDate = new Date(maxDate.getTime() - ONE_WEEK);
+				if (startDate.getTime() - minDate.getTime() < 0) {
+					startDate = minDate;
+				}
 				stopDate = maxDate;
 				changeOnDate = true;
 			} else if (stopDate == maxDate && stopDate - startDate > ONE_YEAR) {
