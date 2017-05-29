@@ -120,7 +120,7 @@ var StatusPanel = Backbone.View.extend({
 			var bottomWidth = $('#bottomToolbar').outerWidth();
 			var menuCommandWidth = 40; // Width of first button allowing to "Show table"
 			var paginationWidth = self.$el.find('#statusPagination').width();
-			var searchBtnWidth = 40;
+			var searchBtnWidth = 70;
 			var shareBtnWidth = 40;
 			
 			$('#bottomDatasets').width(bottomWidth - paginationWidth - searchBtnWidth - shareBtnWidth - menuCommandWidth);
