@@ -163,13 +163,18 @@ var configuration = {
 			var value = defaultValue;
 			propertyPath.forEach(function(_propertyPath) {
 				var _value = _this.getFromPath(object, _propertyPath, defaultValue);
-				if (_value !== defaultValue && typeof _value !== 'object') {
-					value = _value;
-					if (propertyId == "browses" && !_.isArray(_value)) {
-						// HACK: since WEBS sends browses as an Object when there is only one browse
-						// we don't want to change all the logic in WEBC so convert it to array here for now
-						// For more details see NGEO-2182 (in comments)
-						value = [_value];
+				if (_value !== defaultValue) {
+					if (propertyId === 'browses') {
+						if (!_.isArray(_value)) {
+							// HACK: since WEBS sends browses as an Object when there is only one browse
+							// we don't want to change all the logic in WEBC so convert it to array here for now
+							// For more details see NGEO-2182 (in comments)
+							value = [_value];
+						} else {
+							value = _value;
+						}
+					} else if (typeof _value !== 'object') {
+						value = _value;
 					}
 				}
 			});
