@@ -211,7 +211,7 @@ var MapPopup = function(container) {
 			var columnDefs = Configuration.data.tableView.columnsDef;
 			for (var i = 0; i < columnDefs.length; i++) {
 				if (columnDefs[i].sTitle != 'Product URL') {
-					var value = Configuration.getFromPath(product, columnDefs[i].mData);
+					var value = Configuration.getPropertyFromPaths(product, columnDefs[i].mData);
 					if ( columnDefs[i].sTitle == 'Download options' && value ) {
 						// HACK: Skip it for now, we should store it somewhere, or WEBS should send it for us
 							continue;

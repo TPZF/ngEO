@@ -399,7 +399,7 @@ var TableView = Backbone.View.extend({
 			// Update rowData according to columnDefs
 			rowData.cellData.length = 0;
 			for (var j = 0; j < this.columnDefs.length; j++) {
-				var d = Configuration.getFromPath(feature, this.columnDefs[j].mData);
+				var d = Configuration.getPropertyFromPaths(feature, this.columnDefs[j].mData);
 				rowData.cellData.push(d);
 				$($row.find("td").get(j + tdOffset)).html(d);
 			}
@@ -625,7 +625,7 @@ var TableView = Backbone.View.extend({
 
 		var columns = this.columnDefs;
 		for (var j = 0; j < columns.length; j++) {
-			var d = Configuration.getFromPath(feature, columns[j].mData);
+			var d = Configuration.getPropertyFromPaths(feature, columns[j].mData);
 			rowData.cellData.push(d);
 			if (d) {
 				columns[j].numValidCell++;

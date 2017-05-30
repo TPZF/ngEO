@@ -156,16 +156,23 @@ var configuration = {
 	 *		The default value if the path wasn't found
 	 */
 	getMappedProperty: function(object, propertyId, defaultValue) {
+		var _this = this;
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
 		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
 		if (propertyPath) {
-			var value = this.getFromPath(object, propertyPath, defaultValue);
-			if (propertyId == "browses" && !_.isArray(value)) {
-				// HACK: since WEBS sends browses as an Object when there is only one browse
-				// we don't want to change all the logic in WEBC so convert it to array here for now
-				// For more details see NGEO-2182 (in comments)
-				value = [value];
-			}
+			var value = defaultValue;
+			propertyPath.forEach(function(_propertyPath) {
+				var _value = _this.getFromPath(object, _propertyPath, defaultValue);
+				if (_value !== defaultValue && typeof _value !== 'object') {
+					value = _value;
+					if (propertyId == "browses" && !_.isArray(_value)) {
+						// HACK: since WEBS sends browses as an Object when there is only one browse
+						// we don't want to change all the logic in WEBC so convert it to array here for now
+						// For more details see NGEO-2182 (in comments)
+						value = [_value];
+					}
+				}
+			});
 			return value;
 		} else {
 			return defaultValue;
@@ -191,6 +198,31 @@ var configuration = {
 			}
 		} else {
 			console.warn(propertyId + " wasn't found in serverPropertyMapper");
+		}
+	},
+
+	/**
+	 *	Get property from an array of paths
+	 *
+	 *	@function getPropertyFromPaths
+	 *	@param object - Object from which you need to extract the property
+	 *	@param propertyPaths - Array of paths 
+	 *	@param defaultValue - The default value if none path was found
+	 *	@returns {string}
+	 */
+	getPropertyFromPaths: function(object, propertyPaths, defaultValue) {
+		var _this = this;
+		if (propertyPaths && _.isArray(propertyPaths) && propertyPaths.length > 0) {
+			var value = defaultValue;
+			propertyPaths.forEach(function(_propertyPath) {
+				var _value = _this.getFromPath(object, _propertyPath, defaultValue);
+				if (_value !== defaultValue && typeof _value !== 'object') {
+					value = _value;
+				}
+			});
+			return value;
+		} else {
+			return defaultValue;
 		}
 	},
 
