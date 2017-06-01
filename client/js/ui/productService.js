@@ -8,7 +8,7 @@ module.exports = {
 
     // for highlighted products
     addHighlightedProducts: function(features) {
-        _productsHighlighted = _.union(_productsHighlighted, features);
+		_productsHighlighted = _.uniq(_.union(_productsHighlighted, features), 'id');
     },
 
     getHighlightedProducts: function() {
@@ -25,7 +25,7 @@ module.exports = {
 
     // for browsed products
     addBrowsedProducts: function(features) {
-        _productsBrowsed = _.union(_productsBrowsed, features);
+        _productsBrowsed =  _.uniq(_.union(_productsBrowsed, features), 'id');
     },
 
     getBrowsedProducts: function() {
@@ -42,7 +42,7 @@ module.exports = {
 
     // for checked products
     addCheckedProducts: function(features) {
-        _productsChecked = _.union(_productsChecked, features);
+        _productsChecked =  _.uniq(_.union(_productsChecked, features), 'id');
     },
 
     getCheckedProducts: function() {
