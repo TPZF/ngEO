@@ -145,13 +145,29 @@ module.exports = {
 	 *	so table view could react on highlight to features which it contains
 	 */
 	initialize: function() {
+
+		var ctrlPressed = false;
+
+		var onKeyDown = function(e) {
+			if ( e.ctrlKey ) {
+				ctrlPressed = true;
+			}
+		};
+
+		var onKeyUp = function(e) {
+			ctrlPressed = e.ctrlKey;
+		};
+		
+		document.addEventListener('keydown', onKeyDown);
+		document.addEventListener('keyup', onKeyUp);
+
 		// Connect with map feature picking
 		Map.on('pickedFeatures', function(features, featureCollections) {
 			var highlights = {};
 			var featsToAdd = [];
 			var featsToRemove = [];
 			// if ctrl key is pressed and one or more features are picked
-			if (event.ctrlKey && features.length > 0) {
+			if (ctrlPressed && features.length > 0) {
 				features.forEach (function(_feat) {
 					// if feature is already highlighted > add to remove array
 					// if feature is not already highlighted > add to add array
@@ -181,7 +197,7 @@ module.exports = {
 			for (var i = 0; i < featureCollections.length; i++) {
 				// Ctrl key not pressed > unhighlight unchecked products
 				// no features picked > unhighlight unchecked products
-				if (!event.ctrlKey || features.length === 0) {
+				if (!ctrlPressed || features.length === 0) {
 					featureCollections[i].checkAllHighlight();
 				}
 				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
