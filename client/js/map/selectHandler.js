@@ -154,7 +154,10 @@ var isSelectionEqual = function(newSelection) {
 	if (pickedFeatures.length == newSelection.length) {
 
 		for (var i = 0; i < pickedFeatures.length; i++) {
-			if (pickedFeatures[i] != newSelection[i])
+			// compare with id
+			// because fixDateLine transform a polygon into a multipolygon
+			// if crossing date line is true (@see getFeaturesFromPoint)
+			if (pickedFeatures[i].id != newSelection[i].id)
 				return false;
 		}
 
