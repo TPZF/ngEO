@@ -124,10 +124,10 @@ module.exports = {
 			var x1 = coords[n][0];
 			var x2 = coords[n + 1][0];
 
-			if (Math.abs(x1 - x2) > 180)
+			if (Math.abs(x1 - x2) > 180) {
 				return true;
+			}
 		}
-
 		return false;
 	},
 
@@ -229,19 +229,65 @@ module.exports = {
 	 * Fix date line on coordinates
 	 */
 	fixDateLineCoords: function(coords) {
-
-		var posc = [];
-		var negc = [];
+		var crossDate = 0;
+		var newCrossDate = 0;
+		var first = [];
+		var second = [];
+		var current = [];
+		current = first;
 		for (var n = 0; n < coords.length; n++) {
+			var p = n + 1;
 			var coord = [coords[n][0], coords[n][1]];
-			if (coord[0] < 0) {
-				coord[0] += 360;
+			if (p == coords.length) {
+				p = 0;
 			}
-			posc.push(coord);
-			negc.push([coord[0] - 360, coord[1]]);
+			var coordP = [coords[p][0], coords[p][1]];
+			if ((coord[0] - coordP[0]) > 180) {
+				
+				current.push(coord);
+				
+				var deltaLong = (coordP[0] + 360) - coord[0];
+				var deltaLat = coordP[1] - coord[1];
+				var coordDateLine1;
+				if (deltaLong !== 0) {
+					coordDateLine1 = [180, coord[1] + (180 - coord[0]) * deltaLat / deltaLong];
+				} else {
+					coordDateLine1 = [180, coord[1]];
+				}
+				current.push(coordDateLine1);
+				var coordDateLine2;
+				if (deltaLong !== 0) {
+					coordDateLine2 = [-180, coord[1] + (180 - coord[0]) * deltaLat / deltaLong];
+				} else {
+					coordDateLine2 = [-180, coord[1]];
+				}
+				if (current === first) {current = second;} else {current = first;}
+				current.push(coordDateLine2);
+			} else if ((coord[0] - coordP[0]) < -180) {
+				var deltaLong = (coordP[0] - 360) - coord[0];
+				var deltaLat = coordP[1] - coord[1];
+				current.push(coord);
+				var coordDateLine1;
+				if (deltaLong !== 0) {
+					coordDateLine1 = [-180, coord[1] + (-180 - coord[0]) * deltaLat / deltaLong];
+				} else {
+					coordDateLine1 = [-180, coord[1]];
+				}
+				current.push(coordDateLine1);
+				var coordDateLine2;
+				if (deltaLong !== 0) {
+					coordDateLine2 = [180, coord[1] + (-180 - coord[0]) * deltaLat / deltaLong];
+				} else {
+					coordDateLine2 = [180, coord[1]];
+				}
+				if (current === first) {current = second;} else {current = first;}
+				current.push(coordDateLine2);
+			} else {
+				current.push(coord);
+			}
+			crossDate = newCrossDate;
 		}
-
-		return [posc, negc];
+		return [first, second];
 	},
 
 	/**
