@@ -191,14 +191,15 @@ module.exports = {
 				featureCopy.geometry.type = "MultiPolygon";
 				featureCopy.geometry.coordinates = [
 					[out[0]],
-					[out[1]]
+					[out[1]],
+					[out[2]]
 				];
 				break;
 			case "MultiPolygon":
 				var dateLineCoords = [];
 				for (var i = 0; i < geometry.coordinates.length; i++) {
 					var out = this.fixDateLineCoords(geometry.coordinates[i][0]);
-					dateLineCoords.push([out[0]], [out[1]]);
+					dateLineCoords.push([out[0]], [out[1]], [out[2]]);
 				}
 				featureCopy.geometry.type = "MultiPolygon";
 				featureCopy.geometry.coordinates = dateLineCoords;
@@ -211,7 +212,7 @@ module.exports = {
 				var dateLineCoords = [];
 				for (var i = 0; i < geometry.coordinates.length; i++) {
 					var out = this.fixDateLineCoords(geometry.coordinates[i]);
-					dateLineCoords.push(out[0], out[1]);
+					dateLineCoords.push(out[0], out[1], out[2]);
 				}
 				featureCopy.geometry.type = "MultiLineString";
 				featureCopy.geometry.coordinates = dateLineCoords;
@@ -228,13 +229,13 @@ module.exports = {
 	/**
 	 * Fix date line on coordinates
 	 * From one array of coordinates,
-	 * set 2 arrays, one for each side
+	 * split on 2 arrays, one for each side
 	 * 
-	 * @function fixDateLineCoords
+	 * @function fixDateLineCoordsWithSplit
 	 * @param coords
 	 * @returns {object}
 	 */
-	fixDateLineCoords: function(coords) {
+	fixDateLineCoordsWithSplit: function(coords) {
 		var crossDate = 0;
 		var newCrossDate = 0;
 		var first = [];
@@ -323,6 +324,52 @@ module.exports = {
 			crossDate = newCrossDate;
 		}
 		return [first, second];
+	},
+
+	/**
+	 * Fix date line on coordinates
+	 * From one array of coordinates,
+	 * set 3 arrays
+	 *  - original values + gap
+	 *  - original values + gap - 360
+	 *  - original values + gap + 360
+	 * 
+	 * @function fixDateLineCoords
+	 * @param coords
+	 * @returns {object}
+	 */
+	fixDateLineCoords: function(coords) {
+		var gapCrossDate = 0;
+		var newCrossDate = 0;
+		var first = [];
+		var second = [];
+		var third = [];
+		current = first;
+		for (var n = 0; n < coords.length; n++) {
+
+			// get coord for n
+			var coord = [coords[n][0], coords[n][1]];
+
+			first.push([coord[0] + gapCrossDate, coord[1]]);
+			second.push([coord[0] + gapCrossDate - 360, coord[1]]);
+			third.push([coord[0] + gapCrossDate + 360, coord[1]]);
+
+			// get coord for n+1
+			var p = n + 1;
+			if (p == coords.length) {
+				p = 0;
+			}
+			var coordP = [coords[p][0], coords[p][1]];
+
+			if ((coord[0] - coordP[0]) > 180) {
+				// if cross date line 180/-180 from west to east
+				gapCrossDate += 360;
+			} else if ((coord[0] - coordP[0]) < -180) {
+				// if cross date line 180/-180 from east to west
+				gapCrossDate -= 360;
+			}
+		}
+		return [first, second, third];
 	},
 
 	/**
