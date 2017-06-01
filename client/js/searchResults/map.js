@@ -146,16 +146,16 @@ module.exports = {
 	 */
 	initialize: function() {
 
-		var ctrlPressed = false;
+		var ctrlOrCmdPressed = false;
 
 		var onKeyDown = function(e) {
-			if ( e.ctrlKey ) {
-				ctrlPressed = true;
+			if ( e.ctrlKey || e.metaKey ) {
+				ctrlOrCmdPressed = true;
 			}
 		};
 
 		var onKeyUp = function(e) {
-			ctrlPressed = e.ctrlKey;
+			ctrlOrCmdPressed = e.ctrlKey || e.metaKey;
 		};
 		
 		document.addEventListener('keydown', onKeyDown);
@@ -167,7 +167,7 @@ module.exports = {
 			var featsToAdd = [];
 			var featsToRemove = [];
 			// if ctrl key is pressed and one or more features are picked
-			if (ctrlPressed && features.length > 0) {
+			if (ctrlOrCmdPressed && features.length > 0) {
 				features.forEach (function(_feat) {
 					// if feature is already highlighted > add to remove array
 					// if feature is not already highlighted > add to add array
@@ -197,7 +197,7 @@ module.exports = {
 			for (var i = 0; i < featureCollections.length; i++) {
 				// Ctrl key not pressed > unhighlight unchecked products
 				// no features picked > unhighlight unchecked products
-				if (!ctrlPressed || features.length === 0) {
+				if (!ctrlOrCmdPressed || features.length === 0) {
 					featureCollections[i].checkAllHighlight();
 				}
 				featureCollections[i].setHighlight(highlights[featureCollections[i].id]);
