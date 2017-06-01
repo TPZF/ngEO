@@ -227,6 +227,12 @@ module.exports = {
 
 	/**
 	 * Fix date line on coordinates
+	 * From one array of coordinates,
+	 * set 2 arrays, one for each side
+	 * 
+	 * @function fixDateLineCoords
+	 * @param coords
+	 * @returns {object}
 	 */
 	fixDateLineCoords: function(coords) {
 		var crossDate = 0;
@@ -236,16 +242,28 @@ module.exports = {
 		var current = [];
 		current = first;
 		for (var n = 0; n < coords.length; n++) {
-			var p = n + 1;
+
+			// get coord for n
 			var coord = [coords[n][0], coords[n][1]];
+
+			// get coord for n+1
+			var p = n + 1;
 			if (p == coords.length) {
 				p = 0;
 			}
 			var coordP = [coords[p][0], coords[p][1]];
+
 			if ((coord[0] - coordP[0]) > 180) {
-				
+				// if cross date line 180/-180 from west to east
+				// 0 - push current coord in current polygon
+				// 1 - calcul of coord at 180 lon (coordDateLine1)
+				// 2 - push it in current polygon
+				// 3 - calcul of coord at -180 lon (coordDateLine2)
+				// 4 - push it in other polygon
+
+				// 0
 				current.push(coord);
-				
+				// 1
 				var deltaLong = (coordP[0] + 360) - coord[0];
 				var deltaLat = coordP[1] - coord[1];
 				var coordDateLine1;
@@ -254,32 +272,49 @@ module.exports = {
 				} else {
 					coordDateLine1 = [180, coord[1]];
 				}
+				// 2
 				current.push(coordDateLine1);
+				// 3
 				var coordDateLine2;
 				if (deltaLong !== 0) {
 					coordDateLine2 = [-180, coord[1] + (180 - coord[0]) * deltaLat / deltaLong];
 				} else {
 					coordDateLine2 = [-180, coord[1]];
 				}
+				// 4
 				if (current === first) {current = second;} else {current = first;}
 				current.push(coordDateLine2);
+
 			} else if ((coord[0] - coordP[0]) < -180) {
+				// if cross date line 180/-180 from east to west
+				// 0 - push current coord in current polygon
+				// 1 - calcul of coord at 180 lon (coordDateLine1)
+				// 2 - push it in current polygon
+				// 3 - calcul of coord at -180 lon (coordDateLine2)
+				// 4 - push it in other polygon
+
+				// 0
+				current.push(coord);
+
+				// 1
 				var deltaLong = (coordP[0] - 360) - coord[0];
 				var deltaLat = coordP[1] - coord[1];
-				current.push(coord);
 				var coordDateLine1;
 				if (deltaLong !== 0) {
 					coordDateLine1 = [-180, coord[1] + (-180 - coord[0]) * deltaLat / deltaLong];
 				} else {
 					coordDateLine1 = [-180, coord[1]];
 				}
+				// 2
 				current.push(coordDateLine1);
+				// 3
 				var coordDateLine2;
 				if (deltaLong !== 0) {
 					coordDateLine2 = [180, coord[1] + (-180 - coord[0]) * deltaLat / deltaLong];
 				} else {
 					coordDateLine2 = [180, coord[1]];
 				}
+				// 4
 				if (current === first) {current = second;} else {current = first;}
 				current.push(coordDateLine2);
 			} else {
