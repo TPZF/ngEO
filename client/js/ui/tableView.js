@@ -10,11 +10,16 @@ var ProductService = require('ui/productService');
 
 /**
  *	Get nested objects containing the given key
- *		@param options
  *			<ul>
  *			    <li>val : Filter by value</li>
  *			    <li>firstFound : Boolean indicating if you need to return the first found object</li>
  *			<ul>
+ * @function _getObject
+ * @param obj
+ * @param key
+ * @param options
+ * @returns
+ * @private
  */
 var _getObjects = function(obj, key, options) {
 	if ( options ) {
@@ -57,8 +62,14 @@ var _dblClick = false;
  *	Toggle arrays helper used to splice/push features depending on their presence in prevArray
  *	Used to handle Shift+click selection
  *	Ex: newArray = [1,2,3]; prevArray = [2,3,4] --> prevArray becomes = [1,4]
+ *
+ * @function _toggleArrays
+ * @param {array} newArray
+ * @param {array} prevArray
+ * @returns {void}
+ * @private
  */
-var toggleArrays = function(newArray, prevArray) {
+var _toggleArrays = function(newArray, prevArray) {
   	for ( var i=0; i<newArray.length; i++ ) {
   		var item = newArray[i];
   		var idx = _.indexOf(prevArray, item);
@@ -189,7 +200,7 @@ var TableView = Backbone.View.extend({
 						return $(row).data('internal').feature;
 					});
 					currentHighlights = fc.highlights.slice(0);
-					toggleArrays(selectedFeatures, currentHighlights);
+					_toggleArrays(selectedFeatures, currentHighlights);
 					fc.setHighlight(currentHighlights);
 				} else if (!fc.isHighlighted(data.feature)) {
 					// feature is not highlighted
@@ -361,10 +372,7 @@ var TableView = Backbone.View.extend({
 			this.listenTo(this.model, "remove:features", this.removeData);
 			this.listenTo(this.model, "selectFeatures", this.updateSelection);
 			this.listenTo(this.model, "unselectFeatures", this.updateSelection);
-			this.listenTo(this.model, "highlightFeatures", this.triggerHighlightFeature);/*function(features){
-				_allHighlights = _allHighlights.concat(features);
-				self.triggerHighlightFeature(features);
-			});*/
+			this.listenTo(this.model, "highlightFeatures", this.triggerHighlightFeature);
 			this.listenTo(this.model, "unhighlightFeatures", this.unhighlightFeatures);
 			this.listenTo(this.model, "update:downloadOptions", this.updateRows);
 
@@ -407,54 +415,6 @@ var TableView = Backbone.View.extend({
 			this._updateRow(rowData, $row);
 		}
 		this.updateFixedHeader();
-	},
-
-	/**
-	 * Expand a row
-	 */
-	expandRow: function($row) {
-
-		var rowData = $row.data('internal');
-
-		// If row is already loading, exit !
-		if (rowData.isLoading)
-			return;
-
-		var expandUrl = null;
-		if (DataSetSearch.get("mode") != "Simple") {
-			// Interferometric search
-			expandUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
-		} else {
-			// Granules search
-			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
-			// HACK: Update WEBS response from atom to json : to be fixed by WEBS later
-			expandUrl = expandUrl.replace("format=atom", "format=json");
-		}
-
-		this.createChildrenFeatureCollection(rowData);
-		// Launch search
-		rowData.childFc.search(expandUrl);
-	},
-
-	/**
-	 * Close a row
-	 */
-	closeRow: function($row) {
-
-		var rowData = $row.data('internal');
-
-		if (rowData.isLoading) {
-			$row.next().remove();
-		} else {
-
-			if ( rowData.childFc ) {
-				this.model.removeChild(rowData.feature.id);
-			}
-
-			rowData.children.length = 0;
-			$row.nextAll('.child_of_'+ rowData.childFc.id).remove();
-			$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
-		}
 	},
 
 	/**
@@ -774,9 +734,64 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 *	Create children feature collection for the given row data
+	 * Expand a row
 	 */
-	createChildrenFeatureCollection: function(rowData) {
+	expandRow: function($row) {
+
+		var rowData = $row.data('internal');
+
+		// If row is already loading, exit !
+		if (rowData.isLoading)
+			return;
+
+		var expandUrl = null;
+		if (DataSetSearch.get("mode") != "Simple") {
+			// Interferometric search
+			expandUrl = Configuration.getMappedProperty(rowData.feature, "interferometryUrl", null);
+		} else {
+			// Granules search
+			expandUrl = Configuration.getMappedProperty(rowData.feature, "virtualProductUrl", null);
+			// HACK: Update WEBS response from atom to json : to be fixed by WEBS later
+			expandUrl = expandUrl.replace("format=atom", "format=json");
+		}
+		
+		if (expandUrl) {
+			this._createChildrenFeatureCollection(rowData);
+			// Launch search
+			rowData.childFc.search(expandUrl);
+		}
+
+	},
+
+	/**
+	 * Close a row
+	 */
+	closeRow: function($row) {
+
+		var rowData = $row.data('internal');
+
+		if (rowData.isLoading) {
+			$row.next().remove();
+		} else {
+
+			if ( rowData.childFc ) {
+				this.model.removeChild(rowData.feature.id);
+			}
+
+			rowData.children.length = 0;
+			$row.nextAll('.child_of_'+ rowData.childFc.id).remove();
+			$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
+		}
+	},
+
+	/**
+	 * Create children feature collection for the given row data
+	 * 
+	 * @function _createChildrenFeatureCollection
+	 * @param {object} rowData
+	 * 
+	 */
+	_createChildrenFeatureCollection: function(rowData) {
 
 		var $el;
 		var child = this.model.createChild(rowData.feature.id);
@@ -822,11 +837,9 @@ var TableView = Backbone.View.extend({
 		this.listenTo(child, 'reset:features', function(fc) {
 			rowData.children.length = 0;
 		});
-		var self = this;
-		this.listenTo(child, "highlightFeatures", function(features) {
-			_allHighlights = _allHighlights.concat(features);
-			self.triggerHighlightFeature();
-		});
+
+		// Highlight / Pin / Unpin
+		this.listenTo(child, "highlightFeatures", this.triggerHighlightFeature);
 		this.listenTo(child, "selectFeatures", this.updateSelection);
 		this.listenTo(child, "unselectFeatures", this.updateSelection);
 
@@ -1082,36 +1095,6 @@ var TableView = Backbone.View.extend({
 	},
 
 	/**
-	 * Show the table
-	 */
-	show: function() {
-		this.$el.show();
-		if (this.rowsData.length > 0) {
-			this.updateFixedHeader();
-		}
-		
-		// Scroll to the most recent product if selected
-		var highlightedRows = this.$el.find('.row_highlighted');
-		if ( highlightedRows.length ) {
-			var mostRecentRow = _.max(highlightedRows, function(row) {
-				var feature = $(row).data('internal').feature;
-				return new Date(Configuration.getMappedProperty(feature, "stop"));
-			});
-			this._scrollTo($(mostRecentRow));
-		}
-
-		this.visible = true;
-	},
-
-	/**
-	 * Hide the table
-	 */
-	hide: function() {
-		this.$el.hide();
-		this.visible = false;
-	},
-
-	/**
 	 * Build the main table element
 	 */
 	buildTable: function() {
@@ -1171,6 +1154,9 @@ var TableView = Backbone.View.extend({
 
 	/**
 	 * Render the table
+	 * 
+	 * @function render
+	 * 
 	 */
 	render: function() {
 
@@ -1186,15 +1172,53 @@ var TableView = Backbone.View.extend({
 
 		this.buildTable();
 
-		this.renderFooter();
+		this._renderFooter();
 
 		this.$el.trigger('create');
 	},
 
 	/**
-	 * Render footer
+	 * Show the table
 	 */
-	renderFooter: function() {
+	show: function() {
+		this.$el.show();
+		if (this.rowsData.length > 0) {
+			this.updateFixedHeader();
+		}
+		
+		// Scroll to the most recent product if selected
+		var highlightedRows = this.$el.find('.row_highlighted');
+		if ( highlightedRows.length ) {
+			var mostRecentRow = _.max(highlightedRows, function(row) {
+				var feature = $(row).data('internal').feature;
+				return new Date(Configuration.getMappedProperty(feature, "stop"));
+			});
+			this._scrollTo($(mostRecentRow));
+		}
+
+		this.visible = true;
+	},
+
+	/**
+	 * Hide the table
+	 */
+	hide: function() {
+		this.$el.hide();
+		this.visible = false;
+	},
+
+	/**
+	 * Render footer with
+	 * 	- input field to filter table products
+	 *  - a button to unpin all products
+	 *  - some buttons put on the right, specific for each view (searchResults or shopcart)
+	 * 
+	 * @function _renderFooter
+	 * @see {@link render}
+	 * 
+	 */
+	_renderFooter: function() {
+		
 		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
@@ -1203,12 +1227,15 @@ var TableView = Backbone.View.extend({
 						<button data-mini="true" data-inline="true" id="unpin-button" title="Unpin all products" >Unpin all products</button>\
 					</div>\
 					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
+		
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
 
+		// @see tableView in searchResults or shopcart folder for this method
 		if (this.renderButtons)
 			this.renderButtons($buttonContainer);
 
 		this.$el.append(footer).trigger("create");
+
 		// HACK jQm Firefox: Display text-input on the same level as label & button
 		this.$el.find('.table-filter .ui-input-text').css("vertical-align","middle");
 	},
