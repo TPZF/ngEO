@@ -142,9 +142,6 @@ var MapPopup = function(container) {
 	Map.on('unhighlightFeatures', function(highlightedFeatures) {
 		self.openOrCloseDialog('highlight', highlightedFeatures);
 	});
-	Map.on('pickedFeatures', function(pickedFeatures) {
-		//self.openOrCloseDialog('pick', pickedFeatures);
-	});
 
 	/**
 	* When we unselect features, just close the window
@@ -235,7 +232,18 @@ var MapPopup = function(container) {
 			// Show only if product has multiple browses
 			var browses = Configuration.getMappedProperty(product, "browses");
 			if ( browses && browses.length > 1 ) {
-				element.find('#mpButtons a.browse-multiple').addClass('active');
+				var bDisplay = false;
+				_.each(browses, function(browse) {
+					var url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
+					if (url.indexOf('SERVICE') > -1) {
+						bDisplay = true;
+					}
+				});
+				if (bDisplay) {
+					element.find('#mpButtons a.browse-multiple').addClass('active');
+				} else {
+					element.find('#mpButtons a.browse-multiple').removeClass('active');
+				}
 			} else {
 				element.find('#mpButtons a.browse-multiple').removeClass('active');
 			}
@@ -246,16 +254,23 @@ var MapPopup = function(container) {
 				element.find('#mpButtons a.download').addClass('active');
 			}
 
-			var isSelected = product._featureCollection.isSelected(product);
-			if (isSelected) {
+			if (product._featureCollection.isSelected(product)) {
 				element.find('#mpButtons a.check').addClass('select');
 			} else {
 				element.find('#mpButtons a.check').removeClass('select');
 			}
+			// acive shopcart button if product is not in shopcart
+			if (typeof product.properties.shopcart_id === 'undefined') {
+				element.find('#mpButtons a.shop').addClass('active');
+			} else {
+				element.find('#mpButtons a.shop').removeClass('active');
+			}
+
 
 		} else {
 			content += "<p>Products: </p>";
 			var isAllSelected = true;
+			var isAllInShopCart = true;
 			for (var i = 0; i < products.length; i++) {
 				var _product = products[i];
 				content += "<p class='oneproduct' title='"+ _product.id +"'>";
@@ -274,45 +289,31 @@ var MapPopup = function(container) {
 				if (!isSelected) {
 					isAllSelected = false;
 				}
+				if (typeof _product.properties.shopcart_id === 'undefined') {
+					isAllInShopCart = false;
+				}
 			}
 			if (isAllSelected) {
 				element.find('#mpButtons a.check').addClass('select');
 			} else {
 				element.find('#mpButtons a.check').removeClass('select');
 			}
+			// if all features are in shopcart inactive button
+			if (isAllInShopCart) {
+				element.find('#mpButtons a.shop').removeClass('active');
+			} else {
+				element.find('#mpButtons a.shop').addClass('active');
+			}
 
 		}
 
-		// if feature is highlighted >> save and shop are enable
+		// if feature is highlighted >> save (retrieve) button is enable (active)
 		var isHighlighted = _.find(products, function(feature) { return feature._featureCollection.isHighlighted(feature); });
 		if ( isHighlighted ) {
 			element.find('#mpButtons a.save').addClass('active');
-			element.find('#mpButtons a.shop').addClass('active');
 		} else {
 			element.find('#mpButtons a.save').removeClass('active');
-			element.find('#mpButtons a.shop').removeClass('active');
 		}
-
-		/*
-		var isMultipleBrowsed = _.find(products, function(feature) {
-			var browses = Configuration.getMappedProperty(feature, "browses");
-			var bDisplay = false;
-			if (browses && browses.length > 0 && browses[0] !== undefined) {
-				_.each(browses, function(browse) {
-					var url = browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
-					if (url.indexOf('SERVICE') > -1) {
-						bDisplay = true;
-					}
-				});
-			}
-			return bDisplay;
-		});
-		if ( isMultipleBrowsed ) {
-			element.find('#mpButtons a.browse-multiple').addClass('active');
-		} else {
-			element.find('#mpButtons a.browse-multiple').removeClass('active');
-		}
-		*/
 
 		// NGEO-1770: No retrieve button if selection contains at least one planned product or product url doesn't exist
 		var hasPlannedOrNoProductUrl = _.find(products, function(feature) {
@@ -330,14 +331,9 @@ var MapPopup = function(container) {
 		Open the popup
 	 */
 	this.open = function(featuresList) {
-
 		products = featuresList;
-
 		buildContent(products.length);
-
 		parentElement.fadeIn();
-		//parentElement.show();
-
 		isOpened = true;
 	};
 
@@ -346,21 +342,17 @@ var MapPopup = function(container) {
 		Close the popup
 	 */
 	this.close = function() {
-
 		if (isOpened) {
 			parentElement.stop(true).fadeOut();
 			isOpened = false;
 		}
-
 	};
 
 	/**
 	* Depending on the feature list, if empty, close the dialog, otherwise open the dialog and update content
 	*/
 	this.openOrCloseDialog = function(from, featuresList) {
-		if (from !== 'pick') {
-			featuresList = ProductService.getHighlightedProducts();
-		}
+		featuresList = ProductService.getHighlightedProducts();
 		if (!featuresList || featuresList.length == 0) {
 			this.close();
 		} else {

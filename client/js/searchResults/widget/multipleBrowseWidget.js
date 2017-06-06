@@ -17,9 +17,17 @@ module.exports = {
 		var fc = options.featureCollection;
 
 		var browses = Configuration.getMappedProperty(feature, "browses");
+		var newBrowses = [];
+		if (_.isArray(browses)) {
+			browses.forEach(function(_browse) {
+				if (_browse.BrowseInformation.fileName.ServiceReference["@"]["href"].upperCase().indexOf('SERVICE') > -1) {
+					newBrowses.push(browses);
+				}
+			});
+		}
 		var $popup = $(multipleBrowse_template({
 			feature: feature,
-			browses: browses,
+			browses: newBrowses,
 			MapUtils: MapUtils
 		}));
 
