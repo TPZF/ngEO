@@ -35,7 +35,7 @@ module.exports = {
 		/**
 		 * When the document is ready and configuration is loaded load the rest of the application
 		 */
-		$.when(doc_ready, Configuration.load())
+		$.when(doc_ready, Configuration.load(), Configuration.checkBehindSso())
 			.done(function() {
 
 				// Update mailto coordinates

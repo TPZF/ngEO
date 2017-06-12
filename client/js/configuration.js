@@ -256,6 +256,29 @@ var configuration = {
 		}
 
 		return _getValue(obj, names[names.length - 1], defaultValue);
+	},
+
+	checkBehindSso: function() {
+		return $.when(
+			$.ajax({
+				url: this.serverHostName + this.baseServerUrl + "/shopcarts",
+				dataType: 'text',
+				success: function(data) {
+					configuration.data.behindSSO = true;
+					console.info("Behind SSO");
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					configuration.data.behindSSO = false;
+					console.info("Not behind SSO");
+				}
+			})
+		).then(
+		function(success) {
+			return $.when();
+		},
+		function(error) {
+			return $.when();
+		});
 	}
 };
 
