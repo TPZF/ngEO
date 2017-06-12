@@ -107,7 +107,7 @@ var FeatureLayer = function(params, engineLayer) {
 	this.modifyFeaturesStyle = function(features, style) {
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
-			let _myFeat = _.find(this.features, function(_f) {
+			var _myFeat = _.find(this.features, function(_f) {
 				return _f.id === feature.id;
 			});
 			if (_myFeat) {
