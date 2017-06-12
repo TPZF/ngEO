@@ -99,6 +99,27 @@ var _convertToKML = function(myFeatureCollection) {
 }
 
 /**
+ * @function _convertToMetalink
+ * @param {object} myFeatureCollection 
+ */
+var _convertToMetalink = function(myFeatureCollection) {
+	var result = '<metalink version="3.0" xmlns="http://www.metalinker.org/">';
+	result += ' <files>';
+	myFeatureCollection.features.forEach(function(feature) {
+		var productUrl = feature.properties.productUrl;
+		var fileName = productUrl.substr(productUrl.lastIndexOf('/'), productUrl.length);
+	    result += '  <file name="' + fileName + '">';
+		result += '   <resources>';
+        result += '    <url type="http">' + productUrl + '</url> ';
+		result += '   </resources>'
+		result += '  </file>'
+	});
+    result += ' </files>';
+	result += '</metalink>';
+	return result;
+}
+
+/**
  * Public interface for GeoJsonConverter
  */
 module.exports = {
@@ -162,15 +183,15 @@ module.exports = {
 				/*var olFeatures = geoJsonFormat.read(fc);
 				var kmlFormat = new OpenLayers.Format.KML();
 				return kmlFormat.write(olFeatures);*/
-				break;
 			case "GML":
 				var olFeatures = geoJsonFormat.read(fc);
 				var gmlFormat = new OpenLayers.Format.GML();
 				return gmlFormat.write(olFeatures);
-				break;
 			case "JSON":
 			case "GEOJSON":
 				return JSON.stringify(fc);
+			case "METALINK":
+				return _convertToMetalink(fc);
 		}
 	},
 

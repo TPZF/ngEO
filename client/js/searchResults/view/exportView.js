@@ -12,7 +12,8 @@ var ExportView = Backbone.View.extend({
 	mediaTypes: {
 		'kml': 'application/vnd.google-earth.kml+xml',
 		'gml': 'application/gml+xml',
-		'geojson': 'application/json'
+		'geojson': 'application/json',
+		'metalink': 'application/metalink+xml'
 	},
 
 	events: {
