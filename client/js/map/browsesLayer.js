@@ -107,7 +107,7 @@ var BrowsesLayer = function(params, mapEngine) {
 
 			var browseLayerDesc = {
 				time:  Configuration.getMappedProperty( feature, "stop" ),
-				params: layerDesc.params,
+				params: layerDesc,
 				engineLayer: mapEngine.addLayer(layerDesc)
 			};
 
