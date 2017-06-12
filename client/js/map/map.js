@@ -107,9 +107,15 @@ var FeatureLayer = function(params, engineLayer) {
 	this.modifyFeaturesStyle = function(features, style) {
 		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
-			style = mapEngine.applyConditionalStyling(this.engineLayer, feature, style);
-			feature.renderHint = style;
-			mapEngine.modifyFeatureStyle(this.engineLayer, feature, feature.renderHint);
+			let _myFeat = _.find(this.features, function(_f) {
+				return _f.id === feature.id;
+			});
+			if (_myFeat) {
+				_myFeat.renderHint = style;
+				style = mapEngine.applyConditionalStyling(this.engineLayer, _myFeat, style);
+				//feature.renderHint = style;
+				mapEngine.modifyFeatureStyle(this.engineLayer, _myFeat, style);
+			}
 		}
 	};
 	this.updateFeature = function(feature, customFixDateLine) {
