@@ -21,8 +21,8 @@ var ProductService = require('ui/productService');
  * @returns
  * @private
  */
-var _getObjects = function(obj, key, options) {
-	if ( options ) {
+var _getObjects = function (obj, key, options) {
+	if (options) {
 		var val = options.hasOwnProperty("val") ? options.val : null;
 		var firstFound = options.firstFound ? options.firstFound : false;
 	}
@@ -31,19 +31,17 @@ var _getObjects = function(obj, key, options) {
 	for (var i in obj) {
 		if (!obj.hasOwnProperty(i))
 			continue;
-		if ( i == key && (val == undefined || obj[i] == val) ) {
-			if ( firstFound )
+		if (i == key && (val == undefined || obj[i] == val)) {
+			if (firstFound)
 				return obj;
 			objects.push(obj);
 		}
 
 		if (typeof obj[i] == 'object') {
 			var foundObjects = _getObjects(obj[i], key, options);
-			if ( !_.isArray(foundObjects) && firstFound ){
+			if (!_.isArray(foundObjects) && firstFound) {
 				return foundObjects;
-			}
-			else
-			{
+			} else {
 				objects = objects.concat(foundObjects);
 			}
 		}
@@ -53,6 +51,7 @@ var _getObjects = function(obj, key, options) {
 
 var _allHighlights = [];
 var ctrlPressed = false;
+var metakeyPressed = false;
 var shiftPressed = false;
 var _lastSelectedRow = null;
 var _clickInTable = false; // Terrible hack to avoid scrolling to most recent feature(FIXME please..)
@@ -69,16 +68,16 @@ var _dblClick = false;
  * @returns {void}
  * @private
  */
-var _toggleArrays = function(newArray, prevArray) {
-  	for ( var i=0; i<newArray.length; i++ ) {
-  		var item = newArray[i];
-  		var idx = _.indexOf(prevArray, item);
-  		if ( idx !== -1 ) {
-  			prevArray.splice(idx, 1);
-  		} else {
-  			prevArray.push(item);
-  		}
-  	}
+var _toggleArrays = function (newArray, prevArray) {
+	for (var i = 0; i < newArray.length; i++) {
+		var item = newArray[i];
+		var idx = _.indexOf(prevArray, item);
+		if (idx !== -1) {
+			prevArray.splice(idx, 1);
+		} else {
+			prevArray.push(item);
+		}
+	}
 }
 
 /**
@@ -87,11 +86,11 @@ var _toggleArrays = function(newArray, prevArray) {
  */
 var TableView = Backbone.View.extend({
 
-	/**
-	 * Constructor
-	 * Connect to model change
-	 */
-	initialize: function(options) {
+    /**
+     * Constructor
+     * Connect to model change
+     */
+	initialize: function (options) {
 
 		this.setModel(this.model);
 
@@ -108,19 +107,22 @@ var TableView = Backbone.View.extend({
 		this.maxVisibleColumns = 10;
 		var self = this;
 
-		var onKeyDown = function(e) {
-			if ( e.ctrlKey ) {
+		var onKeyDown = function (e) {
+			if (e.ctrlKey) {
 				ctrlPressed = true;
 			}
-			if ( e.shiftKey ) {
+			if (e.metaKey) {
+				metakeyPressed = true;
+			}
+			if (e.shiftKey) {
 				shiftPressed = true;
 			}
 
-			if ( ctrlPressed && e.keyCode == '65' ) {
+			if ((metakeyPressed || ctrlPressed) && e.keyCode == '65') {
 				// Ctrl+A : select all
 				e.preventDefault();
 
-				if ( self.model ) {
+				if (self.model) {
 					if (self.model.highlights.length === self.model.features.length) {
 						self.model.checkAllHighlight();
 					} else {
@@ -128,38 +130,39 @@ var TableView = Backbone.View.extend({
 					}
 				}
 				//	$(self.$el.find('.table-view-checkbox').get(0)).trigger('click');
-				
+
 			}
 			//Map.trigger('keyDown', e.keyCode);
 		}
-		var onKeyUp = function(e) {
+		var onKeyUp = function (e) {
 			ctrlPressed = e.ctrlKey;
+			metakeyPressed = e.metaKey;
 			shiftPressed = e.shiftKey;
 			//Map.trigger('keyUp', e.keyCode);
 		}
 		document.addEventListener('keydown', onKeyDown);
 		document.addEventListener('keyup', onKeyUp);
 
-		/**
-		 *	This code just temporary serves to trigger highlight on ALL the feature collections
-		 *	TODO: Replace the mecanism by something more sexy..
-		 */
-		this.triggerHighlightFeature = _.debounce(function(){
+        /**
+         *	This code just temporary serves to trigger highlight on ALL the feature collections
+         *	TODO: Replace the mecanism by something more sexy..
+         */
+		this.triggerHighlightFeature = _.debounce(function () {
 			self.updateHighlights();
 		}, 10);
 	},
 
-	/**
-	 * Manage events on the view
-	 */
+    /**
+     * Manage events on the view
+     */
 	events: {
 
 		// Call when the user enter text in the filter input
-		'keyup input': function(event) {
+		'keyup input': function (event) {
 			this.filterData($(event.currentTarget).val());
 		},
 
-		'dblclick tr': function(event) {
+		'dblclick tr': function (event) {
 			var data = $(event.currentTarget).data('internal');
 			if (data) {
 				Map.zoomToFeature(data.feature);
@@ -167,7 +170,7 @@ var TableView = Backbone.View.extend({
 			}
 		},
 
-		'click .multipleBrowse': function(event) {
+		'click .multipleBrowse': function (event) {
 			var data = $(event.currentTarget).closest('tr').data('internal')
 			MultipleBrowseWidget.open({
 				feature: data.feature,
@@ -176,27 +179,27 @@ var TableView = Backbone.View.extend({
 		},
 
 		// Call when a row is clicked
-		'click tr': function(event) {
+		'click tr': function (event) {
 			var $row = $(event.currentTarget);
 			var data = $row.data('internal');
-			if ( data ) {
+			if (data) {
 				var fc = this.model;
 				var currentHighlights;
 
-				if ( ctrlPressed ) {
+				if (ctrlPressed || metakeyPressed) {
 					// if feature is highlighted
-					if ( fc.isHighlighted(data.feature) ) {
+					if (fc.isHighlighted(data.feature)) {
 						fc.unsetHighlight([data.feature]);
 					} else {
 						// highlight this feature
 						fc.setHighlight([data.feature]);
 					}
-				} else if ( shiftPressed && _lastSelectedRow ) {
+				} else if (shiftPressed && _lastSelectedRow) {
 					document.getSelection().removeAllRanges();
-					var range = [_lastSelectedRow, $row].sort(function(a,b) { return a.index() - b.index() } );
+					var range = [_lastSelectedRow, $row].sort(function (a, b) { return a.index() - b.index() });
 					var selectedRows = range[0].nextUntil(range[1]);
 					selectedRows.push(event.currentTarget);
-					var selectedFeatures = _.map(selectedRows, function(row) {
+					var selectedFeatures = _.map(selectedRows, function (row) {
 						return $(row).data('internal').feature;
 					});
 					currentHighlights = fc.highlights.slice(0);
@@ -222,7 +225,7 @@ var TableView = Backbone.View.extend({
 		},
 
 		// Call when the header is clicked : sort
-		'click th': function(event) {
+		'click th': function (event) {
 
 			var $cell = $(event.currentTarget);
 			$cell.siblings("th").removeClass('sorting_asc').removeClass('sorting_desc');
@@ -233,7 +236,7 @@ var TableView = Backbone.View.extend({
 			if ($cell.find('#table-columns-button').length > 0)
 				return;
 
-			var cellIndex = this.columnDefs.indexOf(_.find(this.columnDefs, function(c) { return c.sTitle == $cell.html(); } ));
+			var cellIndex = this.columnDefs.indexOf(_.find(this.columnDefs, function (c) { return c.sTitle == $cell.html(); }));
 			if ($cell.hasClass('sorting_asc')) {
 				$cell.removeClass('sorting_asc');
 				this.sortData(-1, 'original');
@@ -248,7 +251,7 @@ var TableView = Backbone.View.extend({
 		},
 
 		// Call when the expand icon is clicked
-		'click .table-view-expand': function(event) {
+		'click .table-view-expand': function (event) {
 			// Change icon and return the row
 			var $row = $(event.currentTarget)
 				.toggleClass('ui-icon-minus')
@@ -265,7 +268,7 @@ var TableView = Backbone.View.extend({
 		},
 
 		// Called when the user clicks on the "selection" checkbox in table
-		'click .row-pin': function(event) {
+		'click .row-pin': function (event) {
 			// Retreive the position of the selected row
 			event.stopPropagation();
 			var $target = $(event.currentTarget);
@@ -283,16 +286,16 @@ var TableView = Backbone.View.extend({
 					model.select([data.feature]);
 					model.setHighlight([data.feature]);
 				}
-				/*
-				 else {
-					// "Select all" case
-					var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
-					this.model.selectAll(filteredFeatures);
-					$target
-						.removeClass('ui-icon-checkbox-off')
-						.addClass('ui-icon-checkbox-on');
-				}
-				*/
+                /*
+                 else {
+                	// "Select all" case
+                	var filteredFeatures = _.pluck(this.visibleRowsData, 'feature');
+                	this.model.selectAll(filteredFeatures);
+                	$target
+                		.removeClass('ui-icon-checkbox-off')
+                		.addClass('ui-icon-checkbox-on');
+                }
+                */
 			} else {
 				this.model.unselect(this.model.highlights);
 				if (data) {
@@ -300,17 +303,18 @@ var TableView = Backbone.View.extend({
 					// NGEO-2174: uncheck every highlighted feature when clicking on already selected row
 					//model.unselect( $row.hasClass('row_highlighted') ? model.highlights : [data.feature] );
 					model.unselect([data.feature]);
-				}/* else {
-					// "Unselect all" case
-					this.model.unselectAll();
-					$target
-						.removeClass('ui-icon-checkbox-on')
-						.addClass('ui-icon-checkbox-off');
-				}*/
+				}
+                /* else {
+                					// "Unselect all" case
+                					this.model.unselectAll();
+                					$target
+                						.removeClass('ui-icon-checkbox-on')
+                						.addClass('ui-icon-checkbox-off');
+                				}*/
 			}
 		},
 
-		'click #table-columns-button': function(event) {
+		'click #table-columns-button': function (event) {
 
 			var self = this;
 			$(tableColumnsPopup_template(this)).appendTo('.ui-page-active')
@@ -318,7 +322,7 @@ var TableView = Backbone.View.extend({
 				.popup({
 					theme: 'c'
 				})
-				.on('change', 'input', function(event) {
+				.on('change', 'input', function (event) {
 					// Get the column to change
 					var i = $(this).data('index');
 					self.columnDefs[i].visible = $(this).is(':checked');
@@ -327,7 +331,7 @@ var TableView = Backbone.View.extend({
 					self.buildTable();
 					self.buildTableContent();
 				})
-				.on('popupafterclose', function(event, ui) {
+				.on('popupafterclose', function (event, ui) {
 					$(this).remove();
 				})
 				.popup('open', {
@@ -336,25 +340,25 @@ var TableView = Backbone.View.extend({
 		},
 
 		// unpin all selected/pined products
-		'click #unpin-button': function(event) {
+		'click #unpin-button': function (event) {
 			this.model.unselect(this.model.selections);
 		},
 
 		// Incremental pagination
-		'click .loadMore' : function(event) {
+		'click .loadMore': function (event) {
 			var rowData = $(event.currentTarget).closest('.paging').data("internal");
 			// If row is already loading, exit !
 			if (rowData.childFc.isLoading)
 				return;
 
-			rowData.childFc.appendPage( rowData.childFc.currentPage + 1 );
+			rowData.childFc.appendPage(rowData.childFc.currentPage + 1);
 		}
 	},
 
-	/**
-	 * Set the model to be used by the TableView
-	 */
-	setModel: function(model) {
+    /**
+     * Set the model to be used by the TableView
+     */
+	setModel: function (model) {
 
 		if (this.model) {
 			// Clean-up previous data
@@ -381,26 +385,26 @@ var TableView = Backbone.View.extend({
 			}
 
 			// Apply filter for the new model
-			if ( $('#filterTableInput').val() ) {
+			if ($('#filterTableInput').val()) {
 				this.filterData($('#filterTableInput').val());
 			}
-			
+
 		}
 	},
-	
-	/**
-	 *	Update rows of given features
-	 */
-	updateRows: function(features) {
 
-		for ( var i=0; i<features.length; i++ ) {
+    /**
+     *	Update rows of given features
+     */
+	updateRows: function (features) {
+
+		for (var i = 0; i < features.length; i++) {
 			var feature = features[i];
 			var $row = this._getRowFromFeature(feature);
 			var rowData = $row.data("internal");
 
 			// Update offset
 			var tdOffset = 1; // Since first <td> could be + and checkbox
-			if ( rowData.isExpandable ) {
+			if (rowData.isExpandable) {
 				tdOffset++;
 			}
 
@@ -417,14 +421,14 @@ var TableView = Backbone.View.extend({
 		this.updateFixedHeader();
 	},
 
-	/**
-	 * For each highlights
-	 * Update class for row
-	 * And scroll to most recent
-	 * 
-	 * @function updateHighlights
-	 */
-	updateHighlights: function() {
+    /**
+     * For each highlights
+     * Update class for row
+     * And scroll to most recent
+     * 
+     * @function updateHighlights
+     */
+	updateHighlights: function () {
 		if (!this.$table) return;
 
 		var _this = this;
@@ -436,18 +440,18 @@ var TableView = Backbone.View.extend({
 			for (var i = 0; i < features.length; i++) {
 
 				var $row = this._getRowFromFeature(features[i]);
-				if ( $row ) {
+				if ($row) {
 					$row.addClass('row_highlighted');
 				}
 			}
 			// NGEO-1941: Scroll to the most recent highlighted product in table
 			// for featureCollection activated
-			var mostRecentFeature = _.max(_.filter(features, function(feat) {return feat._featureCollection.id === _this.model.id}), function(f) {
+			var mostRecentFeature = _.max(_.filter(features, function (feat) { return feat._featureCollection.id === _this.model.id }), function (f) {
 				return new Date(Configuration.getMappedProperty(f, "stop"));
 			});
 
 			var $mostRecentRow = this._getRowFromFeature(mostRecentFeature);
-			if ( $mostRecentRow && !_clickInTable ) {
+			if ($mostRecentRow && !_clickInTable) {
 				this._scrollTo($mostRecentRow);
 			} else {
 				_clickInTable = false;
@@ -455,21 +459,21 @@ var TableView = Backbone.View.extend({
 		}
 	},
 
-	/**
-	 * For each feature unhighlights (remove class for row)
-	 * And update buttons @see updateHighlights
-	 * 
-	 * @function unhighlightFeatures
-	 * @param {array} features
-	 */
-	unhighlightFeatures: function(features) {
+    /**
+     * For each feature unhighlights (remove class for row)
+     * And update buttons @see updateHighlights
+     * 
+     * @function unhighlightFeatures
+     * @param {array} features
+     */
+	unhighlightFeatures: function (features) {
 		if (!this.$table) return;
 		if (features.length > 0) {
 			var rows = this.$table.find("tbody tr");
 			for (var i = 0; i < features.length; i++) {
 
 				var $row = this._getRowFromFeature(features[i]);
-				if ( $row ) {
+				if ($row) {
 					$row.removeClass('row_highlighted');
 				}
 			}
@@ -479,29 +483,29 @@ var TableView = Backbone.View.extend({
 	},
 
 
-	/**
-	 *	Scroll table elt to the given $row
-	 *	Check if the the selected row isn't already visible btw
-	 */
-	_scrollTo: function($row) {
+    /**
+     *	Scroll table elt to the given $row
+     *	Check if the the selected row isn't already visible btw
+     */
+	_scrollTo: function ($row) {
 		var rowTop = $row.position().top;
 		var offset = $row.height() / 2; // Take a half-height as an offset on both sides (top/bottom)
 		var isVisibleInContent = (rowTop > offset && rowTop < this.$el.find(".table-content").height() - offset);
-		if ( !isVisibleInContent ) {
+		if (!isVisibleInContent) {
 			// Scroll only if not already visible in table content
 			this.$el.find(".table-content").animate({
 				scrollTop: rowTop - this.$el.find(".table-content tbody").position().top - 90 // "90" magic number to place in "center"
 			}, {
-				duration: 500,
-				easing: "easeOutQuad"
-			});
+					duration: 500,
+					easing: "easeOutQuad"
+				});
 		}
 	},
 
-	/**
-	 * Helper function to retreive a row from a feature
-	 */
-	_getRowFromFeature: function(feature) {
+    /**
+     * Helper function to retreive a row from a feature
+     */
+	_getRowFromFeature: function (feature) {
 		if (this.feature2row.hasOwnProperty(feature.id)) {
 			var $row = this.feature2row[feature.id];
 			return $row;
@@ -510,17 +514,17 @@ var TableView = Backbone.View.extend({
 		}
 	},
 
-	/**
-	 * Update selection checkbox state for the given features
-	 * based on "selection" property of current <FeatureCollection>
-	 */
-	updateSelection: function(features) {
+    /**
+     * Update selection checkbox state for the given features
+     * based on "selection" property of current <FeatureCollection>
+     */
+	updateSelection: function (features) {
 		if (!this.$table) return;
 
 		for (var i = 0; i < features.length; i++) {
 			var $row = this._getRowFromFeature(features[i]);
 
-			if ( $row && this.model.selections.indexOf(features[i]) >= 0 ) {
+			if ($row && this.model.selections.indexOf(features[i]) >= 0) {
 				// Feature is selected
 				$row.addClass('row_selected');
 				$row.find('.row-pin')
@@ -536,10 +540,10 @@ var TableView = Backbone.View.extend({
 		}
 	},
 
-	/**
-	 * Clear data
-	 */
-	clear: function() {
+    /**
+     * Clear data
+     */
+	clear: function () {
 		if (this.$table) {
 			this.$table.html('<div class="table-nodata">No data found</div>');
 
@@ -553,24 +557,24 @@ var TableView = Backbone.View.extend({
 		}
 	},
 
-	/**
-	 *	Create row data for the given feature
-	 */
-	createRowData: function(feature, parentRowData) {
+    /**
+     *	Create row data for the given feature
+     */
+	createRowData: function (feature, parentRowData) {
 
 		var isExpandable = false;
 		var hasGraticules = false;
 		var links = Configuration.getMappedProperty(feature, "links", null);
 		if (links) {
 			// Is interferometric search
-			isExpandable = Boolean(_.find(links, function(link) {
+			isExpandable = Boolean(_.find(links, function (link) {
 				return link['@rel'] == "related" && link['@title'] == "interferometry";
 			}));
 			hasGraticules |= Boolean(Configuration.getMappedProperty(feature, "virtualProductUrl", null));
 			isExpandable |= hasGraticules;
 		}
 
-		var cleanedId = String(feature.id).replace(/\W/g,'_'); // Id without special characters
+		var cleanedId = String(feature.id).replace(/\W/g, '_'); // Id without special characters
 		var rowData = {
 			feature: feature,
 			cellData: [],
@@ -594,23 +598,23 @@ var TableView = Backbone.View.extend({
 		return rowData;
 	},
 
-	/**
-	 * Add data 
-	 */
-	addData: function(features, model, parentRowData) {
+    /**
+     * Add data 
+     */
+	addData: function (features, model, parentRowData) {
 
 		if (features.length > 0) {
-			
+
 			var hasGraticules = false;
-			for (var i = 0; i < features.length; i++) {				
+			for (var i = 0; i < features.length; i++) {
 				var feature = features[i];
 				var rowData = this.createRowData(feature, parentRowData);
 				hasGraticules |= rowData.hasGraticules;
 
-				if ( rowData.childFc ) {
-					for ( var j=0; j<rowData.childFc.features.length; j++ ) {
+				if (rowData.childFc) {
+					for (var j = 0; j < rowData.childFc.features.length; j++) {
 						var childFeature = rowData.childFc.features[j];
-						var childRowData = this.createRowData( childFeature, rowData );
+						var childRowData = this.createRowData(childFeature, rowData);
 						childRowData.parent = rowData;
 						rowData.children.push(childRowData);
 					}
@@ -631,7 +635,7 @@ var TableView = Backbone.View.extend({
 
 			this.visibleRowsData = this.rowsData.slice(0);
 
-			if ( !parentRowData ) {
+			if (!parentRowData) {
 				this.buildTable();
 				this.buildTableContent();
 			} else {
@@ -640,19 +644,19 @@ var TableView = Backbone.View.extend({
 				this.updateChildren(parentRowData, $row);
 			}
 		} else {
-			if ( parentRowData ) {
+			if (parentRowData) {
 				var $row = this._getRowFromFeature(parentRowData.feature);
 				$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row);
-			} else if ( this.$table ) {
+			} else if (this.$table) {
 				this.$table.html('<div class="table-nodata">No data found</div>');
 			}
 		}
 	},
 
-	/**
-	 * Remove data from the view
-	 */
-	removeData: function(features) {
+    /**
+     * Remove data from the view
+     */
+	removeData: function (features) {
 
 		var rows = this.$table.find("tbody tr");
 		for (var i = 0; i < features.length; i++) {
@@ -679,10 +683,10 @@ var TableView = Backbone.View.extend({
 		}
 	},
 
-	/**
-	 * Filter data
-	 */
-	filterData: function(val) {
+    /**
+     * Filter data
+     */
+	filterData: function (val) {
 
 		// Store previously visible rows to compute the newly hidden/shown features
 		var previouslyVisibleRows = this.visibleRowsData.splice(0);
@@ -711,15 +715,15 @@ var TableView = Backbone.View.extend({
 		this.buildTableContent();
 	},
 
-	/**
-	 * Sort data
-	 */
-	sortData: function(columnIndex, order) {
+    /**
+     * Sort data
+     */
+	sortData: function (columnIndex, order) {
 
 		if (order == "original") {
 			this.visibleRowsData = this.rowsData.slice(0);
 		} else {
-			this.visibleRowsData.sort(function(row1, row2) {
+			this.visibleRowsData.sort(function (row1, row2) {
 				if (row1.cellData[columnIndex] == row2.cellData[columnIndex]) {
 					return 0;
 				} else if (row1.cellData[columnIndex] < row2.cellData[columnIndex]) {
@@ -733,10 +737,10 @@ var TableView = Backbone.View.extend({
 		this.buildTableContent();
 	},
 
-	/**
-	 * Expand a row
-	 */
-	expandRow: function($row) {
+    /**
+     * Expand a row
+     */
+	expandRow: function ($row) {
 
 		var rowData = $row.data('internal');
 
@@ -754,7 +758,7 @@ var TableView = Backbone.View.extend({
 			// HACK: Update WEBS response from atom to json : to be fixed by WEBS later
 			expandUrl = expandUrl.replace("format=atom", "format=json");
 		}
-		
+
 		if (expandUrl) {
 			this._createChildrenFeatureCollection(rowData);
 			// Launch search
@@ -763,10 +767,10 @@ var TableView = Backbone.View.extend({
 
 	},
 
-	/**
-	 * Close a row
-	 */
-	closeRow: function($row) {
+    /**
+     * Close a row
+     */
+	closeRow: function ($row) {
 
 		var rowData = $row.data('internal');
 
@@ -774,31 +778,31 @@ var TableView = Backbone.View.extend({
 			$row.next().remove();
 		} else {
 
-			if ( rowData.childFc ) {
+			if (rowData.childFc) {
 				this.model.removeChild(rowData.feature.id);
 			}
 
 			rowData.children.length = 0;
-			$row.nextAll('.child_of_'+ rowData.childFc.id).remove();
-			$row.next('.paging_child_of_'+ rowData.childFc.id).remove();
+			$row.nextAll('.child_of_' + rowData.childFc.id).remove();
+			$row.next('.paging_child_of_' + rowData.childFc.id).remove();
 		}
 	},
 
-	/**
-	 * Create children feature collection for the given row data
-	 * 
-	 * @function _createChildrenFeatureCollection
-	 * @param {object} rowData
-	 * 
-	 */
-	_createChildrenFeatureCollection: function(rowData) {
+    /**
+     * Create children feature collection for the given row data
+     * 
+     * @function _createChildrenFeatureCollection
+     * @param {object} rowData
+     * 
+     */
+	_createChildrenFeatureCollection: function (rowData) {
 
 		var $el;
 		var child = this.model.createChild(rowData.feature.id);
 
 		// Add "loading" label on start
-		this.listenTo(child, 'startLoading', function(fc) {
-			this.$el.find(".child_of_"+ child.id).remove();
+		this.listenTo(child, 'startLoading', function (fc) {
+			this.$el.find(".child_of_" + child.id).remove();
 			// Find element after which add 'loading'
 			$el = this._getRowFromFeature(rowData.feature);
 
@@ -811,19 +815,19 @@ var TableView = Backbone.View.extend({
 		});
 
 		// Add features to table
-		this.listenTo(child, 'add:features', function(features) {
+		this.listenTo(child, 'add:features', function (features) {
 			$el.next('.loadingChildren').remove();
 			rowData.isLoading = false;
-			if ( !rowData.isExpanded || !features )
+			if (!rowData.isExpanded || !features)
 				return;
 
 			this.addData(features, this.model, rowData);
 		});
 
 		// Add "error message"
-		this.listenTo(child, 'error:features', function(url) {
+		this.listenTo(child, 'error:features', function (url) {
 			rowData.isLoading = false;
-			if ( !rowData.isExpanded )
+			if (!rowData.isExpanded)
 				return;
 			$el.next('.loadingChildren').remove();
 			$('<tr>\
@@ -834,7 +838,7 @@ var TableView = Backbone.View.extend({
 		});
 
 		// Reset features
-		this.listenTo(child, 'reset:features', function(fc) {
+		this.listenTo(child, 'reset:features', function (fc) {
 			rowData.children.length = 0;
 		});
 
@@ -847,31 +851,31 @@ var TableView = Backbone.View.extend({
 		rowData.childFc = child;
 	},
 
-	/**
-	 *	Upate child (expanded) view
-	 */
-	updateChildren: function(rowData, $row) {
-		$row.siblings('.child_of_'+ rowData.childFc.id).remove();
-		$row.siblings('.paging_child_of_'+ rowData.childFc.id).remove();
+    /**
+     *	Upate child (expanded) view
+     */
+	updateChildren: function (rowData, $row) {
+		$row.siblings('.child_of_' + rowData.childFc.id).remove();
+		$row.siblings('.paging_child_of_' + rowData.childFc.id).remove();
 
-		if ( rowData.children.length > 0 ) {
+		if (rowData.children.length > 0) {
 			for (var n = 0; n < rowData.children.length; n++) {
 				this._createRow(rowData.children[n], $row, {
-					className: "child_of_"+ rowData.childFc.id,
+					className: "child_of_" + rowData.childFc.id,
 					isChild: true
 				});
 			}
 
-			this._createPagination( rowData, $row );
+			this._createPagination(rowData, $row);
 		} else {
 			$('<tr><td></td><td></td><td colspan="' + this.columnDefs.length + '">No data found</td></tr>').insertAfter($row);
 		}
 	},
 
-	/**
-	 *	Update the existing row with the given rowData
-	 */
-	_updateRow: function(rowData, $row) {
+    /**
+     *	Update the existing row with the given rowData
+     */
+	_updateRow: function (rowData, $row) {
 
 		var content = '';
 		// Manage expand
@@ -901,17 +905,17 @@ var TableView = Backbone.View.extend({
 
 		// Layer selection checkbox
 		var pinVisibility = (rowData.isCheckable ? "inline-block" : "none");
-		content += '<span style="display:'+ pinVisibility +'" class="row-pin ui-icon '+ pinClass +'"></span>';
+		content += '<span style="display:' + pinVisibility + '" class="row-pin ui-icon ' + pinClass + '"></span>';
 
 		// direct download
 		content += ' <span title="Direct download for this product" class="ui-icon directDownload"></span>';
 
 		// Layer browse visibility checkbox
-		/*
-		//var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
-		var browseVisibilityClass = rowData.feature._featureCollection.isHighlighted(rowData.feature) ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
-		content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
-		*/
+        /*
+        //var browseVisibilityClass = rowData.feature._browseShown ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+        var browseVisibilityClass = rowData.feature._featureCollection.isHighlighted(rowData.feature) ? "ui-icon-checkbox-on" : "ui-icon-checkbox-off";
+        content += '<td><span class="browse-visibility-checkbox ui-icon '+ browseVisibilityClass + '"></span></td>';
+        */
 		content += '</td>';
 
 		for (var j = 0; j < rowData.cellData.length; j++) {
@@ -925,42 +929,42 @@ var TableView = Backbone.View.extend({
 
 				var cellDataColumn = rowData.cellData[j];
 				if (classes && cellDataColumn) {
-					if ( classes == "downloadOptions" ) {
+					if (classes == "downloadOptions") {
 						var doIndex = cellDataColumn.indexOf("ngEO_DO");
-						if ( doIndex >= 0 )
-							cellDataColumn = cellDataColumn.substr( doIndex+8 ).replace(/,(\w)/g,", $1"); // Just add whitespace between properties
+						if (doIndex >= 0)
+							cellDataColumn = cellDataColumn.substr(doIndex + 8).replace(/,(\w)/g, ", $1"); // Just add whitespace between properties
 						else
 							cellDataColumn = "No download options";
 					}
-					content += '<td title="'+ cellDataColumn +'" class="' + classes + '">' + cellDataColumn + '</td>';
+					content += '<td title="' + cellDataColumn + '" class="' + classes + '">' + cellDataColumn + '</td>';
 				} else {
-					content += '<td title="'+ cellDataColumn +'">' + cellDataColumn + '</td>';
+					content += '<td title="' + cellDataColumn + '">' + cellDataColumn + '</td>';
 				}
 			}
 		}
 		$row.html(content);
 
 		var browses = Configuration.getMappedProperty(rowData.feature, "browses");
-		if ( browses && browses.length > 1 ) {
+		if (browses && browses.length > 1) {
 			$row.find('.browse-visibility-checkbox').after('<span title="Multiple browse management" class="multipleBrowse"></span>');
 		}
 	},
 
-	/**
-	 * Create a row given rowData
-	 */
-	_createRow: function(rowData, $body, options) {
+    /**
+     * Create a row given rowData
+     */
+	_createRow: function (rowData, $body, options) {
 		// Update from options
 		var className = null;
 		var isChild = false;
-		if ( options ) {
+		if (options) {
 			className = options.className;
 			isChild = options.isChild;
 		}
 
-		var $row = $('<tr '+ (className ? 'class="'+ className + '"' : "") +'></tr>');
+		var $row = $('<tr ' + (className ? 'class="' + className + '"' : "") + '></tr>');
 		this._updateRow(rowData, $row);
-		if ( isChild ) {
+		if (isChild) {
 			$row = $row.insertAfter($body);
 		} else {
 			$row = $row.appendTo($body);
@@ -969,12 +973,12 @@ var TableView = Backbone.View.extend({
 		this.feature2row[rowData.feature.id] = $row;
 	},
 
-	/**
-	 *	Create pagination for children elements
-	 */
-	_createPagination: function(rowData, $body) {
+    /**
+     *	Create pagination for children elements
+     */
+	_createPagination: function (rowData, $body) {
 
-		var $lastChild = $body.nextAll('.child_of_'+ rowData.childFc.id +':last');
+		var $lastChild = $body.nextAll('.child_of_' + rowData.childFc.id + ':last');
 		// Incremental pagination
 		// if ( rowData.childFc.currentPage != rowData.childFc.lastPage ) {
 		// 	$('<tr class="paging_child_of_'+ rowData.childFc.id +'"><td></td><td></td>\
@@ -989,11 +993,11 @@ var TableView = Backbone.View.extend({
 		// 		.find('.paging')
 		// 			.data("internal", rowData);
 		// }
-		
-		// Next/Prev pagination
-		if ( rowData.childFc.totalResults > rowData.childFc.countPerPage ) {
 
-			var $pagination = $('<tr class="paging_child_of_'+ rowData.childFc.id +'"><td></td><td></td>\
+		// Next/Prev pagination
+		if (rowData.childFc.totalResults > rowData.childFc.countPerPage) {
+
+			var $pagination = $('<tr class="paging_child_of_' + rowData.childFc.id + '"><td></td><td></td>\
 				<td colspan="' + this.columnDefs.length + '">\
 				</td>\
 			   </tr>')
@@ -1009,10 +1013,10 @@ var TableView = Backbone.View.extend({
 		}
 	},
 
-	/**
-	 * Build table content from data
-	 */
-	buildTableContent: function() {
+    /**
+     * Build table content from data
+     */
+	buildTableContent: function () {
 		var $body = this.$table.find('tbody');
 		$body.empty();
 
@@ -1038,45 +1042,45 @@ var TableView = Backbone.View.extend({
 		this.updateHighlights();
 	},
 
-	/**
-	 * Update fixed header
-	 */
-	updateFixedHeader: function() {
+    /**
+     * Update fixed header
+     */
+	updateFixedHeader: function () {
 		if (this.$table) {
 			var $tableHeader = this.$el.find('.table-header');
 			// Reinit min width of every "td/th" before computing the real width
 			$tableHeader.css('margin-right', 0).end()
-				.find('th').css('min-width',"");
+				.find('th').css('min-width', "");
 			this.$table
 				.find('colgroup').remove().end()
 				.find('thead').show().end()
 				.find('td').css('min-width', "");
 			this.$headerTable.find('colgroup').remove();
-			
+
 			// Compute actual col-width per th
 			var self = this;
-			var colWidths = this.$table.find("tr:first").children().map(function(index) {
-				var headerWidth = self.$table.find("th:nth-child("+(index+1)+")").outerWidth();
+			var colWidths = this.$table.find("tr:first").children().map(function (index) {
+				var headerWidth = self.$table.find("th:nth-child(" + (index + 1) + ")").outerWidth();
 				return $(this).outerWidth() > headerWidth ? $(this).outerWidth : headerWidth;
 			});
 
 			// Create COLGROUP
 			var $colgroup = $("<colgroup></colgroup>");
-			var colSumWidth = _.reduce(colWidths, function(sum, w) { return sum+w;}, 0);
+			var colSumWidth = _.reduce(colWidths, function (sum, w) { return sum + w; }, 0);
 			var hasSlider = colSumWidth > $(window).width() - 1;
-			for ( var i=0; i<colWidths.length; i++ ) {
-				if ( hasSlider ) {
+			for (var i = 0; i < colWidths.length; i++) {
+				if (hasSlider) {
 					// Set min-width since it forces table to be wider than window --> show slider
-					$tableHeader.find('th:nth-child('+(i+1)+')')
+					$tableHeader.find('th:nth-child(' + (i + 1) + ')')
 						.css('min-width', colWidths[i]);
-					this.$table.find('td:nth-child('+(i+1)+')')
+					this.$table.find('td:nth-child(' + (i + 1) + ')')
 						.css('min-width', colWidths[i]);
 				} else {
 					$colgroup.append("<col width=" + colWidths[i] + ">");
 				}
 			}
 
-			if ( hasSlider ) {
+			if (hasSlider) {
 				this.$el.find('.table-view').removeClass("fullscreenWidth");
 			} else {
 				this.$el.find('.table-view').addClass("fullscreenWidth");
@@ -1094,10 +1098,10 @@ var TableView = Backbone.View.extend({
 
 	},
 
-	/**
-	 * Build the main table element
-	 */
-	buildTable: function() {
+    /**
+     * Build the main table element
+     */
+	buildTable: function () {
 
 		this.$el.find('.inner-container').remove();
 		this.$el.find('.table-nodata').remove();
@@ -1126,7 +1130,7 @@ var TableView = Backbone.View.extend({
 		$row.append('<th>\
 			<span class="ui-icon ui-shadow" id="table-columns-button" title="Select columns to display in table" ></span>\
 		</th>');
-		
+
 
 		for (var j = 0; j < columns.length; j++) {
 			if (columns[j].visible && columns[j].numValidCell > 0) {
@@ -1148,17 +1152,17 @@ var TableView = Backbone.View.extend({
 
 		// Update header as well
 		this.$el.find(".table-content").scroll(function () {
-			$(".table-header").offset({ left: -1*this.scrollLeft });
+			$(".table-header").offset({ left: -1 * this.scrollLeft });
 		});
 	},
 
-	/**
-	 * Render the table
-	 * 
-	 * @function render
-	 * 
-	 */
-	render: function() {
+    /**
+     * Render the table
+     * 
+     * @function render
+     * 
+     */
+	render: function () {
 
 		// Update column definition  with the visible flag and a counter to know the number of non-empty cell
 		for (var i = 0; i < this.columnDefs.length; i++) {
@@ -1177,19 +1181,19 @@ var TableView = Backbone.View.extend({
 		this.$el.trigger('create');
 	},
 
-	/**
-	 * Show the table
-	 */
-	show: function() {
+    /**
+     * Show the table
+     */
+	show: function () {
 		this.$el.show();
 		if (this.rowsData.length > 0) {
 			this.updateFixedHeader();
 		}
-		
+
 		// Scroll to the most recent product if selected
 		var highlightedRows = this.$el.find('.row_highlighted');
-		if ( highlightedRows.length ) {
-			var mostRecentRow = _.max(highlightedRows, function(row) {
+		if (highlightedRows.length) {
+			var mostRecentRow = _.max(highlightedRows, function (row) {
 				var feature = $(row).data('internal').feature;
 				return new Date(Configuration.getMappedProperty(feature, "stop"));
 			});
@@ -1199,26 +1203,26 @@ var TableView = Backbone.View.extend({
 		this.visible = true;
 	},
 
-	/**
-	 * Hide the table
-	 */
-	hide: function() {
+    /**
+     * Hide the table
+     */
+	hide: function () {
 		this.$el.hide();
 		this.visible = false;
 	},
 
-	/**
-	 * Render footer with
-	 * 	- input field to filter table products
-	 *  - a button to unpin all products
-	 *  - some buttons put on the right, specific for each view (searchResults or shopcart)
-	 * 
-	 * @function _renderFooter
-	 * @see {@link render}
-	 * 
-	 */
-	_renderFooter: function() {
-		
+    /**
+     * Render footer with
+     * 	- input field to filter table products
+     *  - a button to unpin all products
+     *  - some buttons put on the right, specific for each view (searchResults or shopcart)
+     * 
+     * @function _renderFooter
+     * @see {@link render}
+     * 
+     */
+	_renderFooter: function () {
+
 		var footer = $('<div id="tableFooter" class="ui-grid-a"></div>')
 			.append('<div class="table-filter ui-block-a">\
 						<div data-role="fieldcontain" style="width: 300px; display: inline-block; top: 5px; vertical-align: super;" >\
@@ -1227,7 +1231,7 @@ var TableView = Backbone.View.extend({
 						<button data-mini="true" data-inline="true" id="unpin-button" title="Unpin all products" >Unpin all products</button>\
 					</div>\
 					<div class="ui-block-b table-rightButtons"><div data-role="fieldcontain"></div></div>');
-		
+
 		var $buttonContainer = $(footer).find(".table-rightButtons [data-role='fieldcontain']");
 
 		// @see tableView in searchResults or shopcart folder for this method
@@ -1237,13 +1241,13 @@ var TableView = Backbone.View.extend({
 		this.$el.append(footer).trigger("create");
 
 		// HACK jQm Firefox: Display text-input on the same level as label & button
-		this.$el.find('.table-filter .ui-input-text').css("vertical-align","middle");
+		this.$el.find('.table-filter .ui-input-text').css("vertical-align", "middle");
 	},
 
-	/**
-	 *	Refresh method
-	 */
-	refresh: function() {
+    /**
+     *	Refresh method
+     */
+	refresh: function () {
 		this.updateFixedHeader();
 	},
 
