@@ -131,6 +131,9 @@ var SearchResultsTableView = TableView.extend({
 		this.addToShopcart.click(function() {
 			GlobalEvents.trigger('addToShopcart', self.model.highlights);
 		});
+		if (!Configuration.data.behindSSO) {
+			this.addToShopcart.button('disable').parent().hide();
+		}
 
 		//add button to the widget footer in order to download products
 		//do not display this button -> this.downloadOptionsButton = $('<button data-role="button" data-inline="true" data-mini="true">Download Options</button>').appendTo($buttonContainer);

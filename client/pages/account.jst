@@ -1,20 +1,20 @@
 <div id="account">
-<h2 id="account-header">My Account</h2> <a class="ui-link" data-ajax="false" target='_blank' href="account">Access to UMSSO profile management</a>
+<h2 id="account-header">My Account</h2> <a id="sso-login" class="ui-link" data-ajax="false" target='_blank' href="account">Login to UMSSO</a>
 	<div id="tabs">
 		<ul>
+			<li><a data-help="<%= userPrefs %>"href="#userPrefs">User Preferences</a></li>
 			<li><a data-help="<%= shopcart %>"href="#shopcarts">Shopcarts</a></li>
 			<li><a data-help="<%= downloadManagers %>" href="#downloadManagersMonitoring">Download Managers</a></li>
 			<li><a data-help="<%= dar %>" href="#DARMonitoring">Data Access Requests</a></li>
 			<!-- <li><a data-help="<%= inquiries %>"href="#inquiries">Inquiries</a></li> -->
-			<li><a data-help="<%= userPrefs %>"href="#userPrefs">User Preferences</a></li>
 			<li><a data-help="<%= layerManager %>"href="#layerManager">Layer Manager</a></li>
 		</ul>
+		<div id="userPrefs"></div>
 		<div id="shopcarts"></div>
 		<div id="downloadManagersMonitoring"></div>
 		<div id="DARMonitoring"></div>
 		<!-- NGEO-1967: Replace inquiries view by "Contact Us" link -->
 		<!-- <div id="inquiries"></div> -->
-		<div id="userPrefs"></div>
 		<div id="layerManager"></div>
 	</div>
 </div>

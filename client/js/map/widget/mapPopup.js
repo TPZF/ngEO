@@ -184,7 +184,10 @@ var MapPopup = function(container) {
 		if (!Configuration.data.downloadManager.enable) {
 			element.find('#mpButtons a.save').hide();
 		}
-
+		// if not beind SSO => no shopcart button
+		if (!Configuration.data.behindSSO) {
+			element.find('#mpButtons a.shop').hide();
+		}
 		// disable direct download by default
 		element.find('#mpButtons a.download').removeClass('active');
 

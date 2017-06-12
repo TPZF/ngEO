@@ -123,7 +123,11 @@ module.exports = {
 		// Create all widgets for diferent modules
 		SearchDSA.initialize(element, router, panelManager);
 		SearchResultsDSA.initialize(element, router, panelManager);
-		ShopcartDSA.initialize(element, router, panelManager);
+		if (Configuration.data.behindSSO) {
+			ShopcartDSA.initialize(element, router, panelManager);
+		} else {
+			$('#shopcart').hide();
+		}
 
 		// Initialize toolbar and context help
 		toolbarMap = new ToolBarMap(element);

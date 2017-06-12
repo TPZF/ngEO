@@ -74,6 +74,9 @@ module.exports = {
 			acc.find('a[href="#downloadManagersMonitoring"]').parent().hide();
 			acc.find('a[href="#DARMonitoring"]').parent().hide();
 		}
+		if (!Configuration.data.behindSSO) {
+			acc.find('a[href="#shopcarts"]').parent().hide();
+		}
 		return acc;
 	},
 
@@ -118,13 +121,14 @@ module.exports = {
 			// Fetch DAR : maybe not needed right now
 			DataAccessRequestStatuses.fetch();
 		}
-		//Create the shopcart manager view 
-		shopcartManagerView = new ShopcartManagerView({
-			model: ShopcartCollection,
-			el: "#shopcarts"
-		});
-		shopcartManagerView.render();
-
+		if (Configuration.data.behindSSO) {
+			//Create the shopcart manager view 
+			shopcartManagerView = new ShopcartManagerView({
+				model: ShopcartCollection,
+				el: "#shopcarts"
+			});
+			shopcartManagerView.render();
+		}
 		// NGEO-1967: Replace inquiries view by "Contact Us" link
 		// //Create the inquiries View
 		// inquiriesView = new InquiriesView({
@@ -149,8 +153,10 @@ module.exports = {
 		// if downloadManager is enable
 		if (Configuration.data.downloadManager.enable) {
 			activeView = dmView;
-		} else {
+		} else if (Configuration.data.behindSSO) {
 			activeView = shopcartManagerView;
+		} else {
+			activeView = userPrefsView;
 		}
 
 	}
