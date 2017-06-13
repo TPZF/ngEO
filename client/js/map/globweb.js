@@ -76,7 +76,8 @@ GlobWebMapEngine = function(parentElement) {
 		// Add mouse navigation
 		var navigation = new GlobWeb.Navigation(globe, {
 			mouse: {
-				zoomOnDblClick: false
+				zoomOnDblClick: false,
+				rotateButton: 2
 			},
 			zoomDuration: Configuration.get('map.globweb.zoomDuration', 500)
 		});
