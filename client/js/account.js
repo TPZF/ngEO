@@ -71,18 +71,16 @@ module.exports = {
 			activate: onTabActivated
 		});
 
-		// hide shopcarts / download managers / DARs
-		acc.find('a[href="#downloadManagersMonitoring"]').parent().hide();
-		acc.find('a[href="#DARMonitoring"]').parent().hide();
-		acc.find('a[href="#shopcarts"]').parent().hide();
-
-		// if SSO > show
+		// shopcart / DM / DAR displays
 		if (Configuration.data.behindSSO) {
-			acc.find('a[href="#shopcarts"]').parent().show();
-			if (Configuration.data.downloadManager.enable) {
-				acc.find('a[href="#downloadManagersMonitoring"]').parent().show();
-				acc.find('a[href="#DARMonitoring"]').parent().show();
+			if (!Configuration.data.downloadManager.enable) {
+				acc.find('a[href="#downloadManagersMonitoring"]').parent().hide();
+				acc.find('a[href="#DARMonitoring"]').parent().hide();
 			}
+		} else {
+			acc.find('a[href="#shopcarts"]').parent().hide();
+			acc.find('a[href="#downloadManagersMonitoring"]').parent().hide();
+			acc.find('a[href="#DARMonitoring"]').parent().hide();
 		}
 		return acc;
 	},
