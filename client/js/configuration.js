@@ -5,7 +5,7 @@
 /**
  * Helper function to remove comments from the JSON file
  */
-var removeComments = function(string) {
+var removeComments = function (string) {
 	var starCommentRe = new RegExp("/\\\*(.|[\r\n])*?\\\*/", "g");
 	var slashCommentRe = new RegExp("(^[\/]|[^:]\/)\/.*[\r|\n]", "g");
 	string = string.replace(slashCommentRe, "");
@@ -17,7 +17,7 @@ var removeComments = function(string) {
 /**
  * Helper recursive function to get a parameter from the configuration data
  */
-var _getValue = function(object, property, defaultValue) {
+var _getValue = function (object, property, defaultValue) {
 	if (object) {
 		var value = null;
 		var kv = property.split("="); // Split by "=" to handle arrays
@@ -42,14 +42,14 @@ var _getValue = function(object, property, defaultValue) {
 /**
  * Buil base server url with window.location.pathname
  */
-var _builBaseServerUrl = function() {
+var _builBaseServerUrl = function () {
 	// from pathname like /proxy-path/sec/ get /proxy-path
 	// and set baseServerUrl to /proxy-path/ngeo
 	var pathItems = window.location.pathname.split('/');
 	var baseProxyPath = '';
 	if (pathItems.length > 0) {
-		for (var i=0; i<pathItems.length; i++) {
-			if (pathItems[i]!=='sec' && pathItems[i]!=='' && pathItems[i]!=='index.html') {
+		for (var i = 0; i < pathItems.length; i++) {
+			if (pathItems[i] !== 'sec' && pathItems[i] !== '' && pathItems[i] !== 'index.html') {
 				baseProxyPath = baseProxyPath + '/' + pathItems[i];
 			}
 		}
@@ -75,7 +75,7 @@ var configuration = {
 	data: {},
 
 	// Load configurations
-	load: function() {
+	load: function () {
 		var externalData = {};
 		return $.when(
 			// Local configuration
@@ -83,10 +83,10 @@ var configuration = {
 				//url: this.serverHostName + "/client-dev/conf/localConfiguration.json",
 				url: this.url + "/localConfiguration.json",
 				dataType: 'json',
-				success: function(data) {
+				success: function (data) {
 					configuration.localConfig = data;
 				},
-				error: function(jqXHR, textStatus, errorThrown) {
+				error: function (jqXHR, textStatus, errorThrown) {
 					console.log("Local configuration not found " + textStatus + ' ' + errorThrown);
 				}
 			}),
@@ -95,38 +95,38 @@ var configuration = {
 				$.ajax({
 					url: this.url + "/configuration.json",
 					dataType: 'text',
-					success: function(data) {
+					success: function (data) {
 						configuration.setConfigurationData(data);
 					},
-					error: function(jqXHR, textStatus, errorThrown) {
+					error: function (jqXHR, textStatus, errorThrown) {
 						console.log("Configuration not found " + textStatus + ' ' + errorThrown);
 					}
 				}),
 				$.ajax({
 					url: this.serverHostName + this.baseServerUrl + "/webClientConfigurationData",
 					dataType: 'text',
-					success: function(data) {
+					success: function (data) {
 						externalData = data;
 					},
-					error: function(jqXHR, textStatus, errorThrown) {
+					error: function (jqXHR, textStatus, errorThrown) {
 						console.log("Configuration not found " + textStatus + ' ' + errorThrown);
 					}
 				})
-			).then(function(){
+			).then(function () {
 				// Override our's server configuration with one coming from WEBS
 				configuration.buildServerConfiguration(externalData);
 			})
 		);
 	},
 
-	setConfigurationData: function(configurationData) {
+	setConfigurationData: function (configurationData) {
 		configuration.data = JSON.parse(removeComments(configurationData));
 	},
 
 	/**
 	 *	Build server configuration
 	 */
-	buildServerConfiguration: function(externalData) {
+	buildServerConfiguration: function (externalData) {
 		// Remove comments 
 		externalData = JSON.parse(removeComments(externalData));
 
@@ -135,7 +135,7 @@ var configuration = {
 	},
 
 	// Get a configuration parameter
-	get: function(path, defaultValue) {
+	get: function (path, defaultValue) {
 		return this.data ? this.getFromPath(this.data, path, defaultValue) : defaultValue;
 	},
 
@@ -155,13 +155,13 @@ var configuration = {
 	 *	@param defaultValue
 	 *		The default value if the path wasn't found
 	 */
-	getMappedProperty: function(object, propertyId, defaultValue) {
+	getMappedProperty: function (object, propertyId, defaultValue) {
 		var _this = this;
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
 		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
 		if (propertyPath) {
 			var value = defaultValue;
-			propertyPath.forEach(function(_propertyPath) {
+			propertyPath.forEach(function (_propertyPath) {
 				var _value = _this.getFromPath(object, _propertyPath, defaultValue);
 				if (_value !== defaultValue) {
 					if (propertyId === 'browses') {
@@ -185,10 +185,13 @@ var configuration = {
 	},
 
 	/**
-	 *	Set mapped property
-	 *	@see getMappedProperty for more
+	 * Set mapped property
+	 * @see getMappedProperty for more
+	 * @param {object} object
+	 * @param {string} propertyId
+	 * @param {string}
 	 */
-	setMappedProperty: function(object, propertyId, value) {
+	setMappedProperty: function (object, propertyId, value) {
 
 		//var propertyPath = this.get("serverPropertyMapper."+propertyId);
 		var propertyPath = this.getFromPath(this.localConfig, "serverPropertyMapper." + propertyId);
@@ -207,19 +210,19 @@ var configuration = {
 	},
 
 	/**
-	 *	Get property from an array of paths
+	 * Get property from an array of paths
 	 *
-	 *	@function getPropertyFromPaths
-	 *	@param object - Object from which you need to extract the property
-	 *	@param propertyPaths - Array of paths 
-	 *	@param defaultValue - The default value if none path was found
-	 *	@returns {string}
+	 * @function getPropertyFromPaths
+	 * @param object - Object from which you need to extract the property
+	 * @param propertyPaths - Array of paths 
+	 * @param defaultValue - The default value if none path was found
+	 * @returns {string}
 	 */
-	getPropertyFromPaths: function(object, propertyPaths, defaultValue) {
+	getPropertyFromPaths: function (object, propertyPaths, defaultValue) {
 		var _this = this;
 		if (propertyPaths && _.isArray(propertyPaths) && propertyPaths.length > 0) {
 			var value = defaultValue;
-			propertyPaths.forEach(function(_propertyPath) {
+			propertyPaths.forEach(function (_propertyPath) {
 				var _value = _this.getFromPath(object, _propertyPath, defaultValue);
 				if (_value !== defaultValue && typeof _value !== 'object') {
 					value = _value;
@@ -232,22 +235,26 @@ var configuration = {
 	},
 
 	/**
-	 *	Helper imperative function to get a parameter from the configuration data
-	 *	(much faster than recursive one...)
+	 * Helper imperative function to get a parameter from the configuration data
+	 * (much faster than recursive one...)
+	 * @param {object} object
+	 * @param {string} path
+	 * @param {string} defaultValue
+	 * @returns {object | string} 
 	 */
-	getFromPath: function(object, path, defaultValue) {
+	getFromPath: function (object, path, defaultValue) {
 		var names = path.split('.');
 		var obj = object;
 		for (var i = 0; obj && i < names.length - 1; i++) {
 			var nameKV = names[i].split('[]');
 			if (nameKV.length === 2) {
 				var obj2 = null;
-				for (var j=0; j<obj[nameKV[0]].length; j++) {
+				for (var j = 0; j < obj[nameKV[0]].length; j++) {
 					var obj2 = obj[nameKV[0]][j];
-					for (var k=i+1; obj2 && k < names.length -1; k++) {
+					for (var k = i + 1; obj2 && k < names.length - 1; k++) {
 						obj2 = _getValue(obj2, names[k]);
 					}
-					if (obj2) {i=k; break;}
+					if (obj2) { i = k; break; }
 				}
 				obj = obj2;
 			} else {
@@ -258,27 +265,34 @@ var configuration = {
 		return _getValue(obj, names[names.length - 1], defaultValue);
 	},
 
-	checkBehindSso: function() {
+	/**
+	 * Check if webc is behind SSO
+	 * To check this, request on shopcarts REST service
+	 * If 401 or error > no SSO enable
+	 * 
+	 * @returns {Promise}
+	 */
+	checkBehindSso: function () {
 		return $.when(
 			$.ajax({
 				url: this.serverHostName + this.baseServerUrl + "/shopcarts",
 				dataType: 'text',
-				success: function(data) {
+				success: function (data) {
 					configuration.data.behindSSO = true;
 					console.info("Behind SSO");
 				},
-				error: function(jqXHR, textStatus, errorThrown) {
+				error: function (jqXHR, textStatus, errorThrown) {
 					configuration.data.behindSSO = false;
 					console.info("Not behind SSO");
 				}
 			})
 		).then(
-		function(success) {
-			return $.when();
-		},
-		function(error) {
-			return $.when();
-		});
+			function (success) {
+				return $.when();
+			},
+			function (error) {
+				return $.when();
+			});
 	}
 };
 
