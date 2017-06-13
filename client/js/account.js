@@ -158,6 +158,11 @@ module.exports = {
 		} else {
 			activeView = userPrefsView;
 		}
+		$('#sso-login').hide();
+		if (!Configuration.data.behindSSO) {
+			$('#sso-login').show();
+			$('#sso-login').attr('href', Configuration.data.idpUrl);
+		}
 
 	}
 
