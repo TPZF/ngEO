@@ -179,14 +179,18 @@ var MapPopup = function(container) {
 		// pin button is always active
 		element.find('#mpButtons a.check').addClass('active');
 
+
+		element.find('#mpButtons a.save').hide();
+		element.find('#mpButtons a.shop').hide();
+
 		// Hide retrieve button in accordance with configuration settings
 		// no downloadmanager => no retrieve button
-		if (!Configuration.data.downloadManager.enable) {
-			element.find('#mpButtons a.save').hide();
-		}
-		// if not beind SSO => no shopcart button
-		if (!Configuration.data.behindSSO) {
-			element.find('#mpButtons a.shop').hide();
+		// if beind SSO => display shopcart button
+		if (Configuration.data.behindSSO) {
+			element.find('#mpButtons a.shop').show();
+			if (Configuration.data.downloadManager.enable) {
+				element.find('#mpButtons a.save').show();
+			}
 		}
 		// disable direct download by default
 		element.find('#mpButtons a.download').removeClass('active');
