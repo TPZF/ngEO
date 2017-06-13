@@ -17,6 +17,26 @@ var methodMap = {
 };
 
 /**
+ * Clone only geojson feature (id, type, geometry, properties)
+ * Clean _featureCollection, _origGeometry and others attributes
+ * which have circular references
+ * 
+ * @param {object} myFeature 
+ * @returns {object}
+ */
+var _cloneGeoJsonFeature = function(myFeature) {
+	var _feat = {
+		id: myFeature.id,
+		geometry: myFeature._origGeometry,
+		properties: _.clone(myFeature.properties, true),
+		type: myFeature.type
+	};
+	// remove style (openlayers) in properties attribute
+	if (_feat.properties.style) { delete _feat.properties.style; }
+	return _feat;
+};
+
+/**
  *  This is the backbone Model of the Shopcart element
  */
 var Shopcart = Backbone.Model.extend({
@@ -116,19 +136,12 @@ var Shopcart = Backbone.Model.extend({
 			var feature = features[i];
 			var productUrl = Configuration.getMappedProperty(feature, "productUrl", null);
 			if (feature.properties && productUrl && isNotPlanned(feature)) {
-				var myFeature = {
-					id: feature.id,
-					type: feature.type,
-					geometry: feature.geometry,
-					bbox: feature.bbox,
-					properties: feature.properties
-				};
+				// clone
+				var myFeature = _cloneGeoJsonFeature(feature);
+				// add specific attribute
 				myFeature.properties.shopcart_id = this.id;
 				myFeature.properties.productUrl = productUrl;
 				itemsToAdd.push(myFeature);
-				// update for webc
-				feature.properties.shopcart_id = this.id;
-				feature.properties.productUrl = productUrl;
 				productUrls.push(productUrl);
 			}
 		}
@@ -162,16 +175,12 @@ var Shopcart = Backbone.Model.extend({
 					if (indexOfProductUrls >= 0 && indexOfProductUrls < features.length) {
 
 						// Clone the feature to be different from the selected one
-						var feature = _.clone(features[indexOfProductUrls]);
-						feature.id = itemsAddedResponse[i].id;
-						feature.properties = _.clone(feature.properties);
-						feature.properties.shopcartItemId = itemsAddedResponse[i].id;
+						var featureAdd = _cloneGeoJsonFeature(features[indexOfProductUrls], true);
+						featureAdd.id = itemsAddedResponse[i].id;
+						featureAdd.properties.shopcart_id = itemsAddedResponse[i].properties.shopcart_id;
+						featureAdd.properties.shopcartItemId = featureAdd.id;
+						featuresAdded.push(featureAdd);
 
-						featuresAdded.push(feature);
-
-
-					} else {
-						// TODO handle error
 					}
 				}
 
