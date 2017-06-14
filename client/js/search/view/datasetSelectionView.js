@@ -77,7 +77,7 @@ var DatasetSelectionView = Backbone.View.extend({
 			// Hide all datasets with names which doesn't correspond to filter
 			$liArray
 				.find('.name')
-				.filter(function(index, item) { return $(item).text().indexOf(filter) == -1; }).parent()
+				.filter(function(index, item) { return $(item).text().toLowerCase().indexOf(filter.toLowerCase()) == -1; }).parent()
 				.addClass('ui-screen-hidden');
 		}
 	},
