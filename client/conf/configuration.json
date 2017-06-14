@@ -201,8 +201,7 @@
 				"crossOrigin": "anonymous"
 			}
 		},
-		"backgroundLayers": [
-		],
+		"backgroundLayers": [],
 		"styles": {
 			"results-footprint": {
 				"default": {
