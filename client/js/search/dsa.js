@@ -21,7 +21,7 @@ module.exports = {
 	 * @param element 	The root element of the data-services-area
 	 * @param router 	The data-services-area router
 	 */
-	initialize: function(element, router, panelManager) {
+	initialize: function (element, router, panelManager) {
 
 		// Create the main search view
 		var datasetView = new DataSetSelectionView({
@@ -30,10 +30,10 @@ module.exports = {
 
 		var datasetPopulationCallbacks = [];
 
-		var onDatasetPopulationLoaded = function() {
+		var onDatasetPopulationLoaded = function () {
 
 			// Execute all registered callbacks
-			for ( var i=0; i<datasetPopulationCallbacks.length; i++ ) {
+			for (var i = 0; i < datasetPopulationCallbacks.length; i++) {
 				datasetPopulationCallbacks[i]();
 			}
 
@@ -43,7 +43,7 @@ module.exports = {
 			datasetView.render();
 		};
 
-		var onDatasetPopulationFailed = function() {
+		var onDatasetPopulationFailed = function () {
 			if (dsaXHR.state() == "rejected") {
 				Logger.error('Cannot retreive the DataSet Authorizations from the server');
 				dspXHR.done(onDatasetPopulationLoaded);
@@ -91,7 +91,7 @@ module.exports = {
 		router.route(
 			"data-services-area/search?:query",
 			"search",
-			function(query) {
+			function (query) {
 				// Query contains osParameters={...}, substr starting from "{"
 				var sharedParameters = JSON.parse(query.substr(query.indexOf("{")));
 
@@ -105,7 +105,7 @@ module.exports = {
 				MenuBar.showPage("data-services-area");
 
 				// On dataset fetch callback
-				var onFetch = function(dataset, status) {
+				var onFetch = function (dataset, status) {
 
 					var datasetId = dataset.get('datasetId');
 					if (status == "SUCCESS") {
@@ -114,7 +114,7 @@ module.exports = {
 						var currentSharedParameters = sharedParameters['commonCriteria'];
 
 						// Check if dataset has download or advanced options, add to shared params if so
-						if ( sharedParameters[datasetId] )
+						if (sharedParameters[datasetId])
 							currentSharedParameters += "&" + sharedParameters[datasetId];
 						DatasetSearch.populateModelfromURL(currentSharedParameters, datasetId);
 
@@ -141,16 +141,16 @@ module.exports = {
 
 						// And launch the search!
 						SearchResults.launch(DatasetSearch);
-						
+
 						// Show search panel
 						$('#search').click();
 					}
 				}
 
-				datasetPopulationCallbacks.push(function() {
+				datasetPopulationCallbacks.push(function () {
 					DataSetPopulation.on("datasetFetch", onFetch);
 					// Select & fetch all shared datasets
-					_.each(datasetIds, function(id) {
+					_.each(datasetIds, function (id) {
 						DataSetPopulation.select(id);
 					});
 				})
@@ -160,13 +160,13 @@ module.exports = {
 		router.route(
 			"data-services-area/sto/:datasetId?:query",
 			"sto",
-			function(datasetId, query) {
+			function (datasetId, query) {
 
 				// Show the page first
 				MenuBar.showPage("data-services-area");
 
 				// Once dataset has been loaded, populate standing order's model
-				DataSetPopulation.once("datasetFetch", function(dataset, status) {
+				DataSetPopulation.once("datasetFetch", function (dataset, status) {
 
 					if (status == "SUCCESS") {
 
@@ -186,8 +186,8 @@ module.exports = {
 
 					}
 				});
-				
-				datasetPopulationCallbacks.push(function() {					
+
+				datasetPopulationCallbacks.push(function () {
 					// Set the datasetId from the URL, the dataset will be loaded, and if exists it will be initialized
 					DataSetPopulation.select(datasetId);
 				})
@@ -197,9 +197,9 @@ module.exports = {
 		// Set the default route
 		router.route(
 			"data-services-area", "dsa",
-			function() {
+			function () {
 
-				datasetPopulationCallbacks.push(function() {
+				datasetPopulationCallbacks.push(function () {
 					// Select the dataset id stored in the prefs
 					var prefsDS = UserPrefs.get("Dataset");
 					if (prefsDS && prefsDS != "None" && _.isString(prefsDS)) {
@@ -217,13 +217,15 @@ module.exports = {
 			});
 
 		// Update interface when dataset selection has changed
-		var onDatasetSelectionChanged = function(dataset) {
+		var onDatasetSelectionChanged = function (dataset) {
 			var numDatasets = DatasetSearch.datasetIds.length;
 			if (numDatasets == 0) {
 				UserPrefs.save("Dataset", "None");
 
 				$('#subscribe').addClass('ui-disabled');
 				$('#search').addClass('ui-disabled');
+				// hide search area if no dataset selected ?
+				// searchView.onHide();
 			} else if (numDatasets == 1) {
 				UserPrefs.save("Dataset", DatasetSearch.getDatasetPath());
 
