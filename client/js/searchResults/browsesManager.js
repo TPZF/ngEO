@@ -12,18 +12,20 @@ var _browseAccessInformationMap = {};
 
 /**
  * Get the url to be used in the map for the given browse info
+ * @param {object} myBrowseObject
+ * @returns {string | null}
  */
-var _getUrl = function (browse) {
-	// TODO: parametrize from conf
-	return browse.BrowseInformation.fileName.ServiceReference["@"]["href"];
+var _getUrl = function (myBrowseObject) {
+	return Configuration.getMappedProperty(myBrowseObject, 'browseUrl', null);
 };
 
 /**
  * Get crossOrigin to be used in the map for the given browse info
+ * @param {object} myBrowseObject
+ * @returns {string | null}
  */
-var _getCrossOrigin = function (browse) {
-	// TODO: parametrize from conf
-	return browse.BrowseInformation.fileName.ServiceReference["@"]["crossOrigin"];
+var _getCrossOrigin = function (myBrowseObject) {
+	return Configuration.getMappedProperty(myBrowseObject, 'browseCrossOrigin', null);
 };
 
 

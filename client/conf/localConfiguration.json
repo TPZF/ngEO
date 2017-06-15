@@ -1,7 +1,7 @@
 {
 	"version": "2.30",
 	"theme": "c",
-	"serverPropertyMapper" : {
+	"serverPropertyMapper": {
 		"start": [
 			"properties.EarthObservation.phenomenonTime.TimePeriod.beginPosition"
 		],
@@ -33,6 +33,12 @@
 		"browses": [
 			"properties.EarthObservation.result.EarthObservationResult.browse"
 		],
+		"browseUrl": [
+			"BrowseInformation.fileName.ServiceReference.@.href"
+		],
+		"browseCrossOrigin": [
+			"BrowseInformation.fileName.ServiceReference.@.crossOrigin"
+		],
 		"interferometryUrl": [
 			"properties.links.@title=interferometry.@href"
 		],
@@ -49,76 +55,74 @@
 			"properties.EarthObservation.procedure.EarthObservationEquipment.instrument.Instrument.shortName"
 		]
 	},
-	"directDownload" : {
-		"productColumnIndex" : 2
+	"directDownload": {
+		"productColumnIndex": 2
 	},
-	
-	"dataAccessRequestStatuses" : {
-	   	   
-	   "validationRequestStage" : "validation",
-	   
-	   "confirmationRequestStage" : "confirmation",
-	   
-	    "validStatuses": {
-	        "inProgressStatus": {
-	            "value": 0,
-	            "status" : "Processing",
-	            "message": "Request In Progress..."
-	        },
-	        "pausedStatus": {
-	            "value": 1,
-	            "status" : "Paused",
-	            "message": "Request Paused"
-	        },
-	        "completedStatus": {
-	            "value": 2,
-	            "status" : "Completed",
-	            "message": "Request Completed"
-	        },
-	        "cancelledStatus": {
-	            "value": 3,
-	            "status" : "Cancelled",
-	            "message": "Request Cancelled"
-	        },
-	        "validatedStatus": {
-	            "value": 4,
-	            "status" : "Validated",
-	            "message": "Request Acknowledged"
-	        },
-	        "bulkOrderStatus": {
-	            "value": 5,
-	            "status" : "BulkOrdered",
-	            "message": "Request Max Size Exceeded"
-	        }
-	    },
-	    "unExpectedStatusError": "ERROR: The server returned an expected status",
-	    "requestSubmissionError": "FAILURE: Request Submission Failed",
-	    "invalidDownloadManagersError": "Invalid Request : Please select a download manager first.", 
-		"invalidConfirmationRequest" : "Invalid Confirmation Request: The selected download manager has been changed.",
-		"pauseButtonSuffix" : "pause",
-		"stopButtonSuffix" : "stop"
+	"dataAccessRequestStatuses": {
+		"validationRequestStage": "validation",
+		"confirmationRequestStage": "confirmation",
+		"validStatuses": {
+			"inProgressStatus": {
+				"value": 0,
+				"status": "Processing",
+				"message": "Request In Progress..."
+			},
+			"pausedStatus": {
+				"value": 1,
+				"status": "Paused",
+				"message": "Request Paused"
+			},
+			"completedStatus": {
+				"value": 2,
+				"status": "Completed",
+				"message": "Request Completed"
+			},
+			"cancelledStatus": {
+				"value": 3,
+				"status": "Cancelled",
+				"message": "Request Cancelled"
+			},
+			"validatedStatus": {
+				"value": 4,
+				"status": "Validated",
+				"message": "Request Acknowledged"
+			},
+			"bulkOrderStatus": {
+				"value": 5,
+				"status": "BulkOrdered",
+				"message": "Request Max Size Exceeded"
+			}
+		},
+		"unExpectedStatusError": "ERROR: The server returned an expected status",
+		"requestSubmissionError": "FAILURE: Request Submission Failed",
+		"invalidDownloadManagersError": "Invalid Request : Please select a download manager first.",
+		"invalidConfirmationRequest": "Invalid Confirmation Request: The selected download manager has been changed.",
+		"pauseButtonSuffix": "pause",
+		"stopButtonSuffix": "stop"
 	},
-	
-	"simpleDataAccess" : {
+	"simpleDataAccess": {
 		"invalidProductURLsError": "Invalid Request: Please check products having a url."
-	}, 
-	
-	"standingOrder" : {
+	},
+	"standingOrder": {
 		"invalidOpenSearchURLError": "Invalid OpenSearch URL : Empty URL.",
 		"invalidDownloadOptionsError": "Invalid Download options : Empty Value."
 	},
-	
-	"timeSlider" : {
-		"scaleYearsWidth" : 30,
+	"timeSlider": {
+		"scaleYearsWidth": 30,
 		"startRangeWidthInDays": 60,
-		"boundsMaxLength" : 365,
+		"boundsMaxLength": 365,
 		"boundsMinLength": 7
 	},
-	
 	"userPrefs": {
-		"keys": ["Dataset", "Background", "Visible layers", "Map mode", "Advanced info state", "Current shopcart"]
+		"keys": [
+			"Dataset",
+			"Background",
+			"Visible layers",
+			"Map mode",
+			"Advanced info state",
+			"Current shopcart"
+		]
 	},
-
 	"contextHelp": {
 		"date": "Set start and stop dates of<br/> the selected dataset to be used in search",
 		"area": "Set geographical criteria to be used in search",
