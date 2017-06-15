@@ -23,12 +23,12 @@ var shopcartManagerView;
 
 var activeView;
 
-var refreshViewOnResize = _.debounce(function() {
+var refreshViewOnResize = _.debounce(function () {
 	if (activeView.refreshSize) activeView.refreshSize();
 }, 300);
 
 // Function call when a tab is activated
-var onTabActivated = function($link) {
+var onTabActivated = function ($link) {
 
 	switch ($link.attr('href')) {
 		case "#downloadManagersMonitoring":
@@ -63,7 +63,7 @@ module.exports = {
 	 * Build the root element of the module and return it
 	 */
 
-	buildElement: function() {
+	buildElement: function () {
 		var account_html = account_template(Configuration.localConfig.contextHelp);
 		var acc = $(account_html);
 		acc.find('#tabs').tabs({
@@ -88,7 +88,7 @@ module.exports = {
 	/**
 	 * Called when the module main page is shown
 	 */
-	show: function() {
+	show: function () {
 		if (activeView.refreshSize)
 			activeView.refreshSize();
 	},
@@ -97,7 +97,7 @@ module.exports = {
 	 * Initialize the module.
 	 * Called after buildElement
 	 */
-	initialize: function() {
+	initialize: function () {
 
 		$(window).resize(refreshViewOnResize);
 
@@ -128,7 +128,7 @@ module.exports = {
 				// Fetch DAR : maybe not needed right now
 				DataAccessRequestStatuses.fetch();
 			}
-		
+
 			//Create the shopcart manager view 
 			shopcartManagerView = new ShopcartManagerView({
 				model: ShopcartCollection,
@@ -158,6 +158,8 @@ module.exports = {
 
 		// The first active is userPrefs
 		activeView = userPrefsView;
+
+		// hide sso login link
 		$('#sso-login').hide();
 		if (!Configuration.data.behindSSO) {
 			$('#sso-login').show();
