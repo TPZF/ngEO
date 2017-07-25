@@ -4,57 +4,63 @@
 <head>
 	<title>ngEO</title>
 	<meta charset="utf-8" />
-	
+
 	<!-- Style sheet for jquery-mobile and other coming from extrenals vendor -->
-    <link rel="stylesheet" type="text/css" href="../css/vendor.css" /> 
-    <!-- Style sheet for ngeo -->
+	<link rel="stylesheet" type="text/css" href="../css/vendor.css" />
+	<!-- Style sheet for ngeo -->
 	<link rel="stylesheet" type="text/css" href="../css/main.css">
 
 	<!-- librairies from extrenals vendor/COTS -->
-    <script src="../js/libraries.js"></script>
-    <!-- js containing template html to be used on the fly -->
-    <script src="../js/main-templates.js"></script>
-    <!-- js linked to the management of the map -->
-    <script src="../js/map/map.js"></script>
-    <!-- js linked to the management of the dsa -->
-    <script src="../js/data-services-area.js"></script>
-    <!-- js linked to the management of account -->
-    <script src="../js/account.js"></script>
-    <!-- js containing the main -->
-    <script src="../js/main-ngeo.js"></script>
-    <script>require('main').initialize()</script>
-	
+	<script src="../js/libraries.js"></script>
+	<!-- js containing template html to be used on the fly -->
+	<script src="../js/main-templates.js"></script>
+	<!-- js linked to the management of the map -->
+	<script src="../js/map/map.js"></script>
+	<!-- js linked to the management of the dsa -->
+	<script src="../js/data-services-area.js"></script>
+	<!-- js linked to the management of account -->
+	<script src="../js/account.js"></script>
+	<!-- js containing the main -->
+	<script src="../js/main-ngeo.js"></script>
+	<script>
+		require('main').initialize()
+	</script>
+
 </head>
 
 <body>
 
-<div data-role="page" data-theme="c">
-	
-	<!-- Menu Bar -->
-	<header>
-		<img src="../images/ngeo-logo.png" />
-		<p>The next generation user services for earth observation.</p>
-		<nav data-default="#data-services-area">
-			<a href="../index.html" data-ajax="false">Home</a>
-			<a href="#data-services-area" data-ajax="false" data-nowrap="true" data-module="data-services-area">Data Services Area</a>
-			<a href="#account" data-ajax="false" data-module="account">My account</a>
-			<a href="help.html" data-ajax="false">User Guide</a>
-			<a class="contactUs" href="" data-ajax="false">Contact Us</a>
-		</nav>
-	</header>
+	<div data-role="page" data-theme="c">
 
-	<!-- Map -->
-	<div id="mapContainer">
-		<div id="coordinatesViewer"></div>
-		<div id="map">
+		<!-- Menu Bar -->
+		<header>
+			<img src="../images/ngeo-logo.png" />
+			<p>The next generation user services for earth observation.</p>
+			<nav data-default="#data-services-area">
+				<a href="../index.html" data-ajax="false">Home</a>
+				<a href="#data-services-area" data-ajax="false" data-nowrap="true" data-module="data-services-area">Data Services Area</a>
+				<a href="#account" data-ajax="false" data-module="account">My account</a>
+				<a href="help.html" data-ajax="false">User Guide</a>
+				<a class="contactUs" href="" data-ajax="false">Contact Us</a>
+			</nav>
+			<div style="margin: 13px !important; float:right;">
+				<span id="userConnected" style="display:none; color:white"></span>
+				<a href="" id="sso-login" style="display:none; color:white" class="ui-link" data-ajax="false" target='_self'>Login to UMSSO</a>
+			</div>
+		</header>
+
+		<!-- Map -->
+		<div id="mapContainer">
+			<div id="coordinatesViewer"></div>
+			<div id="map">
+			</div>
 		</div>
-	</div>
 
-	<!-- Help toolbar -->
-	<menu id="helpToolbar" type="toolbar">
-		<command id="help" label="Context Help"/>
-	</menu>
-</div>
+		<!-- Help toolbar -->
+		<menu id="helpToolbar" type="toolbar">
+			<command id="help" label="Context Help" />
+		</menu>
+	</div>
 
 </body>
 

@@ -36,7 +36,7 @@ module.exports = {
 		 * When the document is ready and configuration is loaded load the rest of the application
 		 */
 		$.when(doc_ready, Configuration.load(), Configuration.checkBehindSso())
-			.done(function() {
+			.done(function () {
 
 				// Update mailto coordinates
 				$("body .contactUs").attr("href", "mailto:" + Configuration.get("mailto"));
@@ -47,6 +47,19 @@ module.exports = {
 				// Remove some automatic styling from jQuery Mobile that don't fit in ngEO style
 				$("body").removeClass("ui-mobile-viewport");
 				$("header").find("a").removeClass("ui-link");
+
+				// hide sso login link
+				$('#sso-login').hide();
+				$('#userConnected').hide();
+
+				if (!Configuration.data.behindSSO) {
+					$('#sso-login').show();
+					$("#sso-login").attr('href', Configuration.data.idpUrl);
+				} else {
+					$('#userConnected').show();
+					$('#userConnected').html("Logged in as " + Configuration.data.userIdentification);
+				}
+
 				// Initialize map
 				Map.initialize("map");
 				// Load the map module and initialize it
@@ -59,7 +72,7 @@ module.exports = {
 				});
 				ContextHelp($.mobile.activePage);*/
 			})
-			.fail(function(jqXHR, textStatus, errorThrown) {
+			.fail(function (jqXHR, textStatus, errorThrown) {
 				Logger.error('Cannot load configuration : ' + errorThrown);
 			});
 
