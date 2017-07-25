@@ -159,13 +159,6 @@ module.exports = {
 		// The first active is userPrefs
 		activeView = userPrefsView;
 
-		// hide sso login link
-		$('#sso-login').hide();
-		if (!Configuration.data.behindSSO) {
-			$('#sso-login').show();
-			$('#sso-login').attr('href', Configuration.data.idpUrl);
-		}
-
 	}
 
 };
