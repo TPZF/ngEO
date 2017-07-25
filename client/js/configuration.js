@@ -49,7 +49,7 @@ var _builBaseServerUrl = function () {
 	var baseProxyPath = '';
 	if (pathItems.length > 0) {
 		for (var i = 0; i < pathItems.length; i++) {
-			if (pathItems[i] !== 'sec' && pathItems[i] !== '' && pathItems[i] !== 'index.html') {
+			if (pathItems[i] !== 'sec' && pathItems[i] !== '' && pathItems[i] !== 'index.html' && pathItems[i] !== 'help.html') {
 				baseProxyPath = baseProxyPath + '/' + pathItems[i];
 			}
 		}
@@ -275,11 +275,18 @@ var configuration = {
 	checkBehindSso: function () {
 		return $.when(
 			$.ajax({
-				url: this.serverHostName + this.baseServerUrl + "/shopcarts",
+				url: this.serverHostName + this.baseServerUrl + "/userId",
 				dataType: 'text',
 				success: function (data) {
-					configuration.data.behindSSO = true;
-					console.info("Behind SSO");
+					configuration.data.behindSSO = false;
+					var repToJson = JSON.parse(data);
+					if (repToJson.userInformation) {
+						configuration.data.behindSSO = true;
+						configuration.data.userIdentification = repToJson.userInformation.userId;
+						console.info("behind SSO");
+					} else {
+						console.info("Not behind SSO");
+					}
 				},
 				error: function (jqXHR, textStatus, errorThrown) {
 					configuration.data.behindSSO = false;
