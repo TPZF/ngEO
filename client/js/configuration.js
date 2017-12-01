@@ -120,7 +120,10 @@ var configuration = {
 	},
 
 	setConfigurationData: function (configurationData) {
-		configuration.data = JSON.parse(removeComments(configurationData));
+		// checkBehindSso could be retrieved before so this one, so we merge configuration.data
+		// here as well
+		// http://cdsv3.cs.telespazio.it/jira/browse/NGEOL-54
+		$.extend(true, configuration.data, JSON.parse(removeComments(configurationData)));
 	},
 
 	/**
