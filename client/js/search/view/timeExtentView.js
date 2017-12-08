@@ -4,12 +4,12 @@ var SearchResults = require('searchResults/model/searchResults');
 //require('ui/dateRangeSlider');
 var dateCriteria_template = require('search/template/dateCriteriaContent');
 
-var ONE_DAY = 1000*60*60*24;
-var ONE_WEEK = 1000*60*60*24*7;
-var ONE_MONTH = 1000*60*60*24*30;
-var ONE_YEAR = 1000*60*60*24*365;
+var ONE_DAY = 1000 * 60 * 60 * 24;
+var ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+var ONE_MONTH = 1000 * 60 * 60 * 24 * 30;
+var ONE_YEAR = 1000 * 60 * 60 * 24 * 365;
 
-var _setDateBeginEnd = function(myDate, flagBegin) {
+var _setDateBeginEnd = function (myDate, flagBegin) {
 	var year = myDate.getFullYear();
 	var month = myDate.getMonth();
 	var day = myDate.getDate();
@@ -30,12 +30,13 @@ var _setDateBeginEnd = function(myDate, flagBegin) {
 	}
 	return newDate;
 }
+
 /**
  * The backbone model is DatasetSearch
  */
 var TimeExtentView = Backbone.View.extend({
 
-	initialize: function(options) {
+	initialize: function (options) {
 
 		this.hasTimeSlider = options.hasTimeSlider;
 
@@ -50,15 +51,15 @@ var TimeExtentView = Backbone.View.extend({
 
 	events: {
 		//The 2 next handlers listen to start and stop date changes
-		'change .fromDateInput': function(event) {
-			if ( this.model.get("start").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString() ) {
+		'change .fromDateInput': function (event) {
+			if (this.model.get("start").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString()) {
 				this.model.set({
-					"start": Date.fromISOString($(event.currentTarget).val() + "T00:00:00.000Z")
+					"start": Date.fromISOString($(event.currentTarget).val() + "T00:00:00.000Z"),
 				});
 			}
 		},
-		'change .toDateInput': function(event) {
-			if ( this.model.get("stop").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString() ) {
+		'change .toDateInput': function (event) {
+			if (this.model.get("stop").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString()) {
 				this.model.set({
 					"stop": Date.fromISOString($(event.currentTarget).val() + "T23:59:59.999Z")
 				});
@@ -73,7 +74,7 @@ var TimeExtentView = Backbone.View.extend({
 				},
 		*/
 		//check box changes to display or not the time slider widget
-		'click .useTimeSliderLabel': function(event) {
+		'click .useTimeSliderLabel': function (event) {
 			var $target = $(event.currentTarget);
 			var checked = $target.hasClass('ui-checkbox-off');
 			this.model.set({
@@ -98,7 +99,7 @@ var TimeExtentView = Backbone.View.extend({
 	},
 
 	// Call to update the date range
-	updateDateRange: function(model, dateRange) {
+	updateDateRange: function (model, dateRange) {
 		// The dataset has not been loaded : do nothing, because the timeslider has already been removed when the datasetId has been changed, see below.
 		var useTimeSlider = this.model.get('useTimeSlider');
 		if (dateRange) {
@@ -127,7 +128,7 @@ var TimeExtentView = Backbone.View.extend({
 			keyDates.push([stopDate.toISODateString(), "Stop dataset"]);
 
 			// Sort dates
-			keyDates.sort(function(a, b) {
+			keyDates.sort(function (a, b) {
 				return new Date(a[0]) - new Date(b[0]);
 			});
 
@@ -137,7 +138,7 @@ var TimeExtentView = Backbone.View.extend({
 				calDateList: keyDates
 			};
 
-			if ( this.model.get("dateRange") ) {
+			if (this.model.get("dateRange")) {
 				this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
 					calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
 					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
@@ -153,7 +154,7 @@ var TimeExtentView = Backbone.View.extend({
 	},
 
 	// Add the time slider to the map
-	addTimeSlider: function() {
+	addTimeSlider: function () {
 
 		this.$dateRangeSlider = $('#dateRangeSlider');
 		this.$dateRangeSlider.dateRangeSlider('option', {
@@ -174,7 +175,7 @@ var TimeExtentView = Backbone.View.extend({
 	},
 
 	// Call when time slider has changed
-	onTimeSliderChanged: function(bounds) {
+	onTimeSliderChanged: function (bounds) {
 		// Update the model
 		// Silent to avoid double update
 		this.model.set({
@@ -190,10 +191,10 @@ var TimeExtentView = Backbone.View.extend({
 	},
 
 	// Remove the time slider
-	removeTimeSlider: function() {
+	removeTimeSlider: function () {
 
 		var self = this;
-		this.$dateRangeSlider.dateRangeSlider('hide', function() {
+		this.$dateRangeSlider.dateRangeSlider('hide', function () {
 			// self.$dateRangeSlider.dateRangeSlider('destroy');
 			self.$dateRangeSlider = $();
 			self.trigger("removeTimeSlider");
@@ -203,9 +204,11 @@ var TimeExtentView = Backbone.View.extend({
 		});
 	},
 
-	// Update the view when the model has changed
-	update: function() {
-
+	/** 
+	 * Update the view when the model has changed
+	 * @see http://cdsv3.cs.telespazio.it/jira/browse/NGEOL-54
+	*/
+	update: function () {
 		if (this.$dateRangeSlider.length > 0) {
 			this.$dateRangeSlider.dateRangeSlider('option', 'bounds', {
 				min: this.model.get("start"),
@@ -213,80 +216,106 @@ var TimeExtentView = Backbone.View.extend({
 			});
 		}
 
-		this.$fromDateInput.datebox("setTheDate", this.model.get("start"));
-		this.$toDateInput.datebox("setTheDate", this.model.get("stop"));
+		this.$fromDateInput.val(this.model.get("start").toISODateString());
+		this.$toDateInput.val(this.model.get("stop").toISODateString());
 
-		if ( this.model.get("dateRange") ) {
-			// check dates
-			var changeOnDate = false;
+		if (this.model.get("dateRange")) {
+			//explained already here "http://cdsv3.cs.telespazio.it/jira/browse/NGEOL-54"
+			//the actual selected start date
 			var startDate = this.model.get("start");
+			//take the previous start date
+			//this is used to check wether the change comes from the start date widget or stop date widget
+			//if the previous start date is same as the actual start date then it means that the date range was changed from the stop date widget
+			var previousStartDate = this.model._previousAttributes.start;
+			//the actual selected stop date
 			var stopDate = this.model.get("stop");
+			//take the previous stop date
+			//this is used to check wether the change comes from the start date widget or stop date widget
+			//if the previous stop date is same as the actual stop date then it means that the date range was changed from the stop date widget
+			var previousStopDate = this.model._previousAttributes.stop;
+			//The minimum date down which you cannot go (this information is from backend for a given dataset)
 			var minDate = _setDateBeginEnd(this.model.get("dateRange").start, true);
+			//The maximum date beyond which you cannot go (this information is from backend for a given dataset)
 			var maxDate = _setDateBeginEnd(this.model.get("dateRange").stop, false);
+			//This is the range between the min date and max date
+			//this variable is used whenever we pick a date from start date widget or stop date widget
+			//we add or remove depending on the use case we have (for exmaple we select a start date before min date ...)
+			var DELTA = maxDate.getTime() - minDate.getTime();
+			//as we have limitation on the date time slider (yes date time slider and date start and stop widget are synchronized)
+			//we cannot have this limit that exceed one year that is why we calculate it here
+			if (DELTA > ONE_YEAR) {
+				DELTA = ONE_YEAR;
+			}
+			//at least we should have 1 week limitation according to the date time slider widget limitation
+			if (DELTA < ONE_WEEK) {
+				DELTA = ONE_WEEK;
+			}
+
 			if (startDate > maxDate) {
-				// startDate > max Range ==> stop=max and start = max - 1 week
+				//if start date was selected after the max date then we set the stop date to be the max date and start date minus one week
+				//why? to be the more close possible from the date user has choosen
 				startDate = new Date(maxDate.getTime() - ONE_WEEK);
 				stopDate = maxDate;
-				changeOnDate = true;
 			} else if (startDate < minDate) {
-				// startDate < min Range ==> start = min and stop=min + 1 week
+				//force the start date to be the min date
 				startDate = minDate;
-				stopDate = new Date(minDate.getTime() + ONE_WEEK);
-				changeOnDate = true;
+				//check if the start date is beyond the limitaton, if so take the limit
+				if (stopDate.getTime() - startDate.getTime() > DELTA) {
+					stopDate = new Date(minDate.getTime() + DELTA);
+				}
 			} else if (stopDate < minDate) {
-				// stop < min => start=min and stop = min + 1 week
+				//if the stop date choosed is before the mi date date, then set the start date to be the min date and add one week for the stop date
+				//this is done in order to be as closest as possible from the user's request 
 				startDate = minDate;
 				stopDate = new Date(minDate.getTime() + ONE_WEEK);
-				changeOnDate = true;
 			} else if (stopDate > maxDate) {
-				// stop > max => start=max - 1 week and stop = max
-				startDate = new Date(maxDate.getTime() - ONE_WEEK);
-				if (startDate.getTime() - minDate.getTime() < 0) {
-					startDate = minDate;
-				}
+				//force the stop date to be the max one if choosen date is beyond
 				stopDate = maxDate;
-				changeOnDate = true;
-			} else if (stopDate == maxDate && stopDate - startDate > ONE_YEAR) {
-				startDate = new Date(stopDate.getTime() - ONE_MONTH);
-				changeOnDate = true;
-			} else if (stopDate - startDate > ONE_YEAR + ONE_DAY) {
-				// stop - start > 1 year => stop = min (max, start + 1 month)
-				stopDate = new Date(startDate.getTime() + ONE_MONTH);
-				if (stopDate > maxDate) {
-					stopDate = maxDate;
+				//check if the start date and stop date have reached the limitation, if so then set the start date to be one year before (always because of our limitation)
+				if (stopDate.getTime() - startDate.getTime() > DELTA) {
+					startDate = new Date(stopDate.getTime() - DELTA);
 				}
-				changeOnDate = true;
-			} else if (startDate > stopDate) {
-				// start > stop => start = max (stop - 1 month, min)
-				startDate = new Date(stopDate.getTime() - ONE_MONTH);
-				if (startDate < minDate) {
-					startDate = minDate;
+			} else if ((stopDate - startDate >= DELTA) || (startDate > stopDate)) {
+				if (previousStartDate == startDate) {
+					//change comes from the stop date widget as the start date has not change
+					//set the start date to be the limitation because user has choosed the stop date
+					//so set the start date to be coherent with our limitation
+					startDate = new Date(stopDate.getTime() - DELTA);
+					//check if the start date is below the min date, if so then set it as the min date from which he cannot go below
+					if (startDate < minDate) {
+						startDate = minDate;
+					}
+				} else {
+					//change comes from the start date widget
+					//set the stop date to be the limitation because user has choosed the start date
+					//so set the stop date to be coherent with our limitation
+					stopDate = new Date(startDate.getTime() + DELTA);
+					//check if the stop date is beyond the max date, if so then set it as the max date from which you cannot go beyond
+					if (stopDate > maxDate) {
+						stopDate = maxDate;
+					}
 				}
-				changeOnDate = true;
 			}
-			if (changeOnDate) {
-				this.model.set({
-					"start": startDate,
-					"stop": stopDate
-				});
-			}
+			this.model.set({
+				"start": Date.fromISOString(startDate.toISODateString() + "T00:00:00.000Z"),
+				"stop": Date.fromISOString(stopDate.toISODateString() + "T23:59:59.999Z")
+			});
 
 			this.$fromDateInput.datebox("option", {
 				calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
 				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
 			}).datebox("refresh");
 			this.$toDateInput.datebox("option", {
-				calYearPickMin: this.model.get("stop").getFullYear()  - this.model.get("dateRange").start.getFullYear(),
+				calYearPickMin: this.model.get("stop").getFullYear() - this.model.get("dateRange").start.getFullYear(),
 				calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
 			}).datebox("refresh");
-
 		}
 		//Uncomment to use back times
 		//		$('#fromTimeInput').val( this.model.get("startTime") );
 		//		$('#toTimeInput').val( this.model.get("stopTime") );
 	},
 
-	render: function() {
+	render: function () {
 
 		var content = dateCriteria_template({
 			model: this.model,
