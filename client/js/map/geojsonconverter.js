@@ -12,7 +12,7 @@ var geoJsonFormat = new OpenLayers.Format.GeoJSON();
  * Convert a OpenLayer.Feature object to GeoJSON
  * @return a GeoJSON feature collection
  */
-var _convertOL = function(features) {
+var _convertOL = function (features) {
 	if (features && features.length > 0) {
 		var json = geoJsonFormat.write(features);
 		return JSON.parse(json);
@@ -24,7 +24,7 @@ var _convertOL = function(features) {
  * @param {object} myFeature 
  * @returns {string}
  */
-var _buildKMLDescription = function(myFeature) {
+var _buildKMLDescription = function (myFeature) {
 	var result = '';
 	result += ' <description><![CDATA[';
 	var urlIcon = Configuration.getFromPath(myFeature, 'properties.link[].@.rel=icon.href', '');
@@ -35,11 +35,11 @@ var _buildKMLDescription = function(myFeature) {
 	return result;
 };
 
-var _buildKMLExtendedData = function(myFeature) {
+var _buildKMLExtendedData = function (myFeature) {
 	var aProp = ["identifier", "title", "published", "updated", "date", "originDatasetId", "productUrl", "polygon"];
 	var result = '';
 	result += ' <ExtendedData>';
-	aProp.forEach(function(property) {
+	aProp.forEach(function (property) {
 		if (myFeature.properties[property]) {
 			result += '  <Data name="' + property + '">';
 			result += '   <value>' + myFeature.properties[property] + '</value>';
@@ -55,7 +55,7 @@ var _buildKMLExtendedData = function(myFeature) {
  * @param {*} myFeatureGeometry 
  * @returns {string}
  */
-var _buildKMLGeometry = function(myFeatureGeometry) {
+var _buildKMLGeometry = function (myFeatureGeometry) {
 	var result = '';
 	// Only type Polygon is treated
 	if (myFeatureGeometry.type === 'Polygon') {
@@ -63,7 +63,7 @@ var _buildKMLGeometry = function(myFeatureGeometry) {
 		result += '  <outerBoundaryIs>';
 		result += '   <LinearRing>';
 		result += '    <coordinates>';
-		myFeatureGeometry.coordinates[0].forEach(function(coord) {
+		myFeatureGeometry.coordinates[0].forEach(function (coord) {
 			result += coord[0] + ',' + coord[1] + ' ';
 		});
 		result += '    </coordinates>';
@@ -80,20 +80,20 @@ var _buildKMLGeometry = function(myFeatureGeometry) {
  * @function _convertToKML
  * @param {object} myFeatureCollection 
  */
-var _convertToKML = function(myFeatureCollection) {
+var _convertToKML = function (myFeatureCollection) {
 	var result = '<kml xmlns="http://earth.google.com/kml/2.0">';
 	result += '<Folder>';
-    result += '<name>Export from ngEO</name>';
-    result += '<description>Exported on ' + new Date() + '</description>';
-	myFeatureCollection.features.forEach(function(feature) {
+	result += '<name>Export from ngEO</name>';
+	result += '<description>Exported on ' + new Date() + '</description>';
+	myFeatureCollection.features.forEach(function (feature) {
 		result += '<Placemark id="' + feature.id + '">';
-        result += ' <name>' + feature.properties.title + '</name>';
-        result += _buildKMLDescription(feature);
+		result += ' <name>' + feature.properties.title + '</name>';
+		result += _buildKMLDescription(feature);
 		result += _buildKMLGeometry(feature.geometry);
 		result += _buildKMLExtendedData(feature);
 		result += '</Placemark>'
 	});
-    result += '</Folder>';
+	result += '</Folder>';
 	result += '</kml>';
 	return result;
 }
@@ -102,19 +102,27 @@ var _convertToKML = function(myFeatureCollection) {
  * @function _convertToMetalink
  * @param {object} myFeatureCollection 
  */
-var _convertToMetalink = function(myFeatureCollection) {
+var _convertToMetalink = function (myFeatureCollection) {
+	//http://cdsv3.cs.telespazio.it/jira/browse/NGEOL-59
+	//Fixed issue, metalink export 
 	var result = '<metalink version="3.0" xmlns="http://www.metalinker.org/">';
 	result += ' <files>';
-	myFeatureCollection.features.forEach(function(feature) {
-		var productUrl = feature.properties.productUrl;
-		var fileName = productUrl.substr(productUrl.lastIndexOf('/'), productUrl.length);
-	    result += '  <file name="' + fileName + '">';
-		result += '   <resources>';
-        result += '    <url type="http">' + productUrl + '</url> ';
-		result += '   </resources>'
-		result += '  </file>'
+	myFeatureCollection.features.forEach(function (feature) {
+		var productUrl = Configuration.getMappedProperty(feature, "productUri", "");
+		if (productUrl) {
+			var slashIndex = productUrl.lastIndexOf('/');
+			var fileName = productUrl;
+			if (slashIndex && slashIndex > 0) {
+				fileName = productUrl.substring(slashIndex + 1, productUrl.length);
+			}
+			result += '  <file name="' + fileName + '">';
+			result += '   <resources>';
+			result += '    <url type="http">' + productUrl + '</url> ';
+			result += '   </resources>'
+			result += '  </file>'
+		}
 	});
-    result += ' </files>';
+	result += ' </files>';
 	result += '</metalink>';
 	return result;
 }
@@ -128,7 +136,7 @@ module.exports = {
 	 * @param layer the layer to load
 	 * @param onload the callback to call when all data is loaded
 	 */
-	load: function(layer, onload) {
+	load: function (layer, onload) {
 
 		// Create OpenLayers protocol according to its type
 		var protocol;
@@ -151,7 +159,7 @@ module.exports = {
 		// If protocol exists, call it to load data
 		if (protocol) {
 			protocol.read({
-				callback: function(resp) {
+				callback: function (resp) {
 					if (resp.features) {
 						onload(_convertOL(resp.features));
 					}
@@ -168,7 +176,7 @@ module.exports = {
 	 *
 	 * @return the data as a string
 	 */
-	convert: function(features, format) {
+	convert: function (features, format) {
 		var f = format.toUpperCase();
 
 		var fc = {
@@ -180,9 +188,9 @@ module.exports = {
 			case "KML":
 				// Convert to OpenLayers
 				return _convertToKML(fc);
-				/*var olFeatures = geoJsonFormat.read(fc);
-				var kmlFormat = new OpenLayers.Format.KML();
-				return kmlFormat.write(olFeatures);*/
+			/*var olFeatures = geoJsonFormat.read(fc);
+			var kmlFormat = new OpenLayers.Format.KML();
+			return kmlFormat.write(olFeatures);*/
 			case "GML":
 				var olFeatures = geoJsonFormat.read(fc);
 				var gmlFormat = new OpenLayers.Format.GML();
@@ -203,7 +211,7 @@ module.exports = {
 	 *
 	 * @return if the function succeeds
 	 */
-	toGeoJSON: function(layer) {
+	toGeoJSON: function (layer) {
 		if (!layer.data) {
 			return false;
 		}
