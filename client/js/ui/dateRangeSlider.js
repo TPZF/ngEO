@@ -1,7 +1,7 @@
 /**
  * define(['jquery','jquery.mobile','externs/jquery.mousewheel'], function($) {
  */
- 
+
 // Helper functions
 function getDaysBetween(date1, date2) {
 	return Math.floor((date1 - date2) / 86400000);
@@ -35,7 +35,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// the constructor
-	_create: function() {
+	_create: function () {
 
 		var self = this;
 
@@ -44,7 +44,7 @@ $.widget("ui.dateRangeSlider", {
 		// Create left and right arrows
 		this.rightArrow = $('<div style="display: none;" class="dateSlider-rightArrow"></div>')
 			.appendTo(this.element)
-			.mousedown(function(event) {
+			.mousedown(function (event) {
 				self.autoScaleDirection = self.options.wheelFactor;
 				setTimeout($.proxy(self._autoScaleScroll, self), 50);
 			})
@@ -52,7 +52,7 @@ $.widget("ui.dateRangeSlider", {
 
 		this.leftArrow = $('<div style="display: none;" class="dateSlider-leftArrow"></div>')
 			.appendTo(this.element)
-			.mousedown(function(event) {
+			.mousedown(function (event) {
 				self.autoScaleDirection = -self.options.wheelFactor;
 				setTimeout($.proxy(self._autoScaleScroll, self), 50);
 			})
@@ -62,7 +62,7 @@ $.widget("ui.dateRangeSlider", {
 		// Create the bar that defines the date range
 		this.dragBar = $('<div style="display: none;" class="dateSlider-bar"></div>')
 			.appendTo(this.element)
-			.mousedown(function(event) {
+			.mousedown(function (event) {
 				$(document).on('mousemove', {
 					lastX: event.pageX
 				}, $.proxy(self._onDragBar, self));
@@ -73,22 +73,22 @@ $.widget("ui.dateRangeSlider", {
 		// Create the labels of the start and end date
 		this.startLabel = $('<div style="display: none;" class="dateSlider-label"></div>')
 			.appendTo(this.element)
-			.mousedown(function(event) {
+			.mousedown(function (event) {
 				$(document).on('mousemove', {
 					lastX: event.pageX
 				}, $.proxy(self._moveLeftDrag, self));
-				$(document).one('mouseup', function() {
+				$(document).one('mouseup', function () {
 					$(document).off('mousemove', $.proxy(self._moveLeftDrag, self));
 					self.options.change(self._computeCurrentDate());
 				});
 			});
 		this.endLabel = $('<div style="display: none;" class="dateSlider-label"></div>')
 			.appendTo(this.element)
-			.mousedown(function(event) {
+			.mousedown(function (event) {
 				$(document).on('mousemove', {
 					lastX: event.pageX
 				}, $.proxy(self._moveRightDrag, self));
-				$(document).one('mouseup', function() {
+				$(document).one('mouseup', function () {
 					$(document).off('mousemove', $.proxy(self._moveRightDrag, self));
 					self.options.change(self._computeCurrentDate());
 				});
@@ -113,12 +113,11 @@ $.widget("ui.dateRangeSlider", {
 		// Initialize dragging
 		this._updateDragBar();
 
-		// Add events
-		_.extend(this, Backbone.Events);
+		this.show();
 	},
 
 	// Refresh the date range slider when container width have changed
-	refresh: function(force) {
+	refresh: function (force) {
 		var cw = this.container.width();
 		if (cw != this.containerWidth || force) {
 			this.containerWidth = cw;
@@ -134,14 +133,14 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Call when mouse up on an arrow
-	_onArrowMouseUp: function() {
+	_onArrowMouseUp: function () {
 		this.autoScaleDirection = 0;
 		this.options.change(this._computeCurrentDate());
 	},
 
 	// On mouse wheel event handler
-	_onMouseWheel: function(event, delta) {
-
+	_onMouseWheel: function (event) {
+		var delta = Math.max(-1, Math.min(1, (event.originalEvent.wheelDelta || -event.originalEvent.detail)));
 		this._moveDrag(delta * this.options.wheelFactor);
 
 		// Call change after a few milliseconds
@@ -150,7 +149,7 @@ $.widget("ui.dateRangeSlider", {
 				clearTimeout(this.wheelTimeoutVar);
 			}
 			var self = this;
-			this.wheelTimeoutVar = setTimeout(function() {
+			this.wheelTimeoutVar = setTimeout(function () {
 				self.options.change(self._computeCurrentDate());
 				self.wheelTimeoutVar = null;
 			}, this.options.wheelTimeout);
@@ -158,7 +157,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Update the drag bar position
-	_updateDragBar: function() {
+	_updateDragBar: function () {
 		this.dragLeftDays = getDaysBetween(this.options.bounds.min, this.minDate);
 		this.dragRightDays = getDaysBetween(this.options.bounds.max, this.minDate);
 
@@ -172,12 +171,18 @@ $.widget("ui.dateRangeSlider", {
 			//this.options.change( this._computeCurrentDate() ); 
 		}
 
-		this.dragBar.width(this.dragRightDays - this.dragLeftDays);
+		// Just for look&feel: set dragbar width min to 1 to keep it visible for user
+		var dragBarWidth = this.dragRightDays - this.dragLeftDays;
+		if (dragBarWidth == 0) {
+			dragBarWidth += 1;
+		}
+
+		this.dragBar.width(dragBarWidth);
 		this._moveDrag(0);
 	},
 
 	// Create the scale
-	_createScaleBar: function() {
+	_createScaleBar: function () {
 
 		this.container.empty();
 
@@ -214,7 +219,7 @@ $.widget("ui.dateRangeSlider", {
 		}
 
 		scale.css('width', getDaysBetween(maxDate, this.minDate));
-		scale.on('selectstart', function() {
+		scale.on('selectstart', function () {
 			return false;
 		});
 
@@ -223,7 +228,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Move the left side of the drag bar
-	_moveLeftDrag: function(event) {
+	_moveLeftDrag: function (event) {
 		var days = event.pageX - event.data.lastX;
 		this.dragLeftDays += days;
 
@@ -251,7 +256,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Move the right side of the drag bar
-	_moveRightDrag: function(event) {
+	_moveRightDrag: function (event) {
 		var days = event.pageX - event.data.lastX;
 		this.dragRightDays += days;
 
@@ -273,7 +278,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Compute the current date
-	_computeCurrentDate: function() {
+	_computeCurrentDate: function () {
 		return {
 			min: new Date(this.minDate.getTime() + this.dragLeftDays * 86400000),
 			max: new Date(this.minDate.getTime() + this.dragRightDays * 86400000/* + (3600 * 1000 * 24 - 1)*/)
@@ -281,12 +286,12 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Format a date
-	_formatDate: function(date) {
+	_formatDate: function (date) {
 		return pad(date.getUTCDate(), 2) + "-" + pad(monthArray[date.getUTCMonth()], 2) + "-" + date.getUTCFullYear();
 	},
 
 	// Update date labels
-	_updateLabels: function() {
+	_updateLabels: function () {
 
 		var bounds = this._computeCurrentDate();
 		// Update text
@@ -317,7 +322,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Move the drag given the days number
-	_moveDrag: function(days) {
+	_moveDrag: function (days) {
 
 		if (this.dragLeftDays + days <= this.minDays) {
 			this.dragRightDays += this.minDays - this.dragLeftDays;
@@ -354,7 +359,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// To animate scale scrolling
-	_autoScaleScroll: function() {
+	_autoScaleScroll: function () {
 		if (this.autoScaleDirection != 0.0) {
 			this._moveDrag(this.autoScaleDirection);
 			setTimeout($.proxy(this._autoScaleScroll, this), 50);
@@ -362,7 +367,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Called when dragging the bar
-	_onDragBar: function(event) {
+	_onDragBar: function (event) {
 		var rightBlock = (this.dragRightDays == this.scalePosition + this.containerWidth) && event.pageX > event.data.lastX;
 		var leftBlock = (this.dragLeftDays == this.scalePosition) && event.pageX < event.data.lastX;
 
@@ -377,7 +382,7 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// Called when the dragging the bar is stopped
-	_onDragBarStop: function(event) {
+	_onDragBarStop: function (event) {
 		this.autoScaleDirection = 0.0;
 		$(document).off('mousemove', $.proxy(this._onDragBar, this));
 		$(document).off('mouseup', $.proxy(this._onDragBarStop, this));
@@ -386,14 +391,14 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// revert other modifications here
-	_destroy: function() {
+	_destroy: function () {
 		this.element.empty();
 		this.element.off("mousewheel", $.proxy(this._onMouseWheel, this));
 	},
 
 	// _setOptions is called with a hash of all options that are changing
 	// always refresh when changing options
-	_setOptions: function() {
+	_setOptions: function () {
 		// in 1.9 would use _superApply
 		$.Widget.prototype._setOptions.apply(this, arguments);
 		// TODO : refresh?
@@ -402,33 +407,30 @@ $.widget("ui.dateRangeSlider", {
 	/**
 	 *	Show date range slider by animating the height
 	 */
-	show: function(callback){
+	show: function (callback) {
 		var self = this;
-		if ( !self.element.height() ) {
-			$(self.element).trigger('drs:show', []);
-			setTimeout(function(){
-				self.element.animate({
-					height: 24
-				}, 400, function() {
-					$(self.element).find('> div').show();
-					self.refresh(true);
-					self.trigger("drs:show");
-				});
-			}, 0);
-		}
+		//if (!self.element.height()) {
+		setTimeout(function () {
+			self.element.animate({
+				height: 24
+			}, 400, function () {
+				$(self.element).find('> div').show();
+				self.refresh(true);
+			});
+		}, 0);
+		//}
 	},
 
 	/**
 	 *	Hide date range slider by animating the height
 	 */
-	hide: function(callback){
+	hide: function (callback) {
 		var self = this;
-		if ( self.element.height() ) {
-			$(self.element).trigger('drs:hide', []);
-			this.element.stop(true,true).animate({
+		if (self.element.height()) {
+			this.element.stop(true, true).animate({
 				height: 0
-			}, 400, function(){
-				if ( callback )
+			}, 400, function () {
+				if (callback)
 					callback();
 				$(self.element).find('> div').not('.dateSlider-container').hide();
 			});
@@ -436,15 +438,15 @@ $.widget("ui.dateRangeSlider", {
 	},
 
 	// _setOptions is called with a hash of all options that are changing
-    // always refresh when changing options
-    _setOptions: function() {
-    	// _super and _superApply handle keeping the right this-context
-		this._superApply( arguments );
+	// always refresh when changing options
+	_setOptions: function () {
+		// _super and _superApply handle keeping the right this-context
+		this._superApply(arguments);
 		this.refresh();
 	},
 
 	// _setOption is called for each individual option that is changing
-	_setOption: function(key, value) {
+	_setOption: function (key, value) {
 
 		switch (key) {
 			case 'bounds':
