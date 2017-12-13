@@ -1,5 +1,7 @@
 var Configuration = require('configuration');
 var SearchResults = require('searchResults/model/searchResults');
+//var moment = require('moment');
+
 //require('jqm-datebox');
 //require('ui/dateRangeSlider');
 var dateCriteria_template = require('search/template/dateCriteriaContent');
@@ -9,27 +11,56 @@ var ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
 var ONE_MONTH = 1000 * 60 * 60 * 24 * 30;
 var ONE_YEAR = 1000 * 60 * 60 * 24 * 365;
 
-var _setDateBeginEnd = function (myDate, flagBegin) {
-	var year = myDate.getFullYear();
-	var month = myDate.getMonth();
-	var day = myDate.getDate();
-	var newDate = new Date();
-	newDate.setFullYear(year);
-	newDate.setMonth(month);
-	newDate.setDate(day);
-	if (flagBegin) {
-		newDate.setUTCHours(0);
-		newDate.setUTCMinutes(0);
-		newDate.setUTCSeconds(0);
-		newDate.setUTCMilliseconds(0);
-	} else {
-		newDate.setUTCHours(23);
-		newDate.setUTCMinutes(59);
-		newDate.setUTCSeconds(59);
-		newDate.setUTCMilliseconds(999);
-	}
-	return newDate;
+//the maximum time slider bounds (range) taken from conf, if not set then we wil take as one year for default
+//means that at most the delta between min and max (time slider) is this value
+var timeSliderBoundsMax = Configuration.localConfig.timeSlider.boundsMaxLength;
+if (timeSliderBoundsMax) {
+	//convert into milliseconds
+	timeSliderBoundsMax = timeSliderBoundsMax * ONE_DAY;
+} else {
+	timeSliderBoundsMax = ONE_YEAR;
 }
+
+//the minimum time slider bounds (range) taken from conf, if not set then we wil take as one year for default
+//means that at leat the delta between min and max (time slider) is this value
+var timeSliderBoundsMin = Configuration.localConfig.timeSlider.boundsMinLength;
+if (timeSliderBoundsMin) {
+	timeSliderBoundsMin = timeSliderBoundsMin * ONE_DAY;
+} else {
+	timeSliderBoundsMin = ONE_DAY;
+}
+
+/** 
+ * Validate input date
+ * 
+ * @param value the value to validate
+ * @param format the format of the date to validate
+ * @return true if the entered value is valid date of format passed in parameter
+ * 		   false otherwise
+*/
+var isValidDate = function (value, format) {
+	var aDate = moment(value, format, true);
+	return aDate.isValid();
+}
+
+/**
+ * We check if the new value entered in this componenet is valid.
+ * If not then we will force the new value to be the last one (i.e. lastValidDate)
+ * @param theComponent the input date component, in order to revert its value if eneterd date is not valid
+ * @param lastValidDate the last valid value of this componenent. If the new value is not correct then we will set the value of this comoenent to be this one
+ * @return true if the component entered value was valid
+ * 		   false if the component entered value was not valid and the component value was forced to be the last valid one
+ */
+var validateDateComponentInput = function (theComponent, lastValidDate) {
+	var valueToValidate = theComponent.val();
+	var componentValueWasNotForcedToLastValidDate = true;
+	if (!isValidDate(valueToValidate, 'YYYY-MM-DD')) {
+		theComponent.val(lastValidDate);
+		componentValueWasNotForcedToLastValidDate = false;
+	}
+	return componentValueWasNotForcedToLastValidDate;
+}
+
 
 /**
  * The backbone model is DatasetSearch
@@ -52,17 +83,23 @@ var TimeExtentView = Backbone.View.extend({
 	events: {
 		//The 2 next handlers listen to start and stop date changes
 		'change .fromDateInput': function (event) {
-			if (this.model.get("start").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString()) {
-				this.model.set({
-					"start": Date.fromISOString($(event.currentTarget).val() + "T00:00:00.000Z"),
-				});
+			//validate the new entered value
+			if (validateDateComponentInput(this.$fromDateInput, this.model.get("start").toISODateString())) {
+				if (this.model.get("start").toISODateString() != $(event.currentTarget).val()) {
+					this.model.set({
+						"start": Date.fromISOString($(event.currentTarget).val() + "T00:00:00.000Z")
+					});
+				}
 			}
 		},
 		'change .toDateInput': function (event) {
-			if (this.model.get("stop").toISODateString() != $(event.currentTarget).datebox('getTheDate').toISODateString()) {
-				this.model.set({
-					"stop": Date.fromISOString($(event.currentTarget).val() + "T23:59:59.999Z")
-				});
+			//validate the new entered value
+			if (validateDateComponentInput(this.$toDateInput, this.model.get("stop").toISODateString())) {
+				if (this.model.get("stop").toISODateString() != $(event.currentTarget).val()) {
+					this.model.set({
+						"stop": Date.fromISOString($(event.currentTarget).val() + "T23:59:59.999Z")
+					});
+				}
 			}
 		},
 		/*		//the 2 following handlers deal with time setting: COMMENTED FOR THE MOMENT
@@ -209,16 +246,6 @@ var TimeExtentView = Backbone.View.extend({
 	 * @see http://cdsv3.cs.telespazio.it/jira/browse/NGEOL-54
 	*/
 	update: function () {
-		if (this.$dateRangeSlider.length > 0) {
-			this.$dateRangeSlider.dateRangeSlider('option', 'bounds', {
-				min: this.model.get("start"),
-				max: this.model.get("stop")
-			});
-		}
-
-		this.$fromDateInput.val(this.model.get("start").toISODateString());
-		this.$toDateInput.val(this.model.get("stop").toISODateString());
-
 		if (this.model.get("dateRange")) {
 			//explained already here "http://cdsv3.cs.telespazio.it/jira/browse/NGEOL-54"
 			//the actual selected start date
@@ -234,27 +261,27 @@ var TimeExtentView = Backbone.View.extend({
 			//if the previous stop date is same as the actual stop date then it means that the date range was changed from the stop date widget
 			var previousStopDate = this.model._previousAttributes.stop;
 			//The minimum date down which you cannot go (this information is from backend for a given dataset)
-			var minDate = _setDateBeginEnd(this.model.get("dateRange").start, true);
+			var minDate = Date.fromISOString(this.model.get("dateRange").start.toISODateString() + "T00:00:00.000Z")
 			//The maximum date beyond which you cannot go (this information is from backend for a given dataset)
-			var maxDate = _setDateBeginEnd(this.model.get("dateRange").stop, false);
+			var maxDate = Date.fromISOString(this.model.get("dateRange").stop.toISODateString() + "T23:59:59.999Z")
 			//This is the range between the min date and max date
 			//this variable is used whenever we pick a date from start date widget or stop date widget
 			//we add or remove depending on the use case we have (for exmaple we select a start date before min date ...)
 			var DELTA = maxDate.getTime() - minDate.getTime();
 			//as we have limitation on the date time slider (yes date time slider and date start and stop widget are synchronized)
-			//we cannot have this limit that exceed one year that is why we calculate it here
-			if (DELTA > ONE_YEAR) {
-				DELTA = ONE_YEAR;
+			//we cannot have this limit that exceed "timeSliderBoundsMax" that is why we calculate it here
+			if (DELTA > timeSliderBoundsMax) {
+				DELTA = timeSliderBoundsMax;
 			}
-			//at least we should have 1 week limitation according to the date time slider widget limitation
-			if (DELTA < ONE_WEEK) {
-				DELTA = ONE_WEEK;
+			//at least we should have ""timeSliderBoundsMin" limitation according to the date time slider widget limitation
+			if (DELTA < timeSliderBoundsMin) {
+				DELTA = timeSliderBoundsMin;
 			}
 
 			if (startDate > maxDate) {
-				//if start date was selected after the max date then we set the stop date to be the max date and start date minus one week
+				//if start date was selected after the max date then we set the stop date to be the max date and start date minus timeSliderBoundsMin
 				//why? to be the more close possible from the date user has choosen
-				startDate = new Date(maxDate.getTime() - ONE_WEEK);
+				startDate = new Date(maxDate.getTime() - timeSliderBoundsMin);
 				stopDate = maxDate;
 			} else if (startDate < minDate) {
 				//force the start date to be the min date
@@ -264,14 +291,14 @@ var TimeExtentView = Backbone.View.extend({
 					stopDate = new Date(minDate.getTime() + DELTA);
 				}
 			} else if (stopDate < minDate) {
-				//if the stop date choosed is before the mi date date, then set the start date to be the min date and add one week for the stop date
+				//if the stop date choosed is before the min date date, then set the start date to be the min date and add "timeSliderBoundsMin" for the stop date
 				//this is done in order to be as closest as possible from the user's request 
 				startDate = minDate;
-				stopDate = new Date(minDate.getTime() + ONE_WEEK);
+				stopDate = new Date(minDate.getTime() + timeSliderBoundsMin);
 			} else if (stopDate > maxDate) {
 				//force the stop date to be the max one if choosen date is beyond
 				stopDate = maxDate;
-				//check if the start date and stop date have reached the limitation, if so then set the start date to be one year before (always because of our limitation)
+				//check if the start date and stop date have reached the limitation, if so then set the start date to be DELTA before (always because of our limitation)
 				if (stopDate.getTime() - startDate.getTime() > DELTA) {
 					startDate = new Date(stopDate.getTime() - DELTA);
 				}
@@ -300,6 +327,15 @@ var TimeExtentView = Backbone.View.extend({
 				"start": Date.fromISOString(startDate.toISODateString() + "T00:00:00.000Z"),
 				"stop": Date.fromISOString(stopDate.toISODateString() + "T23:59:59.999Z")
 			});
+
+			this.$fromDateInput.val(this.model.get("start").toISODateString());
+			this.$toDateInput.val(this.model.get("stop").toISODateString());
+			if (this.$dateRangeSlider.length > 0) {
+				this.$dateRangeSlider.dateRangeSlider('option', 'bounds', {
+					min: this.model.get("start"),
+					max: this.model.get("stop")
+				});
+			}
 
 			this.$fromDateInput.datebox("option", {
 				calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
