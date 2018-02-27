@@ -176,7 +176,8 @@ var ShopcartTableView = TableView.extend({
 		this.exportButton.button('disable');
 
 		this.exportButton.click(function () {
-			var shopcartExportWidget = new ShopcartExportWidget(self.model);
+			//take only the highlights ones
+			var shopcartExportWidget = new ShopcartExportWidget(self.model.highlights);
 			shopcartExportWidget.open();
 		});
 

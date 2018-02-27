@@ -6,7 +6,10 @@ var Configuration = require('configuration');
 var ShopcartExportView = require('shopcart/view/shopcartExportView');
 var ngeoWidget = require('ui/widget');
 
-var ShopcartExportWidget = function(featureCollection) {
+/**
+ * @param featuresToExport array of features to export
+ */
+var ShopcartExportWidget = function (featuresToExport) {
 
 	var parentElement = $('<div id="exportShopcartPopup">');
 	var element = $('<div id="exportShopcartPopupContent"></div>');
@@ -16,20 +19,20 @@ var ShopcartExportWidget = function(featureCollection) {
 	parentElement.ngeowidget({
 		title: "Export",
 		// Reinit the standing order when the widget is closed (FL: is it really needed?)
-		hide: function() {
+		hide: function () {
 			parentElement.remove();
 		}
 	});
 
 	var exportView = new ShopcartExportView({
-		model: featureCollection,
+		model: featuresToExport,
 		el: element
 	});
 
 	/**
 	 *	Open the popup
 	 */
-	this.open = function() {
+	this.open = function () {
 
 		exportView.render();
 
@@ -41,7 +44,7 @@ var ShopcartExportWidget = function(featureCollection) {
 	 *	For the moment not used since the popup can be 
 	 *	closed by clicking out side its content.
 	 */
-	this.close = function() {
+	this.close = function () {
 		parentElement.ngeowidget("hide");
 	};
 };

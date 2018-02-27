@@ -18,7 +18,7 @@ var ShopcartExportView = Backbone.View.extend({
 
 	events: {
 
-		'change #shopcart-export-format': function(event) {
+		'change #shopcart-export-format': function (event) {
 			var $download = this.$el.find('#download-exported-shopcart');
 			var $select = $(event.currentTarget);
 
@@ -29,8 +29,8 @@ var ShopcartExportView = Backbone.View.extend({
 				$download.removeClass('ui-disabled');
 
 				// Export with original geometries, also remove other internal properties
-				var featureWithOrigGeometries = $.extend(true, [], this.model.highlights);
-				$.each(featureWithOrigGeometries, function(index, feature) {
+				var featureWithOrigGeometries = $.extend(true, [], this.model);
+				$.each(featureWithOrigGeometries, function (index, feature) {
 					if (feature._origGeometry) {
 						feature.geometry = feature._origGeometry;
 						delete feature._origGeometry;
@@ -54,7 +54,7 @@ var ShopcartExportView = Backbone.View.extend({
 		}
 	},
 
-	render: function() {
+	render: function () {
 
 		// Check for blob support
 		var blob = null;

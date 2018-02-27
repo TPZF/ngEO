@@ -67,14 +67,14 @@ var ShopcartManagerView = Backbone.View.extend({
 					}
 					self.render();
 				})
-				.fail(function(xhr, textStatus, errorThrown) {
+				.fail(function (xhr, textStatus, errorThrown) {
 					self.showMessage(errorThrown);
 				});
 		},
 		//added export as in the shopcart item view
-		'click #export_shp': function(event) {
-
-			var shopcartExportWidget = new ShopcartExportWidget();
+		'click #export_shp': function (event) {
+			var self = this;
+			var shopcartExportWidget = new ShopcartExportWidget(self.model.getCurrent().featureCollection.features);
 			shopcartExportWidget.open();
 		}
 	},
