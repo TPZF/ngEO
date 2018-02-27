@@ -176,21 +176,11 @@ var TimeExtentView = Backbone.View.extend({
 			};
 
 			if (this.model.get("dateRange")) {
-				//does not work in IE so made some tricky things for IE < 12 with jquery
-				/*this.$fromDateInput.datebox("option", Object.assign(dateRangeOptions, {
-					calYearPickMin: this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear(),
-					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear()
-				})).datebox("refresh");*/
 				var newStartDateRangeOptions = $.extend({}, dateRangeOptions);
 				newStartDateRangeOptions.calYearPickMin = this.model.get("start").getFullYear() - this.model.get("dateRange").start.getFullYear();
 				newStartDateRangeOptions.calYearPickMax = this.model.get("dateRange").stop.getFullYear() - this.model.get("start").getFullYear();
 				this.$fromDateInput.datebox("option", newStartDateRangeOptions).datebox("refresh");
 
-				//does not work in IE so made some tricky things for IE < 12 
-				/*this.$toDateInput.datebox("option", Object.assign(dateRangeOptions, {
-					calYearPickMin: this.model.get("stop").getFullYear() - this.model.get("dateRange").start.getFullYear(),
-					calYearPickMax: this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear()
-				})).datebox("refresh");*/
 				var newStopDateRangeOptions = $.extend({}, dateRangeOptions);
 				newStopDateRangeOptions.calYearPickMin = this.model.get("stop").getFullYear() - this.model.get("dateRange").start.getFullYear();
 				newStopDateRangeOptions.calYearPickMax = this.model.get("dateRange").stop.getFullYear() - this.model.get("stop").getFullYear();
