@@ -8,17 +8,17 @@ var shopcartManagerContent_template = require('account/template/shopcartManagerC
 
 var ShopcartManagerView = Backbone.View.extend({
 
-	initialize: function() {
+	initialize: function () {
 		this.model.on("sync", this.render, this);
 		this.model.on("error", this.error, this);
 	},
 
 	events: {
-		'click label': function(event) {
+		'click label': function (event) {
 			this.model.setCurrent(this.model.get(event.currentTarget.id));
 		},
 
-		'click #new_shp': function(event) {
+		'click #new_shp': function (event) {
 
 			var createShopcartView = new CreateShopcartView({
 				model: this.model,
@@ -27,7 +27,7 @@ var ShopcartManagerView = Backbone.View.extend({
 			createShopcartView.render();
 		},
 
-		'click #duplicate_shp': function(event) {
+		'click #duplicate_shp': function (event) {
 
 			var duplicateShopcartView = new DuplicateShopcartView({
 				model: this.model,
@@ -36,7 +36,7 @@ var ShopcartManagerView = Backbone.View.extend({
 			duplicateShopcartView.render();
 		},
 
-		'click #rename_shp': function(event) {
+		'click #rename_shp': function (event) {
 
 			var renameShopcartView = new RenameShopcartView({
 				model: this.model,
@@ -46,19 +46,20 @@ var ShopcartManagerView = Backbone.View.extend({
 		},
 
 		//called when the share button is clicked.
-		'click #share_shp': function(event) {
+		//NGEOL-60: To Hide Sharing shopcart
+		/*'click #share_shp': function (event) {
 
 			SharePopup.open({
 				url: Configuration.serverHostName + (window.location.pathname) + this.model.getShopcartSharedURL(),
 				positionTo: '#share_shp'
 			});
 
-		},
+		},*/
 
-		'click #delete_shp': function(event) {
+		'click #delete_shp': function (event) {
 			var self = this;
 			this.model.getCurrent().destroy()
-				.done(function() {
+				.done(function () {
 					if (self.model.length > 0) {
 						self.model.setCurrent(self.model.at(0));
 					} else {
@@ -81,7 +82,7 @@ var ShopcartManagerView = Backbone.View.extend({
 	/**
 	 * Refresh the view size
 	 */
-	refreshSize: function() {
+	refreshSize: function () {
 		var parentOffset = this.$el.offset();
 		var $content = this.$el.find('#shopcartListDiv');
 
@@ -90,7 +91,7 @@ var ShopcartManagerView = Backbone.View.extend({
 		$content.css('max-height', height);
 	},
 
-	render: function() {
+	render: function () {
 		var mainContent = shopcartManagerContent_template({
 			shopcarts: this.model
 		});
@@ -110,7 +111,7 @@ var ShopcartManagerView = Backbone.View.extend({
 	},
 
 	/** display the error message if any */
-	showMessage: function(message) {
+	showMessage: function (message) {
 		if (this.timeOut) {
 			clearTimeout(this.timeOut);
 		}
@@ -120,7 +121,7 @@ var ShopcartManagerView = Backbone.View.extend({
 			.slideDown();
 
 		// Hide status message after a given time
-		this.timeOut = setTimeout(function() {
+		this.timeOut = setTimeout(function () {
 			$("#errorMessageDiv").slideUp();
 		}, Configuration.data.dataAccessRequestStatuses.messagefadeOutTime);
 	},
@@ -129,7 +130,7 @@ var ShopcartManagerView = Backbone.View.extend({
 	 * this is a callback method to display an error message when an error occurs during 
 	 * shopcart list retrieving. 
 	 */
-	error: function() {
+	error: function () {
 		this.$el.html("<div class='ui-error-message'><p><b> Failure: Error when loading the shopcart list.</p></b>" +
 			"<p><b> Please check the interface with the server.</p></b></div>");
 	}
